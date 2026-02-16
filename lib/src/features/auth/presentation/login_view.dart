@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart'
     show AppTextStyles, AppColors, AppTextFields, AppButton;
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthCard;
 
 class LoginView extends StatefulWidget {
@@ -80,7 +82,7 @@ class _LoginViewState extends State<LoginView> {
                   },
                   foregroundColor: AppColors.background,
                   backgroundColor: AppColors.primary,
-                  label: 'Register',
+                  label: 'Login',
                 ),
                 const SizedBox(height: 20),
                 Row(
@@ -97,16 +99,39 @@ class _LoginViewState extends State<LoginView> {
                   onPressed: () {},
                   foregroundColor: AppColors.background,
                   backgroundColor: AppColors.text,
-                  label: 'Sign up with Google',
+                  label: 'Login with Google',
                 ),
                 const SizedBox(height: 12),
                 AppButton.outlined(
                   onPressed: () {},
                   foregroundColor: AppColors.background,
                   backgroundColor: AppColors.text,
-                  label: 'Sign up with LinkedIn',
+                  label: 'Login with LinkedIn',
                 ),
-                const SizedBox(height: 12),
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    context.pushReplacementNamed(RouteNames.register);
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Don't have an account? ",
+                        style: AppTextStyles.s14W400,
+                      ),
+                      Text(
+                        "Sign Up",
+                        style: AppTextStyles.s14W600.copyWith(
+                          color: AppColors.primary,
+                          decorationColor: AppColors.primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 4),
               ],
             ),
           ),

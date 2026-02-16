@@ -8,6 +8,7 @@ class AppTextFields extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.enable = true,
+    this.readOnly = false,
     this.validator,
     this.onChanged,
     this.keyboardType,
@@ -20,6 +21,7 @@ class AppTextFields extends StatefulWidget {
     this.prefixIcon,
     this.suffixIcon,
     this.enable = true,
+    this.readOnly = false,
     this.validator,
     this.onChanged,
     this.keyboardType,
@@ -30,7 +32,8 @@ class AppTextFields extends StatefulWidget {
 
   final TextEditingController controller;
   final String? hint;
-  final bool? enable;
+  final bool enable;
+  final bool readOnly;
   final TextInputType? keyboardType;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -53,7 +56,8 @@ class _AppTextFieldsState extends State<AppTextFields> {
         builder: (_, visible, _) {
           return TextFormField(
             controller: widget.controller,
-            enabled: widget.enable ?? true,
+            enabled: widget.enable,
+            readOnly: widget.readOnly,
             obscureText: widget._isPassword && !visible,
             obscuringCharacter: '*',
             onTapOutside: (_) {

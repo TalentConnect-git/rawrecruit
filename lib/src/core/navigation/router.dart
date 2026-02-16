@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart' show RouteNames;
 import 'package:rawrecruit/src/features/auth/index.dart'
     show LoginView, RegisterView;
+import 'package:rawrecruit/src/features/home/presentation/index.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
@@ -10,7 +11,7 @@ class AppRouter {
       GoRoute(
         name: RouteNames.splash,
         path: '/',
-        builder: (_, _) => LoginView(),
+        builder: (_, _) => SplashView(),
       ),
       GoRoute(
         name: RouteNames.login,
