@@ -16,6 +16,7 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
+        isCoreLibraryDesugaringEnabled = true
     }
 
     kotlinOptions {
@@ -25,7 +26,7 @@ android {
     flavorDimensions += "app"
 
     productFlavors {
-        create("debug") {
+        create("local") {
             dimension = "app"
             applicationId = "com.app.rawrecruit.debug"
             resValue("string", "app_name", "RawRecruit (Debug)")
@@ -46,10 +47,10 @@ android {
 
     signingConfigs {
         create("release") {
-            keyAlias = keystoreProperties["keyAlias"].toString()
-            keyPassword = keystoreProperties["keyPassword"].toString()
-            storeFile = file(keystoreProperties["storeFile"].toString())
-            storePassword = keystoreProperties["storePassword"].toString()
+//            keyAlias = keystoreProperties["keyAlias"].toString()
+//            keyPassword = keystoreProperties["keyPassword"].toString()
+//            storeFile = file(keystoreProperties["storeFile"].toString())
+//            storePassword = keystoreProperties["storePassword"].toString()
         }
     }
 
