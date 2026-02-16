@@ -10,11 +10,11 @@ ApiConfig getApiConfig(Flavor flavor) {
   final String baseUrl;
   switch (flavor) {
     case Flavor.stage:
-      baseUrl = '';
+      baseUrl = 'https://stage.rawrecruit.in';
     case Flavor.prod:
-      baseUrl = '';
+      baseUrl = 'https://api.rawrecruit.in';
     case Flavor.debug:
-      baseUrl = '';
+      baseUrl = 'http://localhost:8080';
   }
   return ApiConfig(baseUrl);
 }
