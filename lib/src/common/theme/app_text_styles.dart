@@ -11,6 +11,8 @@ class AppTextStyles {
 
   static final s16W400 = TextStyle(fontSize: 16, fontWeight: FontWeight.w400);
 
+  static final s16W500 = TextStyle(fontSize: 16, fontWeight: FontWeight.w500);
+
   static final s16W600 = TextStyle(fontSize: 16, fontWeight: FontWeight.w600);
 
   static final s18W400 = TextStyle(fontSize: 18, fontWeight: FontWeight.w400);

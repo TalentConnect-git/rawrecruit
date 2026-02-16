@@ -6,11 +6,11 @@ extension UserTypeExt on UserType {
   String get label {
     switch (this) {
       case UserType.student:
-        return 'student';
+        return 'Student';
       case UserType.fresher:
-        return 'fresher';
+        return 'Fresher';
       case UserType.professional:
-        return 'professional';
+        return 'Professional';
     }
   }
 
