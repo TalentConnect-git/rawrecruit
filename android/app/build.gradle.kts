@@ -25,6 +25,12 @@ android {
     flavorDimensions += "app"
 
     productFlavors {
+        create("debug") {
+            dimension = "app"
+            applicationId = "com.app.rawrecruit.debug"
+            resValue("string", "app_name", "RawRecruit (Debug)")
+        }
+
         create("stage") {
             dimension = "app"
             applicationId = "com.app.rawrecruit.stage"

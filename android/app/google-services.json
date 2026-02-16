@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "601694030048",
+    "project_id": "rawrecruit-2026",
+    "storage_bucket": "rawrecruit-2026.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601694030048:android:d52fc72a45e1f7aeab2885",
+        "android_client_info": {
+          "package_name": "com.app.rawrecruit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMl-wGqPAF3gQvNf_uLRm-SfdTBFm-4ik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601694030048:android:88f76cd8e6122564ab2885",
+        "android_client_info": {
+          "package_name": "com.app.rawrecruit.debug"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMl-wGqPAF3gQvNf_uLRm-SfdTBFm-4ik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:601694030048:android:6edaeda575050ff6ab2885",
+        "android_client_info": {
+          "package_name": "com.app.rawrecruit.stage"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBMl-wGqPAF3gQvNf_uLRm-SfdTBFm-4ik"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

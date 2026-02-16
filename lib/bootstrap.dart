@@ -1,23 +1,32 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/firebase_options_prod.dart' as prod;
-import 'package:rawrecruit/firebase_options_stage.dart' as stage;
+import 'package:rawrecruit/src/config/index.dart'
+    show getApiConfig, FlavorConfig, initializeFirebaseApp;
+import 'package:rawrecruit/src/core/index.dart'
+    show initDependencyLocator, getIt;
 
-enum Flavor { stage, prod }
+import 'app.dart';
+
+enum Flavor { debug, stage, prod }
 
 Future<void> bootstrap(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
+  await _preInit(flavor);
   await _init(flavor);
+
+  runApp(const App());
 }
 
 Future<void> _init(Flavor flavor) async {
+  final apiConfig = getApiConfig(flavor);
+
+  FlavorConfig(flavor: flavor, baseMobileUrl: apiConfig.baseUrl);
+}
+
+Future<void> _preInit(Flavor flavor) async {
   try {
-    await Firebase.initializeApp(
-      options: flavor == Flavor.stage
-          ? stage.DefaultFirebaseOptions.currentPlatform
-          : prod.DefaultFirebaseOptions.currentPlatform,
-    );
+    await initializeFirebaseApp(flavor);
   } finally {
-    // Initialize other dependencies here if needed
+    await initDependencyLocator();
+    await getIt.allReady();
   }
 }
