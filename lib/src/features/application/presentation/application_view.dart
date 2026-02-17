@@ -3,7 +3,6 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/features/application/presentation/widget/application_card.dart';
 import 'package:rawrecruit/src/features/application/presentation/widget/search_bar.dart';
 
-
 class ApplicationsView extends StatelessWidget {
   const ApplicationsView({super.key});
 
@@ -18,9 +17,7 @@ class ApplicationsView extends StatelessWidget {
             children: const [
               ApplicationSearchBar(),
               SizedBox(height: 20),
-              Expanded(
-                child: _ApplicationsList(),
-              ),
+              Expanded(child: _ApplicationsList()),
             ],
           ),
         ),

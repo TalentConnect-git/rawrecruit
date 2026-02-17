@@ -16,7 +16,7 @@ class _SplashViewState extends State<SplashView> {
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3), () {
-      context.pushReplacementNamed(RouteNames.login);
+      context.pushReplacementNamed(RouteNames.dashboard);
     });
   }
 

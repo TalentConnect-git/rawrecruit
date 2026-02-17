@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/config/index.dart'
     show getApiConfig, FlavorConfig, initializeFirebaseApp;
 import 'package:rawrecruit/src/core/index.dart'
     show initDependencyLocator, getIt;
-import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
+
 import 'app.dart';
 
 enum Flavor { debug, stage, prod }
@@ -14,12 +13,7 @@ Future<void> bootstrap(Flavor flavor) async {
   await _preInit(flavor);
   await _init(flavor);
 
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => DashboardProvider(),
-      child: const App(),
-    ),
-  );
+  runApp(const App());
 }
 
 Future<void> _init(Flavor flavor) async {
