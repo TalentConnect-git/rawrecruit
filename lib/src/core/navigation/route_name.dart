@@ -3,4 +3,8 @@ class RouteNames {
   static final register = 'register';
   static final splash = 'splash';
   static final home = 'home';
+  static final dashboard = 'dashboard';
+  static final shortlist = 'shortlist';
+  static final application ='application';
+  static final applicationDetail ='applicationDetail';
 }
