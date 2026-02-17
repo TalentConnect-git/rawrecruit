@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 enum UserType { student, fresher, professional }
 
 enum AuthProvider { google, email }
@@ -35,6 +37,49 @@ extension AuthProviderExt on AuthProvider {
         return 'email';
       case AuthProvider.google:
         return 'google';
+    }
+  }
+}
+
+enum NavItem { home, applications, shortlist, profile }
+
+extension NavItemExt on NavItem {
+  String get label {
+    switch (this) {
+      case NavItem.home:
+        return 'Home';
+      case NavItem.applications:
+        return 'Application';
+      case NavItem.shortlist:
+        return 'Shortlist';
+      case NavItem.profile:
+        return 'Profile';
+    }
+  }
+
+  IconData get selectedIcon {
+    switch (this) {
+      case NavItem.home:
+        return Icons.home;
+      case NavItem.applications:
+        return Icons.assignment;
+      case NavItem.shortlist:
+        return Icons.bookmark;
+      case NavItem.profile:
+        return Icons.person;
+    }
+  }
+
+  IconData get unSelectedIcon {
+    switch (this) {
+      case NavItem.home:
+        return Icons.home_outlined;
+      case NavItem.applications:
+        return Icons.assignment_outlined;
+      case NavItem.shortlist:
+        return Icons.bookmark_outline;
+      case NavItem.profile:
+        return Icons.person_outline;
     }
   }
 }
