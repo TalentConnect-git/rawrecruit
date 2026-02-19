@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 enum UserType { student, fresher, professional }
 
-enum AuthProvider { google, email }
+enum AuthProvider { manual, google, linkedIn }
+
+enum UserStatus { active, pending, blocked }
 
 extension UserTypeExt on UserType {
   String get label {
@@ -33,10 +35,51 @@ extension UserTypeExt on UserType {
 extension AuthProviderExt on AuthProvider {
   String get label {
     switch (this) {
-      case AuthProvider.email:
-        return 'email';
+      case AuthProvider.manual:
+        return 'manual';
       case AuthProvider.google:
         return 'google';
+      case AuthProvider.linkedIn:
+        return 'linkedin';
+    }
+  }
+
+  static AuthProvider fromValue(String value) {
+    switch (value) {
+      case 'manual':
+        return AuthProvider.manual;
+      case 'google':
+        return AuthProvider.google;
+      case 'linkedin':
+        return AuthProvider.linkedIn;
+      default:
+        throw UnimplementedError();
+    }
+  }
+}
+
+extension UserStatusExt on UserStatus {
+  String get label {
+    switch (this) {
+      case UserStatus.active:
+        return 'active';
+      case UserStatus.pending:
+        return 'pending';
+      case UserStatus.blocked:
+        return 'blocked';
+    }
+  }
+
+  static UserStatus fromValue(String value) {
+    switch (value) {
+      case 'active':
+        return UserStatus.active;
+      case 'pending':
+        return UserStatus.pending;
+      case 'blocked':
+        return UserStatus.blocked;
+      default:
+        throw UnimplementedError();
     }
   }
 }

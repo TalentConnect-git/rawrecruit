@@ -15,25 +15,18 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  // final appStateProvider = getIt<AppStateProvider>();
-  // Future<void> _syncUserDetails() async {
-  //   if (!appStateProvider.isGuest && mounted) {
-  //     final failure = await appStateProvider.getUserDetails();
-  //     if (mounted) failure?.showError(context);
-  //   }
-  // }
-  //
-  // @override
-  // void initState() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
-  //     if (!appStateProvider.isGuest) {
-  //       final failure = await appStateProvider.getUserDetails();
-  //       failure?.showError(context);
-  //     }
-  //   });
-  //   super.initState();
-  //   _syncUserDetails();
-  // }
+  final appStateProvider = getIt<AppStateProvider>();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!appStateProvider.isAuthComplete) {
+        final failure = await appStateProvider.getAuthDetails();
+        failure?.showError(context);
+      }
+    });
+    super.initState();
+  }
 
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
