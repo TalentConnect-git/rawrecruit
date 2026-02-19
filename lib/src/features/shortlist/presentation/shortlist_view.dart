@@ -1,63 +1,101 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
-import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';
+import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
-class ShortlistView extends StatelessWidget {
+class ShortlistView extends StatefulWidget {
   const ShortlistView({super.key});
+
+  @override
+  State<ShortlistView> createState() =>
+      _ShortlistViewState();
+}
+
+class _ShortlistViewState
+    extends State<ShortlistView> {
+
+  final viewModel = ShortlistViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.fetchSaved();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
-      value: DashboardProvider(),
-      child: Consumer<DashboardProvider>(
-        builder: (context, provider, _) {
-          final shortlisted = provider.shortlistedJobs;
+      value: viewModel,
+      child:
+          Consumer<ShortlistViewModel>(
+        builder: (context, vm, _) {
+          if (vm.viewState ==
+              ViewState.busy) {
+            return const Scaffold(
+              body: Center(
+                  child:
+                      CircularProgressIndicator()),
+            );
+          }
 
           return Scaffold(
-            backgroundColor: AppColors.background,
             body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Browse your saved opportunities",
-                      style: AppTextStyles.s22W600,
-                    ),
-                    const SizedBox(height: 20),
+              child: Column(
+                children: [
 
-                    if (shortlisted.isEmpty)
-                      const Expanded(
-                        child: Center(child: Text("No saved jobs yet")),
-                      )
-                    else
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: shortlisted.length,
-                          itemBuilder: (context, index) {
-                            final jobId = shortlisted[index];
-                            return JobCard(
-                              jobId: jobId,
-                              title: "Software Developer II",
-                              yoe: 2,
-                              workMode: "Remote/Hybrid",
-                              location: "Mumbai",
-                              package: "2.4 LPA",
-                              description:
-                                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                              skills: const ["Java", "VSCode"],
-                              onApply: () {
-                                provider.markApplied(jobId);
-                              },
-                            );
-                          },
-                        ),
+                  /// 🔽 Dropdown
+                  DropdownButton<SavedTab>(
+                    value: vm.selectedTab,
+                    onChanged: (val) {
+                      if (val != null) {
+                        vm.changeTab(val);
+                      }
+                    },
+                    items: const [
+                      DropdownMenuItem(
+                        value:
+                            SavedTab.offCampus,
+                        child: Text(
+                            "Off-Campus"),
                       ),
-                  ],
-                ),
+                      DropdownMenuItem(
+                        value:
+                            SavedTab.internship,
+                        child:
+                            Text("Internship"),
+                      ),
+                    ],
+                  ),
+
+                  Expanded(
+                    child: vm.saved.isEmpty
+                        ? const Center(
+                            child: Text(
+                                "No saved jobs"),
+                          )
+                        : ListView.builder(
+                            itemCount:
+                                vm.saved.length,
+                            itemBuilder:
+                                (context,
+                                    index) {
+
+                              final item =
+                                  vm.saved[
+                                      index];
+
+                              return ListTile(
+                                title: Text(
+                                    item.jobType ??
+                                        ""),
+                                subtitle: Text(
+                                    item.currentStatus ??
+                                        ""),
+                              );
+                            },
+                          ),
+                  ),
+                ],
               ),
             ),
           );

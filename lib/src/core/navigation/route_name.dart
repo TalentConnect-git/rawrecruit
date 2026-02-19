@@ -7,4 +7,7 @@ class RouteNames {
   static final shortlist = 'shortlist';
   static final application ='application';
   static final applicationDetail ='applicationDetail';
+  static final internshipDetail='internshipDetail';
+  static final jobDetail='jobDetail';
+
 }

@@ -1,19 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/internship_view.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/job_view.dart';
+import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
-class DashboardView extends StatelessWidget {
+class DashboardView extends StatefulWidget {
+
   const DashboardView({super.key});
+  @override
+  State<DashboardView> createState() => _DashboardViewState();
+
+}
+
+class _DashboardViewState extends State<DashboardView> {
+  @override
+  void initState() {
+    super.initState();
+    _setHardcodedToken();
+  }
+
+  Future<void> _setHardcodedToken() async {
+    await SecretRepo.setString(
+      'auth_token',
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => DashboardProvider(),
-      child: const _DashboardBody(),
-    );
+    return MultiProvider(
+  providers: [
+    ChangeNotifierProvider(
+        create: (_) => DashboardProvider()),
+    ChangeNotifierProvider(
+        create: (_) => ShortlistViewModel()),
+  ],
+  child: const _DashboardBody(),
+);
+
   }
 }
 
@@ -153,12 +180,179 @@ class _SortFilterRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider =
+        context.watch<DashboardProvider>();
+
     return Row(
-      children: const [
-        _SmallChip(text: "Sort By :"),
-        SizedBox(width: 12),
-        _SmallChip(text: "Filters", hasIcon: true),
+      children: [
+        /// Sort Dropdown
+        DropdownButton<SortOption>(
+          value: provider.sortOption,
+          onChanged: (value) {
+            if (value != null) {
+              provider.changeSort(value);
+            }
+          },
+          items: const [
+            DropdownMenuItem(
+              value: SortOption.newestFirst,
+              child: Text("Sort: Newest First"),
+            ),
+            DropdownMenuItem(
+              value: SortOption.oldestFirst,
+              child: Text("Sort: Oldest First"),
+            ),
+            DropdownMenuItem(
+              value: SortOption.companyNameAZ,
+              child: Text("Sort: Company Name (A-Z)"),
+            ),
+            DropdownMenuItem(
+              value: SortOption.highestStipend,
+              child: Text("Sort: Highest Stipend"),
+            ),
+            DropdownMenuItem(
+              value: SortOption.nearestDeadline,
+              child: Text("Sort: Nearest Deadline"),
+            ),
+          ],
+        ),
+
+        const SizedBox(width: 12),
+
+        /// Filters Button
+        GestureDetector(
+        onTap: () {
+  final provider =
+      context.read<DashboardProvider>();
+
+  showModalBottomSheet(
+    context: context,
+    isScrollControlled: true,
+    builder: (_) {
+      return ChangeNotifierProvider.value(
+        value: provider,
+        child: const _FilterBottomSheet(),
+      );
+    },
+  );
+},
+
+          child: const _SmallChip(
+            text: "Filters",
+            hasIcon: true,
+          ),
+        ),
       ],
+    );
+  }
+}
+class _FilterBottomSheet extends StatelessWidget {
+  const _FilterBottomSheet();
+
+  @override
+  Widget build(BuildContext context) {
+    final provider =
+        context.watch<DashboardProvider>();
+
+    return Padding(
+      padding: const EdgeInsets.all(20),
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
+          children: [
+
+            const Text(
+              "Filters",
+              style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold),
+            ),
+
+            const SizedBox(height: 20),
+
+            /// Work Mode
+            DropdownButtonFormField<String>(
+              value: provider.selectedWorkMode,
+              hint: const Text("Select Work Mode"),
+              items: const [
+                DropdownMenuItem(
+                    value: "Hybrid",
+                    child: Text("Hybrid")),
+                DropdownMenuItem(
+                    value: "Remote",
+                    child: Text("Remote")),
+                DropdownMenuItem(
+                    value: "On-Site",
+                    child: Text("On-Site")),
+              ],
+              onChanged: (value) {
+                provider.selectedWorkMode = value;
+                provider.notifyListeners();
+              },
+            ),
+
+            const SizedBox(height: 16),
+
+            /// Location
+            DropdownButtonFormField<String>(
+              value: provider.selectedLocation,
+              hint: const Text("Select Location"),
+              items: const [
+                DropdownMenuItem(
+                    value: "Bengaluru",
+                    child: Text("Bengaluru")),
+                DropdownMenuItem(
+                    value: "Mumbai",
+                    child: Text("Mumbai")),
+              ],
+              onChanged: (value) {
+                provider.selectedLocation = value;
+                provider.notifyListeners();
+              },
+            ),
+
+            const SizedBox(height: 16),
+
+            /// Paid Only
+            CheckboxListTile(
+              value: provider.paidOnly,
+              title:
+                  const Text("Show only paid"),
+              onChanged: (value) {
+                provider.paidOnly =
+                    value ?? false;
+                provider.notifyListeners();
+              },
+            ),
+
+            const SizedBox(height: 20),
+
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      provider.clearFilters();
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Clear"),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: const Text("Apply"),
+                  ),
+                ),
+              ],
+            )
+          ],
+        ),
+      ),
     );
   }
 }
