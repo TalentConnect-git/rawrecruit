@@ -16,11 +16,8 @@ abstract class ShortlistModel with _$ShortlistModel {
 
     /// 🔥 ADD THIS
     JobModel? job,
-
   }) = _ShortlistModel;
 
-  factory ShortlistModel.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+  factory ShortlistModel.fromJson(Map<String, dynamic> json) =>
       _$ShortlistModelFromJson(json);
 }

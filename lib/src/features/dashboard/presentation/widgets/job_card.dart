@@ -31,7 +31,7 @@ class JobCard extends StatelessWidget {
     required this.onBookmarkToggle,
     required this.onApply,
     required this.onTap,
-    required this.isApplied
+    required this.isApplied,
   });
 
   @override
@@ -39,20 +39,15 @@ class JobCard extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin:
-            const EdgeInsets.only(bottom: 16),
-        padding:
-            const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: AppColors.background,
-          borderRadius:
-              BorderRadius.circular(16),
-          border:
-              Border.all(color: AppColors.border),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border),
         ),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// 🔹 Title + Bookmark
             Row(
@@ -60,39 +55,22 @@ class JobCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title,
-                    style:
-                        AppTextStyles.s18W600
-                            .copyWith(
-                                color:
-                                    AppColors.text),
+                    style: AppTextStyles.s18W600.copyWith(
+                      color: AppColors.text,
+                    ),
                   ),
                 ),
 
                 GestureDetector(
-                  onTap:
-                      onBookmarkToggle,
-                  child:
-                      AnimatedSwitcher(
-                    duration:
-                        const Duration(
-                            milliseconds:
-                                200),
+                  onTap: onBookmarkToggle,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
                     child: Icon(
-                      isSaved
-                          ? Icons
-                              .bookmark
-                          : Icons
-                              .bookmark_border,
-                      key:
-                          ValueKey(
-                              isSaved),
+                      isSaved ? Icons.bookmark : Icons.bookmark_border,
+                      key: ValueKey(isSaved),
                       color: isSaved
-                          ? AppColors
-                              .primary
-                          : AppColors
-                              .text
-                              .withOpacity(
-                                  0.6),
+                          ? AppColors.primary
+                          : AppColors.text.withOpacity(0.6),
                     ),
                   ),
                 ),
@@ -105,10 +83,7 @@ class JobCard extends StatelessWidget {
               children: [
                 _chip("YOE : $yoe"),
                 const SizedBox(width: 8),
-                Text(workMode,
-                    style:
-                        AppTextStyles
-                            .s12W400),
+                Text(workMode, style: AppTextStyles.s12W400),
               ],
             ),
 
@@ -117,68 +92,43 @@ class JobCard extends StatelessWidget {
             Wrap(
               spacing: 8,
               runSpacing: 6,
-              children: skills
-                  .map((e) =>
-                      _skillChip(e))
-                  .toList(),
+              children: skills.map((e) => _skillChip(e)).toList(),
             ),
 
             const SizedBox(height: 10),
 
             Text(
               description,
-              style:
-                  AppTextStyles.s12W400,
+              style: AppTextStyles.s12W400,
               maxLines: 2,
-              overflow:
-                  TextOverflow.ellipsis,
+              overflow: TextOverflow.ellipsis,
             ),
 
             const SizedBox(height: 14),
 
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment
-                      .spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(
                       children: [
-                        const Icon(
-                            Icons
-                                .location_on,
-                            size: 16),
-                        const SizedBox(
-                            width: 4),
-                        Text(location,
-                            style:
-                                AppTextStyles
-                                    .s12W400),
+                        const Icon(Icons.location_on, size: 16),
+                        const SizedBox(width: 4),
+                        Text(location, style: AppTextStyles.s12W400),
                       ],
                     ),
-                    const SizedBox(
-                        height: 4),
-                    Text("Package",
-                        style:
-                            AppTextStyles
-                                .s12W400),
-                    Text(package,
-                        style:
-                            AppTextStyles
-                                .s14W600),
+                    const SizedBox(height: 4),
+                    Text("Package", style: AppTextStyles.s12W400),
+                    Text(package, style: AppTextStyles.s14W600),
                   ],
                 ),
 
-               ElevatedButton(
-  onPressed: isApplied ? null : onApply,
-  child: Text(
-    isApplied ? "Applied" : "Apply",
-  ),
-),
+                ElevatedButton(
+                  onPressed: isApplied ? null : onApply,
+                  child: Text(isApplied ? "Applied" : "Apply"),
+                ),
               ],
             ),
           ],
@@ -189,39 +139,25 @@ class JobCard extends StatelessWidget {
 
   Widget _chip(String text) {
     return Container(
-      padding:
-          const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
         color: AppColors.background,
-        borderRadius:
-            BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Text(text,
-          style:
-              AppTextStyles.s12W600),
+      child: Text(text, style: AppTextStyles.s12W600),
     );
   }
 
   Widget _skillChip(String text) {
     return Container(
-      padding:
-          const EdgeInsets.symmetric(
-              horizontal: 10,
-              vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.primary
-            .withOpacity(0.1),
-        borderRadius:
-            BorderRadius.circular(20),
+        color: AppColors.primary.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
         text,
-        style: AppTextStyles.s12W600
-            .copyWith(
-                color:
-                    AppColors.primary),
+        style: AppTextStyles.s12W600.copyWith(color: AppColors.primary),
       ),
     );
   }

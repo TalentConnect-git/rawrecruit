@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/common/index.dart';
 
 import '../entities/job_model.dart';
 import 'widgets/section_tile.dart';
