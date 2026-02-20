@@ -11,6 +11,8 @@ import 'package:rawrecruit/src/features/dashboard/entities/job_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show MyProfileView;
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 
 import '../../features/dashboard/presentation/internship_detail_page.dart';
@@ -33,6 +35,30 @@ class AppRouter {
         name: RouteNames.register,
         path: '/register',
         builder: (_, _) => RegisterView(),
+      ),
+      GoRoute(
+        name: RouteNames.applicationDetail,
+        path: '/applicationDetail',
+        builder: (context, state) {
+          final model = state.extra as ApplicationModel;
+          return ApplicationDetailView(model: model);
+        },
+      ),
+      GoRoute(
+        name: RouteNames.jobDetail,
+        path: '/jobDetail',
+        builder: (context, state) {
+          final job = state.extra as JobModel;
+          return JobDetailView(job: job);
+        },
+      ),
+      GoRoute(
+        name: RouteNames.internshipDetail,
+        path: '/internshipDetail',
+        builder: (context, state) {
+          final internship = state.extra as InternshipModel;
+          return InternshipDetailView(internship: internship);
+        },
       ),
 
       ShellRoute(
@@ -58,35 +84,11 @@ class AppRouter {
             builder: (_, _) => ApplicationsView(),
           ),
 
-        GoRoute(
-  name: RouteNames.applicationDetail,
-  path: '/applicationDetail',
-  builder: (context, state) {
-    final model = state.extra as ApplicationModel;
-    return ApplicationDetailView(model: model);
-  },
-),
-            GoRoute(
-      name: RouteNames.jobDetail,
-      path: '/jobDetail',
-      builder: (context, state) {
-        final job = state.extra as JobModel;
-        return JobDetailView(job: job);
-      },
-    ),
-
-    /// ✅ ADD THIS
-    GoRoute(
-      name: RouteNames.internshipDetail,
-      path: '/internshipDetail',
-      builder: (context, state) {
-        final internship =
-            state.extra as InternshipModel;
-        return InternshipDetailView(
-          internship: internship,
-        );
-      },
-    ),
+          GoRoute(
+            name: RouteNames.myProfile,
+            path: '/my-profile',
+            builder: (_, _) => MyProfileView(),
+          ),
         ],
       ),
     ],

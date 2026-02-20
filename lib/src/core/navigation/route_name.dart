@@ -5,9 +5,9 @@ class RouteNames {
   static final home = 'home';
   static final dashboard = 'dashboard';
   static final shortlist = 'shortlist';
-  static final application ='application';
-  static final applicationDetail ='applicationDetail';
-  static final internshipDetail='internshipDetail';
-  static final jobDetail='jobDetail';
-
+  static final myProfile = 'my-profile';
+  static final application = 'application';
+  static final applicationDetail = 'applicationDetail';
+  static final internshipDetail = 'internshipDetail';
+  static final jobDetail = 'jobDetail';
 }

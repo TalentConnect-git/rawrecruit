@@ -33,7 +33,7 @@ class _HomeViewState extends State<HomeView> {
 
     if (location.startsWith('/shortlist')) return 1;
     if (location.startsWith('/application')) return 2;
-    if (location.startsWith('/applicationDetail')) return 3;
+    if (location.startsWith('/my-profile')) return 3;
     return 0;
   }
 
@@ -105,7 +105,7 @@ class _HomeViewState extends State<HomeView> {
                 context.goNamed(RouteNames.application);
                 break;
               case 3:
-                context.goNamed(RouteNames.applicationDetail);
+                context.goNamed(RouteNames.myProfile);
                 break;
             }
           },
