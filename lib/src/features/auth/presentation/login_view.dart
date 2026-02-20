@@ -1,9 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart'
     show AppTextStyles, AppColors, AppTextFields, AppButton;
-import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/core/index.dart' show RouteNames, Toasts;
 import 'package:rawrecruit/src/features/auth/index.dart'
     show AuthCard, LoginViewModel;
 
@@ -17,8 +18,12 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController();
-  final passController = TextEditingController();
+  final emailController = TextEditingController(
+    text: kDebugMode ? 'skhasan.talentconnect+rr@gmail.com' : null,
+  );
+  final passController = TextEditingController(
+    text: kDebugMode ? 'Test@123' : null,
+  );
 
   final LoginViewModel loginViewModel = LoginViewModel();
 

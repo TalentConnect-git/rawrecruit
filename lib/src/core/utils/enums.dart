@@ -18,6 +18,17 @@ extension UserTypeExt on UserType {
     }
   }
 
+  String get apiLabel {
+    switch (this) {
+      case UserType.student:
+        return 'student';
+      case UserType.fresher:
+        return 'fresher';
+      case UserType.professional:
+        return 'professional';
+    }
+  }
+
   static UserType fromValue(String value) {
     switch (value) {
       case 'student':

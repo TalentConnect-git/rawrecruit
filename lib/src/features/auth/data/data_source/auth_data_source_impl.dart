@@ -40,7 +40,7 @@ class AuthDataSourceImpl implements AuthDataSource {
     required String email,
     required String password,
     required UserType userType,
-    required int otp,
+    required String otp,
   }) async {
     final Request request = Request(
       method: RequestMethod.post,
@@ -48,8 +48,8 @@ class AuthDataSourceImpl implements AuthDataSource {
       body: {
         'email': email,
         'password': password,
-        'userType': userType.label,
-        'otp': otp.toString(),
+        'userType': userType.apiLabel,
+        'otp': otp,
       },
     );
 
@@ -110,12 +110,42 @@ class AuthDataSourceImpl implements AuthDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        return Right(response['user']);
+        final auth = Auth.fromJson(response['user']);
+        return Right(auth);
       }
     } catch (e) {
       return Left(APIException.from(e));
     }
 
+    return Right(null);
+  }
+
+  @override
+  ResultFuture<String?> logout() async {
+    final Request request = Request(
+      method: RequestMethod.post,
+      endpoint: Endpoints.apiAuthLogout,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        await SecretRepo.remove('auth_token');
+        await SecretRepo.remove('auth_id');
+        return Right(response['message']);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  @override
+  ResultFuture<Auth?> googleLogin({required String token}) async {
     return Right(null);
   }
 }

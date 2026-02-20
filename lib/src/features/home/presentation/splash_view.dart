@@ -16,20 +16,11 @@ class _SplashViewState extends State<SplashView> {
   String next = RouteNames.login;
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
 
-  // bool _minTimePassed = false;
-  // bool _logicDone = false;
-
   final appStateProvider = getIt<AppStateProvider>();
 
   @override
   void initState() {
     super.initState();
-
-    // Future.delayed(const Duration(seconds: 2), () {
-    //   _minTimePassed = true;
-    //   isLoading.value = true;
-    //   _tryNavigate();
-    // });
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       await _decideNext();
@@ -45,13 +36,12 @@ class _SplashViewState extends State<SplashView> {
       try {
         await appStateProvider.getAuthDetails();
         if (appStateProvider.isAuthComplete) {
-          next = RouteNames.home;
+          next = RouteNames.dashboard;
         } else {
           await SecretRepo.remove('auth_token');
           next = RouteNames.login;
         }
       } catch (e, s) {
-        log('$e\n$s');
         await SecretRepo.remove('auth_token');
         next = RouteNames.login;
       }
@@ -60,16 +50,7 @@ class _SplashViewState extends State<SplashView> {
     if (!mounted) return;
 
     context.pushReplacementNamed(next);
-
-    // _logicDone = true;
-    // _tryNavigate();
   }
-
-  // void _tryNavigate() {
-  //   if (_minTimePassed && _logicDone && mounted) {
-  //     context.pushReplacementNamed(next);
-  //   }
-  // }
 
   @override
   Widget build(BuildContext context) {

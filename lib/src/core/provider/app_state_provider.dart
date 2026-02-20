@@ -54,4 +54,19 @@ class AppStateProvider extends ViewStateProvider {
 
     return failure;
   }
+
+  Future<Failure?> logout() async {
+    setViewState(ViewState.busy);
+
+    Failure? failure;
+    final result = await getIt<AuthDataSource>().logout();
+
+    result.fold((exception) {
+      failure = APIFailure.fromException(exception: exception);
+    }, (res) {});
+
+    setViewState(ViewState.complete);
+
+    return failure;
+  }
 }

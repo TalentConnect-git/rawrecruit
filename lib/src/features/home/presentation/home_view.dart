@@ -58,6 +58,21 @@ class _HomeViewState extends State<HomeView> {
           title: Text('RawRecruit'),
           backgroundColor: Colors.white,
           scrolledUnderElevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () async {
+                final failure = await getIt<AppStateProvider>().logout();
+                Toasts.showSuccessOrFailureToast(
+                  context,
+                  failure: failure,
+                  successCallback: () {
+                    context.goNamed(RouteNames.login);
+                  },
+                );
+              },
+              icon: Icon(Icons.logout),
+            ),
+          ],
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(0.25),
             child: Container(

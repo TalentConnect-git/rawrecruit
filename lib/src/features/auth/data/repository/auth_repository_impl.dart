@@ -1,3 +1,5 @@
+import 'package:dartz/dartz.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/auth/data/data_source/auth_data_source.dart';
 
@@ -20,7 +22,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String email,
     required String password,
     required UserType userType,
-    required int otp,
+    required String otp,
   }) => _authDataSource.register(
     email: email,
     password: password,
@@ -34,4 +36,46 @@ class AuthRepositoryImpl implements AuthRepository {
 
   @override
   ResultFuture<Auth?> getAuth() => _authDataSource.getAuth();
+
+  @override
+  ResultFuture<String?> logout() => _authDataSource.logout();
+
+  @override
+  ResultFuture<Auth?> googleLogin() async {
+    GoogleSignIn googleSignIn = GoogleSignIn.instance;
+
+    await googleSignIn.signOut();
+
+    await googleSignIn.initialize(
+      serverClientId:
+          '574038035729-6nlkp4a98fj3jdqkqlkub49asnskcnmh.apps.googleusercontent.com',
+    );
+
+    final GoogleSignInAccount? googleUser = await googleSignIn.authenticate(
+      scopeHint: ['email'],
+    );
+
+    if (googleUser == null) {
+      return Left(
+        APIException(message: 'Sign in aborted by user', statusCode: 500),
+      );
+    }
+
+    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+
+    final idToken = googleAuth.idToken;
+
+    if (idToken == null) {
+      return Left(
+        APIException(
+          message: 'Something went wrong, Try again later.',
+          statusCode: 500,
+        ),
+      );
+    }
+
+    final auth = await _authDataSource.googleLogin(token: idToken);
+
+    return auth;
+  }
 }

@@ -9,8 +9,12 @@ abstract class AuthDataSource {
     required String email,
     required String password,
     required UserType userType,
-    required int otp,
+    required String otp,
   });
 
   ResultFuture<Auth?> login({required String email, required String password});
+
+  ResultFuture<String?> logout();
+
+  ResultFuture<Auth?> googleLogin({required String token});
 }
