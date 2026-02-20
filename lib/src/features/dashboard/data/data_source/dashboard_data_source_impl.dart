@@ -22,35 +22,33 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
       final List data = response['data'] ?? [];
 
-      final jobs =
-          data.map((e) => JobModel.fromJson(e)).toList();
+      final jobs = data.map((e) => JobModel.fromJson(e)).toList();
 
       return Right(jobs);
     } catch (e) {
       return Left(APIException.from(e));
     }
   }
-@override
-ResultFuture<List<InternshipModel>> getInternships() async {
-  final Request request = Request(
-    method: RequestMethod.get,
-    endpoint: Endpoints.apiInternshipPostings,
-    isSafeRoute: true,
-  );
 
-  try {
-    final result = await _networkService.request(request);
-    final response = result.data as Map<String, dynamic>;
+  @override
+  ResultFuture<List<InternshipModel>> getInternships() async {
+    final Request request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.apiInternshipPostings,
+      isSafeRoute: true,
+    );
 
-    final List data = response['data'] ?? [];
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
 
-    final internships = data
-        .map((e) => InternshipModel.fromJson(e))
-        .toList();
+      final List data = response['data'] ?? [];
 
-    return Right(internships);
-  } catch (e) {
-    return Left(APIException.from(e));
+      final internships = data.map((e) => InternshipModel.fromJson(e)).toList();
+
+      return Right(internships);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
 }

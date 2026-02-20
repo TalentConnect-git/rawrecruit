@@ -7,10 +7,7 @@ import 'widgets/section_tile.dart';
 class JobDetailView extends StatelessWidget {
   final JobModel job;
 
-  const JobDetailView({
-    super.key,
-    required this.job,
-  });
+  const JobDetailView({super.key, required this.job});
 
   String _formatDate(DateTime? date) {
     if (date == null) return "-";
@@ -20,21 +17,14 @@ class JobDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(job.jobRoles?.first ?? 'Job Detail'),
-      ),
+      appBar: AppBar(title: Text(job.jobRoles?.first ?? 'Job Detail')),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             /// Company
-            Text(
-              job.companyName ?? '',
-              style: AppTextStyles.s18W600,
-            ),
+            Text(job.companyName ?? '', style: AppTextStyles.s18W600),
 
             const SizedBox(height: 12),
 
@@ -46,20 +36,15 @@ class JobDetailView extends StatelessWidget {
             SectionTitle(title: "Skills"),
             Wrap(
               spacing: 8,
-              children: job.skills
-                      ?.map((e) =>
-                          CustomChip(text: e))
-                      .toList() ??
-                  [],
+              children:
+                  job.skills?.map((e) => CustomChip(text: e)).toList() ?? [],
             ),
 
             const SizedBox(height: 20),
 
             SectionTitle(title: "Interview Window"),
-            Text(
-                "Start: ${_formatDate(job.interviewWindow?.start)}"),
-            Text(
-                "End: ${_formatDate(job.interviewWindow?.end)}"),
+            Text("Start: ${_formatDate(job.interviewWindow?.start)}"),
+            Text("End: ${_formatDate(job.interviewWindow?.end)}"),
 
             const SizedBox(height: 20),
 
@@ -79,8 +64,7 @@ class JobDetailView extends StatelessWidget {
             const SizedBox(height: 20),
 
             SectionTitle(title: "Benefits"),
-            ...?job.benefits
-                ?.map((e) => Text("• $e")),
+            ...?job.benefits?.map((e) => Text("• $e")),
           ],
         ),
       ),

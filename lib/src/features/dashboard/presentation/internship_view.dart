@@ -7,14 +7,14 @@ import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
+
 import '../../../core/index.dart';
 
 class InternshipView extends StatefulWidget {
   const InternshipView({super.key});
 
   @override
-  State<InternshipView> createState() =>
-      _InternshipViewState();
+  State<InternshipView> createState() => _InternshipViewState();
 }
 
 class _InternshipViewState extends State<InternshipView> {
@@ -37,58 +37,40 @@ class _InternshipViewState extends State<InternshipView> {
       value: viewModel,
       child: Consumer<DashboardViewModel>(
         builder: (context, vm, _) {
-
           if (vm.viewState == ViewState.busy) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
 
-          final dashboardProvider =
-              context.watch<DashboardProvider>();
+          final dashboardProvider = context.watch<DashboardProvider>();
 
-          final filteredInternships =
-              dashboardProvider.applyInternshipFilters(
-                  vm.internships);
+          final filteredInternships = dashboardProvider.applyInternshipFilters(
+            vm.internships,
+          );
 
-          final shortlistVM =
-              context.watch<ShortlistViewModel>();
+          final shortlistVM = context.watch<ShortlistViewModel>();
 
           /// ✅ ADD THIS (you were missing this)
-          final applicationVM =
-              context.watch<ApplicationViewModel>();
+          final applicationVM = context.watch<ApplicationViewModel>();
 
           return ListView.builder(
             itemCount: filteredInternships.length,
             itemBuilder: (context, index) {
+              final internship = filteredInternships[index];
 
-              final internship =
-                  filteredInternships[index];
-
-              final isSaved =
-                  shortlistVM.savedJobIds
-                      .contains(internship.id);
+              final isSaved = shortlistVM.savedJobIds.contains(internship.id);
 
               /// ✅ DEFINE isApplied
-              final isApplied =
-                  applicationVM
-                      .isApplied(internship.id ?? '');
+              final isApplied = applicationVM.isApplied(internship.id ?? '');
 
               return JobCard(
                 jobId: internship.id ?? '',
-                title:
-                    internship.jobRoles?.first ?? '',
+                title: internship.jobRoles?.first ?? '',
                 yoe: 0,
-                workMode:
-                    internship.workMode?.first ?? '',
-                location:
-                    internship.location?.first ?? '',
-                package:
-                    "₹${internship.packageDetails?.totalCTC ?? 0}",
-                skills:
-                    internship.skills ?? [],
-                description:
-                    internship.description ?? '',
+                workMode: internship.workMode?.first ?? '',
+                location: internship.location?.first ?? '',
+                package: "₹${internship.packageDetails?.totalCTC ?? 0}",
+                skills: internship.skills ?? [],
+                description: internship.description ?? '',
 
                 /// 🔖 Bookmark
                 isSaved: isSaved,
@@ -103,9 +85,7 @@ class _InternshipViewState extends State<InternshipView> {
                 /// 🚀 Apply API
                 isApplied: isApplied,
                 onApply: () {
-                  applicationVM.apply(
-                    internship.id ?? '',
-                  );
+                  applicationVM.apply(internship.id ?? '');
                 },
 
                 onTap: () {
@@ -126,23 +106,21 @@ class _InternshipViewState extends State<InternshipView> {
 class _InternshipStats extends StatelessWidget {
   final int total;
 
-  const _InternshipStats({
-    required this.total,
-  });
+  const _InternshipStats({required this.total});
 
   @override
   Widget build(BuildContext context) {
-    final provider =
-        context.watch<DashboardProvider>();
+    final provider = context.watch<DashboardProvider>();
 
-    int activeFilters = [
-      provider.selectedWorkMode,
-      provider.selectedLocation,
-      provider.selectedEmploymentType,
-      provider.selectedDegree,
-      provider.selectedCourse,
-      provider.selectedDuration,
-    ].where((e) => e != null).length +
+    int activeFilters =
+        [
+          provider.selectedWorkMode,
+          provider.selectedLocation,
+          provider.selectedEmploymentType,
+          provider.selectedDegree,
+          provider.selectedCourse,
+          provider.selectedDuration,
+        ].where((e) => e != null).length +
         (provider.paidOnly ? 1 : 0);
 
     return Row(
@@ -169,10 +147,7 @@ class _StatCard extends StatelessWidget {
   final String title;
   final String value;
 
-  const _StatCard({
-    required this.title,
-    required this.value,
-  });
+  const _StatCard({required this.title, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -180,31 +155,23 @@ class _StatCard extends StatelessWidget {
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.background,
-        borderRadius:
-            BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.black
-                .withOpacity(0.1),
+            color: Colors.black.withOpacity(0.1),
             blurRadius: 8,
-            offset:
-                const Offset(0, 4),
-          )
+            offset: const Offset(0, 4),
+          ),
         ],
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title,
-              style: AppTextStyles.s12W600),
+          Text(title, style: AppTextStyles.s12W600),
           const SizedBox(height: 8),
           Text(
             value,
-            style: AppTextStyles.s22W600
-                .copyWith(
-                    color:
-                        AppColors.primary),
+            style: AppTextStyles.s22W600.copyWith(color: AppColors.primary),
           ),
         ],
       ),

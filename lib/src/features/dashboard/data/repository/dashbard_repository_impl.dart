@@ -5,21 +5,17 @@ import 'package:rawrecruit/src/features/dashboard/entities/job_model.dart';
 
 import '../../../../core/index.dart';
 
-class DashboardRepositoryImpl
-    implements DashboardRepository {
-  DashboardRepositoryImpl({
-    required DashboardDataSource dataSource,
-  }) : _dataSource = dataSource;
+class DashboardRepositoryImpl implements DashboardRepository {
+  DashboardRepositoryImpl({required DashboardDataSource dataSource})
+    : _dataSource = dataSource;
 
   final DashboardDataSource _dataSource;
 
   @override
   ResultFuture<List<JobModel>> getOffCampusJobs() =>
       _dataSource.getOffCampusJobs();
-      @override
-@override
-ResultFuture<List<InternshipModel>> getInternships() =>
-    _dataSource.getInternships();
 
-
+  @override
+  ResultFuture<List<InternshipModel>> getInternships() =>
+      _dataSource.getInternships();
 }

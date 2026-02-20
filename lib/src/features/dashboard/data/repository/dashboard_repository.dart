@@ -5,6 +5,6 @@ import '../../../../core/index.dart';
 
 abstract class DashboardRepository {
   ResultFuture<List<JobModel>> getOffCampusJobs();
-  ResultFuture<List<InternshipModel>> getInternships();
 
+  ResultFuture<List<InternshipModel>> getInternships();
 }

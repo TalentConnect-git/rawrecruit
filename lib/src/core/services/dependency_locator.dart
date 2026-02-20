@@ -1,5 +1,9 @@
 import 'package:get_it/get_it.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/application/data/application_data_source.dart';
+import 'package:rawrecruit/src/features/application/data/application_data_source_impl.dart';
+import 'package:rawrecruit/src/features/application/repository/application_repository.dart';
+import 'package:rawrecruit/src/features/application/repository/application_repository_impl.dart';
 import 'package:rawrecruit/src/features/auth/index.dart';
 import 'package:rawrecruit/src/features/dashboard/data/data_source/dashboard_data_source_impl.dart';
 import 'package:rawrecruit/src/features/dashboard/data/data_source/dashbooard_data_source.dart';
@@ -20,22 +24,18 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<AuthDataSource>(() => AuthDataSourceImpl())
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(authDataSource: getIt()),
-    );
-}
-
-Future<void> initDependencyLocator() async {
-  getIt
-    ..registerLazySingleton<NetworkService>(NetworkService.new)
-    ..registerLazySingleton<AppStateProvider>(AppStateProvider.new)
-    ..registerLazySingleton<AuthDataSource>(() => AuthDataSourceImpl())
+    )
     ..registerLazySingleton<ShortlistDataSource>(
       () => ShortlistDataSourceImpl(),
     )
     ..registerLazySingleton<ShortlistRepository>(
       () => ShortlistRepositoryImpl(dataSource: getIt()),
     )
-    ..registerLazySingleton<AuthRepository>(
-      () => AuthRepositoryImpl(authDataSource: getIt()),
+    ..registerLazySingleton<ApplicationDataSource>(
+      () => ApplicationDataSourceImpl(),
+    )
+    ..registerLazySingleton<ApplicationRepository>(
+      () => ApplicationRepositoryImpl(getIt<ApplicationDataSource>()),
     )
     ..registerLazySingleton<DashboardDataSource>(
       () => DashboardDataSourceImpl(),

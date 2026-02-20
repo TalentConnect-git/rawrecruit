@@ -5,6 +5,6 @@ import '../../entities/job_model.dart';
 
 abstract class DashboardDataSource {
   ResultFuture<List<JobModel>> getOffCampusJobs();
-ResultFuture<List<InternshipModel>> getInternships();
 
+  ResultFuture<List<InternshipModel>> getInternships();
 }

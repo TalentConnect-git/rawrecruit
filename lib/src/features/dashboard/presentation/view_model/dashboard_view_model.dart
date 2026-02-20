@@ -8,7 +8,7 @@ class DashboardViewModel extends ViewStateProvider {
   final _repository = getIt<DashboardRepository>();
 
   List<JobModel> jobs = [];
-List<InternshipModel> internships = [];
+  List<InternshipModel> internships = [];
 
   Future<Failure?> getJobs() async {
     Failure? failure;
@@ -19,8 +19,7 @@ List<InternshipModel> internships = [];
 
     result.fold(
       (exception) {
-        failure =
-            APIFailure.fromException(exception: exception);
+        failure = APIFailure.fromException(exception: exception);
       },
       (data) {
         jobs = data;
@@ -31,27 +30,23 @@ List<InternshipModel> internships = [];
     return failure;
   }
 
+  Future<Failure?> getInternships() async {
+    Failure? failure;
 
-Future<Failure?> getInternships() async {
-  Failure? failure;
+    setViewState(ViewState.busy);
 
-  setViewState(ViewState.busy);
+    final result = await _repository.getInternships();
 
-  final result = await _repository.getInternships();
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (data) {
+        internships = data;
+      },
+    );
 
-  result.fold(
-    (exception) {
-      failure =
-          APIFailure.fromException(exception: exception);
-    },
-    (data) {
-      internships = data;
-    },
-  );
-
-  setViewState(ViewState.complete);
-  return failure;
-}
-
-
+    setViewState(ViewState.complete);
+    return failure;
+  }
 }
