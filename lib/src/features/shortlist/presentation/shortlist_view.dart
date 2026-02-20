@@ -1,68 +1,148 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
+import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';
-
-class ShortlistView extends StatelessWidget {
+import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
+class ShortlistView extends StatefulWidget {
   const ShortlistView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: DashboardProvider(),
-      child: Consumer<DashboardProvider>(
-        builder: (context, provider, _) {
-          final shortlisted = provider.shortlistedJobs;
+  State<ShortlistView> createState() =>
+      _ShortlistViewState();
+}
 
-          return Scaffold(
-            backgroundColor: AppColors.background,
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Browse your saved opportunities",
-                      style: AppTextStyles.s22W600,
-                    ),
-                    const SizedBox(height: 20),
+class _ShortlistViewState
+    extends State<ShortlistView> {
 
-                    if (shortlisted.isEmpty)
-                      const Expanded(
-                        child: Center(child: Text("No saved jobs yet")),
-                      )
-                    else
-                      Expanded(
-                        child: ListView.builder(
-                          itemCount: shortlisted.length,
-                          itemBuilder: (context, index) {
-                            final jobId = shortlisted[index];
-                            return JobCard(
-                              jobId: jobId,
-                              title: "Software Developer II",
-                              yoe: 2,
-                              workMode: "Remote/Hybrid",
-                              location: "Mumbai",
-                              package: "2.4 LPA",
-                              description:
-                                  "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
-                              skills: const ["Java", "VSCode"],
-                              onApply: () {
-                                provider.markApplied(jobId);
-                              },
-                            );
-                          },
-                        ),
-                      ),
-                  ],
-                ),
-              ),
+  final viewModel = ShortlistViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    viewModel.fetchSaved();
+  }
+@override
+Widget build(BuildContext context) {
+  return MultiProvider(
+  providers: [
+    ChangeNotifierProvider.value(
+      value: viewModel,
+    ),
+    ChangeNotifierProvider(
+      create: (_) => ApplicationViewModel(),
+    ),
+  ],
+  child: Consumer<ShortlistViewModel>(
+      builder: (context, vm, _) {
+
+        if (vm.viewState == ViewState.busy) {
+          return const Scaffold(
+            body: Center(
+              child: CircularProgressIndicator(),
             ),
           );
-        },
-      ),
-    );
-  }
-}
+        }
+
+        final applicationVM =
+            context.watch<ApplicationViewModel>();
+
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 20,
+                vertical: 16,
+              ),
+              child: Column(
+                crossAxisAlignment:
+                    CrossAxisAlignment.start,
+                children: [
+
+                  const Text(
+                    "Saved Opportunities",
+                    style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  Expanded(
+                    child: vm.saved.isEmpty
+                        ? const Center(
+                            child: Text("No saved jobs"),
+                          )
+                        : ListView.builder(
+                            itemCount: vm.saved.length,
+                            itemBuilder:
+                                (context, index) {
+
+                              final item =
+                                  vm.saved[index];
+
+                              if (item.job == null) {
+                                return const SizedBox();
+                              }
+
+                              final job = item.job!;
+
+                              final isSaved =
+                                  vm.savedJobIds
+                                      .contains(job.id);
+
+                              final isApplied =
+                                  applicationVM
+                                      .isApplied(
+                                          job.id ?? '');
+
+                              return JobCard(
+                                jobId: job.id ?? '',
+                                title: job.jobRoles?.first ?? '',
+                                yoe: 0,
+                                workMode:
+                                    job.workMode?.first ?? '',
+                                location:
+                                    job.location?.first ?? '',
+                                package:
+                                    "₹${job.packageDetails?.totalCTC ?? 0}",
+                                skills: job.skills ?? [],
+                                description:
+                                    job.description ?? '',
+                                isSaved: isSaved,
+
+                                onBookmarkToggle: () {
+                                  vm.toggleSave(
+                                    jobId: job.id ?? '',
+                                    jobType:
+                                        item.jobType ?? '',
+                                    isSaved: true,
+                                  );
+                                },
+
+                                isApplied: isApplied,
+                               onApply: () async {
+  await applicationVM.apply(job.id ?? '');
+},
+
+                                onTap: () {
+                                  context.pushNamed(
+                                    RouteNames.jobDetail,
+                                    extra: job,
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        );
+      },
+    ),
+  );
+}}
