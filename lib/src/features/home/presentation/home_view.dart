@@ -15,25 +15,18 @@ class HomeView extends StatefulWidget {
 
 class _HomeViewState extends State<HomeView> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
-  // final appStateProvider = getIt<AppStateProvider>();
-  // Future<void> _syncUserDetails() async {
-  //   if (!appStateProvider.isGuest && mounted) {
-  //     final failure = await appStateProvider.getUserDetails();
-  //     if (mounted) failure?.showError(context);
-  //   }
-  // }
-  //
-  // @override
-  // void initState() {
-  //   WidgetsBinding.instance.addPostFrameCallback((_) async {
-  //     if (!appStateProvider.isGuest) {
-  //       final failure = await appStateProvider.getUserDetails();
-  //       failure?.showError(context);
-  //     }
-  //   });
-  //   super.initState();
-  //   _syncUserDetails();
-  // }
+  final appStateProvider = getIt<AppStateProvider>();
+
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!appStateProvider.isAuthComplete) {
+        final failure = await appStateProvider.getAuthDetails();
+        failure?.showError(context);
+      }
+    });
+    super.initState();
+  }
 
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
@@ -65,6 +58,21 @@ class _HomeViewState extends State<HomeView> {
           title: Text('RawRecruit'),
           backgroundColor: Colors.white,
           scrolledUnderElevation: 0,
+          actions: [
+            IconButton(
+              onPressed: () async {
+                final failure = await getIt<AppStateProvider>().logout();
+                Toasts.showSuccessOrFailureToast(
+                  context,
+                  failure: failure,
+                  successCallback: () {
+                    context.goNamed(RouteNames.login);
+                  },
+                );
+              },
+              icon: Icon(Icons.logout),
+            ),
+          ],
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(0.25),
             child: Container(

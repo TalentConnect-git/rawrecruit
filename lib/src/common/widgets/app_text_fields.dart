@@ -12,6 +12,7 @@ class AppTextFields extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.keyboardType,
+    this.autoValidateMode = AutovalidateMode.onUserInteraction,
     super.key,
   }) : _isPassword = false;
 
@@ -22,6 +23,7 @@ class AppTextFields extends StatefulWidget {
     this.suffixIcon,
     this.enable = true,
     this.readOnly = false,
+    this.autoValidateMode = AutovalidateMode.onUserInteraction,
     this.validator,
     this.onChanged,
     this.keyboardType,
@@ -37,6 +39,7 @@ class AppTextFields extends StatefulWidget {
   final TextInputType? keyboardType;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final AutovalidateMode autoValidateMode;
   final String? Function(String? val)? validator;
   final void Function(String? val)? onChanged;
 
@@ -60,6 +63,7 @@ class _AppTextFieldsState extends State<AppTextFields> {
             readOnly: widget.readOnly,
             obscureText: widget._isPassword && !visible,
             obscuringCharacter: '*',
+            autovalidateMode: widget.autoValidateMode,
             onTapOutside: (_) {
               FocusManager.instance.primaryFocus?.unfocus();
             },

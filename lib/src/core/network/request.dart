@@ -20,7 +20,7 @@ class Request {
 
   final RequestMethod method;
 
-  String get fullPath => '${FlavorConfig.instance.baseMobileUrl}$endpoint';
+  String get fullPath => '${FlavorConfig.instance.baseMobileUrl}/$endpoint';
 
   String get realPath => endpoint;
 }

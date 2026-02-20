@@ -1,8 +1,9 @@
-import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/core/index.dart'
+    show RouteNames, getIt, AppStateProvider, SecretRepo;
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -12,12 +13,43 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
+  String next = RouteNames.login;
+  final ValueNotifier<bool> isLoading = ValueNotifier(false);
+
+  final appStateProvider = getIt<AppStateProvider>();
+
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
-      context.pushReplacementNamed(RouteNames.dashboard);
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await _decideNext();
     });
+  }
+
+  Future<void> _decideNext() async {
+    String token = await SecretRepo.getString('auth_token') ?? '';
+
+    log(token, name: 'AuthToken');
+
+    if (token.isNotEmpty) {
+      try {
+        await appStateProvider.getAuthDetails();
+        if (appStateProvider.isAuthComplete) {
+          next = RouteNames.dashboard;
+        } else {
+          await SecretRepo.remove('auth_token');
+          next = RouteNames.login;
+        }
+      } catch (e, s) {
+        await SecretRepo.remove('auth_token');
+        next = RouteNames.login;
+      }
+    }
+
+    if (!mounted) return;
+
+    context.pushReplacementNamed(next);
   }
 
   @override
