@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/features/application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';
@@ -25,7 +26,6 @@ class _InternshipViewState extends State<InternshipView> {
 
     viewModel.getInternships();
 
-    ///  Fetch saved opportunities once
     Future.microtask(() {
       context.read<ShortlistViewModel>().fetchSaved();
     });
@@ -37,13 +37,13 @@ class _InternshipViewState extends State<InternshipView> {
       value: viewModel,
       child: Consumer<DashboardViewModel>(
         builder: (context, vm, _) {
+
           if (vm.viewState == ViewState.busy) {
             return const Center(
               child: CircularProgressIndicator(),
             );
           }
 
-          /// 🔥 Apply filters
           final dashboardProvider =
               context.watch<DashboardProvider>();
 
@@ -51,9 +51,12 @@ class _InternshipViewState extends State<InternshipView> {
               dashboardProvider.applyInternshipFilters(
                   vm.internships);
 
-          /// 🔥 Read shortlist viewmodel
           final shortlistVM =
               context.watch<ShortlistViewModel>();
+
+          /// ✅ ADD THIS (you were missing this)
+          final applicationVM =
+              context.watch<ApplicationViewModel>();
 
           return ListView.builder(
             itemCount: filteredInternships.length,
@@ -62,9 +65,14 @@ class _InternshipViewState extends State<InternshipView> {
               final internship =
                   filteredInternships[index];
 
-              /// 🔥 Check if saved
-            final isSaved =
-    shortlistVM.savedJobIds.contains(internship.id);
+              final isSaved =
+                  shortlistVM.savedJobIds
+                      .contains(internship.id);
+
+              /// ✅ DEFINE isApplied
+              final isApplied =
+                  applicationVM
+                      .isApplied(internship.id ?? '');
 
               return JobCard(
                 jobId: internship.id ?? '',
@@ -82,17 +90,23 @@ class _InternshipViewState extends State<InternshipView> {
                 description:
                     internship.description ?? '',
 
-                /// 🔥 CONNECT BOOKMARK TO API
+                /// 🔖 Bookmark
                 isSaved: isSaved,
                 onBookmarkToggle: () {
                   shortlistVM.toggleSave(
                     jobId: internship.id ?? '',
-                    jobType: "Internship",   // 🔥 IMPORTANT
+                    jobType: "Internship",
                     isSaved: isSaved,
                   );
                 },
 
-                onApply: () {},
+                /// 🚀 Apply API
+                isApplied: isApplied,
+                onApply: () {
+                  applicationVM.apply(
+                    internship.id ?? '',
+                  );
+                },
 
                 onTap: () {
                   context.pushNamed(
@@ -108,7 +122,6 @@ class _InternshipViewState extends State<InternshipView> {
     );
   }
 }
-
 
 class _InternshipStats extends StatelessWidget {
   final int total;

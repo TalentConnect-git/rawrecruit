@@ -15,6 +15,7 @@ class JobCard extends StatelessWidget {
   final VoidCallback onBookmarkToggle;
   final VoidCallback onApply;
   final VoidCallback onTap;
+  final bool isApplied;
 
   const JobCard({
     super.key,
@@ -30,6 +31,7 @@ class JobCard extends StatelessWidget {
     required this.onBookmarkToggle,
     required this.onApply,
     required this.onTap,
+    required this.isApplied
   });
 
   @override
@@ -171,19 +173,12 @@ class JobCard extends StatelessWidget {
                   ],
                 ),
 
-                ElevatedButton(
-                  onPressed:
-                      onApply,
-                  style:
-                      ElevatedButton
-                          .styleFrom(
-                    backgroundColor:
-                        AppColors
-                            .primary,
-                  ),
-                  child: const Text(
-                      "Apply"),
-                ),
+               ElevatedButton(
+  onPressed: isApplied ? null : onApply,
+  child: Text(
+    isApplied ? "Applied" : "Apply",
+  ),
+),
               ],
             ),
           ],

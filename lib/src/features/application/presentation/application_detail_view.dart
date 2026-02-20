@@ -1,21 +1,73 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/features/application/entities/application_model.dart';
+import 'package:rawrecruit/src/features/application/presentation/widget/application_progress_stepper.dart';
+import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/presentation/widget/application_progress_stepper.dart';
 
 class ApplicationDetailView extends StatelessWidget {
-  const ApplicationDetailView({super.key});
+  final ApplicationModel model;
+
+  const ApplicationDetailView({
+    super.key,
+    required this.model,
+  });
+
+  int _getStep(String status) {
+    switch (status.toLowerCase()) {
+      case "applied":
+        return 0;
+      case "shortlisted":
+        return 1;
+      case "accepted":
+        return 2;
+      default:
+        return 0;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final job = model.jobDetails;
+    final company = model.companyProfile?.companyDetails;
+    final status = model.currentStatus ?? "";
+
+    final jobTitle =
+        job?.jobRoles?.isNotEmpty == true
+            ? job!.jobRoles!.first
+            : "-";
+
+    final location =
+        job?.location?.isNotEmpty == true
+            ? job!.location!.first
+            : "-";
+
+                final jobType =
+        job?.jobType ?? "-";
+        final package = job?.packageDetails;
+
+        final totalCTC = package?.totalCTC != null
+    ? "${package!.currency ?? "INR"} ${package.totalCTC}"
+    : "-";
+
+final fixedPay = package?.fixedPay != null
+    ? "${package!.currency ?? "INR"} ${package.fixedPay}"
+    : "-";
+
+final joiningBonus = package?.joiningBonus != null
+    ? "${package!.currency ?? "INR"} ${package.joiningBonus}"
+    : "-";
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: const BackButton(color: Colors.black),
-        title: const Text(
-          "TCS",
-          style: TextStyle(color: Colors.black),
+        title: Text(
+          company?.companyName ?? "",
+          style: const TextStyle(color: Colors.black),
         ),
       ),
       body: Padding(
@@ -34,19 +86,15 @@ class ApplicationDetailView extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Software Developer",
+                    jobTitle,
                     style: AppTextStyles.s22W600,
                   ),
                   const SizedBox(height: 8),
                   Row(
-                    children: const [
-                      Icon(Icons.location_on, size: 16),
-                      SizedBox(width: 4),
-                      Text("Mumbai"),
-                      SizedBox(width: 16),
-                      Icon(Icons.work_outline, size: 16),
-                      SizedBox(width: 4),
-                      Text("Full-Time"),
+                    children: [
+                      const Icon(Icons.location_on, size: 16),
+                      const SizedBox(width: 4),
+                      Text(location),
                     ],
                   ),
                 ],
@@ -55,6 +103,7 @@ class ApplicationDetailView extends StatelessWidget {
 
             const SizedBox(height: 30),
 
+            /// 🔥 Progress Stepper
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
@@ -68,125 +117,89 @@ class ApplicationDetailView extends StatelessWidget {
                   )
                 ],
               ),
-              child: const ApplicationProgressStepper(
-                currentStep: 1,
+              child: ApplicationProgressStepper(
+                currentStep: _getStep(status),
               ),
             ),
 
             const SizedBox(height: 30),
 
-            /// 🔥 Info Section
+            /// 🔥 Basic Info Section
             Text(
-              "Job Details",
+              "Application Info",
               style: AppTextStyles.s16W600,
             ),
 
             const SizedBox(height: 16),
 
             _InfoRow(
-              label1: "Job Type",
-              value1: "Full-Time",
-              label2: "Experience",
-              value2: "2+ Years",
+              label1: "Status",
+              value1: status,
+              label2: "Company",
+              value2: company?.companyName ?? "-",
             ),
 
             const SizedBox(height: 16),
 
             _InfoRow(
-              label1: "Compensation",
-              value1: "2.4 LPA",
-              label2: "Applied On",
-              value2: "12 Feb 2026",
+              label1: "Role",
+              value1: jobTitle,
+              label2: "Location",
+              value2: location,
             ),
+                      const SizedBox(height: 16),
+            _InfoRow(
+  label1: "Job Type",
+  value1: jobType,
+  label2: "Employment",
+  value2: job?.employmentType?.first ?? "-",
+),
+          const SizedBox(height: 16),
+       
 
-            const SizedBox(height: 24),
-
-            /// 🔥 Description Section
-            Text(
-              "Description",
-              style: AppTextStyles.s16W600,
-            ),
-
-            const SizedBox(height: 10),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: const Text(
-                "We are looking for a skilled Software Developer to join our team. You will be responsible for developing backend services and collaborating with cross-functional teams to deliver scalable solutions.",
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            /// 🔥 Recruiter Info Section
-            Text(
-              "Recruiter",
-              style: AppTextStyles.s16W600,
-            ),
-
-            const SizedBox(height: 10),
-
-            Container(
-              padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(14),
-                boxShadow: [
-                  BoxShadow(
-                    blurRadius: 8,
-                    color: Colors.black.withOpacity(0.05),
-                  )
-                ],
-              ),
-              child: Row(
-                children: [
-                  CircleAvatar(
-                    radius: 22,
-                    backgroundColor:
-                        AppColors.primary.withOpacity(0.2),
-                    child: const Icon(Icons.person),
-                  ),
-                  const SizedBox(width: 12),
-                  Column(
-                    crossAxisAlignment:
-                        CrossAxisAlignment.start,
-                    children: const [
-                      Text(
-                        "Rahul Sharma",
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600),
-                      ),
-                      SizedBox(height: 4),
-                      Text("HR Manager"),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-
+_InfoRow(
+  label1: "Total CTC",
+  value1: totalCTC,
+  label2: "Fixed Pay",
+  value2: fixedPay,
+),
+   const SizedBox(height: 16),
+   _InfoRow(
+  label1: "Joining Bonus",
+  value1: joiningBonus,
+  label2: "Work Mode",
+  value2: job?.workMode?.first ?? "-",
+),
             const SizedBox(height: 30),
 
             /// 🔥 Withdraw Button
             SizedBox(
               height: 48,
               child: OutlinedButton(
-                onPressed: () {},
+                onPressed: status.toLowerCase() == "accepted"
+                    ? null
+                    : () {
+                        // TODO: implement withdraw logic
+                      },
                 style: OutlinedButton.styleFrom(
                   side: BorderSide(
-                      color: Colors.red.shade400),
+                    color: status.toLowerCase() == "accepted"
+                        ? Colors.grey
+                        : Colors.red.shade400,
+                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius:
                         BorderRadius.circular(12),
                   ),
                 ),
-                child: const Text(
-                  "Withdraw Application",
+                child: Text(
+                  status.toLowerCase() == "accepted"
+                      ? "Application Accepted"
+                      : "Withdraw Application",
                   style: TextStyle(
-                    color: Colors.red,
+                    color: status.toLowerCase() == "accepted"
+                        ? Colors.grey
+                        : Colors.red,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -200,7 +213,6 @@ class ApplicationDetailView extends StatelessWidget {
     );
   }
 }
-
 /// 🔥 Reusable Two Column Info Row
 class _InfoRow extends StatelessWidget {
   final String label1;

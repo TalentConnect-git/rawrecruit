@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/features/application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';
@@ -59,6 +60,8 @@ class _JobViewState extends State<JobView> {
           /// 🔥 Read shortlist viewmodel
           final shortlistVM =
               context.watch<ShortlistViewModel>();
+              final applicationVM =
+    context.watch<ApplicationViewModel>();
 
           return ListView.builder(
             itemCount:
@@ -111,7 +114,10 @@ class _JobViewState extends State<JobView> {
                   );
                 },
 
-                onApply: () {},
+              onApply: () {
+  applicationVM.apply(job.id ?? '');
+},
+isApplied: applicationVM.isApplied(job.id ?? ''),
 
                 onTap: () {
                   context

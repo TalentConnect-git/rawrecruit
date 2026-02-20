@@ -15,4 +15,8 @@ class Endpoints {
   static String apiInternshipPostings =
       'api/student-dashboard/internship-postings';
   static String saveOpportunity = 'application/saveopportunity';
+  static String saveOpportunity = 'application/saveopportunity';
+  static const String applyOffCampus = "application/candidate/offcampus";
+  static const String applicationStatus =
+      "application/status/candidate/Off-campus";
 }

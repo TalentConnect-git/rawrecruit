@@ -10,7 +10,6 @@ class ShortlistViewModel extends ViewStateProvider {
   final _repository =
       GetIt.instance<ShortlistRepository>();
 
-  SavedTab selectedTab = SavedTab.offCampus;
 
   /// 🔥 Saved from API (used in shortlist screen)
   List<ShortlistModel> saved = [];
@@ -18,33 +17,31 @@ class ShortlistViewModel extends ViewStateProvider {
   /// 🔥 Local jobIds for bookmark detection
   final List<String> savedJobIds = [];
 
-  void changeTab(SavedTab tab) {
-    selectedTab = tab;
-    fetchSaved();
-    notifyListeners();
-  }
+Future<void> fetchSaved() async {
+  setViewState(ViewState.busy);
 
-  Future<void> fetchSaved() async {
-    setViewState(ViewState.busy);
+  final result =
+      await _repository.fetchSavedOpportunities(
+    jobType: '', // 🔥 no filtering
+  );
 
-    final type = selectedTab == SavedTab.offCampus
-        ? "Off-campus"
-        : "Internship";
+  result.fold(
+    (failure) {},
+    (data) {
+      saved = data;
 
-    final result =
-        await _repository.fetchSavedOpportunities(
-      jobType: type,
-    );
+      savedJobIds.clear();
 
-    result.fold(
-      (failure) {},
-      (data) {
-        saved = data;
-      },
-    );
+      for (final item in data) {
+        if (item.job?.id != null) {
+          savedJobIds.add(item.job!.id!);
+        }
+      }
+    },
+  );
 
-    setViewState(ViewState.complete);
-  }
+  setViewState(ViewState.complete);
+}
 
   Future<void> toggleSave({
     required String jobId,

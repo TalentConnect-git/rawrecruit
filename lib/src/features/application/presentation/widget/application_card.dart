@@ -2,29 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-
-enum ApplicationStatus { applied, accepted }
+import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 
 class ApplicationCard extends StatelessWidget {
-  final String title;
-  final String company;
-  final String location;
-  final ApplicationStatus status;
+  final ApplicationModel model;
 
   const ApplicationCard({
     super.key,
-    required this.title,
-    required this.company,
-    required this.location,
-    required this.status,
+    required this.model,
   });
 
   @override
   Widget build(BuildContext context) {
+    final title =
+        model.jobDetails?.jobRoles?.isNotEmpty == true
+            ? model.jobDetails!.jobRoles!.first
+            : "-";
+
+    final company =
+        model.companyProfile?.companyDetails?.companyName ?? "-";
+
+    final location =
+        model.jobDetails?.location?.isNotEmpty == true
+            ? model.jobDetails!.location!.first
+            : "-";
+
+    final status = model.currentStatus ?? "";
+
+    final isAccepted =
+        status.toLowerCase() == "accepted";
+
     return InkWell(
       borderRadius: BorderRadius.circular(14),
       onTap: () {
-        context.pushNamed(RouteNames.applicationDetail);
+        context.pushNamed(
+          RouteNames.applicationDetail,
+          extra: model, // 🔥 Now model exists
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -38,7 +52,7 @@ class ApplicationCard extends StatelessWidget {
               MainAxisAlignment.spaceBetween,
           children: [
 
-            /// Left Section
+            /// Left Content
             Column(
               crossAxisAlignment:
                   CrossAxisAlignment.start,
@@ -55,13 +69,11 @@ class ApplicationCard extends StatelessWidget {
                 const SizedBox(height: 6),
                 Row(
                   children: [
-                    const Icon(Icons.location_on,
-                        size: 16),
+                    const Icon(Icons.location_on, size: 16),
                     const SizedBox(width: 4),
                     Text(
                       location,
-                      style:
-                          AppTextStyles.s12W400,
+                      style: AppTextStyles.s12W400,
                     ),
                   ],
                 ),
@@ -69,39 +81,31 @@ class ApplicationCard extends StatelessWidget {
             ),
 
             /// Status Badge
-            _StatusBadge(status: status),
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 10,
+              ),
+              decoration: BoxDecoration(
+                color: isAccepted
+                    ? Colors.green
+                    : const Color(0xFFEAEAEA),
+                borderRadius:
+                    BorderRadius.circular(12),
+              ),
+              child: Text(
+                isAccepted
+                    ? "Accepted"
+                    : "Applied",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  color: isAccepted
+                      ? Colors.white
+                      : Colors.black,
+                ),
+              ),
+            ),
           ],
-        ),
-      ),
-    );
-  }
-}
-
-class _StatusBadge extends StatelessWidget {
-  final ApplicationStatus status;
-
-  const _StatusBadge({required this.status});
-
-  @override
-  Widget build(BuildContext context) {
-    final bool isAccepted =
-        status == ApplicationStatus.accepted;
-
-    return Container(
-      padding: const EdgeInsets.symmetric(
-          horizontal: 16, vertical: 10),
-      decoration: BoxDecoration(
-        color: isAccepted
-            ? Colors.green
-            : const Color(0xFFEAEAEA),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        isAccepted ? "Accepted" : "Applied",
-        style: TextStyle(
-          fontWeight: FontWeight.w600,
-          color:
-              isAccepted ? Colors.white : Colors.black,
         ),
       ),
     );

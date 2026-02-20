@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart' show RouteNames;
+import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_view.dart';
 import 'package:rawrecruit/src/features/auth/index.dart'
@@ -57,11 +58,14 @@ class AppRouter {
             builder: (_, _) => ApplicationsView(),
           ),
 
-          GoRoute(
-            name: RouteNames.applicationDetail,
-            path: '/applicationDetail',
-            builder: (_, _) => ApplicationDetailView(),
-          ),
+        GoRoute(
+  name: RouteNames.applicationDetail,
+  path: '/applicationDetail',
+  builder: (context, state) {
+    final model = state.extra as ApplicationModel;
+    return ApplicationDetailView(model: model);
+  },
+),
             GoRoute(
       name: RouteNames.jobDetail,
       path: '/jobDetail',

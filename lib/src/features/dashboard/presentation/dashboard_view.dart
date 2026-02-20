@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/internship_view.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/job_view.dart';
@@ -25,7 +26,7 @@ class _DashboardViewState extends State<DashboardView> {
   Future<void> _setHardcodedToken() async {
     await SecretRepo.setString(
       'auth_token',
-      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OTk2N2E3MmNkZTJkMGEzYzI5MTliMWYiLCJlbWFpbCI6InNraGFzYW4udGFsZW50Y29ubmVjdCtwb3N0bWFudGVzdEBnbWFpbC5jb20iLCJ1c2VyVHlwZSI6InN0dWRlbnQiLCJpYXQiOjE3NzE0OTcwOTYsImV4cCI6MTc3MjEwMTg5Nn0.RBpa8teQ_8hUWFim4gFrlvINDK4h4qf41lNGaS20-Es"
     );
   }
 
@@ -37,6 +38,8 @@ class _DashboardViewState extends State<DashboardView> {
         create: (_) => DashboardProvider()),
     ChangeNotifierProvider(
         create: (_) => ShortlistViewModel()),
+          ChangeNotifierProvider(
+        create: (_) => ApplicationViewModel()),
   ],
   child: const _DashboardBody(),
 );
