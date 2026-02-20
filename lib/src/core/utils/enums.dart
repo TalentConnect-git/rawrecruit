@@ -41,7 +41,7 @@ extension AuthProviderExt on AuthProvider {
   }
 }
 
-enum NavItem { home, applications, shortlist, profile }
+enum NavItem { home, shortlist, applications, profile }
 
 extension NavItemExt on NavItem {
   String get label {

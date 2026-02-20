@@ -24,22 +24,24 @@ class AppBottomNav extends StatelessWidget {
       ),
       child: StylishBottomBar(
         currentIndex: currentIndex,
-        backgroundColor: AppColors.background,
+        backgroundColor: Colors.white,
         onTap: onTap,
         items: [
           ...NavItem.values.map((item) {
+            final isSelected = item.index == currentIndex;
+
             Widget iconWidget = Icon(
-              item.index == currentIndex
-                  ? item.selectedIcon
-                  : item.unSelectedIcon,
-              color: AppColors.secText,
+              isSelected ? item.selectedIcon : item.unSelectedIcon,
+              color: isSelected ? AppColors.primary : AppColors.secText,
             );
 
             return BottomBarItem(
               icon: iconWidget,
               title: Text(
                 item.label,
-                style: AppTextStyles.s12W400.copyWith(color: AppColors.secText),
+                style: AppTextStyles.s12W400.copyWith(
+                  color: isSelected ? AppColors.primary : AppColors.secText,
+                ),
               ),
             );
           }),

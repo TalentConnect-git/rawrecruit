@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/home/presentation/widgets/app_bottom_nav.dart';
 
@@ -37,10 +38,9 @@ class _HomeViewState extends State<HomeView> {
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
 
-    if (location.startsWith('/blogs')) return 1;
-    if (location.startsWith('/preferences')) return 2;
-    if (location.startsWith('/shortlist')) return 3;
-    if (location.startsWith('/my-forms')) return 4;
+    if (location.startsWith('/shortlist')) return 1;
+    if (location.startsWith('/application')) return 2;
+    if (location.startsWith('/applicationDetail')) return 3;
     return 0;
   }
 
@@ -48,30 +48,32 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     final currentIndex = _calculateIndex(context);
 
-    // ✅ Wrap the Scaffold with PopScope
     return PopScope(
-      // canPop determines if the system back gesture should do anything initially.
-      // We set it to false if we're *not* on the home tab, because we'll handle it manually.
       canPop: currentIndex == 0,
-
-      // onPopInvoked is called *after* the system tries to pop (if canPop was true)
-      // or when the user attempts a pop gesture (if canPop was false).
-      onPopInvoked: (bool didPop) async {
-        // If the pop was already handled (e.g., canPop was true and system popped), do nothing.
+      onPopInvokedWithResult: (bool didPop, _) async {
         if (didPop) {
           return;
         }
 
-        // If we are *not* on the home tab, navigate to the home tab.
         if (currentIndex != 0) {
-          context.goNamed(RouteNames.home);
+          context.goNamed(RouteNames.dashboard);
         }
-        // If we *are* on the home tab, the default behavior (likely exiting the app)
-        // was already allowed by `canPop: true`, so no extra action is needed here.
       },
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(title: Text('RawRecruit')),
+        appBar: AppBar(
+          title: Text('RawRecruit'),
+          backgroundColor: Colors.white,
+          scrolledUnderElevation: 0,
+          bottom: PreferredSize(
+            preferredSize: Size.fromHeight(0.25),
+            child: Container(
+              color: AppColors.border,
+              width: double.maxFinite,
+              height: 0.25,
+            ),
+          ),
+        ),
         // drawer: const SDrawer(),
         // floatingActionButton: FloatingActionButton(
         //   onPressed: () {
@@ -80,45 +82,23 @@ class _HomeViewState extends State<HomeView> {
         //   backgroundColor: colors.amberLightColor,
         //   child: const Icon(Icons.chat, color: Colors.black),
         // ),
-        body: Padding(
-          padding: const EdgeInsets.only(
-            right: 16,
-            left: 16,
-            top: 8,
-            bottom: 0,
-          ),
-          child: widget.navigationShell,
-        ),
+        body: widget.navigationShell,
         bottomNavigationBar: AppBottomNav(
           currentIndex: currentIndex,
           onTap: (index) {
             switch (index) {
               case 0:
-                context.goNamed(RouteNames.home);
+                context.goNamed(RouteNames.dashboard);
                 break;
               case 1:
-              // context.goNamed(RouteNames.blogs);
-              // break;
+                context.goNamed(RouteNames.shortlist);
+                break;
               case 2:
-              // context.goNamed(
-              //   RouteNames.preferences,
-              //   extra: appStateProvider.userPref != null,
-              // );
-              // break;
+                context.goNamed(RouteNames.application);
+                break;
               case 3:
-              // if (appStateProvider.isGuest) {
-              //   Toasts.showLoginToast(context);
-              // } else {
-              //   context.goNamed(RouteNames.shortlist);
-              // }
-              // break;
-              // case 4:
-              // if (appStateProvider.isGuest) {
-              //   Toasts.showLoginToast(context);
-              // } else {
-              //   context.goNamed(RouteNames.myForms);
-              // }
-              // break;
+                context.goNamed(RouteNames.applicationDetail);
+                break;
             }
           },
         ),
