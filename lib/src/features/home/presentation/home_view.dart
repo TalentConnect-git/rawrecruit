@@ -24,6 +24,19 @@ class _HomeViewState extends State<HomeView> {
         final failure = await appStateProvider.getAuthDetails();
         failure?.showError(context);
       }
+
+      if (appStateProvider.isProfileRemaining) {
+        final failure = await appStateProvider.getUserDetails();
+        Toasts.showSuccessOrFailureToast(
+          context,
+          failure: failure,
+          hideSuccess: true,
+          popOnSuccess: false,
+        );
+        if (appStateProvider.isProfileRemaining) {
+          context.goNamed(RouteNames.addEditProfileView);
+        }
+      }
     });
     super.initState();
   }
@@ -54,10 +67,8 @@ class _HomeViewState extends State<HomeView> {
       },
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
+        appBar: RAppBar(
           title: Text('RawRecruit'),
-          backgroundColor: Colors.white,
-          scrolledUnderElevation: 0,
           actions: [
             IconButton(
               onPressed: () async {
@@ -65,6 +76,8 @@ class _HomeViewState extends State<HomeView> {
                 Toasts.showSuccessOrFailureToast(
                   context,
                   failure: failure,
+                  popOnSuccess: false,
+                  successMsg: 'Logout Successful!',
                   successCallback: () {
                     context.goNamed(RouteNames.login);
                   },
@@ -73,23 +86,8 @@ class _HomeViewState extends State<HomeView> {
               icon: Icon(Icons.logout),
             ),
           ],
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(0.25),
-            child: Container(
-              color: AppColors.border,
-              width: double.maxFinite,
-              height: 0.25,
-            ),
-          ),
         ),
-        // drawer: const SDrawer(),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     context.pushNamed(RouteNames.chatbot);
-        //   },
-        //   backgroundColor: colors.amberLightColor,
-        //   child: const Icon(Icons.chat, color: Colors.black),
-        // ),
+
         body: widget.navigationShell,
         bottomNavigationBar: AppBottomNav(
           currentIndex: currentIndex,

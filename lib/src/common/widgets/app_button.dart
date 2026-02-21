@@ -45,8 +45,12 @@ class AppButton extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         elevation: 0,
         padding: padding ?? EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        foregroundColor: _isOutlined ? backgroundColor : foregroundColor,
-        backgroundColor: _isOutlined ? foregroundColor : backgroundColor,
+        foregroundColor: _isOutlined
+            ? backgroundColor
+            : (foregroundColor ?? AppColors.background),
+        backgroundColor: _isOutlined
+            ? foregroundColor
+            : (backgroundColor ?? AppColors.primary),
         side: _isOutlined
             ? BorderSide(color: backgroundColor ?? AppColors.secText)
             : null,

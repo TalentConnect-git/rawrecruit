@@ -11,12 +11,14 @@ import 'package:rawrecruit/src/features/dashboard/entities/job_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
+import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileView;
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 
 import '../../features/dashboard/presentation/internship_detail_page.dart';
 import '../../features/dashboard/presentation/job_detail_page.dart';
+import '../../features/onboarding/presentation/add_edit_profile_view.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
@@ -40,7 +42,7 @@ class AppRouter {
         name: RouteNames.applicationDetail,
         path: '/applicationDetail',
         builder: (context, state) {
-          final model = state.extra as ApplicationModel;
+          final model = state.extra as ApplicationModel?;
           return ApplicationDetailView(model: model);
         },
       ),
@@ -58,6 +60,15 @@ class AppRouter {
         builder: (context, state) {
           final internship = state.extra as InternshipModel;
           return InternshipDetailView(internship: internship);
+        },
+      ),
+
+      GoRoute(
+        name: RouteNames.addEditProfileView,
+        path: '/add-edit-profile-view',
+        builder: (context, state) {
+          final userProfile = state.extra as UserProfile?;
+          return AddEditProfileView(userProfile: userProfile);
         },
       ),
 

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart'
     show AppTextStyles, AppColors, AppTextFields, AppButton;
+import 'package:rawrecruit/src/core/extensions/failure_ext.dart';
 import 'package:rawrecruit/src/core/index.dart' show RouteNames, Toasts;
 import 'package:rawrecruit/src/features/auth/index.dart'
     show AuthCard, LoginViewModel;
@@ -124,7 +125,10 @@ class _LoginViewState extends State<LoginView> {
                   ),
                   const SizedBox(height: 20),
                   AppButton.outlined(
-                    onPressed: () {},
+                    onPressed: () async {
+                      final failure = await loginViewModel.google();
+                      failure?.showError(context);
+                    },
                     foregroundColor: AppColors.background,
                     backgroundColor: AppColors.text,
                     label: 'Login with Google',

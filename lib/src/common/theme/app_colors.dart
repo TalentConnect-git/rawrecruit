@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 class AppColors {
   static Color text = Color(0xff222222);
   static Color card = Color(0xffbcdfec);
-  static Color chip = Color(0xffb0ebff);
-  static Color chipText = Color(0xff216579);
+  static Color chip = Color(0xffb4c8d2);
+  static Color chipText = Color(0xff092b38);
   static Color primary = Color(0xff2f9db6);
   static Color background = Color(0xfffafafa);
   static Color border = Color(0xff858585);

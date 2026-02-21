@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/core/index.dart';
 
@@ -26,6 +28,9 @@ class AuthDataSourceImpl implements AuthDataSource {
         await SecretRepo.setString('auth_token', response['token']);
         await SecretRepo.setString('auth_id', auth.id ?? '');
 
+        final loginToken = await SecretRepo.getString('auth_token');
+
+        log(loginToken ?? '', name: 'Login token');
         return Right(auth);
       }
     } catch (e) {
@@ -133,8 +138,6 @@ class AuthDataSourceImpl implements AuthDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        await SecretRepo.remove('auth_token');
-        await SecretRepo.remove('auth_id');
         return Right(response['message']);
       }
     } catch (e) {

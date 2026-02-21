@@ -45,10 +45,11 @@ class AuthRepositoryImpl implements AuthRepository {
     GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
     await googleSignIn.signOut();
+    await googleSignIn.disconnect();
 
     await googleSignIn.initialize(
       serverClientId:
-          '574038035729-6nlkp4a98fj3jdqkqlkub49asnskcnmh.apps.googleusercontent.com',
+          '532797617580-jd8i8njg4kub2fkrp5qr4ha1395db36d.apps.googleusercontent.com',
     );
 
     final GoogleSignInAccount? googleUser = await googleSignIn.authenticate(

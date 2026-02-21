@@ -35,8 +35,13 @@ class _SplashViewState extends State<SplashView> {
     if (token.isNotEmpty) {
       try {
         await appStateProvider.getAuthDetails();
+        await appStateProvider.getUserDetails();
         if (appStateProvider.isAuthComplete) {
-          next = RouteNames.dashboard;
+          if (appStateProvider.isProfileRemaining) {
+            next = RouteNames.addEditProfileView;
+          } else {
+            next = RouteNames.dashboard;
+          }
         } else {
           await SecretRepo.remove('auth_token');
           next = RouteNames.login;

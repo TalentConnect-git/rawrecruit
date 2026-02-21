@@ -1,6 +1,17 @@
+import 'dart:developer';
+
 import 'package:rawrecruit/src/core/index.dart'
-    show Auth, ViewStateProvider, Failure, ViewState, getIt, APIFailure;
+    show
+        Auth,
+        ViewStateProvider,
+        Failure,
+        ViewState,
+        getIt,
+        APIFailure,
+        SecretRepo;
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show OnboardingRepository, UserProfile;
 
 class AppStateProvider extends ViewStateProvider {
   String get userEmail => auth?.email ?? '';
@@ -12,6 +23,13 @@ class AppStateProvider extends ViewStateProvider {
     notifyListeners();
   }
 
+  UserProfile? _user;
+  UserProfile? get user => _user;
+  set user(UserProfile? user) {
+    _user = user;
+    notifyListeners();
+  }
+
   List<String> _shortlistSchools = [];
   List<String> get shortlistSchools => _shortlistSchools;
   set shortlistSchools(List<String> values) {
@@ -19,7 +37,7 @@ class AppStateProvider extends ViewStateProvider {
     notifyListeners();
   }
 
-  bool get isProfileComplete => auth?.onboardingCompleted ?? false;
+  bool get isProfileComplete => user != null;
 
   bool get isAuthComplete => auth != null;
 
@@ -55,15 +73,51 @@ class AppStateProvider extends ViewStateProvider {
     return failure;
   }
 
+  Future<Failure?> getUserDetails() async {
+    setViewState(ViewState.busy);
+
+    Failure? failure;
+
+    final token = await SecretRepo.getString('auth_token');
+    log(token ?? '', name: 'OnboardingToken');
+
+    final result = await getIt<OnboardingRepository>()
+        .getOnboardingUserProfile();
+
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) {
+        user = res;
+      },
+    );
+
+    setViewState(ViewState.complete);
+
+    return failure;
+  }
+
   Future<Failure?> logout() async {
     setViewState(ViewState.busy);
 
     Failure? failure;
     final result = await getIt<AuthDataSource>().logout();
 
-    result.fold((exception) {
-      failure = APIFailure.fromException(exception: exception);
-    }, (res) {});
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) async {
+        await SecretRepo.clearAll();
+
+        final token = await SecretRepo.getString('auth_token');
+        log(token ?? '', name: 'token');
+
+        user = null;
+        auth = null;
+      },
+    );
 
     setViewState(ViewState.complete);
 

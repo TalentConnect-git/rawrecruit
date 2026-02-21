@@ -6,6 +6,7 @@ class RouteNames {
   static final dashboard = 'dashboard';
   static final shortlist = 'shortlist';
   static final myProfile = 'my-profile';
+  static final addEditProfileView = 'add-edit-profile-view';
   static final application = 'application';
   static final applicationDetail = 'applicationDetail';
   static final internshipDetail = 'internshipDetail';

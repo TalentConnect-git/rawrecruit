@@ -12,6 +12,15 @@ class MyProfileViewModel extends ViewStateProvider {
     notifyListeners();
   }
 
+  bool get canEdit => _userProfile != null;
+
+  bool _isEditing = false;
+  bool get isEditing => _isEditing;
+  set isEditing(bool value) {
+    _isEditing = value;
+    notifyListeners();
+  }
+
   Future<Failure?> getUserProfile() async {
     Failure? failure;
 

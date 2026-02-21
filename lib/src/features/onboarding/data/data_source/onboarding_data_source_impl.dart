@@ -9,12 +9,13 @@ import 'package:rawrecruit/src/core/index.dart'
         Endpoints,
         APIException,
         getIt,
-        NetworkService;
+        NetworkService,
+        AppStateProvider;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingDataSource, UserProfile;
 
 class OnboardingDataSourceImpl implements OnboardingDataSource {
-  final NetworkService _networkService = getIt<NetworkService>();
+  final NetworkService _networkService = NetworkService();
 
   @override
   ResultFuture<UserProfile?> getOnboardingUserProfile() async {
@@ -30,6 +31,7 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
 
       if (response.isNotEmpty) {
         final profile = UserProfile.fromJson(response);
+        getIt<AppStateProvider>().user = profile;
         return Right(profile);
       }
     } catch (e) {
