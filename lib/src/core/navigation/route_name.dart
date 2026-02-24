@@ -11,4 +11,7 @@ class RouteNames {
   static final applicationDetail = 'applicationDetail';
   static final internshipDetail = 'internshipDetail';
   static final jobDetail = 'jobDetail';
+  static final referalJobListing = 'referalJobListing';
+  static final referralDetail = 'referralDetail';
+  static final referralPost = 'referralPost';
 }

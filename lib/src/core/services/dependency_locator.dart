@@ -14,6 +14,8 @@ import 'package:rawrecruit/src/features/shortlist/data/shortlist_data_source_imp
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository_impl.dart';
 
+import '../../features/application/data/application_data_source.dart';
+import '../../features/professional/professional_dashbaord/data/data_source/data_source.dart';
 import '../../features/shortlist/data/shortlist_data_source.dart';
 
 GetIt getIt = GetIt.instance;
@@ -23,6 +25,30 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<NetworkService>(NetworkService.new)
     ..registerLazySingleton<AppStateProvider>(AppStateProvider.new)
     ..registerLazySingleton<AuthDataSource>(() => AuthDataSourceImpl())
+    ..registerLazySingleton<ShortlistDataSource>(
+      () => ShortlistDataSourceImpl(),
+    )
+    ..registerLazySingleton<ApplicationDataSource>(
+      () => ApplicationDataSourceImpl(),
+    )
+    ..registerLazySingleton<ApplicationRepository>(
+      () => ApplicationRepositoryImpl(getIt()),
+    )
+    ..registerLazySingleton<ProfessionalDataSource>(
+      () => ProfessionalDataSourceImpl(),
+    )
+    ..registerLazySingleton<ProfessionalRepository>(
+      () => ProfessionalRepositoryImpl(getIt()),
+    )
+    ..registerLazySingleton<ShortlistRepository>(
+      () => ShortlistRepositoryImpl(dataSource: getIt()),
+    )
+    ..registerLazySingleton<ReferralPostDataSource>(
+      () => ReferralPostDataSourceImpl(),
+    )
+    ..registerLazySingleton<ReferralPostRepository>(
+      () => ReferralPostRepositoryImpl(getIt()),
+    )
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(authDataSource: getIt()),
     )

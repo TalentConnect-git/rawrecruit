@@ -104,7 +104,7 @@ class _LoginViewState extends State<LoginView> {
                           successMsg: 'Login Successful!',
                           popOnSuccess: false,
                           successCallback: () {
-                            context.pushReplacementNamed(RouteNames.dashboard);
+                            context.pushReplacementNamed(RouteNames.referalJobListing);
                           },
                         );
                       }

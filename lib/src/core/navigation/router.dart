@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart' show RouteNames;
 import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_detail_view.dart';
@@ -14,6 +15,9 @@ import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileView;
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
+import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 
 import '../../features/dashboard/presentation/internship_detail_page.dart';
@@ -37,6 +41,24 @@ class AppRouter {
         name: RouteNames.register,
         path: '/register',
         builder: (_, _) => RegisterView(),
+      ),
+      GoRoute(
+        name: RouteNames.referralDetail,
+        path: '/referralDetail',
+        builder: (context, state) {
+          final jobId = state.extra as String;
+          return ReferralDetailView(jobId: jobId);
+        },
+      ),
+      GoRoute(
+        name: RouteNames.referralPost,
+        path: '/referralPost',
+        builder: (context, state) {
+          return ChangeNotifierProvider(
+            create: (_) => ReferralPostViewModel(),
+            child: const ReferralPostView(),
+          );
+        },
       ),
       GoRoute(
         name: RouteNames.applicationDetail,

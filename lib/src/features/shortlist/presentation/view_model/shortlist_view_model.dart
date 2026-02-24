@@ -1,5 +1,4 @@
-import 'package:get_it/get_it.dart';
-import 'package:rawrecruit/src/core/index.dart';
+ort 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/shortlist/entities/shortlist_model.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
 
