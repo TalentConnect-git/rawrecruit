@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/providerlication/presentation/view_model/application_view_model.dart';
+import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/features/application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';

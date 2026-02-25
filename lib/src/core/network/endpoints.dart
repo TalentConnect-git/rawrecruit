@@ -18,10 +18,6 @@ class Endpoints {
   static const apiOnboarding = 'api/onboarding';
   static const apiOnboardingMe = 'api/onboarding/me';
   static const apiOnboardingUpdate = 'api/onboarding/update';
-  static String saveOpportunity = 'application/saveopportunity';
-  static const String applyOffCampus = "application/candidate/offcampus";
-  static const String applicationStatus =
-      "application/status/candidate/Off-campus";
 
   static const String referalListing = "api/student-dashboard/referral-jobs";
   static const String metrics = "application/professional/metrics";

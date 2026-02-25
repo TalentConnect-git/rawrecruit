@@ -1,11 +1,11 @@
-ort 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/shortlist/entities/shortlist_model.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
 
 enum SavedTab { offCampus, internship }
 
 class ShortlistViewModel extends ViewStateProvider {
-  final _repository = GetIt.instance<ShortlistRepository>();
+  final _repository = getIt<ShortlistRepository>();
 
   /// 🔥 Saved from API (used in shortlist screen)
   List<ShortlistModel> saved = [];

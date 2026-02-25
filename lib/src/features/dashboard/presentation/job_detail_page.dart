@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../common/index.dart';
 import '../entities/job_model.dart';
 import 'widgets/section_tile.dart';
 
