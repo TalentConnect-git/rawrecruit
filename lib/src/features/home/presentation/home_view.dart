@@ -24,6 +24,19 @@ class _HomeViewState extends State<HomeView> {
         final failure = await appStateProvider.getAuthDetails();
         failure?.showError(context);
       }
+
+      if (appStateProvider.isProfileRemaining) {
+        final failure = await appStateProvider.getUserDetails();
+        Toasts.showSuccessOrFailureToast(
+          context,
+          failure: failure,
+          hideSuccess: true,
+          popOnSuccess: false,
+        );
+        if (appStateProvider.isProfileRemaining) {
+          context.goNamed(RouteNames.addEditProfileView);
+        }
+      }
     });
     super.initState();
   }
@@ -33,7 +46,7 @@ class _HomeViewState extends State<HomeView> {
 
     if (location.startsWith('/shortlist')) return 1;
     if (location.startsWith('/application')) return 2;
-    if (location.startsWith('/applicationDetail')) return 3;
+    if (location.startsWith('/my-profile')) return 3;
     return 0;
   }
 
@@ -54,10 +67,8 @@ class _HomeViewState extends State<HomeView> {
       },
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: AppBar(
+        appBar: RAppBar(
           title: Text('RawRecruit'),
-          backgroundColor: Colors.white,
-          scrolledUnderElevation: 0,
           actions: [
             IconButton(
               onPressed: () async {
@@ -65,6 +76,8 @@ class _HomeViewState extends State<HomeView> {
                 Toasts.showSuccessOrFailureToast(
                   context,
                   failure: failure,
+                  popOnSuccess: false,
+                  successMsg: 'Logout Successful!',
                   successCallback: () {
                     context.goNamed(RouteNames.login);
                   },
@@ -73,23 +86,8 @@ class _HomeViewState extends State<HomeView> {
               icon: Icon(Icons.logout),
             ),
           ],
-          bottom: PreferredSize(
-            preferredSize: Size.fromHeight(0.25),
-            child: Container(
-              color: AppColors.border,
-              width: double.maxFinite,
-              height: 0.25,
-            ),
-          ),
         ),
-        // drawer: const SDrawer(),
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     context.pushNamed(RouteNames.chatbot);
-        //   },
-        //   backgroundColor: colors.amberLightColor,
-        //   child: const Icon(Icons.chat, color: Colors.black),
-        // ),
+
         body: widget.navigationShell,
         bottomNavigationBar: AppBottomNav(
           currentIndex: currentIndex,
@@ -105,7 +103,7 @@ class _HomeViewState extends State<HomeView> {
                 context.goNamed(RouteNames.application);
                 break;
               case 3:
-                context.goNamed(RouteNames.applicationDetail);
+                context.goNamed(RouteNames.myProfile);
                 break;
             }
           },

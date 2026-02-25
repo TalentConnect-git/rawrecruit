@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/features/application/entities/application_model.dart';
-import 'package:rawrecruit/src/features/application/presentation/widget/application_progress_stepper.dart';
-import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/presentation/widget/application_progress_stepper.dart';
 
 class ApplicationDetailView extends StatelessWidget {
-  final ApplicationModel model;
+  final ApplicationModel? model;
 
-  const ApplicationDetailView({
-    super.key,
-    required this.model,
-  });
+  const ApplicationDetailView({super.key, required this.model});
 
   int _getStep(String status) {
     switch (status.toLowerCase()) {
@@ -30,41 +24,41 @@ class ApplicationDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final job = model.jobDetails;
-    final company = model.companyProfile?.companyDetails;
-    final status = model.currentStatus ?? "";
+    final job = model?.jobDetails;
+    final company = model?.companyProfile?.companyDetails;
+    final status = model?.currentStatus ?? "";
 
-    final jobTitle =
-        job?.jobRoles?.isNotEmpty == true
-            ? job!.jobRoles!.first
-            : "-";
+    final jobTitle = (job?.jobRoles ?? []).isNotEmpty
+        ? job?.jobRoles?.firstOrNull
+        : "-";
 
-    final location =
-        job?.location?.isNotEmpty == true
-            ? job!.location!.first
-            : "-";
+    final location = (job?.location ?? []).isNotEmpty
+        ? job?.location?.firstOrNull
+        : "-";
 
-                final jobType =
-        job?.jobType ?? "-";
-        final package = job?.packageDetails;
+    final jobType = job?.jobType ?? "-";
+    final package = job?.packageDetails;
 
-        final totalCTC = package?.totalCTC != null
-    ? "${package!.currency ?? "INR"} ${package.totalCTC}"
-    : "-";
+    final totalCTC = package?.totalCTC != null
+        ? "${package!.currency ?? "INR"} ${package.totalCTC}"
+        : "-";
 
-final fixedPay = package?.fixedPay != null
-    ? "${package!.currency ?? "INR"} ${package.fixedPay}"
-    : "-";
+    final fixedPay = package?.fixedPay != null
+        ? "${package!.currency ?? "INR"} ${package.fixedPay}"
+        : "-";
 
-final joiningBonus = package?.joiningBonus != null
-    ? "${package!.currency ?? "INR"} ${package.joiningBonus}"
-    : "-";
+    final joiningBonus = package?.joiningBonus != null
+        ? "${package!.currency ?? "INR"} ${package.joiningBonus}"
+        : "-";
     return Scaffold(
       backgroundColor: AppColors.background,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: const BackButton(color: Colors.black),
+      appBar: RAppBar(
+        leading: IconButton(
+          onPressed: () {
+            context.pop();
+          },
+          icon: Icon(Icons.keyboard_arrow_left),
+        ),
         title: Text(
           company?.companyName ?? "",
           style: const TextStyle(color: Colors.black),
@@ -74,7 +68,6 @@ final joiningBonus = package?.joiningBonus != null
         padding: const EdgeInsets.all(20),
         child: ListView(
           children: [
-
             /// 🔥 Job Header Card
             Container(
               padding: const EdgeInsets.all(18),
@@ -85,16 +78,13 @@ final joiningBonus = package?.joiningBonus != null
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    jobTitle,
-                    style: AppTextStyles.s22W600,
-                  ),
+                  Text(jobTitle ?? '-', style: AppTextStyles.s22W600),
                   const SizedBox(height: 8),
                   Row(
                     children: [
                       const Icon(Icons.location_on, size: 16),
                       const SizedBox(width: 4),
-                      Text(location),
+                      Text(location ?? '-'),
                     ],
                   ),
                 ],
@@ -114,21 +104,16 @@ final joiningBonus = package?.joiningBonus != null
                     blurRadius: 10,
                     color: Colors.black.withOpacity(0.05),
                     offset: const Offset(0, 4),
-                  )
+                  ),
                 ],
               ),
-              child: ApplicationProgressStepper(
-                currentStep: _getStep(status),
-              ),
+              child: ApplicationProgressStepper(currentStep: _getStep(status)),
             ),
 
             const SizedBox(height: 30),
 
             /// 🔥 Basic Info Section
-            Text(
-              "Application Info",
-              style: AppTextStyles.s16W600,
-            ),
+            Text("Application Info", style: AppTextStyles.s16W600),
 
             const SizedBox(height: 16),
 
@@ -143,65 +128,60 @@ final joiningBonus = package?.joiningBonus != null
 
             _InfoRow(
               label1: "Role",
-              value1: jobTitle,
+              value1: jobTitle ?? '-',
               label2: "Location",
-              value2: location,
+              value2: location ?? '-',
             ),
-                      const SizedBox(height: 16),
+            const SizedBox(height: 16),
             _InfoRow(
-  label1: "Job Type",
-  value1: jobType,
-  label2: "Employment",
-  value2: job?.employmentType?.first ?? "-",
-),
-          const SizedBox(height: 16),
-       
+              label1: "Job Type",
+              value1: jobType,
+              label2: "Employment",
+              value2: job?.employmentType?.firstOrNull ?? "-",
+            ),
+            const SizedBox(height: 16),
 
-_InfoRow(
-  label1: "Total CTC",
-  value1: totalCTC,
-  label2: "Fixed Pay",
-  value2: fixedPay,
-),
-   const SizedBox(height: 16),
-   _InfoRow(
-  label1: "Joining Bonus",
-  value1: joiningBonus,
-  label2: "Work Mode",
-  value2: job?.workMode?.first ?? "-",
-),
+            _InfoRow(
+              label1: "Total CTC",
+              value1: totalCTC,
+              label2: "Fixed Pay",
+              value2: fixedPay,
+            ),
+            const SizedBox(height: 16),
+            _InfoRow(
+              label1: "Joining Bonus",
+              value1: joiningBonus,
+              label2: "Work Mode",
+              value2: job?.workMode?.firstOrNull ?? "-",
+            ),
             const SizedBox(height: 30),
 
             /// 🔥 Withdraw Button
-            SizedBox(
-              height: 48,
-              child: OutlinedButton(
-                onPressed: status.toLowerCase() == "accepted"
-                    ? null
-                    : () {
-                        // TODO: implement withdraw logic
-                      },
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(
-                    color: status.toLowerCase() == "accepted"
-                        ? Colors.grey
-                        : Colors.red.shade400,
-                  ),
-                  shape: RoundedRectangleBorder(
-                    borderRadius:
-                        BorderRadius.circular(12),
-                  ),
+            OutlinedButton(
+              onPressed: status.toLowerCase() == "accepted"
+                  ? null
+                  : () {
+                      // TODO: implement withdraw logic
+                    },
+              style: OutlinedButton.styleFrom(
+                side: BorderSide(
+                  color: status.toLowerCase() == "accepted"
+                      ? Colors.grey
+                      : Colors.red.shade400,
                 ),
-                child: Text(
-                  status.toLowerCase() == "accepted"
-                      ? "Application Accepted"
-                      : "Withdraw Application",
-                  style: TextStyle(
-                    color: status.toLowerCase() == "accepted"
-                        ? Colors.grey
-                        : Colors.red,
-                    fontWeight: FontWeight.w600,
-                  ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                status.toLowerCase() == "accepted"
+                    ? "Application Accepted"
+                    : "Withdraw Application",
+                style: TextStyle(
+                  color: status.toLowerCase() == "accepted"
+                      ? Colors.grey
+                      : Colors.red,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
@@ -213,6 +193,7 @@ _InfoRow(
     );
   }
 }
+
 /// 🔥 Reusable Two Column Info Row
 class _InfoRow extends StatelessWidget {
   final String label1;
@@ -247,10 +228,7 @@ class _InfoTile extends StatelessWidget {
   final String label;
   final String value;
 
-  const _InfoTile({
-    required this.label,
-    required this.value,
-  });
+  const _InfoTile({required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {
@@ -261,23 +239,11 @@ class _InfoTile extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            label,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
-            ),
-          ),
+          Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
           const SizedBox(height: 6),
-          Text(
-            value,
-            style: const TextStyle(
-              fontWeight: FontWeight.w600,
-            ),
-          ),
+          Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
         ],
       ),
     );

@@ -169,13 +169,6 @@ class _RegisterViewState extends State<RegisterView> {
                                             otp: otpController.text.trim(),
                                           );
 
-                                      failure?.showError(context);
-
-                                    } else {
-                                      failure = await registerViewModel.sendOtp(
-                                        email: emailController.text.trim(),
-                                      );
-
                                       Toasts.showSuccessOrFailureToast(
                                         context,
                                         failure: failure,
@@ -187,6 +180,12 @@ class _RegisterViewState extends State<RegisterView> {
                                           );
                                         },
                                       );
+                                    } else {
+                                      failure = await registerViewModel.sendOtp(
+                                        email: emailController.text.trim(),
+                                      );
+
+                                      failure?.showError(context);
                                     }
                                   }
                                 },
