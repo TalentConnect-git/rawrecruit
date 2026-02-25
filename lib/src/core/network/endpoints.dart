@@ -21,4 +21,10 @@ class Endpoints {
 
   static const String referalListing = "api/student-dashboard/referral-jobs";
   static const String metrics = "application/professional/metrics";
+
+  static const String applicationUpdateStatus = 'application/update-status';
+  static const String applicationMyReferralApplications =
+      'application/my-referral-applications';
+  static const String apiStudentDashboardPostedReferralJob =
+      'api/student-dashboard/posted-referral-job';
 }

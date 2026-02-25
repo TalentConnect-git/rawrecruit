@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/internship_view.dart';
@@ -57,6 +59,13 @@ class _DashboardBody extends StatelessWidget {
                 ],
               ),
             ),
+          ),
+
+          floatingActionButton: FloatingActionButton(
+            onPressed: () {
+              context.pushNamed(RouteNames.jobPosted);
+            },
+            child: Icon(Icons.add),
           ),
         );
       },

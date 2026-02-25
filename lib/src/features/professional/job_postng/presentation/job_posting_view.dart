@@ -12,7 +12,6 @@ class ReferralPostView extends StatefulWidget {
 }
 
 class _ReferralPostViewState extends State<ReferralPostView> {
-
   final _formKey = GlobalKey<FormState>();
 
   final titleController = TextEditingController();
@@ -36,7 +35,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
   @override
   Widget build(BuildContext context) {
-
     final vm = context.watch<ReferralPostViewModel>();
 
     return Scaffold(
@@ -47,41 +45,75 @@ class _ReferralPostViewState extends State<ReferralPostView> {
           key: _formKey,
           child: ListView(
             children: [
-
               _field("Job Title", controller: titleController),
-              _field("Description", controller: descriptionController, maxLines: 3),
+              _field(
+                "Description",
+                controller: descriptionController,
+                maxLines: 3,
+              ),
               _field("Location", controller: locationController),
-              _field("Salary (CTC)", controller: salaryController, keyboardType: TextInputType.number),
-              _field("Number of Openings", controller: openingsController, keyboardType: TextInputType.number),
+              _field(
+                "Salary (CTC)",
+                controller: salaryController,
+                keyboardType: TextInputType.number,
+              ),
+              _field(
+                "Number of Openings",
+                controller: openingsController,
+                keyboardType: TextInputType.number,
+              ),
 
-              _dropdown("Employment Type", employmentType,
-                  ["Full-time", "Part-time", "Internship"],
-                  (val) => setState(() => employmentType = val!)),
+              _dropdown(
+                "Employment Type",
+                employmentType,
+                ["Full-time", "Part-time", "Internship"],
+                (val) => setState(() => employmentType = val!),
+              ),
 
-              _dropdown("Work Mode", workMode,
-                  ["On-site", "Remote", "Hybrid"],
-                  (val) => setState(() => workMode = val!)),
+              _dropdown("Work Mode", workMode, [
+                "On-site",
+                "Remote",
+                "Hybrid",
+              ], (val) => setState(() => workMode = val!)),
 
-              _dropdown("Broadcast Type", broadcastType,
-                  ["Everyone", "Selected Colleges"],
-                  (val) => setState(() => broadcastType = val!)),
+              _dropdown(
+                "Broadcast Type",
+                broadcastType,
+                ["Everyone", "Selected Colleges"],
+                (val) => setState(() => broadcastType = val!),
+              ),
 
-              _dropdown("Minimum Education", minEducation,
-                  ["Bachelor's Degree", "Master's Degree", "Diploma"],
-                  (val) => setState(() => minEducation = val!)),
+              _dropdown(
+                "Minimum Education",
+                minEducation,
+                ["Bachelor's Degree", "Master's Degree", "Diploma"],
+                (val) => setState(() => minEducation = val!),
+              ),
 
-              _dropdown("Work Authorization", workAuthorization,
-                  ["Citizens Only", "Work Visa Required"],
-                  (val) => setState(() => workAuthorization = val!)),
+              _dropdown(
+                "Work Authorization",
+                workAuthorization,
+                ["Citizens Only", "Work Visa Required"],
+                (val) => setState(() => workAuthorization = val!),
+              ),
 
-              _dropdown("Experience Range", experienceRange,
-                  ["0-1 years", "1-3 years", "3-5 years", "5+ years"],
-                  (val) => setState(() => experienceRange = val!)),
+              _dropdown(
+                "Experience Range",
+                experienceRange,
+                ["0-1 years", "1-3 years", "3-5 years", "5+ years"],
+                (val) => setState(() => experienceRange = val!),
+              ),
 
               _field("Skills (comma separated)", controller: skillsController),
               _field("Tags (comma separated)", controller: tagsController),
-              _field("Certifications (comma separated)", controller: certificationsController),
-              _field("Benefits (comma separated)", controller: benefitsController),
+              _field(
+                "Certifications (comma separated)",
+                controller: certificationsController,
+              ),
+              _field(
+                "Benefits (comma separated)",
+                controller: benefitsController,
+              ),
               _field("Eligibility Criteria", controller: eligibilityController),
 
               const SizedBox(height: 20),
@@ -90,7 +122,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                 onPressed: vm.viewState == ViewState.busy
                     ? null
                     : () async {
-
                         if (!_formKey.currentState!.validate()) return;
 
                         final model = ReferralPostModel(
@@ -109,14 +140,27 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                             fixedPay: 0,
                             joiningBonus: 0,
                           ),
-                          skills: skillsController.text.split(",").map((e) => e.trim()).toList(),
+                          skills: skillsController.text
+                              .split(",")
+                              .map((e) => e.trim())
+                              .toList(),
                           studentStreams: ["Computer Science"],
-                          tags: tagsController.text.split(",").map((e) => e.trim()).toList(),
+                          tags: tagsController.text
+                              .split(",")
+                              .map((e) => e.trim())
+                              .toList(),
                           workAuthorization: workAuthorization,
                           yearsOfExperience: experienceRange,
-                          benefits: benefitsController.text.split(",").map((e) => e.trim()).toList(),
-                          certifications: certificationsController.text.split(",").map((e) => e.trim()).toList(),
-                          eligibilityCriteria: eligibilityController.text.trim(),
+                          benefits: benefitsController.text
+                              .split(",")
+                              .map((e) => e.trim())
+                              .toList(),
+                          certifications: certificationsController.text
+                              .split(",")
+                              .map((e) => e.trim())
+                              .toList(),
+                          eligibilityCriteria: eligibilityController.text
+                              .trim(),
                         );
 
                         final success = await vm.postJob(model);
@@ -129,14 +173,16 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                             ),
                           );
 
-                          await Future.delayed(const Duration(milliseconds: 600));
+                          await Future.delayed(
+                            const Duration(milliseconds: 600),
+                          );
                           Navigator.pop(context);
                         }
                       },
                 child: vm.viewState == ViewState.busy
                     ? const CircularProgressIndicator(color: Colors.white)
                     : const Text("Post Job"),
-              )
+              ),
             ],
           ),
         ),
@@ -181,10 +227,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
           border: const OutlineInputBorder(),
         ),
         items: items
-            .map((e) => DropdownMenuItem(
-                  value: e,
-                  child: Text(e),
-                ))
+            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
             .toList(),
         onChanged: onChanged,
       ),

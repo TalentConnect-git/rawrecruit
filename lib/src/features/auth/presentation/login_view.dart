@@ -20,10 +20,10 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
 
   final emailController = TextEditingController(
-    text: kDebugMode ? 'skhasan.talentconnect+rr@gmail.com' : null,
+    text: kDebugMode ? 'ghawanesmitha@gmail.com' : null,
   );
   final passController = TextEditingController(
-    text: kDebugMode ? 'Test@123' : null,
+    text: kDebugMode ? '123456' : null,
   );
 
   final LoginViewModel loginViewModel = LoginViewModel();
@@ -104,7 +104,7 @@ class _LoginViewState extends State<LoginView> {
                           successMsg: 'Login Successful!',
                           popOnSuccess: false,
                           successCallback: () {
-                            context.pushReplacementNamed(RouteNames.referalJobListing);
+                            context.pushReplacementNamed(RouteNames.dashboard);
                           },
                         );
                       }
