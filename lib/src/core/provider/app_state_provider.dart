@@ -8,13 +8,18 @@ import 'package:rawrecruit/src/core/index.dart'
         ViewState,
         getIt,
         APIFailure,
-        SecretRepo;
+        SecretRepo,
+        UserType;
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingRepository, UserProfile;
 
 class AppStateProvider extends ViewStateProvider {
   String get userEmail => auth?.email ?? '';
+
+  UserType? get userType => auth?.userType;
+
+  bool get isProfessional => userType == UserType.professional;
 
   Auth? _auth;
   Auth? get auth => _auth;

@@ -95,9 +95,19 @@ extension UserStatusExt on UserStatus {
   }
 }
 
-enum NavItem { home, shortlist, applications, profile }
+enum NavItem { home, shortlist, jobs, applications, profile }
 
 extension NavItemExt on NavItem {
+  static List<NavItem> get professionals => NavItem.values
+      .where(
+        (element) =>
+            element != NavItem.shortlist && element != NavItem.applications,
+      )
+      .toList();
+
+  static List<NavItem> get freshers =>
+      NavItem.values.where((element) => element != NavItem.jobs).toList();
+
   String get label {
     switch (this) {
       case NavItem.home:
@@ -106,6 +116,8 @@ extension NavItemExt on NavItem {
         return 'Application';
       case NavItem.shortlist:
         return 'Shortlist';
+      case NavItem.jobs:
+        return 'My Jobs';
       case NavItem.profile:
         return 'Profile';
     }
@@ -119,6 +131,8 @@ extension NavItemExt on NavItem {
         return Icons.assignment;
       case NavItem.shortlist:
         return Icons.bookmark;
+      case NavItem.jobs:
+        return Icons.bookmark_add;
       case NavItem.profile:
         return Icons.person;
     }
@@ -134,6 +148,8 @@ extension NavItemExt on NavItem {
         return Icons.bookmark_outline;
       case NavItem.profile:
         return Icons.person_outline;
+      case NavItem.jobs:
+        return Icons.bookmark_add_outlined;
     }
   }
 }

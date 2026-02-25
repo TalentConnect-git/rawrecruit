@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart' show AppColors, AppTextStyles;
-import 'package:rawrecruit/src/core/index.dart' show NavItem, NavItemExt;
+import 'package:rawrecruit/src/core/index.dart'
+    show NavItemExt, AppStateProvider, getIt;
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
 class AppBottomNav extends StatelessWidget {
@@ -15,6 +16,10 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final items = getIt<AppStateProvider>().isProfessional
+        ? NavItemExt.professionals
+        : NavItemExt.freshers;
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -27,8 +32,8 @@ class AppBottomNav extends StatelessWidget {
         backgroundColor: Colors.white,
         onTap: onTap,
         items: [
-          ...NavItem.values.map((item) {
-            final isSelected = item.index == currentIndex;
+          ...items.map((item) {
+            final isSelected = items.indexOf(item) == currentIndex;
 
             Widget iconWidget = Icon(
               isSelected ? item.selectedIcon : item.unSelectedIcon,

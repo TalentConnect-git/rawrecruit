@@ -45,8 +45,11 @@ class _HomeViewState extends State<HomeView> {
     final location = GoRouterState.of(context).uri.toString();
 
     if (location.startsWith('/shortlist')) return 1;
+    if (location.startsWith('/jobPosted')) return 1;
     if (location.startsWith('/application')) return 2;
-    if (location.startsWith('/my-profile')) return 3;
+    if (location.startsWith('/my-profile')) {
+      return appStateProvider.isProfessional ? 2 : 3;
+    }
     return 0;
   }
 
@@ -62,7 +65,10 @@ class _HomeViewState extends State<HomeView> {
         }
 
         if (currentIndex != 0) {
-          context.goNamed(RouteNames.dashboard);
+          context.goNamed(
+            RouteNames.dashboard,
+            extra: appStateProvider.userType,
+          );
         }
       },
       child: Scaffold(
@@ -94,13 +100,24 @@ class _HomeViewState extends State<HomeView> {
           onTap: (index) {
             switch (index) {
               case 0:
-                context.goNamed(RouteNames.dashboard);
+                context.goNamed(
+                  RouteNames.dashboard,
+                  extra: appStateProvider.userType,
+                );
                 break;
               case 1:
-                context.goNamed(RouteNames.shortlist);
+                if (appStateProvider.isProfessional) {
+                  context.goNamed(RouteNames.jobPosted);
+                } else {
+                  context.goNamed(RouteNames.shortlist);
+                }
                 break;
               case 2:
-                context.goNamed(RouteNames.application);
+                if (appStateProvider.isProfessional) {
+                  context.goNamed(RouteNames.myProfile);
+                } else {
+                  context.goNamed(RouteNames.application);
+                }
                 break;
               case 3:
                 context.goNamed(RouteNames.myProfile);

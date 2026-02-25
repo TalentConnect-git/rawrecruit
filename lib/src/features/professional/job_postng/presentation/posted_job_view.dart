@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
@@ -30,15 +29,15 @@ class _PostedJobViewState extends State<PostedJobView> {
     return ChangeNotifierProvider.value(
       value: postedJobViewModel,
       child: Scaffold(
-        appBar: RAppBar(
-          label: 'Posted Jobs',
-          leading: IconButton(
-            onPressed: () {
-              context.pop();
-            },
-            icon: Icon(Icons.keyboard_arrow_left),
-          ),
-        ),
+        // appBar: RAppBar(
+        //   label: 'Posted Jobs',
+        //   leading: IconButton(
+        //     onPressed: () {
+        //       context.pop();
+        //     },
+        //     icon: Icon(Icons.keyboard_arrow_left),
+        //   ),
+        // ),
         body: Consumer<PostedJobViewModel>(
           builder: (vmContext, vm, _) {
             if (vm.isLoading) return Center(child: AppLoadingIndicator());

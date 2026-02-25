@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rawrecruit/src/core/index.dart' show RouteNames;
+import 'package:rawrecruit/src/core/index.dart' show RouteNames, UserType;
 import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_view.dart';
@@ -63,13 +63,7 @@ class AppRouter {
           );
         },
       ),
-      GoRoute(
-        name: RouteNames.jobPosted,
-        path: '/jobPosted',
-        builder: (context, state) {
-          return const PostedJobView();
-        },
-      ),
+
       GoRoute(
         name: RouteNames.postedJobApplication,
         path: '/postedJobApplication',
@@ -127,9 +121,22 @@ class AppRouter {
           GoRoute(
             name: RouteNames.dashboard,
             path: '/dashboard',
-            builder: (_, _) => DashboardView(),
+            builder: (_, state) {
+              final type = state.extra as UserType?;
+              if (type == UserType.professional) {
+                return ReferralJobListing();
+              } else {
+                return DashboardView();
+              }
+            },
           ),
-
+          GoRoute(
+            name: RouteNames.jobPosted,
+            path: '/jobPosted',
+            builder: (context, state) {
+              return const PostedJobView();
+            },
+          ),
           GoRoute(
             name: RouteNames.shortlist,
             path: '/shortlist',
