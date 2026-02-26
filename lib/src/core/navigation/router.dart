@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rawrecruit/src/core/index.dart' show RouteNames;
+import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/core/index.dart' show RouteNames, UserType;
 import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_view.dart';
@@ -14,11 +15,17 @@ import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileView;
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/posted_job_application_view.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
+import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
+import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 
 import '../../features/dashboard/presentation/internship_detail_page.dart';
 import '../../features/dashboard/presentation/job_detail_page.dart';
 import '../../features/onboarding/presentation/add_edit_profile_view.dart';
+import '../../features/professional/job_postng/presentation/posted_job_view.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
@@ -37,6 +44,40 @@ class AppRouter {
         name: RouteNames.register,
         path: '/register',
         builder: (_, _) => RegisterView(),
+      ),
+      GoRoute(
+        name: RouteNames.referralDetail,
+        path: '/referralDetail',
+        builder: (context, state) {
+          final jobId = state.extra as String;
+          return ReferralDetailView(jobId: jobId);
+        },
+      ),
+      GoRoute(
+        name: RouteNames.referralPost,
+        path: '/referralPost',
+        builder: (context, state) {
+          return ChangeNotifierProvider(
+            create: (_) => ReferralPostViewModel(),
+            child: const ReferralPostView(),
+          );
+        },
+      ),
+
+      GoRoute(
+        name: RouteNames.postedJobApplication,
+        path: '/postedJobApplication',
+        builder: (context, state) {
+          final id = state.extra as String?;
+          return PostedJobApplicationView(id: id);
+        },
+      ),
+      GoRoute(
+        name: RouteNames.referalJobListing,
+        path: '/referalJobListing',
+        builder: (context, state) {
+          return const ReferralJobListing();
+        },
       ),
       GoRoute(
         name: RouteNames.applicationDetail,
@@ -80,9 +121,22 @@ class AppRouter {
           GoRoute(
             name: RouteNames.dashboard,
             path: '/dashboard',
-            builder: (_, _) => DashboardView(),
+            builder: (_, state) {
+              final type = state.extra as UserType?;
+              if (type == UserType.professional) {
+                return ReferralJobListing();
+              } else {
+                return DashboardView();
+              }
+            },
           ),
-
+          GoRoute(
+            name: RouteNames.jobPosted,
+            path: '/jobPosted',
+            builder: (context, state) {
+              return const PostedJobView();
+            },
+          ),
           GoRoute(
             name: RouteNames.shortlist,
             path: '/shortlist',

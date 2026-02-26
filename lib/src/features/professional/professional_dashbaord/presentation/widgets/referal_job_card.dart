@@ -1,34 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/common/index.dart';
+import '../../data/entities/referral_job_model.dart';
+import 'package:flutter/material.dart';
+import '../../data/entities/referral_job_model.dart';
 
-import '../../../../common/index.dart';
-
-class JobCard extends StatelessWidget {
-  final String jobId;
-  final String title;
-  final String workMode;
-  final String location;
-  final String package;
-  final String description;
-  final List<String> skills;
-  final int yoe;
-  final bool isSaved;
-  final VoidCallback onBookmarkToggle;
+class ReferralJobCard extends StatelessWidget {
+  final ReferralJobModel job;
   final VoidCallback onApply;
   final VoidCallback onTap;
   final bool isApplied;
 
-  const JobCard({
+  const ReferralJobCard({
     super.key,
-    required this.jobId,
-    required this.title,
-    required this.workMode,
-    required this.location,
-    required this.package,
-    required this.description,
-    required this.skills,
-    required this.yoe,
-    required this.isSaved,
-    required this.onBookmarkToggle,
+    required this.job,
     required this.onApply,
     required this.onTap,
     required this.isApplied,
@@ -36,6 +20,9 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final package =
+        "${job.packageDetails?.currency ?? ""} ${job.packageDetails?.totalCTC ?? 0}";
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -49,56 +36,47 @@ class JobCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// 🔹 Title + Bookmark
+            /// 🔹 Title + Status
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    title,
+                    job.jobTitle ?? "",
                     style: AppTextStyles.s18W600.copyWith(
                       color: AppColors.text,
                     ),
                   ),
                 ),
 
-                GestureDetector(
-                  onTap: onBookmarkToggle,
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 200),
-                    child: Icon(
-                      isSaved ? Icons.bookmark : Icons.bookmark_border,
-                      key: ValueKey(isSaved),
-                      color: isSaved
-                          ? AppColors.primary
-                          : AppColors.text.withOpacity(0.6),
-                    ),
-                  ),
-                ),
+                _statusChip(job.approvalStatus),
               ],
             ),
 
             const SizedBox(height: 8),
 
+            /// 🔹 YOE + Work Mode
             Row(
               children: [
-                _chip("YOE : $yoe"),
+                _chip("YOE : ${job.yearsOfExperience ?? "-"}"),
                 const SizedBox(width: 8),
-                Text(workMode, style: AppTextStyles.s12W400),
+                Text(job.workMode?.first ?? "", style: AppTextStyles.s12W400),
               ],
             ),
 
             const SizedBox(height: 10),
 
+            /// 🔹 Skills
             Wrap(
               spacing: 8,
               runSpacing: 6,
-              children: skills.map((e) => _skillChip(e)).toList(),
+              children: (job.skills ?? []).map((e) => _skillChip(e)).toList(),
             ),
 
             const SizedBox(height: 10),
 
+            /// 🔹 Description
             Text(
-              description,
+              job.description ?? "",
               style: AppTextStyles.s12W400,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -106,6 +84,7 @@ class JobCard extends StatelessWidget {
 
             const SizedBox(height: 14),
 
+            /// 🔹 Bottom Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -116,7 +95,10 @@ class JobCard extends StatelessWidget {
                       children: [
                         const Icon(Icons.location_on, size: 16),
                         const SizedBox(width: 4),
-                        Text(location, style: AppTextStyles.s12W400),
+                        Text(
+                          job.location?.first ?? "",
+                          style: AppTextStyles.s12W400,
+                        ),
                       ],
                     ),
                     const SizedBox(height: 4),
@@ -158,6 +140,28 @@ class JobCard extends StatelessWidget {
       child: Text(
         text,
         style: AppTextStyles.s12W600.copyWith(color: AppColors.primary),
+      ),
+    );
+  }
+
+  Widget _statusChip(String? status) {
+    final isApproved = status?.toLowerCase() == "approved";
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: isApproved
+            ? Colors.green.withOpacity(0.1)
+            : Colors.orange.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Text(
+        status ?? "",
+        style: TextStyle(
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+          color: isApproved ? Colors.green : Colors.orange,
+        ),
       ),
     );
   }

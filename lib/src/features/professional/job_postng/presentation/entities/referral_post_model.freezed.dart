@@ -1,0 +1,678 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'referral_post_model.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+// dart format off
+T _$identity<T>(T value) => value;
+
+/// @nodoc
+mixin _$ReferralPostModel {
+
+@JsonKey(name: '_id') String? get id; String? get jobTitle; String? get description; String? get approvalStatus;@StringOrListConvertor() String? get employmentType;@StringOrListConvertor() String? get workMode; String? get broadcastType; String? get jobType; List<String>? get location; String? get minEducation; int? get numberOfOpenings; PackageDetails? get packageDetails; List<String>? get skills; List<String>? get studentStreams; List<String>? get tags; String? get workAuthorization; String? get yearsOfExperience; List<String>? get benefits; List<String>? get certifications; String? get eligibilityCriteria;
+/// Create a copy of ReferralPostModel
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ReferralPostModelCopyWith<ReferralPostModel> get copyWith => _$ReferralPostModelCopyWithImpl<ReferralPostModel>(this as ReferralPostModel, _$identity);
+
+  /// Serializes this ReferralPostModel to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferralPostModel&&(identical(other.id, id) || other.id == id)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&(identical(other.description, description) || other.description == description)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&(identical(other.employmentType, employmentType) || other.employmentType == employmentType)&&(identical(other.workMode, workMode) || other.workMode == workMode)&&(identical(other.broadcastType, broadcastType) || other.broadcastType == broadcastType)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other.location, location)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&const DeepCollectionEquality().equals(other.skills, skills)&&const DeepCollectionEquality().equals(other.studentStreams, studentStreams)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.workAuthorization, workAuthorization) || other.workAuthorization == workAuthorization)&&(identical(other.yearsOfExperience, yearsOfExperience) || other.yearsOfExperience == yearsOfExperience)&&const DeepCollectionEquality().equals(other.benefits, benefits)&&const DeepCollectionEquality().equals(other.certifications, certifications)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hashAll([runtimeType,id,jobTitle,description,approvalStatus,employmentType,workMode,broadcastType,jobType,const DeepCollectionEquality().hash(location),minEducation,numberOfOpenings,packageDetails,const DeepCollectionEquality().hash(skills),const DeepCollectionEquality().hash(studentStreams),const DeepCollectionEquality().hash(tags),workAuthorization,yearsOfExperience,const DeepCollectionEquality().hash(benefits),const DeepCollectionEquality().hash(certifications),eligibilityCriteria]);
+
+@override
+String toString() {
+  return 'ReferralPostModel(id: $id, jobTitle: $jobTitle, description: $description, approvalStatus: $approvalStatus, employmentType: $employmentType, workMode: $workMode, broadcastType: $broadcastType, jobType: $jobType, location: $location, minEducation: $minEducation, numberOfOpenings: $numberOfOpenings, packageDetails: $packageDetails, skills: $skills, studentStreams: $studentStreams, tags: $tags, workAuthorization: $workAuthorization, yearsOfExperience: $yearsOfExperience, benefits: $benefits, certifications: $certifications, eligibilityCriteria: $eligibilityCriteria)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ReferralPostModelCopyWith<$Res>  {
+  factory $ReferralPostModelCopyWith(ReferralPostModel value, $Res Function(ReferralPostModel) _then) = _$ReferralPostModelCopyWithImpl;
+@useResult
+$Res call({
+@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? approvalStatus,@StringOrListConvertor() String? employmentType,@StringOrListConvertor() String? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria
+});
+
+
+$PackageDetailsCopyWith<$Res>? get packageDetails;
+
+}
+/// @nodoc
+class _$ReferralPostModelCopyWithImpl<$Res>
+    implements $ReferralPostModelCopyWith<$Res> {
+  _$ReferralPostModelCopyWithImpl(this._self, this._then);
+
+  final ReferralPostModel _self;
+  final $Res Function(ReferralPostModel) _then;
+
+/// Create a copy of ReferralPostModel
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? jobTitle = freezed,Object? description = freezed,Object? approvalStatus = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? broadcastType = freezed,Object? jobType = freezed,Object? location = freezed,Object? minEducation = freezed,Object? numberOfOpenings = freezed,Object? packageDetails = freezed,Object? skills = freezed,Object? studentStreams = freezed,Object? tags = freezed,Object? workAuthorization = freezed,Object? yearsOfExperience = freezed,Object? benefits = freezed,Object? certifications = freezed,Object? eligibilityCriteria = freezed,}) {
+  return _then(_self.copyWith(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,approvalStatus: freezed == approvalStatus ? _self.approvalStatus : approvalStatus // ignore: cast_nullable_to_non_nullable
+as String?,employmentType: freezed == employmentType ? _self.employmentType : employmentType // ignore: cast_nullable_to_non_nullable
+as String?,workMode: freezed == workMode ? _self.workMode : workMode // ignore: cast_nullable_to_non_nullable
+as String?,broadcastType: freezed == broadcastType ? _self.broadcastType : broadcastType // ignore: cast_nullable_to_non_nullable
+as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
+as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
+as List<String>?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
+as String?,numberOfOpenings: freezed == numberOfOpenings ? _self.numberOfOpenings : numberOfOpenings // ignore: cast_nullable_to_non_nullable
+as int?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
+as PackageDetails?,skills: freezed == skills ? _self.skills : skills // ignore: cast_nullable_to_non_nullable
+as List<String>?,studentStreams: freezed == studentStreams ? _self.studentStreams : studentStreams // ignore: cast_nullable_to_non_nullable
+as List<String>?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>?,workAuthorization: freezed == workAuthorization ? _self.workAuthorization : workAuthorization // ignore: cast_nullable_to_non_nullable
+as String?,yearsOfExperience: freezed == yearsOfExperience ? _self.yearsOfExperience : yearsOfExperience // ignore: cast_nullable_to_non_nullable
+as String?,benefits: freezed == benefits ? _self.benefits : benefits // ignore: cast_nullable_to_non_nullable
+as List<String>?,certifications: freezed == certifications ? _self.certifications : certifications // ignore: cast_nullable_to_non_nullable
+as List<String>?,eligibilityCriteria: freezed == eligibilityCriteria ? _self.eligibilityCriteria : eligibilityCriteria // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+/// Create a copy of ReferralPostModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PackageDetailsCopyWith<$Res>? get packageDetails {
+    if (_self.packageDetails == null) {
+    return null;
+  }
+
+  return $PackageDetailsCopyWith<$Res>(_self.packageDetails!, (value) {
+    return _then(_self.copyWith(packageDetails: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [ReferralPostModel].
+extension ReferralPostModelPatterns on ReferralPostModel {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ReferralPostModel value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ReferralPostModel() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ReferralPostModel value)  $default,){
+final _that = this;
+switch (_that) {
+case _ReferralPostModel():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ReferralPostModel value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ReferralPostModel() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus, @StringOrListConvertor()  String? employmentType, @StringOrListConvertor()  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ReferralPostModel() when $default != null:
+return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.benefits,_that.certifications,_that.eligibilityCriteria);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus, @StringOrListConvertor()  String? employmentType, @StringOrListConvertor()  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria)  $default,) {final _that = this;
+switch (_that) {
+case _ReferralPostModel():
+return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.benefits,_that.certifications,_that.eligibilityCriteria);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus, @StringOrListConvertor()  String? employmentType, @StringOrListConvertor()  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria)?  $default,) {final _that = this;
+switch (_that) {
+case _ReferralPostModel() when $default != null:
+return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.benefits,_that.certifications,_that.eligibilityCriteria);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ReferralPostModel implements ReferralPostModel {
+  const _ReferralPostModel({@JsonKey(name: '_id') this.id, this.jobTitle, this.description, this.approvalStatus, @StringOrListConvertor() this.employmentType, @StringOrListConvertor() this.workMode, this.broadcastType, this.jobType, final  List<String>? location, this.minEducation, this.numberOfOpenings, this.packageDetails, final  List<String>? skills, final  List<String>? studentStreams, final  List<String>? tags, this.workAuthorization, this.yearsOfExperience, final  List<String>? benefits, final  List<String>? certifications, this.eligibilityCriteria}): _location = location,_skills = skills,_studentStreams = studentStreams,_tags = tags,_benefits = benefits,_certifications = certifications;
+  factory _ReferralPostModel.fromJson(Map<String, dynamic> json) => _$ReferralPostModelFromJson(json);
+
+@override@JsonKey(name: '_id') final  String? id;
+@override final  String? jobTitle;
+@override final  String? description;
+@override final  String? approvalStatus;
+@override@StringOrListConvertor() final  String? employmentType;
+@override@StringOrListConvertor() final  String? workMode;
+@override final  String? broadcastType;
+@override final  String? jobType;
+ final  List<String>? _location;
+@override List<String>? get location {
+  final value = _location;
+  if (value == null) return null;
+  if (_location is EqualUnmodifiableListView) return _location;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+@override final  String? minEducation;
+@override final  int? numberOfOpenings;
+@override final  PackageDetails? packageDetails;
+ final  List<String>? _skills;
+@override List<String>? get skills {
+  final value = _skills;
+  if (value == null) return null;
+  if (_skills is EqualUnmodifiableListView) return _skills;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _studentStreams;
+@override List<String>? get studentStreams {
+  final value = _studentStreams;
+  if (value == null) return null;
+  if (_studentStreams is EqualUnmodifiableListView) return _studentStreams;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _tags;
+@override List<String>? get tags {
+  final value = _tags;
+  if (value == null) return null;
+  if (_tags is EqualUnmodifiableListView) return _tags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+@override final  String? workAuthorization;
+@override final  String? yearsOfExperience;
+ final  List<String>? _benefits;
+@override List<String>? get benefits {
+  final value = _benefits;
+  if (value == null) return null;
+  if (_benefits is EqualUnmodifiableListView) return _benefits;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _certifications;
+@override List<String>? get certifications {
+  final value = _certifications;
+  if (value == null) return null;
+  if (_certifications is EqualUnmodifiableListView) return _certifications;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+@override final  String? eligibilityCriteria;
+
+/// Create a copy of ReferralPostModel
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ReferralPostModelCopyWith<_ReferralPostModel> get copyWith => __$ReferralPostModelCopyWithImpl<_ReferralPostModel>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ReferralPostModelToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferralPostModel&&(identical(other.id, id) || other.id == id)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&(identical(other.description, description) || other.description == description)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&(identical(other.employmentType, employmentType) || other.employmentType == employmentType)&&(identical(other.workMode, workMode) || other.workMode == workMode)&&(identical(other.broadcastType, broadcastType) || other.broadcastType == broadcastType)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other._location, _location)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&const DeepCollectionEquality().equals(other._skills, _skills)&&const DeepCollectionEquality().equals(other._studentStreams, _studentStreams)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.workAuthorization, workAuthorization) || other.workAuthorization == workAuthorization)&&(identical(other.yearsOfExperience, yearsOfExperience) || other.yearsOfExperience == yearsOfExperience)&&const DeepCollectionEquality().equals(other._benefits, _benefits)&&const DeepCollectionEquality().equals(other._certifications, _certifications)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hashAll([runtimeType,id,jobTitle,description,approvalStatus,employmentType,workMode,broadcastType,jobType,const DeepCollectionEquality().hash(_location),minEducation,numberOfOpenings,packageDetails,const DeepCollectionEquality().hash(_skills),const DeepCollectionEquality().hash(_studentStreams),const DeepCollectionEquality().hash(_tags),workAuthorization,yearsOfExperience,const DeepCollectionEquality().hash(_benefits),const DeepCollectionEquality().hash(_certifications),eligibilityCriteria]);
+
+@override
+String toString() {
+  return 'ReferralPostModel(id: $id, jobTitle: $jobTitle, description: $description, approvalStatus: $approvalStatus, employmentType: $employmentType, workMode: $workMode, broadcastType: $broadcastType, jobType: $jobType, location: $location, minEducation: $minEducation, numberOfOpenings: $numberOfOpenings, packageDetails: $packageDetails, skills: $skills, studentStreams: $studentStreams, tags: $tags, workAuthorization: $workAuthorization, yearsOfExperience: $yearsOfExperience, benefits: $benefits, certifications: $certifications, eligibilityCriteria: $eligibilityCriteria)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ReferralPostModelCopyWith<$Res> implements $ReferralPostModelCopyWith<$Res> {
+  factory _$ReferralPostModelCopyWith(_ReferralPostModel value, $Res Function(_ReferralPostModel) _then) = __$ReferralPostModelCopyWithImpl;
+@override @useResult
+$Res call({
+@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? approvalStatus,@StringOrListConvertor() String? employmentType,@StringOrListConvertor() String? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria
+});
+
+
+@override $PackageDetailsCopyWith<$Res>? get packageDetails;
+
+}
+/// @nodoc
+class __$ReferralPostModelCopyWithImpl<$Res>
+    implements _$ReferralPostModelCopyWith<$Res> {
+  __$ReferralPostModelCopyWithImpl(this._self, this._then);
+
+  final _ReferralPostModel _self;
+  final $Res Function(_ReferralPostModel) _then;
+
+/// Create a copy of ReferralPostModel
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? jobTitle = freezed,Object? description = freezed,Object? approvalStatus = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? broadcastType = freezed,Object? jobType = freezed,Object? location = freezed,Object? minEducation = freezed,Object? numberOfOpenings = freezed,Object? packageDetails = freezed,Object? skills = freezed,Object? studentStreams = freezed,Object? tags = freezed,Object? workAuthorization = freezed,Object? yearsOfExperience = freezed,Object? benefits = freezed,Object? certifications = freezed,Object? eligibilityCriteria = freezed,}) {
+  return _then(_ReferralPostModel(
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,approvalStatus: freezed == approvalStatus ? _self.approvalStatus : approvalStatus // ignore: cast_nullable_to_non_nullable
+as String?,employmentType: freezed == employmentType ? _self.employmentType : employmentType // ignore: cast_nullable_to_non_nullable
+as String?,workMode: freezed == workMode ? _self.workMode : workMode // ignore: cast_nullable_to_non_nullable
+as String?,broadcastType: freezed == broadcastType ? _self.broadcastType : broadcastType // ignore: cast_nullable_to_non_nullable
+as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
+as String?,location: freezed == location ? _self._location : location // ignore: cast_nullable_to_non_nullable
+as List<String>?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
+as String?,numberOfOpenings: freezed == numberOfOpenings ? _self.numberOfOpenings : numberOfOpenings // ignore: cast_nullable_to_non_nullable
+as int?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
+as PackageDetails?,skills: freezed == skills ? _self._skills : skills // ignore: cast_nullable_to_non_nullable
+as List<String>?,studentStreams: freezed == studentStreams ? _self._studentStreams : studentStreams // ignore: cast_nullable_to_non_nullable
+as List<String>?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>?,workAuthorization: freezed == workAuthorization ? _self.workAuthorization : workAuthorization // ignore: cast_nullable_to_non_nullable
+as String?,yearsOfExperience: freezed == yearsOfExperience ? _self.yearsOfExperience : yearsOfExperience // ignore: cast_nullable_to_non_nullable
+as String?,benefits: freezed == benefits ? _self._benefits : benefits // ignore: cast_nullable_to_non_nullable
+as List<String>?,certifications: freezed == certifications ? _self._certifications : certifications // ignore: cast_nullable_to_non_nullable
+as List<String>?,eligibilityCriteria: freezed == eligibilityCriteria ? _self.eligibilityCriteria : eligibilityCriteria // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+/// Create a copy of ReferralPostModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PackageDetailsCopyWith<$Res>? get packageDetails {
+    if (_self.packageDetails == null) {
+    return null;
+  }
+
+  return $PackageDetailsCopyWith<$Res>(_self.packageDetails!, (value) {
+    return _then(_self.copyWith(packageDetails: value));
+  });
+}
+}
+
+
+/// @nodoc
+mixin _$PackageDetails {
+
+ String? get currency; int? get totalCTC; int? get fixedPay; int? get joiningBonus;
+/// Create a copy of PackageDetails
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PackageDetailsCopyWith<PackageDetails> get copyWith => _$PackageDetailsCopyWithImpl<PackageDetails>(this as PackageDetails, _$identity);
+
+  /// Serializes this PackageDetails to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PackageDetails&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.totalCTC, totalCTC) || other.totalCTC == totalCTC)&&(identical(other.fixedPay, fixedPay) || other.fixedPay == fixedPay)&&(identical(other.joiningBonus, joiningBonus) || other.joiningBonus == joiningBonus));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,currency,totalCTC,fixedPay,joiningBonus);
+
+@override
+String toString() {
+  return 'PackageDetails(currency: $currency, totalCTC: $totalCTC, fixedPay: $fixedPay, joiningBonus: $joiningBonus)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PackageDetailsCopyWith<$Res>  {
+  factory $PackageDetailsCopyWith(PackageDetails value, $Res Function(PackageDetails) _then) = _$PackageDetailsCopyWithImpl;
+@useResult
+$Res call({
+ String? currency, int? totalCTC, int? fixedPay, int? joiningBonus
+});
+
+
+
+
+}
+/// @nodoc
+class _$PackageDetailsCopyWithImpl<$Res>
+    implements $PackageDetailsCopyWith<$Res> {
+  _$PackageDetailsCopyWithImpl(this._self, this._then);
+
+  final PackageDetails _self;
+  final $Res Function(PackageDetails) _then;
+
+/// Create a copy of PackageDetails
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? currency = freezed,Object? totalCTC = freezed,Object? fixedPay = freezed,Object? joiningBonus = freezed,}) {
+  return _then(_self.copyWith(
+currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String?,totalCTC: freezed == totalCTC ? _self.totalCTC : totalCTC // ignore: cast_nullable_to_non_nullable
+as int?,fixedPay: freezed == fixedPay ? _self.fixedPay : fixedPay // ignore: cast_nullable_to_non_nullable
+as int?,joiningBonus: freezed == joiningBonus ? _self.joiningBonus : joiningBonus // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [PackageDetails].
+extension PackageDetailsPatterns on PackageDetails {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _PackageDetails value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _PackageDetails() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _PackageDetails value)  $default,){
+final _that = this;
+switch (_that) {
+case _PackageDetails():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _PackageDetails value)?  $default,){
+final _that = this;
+switch (_that) {
+case _PackageDetails() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? currency,  int? totalCTC,  int? fixedPay,  int? joiningBonus)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _PackageDetails() when $default != null:
+return $default(_that.currency,_that.totalCTC,_that.fixedPay,_that.joiningBonus);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? currency,  int? totalCTC,  int? fixedPay,  int? joiningBonus)  $default,) {final _that = this;
+switch (_that) {
+case _PackageDetails():
+return $default(_that.currency,_that.totalCTC,_that.fixedPay,_that.joiningBonus);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? currency,  int? totalCTC,  int? fixedPay,  int? joiningBonus)?  $default,) {final _that = this;
+switch (_that) {
+case _PackageDetails() when $default != null:
+return $default(_that.currency,_that.totalCTC,_that.fixedPay,_that.joiningBonus);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _PackageDetails implements PackageDetails {
+  const _PackageDetails({this.currency, this.totalCTC, this.fixedPay, this.joiningBonus});
+  factory _PackageDetails.fromJson(Map<String, dynamic> json) => _$PackageDetailsFromJson(json);
+
+@override final  String? currency;
+@override final  int? totalCTC;
+@override final  int? fixedPay;
+@override final  int? joiningBonus;
+
+/// Create a copy of PackageDetails
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$PackageDetailsCopyWith<_PackageDetails> get copyWith => __$PackageDetailsCopyWithImpl<_PackageDetails>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$PackageDetailsToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PackageDetails&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.totalCTC, totalCTC) || other.totalCTC == totalCTC)&&(identical(other.fixedPay, fixedPay) || other.fixedPay == fixedPay)&&(identical(other.joiningBonus, joiningBonus) || other.joiningBonus == joiningBonus));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,currency,totalCTC,fixedPay,joiningBonus);
+
+@override
+String toString() {
+  return 'PackageDetails(currency: $currency, totalCTC: $totalCTC, fixedPay: $fixedPay, joiningBonus: $joiningBonus)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$PackageDetailsCopyWith<$Res> implements $PackageDetailsCopyWith<$Res> {
+  factory _$PackageDetailsCopyWith(_PackageDetails value, $Res Function(_PackageDetails) _then) = __$PackageDetailsCopyWithImpl;
+@override @useResult
+$Res call({
+ String? currency, int? totalCTC, int? fixedPay, int? joiningBonus
+});
+
+
+
+
+}
+/// @nodoc
+class __$PackageDetailsCopyWithImpl<$Res>
+    implements _$PackageDetailsCopyWith<$Res> {
+  __$PackageDetailsCopyWithImpl(this._self, this._then);
+
+  final _PackageDetails _self;
+  final $Res Function(_PackageDetails) _then;
+
+/// Create a copy of PackageDetails
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? currency = freezed,Object? totalCTC = freezed,Object? fixedPay = freezed,Object? joiningBonus = freezed,}) {
+  return _then(_PackageDetails(
+currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String?,totalCTC: freezed == totalCTC ? _self.totalCTC : totalCTC // ignore: cast_nullable_to_non_nullable
+as int?,fixedPay: freezed == fixedPay ? _self.fixedPay : fixedPay // ignore: cast_nullable_to_non_nullable
+as int?,joiningBonus: freezed == joiningBonus ? _self.joiningBonus : joiningBonus // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
+
+}
+
+// dart format on

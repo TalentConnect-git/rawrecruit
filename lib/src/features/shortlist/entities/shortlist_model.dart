@@ -8,19 +8,14 @@ part 'shortlist_model.g.dart';
 abstract class ShortlistModel with _$ShortlistModel {
   const factory ShortlistModel({
     @JsonKey(name: '_id') String? id,
-
     String? jobType,
     String? currentStatus,
-
     DateTime? createdAt,
 
     /// 🔥 ADD THIS
     JobModel? job,
-
   }) = _ShortlistModel;
 
-  factory ShortlistModel.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+  factory ShortlistModel.fromJson(Map<String, dynamic> json) =>
       _$ShortlistModelFromJson(json);
 }

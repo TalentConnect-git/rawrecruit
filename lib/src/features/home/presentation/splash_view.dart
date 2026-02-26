@@ -46,7 +46,7 @@ class _SplashViewState extends State<SplashView> {
           await SecretRepo.remove('auth_token');
           next = RouteNames.login;
         }
-      } catch (e, s) {
+      } catch (e) {
         await SecretRepo.remove('auth_token');
         next = RouteNames.login;
       }
@@ -54,7 +54,7 @@ class _SplashViewState extends State<SplashView> {
 
     if (!mounted) return;
 
-    context.pushReplacementNamed(next);
+    context.pushReplacementNamed(next, extra: appStateProvider.userType);
   }
 
   @override

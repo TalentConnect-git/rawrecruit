@@ -95,13 +95,20 @@ extension UserStatusExt on UserStatus {
   }
 }
 
-enum NavItem { home, shortlist, applications, profile }
+enum NavItem { home, jobs, applications, shortlist, profile }
 
 extension NavItemExt on NavItem {
+  static List<NavItem> get professionals => NavItem.values;
+
+  static List<NavItem> get freshers =>
+      NavItem.values.where((element) => element != NavItem.jobs).toList();
+
   String get label {
     switch (this) {
       case NavItem.home:
         return 'Home';
+      case NavItem.jobs:
+        return 'My Jobs';
       case NavItem.applications:
         return 'Application';
       case NavItem.shortlist:
@@ -119,6 +126,8 @@ extension NavItemExt on NavItem {
         return Icons.assignment;
       case NavItem.shortlist:
         return Icons.bookmark;
+      case NavItem.jobs:
+        return Icons.bookmark_add;
       case NavItem.profile:
         return Icons.person;
     }
@@ -134,6 +143,8 @@ extension NavItemExt on NavItem {
         return Icons.bookmark_outline;
       case NavItem.profile:
         return Icons.person_outline;
+      case NavItem.jobs:
+        return Icons.bookmark_add_outlined;
     }
   }
 }

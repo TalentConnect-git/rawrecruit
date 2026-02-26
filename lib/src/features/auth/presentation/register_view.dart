@@ -10,7 +10,14 @@ import 'package:rawrecruit/src/common/index.dart'
         AppButton,
         AppLoadingIndicator;
 import 'package:rawrecruit/src/core/index.dart'
-    show UserType, Failure, Toasts, RouteNames, FailureExt;
+    show
+        UserType,
+        Failure,
+        Toasts,
+        RouteNames,
+        FailureExt,
+        getIt,
+        AppStateProvider;
 import 'package:rawrecruit/src/features/auth/index.dart'
     show AuthCard, UserTypeCard, RegisterViewModel;
 
@@ -177,6 +184,8 @@ class _RegisterViewState extends State<RegisterView> {
                                         successCallback: () {
                                           context.pushReplacementNamed(
                                             RouteNames.dashboard,
+                                            extra: getIt<AppStateProvider>()
+                                                .userType,
                                           );
                                         },
                                       );

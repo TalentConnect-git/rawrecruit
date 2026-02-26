@@ -1,11 +1,11 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart'
     show AppTextStyles, AppColors, AppTextFields, AppButton;
 import 'package:rawrecruit/src/core/extensions/failure_ext.dart';
-import 'package:rawrecruit/src/core/index.dart' show RouteNames, Toasts;
+import 'package:rawrecruit/src/core/index.dart'
+    show RouteNames, Toasts, getIt, AppStateProvider;
 import 'package:rawrecruit/src/features/auth/index.dart'
     show AuthCard, LoginViewModel;
 
@@ -20,11 +20,9 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
 
   final emailController = TextEditingController(
-    text: kDebugMode ? 'skhasan.talentconnect+rr@gmail.com' : null,
+    text: 'ghawanesmitha@gmail.com',
   );
-  final passController = TextEditingController(
-    text: kDebugMode ? 'Test@123' : null,
-  );
+  final passController = TextEditingController(text: '123456');
 
   final LoginViewModel loginViewModel = LoginViewModel();
 
@@ -104,7 +102,10 @@ class _LoginViewState extends State<LoginView> {
                           successMsg: 'Login Successful!',
                           popOnSuccess: false,
                           successCallback: () {
-                            context.pushReplacementNamed(RouteNames.dashboard);
+                            context.pushReplacementNamed(
+                              RouteNames.dashboard,
+                              extra: getIt<AppStateProvider>().userType,
+                            );
                           },
                         );
                       }
