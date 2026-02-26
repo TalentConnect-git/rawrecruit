@@ -6,11 +6,12 @@ import 'package:rawrecruit/src/features/professional/job_postng/utils/enum.dart'
 class ApplicationListItem extends StatelessWidget {
   final ReferralApplication application;
   final void Function(ApplicationStatus) onApplyOrReject;
-
+  final VoidCallback? onTap;
   const ApplicationListItem({
     super.key,
     required this.application,
     required this.onApplyOrReject,
+    this.onTap,
   });
 
   @override
@@ -25,7 +26,7 @@ class ApplicationListItem extends StatelessWidget {
 
     return InkWell(
       borderRadius: BorderRadius.circular(14),
-      onTap: null,
+      onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),

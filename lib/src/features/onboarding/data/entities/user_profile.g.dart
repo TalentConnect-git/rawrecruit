@@ -21,6 +21,9 @@ _UserProfile _$UserProfileFromJson(Map<String, dynamic> json) => _UserProfile(
       .toList(),
   createdAt: json['createdAt'] as String?,
   updatedAt: json['updatedAt'] as String?,
+  profileImage: json['profileImage'] as String?,
+  currentCompany: json['currentCompany'] as String?,
+  noticePeriod: json['noticePeriod'] as String?,
   domainKnowledge: (json['domainKnowledge'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
@@ -96,6 +99,9 @@ Map<String, dynamic> _$UserProfileToJson(_UserProfile instance) =>
       'publications': instance.publications,
       'createdAt': instance.createdAt,
       'updatedAt': instance.updatedAt,
+      'profileImage': instance.profileImage,
+      'currentCompany': instance.currentCompany,
+      'noticePeriod': instance.noticePeriod,
       'domainKnowledge': instance.domainKnowledge,
       'employmentType': instance.employmentType,
       'experiences': instance.experiences,

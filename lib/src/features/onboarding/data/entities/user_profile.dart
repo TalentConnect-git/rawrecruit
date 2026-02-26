@@ -19,6 +19,10 @@ abstract class UserProfile with _$UserProfile {
     String? createdAt,
     String? updatedAt,
 
+    String? profileImage,
+String? currentCompany,
+String? noticePeriod,
+
     List<String>? domainKnowledge,
     List<String>? employmentType,
     List<String>? experiences,

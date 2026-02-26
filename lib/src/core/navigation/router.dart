@@ -17,6 +17,8 @@ import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileView;
 import 'package:rawrecruit/src/features/professional/application_listing/presentation/application_list_view.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/applicant_detail_screen.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/posted_job_application_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
@@ -115,7 +117,14 @@ class AppRouter {
           return AddEditProfileView(userProfile: userProfile);
         },
       ),
-
+GoRoute(
+  name: RouteNames.applicantDetail,
+  path: '/applicantDetail',
+  builder: (context, state) {
+    final application = state.extra as ReferralApplication;
+    return ApplicationDetailsView(application: application);
+  },
+),
       ShellRoute(
         builder: (context, state, navigationShell) {
           return HomeView(navigationShell: navigationShell);
