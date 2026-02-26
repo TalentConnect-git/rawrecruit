@@ -10,17 +10,13 @@ abstract class ApplicationModel with _$ApplicationModel {
     String? currentStatus,
 
     /// 🔹 From API
-    @JsonKey(name: 'jobDetails')
-    JobDetails? jobDetails,
+    @JsonKey(name: 'jobDetails') JobDetails? jobDetails,
 
     /// 🔹 From API
-    @JsonKey(name: 'companyProfile')
-    CompanyProfile? companyProfile,
+    @JsonKey(name: 'companyProfile') CompanyProfile? companyProfile,
   }) = _ApplicationModel;
 
-  factory ApplicationModel.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+  factory ApplicationModel.fromJson(Map<String, dynamic> json) =>
       _$ApplicationModelFromJson(json);
 }
 
@@ -39,11 +35,10 @@ abstract class JobDetails with _$JobDetails {
     PackageDetails? packageDetails, // 🔥 ADD THIS
   }) = _JobDetails;
 
-  factory JobDetails.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+  factory JobDetails.fromJson(Map<String, dynamic> json) =>
       _$JobDetailsFromJson(json);
 }
+
 @freezed
 abstract class PackageDetails with _$PackageDetails {
   const factory PackageDetails({
@@ -53,31 +48,23 @@ abstract class PackageDetails with _$PackageDetails {
     int? joiningBonus,
   }) = _PackageDetails;
 
-  factory PackageDetails.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+  factory PackageDetails.fromJson(Map<String, dynamic> json) =>
       _$PackageDetailsFromJson(json);
 }
+
 @freezed
 abstract class CompanyProfile with _$CompanyProfile {
-  const factory CompanyProfile({
-    CompanyDetails? companyDetails,
-  }) = _CompanyProfile;
+  const factory CompanyProfile({CompanyDetails? companyDetails}) =
+      _CompanyProfile;
 
-  factory CompanyProfile.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+  factory CompanyProfile.fromJson(Map<String, dynamic> json) =>
       _$CompanyProfileFromJson(json);
 }
 
 @freezed
 abstract class CompanyDetails with _$CompanyDetails {
-  const factory CompanyDetails({
-    String? companyName,
-  }) = _CompanyDetails;
+  const factory CompanyDetails({String? companyName}) = _CompanyDetails;
 
-  factory CompanyDetails.fromJson(
-    Map<String, dynamic> json,
-  ) =>
+  factory CompanyDetails.fromJson(Map<String, dynamic> json) =>
       _$CompanyDetailsFromJson(json);
 }
