@@ -59,61 +59,76 @@ class _ShortlistViewState extends State<ShortlistView> {
 
                     const SizedBox(height: 16),
 
-                    Expanded(
-                      child: vm.saved.isEmpty
-                          ? const Center(child: Text("No saved jobs"))
-                          : ListView.builder(
-                              itemCount: vm.saved.length,
-                              itemBuilder: (context, index) {
-                                final item = vm.saved[index];
+             Expanded(
+  child: vm.saved.isEmpty
+      ? const Center(child: Text("No saved jobs"))
+      : ListView.builder(
+          itemCount: vm.saved.length,
+          itemBuilder: (context, index) {
+            final item = vm.saved[index];
 
-                                if (item.job == null) {
-                                  return const SizedBox();
-                                }
+            if (item.job == null) {
+              return const SizedBox();
+            }
 
-                                final job = item.job!;
+            final job = item.job!;
 
-                                final isSaved = vm.savedJobIds.contains(job.id);
+            final isSaved =
+                vm.savedJobIds.contains(job.id);
 
-                                final isApplied = applicationVM.isApplied(
-                                  job.id ?? '',
-                                );
+            final isApplied =
+                applicationVM.isApplied(job.id ?? '');
 
-                                return JobCard(
-                                  jobId: job.id ?? '',
-                                  title: job.jobRoles?.first ?? '',
-                                  yoe: 0,
-                                  workMode: job.workMode?.first ?? '',
-                                  location: job.location?.first ?? '',
-                                  package:
-                                      "₹${job.packageDetails?.totalCTC ?? 0}",
-                                  skills: job.skills ?? [],
-                                  description: job.description ?? '',
-                                  isSaved: isSaved,
+            return JobCard(
+              jobId: job.id ?? '',
 
-                                  onBookmarkToggle: () {
-                                    vm.toggleSave(
-                                      jobId: job.id ?? '',
-                                      jobType: item.jobType ?? '',
-                                      isSaved: true,
-                                    );
-                                  },
+              /// 🔥 SAME AS INTERNSHIP VIEW
+              title: job.jobRoles?.isNotEmpty == true
+                  ? job.jobRoles!.first
+                  : '',
 
-                                  isApplied: isApplied,
-                                  onApply: () async {
-                                    await applicationVM.apply(job.id ?? '');
-                                  },
+              workMode: job.workMode?.isNotEmpty == true
+                  ? job.workMode!.first
+                  : '',
 
-                                  onTap: () {
-                                    context.pushNamed(
-                                      RouteNames.jobDetail,
-                                      extra: job,
-                                    );
-                                  },
-                                );
-                              },
-                            ),
-                    ),
+              location: job.location?.isNotEmpty == true
+                  ? job.location!.first
+                  : '',
+
+              yoe: 0,
+
+              package:
+                  "₹${job.packageDetails?.totalCTC ?? 0}",
+
+              skills: job.skills ?? [],
+              description: job.description ?? '',
+
+              /// Bookmark
+              isSaved: isSaved,
+              onBookmarkToggle: () {
+                vm.toggleSave(
+                  jobId: job.id ?? '',
+                  jobType: item.jobType ?? '',
+                  isSaved: isSaved,
+                );
+              },
+
+              /// Apply
+              isApplied: isApplied,
+              onApply: () async {
+                await applicationVM.apply(job.id ?? '');
+              },
+
+              onTap: () {
+                context.pushNamed(
+                  RouteNames.jobDetail,
+                  extra: job,
+                );
+              },
+            );
+          },
+        ),
+)
                   ],
                 ),
               ),

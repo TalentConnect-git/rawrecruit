@@ -15,6 +15,8 @@ import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileView;
+import 'package:rawrecruit/src/features/professional/application_listing/presentation/application_list_view.dart';
+import 'package:rawrecruit/src/features/professional/application_listing/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/posted_job_application_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
@@ -53,6 +55,7 @@ class AppRouter {
           return ReferralDetailView(jobId: jobId);
         },
       ),
+
       GoRoute(
         name: RouteNames.referralPost,
         path: '/referralPost',
@@ -130,6 +133,7 @@ class AppRouter {
               }
             },
           ),
+
           GoRoute(
             name: RouteNames.jobPosted,
             path: '/jobPosted',
@@ -143,11 +147,22 @@ class AppRouter {
             builder: (_, _) => ShortlistView(),
           ),
 
-          GoRoute(
-            name: RouteNames.application,
-            path: '/application',
-            builder: (_, _) => ApplicationsView(),
-          ),
+        GoRoute(
+  name: RouteNames.application,
+  path: '/application',
+  builder: (_, state) {
+    final type = state.extra as UserType?;
+
+    if (type == UserType.professional) {
+      return ChangeNotifierProvider(
+        create: (_) => ReferralApplicationsViewModel(),
+        child: const ReferralApplicationsScreen(),
+      );
+    } else {
+      return ApplicationsView();
+    }
+  },
+),
 
           GoRoute(
             name: RouteNames.myProfile,

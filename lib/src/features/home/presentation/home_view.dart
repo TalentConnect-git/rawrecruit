@@ -120,7 +120,10 @@ class _HomeViewState extends State<HomeView> {
                 break;
               case 2:
                 if (appStateProvider.isProfessional) {
-                  context.goNamed(RouteNames.application);
+                  context.goNamed(
+                    RouteNames.application,
+                    extra: appStateProvider.userType,
+                  );
                 } else {
                   context.goNamed(RouteNames.shortlist);
                 }
