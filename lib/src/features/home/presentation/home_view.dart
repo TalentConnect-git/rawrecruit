@@ -44,12 +44,18 @@ class _HomeViewState extends State<HomeView> {
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
 
-    if (location.startsWith('/shortlist')) return 1;
     if (location.startsWith('/jobPosted')) return 1;
-    if (location.startsWith('/application')) return 2;
-    if (location.startsWith('/my-profile')) {
-      return appStateProvider.isProfessional ? 2 : 3;
+
+    if (location.startsWith('/application')) {
+      return appStateProvider.isProfessional ? 2 : 1;
     }
+    if (location.startsWith('/shortlist')) {
+      return appStateProvider.isProfessional ? 3 : 2;
+    }
+    if (location.startsWith('/my-profile')) {
+      return appStateProvider.isProfessional ? 4 : 3;
+    }
+
     return 0;
   }
 
@@ -109,19 +115,27 @@ class _HomeViewState extends State<HomeView> {
                 if (appStateProvider.isProfessional) {
                   context.goNamed(RouteNames.jobPosted);
                 } else {
-                  context.goNamed(RouteNames.shortlist);
+                  context.goNamed(RouteNames.application);
                 }
                 break;
               case 2:
                 if (appStateProvider.isProfessional) {
-                  context.goNamed(RouteNames.myProfile);
-                } else {
                   context.goNamed(RouteNames.application);
+                } else {
+                  context.goNamed(RouteNames.shortlist);
                 }
                 break;
               case 3:
-                context.goNamed(RouteNames.myProfile);
+                if (appStateProvider.isProfessional) {
+                  context.goNamed(RouteNames.shortlist);
+                } else {
+                  context.goNamed(RouteNames.myProfile);
+                }
                 break;
+              case 4:
+                if (appStateProvider.isProfessional) {
+                  context.goNamed(RouteNames.myProfile);
+                }
             }
           },
         ),

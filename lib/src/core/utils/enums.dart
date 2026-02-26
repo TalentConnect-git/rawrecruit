@@ -95,15 +95,10 @@ extension UserStatusExt on UserStatus {
   }
 }
 
-enum NavItem { home, shortlist, jobs, applications, profile }
+enum NavItem { home, jobs, applications, shortlist, profile }
 
 extension NavItemExt on NavItem {
-  static List<NavItem> get professionals => NavItem.values
-      .where(
-        (element) =>
-            element != NavItem.shortlist && element != NavItem.applications,
-      )
-      .toList();
+  static List<NavItem> get professionals => NavItem.values;
 
   static List<NavItem> get freshers =>
       NavItem.values.where((element) => element != NavItem.jobs).toList();
@@ -112,12 +107,12 @@ extension NavItemExt on NavItem {
     switch (this) {
       case NavItem.home:
         return 'Home';
+      case NavItem.jobs:
+        return 'My Jobs';
       case NavItem.applications:
         return 'Application';
       case NavItem.shortlist:
         return 'Shortlist';
-      case NavItem.jobs:
-        return 'My Jobs';
       case NavItem.profile:
         return 'Profile';
     }
