@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/view_model/prof_dashboard_view_model.dart';
+import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../../../core/index.dart';
 import 'widgets/referal_job_card.dart';
@@ -15,19 +16,26 @@ class ReferralJobListing extends StatefulWidget {
 
 class _ReferalJobListingState extends State<ReferralJobListing> {
   final viewModel = ProfessionalViewModel();
+  final shortlistVm = getIt<ShortlistViewModel>();
 
   @override
   void initState() {
     super.initState();
     viewModel.fetchProfessionalData();
+    shortlistVm.fetchSaved();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: viewModel,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: viewModel),
+        ChangeNotifierProvider.value(value: shortlistVm),
+      ],
       child: Consumer<ProfessionalViewModel>(
         builder: (context, vm, _) {
+          final shortlistVM = context.watch<ShortlistViewModel>();
+
           return Scaffold(
             floatingActionButton: FloatingActionButton.extended(
               onPressed: () {
@@ -87,8 +95,13 @@ class _ReferalJobListingState extends State<ReferralJobListing> {
                         ...vm.referralJobs.map((job) {
                           final isApplied = vm.isReferralApplied(job.id ?? '');
 
+                          final isSaved = shortlistVM.savedJobIds.contains(
+                            job.id,
+                          );
+
                           return ReferralJobCard(
                             job: job,
+                            isSaved: isSaved,
                             isApplied: isApplied,
                             onApply: () async {
                               await vm.applyReferral(job.id ?? '');
@@ -103,6 +116,13 @@ class _ReferalJobListingState extends State<ReferralJobListing> {
                               context.pushNamed(
                                 RouteNames.referralDetail,
                                 extra: job.id,
+                              );
+                            },
+                            onBookmarkToggle: () {
+                              shortlistVM.toggleSave(
+                                jobId: job.id ?? '',
+                                jobType: "Off-campus",
+                                isSaved: isSaved,
                               );
                             },
                           );

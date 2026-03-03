@@ -9,6 +9,7 @@ abstract class JobModel with _$JobModel {
     @JsonKey(name: '_id') String? id,
 
     String? description,
+    String? jobTitle,
 
     List<String>? skills,
 
@@ -51,23 +52,17 @@ abstract class JobModel with _$JobModel {
 
 @freezed
 abstract class InterviewWindow with _$InterviewWindow {
-  const factory InterviewWindow({
-    DateTime? start,
-    DateTime? end,
-  }) = _InterviewWindow;
+  const factory InterviewWindow({DateTime? start, DateTime? end}) =
+      _InterviewWindow;
 
-  factory InterviewWindow.fromJson(
-          Map<String, dynamic> json) =>
+  factory InterviewWindow.fromJson(Map<String, dynamic> json) =>
       _$InterviewWindowFromJson(json);
 }
 
 @freezed
 abstract class JobPackageDetails with _$JobPackageDetails {
-  const factory JobPackageDetails({
-    int? totalCTC,
-  }) = _JobPackageDetails;
+  const factory JobPackageDetails({int? totalCTC}) = _JobPackageDetails;
 
-  factory JobPackageDetails.fromJson(
-          Map<String, dynamic> json) =>
+  factory JobPackageDetails.fromJson(Map<String, dynamic> json) =>
       _$JobPackageDetailsFromJson(json);
 }

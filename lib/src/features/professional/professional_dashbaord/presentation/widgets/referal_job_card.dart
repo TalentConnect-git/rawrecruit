@@ -1,14 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
-import '../../data/entities/referral_job_model.dart';
-import 'package:flutter/material.dart';
+
 import '../../data/entities/referral_job_model.dart';
 
 class ReferralJobCard extends StatelessWidget {
   final ReferralJobModel job;
   final VoidCallback onApply;
   final VoidCallback onTap;
+  final VoidCallback onBookmarkToggle;
   final bool isApplied;
+  final bool isSaved;
 
   const ReferralJobCard({
     super.key,
@@ -16,12 +19,16 @@ class ReferralJobCard extends StatelessWidget {
     required this.onApply,
     required this.onTap,
     required this.isApplied,
+    required this.isSaved,
+    required this.onBookmarkToggle,
   });
 
   @override
   Widget build(BuildContext context) {
     final package =
         "${job.packageDetails?.currency ?? ""} ${job.packageDetails?.totalCTC ?? 0}";
+
+    log(job.toString(), name: 'Job');
 
     return GestureDetector(
       onTap: onTap,
@@ -48,7 +55,19 @@ class ReferralJobCard extends StatelessWidget {
                   ),
                 ),
 
-                _statusChip(job.approvalStatus),
+                GestureDetector(
+                  onTap: onBookmarkToggle,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 200),
+                    child: Icon(
+                      isSaved ? Icons.bookmark : Icons.bookmark_border,
+                      key: ValueKey(isSaved),
+                      color: isSaved
+                          ? AppColors.primary
+                          : AppColors.text.withOpacity(0.6),
+                    ),
+                  ),
+                ),
               ],
             ),
 
