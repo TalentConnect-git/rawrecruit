@@ -19,8 +19,10 @@ import 'package:rawrecruit/src/features/professional/application_listing/present
 import 'package:rawrecruit/src/features/professional/application_listing/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/applicant_detail_screen.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/posted_job_application_view.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/referral_post_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
@@ -49,6 +51,14 @@ class AppRouter {
         path: '/register',
         builder: (_, _) => RegisterView(),
       ),
+      GoRoute(
+  name: RouteNames.referralPostDetail,
+  path: '/referral-post-detail',
+  builder: (context, state) {
+    final job = state.extra as ReferralPostModel;
+    return ReferralPostDetailView(job: job);
+  },
+),
       GoRoute(
         name: RouteNames.referralDetail,
         path: '/referralDetail',

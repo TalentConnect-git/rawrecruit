@@ -121,11 +121,11 @@ class ReferralApplicationCard extends StatelessWidget {
                 ),
 
                 /// Admin Status
-                if (application.adminApprovalStatus != null)
-                  _buildStatusChip(
-                    label:
-                        "${application.adminApprovalStatus} By Admin",
-                  ),
+                // if (application.adminApprovalStatus != null)
+                //   _buildStatusChip(
+                //     label:
+                //         "${application.adminApprovalStatus} By Admin",
+                //   ),
               ],
             ),
           ],

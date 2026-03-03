@@ -42,32 +42,132 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 
           return Scaffold(
             appBar: AppBar(title: Text(job.jobTitle ?? "")),
-            body: Padding(
-              padding: const EdgeInsets.all(16),
-              child: ListView(
-                children: [
-                  Text(job.description ?? ""),
+           body: Padding(
+  padding: const EdgeInsets.all(16),
+  child: ListView(
+    children: [
 
-                  const SizedBox(height: 20),
+      /// Description
+      _buildRow("Description", job.description),
 
-                  Text("Experience: ${job.yearsOfExperience}"),
-                  Text("Education: ${job.minEducation}"),
-                  Text("Work Authorization: ${job.workAuthorization}"),
+      const SizedBox(height: 12),
 
-                  const SizedBox(height: 20),
+      /// Basic Info
+      _buildRow("Experience", job.yearsOfExperience),
+      _buildRow("Education", job.minEducation),
+      _buildRow("Work Authorization", job.workAuthorization),
+      _buildRow("Eligibility Criteria", job.eligibilityCriteria),
+      _buildRow("Number of Openings",
+          job.numberOfOpenings?.toString()),
 
-                  Wrap(
-                    spacing: 8,
-                    children: (job.skills ?? [])
-                        .map((e) => Chip(label: Text(e)))
-                        .toList(),
-                  ),
-                ],
-              ),
-            ),
+      /// Employment Type
+      _buildRow(
+        "Employment Type",
+        job.employmentType?.join(", "),
+      ),
+
+      /// Work Mode
+      _buildRow(
+        "Work Mode",
+        job.workMode?.join(", "),
+      ),
+
+      /// Location
+      _buildRow(
+        "Location",
+        job.location?.join(", "),
+      ),
+
+      const SizedBox(height: 20),
+
+      /// ✅ PACKAGE DETAILS (SEPARATE FIELDS)
+      const Text(
+        "Package Details",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const SizedBox(height: 10),
+
+      _buildRow(
+        "Currency",
+        job.packageDetails?.currency,
+      ),
+
+      _buildRow(
+        "Total CTC",
+        job.packageDetails?.totalCTC?.toString(),
+      ),
+
+      _buildRow(
+        "Fixed Pay",
+        job.packageDetails?.fixedPay?.toString(),
+      ),
+
+      _buildRow(
+        "Joining Bonus",
+        job.packageDetails?.joiningBonus?.toString(),
+      ),
+
+      const SizedBox(height: 20),
+
+      /// Benefits
+      _buildRow(
+        "Benefits",
+        job.benefits?.join(", "),
+      ),
+
+      /// Tags
+      _buildRow(
+        "Tags",
+        job.tags?.join(", "),
+      ),
+
+      const SizedBox(height: 20),
+
+      /// Skills
+      const Text(
+        "Skills",
+        style: TextStyle(
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      const SizedBox(height: 8),
+
+      Wrap(
+        spacing: 8,
+        children: (job.skills ?? [])
+            .map((e) => Chip(label: Text(e)))
+            .toList(),
+      ),
+    ],
+  ),
+),
           );
         },
       ),
     );
   }
+  Widget _buildRow(String title, String? value) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 150,
+          child: Text(
+            "$title:",
+            style: const TextStyle(fontWeight: FontWeight.w600),
+          ),
+        ),
+        Expanded(
+          child: Text(value?.isNotEmpty == true ? value! : "-"),
+        ),
+      ],
+    ),
+  );
+}
 }

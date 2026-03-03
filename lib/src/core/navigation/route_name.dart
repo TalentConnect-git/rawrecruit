@@ -18,5 +18,6 @@ class RouteNames {
   static final applicantDetail='applicantDetail';
   static final professionalAppliedJobs= 'professionalAppliedJobs';
     static final professionalAppliedJobsDetail= 'professionalAppliedJobsDetail';
+    static final referralPostDetail='referralPostDetail';
 
 }
