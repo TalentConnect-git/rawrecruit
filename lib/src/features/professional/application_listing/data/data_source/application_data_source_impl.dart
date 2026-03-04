@@ -18,7 +18,7 @@ class ReferralApplicationDataSourceImpl
 
     final request = Request(
       method: RequestMethod.get,
-      endpoint: Endpoints.ProfessionalAppliedJobs,
+      endpoint: Endpoints.professionalAppliedJobs,
       isSafeRoute: true,
     );
 

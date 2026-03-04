@@ -27,6 +27,11 @@ class Endpoints {
       'application/my-referral-applications';
   static const String apiStudentDashboardPostedReferralJob =
       'api/student-dashboard/posted-referral-job';
-  static const String ProfessionalAppliedJobs =
+  static const String professionalAppliedJobs =
       'application/status/candidate/Referral';
+
+      static const String chatUserList='api/messages/allusers';
+      static const String getUnreadCounts="api/messages/unread-count";
+      static const String createConversation="api/messages/conversation";
 }
+

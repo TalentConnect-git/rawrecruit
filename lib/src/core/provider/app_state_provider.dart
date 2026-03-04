@@ -14,9 +14,11 @@ import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingRepository, UserProfile;
 
+import '../network/socket_service.dart';
+
 class AppStateProvider extends ViewStateProvider {
   String get userEmail => auth?.email ?? '';
-
+String get userId => auth?.id ?? '';
   UserType? get userType => auth?.userType;
 
   bool get isProfessional => userType == UserType.professional;
@@ -25,6 +27,10 @@ class AppStateProvider extends ViewStateProvider {
   Auth? get auth => _auth;
   set auth(Auth? auth) {
     _auth = auth;
+    if (auth != null && auth.id != null) {
+    SocketService().connect(auth.id!);
+  }
+
     notifyListeners();
   }
 
