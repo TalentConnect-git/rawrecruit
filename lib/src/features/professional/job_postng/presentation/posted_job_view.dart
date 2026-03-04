@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
@@ -33,7 +34,6 @@ class _PostedJobViewState extends State<PostedJobView> {
         //   label: 'Posted Jobs',
         //   leading: IconButton(
         //     onPressed: () {
-        //       context.pop();
         //     },
         //     icon: Icon(Icons.keyboard_arrow_left),
         //   ),
@@ -47,8 +47,15 @@ class _PostedJobViewState extends State<PostedJobView> {
               child: ListView.separated(
                 itemBuilder: (_, index) {
                   final job = vm.jobs[index];
-                  return MyJobCard(job: job);
-                },
+return MyJobCard(
+  job: job,
+  onTap: () {
+    context.pushNamed(
+      RouteNames.referralPostDetail,
+      extra: job, // passing full object
+    );
+  },
+);                },
                 separatorBuilder: (_, _) => SizedBox(height: 4),
                 itemCount: vm.jobs.length,
               ),

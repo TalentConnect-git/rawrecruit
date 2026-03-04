@@ -10,10 +10,18 @@ import 'package:rawrecruit/src/features/dashboard/data/data_source/dashbooard_da
 import 'package:rawrecruit/src/features/dashboard/data/repository/dashbard_repository_impl.dart';
 import 'package:rawrecruit/src/features/dashboard/data/repository/dashboard_repository.dart';
 import 'package:rawrecruit/src/features/onboarding/data/index.dart';
+import 'package:rawrecruit/src/features/professional/application_listing/data/data_source/application_data_source.dart';
+import 'package:rawrecruit/src/features/professional/application_listing/data/data_source/application_data_source_impl.dart';
+import 'package:rawrecruit/src/features/professional/application_listing/data/repository/application_repo.dart';
+import 'package:rawrecruit/src/features/professional/application_listing/data/repository/application_repo_impl.dart';
 import 'package:rawrecruit/src/features/shortlist/data/shortlist_data_source_impl.dart';
+import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository_impl.dart';
 
+import '../../features/chat/data/data_source/index.dart';
+import '../../features/chat/data/index.dart';
+import '../../features/chat/index.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source_impl.dart';
 import '../../features/professional/job_postng/data/repository/job_posting_repo.dart';
@@ -43,6 +51,14 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<ReferralPostDataSource>(
       () => ReferralPostDataSourceImpl(),
     )
+    ..registerLazySingleton<ReferralApplicationDataSource>(
+      () => ReferralApplicationDataSourceImpl(),
+    )
+    ..registerLazySingleton<ReferralApplicationRepository>(
+      () => ReferralApplicationRepositoryImpl(
+        getIt<ReferralApplicationDataSource>(),
+      ),
+    )
     ..registerLazySingleton<ReferralPostRepository>(
       () => ReferralPostRepositoryImpl(getIt()),
     )
@@ -69,5 +85,17 @@ Future<void> initDependencyLocator() async {
     )
     ..registerLazySingleton<DashboardRepository>(
       () => DashboardRepositoryImpl(dataSource: getIt<DashboardDataSource>()),
-    );
+    )
+
+    ..registerLazySingleton<ShortlistViewModel>(() => ShortlistViewModel())
+    ..registerLazySingleton<ChatDataSource>(
+  () => ChatDataSourceImpl(),
+)
+
+..registerLazySingleton<ChatRepository>(
+  () => ChatRepositoryImpl(
+    getIt<ChatDataSource>(),
+  ),
+)
+..registerLazySingleton<ChatViewModel>(() => ChatViewModel());
 }

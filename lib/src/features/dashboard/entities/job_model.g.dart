@@ -9,6 +9,7 @@ part of 'job_model.dart';
 _JobModel _$JobModelFromJson(Map<String, dynamic> json) => _JobModel(
   id: json['_id'] as String?,
   description: json['description'] as String?,
+  jobTitle: json['jobTitle'] as String?,
   skills: (json['skills'] as List<dynamic>?)?.map((e) => e as String).toList(),
   workMode: (json['workMode'] as List<dynamic>?)
       ?.map((e) => e as String)
@@ -55,6 +56,7 @@ _JobModel _$JobModelFromJson(Map<String, dynamic> json) => _JobModel(
 Map<String, dynamic> _$JobModelToJson(_JobModel instance) => <String, dynamic>{
   '_id': instance.id,
   'description': instance.description,
+  'jobTitle': instance.jobTitle,
   'skills': instance.skills,
   'workMode': instance.workMode,
   'location': instance.location,

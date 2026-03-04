@@ -15,17 +15,25 @@ import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileView;
+import 'package:rawrecruit/src/features/professional/application_listing/presentation/application_list_view.dart';
+import 'package:rawrecruit/src/features/professional/application_listing/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/applicant_detail_screen.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/posted_job_application_view.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/referral_post_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 
+import '../../features/chat/index.dart';
 import '../../features/dashboard/presentation/internship_detail_page.dart';
 import '../../features/dashboard/presentation/job_detail_page.dart';
 import '../../features/onboarding/presentation/add_edit_profile_view.dart';
 import '../../features/professional/job_postng/presentation/posted_job_view.dart';
+import '../services/dependency_locator.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
@@ -46,6 +54,14 @@ class AppRouter {
         builder: (_, _) => RegisterView(),
       ),
       GoRoute(
+        name: RouteNames.referralPostDetail,
+        path: '/referral-post-detail',
+        builder: (context, state) {
+          final job = state.extra as ReferralPostModel;
+          return ReferralPostDetailView(job: job);
+        },
+      ),
+      GoRoute(
         name: RouteNames.referralDetail,
         path: '/referralDetail',
         builder: (context, state) {
@@ -53,6 +69,7 @@ class AppRouter {
           return ReferralDetailView(jobId: jobId);
         },
       ),
+
       GoRoute(
         name: RouteNames.referralPost,
         path: '/referralPost',
@@ -112,7 +129,14 @@ class AppRouter {
           return AddEditProfileView(userProfile: userProfile);
         },
       ),
-
+      GoRoute(
+        name: RouteNames.applicantDetail,
+        path: '/applicantDetail',
+        builder: (context, state) {
+          final application = state.extra as ReferralApplication;
+          return ApplicationDetailsView(application: application);
+        },
+      ),
       ShellRoute(
         builder: (context, state, navigationShell) {
           return HomeView(navigationShell: navigationShell);
@@ -130,6 +154,7 @@ class AppRouter {
               }
             },
           ),
+
           GoRoute(
             name: RouteNames.jobPosted,
             path: '/jobPosted',
@@ -146,7 +171,18 @@ class AppRouter {
           GoRoute(
             name: RouteNames.application,
             path: '/application',
-            builder: (_, _) => ApplicationsView(),
+            builder: (_, state) {
+              final type = state.extra as UserType?;
+
+              if (type == UserType.professional) {
+                return ChangeNotifierProvider(
+                  create: (_) => ReferralApplicationsViewModel(),
+                  child: const ReferralApplicationsScreen(),
+                );
+              } else {
+                return ApplicationsView();
+              }
+            },
           ),
 
           GoRoute(
@@ -154,6 +190,16 @@ class AppRouter {
             path: '/my-profile',
             builder: (_, _) => MyProfileView(),
           ),
+       GoRoute(
+  name: RouteNames.chatUserList,
+  path: '/chatUsers',
+  builder: (context, state) {
+    return ChangeNotifierProvider.value(
+  value: getIt<ChatViewModel>(),
+  child: const ChatUserListView(),
+);
+  },
+),
         ],
       ),
     ],

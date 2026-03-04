@@ -15,9 +15,8 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ApplicationModel {
 
-@JsonKey(name: '_id') String? get id; String? get currentStatus;/// 🔹 From API
-@JsonKey(name: 'jobDetails') JobDetails? get jobDetails;/// 🔹 From API
-@JsonKey(name: 'companyProfile') CompanyProfile? get companyProfile;
+@JsonKey(name: '_id') String? get id; String? get currentStatus; String? get jobType; bool? get isVisited; String? get adminApprovalStatus;// 🔥 IMPORTANT FOR REFERRAL
+@JsonKey(name: 'jobDetails') JobDetails? get jobDetails;@JsonKey(name: 'companyProfile') CompanyProfile? get companyProfile;
 /// Create a copy of ApplicationModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -30,16 +29,16 @@ $ApplicationModelCopyWith<ApplicationModel> get copyWith => _$ApplicationModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApplicationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.jobDetails, jobDetails) || other.jobDetails == jobDetails)&&(identical(other.companyProfile, companyProfile) || other.companyProfile == companyProfile));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApplicationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.isVisited, isVisited) || other.isVisited == isVisited)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.jobDetails, jobDetails) || other.jobDetails == jobDetails)&&(identical(other.companyProfile, companyProfile) || other.companyProfile == companyProfile));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,currentStatus,jobDetails,companyProfile);
+int get hashCode => Object.hash(runtimeType,id,currentStatus,jobType,isVisited,adminApprovalStatus,jobDetails,companyProfile);
 
 @override
 String toString() {
-  return 'ApplicationModel(id: $id, currentStatus: $currentStatus, jobDetails: $jobDetails, companyProfile: $companyProfile)';
+  return 'ApplicationModel(id: $id, currentStatus: $currentStatus, jobType: $jobType, isVisited: $isVisited, adminApprovalStatus: $adminApprovalStatus, jobDetails: $jobDetails, companyProfile: $companyProfile)';
 }
 
 
@@ -50,7 +49,7 @@ abstract mixin class $ApplicationModelCopyWith<$Res>  {
   factory $ApplicationModelCopyWith(ApplicationModel value, $Res Function(ApplicationModel) _then) = _$ApplicationModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? currentStatus,@JsonKey(name: 'jobDetails') JobDetails? jobDetails,@JsonKey(name: 'companyProfile') CompanyProfile? companyProfile
+@JsonKey(name: '_id') String? id, String? currentStatus, String? jobType, bool? isVisited, String? adminApprovalStatus,@JsonKey(name: 'jobDetails') JobDetails? jobDetails,@JsonKey(name: 'companyProfile') CompanyProfile? companyProfile
 });
 
 
@@ -67,10 +66,13 @@ class _$ApplicationModelCopyWithImpl<$Res>
 
 /// Create a copy of ApplicationModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? currentStatus = freezed,Object? jobDetails = freezed,Object? companyProfile = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? currentStatus = freezed,Object? jobType = freezed,Object? isVisited = freezed,Object? adminApprovalStatus = freezed,Object? jobDetails = freezed,Object? companyProfile = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
+as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
+as String?,isVisited: freezed == isVisited ? _self.isVisited : isVisited // ignore: cast_nullable_to_non_nullable
+as bool?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminApprovalStatus : adminApprovalStatus // ignore: cast_nullable_to_non_nullable
 as String?,jobDetails: freezed == jobDetails ? _self.jobDetails : jobDetails // ignore: cast_nullable_to_non_nullable
 as JobDetails?,companyProfile: freezed == companyProfile ? _self.companyProfile : companyProfile // ignore: cast_nullable_to_non_nullable
 as CompanyProfile?,
@@ -182,10 +184,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? currentStatus, @JsonKey(name: 'jobDetails')  JobDetails? jobDetails, @JsonKey(name: 'companyProfile')  CompanyProfile? companyProfile)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? currentStatus,  String? jobType,  bool? isVisited,  String? adminApprovalStatus, @JsonKey(name: 'jobDetails')  JobDetails? jobDetails, @JsonKey(name: 'companyProfile')  CompanyProfile? companyProfile)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ApplicationModel() when $default != null:
-return $default(_that.id,_that.currentStatus,_that.jobDetails,_that.companyProfile);case _:
+return $default(_that.id,_that.currentStatus,_that.jobType,_that.isVisited,_that.adminApprovalStatus,_that.jobDetails,_that.companyProfile);case _:
   return orElse();
 
 }
@@ -203,10 +205,10 @@ return $default(_that.id,_that.currentStatus,_that.jobDetails,_that.companyProfi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? currentStatus, @JsonKey(name: 'jobDetails')  JobDetails? jobDetails, @JsonKey(name: 'companyProfile')  CompanyProfile? companyProfile)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? currentStatus,  String? jobType,  bool? isVisited,  String? adminApprovalStatus, @JsonKey(name: 'jobDetails')  JobDetails? jobDetails, @JsonKey(name: 'companyProfile')  CompanyProfile? companyProfile)  $default,) {final _that = this;
 switch (_that) {
 case _ApplicationModel():
-return $default(_that.id,_that.currentStatus,_that.jobDetails,_that.companyProfile);case _:
+return $default(_that.id,_that.currentStatus,_that.jobType,_that.isVisited,_that.adminApprovalStatus,_that.jobDetails,_that.companyProfile);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -223,10 +225,10 @@ return $default(_that.id,_that.currentStatus,_that.jobDetails,_that.companyProfi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? currentStatus, @JsonKey(name: 'jobDetails')  JobDetails? jobDetails, @JsonKey(name: 'companyProfile')  CompanyProfile? companyProfile)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? currentStatus,  String? jobType,  bool? isVisited,  String? adminApprovalStatus, @JsonKey(name: 'jobDetails')  JobDetails? jobDetails, @JsonKey(name: 'companyProfile')  CompanyProfile? companyProfile)?  $default,) {final _that = this;
 switch (_that) {
 case _ApplicationModel() when $default != null:
-return $default(_that.id,_that.currentStatus,_that.jobDetails,_that.companyProfile);case _:
+return $default(_that.id,_that.currentStatus,_that.jobType,_that.isVisited,_that.adminApprovalStatus,_that.jobDetails,_that.companyProfile);case _:
   return null;
 
 }
@@ -238,14 +240,16 @@ return $default(_that.id,_that.currentStatus,_that.jobDetails,_that.companyProfi
 @JsonSerializable()
 
 class _ApplicationModel implements ApplicationModel {
-  const _ApplicationModel({@JsonKey(name: '_id') this.id, this.currentStatus, @JsonKey(name: 'jobDetails') this.jobDetails, @JsonKey(name: 'companyProfile') this.companyProfile});
+  const _ApplicationModel({@JsonKey(name: '_id') this.id, this.currentStatus, this.jobType, this.isVisited, this.adminApprovalStatus, @JsonKey(name: 'jobDetails') this.jobDetails, @JsonKey(name: 'companyProfile') this.companyProfile});
   factory _ApplicationModel.fromJson(Map<String, dynamic> json) => _$ApplicationModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
 @override final  String? currentStatus;
-/// 🔹 From API
+@override final  String? jobType;
+@override final  bool? isVisited;
+@override final  String? adminApprovalStatus;
+// 🔥 IMPORTANT FOR REFERRAL
 @override@JsonKey(name: 'jobDetails') final  JobDetails? jobDetails;
-/// 🔹 From API
 @override@JsonKey(name: 'companyProfile') final  CompanyProfile? companyProfile;
 
 /// Create a copy of ApplicationModel
@@ -261,16 +265,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApplicationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.jobDetails, jobDetails) || other.jobDetails == jobDetails)&&(identical(other.companyProfile, companyProfile) || other.companyProfile == companyProfile));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApplicationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.isVisited, isVisited) || other.isVisited == isVisited)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.jobDetails, jobDetails) || other.jobDetails == jobDetails)&&(identical(other.companyProfile, companyProfile) || other.companyProfile == companyProfile));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,currentStatus,jobDetails,companyProfile);
+int get hashCode => Object.hash(runtimeType,id,currentStatus,jobType,isVisited,adminApprovalStatus,jobDetails,companyProfile);
 
 @override
 String toString() {
-  return 'ApplicationModel(id: $id, currentStatus: $currentStatus, jobDetails: $jobDetails, companyProfile: $companyProfile)';
+  return 'ApplicationModel(id: $id, currentStatus: $currentStatus, jobType: $jobType, isVisited: $isVisited, adminApprovalStatus: $adminApprovalStatus, jobDetails: $jobDetails, companyProfile: $companyProfile)';
 }
 
 
@@ -281,7 +285,7 @@ abstract mixin class _$ApplicationModelCopyWith<$Res> implements $ApplicationMod
   factory _$ApplicationModelCopyWith(_ApplicationModel value, $Res Function(_ApplicationModel) _then) = __$ApplicationModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? currentStatus,@JsonKey(name: 'jobDetails') JobDetails? jobDetails,@JsonKey(name: 'companyProfile') CompanyProfile? companyProfile
+@JsonKey(name: '_id') String? id, String? currentStatus, String? jobType, bool? isVisited, String? adminApprovalStatus,@JsonKey(name: 'jobDetails') JobDetails? jobDetails,@JsonKey(name: 'companyProfile') CompanyProfile? companyProfile
 });
 
 
@@ -298,10 +302,13 @@ class __$ApplicationModelCopyWithImpl<$Res>
 
 /// Create a copy of ApplicationModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? currentStatus = freezed,Object? jobDetails = freezed,Object? companyProfile = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? currentStatus = freezed,Object? jobType = freezed,Object? isVisited = freezed,Object? adminApprovalStatus = freezed,Object? jobDetails = freezed,Object? companyProfile = freezed,}) {
   return _then(_ApplicationModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
+as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
+as String?,isVisited: freezed == isVisited ? _self.isVisited : isVisited // ignore: cast_nullable_to_non_nullable
+as bool?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminApprovalStatus : adminApprovalStatus // ignore: cast_nullable_to_non_nullable
 as String?,jobDetails: freezed == jobDetails ? _self.jobDetails : jobDetails // ignore: cast_nullable_to_non_nullable
 as JobDetails?,companyProfile: freezed == companyProfile ? _self.companyProfile : companyProfile // ignore: cast_nullable_to_non_nullable
 as CompanyProfile?,
@@ -339,8 +346,8 @@ $CompanyProfileCopyWith<$Res>? get companyProfile {
 /// @nodoc
 mixin _$JobDetails {
 
-@JsonKey(name: '_id') String? get id; List<String>? get jobRoles; List<String>? get location; String? get jobType;// 🔥 ADD THIS
- List<String>? get employmentType; List<String>? get workMode; PackageDetails? get packageDetails;
+@JsonKey(name: '_id') String? get id; String? get jobTitle;// 🔥 REQUIRED
+ String? get description; String? get jobStatus; String? get approvalStatus; String? get jobType; List<String>? get jobRoles; List<String>? get location; List<String>? get employmentType; List<String>? get workMode; List<String>? get skills; List<String>? get certifications; List<String>? get tags; String? get minEducation; String? get yearsOfExperience; PackageDetails? get packageDetails;
 /// Create a copy of JobDetails
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -353,16 +360,16 @@ $JobDetailsCopyWith<JobDetails> get copyWith => _$JobDetailsCopyWithImpl<JobDeta
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobDetails&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.jobRoles, jobRoles)&&const DeepCollectionEquality().equals(other.location, location)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other.employmentType, employmentType)&&const DeepCollectionEquality().equals(other.workMode, workMode)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobDetails&&(identical(other.id, id) || other.id == id)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&(identical(other.description, description) || other.description == description)&&(identical(other.jobStatus, jobStatus) || other.jobStatus == jobStatus)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other.jobRoles, jobRoles)&&const DeepCollectionEquality().equals(other.location, location)&&const DeepCollectionEquality().equals(other.employmentType, employmentType)&&const DeepCollectionEquality().equals(other.workMode, workMode)&&const DeepCollectionEquality().equals(other.skills, skills)&&const DeepCollectionEquality().equals(other.certifications, certifications)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.yearsOfExperience, yearsOfExperience) || other.yearsOfExperience == yearsOfExperience)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(jobRoles),const DeepCollectionEquality().hash(location),jobType,const DeepCollectionEquality().hash(employmentType),const DeepCollectionEquality().hash(workMode),packageDetails);
+int get hashCode => Object.hash(runtimeType,id,jobTitle,description,jobStatus,approvalStatus,jobType,const DeepCollectionEquality().hash(jobRoles),const DeepCollectionEquality().hash(location),const DeepCollectionEquality().hash(employmentType),const DeepCollectionEquality().hash(workMode),const DeepCollectionEquality().hash(skills),const DeepCollectionEquality().hash(certifications),const DeepCollectionEquality().hash(tags),minEducation,yearsOfExperience,packageDetails);
 
 @override
 String toString() {
-  return 'JobDetails(id: $id, jobRoles: $jobRoles, location: $location, jobType: $jobType, employmentType: $employmentType, workMode: $workMode, packageDetails: $packageDetails)';
+  return 'JobDetails(id: $id, jobTitle: $jobTitle, description: $description, jobStatus: $jobStatus, approvalStatus: $approvalStatus, jobType: $jobType, jobRoles: $jobRoles, location: $location, employmentType: $employmentType, workMode: $workMode, skills: $skills, certifications: $certifications, tags: $tags, minEducation: $minEducation, yearsOfExperience: $yearsOfExperience, packageDetails: $packageDetails)';
 }
 
 
@@ -373,7 +380,7 @@ abstract mixin class $JobDetailsCopyWith<$Res>  {
   factory $JobDetailsCopyWith(JobDetails value, $Res Function(JobDetails) _then) = _$JobDetailsCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, List<String>? jobRoles, List<String>? location, String? jobType, List<String>? employmentType, List<String>? workMode, PackageDetails? packageDetails
+@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? jobStatus, String? approvalStatus, String? jobType, List<String>? jobRoles, List<String>? location, List<String>? employmentType, List<String>? workMode, List<String>? skills, List<String>? certifications, List<String>? tags, String? minEducation, String? yearsOfExperience, PackageDetails? packageDetails
 });
 
 
@@ -390,15 +397,24 @@ class _$JobDetailsCopyWithImpl<$Res>
 
 /// Create a copy of JobDetails
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? jobRoles = freezed,Object? location = freezed,Object? jobType = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? packageDetails = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? jobTitle = freezed,Object? description = freezed,Object? jobStatus = freezed,Object? approvalStatus = freezed,Object? jobType = freezed,Object? jobRoles = freezed,Object? location = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? skills = freezed,Object? certifications = freezed,Object? tags = freezed,Object? minEducation = freezed,Object? yearsOfExperience = freezed,Object? packageDetails = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,jobStatus: freezed == jobStatus ? _self.jobStatus : jobStatus // ignore: cast_nullable_to_non_nullable
+as String?,approvalStatus: freezed == approvalStatus ? _self.approvalStatus : approvalStatus // ignore: cast_nullable_to_non_nullable
+as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
 as String?,jobRoles: freezed == jobRoles ? _self.jobRoles : jobRoles // ignore: cast_nullable_to_non_nullable
 as List<String>?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as List<String>?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
-as String?,employmentType: freezed == employmentType ? _self.employmentType : employmentType // ignore: cast_nullable_to_non_nullable
+as List<String>?,employmentType: freezed == employmentType ? _self.employmentType : employmentType // ignore: cast_nullable_to_non_nullable
 as List<String>?,workMode: freezed == workMode ? _self.workMode : workMode // ignore: cast_nullable_to_non_nullable
-as List<String>?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
+as List<String>?,skills: freezed == skills ? _self.skills : skills // ignore: cast_nullable_to_non_nullable
+as List<String>?,certifications: freezed == certifications ? _self.certifications : certifications // ignore: cast_nullable_to_non_nullable
+as List<String>?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
+as String?,yearsOfExperience: freezed == yearsOfExperience ? _self.yearsOfExperience : yearsOfExperience // ignore: cast_nullable_to_non_nullable
+as String?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
 as PackageDetails?,
   ));
 }
@@ -496,10 +512,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  List<String>? jobRoles,  List<String>? location,  String? jobType,  List<String>? employmentType,  List<String>? workMode,  PackageDetails? packageDetails)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? jobStatus,  String? approvalStatus,  String? jobType,  List<String>? jobRoles,  List<String>? location,  List<String>? employmentType,  List<String>? workMode,  List<String>? skills,  List<String>? certifications,  List<String>? tags,  String? minEducation,  String? yearsOfExperience,  PackageDetails? packageDetails)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _JobDetails() when $default != null:
-return $default(_that.id,_that.jobRoles,_that.location,_that.jobType,_that.employmentType,_that.workMode,_that.packageDetails);case _:
+return $default(_that.id,_that.jobTitle,_that.description,_that.jobStatus,_that.approvalStatus,_that.jobType,_that.jobRoles,_that.location,_that.employmentType,_that.workMode,_that.skills,_that.certifications,_that.tags,_that.minEducation,_that.yearsOfExperience,_that.packageDetails);case _:
   return orElse();
 
 }
@@ -517,10 +533,10 @@ return $default(_that.id,_that.jobRoles,_that.location,_that.jobType,_that.emplo
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  List<String>? jobRoles,  List<String>? location,  String? jobType,  List<String>? employmentType,  List<String>? workMode,  PackageDetails? packageDetails)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? jobStatus,  String? approvalStatus,  String? jobType,  List<String>? jobRoles,  List<String>? location,  List<String>? employmentType,  List<String>? workMode,  List<String>? skills,  List<String>? certifications,  List<String>? tags,  String? minEducation,  String? yearsOfExperience,  PackageDetails? packageDetails)  $default,) {final _that = this;
 switch (_that) {
 case _JobDetails():
-return $default(_that.id,_that.jobRoles,_that.location,_that.jobType,_that.employmentType,_that.workMode,_that.packageDetails);case _:
+return $default(_that.id,_that.jobTitle,_that.description,_that.jobStatus,_that.approvalStatus,_that.jobType,_that.jobRoles,_that.location,_that.employmentType,_that.workMode,_that.skills,_that.certifications,_that.tags,_that.minEducation,_that.yearsOfExperience,_that.packageDetails);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -537,10 +553,10 @@ return $default(_that.id,_that.jobRoles,_that.location,_that.jobType,_that.emplo
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  List<String>? jobRoles,  List<String>? location,  String? jobType,  List<String>? employmentType,  List<String>? workMode,  PackageDetails? packageDetails)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? jobStatus,  String? approvalStatus,  String? jobType,  List<String>? jobRoles,  List<String>? location,  List<String>? employmentType,  List<String>? workMode,  List<String>? skills,  List<String>? certifications,  List<String>? tags,  String? minEducation,  String? yearsOfExperience,  PackageDetails? packageDetails)?  $default,) {final _that = this;
 switch (_that) {
 case _JobDetails() when $default != null:
-return $default(_that.id,_that.jobRoles,_that.location,_that.jobType,_that.employmentType,_that.workMode,_that.packageDetails);case _:
+return $default(_that.id,_that.jobTitle,_that.description,_that.jobStatus,_that.approvalStatus,_that.jobType,_that.jobRoles,_that.location,_that.employmentType,_that.workMode,_that.skills,_that.certifications,_that.tags,_that.minEducation,_that.yearsOfExperience,_that.packageDetails);case _:
   return null;
 
 }
@@ -552,10 +568,16 @@ return $default(_that.id,_that.jobRoles,_that.location,_that.jobType,_that.emplo
 @JsonSerializable()
 
 class _JobDetails implements JobDetails {
-  const _JobDetails({@JsonKey(name: '_id') this.id, final  List<String>? jobRoles, final  List<String>? location, this.jobType, final  List<String>? employmentType, final  List<String>? workMode, this.packageDetails}): _jobRoles = jobRoles,_location = location,_employmentType = employmentType,_workMode = workMode;
+  const _JobDetails({@JsonKey(name: '_id') this.id, this.jobTitle, this.description, this.jobStatus, this.approvalStatus, this.jobType, final  List<String>? jobRoles, final  List<String>? location, final  List<String>? employmentType, final  List<String>? workMode, final  List<String>? skills, final  List<String>? certifications, final  List<String>? tags, this.minEducation, this.yearsOfExperience, this.packageDetails}): _jobRoles = jobRoles,_location = location,_employmentType = employmentType,_workMode = workMode,_skills = skills,_certifications = certifications,_tags = tags;
   factory _JobDetails.fromJson(Map<String, dynamic> json) => _$JobDetailsFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
+@override final  String? jobTitle;
+// 🔥 REQUIRED
+@override final  String? description;
+@override final  String? jobStatus;
+@override final  String? approvalStatus;
+@override final  String? jobType;
  final  List<String>? _jobRoles;
 @override List<String>? get jobRoles {
   final value = _jobRoles;
@@ -574,10 +596,7 @@ class _JobDetails implements JobDetails {
   return EqualUnmodifiableListView(value);
 }
 
-@override final  String? jobType;
-// 🔥 ADD THIS
  final  List<String>? _employmentType;
-// 🔥 ADD THIS
 @override List<String>? get employmentType {
   final value = _employmentType;
   if (value == null) return null;
@@ -595,6 +614,35 @@ class _JobDetails implements JobDetails {
   return EqualUnmodifiableListView(value);
 }
 
+ final  List<String>? _skills;
+@override List<String>? get skills {
+  final value = _skills;
+  if (value == null) return null;
+  if (_skills is EqualUnmodifiableListView) return _skills;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _certifications;
+@override List<String>? get certifications {
+  final value = _certifications;
+  if (value == null) return null;
+  if (_certifications is EqualUnmodifiableListView) return _certifications;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _tags;
+@override List<String>? get tags {
+  final value = _tags;
+  if (value == null) return null;
+  if (_tags is EqualUnmodifiableListView) return _tags;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+@override final  String? minEducation;
+@override final  String? yearsOfExperience;
 @override final  PackageDetails? packageDetails;
 
 /// Create a copy of JobDetails
@@ -610,16 +658,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobDetails&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._jobRoles, _jobRoles)&&const DeepCollectionEquality().equals(other._location, _location)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other._employmentType, _employmentType)&&const DeepCollectionEquality().equals(other._workMode, _workMode)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobDetails&&(identical(other.id, id) || other.id == id)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&(identical(other.description, description) || other.description == description)&&(identical(other.jobStatus, jobStatus) || other.jobStatus == jobStatus)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other._jobRoles, _jobRoles)&&const DeepCollectionEquality().equals(other._location, _location)&&const DeepCollectionEquality().equals(other._employmentType, _employmentType)&&const DeepCollectionEquality().equals(other._workMode, _workMode)&&const DeepCollectionEquality().equals(other._skills, _skills)&&const DeepCollectionEquality().equals(other._certifications, _certifications)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.yearsOfExperience, yearsOfExperience) || other.yearsOfExperience == yearsOfExperience)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,const DeepCollectionEquality().hash(_jobRoles),const DeepCollectionEquality().hash(_location),jobType,const DeepCollectionEquality().hash(_employmentType),const DeepCollectionEquality().hash(_workMode),packageDetails);
+int get hashCode => Object.hash(runtimeType,id,jobTitle,description,jobStatus,approvalStatus,jobType,const DeepCollectionEquality().hash(_jobRoles),const DeepCollectionEquality().hash(_location),const DeepCollectionEquality().hash(_employmentType),const DeepCollectionEquality().hash(_workMode),const DeepCollectionEquality().hash(_skills),const DeepCollectionEquality().hash(_certifications),const DeepCollectionEquality().hash(_tags),minEducation,yearsOfExperience,packageDetails);
 
 @override
 String toString() {
-  return 'JobDetails(id: $id, jobRoles: $jobRoles, location: $location, jobType: $jobType, employmentType: $employmentType, workMode: $workMode, packageDetails: $packageDetails)';
+  return 'JobDetails(id: $id, jobTitle: $jobTitle, description: $description, jobStatus: $jobStatus, approvalStatus: $approvalStatus, jobType: $jobType, jobRoles: $jobRoles, location: $location, employmentType: $employmentType, workMode: $workMode, skills: $skills, certifications: $certifications, tags: $tags, minEducation: $minEducation, yearsOfExperience: $yearsOfExperience, packageDetails: $packageDetails)';
 }
 
 
@@ -630,7 +678,7 @@ abstract mixin class _$JobDetailsCopyWith<$Res> implements $JobDetailsCopyWith<$
   factory _$JobDetailsCopyWith(_JobDetails value, $Res Function(_JobDetails) _then) = __$JobDetailsCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, List<String>? jobRoles, List<String>? location, String? jobType, List<String>? employmentType, List<String>? workMode, PackageDetails? packageDetails
+@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? jobStatus, String? approvalStatus, String? jobType, List<String>? jobRoles, List<String>? location, List<String>? employmentType, List<String>? workMode, List<String>? skills, List<String>? certifications, List<String>? tags, String? minEducation, String? yearsOfExperience, PackageDetails? packageDetails
 });
 
 
@@ -647,15 +695,24 @@ class __$JobDetailsCopyWithImpl<$Res>
 
 /// Create a copy of JobDetails
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? jobRoles = freezed,Object? location = freezed,Object? jobType = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? packageDetails = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? jobTitle = freezed,Object? description = freezed,Object? jobStatus = freezed,Object? approvalStatus = freezed,Object? jobType = freezed,Object? jobRoles = freezed,Object? location = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? skills = freezed,Object? certifications = freezed,Object? tags = freezed,Object? minEducation = freezed,Object? yearsOfExperience = freezed,Object? packageDetails = freezed,}) {
   return _then(_JobDetails(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,jobStatus: freezed == jobStatus ? _self.jobStatus : jobStatus // ignore: cast_nullable_to_non_nullable
+as String?,approvalStatus: freezed == approvalStatus ? _self.approvalStatus : approvalStatus // ignore: cast_nullable_to_non_nullable
+as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
 as String?,jobRoles: freezed == jobRoles ? _self._jobRoles : jobRoles // ignore: cast_nullable_to_non_nullable
 as List<String>?,location: freezed == location ? _self._location : location // ignore: cast_nullable_to_non_nullable
-as List<String>?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
-as String?,employmentType: freezed == employmentType ? _self._employmentType : employmentType // ignore: cast_nullable_to_non_nullable
+as List<String>?,employmentType: freezed == employmentType ? _self._employmentType : employmentType // ignore: cast_nullable_to_non_nullable
 as List<String>?,workMode: freezed == workMode ? _self._workMode : workMode // ignore: cast_nullable_to_non_nullable
-as List<String>?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
+as List<String>?,skills: freezed == skills ? _self._skills : skills // ignore: cast_nullable_to_non_nullable
+as List<String>?,certifications: freezed == certifications ? _self._certifications : certifications // ignore: cast_nullable_to_non_nullable
+as List<String>?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
+as List<String>?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
+as String?,yearsOfExperience: freezed == yearsOfExperience ? _self.yearsOfExperience : yearsOfExperience // ignore: cast_nullable_to_non_nullable
+as String?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
 as PackageDetails?,
   ));
 }

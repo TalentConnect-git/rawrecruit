@@ -17,7 +17,11 @@ class JobDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(job.jobRoles?.first ?? 'Job Detail')),
+      appBar: AppBar(title: Text(
+  job.jobRoles != null && job.jobRoles!.isNotEmpty
+      ? job.jobRoles!.first
+      : 'Job Detail',
+)),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Column(

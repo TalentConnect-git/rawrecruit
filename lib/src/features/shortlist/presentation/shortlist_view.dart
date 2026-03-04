@@ -81,24 +81,39 @@ class _ShortlistViewState extends State<ShortlistView> {
 
                                 return JobCard(
                                   jobId: job.id ?? '',
-                                  title: job.jobRoles?.first ?? '',
+
+                                  /// 🔥 SAME AS INTERNSHIP VIEW
+                                  title: job.jobRoles?.isNotEmpty == true
+                                      ? job.jobRoles!.first
+                                      : job.jobTitle ?? '-',
+
+                                  workMode: job.workMode?.isNotEmpty == true
+                                      ? job.workMode!.first
+                                      : '',
+
+                                  location: job.location?.isNotEmpty == true
+                                      ? job.location!.first
+                                      : '',
+
                                   yoe: 0,
-                                  workMode: job.workMode?.first ?? '',
-                                  location: job.location?.first ?? '',
+
                                   package:
                                       "₹${job.packageDetails?.totalCTC ?? 0}",
+
                                   skills: job.skills ?? [],
                                   description: job.description ?? '',
-                                  isSaved: isSaved,
 
+                                  /// Bookmark
+                                  isSaved: isSaved,
                                   onBookmarkToggle: () {
                                     vm.toggleSave(
                                       jobId: job.id ?? '',
                                       jobType: item.jobType ?? '',
-                                      isSaved: true,
+                                      isSaved: isSaved,
                                     );
                                   },
 
+                                  /// Apply
                                   isApplied: isApplied,
                                   onApply: () async {
                                     await applicationVM.apply(job.id ?? '');
