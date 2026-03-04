@@ -55,6 +55,9 @@ class _HomeViewState extends State<HomeView> {
     if (location.startsWith('/my-profile')) {
       return appStateProvider.isProfessional ? 4 : 3;
     }
+    if (location.startsWith('/chatUsers')) {
+      return appStateProvider.isProfessional ? 5 : 4;
+    }
 
     return 0;
   }
@@ -138,7 +141,12 @@ class _HomeViewState extends State<HomeView> {
               case 4:
                 if (appStateProvider.isProfessional) {
                   context.goNamed(RouteNames.myProfile);
+                } else {
+                  context.goNamed(RouteNames.chatUserList);
                 }
+                break;
+              case 5:
+                context.goNamed(RouteNames.chatUserList);
             }
           },
         ),

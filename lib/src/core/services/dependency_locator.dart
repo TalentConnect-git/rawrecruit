@@ -19,6 +19,9 @@ import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortl
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository_impl.dart';
 
+import '../../features/chat/data/data_source/index.dart';
+import '../../features/chat/data/index.dart';
+import '../../features/chat/index.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source_impl.dart';
 import '../../features/professional/job_postng/data/repository/job_posting_repo.dart';
@@ -83,5 +86,16 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<DashboardRepository>(
       () => DashboardRepositoryImpl(dataSource: getIt<DashboardDataSource>()),
     )
-    ..registerLazySingleton<ShortlistViewModel>(() => ShortlistViewModel());
+
+    ..registerLazySingleton<ShortlistViewModel>(() => ShortlistViewModel())
+    ..registerLazySingleton<ChatDataSource>(
+  () => ChatDataSourceImpl(),
+)
+
+..registerLazySingleton<ChatRepository>(
+  () => ChatRepositoryImpl(
+    getIt<ChatDataSource>(),
+  ),
+)
+..registerLazySingleton<ChatViewModel>(() => ChatViewModel());
 }

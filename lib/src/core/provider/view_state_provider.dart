@@ -7,11 +7,13 @@ class ViewStateProvider extends ChangeNotifier {
   ViewState get viewState => _viewState;
 
   bool get isLoading => _viewState == ViewState.busy;
+void setViewState(ViewState state, {bool notify = true}) {
+  _viewState = state;
 
-  void setViewState(ViewState state, {bool notify = true}) {
-    _viewState = state;
-    if (notify) {
+  if (notify) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       notifyListeners();
-    }
+    });
   }
+}
 }

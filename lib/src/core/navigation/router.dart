@@ -28,10 +28,12 @@ import 'package:rawrecruit/src/features/professional/professional_dashbaord/pres
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 
+import '../../features/chat/index.dart';
 import '../../features/dashboard/presentation/internship_detail_page.dart';
 import '../../features/dashboard/presentation/job_detail_page.dart';
 import '../../features/onboarding/presentation/add_edit_profile_view.dart';
 import '../../features/professional/job_postng/presentation/posted_job_view.dart';
+import '../services/dependency_locator.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
@@ -52,13 +54,13 @@ class AppRouter {
         builder: (_, _) => RegisterView(),
       ),
       GoRoute(
-  name: RouteNames.referralPostDetail,
-  path: '/referral-post-detail',
-  builder: (context, state) {
-    final job = state.extra as ReferralPostModel;
-    return ReferralPostDetailView(job: job);
-  },
-),
+        name: RouteNames.referralPostDetail,
+        path: '/referral-post-detail',
+        builder: (context, state) {
+          final job = state.extra as ReferralPostModel;
+          return ReferralPostDetailView(job: job);
+        },
+      ),
       GoRoute(
         name: RouteNames.referralDetail,
         path: '/referralDetail',
@@ -127,14 +129,14 @@ class AppRouter {
           return AddEditProfileView(userProfile: userProfile);
         },
       ),
-GoRoute(
-  name: RouteNames.applicantDetail,
-  path: '/applicantDetail',
-  builder: (context, state) {
-    final application = state.extra as ReferralApplication;
-    return ApplicationDetailsView(application: application);
-  },
-),
+      GoRoute(
+        name: RouteNames.applicantDetail,
+        path: '/applicantDetail',
+        builder: (context, state) {
+          final application = state.extra as ReferralApplication;
+          return ApplicationDetailsView(application: application);
+        },
+      ),
       ShellRoute(
         builder: (context, state, navigationShell) {
           return HomeView(navigationShell: navigationShell);
@@ -166,28 +168,38 @@ GoRoute(
             builder: (_, _) => ShortlistView(),
           ),
 
-        GoRoute(
-  name: RouteNames.application,
-  path: '/application',
-  builder: (_, state) {
-    final type = state.extra as UserType?;
+          GoRoute(
+            name: RouteNames.application,
+            path: '/application',
+            builder: (_, state) {
+              final type = state.extra as UserType?;
 
-    if (type == UserType.professional) {
-      return ChangeNotifierProvider(
-        create: (_) => ReferralApplicationsViewModel(),
-        child: const ReferralApplicationsScreen(),
-      );
-    } else {
-      return ApplicationsView();
-    }
-  },
-),
+              if (type == UserType.professional) {
+                return ChangeNotifierProvider(
+                  create: (_) => ReferralApplicationsViewModel(),
+                  child: const ReferralApplicationsScreen(),
+                );
+              } else {
+                return ApplicationsView();
+              }
+            },
+          ),
 
           GoRoute(
             name: RouteNames.myProfile,
             path: '/my-profile',
             builder: (_, _) => MyProfileView(),
           ),
+       GoRoute(
+  name: RouteNames.chatUserList,
+  path: '/chatUsers',
+  builder: (context, state) {
+    return ChangeNotifierProvider.value(
+  value: getIt<ChatViewModel>(),
+  child: const ChatUserListView(),
+);
+  },
+),
         ],
       ),
     ],
