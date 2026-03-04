@@ -85,6 +85,77 @@ class _MyProfileViewState extends State<MyProfileView> {
                     ),
                   ),
 
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.shadow,
+                          spreadRadius: 1,
+                          blurRadius: 1,
+                        ),
+                      ],
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 4,
+                      children: [
+                        Text('College Detail', style: AppTextStyles.s16W600),
+                        const SizedBox(height: 4),
+                        Row(
+                          children: [
+                            Text(
+                              'Name : ',
+                              style: AppTextStyles.s14W600.copyWith(
+                                color: AppColors.chipText,
+                              ),
+                            ),
+                            Text(
+                              vm.userProfile?.college ?? '',
+                              style: AppTextStyles.s14W600.copyWith(
+                                color: AppColors.chipText,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'Degree : ',
+                              style: AppTextStyles.s14W600.copyWith(
+                                color: AppColors.chipText,
+                              ),
+                            ),
+                            Text(
+                              vm.userProfile?.degree ?? '',
+                              style: AppTextStyles.s14W600.copyWith(
+                                color: AppColors.chipText,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Row(
+                          children: [
+                            Text(
+                              'CGPA : ',
+                              style: AppTextStyles.s14W600.copyWith(
+                                color: AppColors.chipText,
+                              ),
+                            ),
+                            Text(
+                              vm.userProfile?.cgpa ?? '-',
+                              style: AppTextStyles.s14W600.copyWith(
+                                color: AppColors.chipText,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
                   if ((vm.userProfile?.skills ?? []).isNotEmpty)
                     Container(
                       padding: EdgeInsets.symmetric(
@@ -131,6 +202,328 @@ class _MyProfileViewState extends State<MyProfileView> {
                               }),
                             ],
                           ),
+                        ],
+                      ),
+                    ),
+
+                  if ((vm.userProfile?.toolsAndPlatforms ?? []).isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.shadow,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: 16,
+                        children: [
+                          Text(
+                            'Tools & Platforms',
+                            style: AppTextStyles.s16W600,
+                          ),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ...(vm.userProfile?.toolsAndPlatforms ?? []).map((
+                                skill,
+                              ) {
+                                return Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.card,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    skill,
+                                    style: AppTextStyles.s14W600.copyWith(
+                                      color: AppColors.chipText,
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  if ((vm.userProfile?.languagesKnown ?? []).isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.shadow,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: 16,
+                        children: [
+                          Text('Languages known', style: AppTextStyles.s16W600),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ...(vm.userProfile?.languagesKnown ?? []).map((
+                                skill,
+                              ) {
+                                return Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.card,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    skill,
+                                    style: AppTextStyles.s14W600.copyWith(
+                                      color: AppColors.chipText,
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  if ((vm.userProfile?.experiences ?? []).isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.shadow,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: 16,
+                        children: [
+                          Text('Experiences', style: AppTextStyles.s16W600),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ...(vm.userProfile?.experiences ?? []).map((
+                                skill,
+                              ) {
+                                return Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.card,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    skill,
+                                    style: AppTextStyles.s14W600.copyWith(
+                                      color: AppColors.chipText,
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  if ((vm.userProfile?.employmentType ?? []).isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.shadow,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: 16,
+                        children: [
+                          Text('EmploymentType', style: AppTextStyles.s16W600),
+                          Wrap(
+                            spacing: 8,
+                            runSpacing: 8,
+                            children: [
+                              ...(vm.userProfile?.employmentType ?? []).map((
+                                skill,
+                              ) {
+                                return Container(
+                                  padding: EdgeInsets.symmetric(
+                                    vertical: 8,
+                                    horizontal: 12,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: AppColors.card,
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                  child: Text(
+                                    skill,
+                                    style: AppTextStyles.s14W600.copyWith(
+                                      color: AppColors.chipText,
+                                    ),
+                                  ),
+                                );
+                              }),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  if ((vm.userProfile?.awards ?? []).isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.shadow,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: 4,
+                        children: [
+                          Text('Awards', style: AppTextStyles.s16W600),
+                          const SizedBox(height: 4),
+                          ...(vm.userProfile?.awards ?? []).map((p) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      p.title ?? '-',
+                                      style: AppTextStyles.s14W600.copyWith(
+                                        color: AppColors.chipText,
+                                      ),
+                                    ),
+                                    Text(
+                                      '  -  ',
+                                      style: AppTextStyles.s14W600.copyWith(
+                                        color: AppColors.chipText,
+                                      ),
+                                    ),
+                                    Text(
+                                      p.organization ?? '-',
+                                      style: AppTextStyles.s14W600.copyWith(
+                                        color: AppColors.chipText,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  p.description ?? '',
+                                  style: AppTextStyles.s14W600.copyWith(
+                                    color: AppColors.chipText,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+                        ],
+                      ),
+                    ),
+
+                  if ((vm.userProfile?.publications ?? []).isNotEmpty)
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.shadow,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: 4,
+                        children: [
+                          Text('Publications', style: AppTextStyles.s16W600),
+                          const SizedBox(height: 4),
+                          ...(vm.userProfile?.publications ?? []).map((p) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  p.title ??
+                                      'Publication ${(vm.userProfile?.publications ?? []).indexOf(p)}',
+                                  style: AppTextStyles.s14W600.copyWith(
+                                    color: AppColors.chipText,
+                                  ),
+                                ),
+                                Text(
+                                  p.url ?? '',
+                                  style: AppTextStyles.s14W600.copyWith(
+                                    color: Colors.purple,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                         ],
                       ),
                     ),
