@@ -17,6 +17,9 @@ class ChatViewModel extends ViewStateProvider {
 Set<String> onlineUsers = {};
   String? activeChatUserId;
 bool _disposed = false;
+int get totalUnreadCount {
+  return unreadCounts.fold(0, (sum, item) => sum + item.count);
+}
 
   late final socket = SocketService().getSocket();
   /// ---------- USERS ----------

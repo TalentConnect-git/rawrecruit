@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/home/presentation/widgets/app_bottom_nav.dart';
+
+import '../../chat/index.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({required this.navigationShell, super.key});
@@ -20,6 +23,9 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+       final chatVm = context.read<ChatViewModel>();
+    chatVm.fetchUnreadCounts();
+
       if (!appStateProvider.isAuthComplete) {
         final failure = await appStateProvider.getAuthDetails();
         failure?.showError(context);
@@ -65,7 +71,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final currentIndex = _calculateIndex(context);
-
+  final chatVm = context.watch<ChatViewModel>();
     return PopScope(
       canPop: currentIndex == 0,
       onPopInvokedWithResult: (bool didPop, _) async {
@@ -106,6 +112,7 @@ class _HomeViewState extends State<HomeView> {
         body: widget.navigationShell,
         bottomNavigationBar: AppBottomNav(
           currentIndex: currentIndex,
+            hasUnread: chatVm.totalUnreadCount > 0,
           onTap: (index) {
             switch (index) {
               case 0:

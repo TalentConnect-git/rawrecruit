@@ -95,6 +95,7 @@ class AppRouter {
         builder: (context, state) {
           return const ReferralJobListing();
         },
+        
       ),
       GoRoute(
         name: RouteNames.applicationDetail,
@@ -139,7 +140,10 @@ class AppRouter {
       ),
       ShellRoute(
         builder: (context, state, navigationShell) {
-          return HomeView(navigationShell: navigationShell);
+          return ChangeNotifierProvider.value(
+            value: getIt<ChatViewModel>(),
+            child: HomeView(navigationShell: navigationShell),
+          );
         },
         routes: [
           GoRoute(
@@ -190,16 +194,13 @@ class AppRouter {
             path: '/my-profile',
             builder: (_, _) => MyProfileView(),
           ),
-       GoRoute(
-  name: RouteNames.chatUserList,
-  path: '/chatUsers',
-  builder: (context, state) {
-    return ChangeNotifierProvider.value(
-  value: getIt<ChatViewModel>(),
-  child: const ChatUserListView(),
-);
-  },
-),
+          GoRoute(
+            name: RouteNames.chatUserList,
+            path: '/chatUsers',
+            builder: (context, state) {
+              return const ChatUserListView();
+            },
+          ),
         ],
       ),
     ],
