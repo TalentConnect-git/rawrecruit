@@ -16,15 +16,13 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
-  final locationController = TextEditingController();
-  final experienceController = TextEditingController();
   final salaryController = TextEditingController();
   final openingsController = TextEditingController();
   final skillsController = TextEditingController();
-  final tagsController = TextEditingController();
   final certificationsController = TextEditingController();
   final benefitsController = TextEditingController();
   final eligibilityController = TextEditingController();
+  final fieldOfStudyController = TextEditingController();
 
   String employmentType = "Full-time";
   String workMode = "On-site";
@@ -32,6 +30,84 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   String minEducation = "Bachelor's Degree";
   String workAuthorization = "Citizens Only";
   String experienceRange = "0-1 years";
+  String selectedTag = "Urgent hiring";
+  String selectedCity = "Mumbai";
+
+  final List<String> skillOptions = [
+    'node',
+    'python',
+    'react',
+    'typescript',
+    'css',
+    'html',
+    'java',
+    'flutter',
+    'dart',
+  ];
+
+  final List<String> certificationOptions = [
+    'AWS Certified',
+    'Microsoft Certified',
+    'Google Cloud Certified',
+    'Cisco Certified',
+    'PMP',
+  ];
+
+  final List<String> benefitOptions = [
+    'Health Insurance',
+    '401(k)',
+    'Paid Time Off',
+    'Flexible Schedule',
+    'Dental Insurance',
+  ];
+
+  final List<String> fieldOfStudyOptions = [
+    'Computer Science',
+    'Engineering',
+    'Business',
+    'Arts',
+    'Sciences',
+    'Mathematics',
+    'Medicine',
+    'Law',
+  ];
+
+  final List<String> indiaCities = [
+    "Mumbai",
+    "Delhi",
+    "Bangalore",
+    "Hyderabad",
+    "Chennai",
+    "Pune",
+  ];
+
+  final List<String> educationOptions = [
+    "High School",
+    "Bachelor's Degree",
+    "Master's Degree",
+    "PhD",
+  ];
+
+  final List<String> experienceOptions = [
+    "0-1 years",
+    "1-3 years",
+    "3-5 years",
+    "5-10 years",
+  ];
+
+  final List<String> workAuthorizationOptions = [
+    "Citizens Only",
+    "Permanent Residents",
+    "Work Visa Holders",
+    "Any",
+  ];
+
+  final List<String> tagOptions = [
+    "Urgent hiring",
+    "Fresher preferred",
+    "Remote-friendly",
+    "Work from Home",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -46,35 +122,31 @@ class _ReferralPostViewState extends State<ReferralPostView> {
           child: ListView(
             children: [
               _field("Job Title", controller: titleController),
-              _field(
-                "Description",
-                controller: descriptionController,
-                maxLines: 3,
+              _field("Description", controller: descriptionController, maxLines: 3),
+
+              _dropdown(
+                "Location",
+                selectedCity,
+                indiaCities,
+                (val) => setState(() => selectedCity = val!),
               ),
-              _field("Location", controller: locationController),
-              _field(
-                "Salary (CTC)",
-                controller: salaryController,
-                keyboardType: TextInputType.number,
-              ),
-              _field(
-                "Number of Openings",
-                controller: openingsController,
-                keyboardType: TextInputType.number,
-              ),
+
+              _field("Salary", controller: salaryController),
+              _field("Openings", controller: openingsController),
 
               _dropdown(
                 "Employment Type",
                 employmentType,
-                ["Full-time", "Part-time", "Internship"],
+                ["Full-time", "Part-time"],
                 (val) => setState(() => employmentType = val!),
               ),
 
-              _dropdown("Work Mode", workMode, [
-                "On-site",
-                "Remote",
-                "Hybrid",
-              ], (val) => setState(() => workMode = val!)),
+              _dropdown(
+                "Work Mode",
+                workMode,
+                ["On-site", "Remote", "Hybrid"],
+                (val) => setState(() => workMode = val!),
+              ),
 
               _dropdown(
                 "Broadcast Type",
@@ -86,102 +158,119 @@ class _ReferralPostViewState extends State<ReferralPostView> {
               _dropdown(
                 "Minimum Education",
                 minEducation,
-                ["Bachelor's Degree", "Master's Degree", "Diploma"],
+                educationOptions,
                 (val) => setState(() => minEducation = val!),
               ),
 
               _dropdown(
                 "Work Authorization",
                 workAuthorization,
-                ["Citizens Only", "Work Visa Required"],
+                workAuthorizationOptions,
                 (val) => setState(() => workAuthorization = val!),
               ),
 
               _dropdown(
                 "Experience Range",
                 experienceRange,
-                ["0-1 years", "1-3 years", "3-5 years", "5+ years"],
+                experienceOptions,
                 (val) => setState(() => experienceRange = val!),
               ),
 
-              _field("Skills (comma separated)", controller: skillsController),
-              _field("Tags (comma separated)", controller: tagsController),
-              _field(
-                "Certifications (comma separated)",
-                controller: certificationsController,
+              _dropdown(
+                "Tags",
+                selectedTag,
+                tagOptions,
+                (val) => setState(() => selectedTag = val!),
               ),
-              _field(
-                "Benefits (comma separated)",
-                controller: benefitsController,
+
+              _chipMultiSelectField(
+                "Preferred Field of Study",
+                fieldOfStudyController,
+                fieldOfStudyOptions,
               ),
+
+              _chipMultiSelectField(
+                "Skills",
+                skillsController,
+                skillOptions,
+              ),
+
+              _chipMultiSelectField(
+                "Certifications",
+                certificationsController,
+                certificationOptions,
+              ),
+
+              _chipMultiSelectField(
+                "Benefits",
+                benefitsController,
+                benefitOptions,
+              ),
+
               _field("Eligibility Criteria", controller: eligibilityController),
 
               const SizedBox(height: 20),
 
               ElevatedButton(
-                onPressed: vm.viewState == ViewState.busy
-                    ? null
-                    : () async {
-                        if (!_formKey.currentState!.validate()) return;
+               onPressed: () async {
+  final model = ReferralPostModel(
+    jobTitle: titleController.text.trim(),
+    description: descriptionController.text.trim(),
+    employmentType: employmentType,
+    workMode: workMode,
+    broadcastType: broadcastType,
+    jobType: "Referral",
+    location: [selectedCity],
+    minEducation: minEducation,
+    numberOfOpenings: int.tryParse(openingsController.text) ?? 0,
+    packageDetails: PackageDetails(
+      currency: "INR",
+      totalCTC: int.tryParse(salaryController.text) ?? 0,
+      fixedPay: 0,
+      joiningBonus: 0,
+    ),
+    skills: skillsController.text
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList(),
+    studentStreams: fieldOfStudyController.text
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList(),
+    tags: [selectedTag],
+    workAuthorization: workAuthorization,
+    yearsOfExperience: experienceRange,
+    benefits: benefitsController.text
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList(),
+    certifications: certificationsController.text
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList(),
+    eligibilityCriteria: eligibilityController.text.trim(),
+  );
 
-                        final model = ReferralPostModel(
-                          jobTitle: titleController.text.trim(),
-                          description: descriptionController.text.trim(),
-                          employmentType: employmentType,
-                          workMode: workMode,
-                          broadcastType: broadcastType,
-                          jobType: "Referral",
-                          location: [locationController.text.trim()],
-                          minEducation: minEducation,
-                          numberOfOpenings: int.parse(openingsController.text),
-                          packageDetails: PackageDetails(
-                            currency: "INR",
-                            totalCTC: int.parse(salaryController.text),
-                            fixedPay: 0,
-                            joiningBonus: 0,
-                          ),
-                          skills: skillsController.text
-                              .split(",")
-                              .map((e) => e.trim())
-                              .toList(),
-                          studentStreams: ["Computer Science"],
-                          tags: tagsController.text
-                              .split(",")
-                              .map((e) => e.trim())
-                              .toList(),
-                          workAuthorization: workAuthorization,
-                          yearsOfExperience: experienceRange,
-                          benefits: benefitsController.text
-                              .split(",")
-                              .map((e) => e.trim())
-                              .toList(),
-                          certifications: certificationsController.text
-                              .split(",")
-                              .map((e) => e.trim())
-                              .toList(),
-                          eligibilityCriteria: eligibilityController.text
-                              .trim(),
-                        );
+  final success = await vm.postJob(model);
 
-                        final success = await vm.postJob(model);
+  if (success && mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Referral Successfully Added"),
+        backgroundColor: Colors.green,
+      ),
+    );
 
-                        if (success && mounted) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Referral Successfully Added"),
-                              backgroundColor: Colors.green,
-                            ),
-                          );
-
-                          await Future.delayed(
-                            const Duration(milliseconds: 600),
-                          );
-                          Navigator.pop(context);
-                        }
-                      },
-                child: vm.viewState == ViewState.busy
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text("Post Job"),
+    Future.delayed(const Duration(seconds: 1), () {
+      if (mounted) Navigator.pop(context);
+    });
+  }
+},
+                child: const Text("Post Job"),
               ),
             ],
           ),
@@ -189,21 +278,121 @@ class _ReferralPostViewState extends State<ReferralPostView> {
       ),
     );
   }
+Widget _chipMultiSelectField(
+  String label,
+  TextEditingController controller,
+  List<String> options,
+) {
+  return StatefulBuilder(
+    builder: (context, setLocalState) {
+      final inputController = TextEditingController();
+      final focusNode = FocusNode();
 
+      List<String> selectedItems = controller.text.isEmpty
+          ? []
+          : controller.text.split(',').map((e) => e.trim()).toList();
+
+      void syncController() {
+        controller.text = selectedItems.join(', ');
+      }
+
+      void addItem(String value) {
+        final trimmed = value.trim();
+
+        if (trimmed.isEmpty) return;
+
+        if (!selectedItems.contains(trimmed)) {
+          selectedItems.add(trimmed);
+          syncController();
+          inputController.clear();
+          setLocalState(() {});
+        }
+      }
+
+      void removeItem(String value) {
+        selectedItems.remove(value);
+        syncController();
+        setLocalState(() {});
+      }
+
+      return Padding(
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label),
+
+            const SizedBox(height: 8),
+
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.black),
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ...selectedItems.map(
+                    (item) => Chip(
+                      label: Text(item),
+                      onDeleted: () => removeItem(item),
+                    ),
+                  ),
+
+                  SizedBox(
+                    width: 220,
+                    child: Autocomplete<String>(
+                      optionsBuilder: (textEditingValue) {
+                        if (textEditingValue.text.isEmpty) {
+                          return options;
+                        }
+
+                        return options.where(
+                          (item) => item.toLowerCase().contains(
+                                textEditingValue.text.toLowerCase(),
+                              ),
+                        );
+                      },
+                      onSelected: (value) {
+                        addItem(value);
+                      },
+                      fieldViewBuilder:
+                          (context, textController, focusNode, onSubmit) {
+                        return TextField(
+                          controller: textController,
+                          focusNode: focusNode,
+                          decoration: InputDecoration(
+                            hintText: "Add",
+                            border: InputBorder.none,
+                          ),
+                          onSubmitted: (value) {
+                            addItem(value);
+                          },
+                        );
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
   Widget _field(
     String label, {
     required TextEditingController controller,
     int maxLines = 1,
-    TextInputType keyboardType = TextInputType.text,
   }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: TextFormField(
         controller: controller,
         maxLines: maxLines,
-        keyboardType: keyboardType,
-        validator: (value) =>
-            value == null || value.isEmpty ? "Required field" : null,
         decoration: InputDecoration(
           labelText: label,
           border: const OutlineInputBorder(),
@@ -227,7 +416,12 @@ class _ReferralPostViewState extends State<ReferralPostView> {
           border: const OutlineInputBorder(),
         ),
         items: items
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+            .map(
+              (e) => DropdownMenuItem(
+                value: e,
+                child: Text(e),
+              ),
+            )
             .toList(),
         onChanged: onChanged,
       ),

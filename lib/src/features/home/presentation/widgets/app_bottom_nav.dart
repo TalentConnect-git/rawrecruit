@@ -8,12 +8,13 @@ class AppBottomNav extends StatelessWidget {
   const AppBottomNav({
     required this.currentIndex,
     required this.onTap,
+      required this.hasUnread,
     super.key,
   });
 
   final void Function(int index) onTap;
   final int currentIndex;
-
+final bool hasUnread;
   @override
   Widget build(BuildContext context) {
     final items = getIt<AppStateProvider>().isProfessional
@@ -35,10 +36,29 @@ class AppBottomNav extends StatelessWidget {
           ...items.map((item) {
             final isSelected = items.indexOf(item) == currentIndex;
 
-            Widget iconWidget = Icon(
-              isSelected ? item.selectedIcon : item.unSelectedIcon,
-              color: isSelected ? AppColors.primary : AppColors.secText,
-            );
+           Widget iconWidget = Stack(
+  clipBehavior: Clip.none,
+  children: [
+    Icon(
+      isSelected ? item.selectedIcon : item.unSelectedIcon,
+      color: isSelected ? AppColors.primary : AppColors.secText,
+    ),
+
+    if (item.label == 'Chat' && hasUnread)
+      Positioned(
+        right: -2,
+        top: -2,
+        child: Container(
+          width: 8,
+          height: 8,
+          decoration: const BoxDecoration(
+            color: Colors.red,
+            shape: BoxShape.circle,
+          ),
+        ),
+      ),
+  ],
+);
 
             return BottomBarItem(
               icon: iconWidget,
