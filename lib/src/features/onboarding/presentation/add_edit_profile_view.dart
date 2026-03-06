@@ -20,7 +20,130 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   late UserProfileController controller =
       addEditProfileViewModel.userProfileController;
   final _formKey = GlobalKey<FormState>();
+final degreeOptions = [
+  "B.Tech",
+  "B.E",
+  "Bachelor of Science",
+  "BCA",
+  "B.Com",
+  "BA",
+  "M.Tech",
+  "M.E",
+  "MSc",
+  "MBA",
+  "MCA",
+  "PhD",
+  "Diploma",
+  "Other",
+];
 
+final semesterOptions = List.generate(
+  8,
+  (index) => "Semester ${index + 1}",
+);
+
+final graduationYears = List.generate(
+  91,
+  (index) => (1960 + index).toString(),
+);
+
+final industryOptions = [
+  "Technology",
+  "Finance",
+  "Healthcare",
+  "Education",
+  "Manufacturing",
+  "Retail",
+  "Automobile",
+  "Construction",
+  "Telecommunications",
+  "Media",
+  "Hospitality",
+  "Pharmaceutical",
+  "Energy",
+  "Logistics",
+  "Agriculture",
+];
+
+final jobRoleOptions = [
+  "Software Developer",
+  "Frontend Developer",
+  "Backend Developer",
+  "Full Stack Developer",
+  "Mobile App Developer",
+  "UI/UX Designer",
+  "Data Analyst",
+  "Data Scientist",
+  "Machine Learning Engineer",
+  "DevOps Engineer",
+  "Cloud Architect",
+  "QA Engineer",
+  "Cyber Security Specialist",
+  "Network Engineer",
+  "Business Analyst",
+  "Product Manager",
+  "Project Manager",
+  "HR Recruiter",
+  "Marketing Specialist",
+  "Sales Executive",
+  "Finance Analyst",
+];
+
+final employmentOptions = [
+  "Full-time",
+  "Part-time",
+  "Contract",
+];
+
+final lookingForOptions = [
+  "Internship",
+  "Job",
+  "Both",
+];
+
+final genderOptions = [
+  "Male",
+  "Female",
+  "Non-binary",
+  "Prefer not to say",
+];
+
+final toolsOptions = [
+  "VS Code",
+  "Android Studio",
+  "Xcode",
+  "Postman",
+  "Docker",
+  "Kubernetes",
+  "GitHub",
+  "GitLab",
+  "JIRA",
+  "Slack",
+  "Figma",
+  "Adobe XD",
+  "Jenkins",
+  "Firebase",
+  "AWS Console",
+  "Google Cloud Platform",
+];
+
+final languageOptions = [
+  "English",
+  "Hindi",
+  "Marathi",
+  "Gujarati",
+  "Tamil",
+  "Telugu",
+  "Kannada",
+  "Malayalam",
+  "Punjabi",
+  "Bengali",
+  "French",
+  "German",
+  "Spanish",
+  "Japanese",
+  "Chinese",
+];
   @override
   void initState() {
     super.initState();
@@ -113,7 +236,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                       return null;
                     },
                   ),
-                  AppTextFields(controller: controller.gender, hint: 'Gender'),
+                  _dropdownField(controller.gender, 'Gender', genderOptions),
                   AppTextFields(controller: controller.dob, hint: 'DOB'),
                   AppTextFields(
                     controller: controller.ethnicity,
@@ -139,20 +262,24 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                     controller: controller.college,
                     hint: 'College',
                   ),
-                  AppTextFields(controller: controller.degree, hint: 'Degree'),
+                  _dropdownField(controller.degree, 'Degree', degreeOptions),
+
+                  _dropdownField(
+                    controller.semester,
+                    'Semester',
+                    semesterOptions,
+                  ),
+
+                  _dropdownField(
+                    controller.yearOfGraduation,
+                    'Graduation Year',
+                    graduationYears,
+                  ),
                   AppTextFields(
                     controller: controller.specialization,
                     hint: 'Specialization',
                   ),
                   AppTextFields(controller: controller.cgpa, hint: 'CGPA'),
-                  AppTextFields(
-                    controller: controller.semester,
-                    hint: 'Semester',
-                  ),
-                  AppTextFields(
-                    controller: controller.yearOfGraduation,
-                    hint: 'Graduation Year',
-                  ),
                 ],
               ),
 
@@ -219,20 +346,41 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
               ),
 
               /// ---------------- STRING LIST SECTIONS ----------------
-              _profileListSection('Skills', controller.skills),
+              _chipInputField('Skills', controller.skills.first),
               _profileListSection(
                 'Domain Knowledge',
                 controller.domainKnowledge,
               ),
-              _profileListSection('Employment Type', controller.employmentType),
-              _profileListSection('Industry', controller.industry),
-              _profileListSection('Job Roles', controller.jobRoles),
-              _profileListSection('Languages Known', controller.languagesKnown),
+              _chipDropdownField(
+                'Employment Type',
+                controller.employmentType.first,
+                employmentOptions,
+              ),
+              _chipDropdownField(
+                'Industry',
+                controller.industry.first,
+                industryOptions,
+              ),
+              _chipDropdownField(
+                'Industry',
+                controller.industry.first,
+                industryOptions,
+              ),
+              _chipDropdownField(
+                'Languages Known',
+                controller.languagesKnown.first,
+                languageOptions,
+              ),
               _profileListSection('Locations', controller.locations),
-              _profileListSection('Looking For', controller.lookingFor),
-              _profileListSection(
+              _dropdownField(
+                controller.lookingFor.first,
+                'Looking For',
+                lookingForOptions,
+              ),
+              _chipDropdownField(
                 'Tools & Platforms',
-                controller.toolsAndPlatforms,
+                controller.toolsAndPlatforms.first,
+                toolsOptions,
               ),
 
               /// ---------------- ACHIEVEMENTS ----------------
@@ -384,4 +532,135 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       ),
     );
   }
+  Widget _dropdownField(
+  TextEditingController controller,
+  String hint,
+  List<String> options,
+) {
+  String? selectedValue =
+      options.contains(controller.text) ? controller.text : null;
+
+  return DropdownButtonFormField<String>(
+    value: selectedValue,
+    decoration: const InputDecoration(
+      border: OutlineInputBorder(),
+    ),
+    hint: Text(hint),
+    items: options
+        .map(
+          (e) => DropdownMenuItem(
+            value: e,
+            child: Text(e),
+          ),
+        )
+        .toList(),
+    onChanged: (val) {
+      controller.text = val ?? '';
+      setState(() {});
+    },
+  );
+}
+Widget _chipDropdownField(
+  String label,
+  TextEditingController controller,
+  List<String> options,
+) {
+  return _chipMultiSelectField(label, controller, options);
+}
+Widget _chipInputField(
+  String label,
+  TextEditingController controller,
+) {
+  return _chipMultiSelectField(label, controller, []);
+}
+Widget _chipMultiSelectField(
+  String label,
+  TextEditingController controller,
+  List<String> options,
+) {
+  final inputController = TextEditingController();
+
+  List<String> selectedItems = controller.text.isEmpty
+      ? []
+      : controller.text.split(',').map((e) => e.trim()).toList();
+
+  return StatefulBuilder(
+    builder: (context, setLocalState) {
+      void addItem(String value) {
+        final trimmed = value.trim();
+
+        if (trimmed.isEmpty) return;
+
+        if (!selectedItems.contains(trimmed)) {
+          selectedItems.add(trimmed);
+          controller.text = selectedItems.join(', ');
+          inputController.clear();
+          setLocalState(() {});
+        }
+      }
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label),
+
+          const SizedBox(height: 8),
+
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ...selectedItems.map(
+                  (item) => Chip(
+                    label: Text(item),
+                    onDeleted: () {
+                      selectedItems.remove(item);
+                      controller.text = selectedItems.join(', ');
+                      setLocalState(() {});
+                    },
+                  ),
+                ),
+
+                SizedBox(
+                  width: 250,
+                  child: Autocomplete<String>(
+                    optionsBuilder: (textEditingValue) {
+                      if (textEditingValue.text.isEmpty) return options;
+
+                      return options.where(
+                        (item) => item.toLowerCase().contains(
+                              textEditingValue.text.toLowerCase(),
+                            ),
+                      );
+                    },
+                    onSelected: addItem,
+                    fieldViewBuilder:
+                        (context, textController, focusNode, onSubmit) {
+                      return TextField(
+                        controller: textController,
+                        focusNode: focusNode,
+                        decoration: const InputDecoration(
+                          hintText: "Add",
+                          border: InputBorder.none,
+                        ),
+                        onSubmitted: addItem,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 }
