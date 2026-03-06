@@ -15,10 +15,10 @@ class RouteNames {
   static final referalJobListing = 'referalJobListing';
   static final referralDetail = 'referralDetail';
   static final referralPost = 'referralPost';
-  static final applicantDetail='applicantDetail';
-  static final professionalAppliedJobs= 'professionalAppliedJobs';
-    static final professionalAppliedJobsDetail= 'professionalAppliedJobsDetail';
-    static final referralPostDetail='referralPostDetail';
-        static final chatUserList='chatUserList';
-
+  static final applicantDetail = 'applicantDetail';
+  static final professionalAppliedJobs = 'professionalAppliedJobs';
+  static final professionalAppliedJobsDetail = 'professionalAppliedJobsDetail';
+  static final referralPostDetail = 'referralPostDetail';
+  static final chatUserList = 'chatUserList';
+  static final notification = 'notification';
 }

@@ -12,6 +12,7 @@ import 'package:rawrecruit/src/features/dashboard/entities/job_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
+import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileView;
@@ -95,7 +96,6 @@ class AppRouter {
         builder: (context, state) {
           return const ReferralJobListing();
         },
-        
       ),
       GoRoute(
         name: RouteNames.applicationDetail,
@@ -136,6 +136,13 @@ class AppRouter {
         builder: (context, state) {
           final application = state.extra as ReferralApplication;
           return ApplicationDetailsView(application: application);
+        },
+      ),
+      GoRoute(
+        name: RouteNames.notification,
+        path: '/notification',
+        builder: (context, state) {
+          return NotificationView();
         },
       ),
       ShellRoute(

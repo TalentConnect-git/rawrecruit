@@ -23,8 +23,8 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-       final chatVm = context.read<ChatViewModel>();
-    chatVm.fetchUnreadCounts();
+      final chatVm = context.read<ChatViewModel>();
+      chatVm.fetchUnreadCounts();
 
       if (!appStateProvider.isAuthComplete) {
         final failure = await appStateProvider.getAuthDetails();
@@ -71,7 +71,7 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final currentIndex = _calculateIndex(context);
-  final chatVm = context.watch<ChatViewModel>();
+    final chatVm = context.watch<ChatViewModel>();
     return PopScope(
       canPop: currentIndex == 0,
       onPopInvokedWithResult: (bool didPop, _) async {
@@ -93,6 +93,12 @@ class _HomeViewState extends State<HomeView> {
           actions: [
             IconButton(
               onPressed: () async {
+                context.pushNamed(RouteNames.notification);
+              },
+              icon: Icon(Icons.notifications),
+            ),
+            IconButton(
+              onPressed: () async {
                 final failure = await getIt<AppStateProvider>().logout();
                 Toasts.showSuccessOrFailureToast(
                   context,
@@ -112,7 +118,7 @@ class _HomeViewState extends State<HomeView> {
         body: widget.navigationShell,
         bottomNavigationBar: AppBottomNav(
           currentIndex: currentIndex,
-            hasUnread: chatVm.totalUnreadCount > 0,
+          hasUnread: chatVm.totalUnreadCount > 0,
           onTap: (index) {
             switch (index) {
               case 0:

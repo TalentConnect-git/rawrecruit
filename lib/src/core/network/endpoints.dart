@@ -30,8 +30,9 @@ class Endpoints {
   static const String professionalAppliedJobs =
       'application/status/candidate/Referral';
 
-      static const String chatUserList='api/messages/allusers';
-      static const String getUnreadCounts="api/messages/unread-count";
-      static const String createConversation="api/messages/conversation";
-}
+  static const String chatUserList = 'api/messages/allusers';
+  static const String getUnreadCounts = "api/messages/unread-count";
+  static const String createConversation = "api/messages/conversation";
 
+  static const String apiNotifications = "api/notifications";
+}
