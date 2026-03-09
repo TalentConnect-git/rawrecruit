@@ -124,7 +124,8 @@ class Toasts {
   //   );
   // }
 
-  static void showErrorToast(BuildContext context, {required String message}) {
+  static void showErrorToast(BuildContext context, {required String? message}) {
+    if (message == null) return;
     _showToast(
       context,
       message: message,
