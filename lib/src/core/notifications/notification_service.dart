@@ -20,9 +20,11 @@ class NotificationService {
     // Request permissions
     await _fcm.requestPermission();
     String? fcmToken = await _fcm.getToken();
-
+print("FCM TOKEN = $fcmToken");
     SharedPrefHelper.setString("deviceToken", fcmToken ?? '');
-
+FirebaseMessaging.instance.onTokenRefresh.listen((newToken) {
+  SharedPrefHelper.setString("deviceToken", newToken);
+});
     // Foreground message handling
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('📩 Foreground notification: ${message.notification?.title}');
