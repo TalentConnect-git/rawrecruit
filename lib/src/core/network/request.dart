@@ -1,5 +1,5 @@
 import 'package:rawrecruit/src/config/index.dart';
-
+import 'package:dio/dio.dart';
 enum RequestMethod { get, post, put, patch, delete }
 
 class Request {
@@ -9,6 +9,7 @@ class Request {
     this.queryParams = const {},
     this.body,
     this.headers,
+      this.formData,  
     this.isSafeRoute = false,
   });
 
@@ -16,7 +17,9 @@ class Request {
   final Map<String, dynamic> queryParams;
   final Map<String, String>? headers;
   final dynamic body;
+   final FormData? formData;    
   final bool isSafeRoute;
+  
 
   final RequestMethod method;
 

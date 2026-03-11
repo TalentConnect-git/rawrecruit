@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
@@ -7,6 +9,9 @@ class AddEditProfileViewModel extends ViewStateProvider {
 
   final UserProfileController userProfileController = UserProfileController();
 
+  // ← store the picked file here
+  File? pickedResumeFile;
+
   Future<Failure?> saveProfile() async {
     Failure? failure;
 
@@ -14,6 +19,7 @@ class AddEditProfileViewModel extends ViewStateProvider {
 
     final result = await _onboardingRepository.updateOnboardingUserProfile(
       body: userProfileController.toMap(),
+      resume: pickedResumeFile,    // ← pass file
     );
 
     result.fold((e) {

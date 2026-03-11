@@ -13,5 +13,6 @@ abstract class OnboardingDataSource {
 
   ResultFuture<UserProfile?> updateOnboardingUserProfile({
     required Map<String, dynamic> body,
+    File? resume,      // ← ADD
   });
 }

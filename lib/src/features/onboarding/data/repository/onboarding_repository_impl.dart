@@ -25,9 +25,11 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
     body: body,
     resume: resume,
   );
-
-  @override
-  ResultFuture<UserProfile?> updateOnboardingUserProfile({
-    required Map<String, dynamic> body,
-  }) => _onboardingDataSource.updateOnboardingUserProfile(body: body);
-}
+@override
+ResultFuture<UserProfile?> updateOnboardingUserProfile({
+  required Map<String, dynamic> body,
+  File? resume,        // ← ADD
+}) => _onboardingDataSource.updateOnboardingUserProfile(
+  body: body,
+  resume: resume,      // ← ADD
+);}
