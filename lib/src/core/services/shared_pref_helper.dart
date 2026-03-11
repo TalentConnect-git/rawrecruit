@@ -1,4 +1,5 @@
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SharedPrefHelper {
   static SharedPreferences? _prefs;
@@ -8,14 +9,16 @@ class SharedPrefHelper {
   }
 
   static Future<bool> setString(String key, String value) async {
+    await init();
     return await _prefs!.setString(key, value);
   }
 
   static String? getString(String key) {
-    return _prefs!.getString(key);
+    return _prefs?.getString(key);
   }
 
   static Future<bool> remove(String key) async {
+    await init();
     return await _prefs!.remove(key);
   }
 }

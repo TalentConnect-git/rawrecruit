@@ -52,10 +52,7 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
             spacing: 8,
             children: [
               _buildStatusChip(application.currentStatus),
-              if (application.adminApprovalStatus != null)
-                _buildStatusChip(
-                  "${application.adminApprovalStatus} • Admin",
-                ),
+            
             ],
           ),
 

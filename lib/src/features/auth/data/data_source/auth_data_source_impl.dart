@@ -7,16 +7,17 @@ import 'auth_data_source.dart';
 
 class AuthDataSourceImpl implements AuthDataSource {
   final NetworkService _networkService = NetworkService();
-
   @override
   ResultFuture<Auth?> login({
     required String email,
     required String password,
   }) async {
+    final deviceToken = SharedPrefHelper.getString("deviceToken");
+
     final Request request = Request(
       method: RequestMethod.post,
       endpoint: Endpoints.apiAuthLogin,
-      body: {'email': email, 'password': password},
+      body: {'email': email, 'password': password, 'deviceToken':deviceToken},
     );
 
     try {
@@ -47,6 +48,8 @@ class AuthDataSourceImpl implements AuthDataSource {
     required UserType userType,
     required String otp,
   }) async {
+    final deviceToken = SharedPrefHelper.getString("deviceToken");
+
     final Request request = Request(
       method: RequestMethod.post,
       endpoint: Endpoints.apiAuthSignup,
@@ -55,6 +58,7 @@ class AuthDataSourceImpl implements AuthDataSource {
         'password': password,
         'userType': userType.apiLabel,
         'otp': otp,
+          'deviceToken': deviceToken,
       },
     );
 

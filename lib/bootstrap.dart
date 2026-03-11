@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/config/index.dart'
     show getApiConfig, FlavorConfig, initializeFirebaseApp;
+    import 'package:rawrecruit/src/core/services/shared_pref_helper.dart';
 import 'package:rawrecruit/src/core/index.dart'
-    show initDependencyLocator, getIt;
+    show initDependencyLocator, getIt, NotificationService;
 
 import 'app.dart';
 
@@ -25,6 +26,8 @@ Future<void> _init(Flavor flavor) async {
 Future<void> _preInit(Flavor flavor) async {
   try {
     await initializeFirebaseApp(flavor);
+     await SharedPrefHelper.init();
+         await NotificationService().init();
   } finally {
     await initDependencyLocator();
     await getIt.allReady();
