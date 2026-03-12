@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dartz/dartz.dart';
 import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show
         Request,
@@ -46,6 +47,7 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
   ResultFuture<UserProfile?> submitOnboardingUserProfile({
     required Map<String, dynamic> body,
     File? resume,
+    XFile? image,
   }) async {
     try {
       // Build multipart form — file goes under key 'resume'
@@ -56,13 +58,18 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
             resume.path,
             filename: resume.path.split('/').last,
           ),
+        if (image != null)
+          'profileImage': await MultipartFile.fromFile(
+            image.path,
+            filename: image.path.split('/').last,
+          ),
       });
 
       final Request request = Request(
         method: RequestMethod.post,
         endpoint: Endpoints.apiOnboarding,
         isSafeRoute: true,
-        formData: formData,   // ← FormData, not body
+        formData: formData, // ← FormData, not body
       );
 
       final result = await _networkService.request(request);
@@ -79,39 +86,45 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
     return Right(null);
   }
 
-@override
-ResultFuture<UserProfile?> updateOnboardingUserProfile({
-  required Map<String, dynamic> body,
-  File? resume,        // ← ADD
-}) async {
-  try {
-    final formData = FormData.fromMap({
-      ...body,
-      if (resume != null)
-        'resume': await MultipartFile.fromFile(
-          resume.path,
-          filename: resume.path.split('/').last,
-        ),
-    });
+  @override
+  ResultFuture<UserProfile?> updateOnboardingUserProfile({
+    required Map<String, dynamic> body,
+    File? resume, // ← ADD
+    XFile? image,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        ...body,
+        if (image != null)
+          'profileImage': await MultipartFile.fromFile(
+            image.path,
+            filename: image.path.split('/').last,
+          ),
+        if (resume != null)
+          'resume': await MultipartFile.fromFile(
+            resume.path,
+            filename: resume.path.split('/').last,
+          ),
+      });
 
-    final Request request = Request(
-      method: RequestMethod.put,
-      endpoint: Endpoints.apiOnboardingUpdate,
-      isSafeRoute: true,
-      formData: formData,    // ← FormData instead of body
-    );
+      final Request request = Request(
+        method: RequestMethod.put,
+        endpoint: Endpoints.apiOnboardingUpdate,
+        isSafeRoute: true,
+        formData: formData, // ← FormData instead of body
+      );
 
-    final result = await _networkService.request(request);
-    final response = result.data as Map<String, dynamic>;
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
 
-    if (response.isNotEmpty) {
-      final profile = UserProfile.fromJson(response['data']);
-      return Right(profile);
+      if (response.isNotEmpty) {
+        final profile = UserProfile.fromJson(response['data']);
+        return Right(profile);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
     }
-  } catch (e) {
-    return Left(APIException.from(e));
-  }
 
-  return Right(null);
-}
+    return Right(null);
+  }
 }

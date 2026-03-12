@@ -33,7 +33,7 @@ class _MyProfileViewState extends State<MyProfileView> {
         body: Consumer<MyProfileViewModel>(
           builder: (vmContext, vm, _) {
             if (vm.isLoading) {
-              return AppLoadingIndicator();
+              return Center(child: AppLoadingIndicator());
             }
 
             return SingleChildScrollView(
@@ -59,12 +59,22 @@ class _MyProfileViewState extends State<MyProfileView> {
                       spacing: 16,
                       children: [
                         Container(
-                          padding: EdgeInsets.all(12),
+                          clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColors.card,
                           ),
-                          child: Icon(Icons.person),
+                          child: vm.isProfileAvailable
+                              ? Image.network(
+                                  vm.userProfile?.profileImage ?? '',
+                                  height: 50,
+                                  width: 50,
+                                  fit: BoxFit.cover,
+                                )
+                              : Padding(
+                                  padding: const EdgeInsets.all(12),
+                                  child: Icon(Icons.person),
+                                ),
                         ),
                         Expanded(
                           child: Column(
@@ -528,54 +538,67 @@ class _MyProfileViewState extends State<MyProfileView> {
                         ],
                       ),
                     ),
-if ((vm.userProfile?.resume ?? '').isNotEmpty)
-  Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      boxShadow: [
-        BoxShadow(color: AppColors.shadow, spreadRadius: 1, blurRadius: 1),
-      ],
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.red.shade50,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(Icons.picture_as_pdf, color: Colors.red),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Resume', style: AppTextStyles.s16W600),
-              Text(
-                'Tap to download',
-                style: AppTextStyles.s14W600.copyWith(
-                  color: AppColors.chipText,
-                ),
-              ),
-            ],
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.download_rounded),
-          color: AppColors.chipText,
-          onPressed: () async {
-            final uri = Uri.parse(vm.userProfile!.resume!);
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-            }
-          },
-        ),
-      ],
-    ),
-  ),
+                  if ((vm.userProfile?.resume ?? '').isNotEmpty)
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 20,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.shadow,
+                            spreadRadius: 1,
+                            blurRadius: 1,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade50,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(
+                              Icons.picture_as_pdf,
+                              color: Colors.red,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Resume', style: AppTextStyles.s16W600),
+                                Text(
+                                  'Tap to download',
+                                  style: AppTextStyles.s14W600.copyWith(
+                                    color: AppColors.chipText,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.download_rounded),
+                            color: AppColors.chipText,
+                            onPressed: () async {
+                              final uri = Uri.parse(vm.userProfile!.resume!);
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(
+                                  uri,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   AppButton(
                     onPressed: () async {
                       final result = await context.pushNamed(

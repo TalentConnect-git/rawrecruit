@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 
@@ -12,6 +13,8 @@ class AddEditProfileViewModel extends ViewStateProvider {
   // ← store the picked file here
   File? pickedResumeFile;
 
+  XFile? pickedImage;
+
   Future<Failure?> saveProfile() async {
     Failure? failure;
 
@@ -19,7 +22,8 @@ class AddEditProfileViewModel extends ViewStateProvider {
 
     final result = await _onboardingRepository.updateOnboardingUserProfile(
       body: userProfileController.toMap(),
-      resume: pickedResumeFile,    // ← pass file
+      resume: pickedResumeFile,
+      image: pickedImage,
     );
 
     result.fold((e) {

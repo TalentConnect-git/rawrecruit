@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:image_picker/image_picker.dart';
 import 'package:rawrecruit/src/core/network/typedef.dart';
 import 'package:rawrecruit/src/features/onboarding/data/data_source/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/entities/user_profile.dart';
@@ -21,15 +22,20 @@ class OnboardingRepositoryImpl implements OnboardingRepository {
   ResultFuture<UserProfile?> submitOnboardingUserProfile({
     required Map<String, dynamic> body,
     File? resume,
+    XFile? image,
   }) => _onboardingDataSource.submitOnboardingUserProfile(
     body: body,
     resume: resume,
+    image: image,
   );
-@override
-ResultFuture<UserProfile?> updateOnboardingUserProfile({
-  required Map<String, dynamic> body,
-  File? resume,        // ← ADD
-}) => _onboardingDataSource.updateOnboardingUserProfile(
-  body: body,
-  resume: resume,      // ← ADD
-);}
+  @override
+  ResultFuture<UserProfile?> updateOnboardingUserProfile({
+    required Map<String, dynamic> body,
+    File? resume, // ← ADD
+    XFile? image,
+  }) => _onboardingDataSource.updateOnboardingUserProfile(
+    body: body,
+    resume: resume, // ← ADD
+    image: image,
+  );
+}

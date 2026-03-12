@@ -27,7 +27,15 @@ class _ShortlistViewState extends State<ShortlistView> {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: viewModel),
-        ChangeNotifierProvider(create: (_) => ApplicationViewModel()),
+        ChangeNotifierProvider(
+          create: (_) {
+            final vm = ApplicationViewModel();
+
+            vm.fetchApplications();
+
+            return vm;
+          },
+        ),
       ],
       child: Consumer<ShortlistViewModel>(
         builder: (context, vm, _) {
