@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show
         Request,
@@ -46,14 +47,24 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
     required Map<String, dynamic> body,
     File? resume,
   }) async {
-    final Request request = Request(
-      method: RequestMethod.post,
-      endpoint: Endpoints.apiOnboarding,
-      isSafeRoute: true,
-      body: body,
-    );
-
     try {
+      // Build multipart form — file goes under key 'resume'
+      final formData = FormData.fromMap({
+        ...body,
+        if (resume != null)
+          'resume': await MultipartFile.fromFile(
+            resume.path,
+            filename: resume.path.split('/').last,
+          ),
+      });
+
+      final Request request = Request(
+        method: RequestMethod.post,
+        endpoint: Endpoints.apiOnboarding,
+        isSafeRoute: true,
+        formData: formData,   // ← FormData, not body
+      );
+
       final result = await _networkService.request(request);
       final response = result.data as Map<String, dynamic>;
 
@@ -68,29 +79,39 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
     return Right(null);
   }
 
-  @override
-  ResultFuture<UserProfile?> updateOnboardingUserProfile({
-    required Map<String, dynamic> body,
-  }) async {
+@override
+ResultFuture<UserProfile?> updateOnboardingUserProfile({
+  required Map<String, dynamic> body,
+  File? resume,        // ← ADD
+}) async {
+  try {
+    final formData = FormData.fromMap({
+      ...body,
+      if (resume != null)
+        'resume': await MultipartFile.fromFile(
+          resume.path,
+          filename: resume.path.split('/').last,
+        ),
+    });
+
     final Request request = Request(
       method: RequestMethod.put,
       endpoint: Endpoints.apiOnboardingUpdate,
       isSafeRoute: true,
-      body: body,
+      formData: formData,    // ← FormData instead of body
     );
 
-    try {
-      final result = await _networkService.request(request);
-      final response = result.data as Map<String, dynamic>;
+    final result = await _networkService.request(request);
+    final response = result.data as Map<String, dynamic>;
 
-      if (response.isNotEmpty) {
-        final profile = UserProfile.fromJson(response['data']);
-        return Right(profile);
-      }
-    } catch (e) {
-      return Left(APIException.from(e));
+    if (response.isNotEmpty) {
+      final profile = UserProfile.fromJson(response['data']);
+      return Right(profile);
     }
-
-    return Right(null);
+  } catch (e) {
+    return Left(APIException.from(e));
   }
+
+  return Right(null);
+}
 }

@@ -34,7 +34,7 @@ class NetworkService {
 
     return _dio.request(
       request.endpoint,
-      data: request.body,
+      data: request.formData ?? request.body,
       queryParameters: request.queryParams,
       options: Options(method: method, headers: headers),
     );

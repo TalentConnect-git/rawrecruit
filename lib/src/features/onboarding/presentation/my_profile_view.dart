@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/view_model/my_profile_view_model.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyProfileView extends StatefulWidget {
   const MyProfileView({super.key});
@@ -527,7 +528,54 @@ class _MyProfileViewState extends State<MyProfileView> {
                         ],
                       ),
                     ),
-
+if ((vm.userProfile?.resume ?? '').isNotEmpty)
+  Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+    decoration: BoxDecoration(
+      color: Colors.white,
+      boxShadow: [
+        BoxShadow(color: AppColors.shadow, spreadRadius: 1, blurRadius: 1),
+      ],
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+            color: Colors.red.shade50,
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: const Icon(Icons.picture_as_pdf, color: Colors.red),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Resume', style: AppTextStyles.s16W600),
+              Text(
+                'Tap to download',
+                style: AppTextStyles.s14W600.copyWith(
+                  color: AppColors.chipText,
+                ),
+              ),
+            ],
+          ),
+        ),
+        IconButton(
+          icon: const Icon(Icons.download_rounded),
+          color: AppColors.chipText,
+          onPressed: () async {
+            final uri = Uri.parse(vm.userProfile!.resume!);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri, mode: LaunchMode.externalApplication);
+            }
+          },
+        ),
+      ],
+    ),
+  ),
                   AppButton(
                     onPressed: () async {
                       final result = await context.pushNamed(
