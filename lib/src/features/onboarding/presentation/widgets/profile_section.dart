@@ -28,6 +28,7 @@ class ProfileSection extends StatelessWidget {
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
         spacing: spacing,
         children: [
           Row(

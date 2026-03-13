@@ -7,30 +7,23 @@ import 'package:rawrecruit/src/features/application/entities/application_model.d
 class ApplicationCard extends StatelessWidget {
   final ApplicationModel model;
 
-  const ApplicationCard({
-    super.key,
-    required this.model,
-  });
+  const ApplicationCard({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
-    final title =
-        model.jobDetails?.jobRoles?.isNotEmpty == true
-            ? model.jobDetails!.jobRoles!.first
-            : "-";
+    final title = model.jobDetails?.jobRoles?.isNotEmpty == true
+        ? model.jobDetails!.jobRoles!.first
+        : "-";
 
-    final company =
-        model.companyProfile?.companyDetails?.companyName ?? "-";
+    final company = model.companyProfile?.companyDetails?.companyName ?? "-";
 
-    final location =
-        model.jobDetails?.location?.isNotEmpty == true
-            ? model.jobDetails!.location!.first
-            : "-";
+    final location = model.jobDetails?.location?.isNotEmpty == true
+        ? model.jobDetails!.location!.first
+        : "-";
 
     final status = model.currentStatus ?? "";
 
-    final isAccepted =
-        status.toLowerCase() == "accepted";
+    final isAccepted = status.toLowerCase() == "accepted";
 
     return InkWell(
       borderRadius: BorderRadius.circular(14),
@@ -48,33 +41,21 @@ class ApplicationCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(14),
         ),
         child: Row(
-          mainAxisAlignment:
-              MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-
             /// Left Content
             Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: AppTextStyles.s16W600,
-                ),
+                Text(title, style: AppTextStyles.s16W600),
                 const SizedBox(height: 6),
-                Text(
-                  company,
-                  style: AppTextStyles.s18W600,
-                ),
+                Text(company, style: AppTextStyles.s18W600),
                 const SizedBox(height: 6),
                 Row(
                   children: [
                     const Icon(Icons.location_on, size: 16),
                     const SizedBox(width: 4),
-                    Text(
-                      location,
-                      style: AppTextStyles.s12W400,
-                    ),
+                    Text(location, style: AppTextStyles.s12W400),
                   ],
                 ),
               ],
@@ -82,26 +63,16 @@ class ApplicationCard extends StatelessWidget {
 
             /// Status Badge
             Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 16,
-                vertical: 10,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               decoration: BoxDecoration(
-                color: isAccepted
-                    ? Colors.green
-                    : const Color(0xFFEAEAEA),
-                borderRadius:
-                    BorderRadius.circular(12),
+                color: isAccepted ? Colors.green : const Color(0xFFEAEAEA),
+                borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                isAccepted
-                    ? "Accepted"
-                    : "Applied",
+                status.toCapitalise,
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
-                  color: isAccepted
-                      ? Colors.white
-                      : Colors.black,
+                  color: isAccepted ? Colors.white : Colors.black,
                 ),
               ),
             ),

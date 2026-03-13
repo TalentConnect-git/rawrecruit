@@ -4,7 +4,8 @@ import '../../../../common/index.dart';
 
 class JobCard extends StatelessWidget {
   final String jobId;
-  final String title;
+  final String title;       // job role / internship role
+  final String companyName; // company name
   final String workMode;
   final String location;
   final String package;
@@ -21,6 +22,7 @@ class JobCard extends StatelessWidget {
     super.key,
     required this.jobId,
     required this.title,
+    required this.companyName,
     required this.workMode,
     required this.location,
     required this.package,
@@ -53,11 +55,25 @@ class JobCard extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: Text(
-                    title,
-                    style: AppTextStyles.s18W600.copyWith(
-                      color: AppColors.text,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: AppTextStyles.s18W600.copyWith(
+                          color: AppColors.text,
+                        ),
+                      ),
+                      if (companyName.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Text(
+                          companyName,
+                          style: AppTextStyles.s14W400.copyWith(
+                            color: AppColors.text.withOpacity(0.65),
+                          ),
+                        ),
+                      ],
+                    ],
                   ),
                 ),
 

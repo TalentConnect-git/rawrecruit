@@ -62,17 +62,23 @@ class _InternshipViewState extends State<InternshipView> {
               /// ✅ DEFINE isApplied
               final isApplied = applicationVM.isApplied(internship.id ?? '');
 
+             
               return JobCard(
                 jobId: internship.id ?? '',
-                title: internship.jobRoles?.first ?? '',
+                // Show job role as the title
+                title: internship.jobRoles?.isNotEmpty == true
+                    ? internship.jobRoles!.first
+                    : '',
+                // Show company name below title
+                companyName: internship
+                        .companyPosted?.companyDetails?.companyName ??
+                    '',
                 yoe: 0,
                 workMode: internship.workMode?.first ?? '',
                 location: internship.location?.first ?? '',
                 package: "₹${internship.packageDetails?.totalCTC ?? 0}",
                 skills: internship.skills ?? [],
                 description: internship.description ?? '',
-
-                /// 🔖 Bookmark
                 isSaved: isSaved,
                 onBookmarkToggle: () {
                   shortlistVM.toggleSave(
@@ -81,19 +87,20 @@ class _InternshipViewState extends State<InternshipView> {
                     isSaved: isSaved,
                   );
                 },
-
-                /// 🚀 Apply API
                 isApplied: isApplied,
                 onApply: () {
                   applicationVM.apply(internship.id ?? '');
                 },
-
-                onTap: () {
-                  context.pushNamed(
-                    RouteNames.internshipDetail,
-                    extra: internship,
-                  );
-                },
+              onTap: () async {
+  await context.pushNamed(
+    RouteNames.internshipDetail,
+    extra: internship,
+  );
+  if (context.mounted) {
+    context.read<ShortlistViewModel>().fetchSaved();
+    context.read<ApplicationViewModel>().fetchApplications();
+  }
+},
               );
             },
           );

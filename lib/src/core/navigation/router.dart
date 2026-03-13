@@ -28,7 +28,9 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/vie
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
+import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
+import '../../features/application/presentation/view_model/application_view_model.dart';
 import '../../features/chat/index.dart';
 import '../../features/dashboard/presentation/internship_detail_page.dart';
 import '../../features/dashboard/presentation/job_detail_page.dart';
@@ -106,21 +108,41 @@ class AppRouter {
         },
       ),
       GoRoute(
-        name: RouteNames.jobDetail,
-        path: '/jobDetail',
-        builder: (context, state) {
-          final job = state.extra as JobModel;
-          return JobDetailView(job: job);
-        },
-      ),
-      GoRoute(
-        name: RouteNames.internshipDetail,
-        path: '/internshipDetail',
-        builder: (context, state) {
-          final internship = state.extra as InternshipModel;
-          return InternshipDetailView(internship: internship);
-        },
-      ),
+  name: RouteNames.jobDetail,
+  path: '/jobDetail',
+  builder: (context, state) {
+    final job = state.extra as JobModel;
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ShortlistViewModel()..fetchSaved(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ApplicationViewModel()..fetchApplications(),
+        ),
+      ],
+      child: JobDetailView(job: job),
+    );
+  },
+),
+GoRoute(
+  name: RouteNames.internshipDetail,
+  path: '/internshipDetail',
+  builder: (context, state) {
+    final internship = state.extra as InternshipModel;
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => ShortlistViewModel()..fetchSaved(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ApplicationViewModel()..fetchApplications(),
+        ),
+      ],
+      child: InternshipDetailView(internship: internship),
+    );
+  },
+),
 
       GoRoute(
         name: RouteNames.addEditProfileView,

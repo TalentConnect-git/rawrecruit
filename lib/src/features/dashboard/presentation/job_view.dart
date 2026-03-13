@@ -57,20 +57,21 @@ class _JobViewState extends State<JobView> {
 
               /// 🔥 Check if saved
               final isSaved = shortlistVM.savedJobIds.contains(job.id);
-
-              return JobCard(
+    return JobCard(
                 jobId: job.id ?? '',
-                title: job.companyName ?? '',
+                // Show job role as the title
+                title: job.jobRoles?.isNotEmpty == true
+                    ? job.jobRoles!.first
+                    : (job.jobTitle ?? ''),
+                // Show company name below title
+                companyName: job.companyName ?? '',
                 yoe: 0,
                 workMode: job.workMode?.first ?? '',
                 location: job.location?.first ?? '',
                 package: "₹${job.packageDetails?.totalCTC ?? 0}",
                 skills: job.skills ?? [],
                 description: job.description ?? '',
-
-                /// 🔥 Bookmark connected to API
                 isSaved: isSaved,
-
                 onBookmarkToggle: () {
                   shortlistVM.toggleSave(
                     jobId: job.id ?? '',
@@ -78,15 +79,17 @@ class _JobViewState extends State<JobView> {
                     isSaved: isSaved,
                   );
                 },
-
                 onApply: () {
                   applicationVM.apply(job.id ?? '');
                 },
                 isApplied: applicationVM.isApplied(job.id ?? ''),
-
-                onTap: () {
-                  context.pushNamed(RouteNames.jobDetail, extra: job);
-                },
+              onTap: () async {
+  await context.pushNamed(RouteNames.jobDetail, extra: job);
+  if (context.mounted) {
+    context.read<ShortlistViewModel>().fetchSaved();
+    context.read<ApplicationViewModel>().fetchApplications();
+  }
+},
               );
             },
           );

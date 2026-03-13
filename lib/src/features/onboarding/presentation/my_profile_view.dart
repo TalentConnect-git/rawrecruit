@@ -14,15 +14,15 @@ class MyProfileView extends StatefulWidget {
 }
 
 class _MyProfileViewState extends State<MyProfileView> {
-  MyProfileViewModel myProfileViewModel = MyProfileViewModel();
+  final MyProfileViewModel myProfileViewModel = MyProfileViewModel();
 
   @override
   void initState() {
+    super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final failure = await myProfileViewModel.getUserProfile();
-      failure?.showError(context);
+      if (mounted) failure?.showError(context);
     });
-    super.initState();
   }
 
   @override
@@ -33,38 +33,41 @@ class _MyProfileViewState extends State<MyProfileView> {
         body: Consumer<MyProfileViewModel>(
           builder: (vmContext, vm, _) {
             if (vm.isLoading) {
-              return AppLoadingIndicator();
+              return const Center(child: AppLoadingIndicator());
             }
 
+            final p = vm.userProfile;
+
             return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 spacing: 20,
                 children: [
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.shadow,
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+
+                  // ── HEADER CARD ──────────────────────────────────────────
+                  _card(
                     child: Row(
                       spacing: 16,
                       children: [
                         Container(
-                          padding: EdgeInsets.all(12),
+                          clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             color: AppColors.card,
                           ),
-                          child: Icon(Icons.person),
+                          child: vm.isProfileAvailable &&
+                                  (p?.profileImage ?? '').isNotEmpty
+                              ? Image.network(
+                                  p!.profileImage!,
+                                  height: 60,
+                                  width: 60,
+                                  fit: BoxFit.cover,
+                                )
+                              : const Padding(
+                                  padding: EdgeInsets.all(14),
+                                  child: Icon(Icons.person, size: 32),
+                                ),
                         ),
                         Expanded(
                           child: Column(
@@ -72,13 +75,18 @@ class _MyProfileViewState extends State<MyProfileView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                vm.userProfile?.name ?? '-',
+                                p?.name ?? '-',
                                 style: AppTextStyles.s18W600,
                               ),
                               Text(
-                                vm.userProfile?.email ?? '-',
+                                p?.email ?? '-',
                                 style: AppTextStyles.s16W400,
                               ),
+                              if ((p?.phone ?? '').isNotEmpty)
+                                Text(
+                                  p!.phone!,
+                                  style: AppTextStyles.s14W400,
+                                ),
                             ],
                           ),
                         ),
@@ -86,507 +94,289 @@ class _MyProfileViewState extends State<MyProfileView> {
                     ),
                   ),
 
-                  Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.shadow,
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                        ),
-                      ],
-                      borderRadius: BorderRadius.circular(12),
-                    ),
+                  // ── BASIC INFO ───────────────────────────────────────────
+                  _card(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
-                      spacing: 4,
+                      spacing: 6,
                       children: [
-                        Text('College Detail', style: AppTextStyles.s16W600),
+                        _sectionTitle('Basic Information'),
                         const SizedBox(height: 4),
-                        Row(
-                          children: [
-                            Text(
-                              'Name : ',
-                              style: AppTextStyles.s14W600.copyWith(
-                                color: AppColors.chipText,
-                              ),
-                            ),
-                            Text(
-                              vm.userProfile?.college ?? '',
-                              style: AppTextStyles.s14W600.copyWith(
-                                color: AppColors.chipText,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              'Degree : ',
-                              style: AppTextStyles.s14W600.copyWith(
-                                color: AppColors.chipText,
-                              ),
-                            ),
-                            Text(
-                              vm.userProfile?.degree ?? '',
-                              style: AppTextStyles.s14W600.copyWith(
-                                color: AppColors.chipText,
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          children: [
-                            Text(
-                              'CGPA : ',
-                              style: AppTextStyles.s14W600.copyWith(
-                                color: AppColors.chipText,
-                              ),
-                            ),
-                            Text(
-                              vm.userProfile?.cgpa ?? '-',
-                              style: AppTextStyles.s14W600.copyWith(
-                                color: AppColors.chipText,
-                              ),
-                            ),
-                          ],
-                        ),
+                        _infoRow('Gender', p?.gender),
+                        _infoRow('Date of Birth', p?.dob),
+                        _infoRow('Ethnicity', p?.ethnicity),
+                        _infoRow('Marital Status', p?.maritalStatus),
+                        _infoRow('Visa Status', p?.visaStatus),
                       ],
                     ),
                   ),
 
-                  if ((vm.userProfile?.skills ?? []).isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.shadow,
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                  // ── EDUCATION ────────────────────────────────────────────
+                  _card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 6,
+                      children: [
+                        _sectionTitle('Education'),
+                        const SizedBox(height: 4),
+                        _infoRow('College', p?.college),
+                        _infoRow('Degree', p?.degree),
+                        _infoRow('Specialization', p?.specialization),
+                        _infoRow('Semester', p?.semester),
+                        _infoRow('Graduation Year', p?.yearOfGraduation),
+                        _infoRow('CGPA', p?.cgpa),
+                      ],
+                    ),
+                  ),
+
+                  // ── LINKS ────────────────────────────────────────────────
+                  if (_anyNonEmpty([p?.github, p?.linkedin, p?.portfolio]))
+                    _card(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: 16,
+                        spacing: 6,
                         children: [
-                          Text('Skills', style: AppTextStyles.s16W600),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              ...(vm.userProfile?.skills ?? []).map((skill) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.card,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    skill,
-                                    style: AppTextStyles.s14W600.copyWith(
-                                      color: AppColors.chipText,
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
+                          _sectionTitle('Links'),
+                          const SizedBox(height: 4),
+                          if ((p?.linkedin ?? '').isNotEmpty)
+                            _linkRow('LinkedIn', p!.linkedin!),
+                          if ((p?.github ?? '').isNotEmpty)
+                            _linkRow('GitHub', p!.github!),
+                          if ((p?.portfolio ?? '').isNotEmpty)
+                            _linkRow('Portfolio', p!.portfolio!),
                         ],
                       ),
                     ),
 
-                  if ((vm.userProfile?.toolsAndPlatforms ?? []).isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.shadow,
-                            spreadRadius: 1,
-                            blurRadius: 1,
+                  // ── CAREER ───────────────────────────────────────────────
+                  _card(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      spacing: 6,
+                      children: [
+                        _sectionTitle('Career'),
+                        const SizedBox(height: 4),
+                        _infoRow('Open To Shift', p?.openToShift),
+                        if ((p?.currentSalaryAmount ?? '').isNotEmpty)
+                          _infoRow(
+                            'Current Salary',
+                            '${p?.currentSalaryAmount ?? ''} ${p?.currentSalaryCurrency ?? ''}',
                           ),
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                        if ((p?.expectedSalaryAmount ?? '').isNotEmpty)
+                          _infoRow(
+                            'Expected Salary',
+                            '${p?.expectedSalaryAmount ?? ''} ${p?.expectedSalaryCurrency ?? ''}',
+                          ),
+                      ],
+                    ),
+                  ),
+
+                  // ── ABOUT ────────────────────────────────────────────────
+                  if ((p?.about ?? '').isNotEmpty)
+                    _card(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: 16,
+                        spacing: 8,
                         children: [
+                          _sectionTitle('About'),
                           Text(
-                            'Tools & Platforms',
-                            style: AppTextStyles.s16W600,
+                            p!.about!,
+                            style: AppTextStyles.s14W400,
                           ),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              ...(vm.userProfile?.toolsAndPlatforms ?? []).map((
-                                skill,
-                              ) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.card,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    skill,
-                                    style: AppTextStyles.s14W600.copyWith(
-                                      color: AppColors.chipText,
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
+                          if ((p.certifications ?? '').isNotEmpty) ...[
+                            _sectionTitle('Certifications'),
+                            Text(
+                              p.certifications!,
+                              style: AppTextStyles.s14W400,
+                            ),
+                          ],
                         ],
                       ),
                     ),
 
-                  if ((vm.userProfile?.languagesKnown ?? []).isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.shadow,
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: 16,
-                        children: [
-                          Text('Languages known', style: AppTextStyles.s16W600),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              ...(vm.userProfile?.languagesKnown ?? []).map((
-                                skill,
-                              ) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.card,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    skill,
-                                    style: AppTextStyles.s14W600.copyWith(
-                                      color: AppColors.chipText,
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                  // ── SKILLS ───────────────────────────────────────────────
+                  if ((p?.skills ?? []).isNotEmpty)
+                    _chipCard('Skills', p!.skills!),
 
-                  if ((vm.userProfile?.experiences ?? []).isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.shadow,
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: 16,
-                        children: [
-                          Text('Experiences', style: AppTextStyles.s16W600),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              ...(vm.userProfile?.experiences ?? []).map((
-                                skill,
-                              ) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.card,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    skill,
-                                    style: AppTextStyles.s14W600.copyWith(
-                                      color: AppColors.chipText,
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                  // ── DOMAIN KNOWLEDGE ─────────────────────────────────────
+                  if ((p?.domainKnowledge ?? []).isNotEmpty)
+                    _chipCard('Domain Knowledge', p!.domainKnowledge!),
 
-                  if ((vm.userProfile?.employmentType ?? []).isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.shadow,
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        spacing: 16,
-                        children: [
-                          Text('EmploymentType', style: AppTextStyles.s16W600),
-                          Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              ...(vm.userProfile?.employmentType ?? []).map((
-                                skill,
-                              ) {
-                                return Container(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: 8,
-                                    horizontal: 12,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.card,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: Text(
-                                    skill,
-                                    style: AppTextStyles.s14W600.copyWith(
-                                      color: AppColors.chipText,
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                  // ── JOB ROLES ────────────────────────────────────────────
+                  if ((p?.jobRoles ?? []).isNotEmpty)
+                    _chipCard('Job Roles', p!.jobRoles!),
 
-                  if ((vm.userProfile?.awards ?? []).isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.shadow,
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                  // ── EMPLOYMENT TYPE ──────────────────────────────────────
+                  if ((p?.employmentType ?? []).isNotEmpty)
+                    _chipCard('Employment Type', p!.employmentType!),
+
+                  // ── INDUSTRY ─────────────────────────────────────────────
+                  if ((p?.industry ?? []).isNotEmpty)
+                    _chipCard('Industry', p!.industry!),
+
+                  // ── LOOKING FOR ──────────────────────────────────────────
+                  if ((p?.lookingFor ?? []).isNotEmpty)
+                    _chipCard('Looking For', p!.lookingFor!),
+
+                  // ── TOOLS & PLATFORMS ────────────────────────────────────
+                  if ((p?.toolsAndPlatforms ?? []).isNotEmpty)
+                    _chipCard('Tools & Platforms', p!.toolsAndPlatforms!),
+
+                  // ── LANGUAGES KNOWN ──────────────────────────────────────
+                  if ((p?.languagesKnown ?? []).isNotEmpty)
+                    _chipCard('Languages Known', p!.languagesKnown!),
+
+                  // ── LOCATIONS ────────────────────────────────────────────
+                  if ((p?.locations ?? []).isNotEmpty)
+                    _chipCard('Preferred Locations', p!.locations!),
+
+                  // ── EXPERIENCES ──────────────────────────────────────────
+                  if ((p?.experiences ?? []).isNotEmpty)
+                    _chipCard('Experiences', p!.experiences!),
+
+                  // ── ACHIEVEMENTS ─────────────────────────────────────────
+                  if ((p?.achievements ?? []).isNotEmpty)
+                    _card(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         spacing: 4,
                         children: [
-                          Text('Awards', style: AppTextStyles.s16W600),
+                          _sectionTitle('Achievements'),
                           const SizedBox(height: 4),
-                          ...(vm.userProfile?.awards ?? []).map((p) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  children: [
-                                    Text(
-                                      p.title ?? '-',
-                                      style: AppTextStyles.s14W600.copyWith(
-                                        color: AppColors.chipText,
-                                      ),
-                                    ),
-                                    Text(
-                                      '  -  ',
-                                      style: AppTextStyles.s14W600.copyWith(
-                                        color: AppColors.chipText,
-                                      ),
-                                    ),
-                                    Text(
-                                      p.organization ?? '-',
-                                      style: AppTextStyles.s14W600.copyWith(
-                                        color: AppColors.chipText,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Text(
-                                  p.description ?? '',
-                                  style: AppTextStyles.s14W600.copyWith(
-                                    color: AppColors.chipText,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
+                          ...(p!.achievements!).map(
+                            (a) => _itemCard(
+                              title: a.title ?? '-',
+                              subtitle: a.event ?? '',
+                              trailing: a.date ?? '',
+                            ),
+                          ),
                         ],
                       ),
                     ),
 
-                  if ((vm.userProfile?.publications ?? []).isNotEmpty)
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 20,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.shadow,
-                            spreadRadius: 1,
-                            blurRadius: 1,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(12),
-                      ),
+                  // ── AWARDS ───────────────────────────────────────────────
+                  if ((p?.awards ?? []).isNotEmpty)
+                    _card(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         spacing: 4,
                         children: [
-                          Text('Publications', style: AppTextStyles.s16W600),
+                          _sectionTitle('Awards'),
                           const SizedBox(height: 4),
-                          ...(vm.userProfile?.publications ?? []).map((p) {
-                            return Column(
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  p.title ??
-                                      'Publication ${(vm.userProfile?.publications ?? []).indexOf(p)}',
-                                  style: AppTextStyles.s14W600.copyWith(
-                                    color: AppColors.chipText,
-                                  ),
-                                ),
-                                Text(
-                                  p.url ?? '',
-                                  style: AppTextStyles.s14W600.copyWith(
-                                    color: Colors.purple,
-                                  ),
-                                ),
-                              ],
-                            );
-                          }),
+                          ...(p!.awards!).map(
+                            (a) => _itemCard(
+                              title: a.title ?? '-',
+                              subtitle: a.organization ?? '',
+                              trailing:
+                                  [a.startDate, a.endDate].where((s) => (s ?? '').isNotEmpty).join(' – '),
+                              description: a.description,
+                            ),
+                          ),
                         ],
                       ),
                     ),
-if ((vm.userProfile?.resume ?? '').isNotEmpty)
-  Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
-    decoration: BoxDecoration(
-      color: Colors.white,
-      boxShadow: [
-        BoxShadow(color: AppColors.shadow, spreadRadius: 1, blurRadius: 1),
-      ],
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            color: Colors.red.shade50,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: const Icon(Icons.picture_as_pdf, color: Colors.red),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Resume', style: AppTextStyles.s16W600),
-              Text(
-                'Tap to download',
-                style: AppTextStyles.s14W600.copyWith(
-                  color: AppColors.chipText,
-                ),
-              ),
-            ],
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.download_rounded),
-          color: AppColors.chipText,
-          onPressed: () async {
-            final uri = Uri.parse(vm.userProfile!.resume!);
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri, mode: LaunchMode.externalApplication);
-            }
-          },
-        ),
-      ],
-    ),
-  ),
+
+                  // ── PUBLICATIONS ─────────────────────────────────────────
+                  if ((p?.publications ?? []).isNotEmpty)
+                    _card(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        spacing: 4,
+                        children: [
+                          _sectionTitle('Publications'),
+                          const SizedBox(height: 4),
+                          ...(p!.publications!).map(
+                            (pub) => Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 4),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    pub.title ?? '-',
+                                    style: AppTextStyles.s14W600.copyWith(
+                                      color: AppColors.chipText,
+                                    ),
+                                  ),
+                                  if ((pub.url ?? '').isNotEmpty)
+                                    GestureDetector(
+                                      onTap: () async {
+                                        final uri = Uri.parse(pub.url!);
+                                        if (await canLaunchUrl(uri)) {
+                                          await launchUrl(uri,
+                                              mode: LaunchMode.externalApplication);
+                                        }
+                                      },
+                                      child: Text(
+                                        pub.url!,
+                                        style: AppTextStyles.s14W400.copyWith(
+                                          color: Colors.purple,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  // ── RESUME ───────────────────────────────────────────────
+                  if ((p?.resume ?? '').isNotEmpty)
+                    _card(
+                      child: Row(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade50,
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: const Icon(Icons.picture_as_pdf,
+                                color: Colors.red),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text('Resume', style: AppTextStyles.s16W600),
+                                Text(
+                                  'Tap to download',
+                                  style: AppTextStyles.s14W400.copyWith(
+                                    color: AppColors.chipText,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.download_rounded),
+                            color: AppColors.chipText,
+                            onPressed: () async {
+                              final uri = Uri.parse(p!.resume!);
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri,
+                                    mode: LaunchMode.externalApplication);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  // ── EDIT BUTTON ──────────────────────────────────────────
                   AppButton(
                     onPressed: () async {
                       final result = await context.pushNamed(
                         RouteNames.addEditProfileView,
                         extra: myProfileViewModel.userProfile,
                       );
-
                       if (result == true) {
-                        final failure = await myProfileViewModel
-                            .getUserProfile();
-                        failure?.showError(context);
+                        final failure =
+                            await myProfileViewModel.getUserProfile();
+                        if (mounted) failure?.showError(context);
                       }
                     },
                     child: Text(
@@ -596,11 +386,169 @@ if ((vm.userProfile?.resume ?? '').isNotEmpty)
                       ),
                     ),
                   ),
+
+                  const SizedBox(height: 20),
                 ],
               ),
             );
           },
         ),
+      ),
+    );
+  }
+
+  // ── Helper builders ──────────────────────────────────────────────────────────
+
+  bool _anyNonEmpty(List<String?> values) =>
+      values.any((v) => (v ?? '').isNotEmpty);
+
+  Widget _card({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.shadow,
+            spreadRadius: 1,
+            blurRadius: 1,
+          ),
+        ],
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: child,
+    );
+  }
+
+  Widget _sectionTitle(String title) {
+    return Text(title, style: AppTextStyles.s16W600);
+  }
+
+  Widget _infoRow(String label, String? value) {
+    if ((value ?? '').isEmpty) return const SizedBox.shrink();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 2),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            '$label : ',
+            style: AppTextStyles.s14W600.copyWith(color: AppColors.chipText),
+          ),
+          Expanded(
+            child: Text(
+              value!,
+              style: AppTextStyles.s14W400.copyWith(color: AppColors.chipText),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _linkRow(String label, String url) {
+    return GestureDetector(
+      onTap: () async {
+        final uri = Uri.parse(url);
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri, mode: LaunchMode.externalApplication);
+        }
+      },
+      child: Row(
+        children: [
+          Text(
+            '$label : ',
+            style: AppTextStyles.s14W600.copyWith(color: AppColors.chipText),
+          ),
+          Expanded(
+            child: Text(
+              url,
+              style: AppTextStyles.s14W400.copyWith(
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
+              ),
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _chipCard(String title, List<String> items) {
+    return _card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        spacing: 12,
+        children: [
+          _sectionTitle(title),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: items.map((item) {
+              return Container(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                decoration: BoxDecoration(
+                  color: AppColors.card,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  item,
+                  style:
+                      AppTextStyles.s14W600.copyWith(color: AppColors.chipText),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _itemCard({
+    required String title,
+    String? subtitle,
+    String? trailing,
+    String? description,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  title,
+                  style: AppTextStyles.s14W600.copyWith(
+                    color: AppColors.chipText,
+                  ),
+                ),
+              ),
+              if ((trailing ?? '').isNotEmpty)
+                Text(
+                  trailing!,
+                  style: AppTextStyles.s12W400.copyWith(
+                    color: AppColors.chipText,
+                  ),
+                ),
+            ],
+          ),
+          if ((subtitle ?? '').isNotEmpty)
+            Text(
+              subtitle!,
+              style: AppTextStyles.s14W400.copyWith(color: AppColors.chipText),
+            ),
+          if ((description ?? '').isNotEmpty)
+            Text(
+              description!,
+              style: AppTextStyles.s14W400.copyWith(color: AppColors.chipText),
+            ),
+        ],
       ),
     );
   }

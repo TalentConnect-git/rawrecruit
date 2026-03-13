@@ -12,6 +12,10 @@ class MyProfileViewModel extends ViewStateProvider {
     notifyListeners();
   }
 
+  bool get isProfileAvailable =>
+      userProfile?.profileImage != null &&
+      (userProfile?.profileImage?.isNotEmpty ?? false);
+
   bool get canEdit => _userProfile != null;
 
   bool _isEditing = false;
