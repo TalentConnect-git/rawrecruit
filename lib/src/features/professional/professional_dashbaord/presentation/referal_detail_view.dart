@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'view_model/prof_dashboard_view_model.dart';
 
@@ -40,134 +41,225 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
             return const Scaffold(body: Center(child: Text("No Data")));
           }
 
+          final poster = job.candidatePosted;
+
           return Scaffold(
-            appBar: AppBar(title: Text(job.jobTitle ?? "")),
-           body: Padding(
-  padding: const EdgeInsets.all(16),
-  child: ListView(
-    children: [
+            appBar: AppBar(title: Text(job.jobTitle ?? '')),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
 
-      /// Description
-      _buildRow("Description", job.description),
+                  // ── JOB OVERVIEW ──────────────────────────────────────────
+                  _sectionHeader('Job Overview'),
+                  _row('Job Title', job.jobTitle),
+                  _row('Job Type', job.jobType),
+                  _row('Job Status', job.jobStatus),
+                  // _row('Approval Status', job.approvalStatus),
+                  _row('Description', job.description),
+                  _row('Eligibility Criteria', job.eligibilityCriteria),
+                  _row('Min Education', job.minEducation),
+                  _row('Years of Experience', job.yearsOfExperience),
+                  _row('Work Authorization', job.workAuthorization),
+                  _row('Number of Openings', job.numberOfOpenings?.toString()),
+                  _row('CGPA Required', job.cgpa == 0 ? '-' : job.cgpa?.toString()),
+                  // _row('Views', job.views?.toString()),
+                  _row('Expires At', _formatDate(job.expireAt)),
+                  _row('Posted At', _formatDate(job.createdAt)),
 
-      const SizedBox(height: 12),
+                  const SizedBox(height: 16),
 
-      /// Basic Info
-      _buildRow("Experience", job.yearsOfExperience),
-      _buildRow("Education", job.minEducation),
-      _buildRow("Work Authorization", job.workAuthorization),
-      _buildRow("Eligibility Criteria", job.eligibilityCriteria),
-      _buildRow("Number of Openings",
-          job.numberOfOpenings?.toString()),
+                  // ── LOCATION & WORK ───────────────────────────────────────
+                  _sectionHeader('Location & Work'),
+                  _row('Location', job.location?.isNotEmpty == true ? job.location!.join(', ') : null),
+                  _row('Work Mode', job.workMode?.isNotEmpty == true ? job.workMode!.join(', ') : null),
+                  _row('Work Location', job.workLocation?.isNotEmpty == true ? job.workLocation!.join(', ') : null),
+                  _row('Employment Type', job.employmentType?.isNotEmpty == true ? job.employmentType!.join(', ') : null),
 
-      /// Employment Type
-      _buildRow(
-        "Employment Type",
-        job.employmentType?.join(", "),
-      ),
+                  const SizedBox(height: 16),
 
-      /// Work Mode
-      _buildRow(
-        "Work Mode",
-        job.workMode?.join(", "),
-      ),
+                  // ── PACKAGE DETAILS ───────────────────────────────────────
+                  _sectionHeader('Package Details'),
+                  _row('Currency', job.packageDetails?.currency),
+                  _row('Total CTC', job.packageDetails?.totalCTC?.toString()),
+                  _row('Fixed Pay', job.packageDetails?.fixedPay?.toString()),
+                  _row('Joining Bonus', job.packageDetails?.joiningBonus?.toString()),
 
-      /// Location
-      _buildRow(
-        "Location",
-        job.location?.join(", "),
-      ),
+                  const SizedBox(height: 16),
 
-      const SizedBox(height: 20),
+                  // ── ELIGIBILITY ───────────────────────────────────────────
+                  _sectionHeader('Eligibility'),
+                  _row('Degree', job.degree?.isNotEmpty == true ? job.degree!.join(', ') : null),
+                  _row('Student Streams', job.studentStreams?.isNotEmpty == true ? job.studentStreams!.join(', ') : null),
+                  _row('College Types', job.collegeTypes?.isNotEmpty == true ? job.collegeTypes!.join(', ') : null),
+                  _row('College Categories', job.collegeCategories?.isNotEmpty == true ? job.collegeCategories!.join(', ') : null),
+                  _row('Company Type', job.companyType?.isNotEmpty == true ? job.companyType!.join(', ') : null),
 
-      /// ✅ PACKAGE DETAILS (SEPARATE FIELDS)
-      const Text(
-        "Package Details",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 10),
+                  const SizedBox(height: 16),
 
-      _buildRow(
-        "Currency",
-        job.packageDetails?.currency,
-      ),
+                  // ── SKILLS & TOOLS ────────────────────────────────────────
+                  if ((job.skills ?? []).isNotEmpty) ...[
+                    _sectionHeader('Skills Required'),
+                    _chipWrap(job.skills!),
+                    const SizedBox(height: 16),
+                  ],
 
-      _buildRow(
-        "Total CTC",
-        job.packageDetails?.totalCTC?.toString(),
-      ),
+                  if ((job.toolsAndPlatforms ?? []).isNotEmpty) ...[
+                    _sectionHeader('Tools & Platforms'),
+                    _chipWrap(job.toolsAndPlatforms!),
+                    const SizedBox(height: 16),
+                  ],
 
-      _buildRow(
-        "Fixed Pay",
-        job.packageDetails?.fixedPay?.toString(),
-      ),
+                  if ((job.certifications ?? []).isNotEmpty) ...[
+                    _sectionHeader('Certifications'),
+                    _chipWrap(job.certifications!),
+                    const SizedBox(height: 16),
+                  ],
 
-      _buildRow(
-        "Joining Bonus",
-        job.packageDetails?.joiningBonus?.toString(),
-      ),
+                  // ── SELECTION PROCESS ─────────────────────────────────────
+                  _sectionHeader('Selection Process'),
+                  _row('Rounds', job.rounds?.isNotEmpty == true ? job.rounds!.join(', ') : null),
+                  _row('Selection Process', job.selectionProcess?.isNotEmpty == true ? job.selectionProcess!.join(', ') : null),
 
-      const SizedBox(height: 20),
+                  const SizedBox(height: 16),
 
-      /// Benefits
-      _buildRow(
-        "Benefits",
-        job.benefits?.join(", "),
-      ),
+                  // ── BENEFITS & TAGS ───────────────────────────────────────
+                  _sectionHeader('Benefits & Tags'),
+                  _row('Benefits', job.benefits?.isNotEmpty == true ? job.benefits!.join(', ') : null),
+                  _row('Tags', job.tags?.isNotEmpty == true ? job.tags!.join(', ') : null),
+                  _row('Amenities Required', job.amenitiesRequired?.isNotEmpty == true ? job.amenitiesRequired!.join(', ') : null),
 
-      /// Tags
-      _buildRow(
-        "Tags",
-        job.tags?.join(", "),
-      ),
+                  const SizedBox(height: 24),
 
-      const SizedBox(height: 20),
-
-      /// Skills
-      const Text(
-        "Skills",
-        style: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      const SizedBox(height: 8),
-
-      Wrap(
-        spacing: 8,
-        children: (job.skills ?? [])
-            .map((e) => Chip(label: Text(e)))
-            .toList(),
-      ),
-    ],
-  ),
-),
+                  // ── POSTED BY ─────────────────────────────────────────────
+              
+                  const SizedBox(height: 40),
+                ],
+              ),
+            ),
           );
         },
       ),
     );
   }
-  Widget _buildRow(String title, String? value) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 8),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 150,
-          child: Text(
-            "$title:",
-            style: const TextStyle(fontWeight: FontWeight.w600),
+
+  // ── Helpers ──────────────────────────────────────────────────────────────────
+
+  String _formatDate(DateTime? date) {
+    if (date == null) return '-';
+    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
+  }
+
+  Widget _sectionHeader(String title) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
           ),
-        ),
-        Expanded(
-          child: Text(value?.isNotEmpty == true ? value! : "-"),
-        ),
-      ],
-    ),
-  );
-}
+          const Divider(height: 8),
+        ],
+      ),
+    );
+  }
+
+  Widget _rowLabel(String label) {
+    return Text(
+      label,
+      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+    );
+  }
+
+  Widget _row(String label, String? value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 160,
+            child: Text(
+              '$label:',
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(
+              (value != null && value.isNotEmpty) ? value : '-',
+              style: const TextStyle(fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _linkRow(String label, String url) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 160,
+            child: Text(
+              '$label:',
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
+          ),
+          Expanded(
+            child: GestureDetector(
+              onTap: () async {
+                final uri = Uri.parse(url);
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri, mode: LaunchMode.externalApplication);
+                }
+              },
+              child: Text(
+                url,
+                style: const TextStyle(
+                  fontSize: 13,
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _chipWrap(List<String> items) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 6,
+      children: items
+          .map(
+            (e) => Container(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.blue.shade50,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Text(
+                e,
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          )
+          .toList(),
+    );
+  }
 }

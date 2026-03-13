@@ -15,7 +15,12 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InternshipModel {
 
-@JsonKey(name: '_id') String? get id; String? get description; List<String>? get skills; List<String>? get workMode; List<String>? get location; List<String>? get jobRoles; String? get internshipDuration; int? get numberOfOpenings; String? get minEducation; List<String>? get benefits; List<String>? get tags; String? get eligibilityCriteria; DateTime? get onlineTestDate; InternshipPackageDetails? get packageDetails; InternshipCompanyPosted? get companyPosted;
+@JsonKey(name: '_id') String? get id;// Basic
+ String? get description; String? get jobType; String? get jobStatus; String? get approvalStatus; String? get visibleTo; String? get broadcastType; String? get eligibilityCriteria; String? get minEducation; String? get minimumStudents; String? get venue; String? get internshipDuration;// Numbers
+@JsonKey(fromJson: _doubleFromJson) double? get cgpa; int? get numberOfOpenings; int? get views; int? get matchScore;// Lists
+ List<String>? get jobRoles; List<String>? get skills; List<String>? get workMode; List<String>? get location; List<String>? get employmentType; List<String>? get degree; List<String>? get studentStreams; List<String>? get collegeTypes; List<String>? get collegeCategories; List<String>? get companyType; List<String>? get rounds; List<String>? get selectionProcess; List<String>? get certifications; List<String>? get workAchievements; List<String>? get amenitiesRequired; List<String>? get benefits; List<String>? get tags; List<String>? get toolsAndPlatforms; List<String>? get workLocation; List<String>? get numberOfStudent;// Nested
+ InternshipPackageDetails? get packageDetails; ContactPerson? get contactPerson; InternshipCompanyPosted? get companyPosted;// Dates
+ DateTime? get onlineTestDate; DateTime? get startDate; DateTime? get endDate; DateTime? get expireAt; DateTime? get createdAt; DateTime? get updatedAt;
 /// Create a copy of InternshipModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +33,16 @@ $InternshipModelCopyWith<InternshipModel> get copyWith => _$InternshipModelCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternshipModel&&(identical(other.id, id) || other.id == id)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other.skills, skills)&&const DeepCollectionEquality().equals(other.workMode, workMode)&&const DeepCollectionEquality().equals(other.location, location)&&const DeepCollectionEquality().equals(other.jobRoles, jobRoles)&&(identical(other.internshipDuration, internshipDuration) || other.internshipDuration == internshipDuration)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&const DeepCollectionEquality().equals(other.benefits, benefits)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria)&&(identical(other.onlineTestDate, onlineTestDate) || other.onlineTestDate == onlineTestDate)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&(identical(other.companyPosted, companyPosted) || other.companyPosted == companyPosted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternshipModel&&(identical(other.id, id) || other.id == id)&&(identical(other.description, description) || other.description == description)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.jobStatus, jobStatus) || other.jobStatus == jobStatus)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&(identical(other.visibleTo, visibleTo) || other.visibleTo == visibleTo)&&(identical(other.broadcastType, broadcastType) || other.broadcastType == broadcastType)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.minimumStudents, minimumStudents) || other.minimumStudents == minimumStudents)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.internshipDuration, internshipDuration) || other.internshipDuration == internshipDuration)&&(identical(other.cgpa, cgpa) || other.cgpa == cgpa)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.views, views) || other.views == views)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&const DeepCollectionEquality().equals(other.jobRoles, jobRoles)&&const DeepCollectionEquality().equals(other.skills, skills)&&const DeepCollectionEquality().equals(other.workMode, workMode)&&const DeepCollectionEquality().equals(other.location, location)&&const DeepCollectionEquality().equals(other.employmentType, employmentType)&&const DeepCollectionEquality().equals(other.degree, degree)&&const DeepCollectionEquality().equals(other.studentStreams, studentStreams)&&const DeepCollectionEquality().equals(other.collegeTypes, collegeTypes)&&const DeepCollectionEquality().equals(other.collegeCategories, collegeCategories)&&const DeepCollectionEquality().equals(other.companyType, companyType)&&const DeepCollectionEquality().equals(other.rounds, rounds)&&const DeepCollectionEquality().equals(other.selectionProcess, selectionProcess)&&const DeepCollectionEquality().equals(other.certifications, certifications)&&const DeepCollectionEquality().equals(other.workAchievements, workAchievements)&&const DeepCollectionEquality().equals(other.amenitiesRequired, amenitiesRequired)&&const DeepCollectionEquality().equals(other.benefits, benefits)&&const DeepCollectionEquality().equals(other.tags, tags)&&const DeepCollectionEquality().equals(other.toolsAndPlatforms, toolsAndPlatforms)&&const DeepCollectionEquality().equals(other.workLocation, workLocation)&&const DeepCollectionEquality().equals(other.numberOfStudent, numberOfStudent)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&(identical(other.contactPerson, contactPerson) || other.contactPerson == contactPerson)&&(identical(other.companyPosted, companyPosted) || other.companyPosted == companyPosted)&&(identical(other.onlineTestDate, onlineTestDate) || other.onlineTestDate == onlineTestDate)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.expireAt, expireAt) || other.expireAt == expireAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,description,const DeepCollectionEquality().hash(skills),const DeepCollectionEquality().hash(workMode),const DeepCollectionEquality().hash(location),const DeepCollectionEquality().hash(jobRoles),internshipDuration,numberOfOpenings,minEducation,const DeepCollectionEquality().hash(benefits),const DeepCollectionEquality().hash(tags),eligibilityCriteria,onlineTestDate,packageDetails,companyPosted);
+int get hashCode => Object.hashAll([runtimeType,id,description,jobType,jobStatus,approvalStatus,visibleTo,broadcastType,eligibilityCriteria,minEducation,minimumStudents,venue,internshipDuration,cgpa,numberOfOpenings,views,matchScore,const DeepCollectionEquality().hash(jobRoles),const DeepCollectionEquality().hash(skills),const DeepCollectionEquality().hash(workMode),const DeepCollectionEquality().hash(location),const DeepCollectionEquality().hash(employmentType),const DeepCollectionEquality().hash(degree),const DeepCollectionEquality().hash(studentStreams),const DeepCollectionEquality().hash(collegeTypes),const DeepCollectionEquality().hash(collegeCategories),const DeepCollectionEquality().hash(companyType),const DeepCollectionEquality().hash(rounds),const DeepCollectionEquality().hash(selectionProcess),const DeepCollectionEquality().hash(certifications),const DeepCollectionEquality().hash(workAchievements),const DeepCollectionEquality().hash(amenitiesRequired),const DeepCollectionEquality().hash(benefits),const DeepCollectionEquality().hash(tags),const DeepCollectionEquality().hash(toolsAndPlatforms),const DeepCollectionEquality().hash(workLocation),const DeepCollectionEquality().hash(numberOfStudent),packageDetails,contactPerson,companyPosted,onlineTestDate,startDate,endDate,expireAt,createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'InternshipModel(id: $id, description: $description, skills: $skills, workMode: $workMode, location: $location, jobRoles: $jobRoles, internshipDuration: $internshipDuration, numberOfOpenings: $numberOfOpenings, minEducation: $minEducation, benefits: $benefits, tags: $tags, eligibilityCriteria: $eligibilityCriteria, onlineTestDate: $onlineTestDate, packageDetails: $packageDetails, companyPosted: $companyPosted)';
+  return 'InternshipModel(id: $id, description: $description, jobType: $jobType, jobStatus: $jobStatus, approvalStatus: $approvalStatus, visibleTo: $visibleTo, broadcastType: $broadcastType, eligibilityCriteria: $eligibilityCriteria, minEducation: $minEducation, minimumStudents: $minimumStudents, venue: $venue, internshipDuration: $internshipDuration, cgpa: $cgpa, numberOfOpenings: $numberOfOpenings, views: $views, matchScore: $matchScore, jobRoles: $jobRoles, skills: $skills, workMode: $workMode, location: $location, employmentType: $employmentType, degree: $degree, studentStreams: $studentStreams, collegeTypes: $collegeTypes, collegeCategories: $collegeCategories, companyType: $companyType, rounds: $rounds, selectionProcess: $selectionProcess, certifications: $certifications, workAchievements: $workAchievements, amenitiesRequired: $amenitiesRequired, benefits: $benefits, tags: $tags, toolsAndPlatforms: $toolsAndPlatforms, workLocation: $workLocation, numberOfStudent: $numberOfStudent, packageDetails: $packageDetails, contactPerson: $contactPerson, companyPosted: $companyPosted, onlineTestDate: $onlineTestDate, startDate: $startDate, endDate: $endDate, expireAt: $expireAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,11 +53,11 @@ abstract mixin class $InternshipModelCopyWith<$Res>  {
   factory $InternshipModelCopyWith(InternshipModel value, $Res Function(InternshipModel) _then) = _$InternshipModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? description, List<String>? skills, List<String>? workMode, List<String>? location, List<String>? jobRoles, String? internshipDuration, int? numberOfOpenings, String? minEducation, List<String>? benefits, List<String>? tags, String? eligibilityCriteria, DateTime? onlineTestDate, InternshipPackageDetails? packageDetails, InternshipCompanyPosted? companyPosted
+@JsonKey(name: '_id') String? id, String? description, String? jobType, String? jobStatus, String? approvalStatus, String? visibleTo, String? broadcastType, String? eligibilityCriteria, String? minEducation, String? minimumStudents, String? venue, String? internshipDuration,@JsonKey(fromJson: _doubleFromJson) double? cgpa, int? numberOfOpenings, int? views, int? matchScore, List<String>? jobRoles, List<String>? skills, List<String>? workMode, List<String>? location, List<String>? employmentType, List<String>? degree, List<String>? studentStreams, List<String>? collegeTypes, List<String>? collegeCategories, List<String>? companyType, List<String>? rounds, List<String>? selectionProcess, List<String>? certifications, List<String>? workAchievements, List<String>? amenitiesRequired, List<String>? benefits, List<String>? tags, List<String>? toolsAndPlatforms, List<String>? workLocation, List<String>? numberOfStudent, InternshipPackageDetails? packageDetails, ContactPerson? contactPerson, InternshipCompanyPosted? companyPosted, DateTime? onlineTestDate, DateTime? startDate, DateTime? endDate, DateTime? expireAt, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-$InternshipPackageDetailsCopyWith<$Res>? get packageDetails;$InternshipCompanyPostedCopyWith<$Res>? get companyPosted;
+$InternshipPackageDetailsCopyWith<$Res>? get packageDetails;$ContactPersonCopyWith<$Res>? get contactPerson;$InternshipCompanyPostedCopyWith<$Res>? get companyPosted;
 
 }
 /// @nodoc
@@ -65,24 +70,54 @@ class _$InternshipModelCopyWithImpl<$Res>
 
 /// Create a copy of InternshipModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? description = freezed,Object? skills = freezed,Object? workMode = freezed,Object? location = freezed,Object? jobRoles = freezed,Object? internshipDuration = freezed,Object? numberOfOpenings = freezed,Object? minEducation = freezed,Object? benefits = freezed,Object? tags = freezed,Object? eligibilityCriteria = freezed,Object? onlineTestDate = freezed,Object? packageDetails = freezed,Object? companyPosted = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? description = freezed,Object? jobType = freezed,Object? jobStatus = freezed,Object? approvalStatus = freezed,Object? visibleTo = freezed,Object? broadcastType = freezed,Object? eligibilityCriteria = freezed,Object? minEducation = freezed,Object? minimumStudents = freezed,Object? venue = freezed,Object? internshipDuration = freezed,Object? cgpa = freezed,Object? numberOfOpenings = freezed,Object? views = freezed,Object? matchScore = freezed,Object? jobRoles = freezed,Object? skills = freezed,Object? workMode = freezed,Object? location = freezed,Object? employmentType = freezed,Object? degree = freezed,Object? studentStreams = freezed,Object? collegeTypes = freezed,Object? collegeCategories = freezed,Object? companyType = freezed,Object? rounds = freezed,Object? selectionProcess = freezed,Object? certifications = freezed,Object? workAchievements = freezed,Object? amenitiesRequired = freezed,Object? benefits = freezed,Object? tags = freezed,Object? toolsAndPlatforms = freezed,Object? workLocation = freezed,Object? numberOfStudent = freezed,Object? packageDetails = freezed,Object? contactPerson = freezed,Object? companyPosted = freezed,Object? onlineTestDate = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? expireAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,skills: freezed == skills ? _self.skills : skills // ignore: cast_nullable_to_non_nullable
+as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
+as String?,jobStatus: freezed == jobStatus ? _self.jobStatus : jobStatus // ignore: cast_nullable_to_non_nullable
+as String?,approvalStatus: freezed == approvalStatus ? _self.approvalStatus : approvalStatus // ignore: cast_nullable_to_non_nullable
+as String?,visibleTo: freezed == visibleTo ? _self.visibleTo : visibleTo // ignore: cast_nullable_to_non_nullable
+as String?,broadcastType: freezed == broadcastType ? _self.broadcastType : broadcastType // ignore: cast_nullable_to_non_nullable
+as String?,eligibilityCriteria: freezed == eligibilityCriteria ? _self.eligibilityCriteria : eligibilityCriteria // ignore: cast_nullable_to_non_nullable
+as String?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
+as String?,minimumStudents: freezed == minimumStudents ? _self.minimumStudents : minimumStudents // ignore: cast_nullable_to_non_nullable
+as String?,venue: freezed == venue ? _self.venue : venue // ignore: cast_nullable_to_non_nullable
+as String?,internshipDuration: freezed == internshipDuration ? _self.internshipDuration : internshipDuration // ignore: cast_nullable_to_non_nullable
+as String?,cgpa: freezed == cgpa ? _self.cgpa : cgpa // ignore: cast_nullable_to_non_nullable
+as double?,numberOfOpenings: freezed == numberOfOpenings ? _self.numberOfOpenings : numberOfOpenings // ignore: cast_nullable_to_non_nullable
+as int?,views: freezed == views ? _self.views : views // ignore: cast_nullable_to_non_nullable
+as int?,matchScore: freezed == matchScore ? _self.matchScore : matchScore // ignore: cast_nullable_to_non_nullable
+as int?,jobRoles: freezed == jobRoles ? _self.jobRoles : jobRoles // ignore: cast_nullable_to_non_nullable
+as List<String>?,skills: freezed == skills ? _self.skills : skills // ignore: cast_nullable_to_non_nullable
 as List<String>?,workMode: freezed == workMode ? _self.workMode : workMode // ignore: cast_nullable_to_non_nullable
 as List<String>?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
-as List<String>?,jobRoles: freezed == jobRoles ? _self.jobRoles : jobRoles // ignore: cast_nullable_to_non_nullable
-as List<String>?,internshipDuration: freezed == internshipDuration ? _self.internshipDuration : internshipDuration // ignore: cast_nullable_to_non_nullable
-as String?,numberOfOpenings: freezed == numberOfOpenings ? _self.numberOfOpenings : numberOfOpenings // ignore: cast_nullable_to_non_nullable
-as int?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
-as String?,benefits: freezed == benefits ? _self.benefits : benefits // ignore: cast_nullable_to_non_nullable
+as List<String>?,employmentType: freezed == employmentType ? _self.employmentType : employmentType // ignore: cast_nullable_to_non_nullable
+as List<String>?,degree: freezed == degree ? _self.degree : degree // ignore: cast_nullable_to_non_nullable
+as List<String>?,studentStreams: freezed == studentStreams ? _self.studentStreams : studentStreams // ignore: cast_nullable_to_non_nullable
+as List<String>?,collegeTypes: freezed == collegeTypes ? _self.collegeTypes : collegeTypes // ignore: cast_nullable_to_non_nullable
+as List<String>?,collegeCategories: freezed == collegeCategories ? _self.collegeCategories : collegeCategories // ignore: cast_nullable_to_non_nullable
+as List<String>?,companyType: freezed == companyType ? _self.companyType : companyType // ignore: cast_nullable_to_non_nullable
+as List<String>?,rounds: freezed == rounds ? _self.rounds : rounds // ignore: cast_nullable_to_non_nullable
+as List<String>?,selectionProcess: freezed == selectionProcess ? _self.selectionProcess : selectionProcess // ignore: cast_nullable_to_non_nullable
+as List<String>?,certifications: freezed == certifications ? _self.certifications : certifications // ignore: cast_nullable_to_non_nullable
+as List<String>?,workAchievements: freezed == workAchievements ? _self.workAchievements : workAchievements // ignore: cast_nullable_to_non_nullable
+as List<String>?,amenitiesRequired: freezed == amenitiesRequired ? _self.amenitiesRequired : amenitiesRequired // ignore: cast_nullable_to_non_nullable
+as List<String>?,benefits: freezed == benefits ? _self.benefits : benefits // ignore: cast_nullable_to_non_nullable
 as List<String>?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>?,eligibilityCriteria: freezed == eligibilityCriteria ? _self.eligibilityCriteria : eligibilityCriteria // ignore: cast_nullable_to_non_nullable
-as String?,onlineTestDate: freezed == onlineTestDate ? _self.onlineTestDate : onlineTestDate // ignore: cast_nullable_to_non_nullable
-as DateTime?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
-as InternshipPackageDetails?,companyPosted: freezed == companyPosted ? _self.companyPosted : companyPosted // ignore: cast_nullable_to_non_nullable
-as InternshipCompanyPosted?,
+as List<String>?,toolsAndPlatforms: freezed == toolsAndPlatforms ? _self.toolsAndPlatforms : toolsAndPlatforms // ignore: cast_nullable_to_non_nullable
+as List<String>?,workLocation: freezed == workLocation ? _self.workLocation : workLocation // ignore: cast_nullable_to_non_nullable
+as List<String>?,numberOfStudent: freezed == numberOfStudent ? _self.numberOfStudent : numberOfStudent // ignore: cast_nullable_to_non_nullable
+as List<String>?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
+as InternshipPackageDetails?,contactPerson: freezed == contactPerson ? _self.contactPerson : contactPerson // ignore: cast_nullable_to_non_nullable
+as ContactPerson?,companyPosted: freezed == companyPosted ? _self.companyPosted : companyPosted // ignore: cast_nullable_to_non_nullable
+as InternshipCompanyPosted?,onlineTestDate: freezed == onlineTestDate ? _self.onlineTestDate : onlineTestDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,expireAt: freezed == expireAt ? _self.expireAt : expireAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 /// Create a copy of InternshipModel
@@ -96,6 +131,18 @@ $InternshipPackageDetailsCopyWith<$Res>? get packageDetails {
 
   return $InternshipPackageDetailsCopyWith<$Res>(_self.packageDetails!, (value) {
     return _then(_self.copyWith(packageDetails: value));
+  });
+}/// Create a copy of InternshipModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContactPersonCopyWith<$Res>? get contactPerson {
+    if (_self.contactPerson == null) {
+    return null;
+  }
+
+  return $ContactPersonCopyWith<$Res>(_self.contactPerson!, (value) {
+    return _then(_self.copyWith(contactPerson: value));
   });
 }/// Create a copy of InternshipModel
 /// with the given fields replaced by the non-null parameter values.
@@ -191,10 +238,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? description,  List<String>? skills,  List<String>? workMode,  List<String>? location,  List<String>? jobRoles,  String? internshipDuration,  int? numberOfOpenings,  String? minEducation,  List<String>? benefits,  List<String>? tags,  String? eligibilityCriteria,  DateTime? onlineTestDate,  InternshipPackageDetails? packageDetails,  InternshipCompanyPosted? companyPosted)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? description,  String? jobType,  String? jobStatus,  String? approvalStatus,  String? visibleTo,  String? broadcastType,  String? eligibilityCriteria,  String? minEducation,  String? minimumStudents,  String? venue,  String? internshipDuration, @JsonKey(fromJson: _doubleFromJson)  double? cgpa,  int? numberOfOpenings,  int? views,  int? matchScore,  List<String>? jobRoles,  List<String>? skills,  List<String>? workMode,  List<String>? location,  List<String>? employmentType,  List<String>? degree,  List<String>? studentStreams,  List<String>? collegeTypes,  List<String>? collegeCategories,  List<String>? companyType,  List<String>? rounds,  List<String>? selectionProcess,  List<String>? certifications,  List<String>? workAchievements,  List<String>? amenitiesRequired,  List<String>? benefits,  List<String>? tags,  List<String>? toolsAndPlatforms,  List<String>? workLocation,  List<String>? numberOfStudent,  InternshipPackageDetails? packageDetails,  ContactPerson? contactPerson,  InternshipCompanyPosted? companyPosted,  DateTime? onlineTestDate,  DateTime? startDate,  DateTime? endDate,  DateTime? expireAt,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InternshipModel() when $default != null:
-return $default(_that.id,_that.description,_that.skills,_that.workMode,_that.location,_that.jobRoles,_that.internshipDuration,_that.numberOfOpenings,_that.minEducation,_that.benefits,_that.tags,_that.eligibilityCriteria,_that.onlineTestDate,_that.packageDetails,_that.companyPosted);case _:
+return $default(_that.id,_that.description,_that.jobType,_that.jobStatus,_that.approvalStatus,_that.visibleTo,_that.broadcastType,_that.eligibilityCriteria,_that.minEducation,_that.minimumStudents,_that.venue,_that.internshipDuration,_that.cgpa,_that.numberOfOpenings,_that.views,_that.matchScore,_that.jobRoles,_that.skills,_that.workMode,_that.location,_that.employmentType,_that.degree,_that.studentStreams,_that.collegeTypes,_that.collegeCategories,_that.companyType,_that.rounds,_that.selectionProcess,_that.certifications,_that.workAchievements,_that.amenitiesRequired,_that.benefits,_that.tags,_that.toolsAndPlatforms,_that.workLocation,_that.numberOfStudent,_that.packageDetails,_that.contactPerson,_that.companyPosted,_that.onlineTestDate,_that.startDate,_that.endDate,_that.expireAt,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -212,10 +259,10 @@ return $default(_that.id,_that.description,_that.skills,_that.workMode,_that.loc
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? description,  List<String>? skills,  List<String>? workMode,  List<String>? location,  List<String>? jobRoles,  String? internshipDuration,  int? numberOfOpenings,  String? minEducation,  List<String>? benefits,  List<String>? tags,  String? eligibilityCriteria,  DateTime? onlineTestDate,  InternshipPackageDetails? packageDetails,  InternshipCompanyPosted? companyPosted)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? description,  String? jobType,  String? jobStatus,  String? approvalStatus,  String? visibleTo,  String? broadcastType,  String? eligibilityCriteria,  String? minEducation,  String? minimumStudents,  String? venue,  String? internshipDuration, @JsonKey(fromJson: _doubleFromJson)  double? cgpa,  int? numberOfOpenings,  int? views,  int? matchScore,  List<String>? jobRoles,  List<String>? skills,  List<String>? workMode,  List<String>? location,  List<String>? employmentType,  List<String>? degree,  List<String>? studentStreams,  List<String>? collegeTypes,  List<String>? collegeCategories,  List<String>? companyType,  List<String>? rounds,  List<String>? selectionProcess,  List<String>? certifications,  List<String>? workAchievements,  List<String>? amenitiesRequired,  List<String>? benefits,  List<String>? tags,  List<String>? toolsAndPlatforms,  List<String>? workLocation,  List<String>? numberOfStudent,  InternshipPackageDetails? packageDetails,  ContactPerson? contactPerson,  InternshipCompanyPosted? companyPosted,  DateTime? onlineTestDate,  DateTime? startDate,  DateTime? endDate,  DateTime? expireAt,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _InternshipModel():
-return $default(_that.id,_that.description,_that.skills,_that.workMode,_that.location,_that.jobRoles,_that.internshipDuration,_that.numberOfOpenings,_that.minEducation,_that.benefits,_that.tags,_that.eligibilityCriteria,_that.onlineTestDate,_that.packageDetails,_that.companyPosted);case _:
+return $default(_that.id,_that.description,_that.jobType,_that.jobStatus,_that.approvalStatus,_that.visibleTo,_that.broadcastType,_that.eligibilityCriteria,_that.minEducation,_that.minimumStudents,_that.venue,_that.internshipDuration,_that.cgpa,_that.numberOfOpenings,_that.views,_that.matchScore,_that.jobRoles,_that.skills,_that.workMode,_that.location,_that.employmentType,_that.degree,_that.studentStreams,_that.collegeTypes,_that.collegeCategories,_that.companyType,_that.rounds,_that.selectionProcess,_that.certifications,_that.workAchievements,_that.amenitiesRequired,_that.benefits,_that.tags,_that.toolsAndPlatforms,_that.workLocation,_that.numberOfStudent,_that.packageDetails,_that.contactPerson,_that.companyPosted,_that.onlineTestDate,_that.startDate,_that.endDate,_that.expireAt,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -232,10 +279,10 @@ return $default(_that.id,_that.description,_that.skills,_that.workMode,_that.loc
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? description,  List<String>? skills,  List<String>? workMode,  List<String>? location,  List<String>? jobRoles,  String? internshipDuration,  int? numberOfOpenings,  String? minEducation,  List<String>? benefits,  List<String>? tags,  String? eligibilityCriteria,  DateTime? onlineTestDate,  InternshipPackageDetails? packageDetails,  InternshipCompanyPosted? companyPosted)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? description,  String? jobType,  String? jobStatus,  String? approvalStatus,  String? visibleTo,  String? broadcastType,  String? eligibilityCriteria,  String? minEducation,  String? minimumStudents,  String? venue,  String? internshipDuration, @JsonKey(fromJson: _doubleFromJson)  double? cgpa,  int? numberOfOpenings,  int? views,  int? matchScore,  List<String>? jobRoles,  List<String>? skills,  List<String>? workMode,  List<String>? location,  List<String>? employmentType,  List<String>? degree,  List<String>? studentStreams,  List<String>? collegeTypes,  List<String>? collegeCategories,  List<String>? companyType,  List<String>? rounds,  List<String>? selectionProcess,  List<String>? certifications,  List<String>? workAchievements,  List<String>? amenitiesRequired,  List<String>? benefits,  List<String>? tags,  List<String>? toolsAndPlatforms,  List<String>? workLocation,  List<String>? numberOfStudent,  InternshipPackageDetails? packageDetails,  ContactPerson? contactPerson,  InternshipCompanyPosted? companyPosted,  DateTime? onlineTestDate,  DateTime? startDate,  DateTime? endDate,  DateTime? expireAt,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _InternshipModel() when $default != null:
-return $default(_that.id,_that.description,_that.skills,_that.workMode,_that.location,_that.jobRoles,_that.internshipDuration,_that.numberOfOpenings,_that.minEducation,_that.benefits,_that.tags,_that.eligibilityCriteria,_that.onlineTestDate,_that.packageDetails,_that.companyPosted);case _:
+return $default(_that.id,_that.description,_that.jobType,_that.jobStatus,_that.approvalStatus,_that.visibleTo,_that.broadcastType,_that.eligibilityCriteria,_that.minEducation,_that.minimumStudents,_that.venue,_that.internshipDuration,_that.cgpa,_that.numberOfOpenings,_that.views,_that.matchScore,_that.jobRoles,_that.skills,_that.workMode,_that.location,_that.employmentType,_that.degree,_that.studentStreams,_that.collegeTypes,_that.collegeCategories,_that.companyType,_that.rounds,_that.selectionProcess,_that.certifications,_that.workAchievements,_that.amenitiesRequired,_that.benefits,_that.tags,_that.toolsAndPlatforms,_that.workLocation,_that.numberOfStudent,_that.packageDetails,_that.contactPerson,_that.companyPosted,_that.onlineTestDate,_that.startDate,_that.endDate,_that.expireAt,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -247,11 +294,38 @@ return $default(_that.id,_that.description,_that.skills,_that.workMode,_that.loc
 @JsonSerializable()
 
 class _InternshipModel implements InternshipModel {
-  const _InternshipModel({@JsonKey(name: '_id') this.id, this.description, final  List<String>? skills, final  List<String>? workMode, final  List<String>? location, final  List<String>? jobRoles, this.internshipDuration, this.numberOfOpenings, this.minEducation, final  List<String>? benefits, final  List<String>? tags, this.eligibilityCriteria, this.onlineTestDate, this.packageDetails, this.companyPosted}): _skills = skills,_workMode = workMode,_location = location,_jobRoles = jobRoles,_benefits = benefits,_tags = tags;
+  const _InternshipModel({@JsonKey(name: '_id') this.id, this.description, this.jobType, this.jobStatus, this.approvalStatus, this.visibleTo, this.broadcastType, this.eligibilityCriteria, this.minEducation, this.minimumStudents, this.venue, this.internshipDuration, @JsonKey(fromJson: _doubleFromJson) this.cgpa, this.numberOfOpenings, this.views, this.matchScore, final  List<String>? jobRoles, final  List<String>? skills, final  List<String>? workMode, final  List<String>? location, final  List<String>? employmentType, final  List<String>? degree, final  List<String>? studentStreams, final  List<String>? collegeTypes, final  List<String>? collegeCategories, final  List<String>? companyType, final  List<String>? rounds, final  List<String>? selectionProcess, final  List<String>? certifications, final  List<String>? workAchievements, final  List<String>? amenitiesRequired, final  List<String>? benefits, final  List<String>? tags, final  List<String>? toolsAndPlatforms, final  List<String>? workLocation, final  List<String>? numberOfStudent, this.packageDetails, this.contactPerson, this.companyPosted, this.onlineTestDate, this.startDate, this.endDate, this.expireAt, this.createdAt, this.updatedAt}): _jobRoles = jobRoles,_skills = skills,_workMode = workMode,_location = location,_employmentType = employmentType,_degree = degree,_studentStreams = studentStreams,_collegeTypes = collegeTypes,_collegeCategories = collegeCategories,_companyType = companyType,_rounds = rounds,_selectionProcess = selectionProcess,_certifications = certifications,_workAchievements = workAchievements,_amenitiesRequired = amenitiesRequired,_benefits = benefits,_tags = tags,_toolsAndPlatforms = toolsAndPlatforms,_workLocation = workLocation,_numberOfStudent = numberOfStudent;
   factory _InternshipModel.fromJson(Map<String, dynamic> json) => _$InternshipModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
+// Basic
 @override final  String? description;
+@override final  String? jobType;
+@override final  String? jobStatus;
+@override final  String? approvalStatus;
+@override final  String? visibleTo;
+@override final  String? broadcastType;
+@override final  String? eligibilityCriteria;
+@override final  String? minEducation;
+@override final  String? minimumStudents;
+@override final  String? venue;
+@override final  String? internshipDuration;
+// Numbers
+@override@JsonKey(fromJson: _doubleFromJson) final  double? cgpa;
+@override final  int? numberOfOpenings;
+@override final  int? views;
+@override final  int? matchScore;
+// Lists
+ final  List<String>? _jobRoles;
+// Lists
+@override List<String>? get jobRoles {
+  final value = _jobRoles;
+  if (value == null) return null;
+  if (_jobRoles is EqualUnmodifiableListView) return _jobRoles;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
  final  List<String>? _skills;
 @override List<String>? get skills {
   final value = _skills;
@@ -279,18 +353,105 @@ class _InternshipModel implements InternshipModel {
   return EqualUnmodifiableListView(value);
 }
 
- final  List<String>? _jobRoles;
-@override List<String>? get jobRoles {
-  final value = _jobRoles;
+ final  List<String>? _employmentType;
+@override List<String>? get employmentType {
+  final value = _employmentType;
   if (value == null) return null;
-  if (_jobRoles is EqualUnmodifiableListView) return _jobRoles;
+  if (_employmentType is EqualUnmodifiableListView) return _employmentType;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(value);
 }
 
-@override final  String? internshipDuration;
-@override final  int? numberOfOpenings;
-@override final  String? minEducation;
+ final  List<String>? _degree;
+@override List<String>? get degree {
+  final value = _degree;
+  if (value == null) return null;
+  if (_degree is EqualUnmodifiableListView) return _degree;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _studentStreams;
+@override List<String>? get studentStreams {
+  final value = _studentStreams;
+  if (value == null) return null;
+  if (_studentStreams is EqualUnmodifiableListView) return _studentStreams;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _collegeTypes;
+@override List<String>? get collegeTypes {
+  final value = _collegeTypes;
+  if (value == null) return null;
+  if (_collegeTypes is EqualUnmodifiableListView) return _collegeTypes;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _collegeCategories;
+@override List<String>? get collegeCategories {
+  final value = _collegeCategories;
+  if (value == null) return null;
+  if (_collegeCategories is EqualUnmodifiableListView) return _collegeCategories;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _companyType;
+@override List<String>? get companyType {
+  final value = _companyType;
+  if (value == null) return null;
+  if (_companyType is EqualUnmodifiableListView) return _companyType;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _rounds;
+@override List<String>? get rounds {
+  final value = _rounds;
+  if (value == null) return null;
+  if (_rounds is EqualUnmodifiableListView) return _rounds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _selectionProcess;
+@override List<String>? get selectionProcess {
+  final value = _selectionProcess;
+  if (value == null) return null;
+  if (_selectionProcess is EqualUnmodifiableListView) return _selectionProcess;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _certifications;
+@override List<String>? get certifications {
+  final value = _certifications;
+  if (value == null) return null;
+  if (_certifications is EqualUnmodifiableListView) return _certifications;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _workAchievements;
+@override List<String>? get workAchievements {
+  final value = _workAchievements;
+  if (value == null) return null;
+  if (_workAchievements is EqualUnmodifiableListView) return _workAchievements;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _amenitiesRequired;
+@override List<String>? get amenitiesRequired {
+  final value = _amenitiesRequired;
+  if (value == null) return null;
+  if (_amenitiesRequired is EqualUnmodifiableListView) return _amenitiesRequired;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
  final  List<String>? _benefits;
 @override List<String>? get benefits {
   final value = _benefits;
@@ -309,10 +470,44 @@ class _InternshipModel implements InternshipModel {
   return EqualUnmodifiableListView(value);
 }
 
-@override final  String? eligibilityCriteria;
-@override final  DateTime? onlineTestDate;
+ final  List<String>? _toolsAndPlatforms;
+@override List<String>? get toolsAndPlatforms {
+  final value = _toolsAndPlatforms;
+  if (value == null) return null;
+  if (_toolsAndPlatforms is EqualUnmodifiableListView) return _toolsAndPlatforms;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _workLocation;
+@override List<String>? get workLocation {
+  final value = _workLocation;
+  if (value == null) return null;
+  if (_workLocation is EqualUnmodifiableListView) return _workLocation;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _numberOfStudent;
+@override List<String>? get numberOfStudent {
+  final value = _numberOfStudent;
+  if (value == null) return null;
+  if (_numberOfStudent is EqualUnmodifiableListView) return _numberOfStudent;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+// Nested
 @override final  InternshipPackageDetails? packageDetails;
+@override final  ContactPerson? contactPerson;
 @override final  InternshipCompanyPosted? companyPosted;
+// Dates
+@override final  DateTime? onlineTestDate;
+@override final  DateTime? startDate;
+@override final  DateTime? endDate;
+@override final  DateTime? expireAt;
+@override final  DateTime? createdAt;
+@override final  DateTime? updatedAt;
 
 /// Create a copy of InternshipModel
 /// with the given fields replaced by the non-null parameter values.
@@ -327,16 +522,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternshipModel&&(identical(other.id, id) || other.id == id)&&(identical(other.description, description) || other.description == description)&&const DeepCollectionEquality().equals(other._skills, _skills)&&const DeepCollectionEquality().equals(other._workMode, _workMode)&&const DeepCollectionEquality().equals(other._location, _location)&&const DeepCollectionEquality().equals(other._jobRoles, _jobRoles)&&(identical(other.internshipDuration, internshipDuration) || other.internshipDuration == internshipDuration)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&const DeepCollectionEquality().equals(other._benefits, _benefits)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria)&&(identical(other.onlineTestDate, onlineTestDate) || other.onlineTestDate == onlineTestDate)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&(identical(other.companyPosted, companyPosted) || other.companyPosted == companyPosted));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternshipModel&&(identical(other.id, id) || other.id == id)&&(identical(other.description, description) || other.description == description)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.jobStatus, jobStatus) || other.jobStatus == jobStatus)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&(identical(other.visibleTo, visibleTo) || other.visibleTo == visibleTo)&&(identical(other.broadcastType, broadcastType) || other.broadcastType == broadcastType)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.minimumStudents, minimumStudents) || other.minimumStudents == minimumStudents)&&(identical(other.venue, venue) || other.venue == venue)&&(identical(other.internshipDuration, internshipDuration) || other.internshipDuration == internshipDuration)&&(identical(other.cgpa, cgpa) || other.cgpa == cgpa)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.views, views) || other.views == views)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&const DeepCollectionEquality().equals(other._jobRoles, _jobRoles)&&const DeepCollectionEquality().equals(other._skills, _skills)&&const DeepCollectionEquality().equals(other._workMode, _workMode)&&const DeepCollectionEquality().equals(other._location, _location)&&const DeepCollectionEquality().equals(other._employmentType, _employmentType)&&const DeepCollectionEquality().equals(other._degree, _degree)&&const DeepCollectionEquality().equals(other._studentStreams, _studentStreams)&&const DeepCollectionEquality().equals(other._collegeTypes, _collegeTypes)&&const DeepCollectionEquality().equals(other._collegeCategories, _collegeCategories)&&const DeepCollectionEquality().equals(other._companyType, _companyType)&&const DeepCollectionEquality().equals(other._rounds, _rounds)&&const DeepCollectionEquality().equals(other._selectionProcess, _selectionProcess)&&const DeepCollectionEquality().equals(other._certifications, _certifications)&&const DeepCollectionEquality().equals(other._workAchievements, _workAchievements)&&const DeepCollectionEquality().equals(other._amenitiesRequired, _amenitiesRequired)&&const DeepCollectionEquality().equals(other._benefits, _benefits)&&const DeepCollectionEquality().equals(other._tags, _tags)&&const DeepCollectionEquality().equals(other._toolsAndPlatforms, _toolsAndPlatforms)&&const DeepCollectionEquality().equals(other._workLocation, _workLocation)&&const DeepCollectionEquality().equals(other._numberOfStudent, _numberOfStudent)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&(identical(other.contactPerson, contactPerson) || other.contactPerson == contactPerson)&&(identical(other.companyPosted, companyPosted) || other.companyPosted == companyPosted)&&(identical(other.onlineTestDate, onlineTestDate) || other.onlineTestDate == onlineTestDate)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.expireAt, expireAt) || other.expireAt == expireAt)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,description,const DeepCollectionEquality().hash(_skills),const DeepCollectionEquality().hash(_workMode),const DeepCollectionEquality().hash(_location),const DeepCollectionEquality().hash(_jobRoles),internshipDuration,numberOfOpenings,minEducation,const DeepCollectionEquality().hash(_benefits),const DeepCollectionEquality().hash(_tags),eligibilityCriteria,onlineTestDate,packageDetails,companyPosted);
+int get hashCode => Object.hashAll([runtimeType,id,description,jobType,jobStatus,approvalStatus,visibleTo,broadcastType,eligibilityCriteria,minEducation,minimumStudents,venue,internshipDuration,cgpa,numberOfOpenings,views,matchScore,const DeepCollectionEquality().hash(_jobRoles),const DeepCollectionEquality().hash(_skills),const DeepCollectionEquality().hash(_workMode),const DeepCollectionEquality().hash(_location),const DeepCollectionEquality().hash(_employmentType),const DeepCollectionEquality().hash(_degree),const DeepCollectionEquality().hash(_studentStreams),const DeepCollectionEquality().hash(_collegeTypes),const DeepCollectionEquality().hash(_collegeCategories),const DeepCollectionEquality().hash(_companyType),const DeepCollectionEquality().hash(_rounds),const DeepCollectionEquality().hash(_selectionProcess),const DeepCollectionEquality().hash(_certifications),const DeepCollectionEquality().hash(_workAchievements),const DeepCollectionEquality().hash(_amenitiesRequired),const DeepCollectionEquality().hash(_benefits),const DeepCollectionEquality().hash(_tags),const DeepCollectionEquality().hash(_toolsAndPlatforms),const DeepCollectionEquality().hash(_workLocation),const DeepCollectionEquality().hash(_numberOfStudent),packageDetails,contactPerson,companyPosted,onlineTestDate,startDate,endDate,expireAt,createdAt,updatedAt]);
 
 @override
 String toString() {
-  return 'InternshipModel(id: $id, description: $description, skills: $skills, workMode: $workMode, location: $location, jobRoles: $jobRoles, internshipDuration: $internshipDuration, numberOfOpenings: $numberOfOpenings, minEducation: $minEducation, benefits: $benefits, tags: $tags, eligibilityCriteria: $eligibilityCriteria, onlineTestDate: $onlineTestDate, packageDetails: $packageDetails, companyPosted: $companyPosted)';
+  return 'InternshipModel(id: $id, description: $description, jobType: $jobType, jobStatus: $jobStatus, approvalStatus: $approvalStatus, visibleTo: $visibleTo, broadcastType: $broadcastType, eligibilityCriteria: $eligibilityCriteria, minEducation: $minEducation, minimumStudents: $minimumStudents, venue: $venue, internshipDuration: $internshipDuration, cgpa: $cgpa, numberOfOpenings: $numberOfOpenings, views: $views, matchScore: $matchScore, jobRoles: $jobRoles, skills: $skills, workMode: $workMode, location: $location, employmentType: $employmentType, degree: $degree, studentStreams: $studentStreams, collegeTypes: $collegeTypes, collegeCategories: $collegeCategories, companyType: $companyType, rounds: $rounds, selectionProcess: $selectionProcess, certifications: $certifications, workAchievements: $workAchievements, amenitiesRequired: $amenitiesRequired, benefits: $benefits, tags: $tags, toolsAndPlatforms: $toolsAndPlatforms, workLocation: $workLocation, numberOfStudent: $numberOfStudent, packageDetails: $packageDetails, contactPerson: $contactPerson, companyPosted: $companyPosted, onlineTestDate: $onlineTestDate, startDate: $startDate, endDate: $endDate, expireAt: $expireAt, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -347,11 +542,11 @@ abstract mixin class _$InternshipModelCopyWith<$Res> implements $InternshipModel
   factory _$InternshipModelCopyWith(_InternshipModel value, $Res Function(_InternshipModel) _then) = __$InternshipModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? description, List<String>? skills, List<String>? workMode, List<String>? location, List<String>? jobRoles, String? internshipDuration, int? numberOfOpenings, String? minEducation, List<String>? benefits, List<String>? tags, String? eligibilityCriteria, DateTime? onlineTestDate, InternshipPackageDetails? packageDetails, InternshipCompanyPosted? companyPosted
+@JsonKey(name: '_id') String? id, String? description, String? jobType, String? jobStatus, String? approvalStatus, String? visibleTo, String? broadcastType, String? eligibilityCriteria, String? minEducation, String? minimumStudents, String? venue, String? internshipDuration,@JsonKey(fromJson: _doubleFromJson) double? cgpa, int? numberOfOpenings, int? views, int? matchScore, List<String>? jobRoles, List<String>? skills, List<String>? workMode, List<String>? location, List<String>? employmentType, List<String>? degree, List<String>? studentStreams, List<String>? collegeTypes, List<String>? collegeCategories, List<String>? companyType, List<String>? rounds, List<String>? selectionProcess, List<String>? certifications, List<String>? workAchievements, List<String>? amenitiesRequired, List<String>? benefits, List<String>? tags, List<String>? toolsAndPlatforms, List<String>? workLocation, List<String>? numberOfStudent, InternshipPackageDetails? packageDetails, ContactPerson? contactPerson, InternshipCompanyPosted? companyPosted, DateTime? onlineTestDate, DateTime? startDate, DateTime? endDate, DateTime? expireAt, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-@override $InternshipPackageDetailsCopyWith<$Res>? get packageDetails;@override $InternshipCompanyPostedCopyWith<$Res>? get companyPosted;
+@override $InternshipPackageDetailsCopyWith<$Res>? get packageDetails;@override $ContactPersonCopyWith<$Res>? get contactPerson;@override $InternshipCompanyPostedCopyWith<$Res>? get companyPosted;
 
 }
 /// @nodoc
@@ -364,24 +559,54 @@ class __$InternshipModelCopyWithImpl<$Res>
 
 /// Create a copy of InternshipModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? description = freezed,Object? skills = freezed,Object? workMode = freezed,Object? location = freezed,Object? jobRoles = freezed,Object? internshipDuration = freezed,Object? numberOfOpenings = freezed,Object? minEducation = freezed,Object? benefits = freezed,Object? tags = freezed,Object? eligibilityCriteria = freezed,Object? onlineTestDate = freezed,Object? packageDetails = freezed,Object? companyPosted = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? description = freezed,Object? jobType = freezed,Object? jobStatus = freezed,Object? approvalStatus = freezed,Object? visibleTo = freezed,Object? broadcastType = freezed,Object? eligibilityCriteria = freezed,Object? minEducation = freezed,Object? minimumStudents = freezed,Object? venue = freezed,Object? internshipDuration = freezed,Object? cgpa = freezed,Object? numberOfOpenings = freezed,Object? views = freezed,Object? matchScore = freezed,Object? jobRoles = freezed,Object? skills = freezed,Object? workMode = freezed,Object? location = freezed,Object? employmentType = freezed,Object? degree = freezed,Object? studentStreams = freezed,Object? collegeTypes = freezed,Object? collegeCategories = freezed,Object? companyType = freezed,Object? rounds = freezed,Object? selectionProcess = freezed,Object? certifications = freezed,Object? workAchievements = freezed,Object? amenitiesRequired = freezed,Object? benefits = freezed,Object? tags = freezed,Object? toolsAndPlatforms = freezed,Object? workLocation = freezed,Object? numberOfStudent = freezed,Object? packageDetails = freezed,Object? contactPerson = freezed,Object? companyPosted = freezed,Object? onlineTestDate = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? expireAt = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
   return _then(_InternshipModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,skills: freezed == skills ? _self._skills : skills // ignore: cast_nullable_to_non_nullable
+as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
+as String?,jobStatus: freezed == jobStatus ? _self.jobStatus : jobStatus // ignore: cast_nullable_to_non_nullable
+as String?,approvalStatus: freezed == approvalStatus ? _self.approvalStatus : approvalStatus // ignore: cast_nullable_to_non_nullable
+as String?,visibleTo: freezed == visibleTo ? _self.visibleTo : visibleTo // ignore: cast_nullable_to_non_nullable
+as String?,broadcastType: freezed == broadcastType ? _self.broadcastType : broadcastType // ignore: cast_nullable_to_non_nullable
+as String?,eligibilityCriteria: freezed == eligibilityCriteria ? _self.eligibilityCriteria : eligibilityCriteria // ignore: cast_nullable_to_non_nullable
+as String?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
+as String?,minimumStudents: freezed == minimumStudents ? _self.minimumStudents : minimumStudents // ignore: cast_nullable_to_non_nullable
+as String?,venue: freezed == venue ? _self.venue : venue // ignore: cast_nullable_to_non_nullable
+as String?,internshipDuration: freezed == internshipDuration ? _self.internshipDuration : internshipDuration // ignore: cast_nullable_to_non_nullable
+as String?,cgpa: freezed == cgpa ? _self.cgpa : cgpa // ignore: cast_nullable_to_non_nullable
+as double?,numberOfOpenings: freezed == numberOfOpenings ? _self.numberOfOpenings : numberOfOpenings // ignore: cast_nullable_to_non_nullable
+as int?,views: freezed == views ? _self.views : views // ignore: cast_nullable_to_non_nullable
+as int?,matchScore: freezed == matchScore ? _self.matchScore : matchScore // ignore: cast_nullable_to_non_nullable
+as int?,jobRoles: freezed == jobRoles ? _self._jobRoles : jobRoles // ignore: cast_nullable_to_non_nullable
+as List<String>?,skills: freezed == skills ? _self._skills : skills // ignore: cast_nullable_to_non_nullable
 as List<String>?,workMode: freezed == workMode ? _self._workMode : workMode // ignore: cast_nullable_to_non_nullable
 as List<String>?,location: freezed == location ? _self._location : location // ignore: cast_nullable_to_non_nullable
-as List<String>?,jobRoles: freezed == jobRoles ? _self._jobRoles : jobRoles // ignore: cast_nullable_to_non_nullable
-as List<String>?,internshipDuration: freezed == internshipDuration ? _self.internshipDuration : internshipDuration // ignore: cast_nullable_to_non_nullable
-as String?,numberOfOpenings: freezed == numberOfOpenings ? _self.numberOfOpenings : numberOfOpenings // ignore: cast_nullable_to_non_nullable
-as int?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
-as String?,benefits: freezed == benefits ? _self._benefits : benefits // ignore: cast_nullable_to_non_nullable
+as List<String>?,employmentType: freezed == employmentType ? _self._employmentType : employmentType // ignore: cast_nullable_to_non_nullable
+as List<String>?,degree: freezed == degree ? _self._degree : degree // ignore: cast_nullable_to_non_nullable
+as List<String>?,studentStreams: freezed == studentStreams ? _self._studentStreams : studentStreams // ignore: cast_nullable_to_non_nullable
+as List<String>?,collegeTypes: freezed == collegeTypes ? _self._collegeTypes : collegeTypes // ignore: cast_nullable_to_non_nullable
+as List<String>?,collegeCategories: freezed == collegeCategories ? _self._collegeCategories : collegeCategories // ignore: cast_nullable_to_non_nullable
+as List<String>?,companyType: freezed == companyType ? _self._companyType : companyType // ignore: cast_nullable_to_non_nullable
+as List<String>?,rounds: freezed == rounds ? _self._rounds : rounds // ignore: cast_nullable_to_non_nullable
+as List<String>?,selectionProcess: freezed == selectionProcess ? _self._selectionProcess : selectionProcess // ignore: cast_nullable_to_non_nullable
+as List<String>?,certifications: freezed == certifications ? _self._certifications : certifications // ignore: cast_nullable_to_non_nullable
+as List<String>?,workAchievements: freezed == workAchievements ? _self._workAchievements : workAchievements // ignore: cast_nullable_to_non_nullable
+as List<String>?,amenitiesRequired: freezed == amenitiesRequired ? _self._amenitiesRequired : amenitiesRequired // ignore: cast_nullable_to_non_nullable
+as List<String>?,benefits: freezed == benefits ? _self._benefits : benefits // ignore: cast_nullable_to_non_nullable
 as List<String>?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
-as List<String>?,eligibilityCriteria: freezed == eligibilityCriteria ? _self.eligibilityCriteria : eligibilityCriteria // ignore: cast_nullable_to_non_nullable
-as String?,onlineTestDate: freezed == onlineTestDate ? _self.onlineTestDate : onlineTestDate // ignore: cast_nullable_to_non_nullable
-as DateTime?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
-as InternshipPackageDetails?,companyPosted: freezed == companyPosted ? _self.companyPosted : companyPosted // ignore: cast_nullable_to_non_nullable
-as InternshipCompanyPosted?,
+as List<String>?,toolsAndPlatforms: freezed == toolsAndPlatforms ? _self._toolsAndPlatforms : toolsAndPlatforms // ignore: cast_nullable_to_non_nullable
+as List<String>?,workLocation: freezed == workLocation ? _self._workLocation : workLocation // ignore: cast_nullable_to_non_nullable
+as List<String>?,numberOfStudent: freezed == numberOfStudent ? _self._numberOfStudent : numberOfStudent // ignore: cast_nullable_to_non_nullable
+as List<String>?,packageDetails: freezed == packageDetails ? _self.packageDetails : packageDetails // ignore: cast_nullable_to_non_nullable
+as InternshipPackageDetails?,contactPerson: freezed == contactPerson ? _self.contactPerson : contactPerson // ignore: cast_nullable_to_non_nullable
+as ContactPerson?,companyPosted: freezed == companyPosted ? _self.companyPosted : companyPosted // ignore: cast_nullable_to_non_nullable
+as InternshipCompanyPosted?,onlineTestDate: freezed == onlineTestDate ? _self.onlineTestDate : onlineTestDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as DateTime?,expireAt: freezed == expireAt ? _self.expireAt : expireAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime?,
   ));
 }
 
@@ -396,6 +621,18 @@ $InternshipPackageDetailsCopyWith<$Res>? get packageDetails {
 
   return $InternshipPackageDetailsCopyWith<$Res>(_self.packageDetails!, (value) {
     return _then(_self.copyWith(packageDetails: value));
+  });
+}/// Create a copy of InternshipModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$ContactPersonCopyWith<$Res>? get contactPerson {
+    if (_self.contactPerson == null) {
+    return null;
+  }
+
+  return $ContactPersonCopyWith<$Res>(_self.contactPerson!, (value) {
+    return _then(_self.copyWith(contactPerson: value));
   });
 }/// Create a copy of InternshipModel
 /// with the given fields replaced by the non-null parameter values.
@@ -416,7 +653,7 @@ $InternshipCompanyPostedCopyWith<$Res>? get companyPosted {
 /// @nodoc
 mixin _$InternshipPackageDetails {
 
- int? get totalCTC;
+ String? get currency; int? get totalCTC; int? get fixedPay; int? get joiningBonus;
 /// Create a copy of InternshipPackageDetails
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -429,16 +666,16 @@ $InternshipPackageDetailsCopyWith<InternshipPackageDetails> get copyWith => _$In
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternshipPackageDetails&&(identical(other.totalCTC, totalCTC) || other.totalCTC == totalCTC));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternshipPackageDetails&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.totalCTC, totalCTC) || other.totalCTC == totalCTC)&&(identical(other.fixedPay, fixedPay) || other.fixedPay == fixedPay)&&(identical(other.joiningBonus, joiningBonus) || other.joiningBonus == joiningBonus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalCTC);
+int get hashCode => Object.hash(runtimeType,currency,totalCTC,fixedPay,joiningBonus);
 
 @override
 String toString() {
-  return 'InternshipPackageDetails(totalCTC: $totalCTC)';
+  return 'InternshipPackageDetails(currency: $currency, totalCTC: $totalCTC, fixedPay: $fixedPay, joiningBonus: $joiningBonus)';
 }
 
 
@@ -449,7 +686,7 @@ abstract mixin class $InternshipPackageDetailsCopyWith<$Res>  {
   factory $InternshipPackageDetailsCopyWith(InternshipPackageDetails value, $Res Function(InternshipPackageDetails) _then) = _$InternshipPackageDetailsCopyWithImpl;
 @useResult
 $Res call({
- int? totalCTC
+ String? currency, int? totalCTC, int? fixedPay, int? joiningBonus
 });
 
 
@@ -466,9 +703,12 @@ class _$InternshipPackageDetailsCopyWithImpl<$Res>
 
 /// Create a copy of InternshipPackageDetails
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? totalCTC = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? currency = freezed,Object? totalCTC = freezed,Object? fixedPay = freezed,Object? joiningBonus = freezed,}) {
   return _then(_self.copyWith(
-totalCTC: freezed == totalCTC ? _self.totalCTC : totalCTC // ignore: cast_nullable_to_non_nullable
+currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String?,totalCTC: freezed == totalCTC ? _self.totalCTC : totalCTC // ignore: cast_nullable_to_non_nullable
+as int?,fixedPay: freezed == fixedPay ? _self.fixedPay : fixedPay // ignore: cast_nullable_to_non_nullable
+as int?,joiningBonus: freezed == joiningBonus ? _self.joiningBonus : joiningBonus // ignore: cast_nullable_to_non_nullable
 as int?,
   ));
 }
@@ -554,10 +794,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? totalCTC)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? currency,  int? totalCTC,  int? fixedPay,  int? joiningBonus)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InternshipPackageDetails() when $default != null:
-return $default(_that.totalCTC);case _:
+return $default(_that.currency,_that.totalCTC,_that.fixedPay,_that.joiningBonus);case _:
   return orElse();
 
 }
@@ -575,10 +815,10 @@ return $default(_that.totalCTC);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? totalCTC)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? currency,  int? totalCTC,  int? fixedPay,  int? joiningBonus)  $default,) {final _that = this;
 switch (_that) {
 case _InternshipPackageDetails():
-return $default(_that.totalCTC);case _:
+return $default(_that.currency,_that.totalCTC,_that.fixedPay,_that.joiningBonus);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -595,10 +835,10 @@ return $default(_that.totalCTC);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? totalCTC)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? currency,  int? totalCTC,  int? fixedPay,  int? joiningBonus)?  $default,) {final _that = this;
 switch (_that) {
 case _InternshipPackageDetails() when $default != null:
-return $default(_that.totalCTC);case _:
+return $default(_that.currency,_that.totalCTC,_that.fixedPay,_that.joiningBonus);case _:
   return null;
 
 }
@@ -610,10 +850,13 @@ return $default(_that.totalCTC);case _:
 @JsonSerializable()
 
 class _InternshipPackageDetails implements InternshipPackageDetails {
-  const _InternshipPackageDetails({this.totalCTC});
+  const _InternshipPackageDetails({this.currency, this.totalCTC, this.fixedPay, this.joiningBonus});
   factory _InternshipPackageDetails.fromJson(Map<String, dynamic> json) => _$InternshipPackageDetailsFromJson(json);
 
+@override final  String? currency;
 @override final  int? totalCTC;
+@override final  int? fixedPay;
+@override final  int? joiningBonus;
 
 /// Create a copy of InternshipPackageDetails
 /// with the given fields replaced by the non-null parameter values.
@@ -628,16 +871,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternshipPackageDetails&&(identical(other.totalCTC, totalCTC) || other.totalCTC == totalCTC));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternshipPackageDetails&&(identical(other.currency, currency) || other.currency == currency)&&(identical(other.totalCTC, totalCTC) || other.totalCTC == totalCTC)&&(identical(other.fixedPay, fixedPay) || other.fixedPay == fixedPay)&&(identical(other.joiningBonus, joiningBonus) || other.joiningBonus == joiningBonus));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalCTC);
+int get hashCode => Object.hash(runtimeType,currency,totalCTC,fixedPay,joiningBonus);
 
 @override
 String toString() {
-  return 'InternshipPackageDetails(totalCTC: $totalCTC)';
+  return 'InternshipPackageDetails(currency: $currency, totalCTC: $totalCTC, fixedPay: $fixedPay, joiningBonus: $joiningBonus)';
 }
 
 
@@ -648,7 +891,7 @@ abstract mixin class _$InternshipPackageDetailsCopyWith<$Res> implements $Intern
   factory _$InternshipPackageDetailsCopyWith(_InternshipPackageDetails value, $Res Function(_InternshipPackageDetails) _then) = __$InternshipPackageDetailsCopyWithImpl;
 @override @useResult
 $Res call({
- int? totalCTC
+ String? currency, int? totalCTC, int? fixedPay, int? joiningBonus
 });
 
 
@@ -665,10 +908,288 @@ class __$InternshipPackageDetailsCopyWithImpl<$Res>
 
 /// Create a copy of InternshipPackageDetails
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? totalCTC = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? currency = freezed,Object? totalCTC = freezed,Object? fixedPay = freezed,Object? joiningBonus = freezed,}) {
   return _then(_InternshipPackageDetails(
-totalCTC: freezed == totalCTC ? _self.totalCTC : totalCTC // ignore: cast_nullable_to_non_nullable
+currency: freezed == currency ? _self.currency : currency // ignore: cast_nullable_to_non_nullable
+as String?,totalCTC: freezed == totalCTC ? _self.totalCTC : totalCTC // ignore: cast_nullable_to_non_nullable
+as int?,fixedPay: freezed == fixedPay ? _self.fixedPay : fixedPay // ignore: cast_nullable_to_non_nullable
+as int?,joiningBonus: freezed == joiningBonus ? _self.joiningBonus : joiningBonus // ignore: cast_nullable_to_non_nullable
 as int?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
+mixin _$ContactPerson {
+
+ String? get name; String? get designation; String? get email; String? get mobile; String? get linkedin;
+/// Create a copy of ContactPerson
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ContactPersonCopyWith<ContactPerson> get copyWith => _$ContactPersonCopyWithImpl<ContactPerson>(this as ContactPerson, _$identity);
+
+  /// Serializes this ContactPerson to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ContactPerson&&(identical(other.name, name) || other.name == name)&&(identical(other.designation, designation) || other.designation == designation)&&(identical(other.email, email) || other.email == email)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.linkedin, linkedin) || other.linkedin == linkedin));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,designation,email,mobile,linkedin);
+
+@override
+String toString() {
+  return 'ContactPerson(name: $name, designation: $designation, email: $email, mobile: $mobile, linkedin: $linkedin)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $ContactPersonCopyWith<$Res>  {
+  factory $ContactPersonCopyWith(ContactPerson value, $Res Function(ContactPerson) _then) = _$ContactPersonCopyWithImpl;
+@useResult
+$Res call({
+ String? name, String? designation, String? email, String? mobile, String? linkedin
+});
+
+
+
+
+}
+/// @nodoc
+class _$ContactPersonCopyWithImpl<$Res>
+    implements $ContactPersonCopyWith<$Res> {
+  _$ContactPersonCopyWithImpl(this._self, this._then);
+
+  final ContactPerson _self;
+  final $Res Function(ContactPerson) _then;
+
+/// Create a copy of ContactPerson
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? designation = freezed,Object? email = freezed,Object? mobile = freezed,Object? linkedin = freezed,}) {
+  return _then(_self.copyWith(
+name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,designation: freezed == designation ? _self.designation : designation // ignore: cast_nullable_to_non_nullable
+as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,mobile: freezed == mobile ? _self.mobile : mobile // ignore: cast_nullable_to_non_nullable
+as String?,linkedin: freezed == linkedin ? _self.linkedin : linkedin // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [ContactPerson].
+extension ContactPersonPatterns on ContactPerson {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _ContactPerson value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _ContactPerson() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _ContactPerson value)  $default,){
+final _that = this;
+switch (_that) {
+case _ContactPerson():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _ContactPerson value)?  $default,){
+final _that = this;
+switch (_that) {
+case _ContactPerson() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? designation,  String? email,  String? mobile,  String? linkedin)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _ContactPerson() when $default != null:
+return $default(_that.name,_that.designation,_that.email,_that.mobile,_that.linkedin);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? designation,  String? email,  String? mobile,  String? linkedin)  $default,) {final _that = this;
+switch (_that) {
+case _ContactPerson():
+return $default(_that.name,_that.designation,_that.email,_that.mobile,_that.linkedin);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? designation,  String? email,  String? mobile,  String? linkedin)?  $default,) {final _that = this;
+switch (_that) {
+case _ContactPerson() when $default != null:
+return $default(_that.name,_that.designation,_that.email,_that.mobile,_that.linkedin);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _ContactPerson implements ContactPerson {
+  const _ContactPerson({this.name, this.designation, this.email, this.mobile, this.linkedin});
+  factory _ContactPerson.fromJson(Map<String, dynamic> json) => _$ContactPersonFromJson(json);
+
+@override final  String? name;
+@override final  String? designation;
+@override final  String? email;
+@override final  String? mobile;
+@override final  String? linkedin;
+
+/// Create a copy of ContactPerson
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ContactPersonCopyWith<_ContactPerson> get copyWith => __$ContactPersonCopyWithImpl<_ContactPerson>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$ContactPersonToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ContactPerson&&(identical(other.name, name) || other.name == name)&&(identical(other.designation, designation) || other.designation == designation)&&(identical(other.email, email) || other.email == email)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.linkedin, linkedin) || other.linkedin == linkedin));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,designation,email,mobile,linkedin);
+
+@override
+String toString() {
+  return 'ContactPerson(name: $name, designation: $designation, email: $email, mobile: $mobile, linkedin: $linkedin)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$ContactPersonCopyWith<$Res> implements $ContactPersonCopyWith<$Res> {
+  factory _$ContactPersonCopyWith(_ContactPerson value, $Res Function(_ContactPerson) _then) = __$ContactPersonCopyWithImpl;
+@override @useResult
+$Res call({
+ String? name, String? designation, String? email, String? mobile, String? linkedin
+});
+
+
+
+
+}
+/// @nodoc
+class __$ContactPersonCopyWithImpl<$Res>
+    implements _$ContactPersonCopyWith<$Res> {
+  __$ContactPersonCopyWithImpl(this._self, this._then);
+
+  final _ContactPerson _self;
+  final $Res Function(_ContactPerson) _then;
+
+/// Create a copy of ContactPerson
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? designation = freezed,Object? email = freezed,Object? mobile = freezed,Object? linkedin = freezed,}) {
+  return _then(_ContactPerson(
+name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,designation: freezed == designation ? _self.designation : designation // ignore: cast_nullable_to_non_nullable
+as String?,email: freezed == email ? _self.email : email // ignore: cast_nullable_to_non_nullable
+as String?,mobile: freezed == mobile ? _self.mobile : mobile // ignore: cast_nullable_to_non_nullable
+as String?,linkedin: freezed == linkedin ? _self.linkedin : linkedin // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -679,7 +1200,7 @@ as int?,
 /// @nodoc
 mixin _$InternshipCompanyPosted {
 
- InternshipCompanyDetails? get companyDetails; String? get profileImageUrl;
+@JsonKey(name: '_id') String? get id; String? get profileImageUrl; String? get backgroundImageUrl; InternshipEmployerDetails? get employerDetails; InternshipCompanyDetails? get companyDetails;
 /// Create a copy of InternshipCompanyPosted
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -692,16 +1213,16 @@ $InternshipCompanyPostedCopyWith<InternshipCompanyPosted> get copyWith => _$Inte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternshipCompanyPosted&&(identical(other.companyDetails, companyDetails) || other.companyDetails == companyDetails)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternshipCompanyPosted&&(identical(other.id, id) || other.id == id)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&(identical(other.backgroundImageUrl, backgroundImageUrl) || other.backgroundImageUrl == backgroundImageUrl)&&(identical(other.employerDetails, employerDetails) || other.employerDetails == employerDetails)&&(identical(other.companyDetails, companyDetails) || other.companyDetails == companyDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,companyDetails,profileImageUrl);
+int get hashCode => Object.hash(runtimeType,id,profileImageUrl,backgroundImageUrl,employerDetails,companyDetails);
 
 @override
 String toString() {
-  return 'InternshipCompanyPosted(companyDetails: $companyDetails, profileImageUrl: $profileImageUrl)';
+  return 'InternshipCompanyPosted(id: $id, profileImageUrl: $profileImageUrl, backgroundImageUrl: $backgroundImageUrl, employerDetails: $employerDetails, companyDetails: $companyDetails)';
 }
 
 
@@ -712,11 +1233,11 @@ abstract mixin class $InternshipCompanyPostedCopyWith<$Res>  {
   factory $InternshipCompanyPostedCopyWith(InternshipCompanyPosted value, $Res Function(InternshipCompanyPosted) _then) = _$InternshipCompanyPostedCopyWithImpl;
 @useResult
 $Res call({
- InternshipCompanyDetails? companyDetails, String? profileImageUrl
+@JsonKey(name: '_id') String? id, String? profileImageUrl, String? backgroundImageUrl, InternshipEmployerDetails? employerDetails, InternshipCompanyDetails? companyDetails
 });
 
 
-$InternshipCompanyDetailsCopyWith<$Res>? get companyDetails;
+$InternshipEmployerDetailsCopyWith<$Res>? get employerDetails;$InternshipCompanyDetailsCopyWith<$Res>? get companyDetails;
 
 }
 /// @nodoc
@@ -729,14 +1250,29 @@ class _$InternshipCompanyPostedCopyWithImpl<$Res>
 
 /// Create a copy of InternshipCompanyPosted
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? companyDetails = freezed,Object? profileImageUrl = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? profileImageUrl = freezed,Object? backgroundImageUrl = freezed,Object? employerDetails = freezed,Object? companyDetails = freezed,}) {
   return _then(_self.copyWith(
-companyDetails: freezed == companyDetails ? _self.companyDetails : companyDetails // ignore: cast_nullable_to_non_nullable
-as InternshipCompanyDetails?,profileImageUrl: freezed == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,profileImageUrl: freezed == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
+as String?,backgroundImageUrl: freezed == backgroundImageUrl ? _self.backgroundImageUrl : backgroundImageUrl // ignore: cast_nullable_to_non_nullable
+as String?,employerDetails: freezed == employerDetails ? _self.employerDetails : employerDetails // ignore: cast_nullable_to_non_nullable
+as InternshipEmployerDetails?,companyDetails: freezed == companyDetails ? _self.companyDetails : companyDetails // ignore: cast_nullable_to_non_nullable
+as InternshipCompanyDetails?,
   ));
 }
 /// Create a copy of InternshipCompanyPosted
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$InternshipEmployerDetailsCopyWith<$Res>? get employerDetails {
+    if (_self.employerDetails == null) {
+    return null;
+  }
+
+  return $InternshipEmployerDetailsCopyWith<$Res>(_self.employerDetails!, (value) {
+    return _then(_self.copyWith(employerDetails: value));
+  });
+}/// Create a copy of InternshipCompanyPosted
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -830,10 +1366,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( InternshipCompanyDetails? companyDetails,  String? profileImageUrl)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? profileImageUrl,  String? backgroundImageUrl,  InternshipEmployerDetails? employerDetails,  InternshipCompanyDetails? companyDetails)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InternshipCompanyPosted() when $default != null:
-return $default(_that.companyDetails,_that.profileImageUrl);case _:
+return $default(_that.id,_that.profileImageUrl,_that.backgroundImageUrl,_that.employerDetails,_that.companyDetails);case _:
   return orElse();
 
 }
@@ -851,10 +1387,10 @@ return $default(_that.companyDetails,_that.profileImageUrl);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( InternshipCompanyDetails? companyDetails,  String? profileImageUrl)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? profileImageUrl,  String? backgroundImageUrl,  InternshipEmployerDetails? employerDetails,  InternshipCompanyDetails? companyDetails)  $default,) {final _that = this;
 switch (_that) {
 case _InternshipCompanyPosted():
-return $default(_that.companyDetails,_that.profileImageUrl);case _:
+return $default(_that.id,_that.profileImageUrl,_that.backgroundImageUrl,_that.employerDetails,_that.companyDetails);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -871,10 +1407,10 @@ return $default(_that.companyDetails,_that.profileImageUrl);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( InternshipCompanyDetails? companyDetails,  String? profileImageUrl)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? profileImageUrl,  String? backgroundImageUrl,  InternshipEmployerDetails? employerDetails,  InternshipCompanyDetails? companyDetails)?  $default,) {final _that = this;
 switch (_that) {
 case _InternshipCompanyPosted() when $default != null:
-return $default(_that.companyDetails,_that.profileImageUrl);case _:
+return $default(_that.id,_that.profileImageUrl,_that.backgroundImageUrl,_that.employerDetails,_that.companyDetails);case _:
   return null;
 
 }
@@ -886,11 +1422,14 @@ return $default(_that.companyDetails,_that.profileImageUrl);case _:
 @JsonSerializable()
 
 class _InternshipCompanyPosted implements InternshipCompanyPosted {
-  const _InternshipCompanyPosted({this.companyDetails, this.profileImageUrl});
+  const _InternshipCompanyPosted({@JsonKey(name: '_id') this.id, this.profileImageUrl, this.backgroundImageUrl, this.employerDetails, this.companyDetails});
   factory _InternshipCompanyPosted.fromJson(Map<String, dynamic> json) => _$InternshipCompanyPostedFromJson(json);
 
-@override final  InternshipCompanyDetails? companyDetails;
+@override@JsonKey(name: '_id') final  String? id;
 @override final  String? profileImageUrl;
+@override final  String? backgroundImageUrl;
+@override final  InternshipEmployerDetails? employerDetails;
+@override final  InternshipCompanyDetails? companyDetails;
 
 /// Create a copy of InternshipCompanyPosted
 /// with the given fields replaced by the non-null parameter values.
@@ -905,16 +1444,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternshipCompanyPosted&&(identical(other.companyDetails, companyDetails) || other.companyDetails == companyDetails)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternshipCompanyPosted&&(identical(other.id, id) || other.id == id)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&(identical(other.backgroundImageUrl, backgroundImageUrl) || other.backgroundImageUrl == backgroundImageUrl)&&(identical(other.employerDetails, employerDetails) || other.employerDetails == employerDetails)&&(identical(other.companyDetails, companyDetails) || other.companyDetails == companyDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,companyDetails,profileImageUrl);
+int get hashCode => Object.hash(runtimeType,id,profileImageUrl,backgroundImageUrl,employerDetails,companyDetails);
 
 @override
 String toString() {
-  return 'InternshipCompanyPosted(companyDetails: $companyDetails, profileImageUrl: $profileImageUrl)';
+  return 'InternshipCompanyPosted(id: $id, profileImageUrl: $profileImageUrl, backgroundImageUrl: $backgroundImageUrl, employerDetails: $employerDetails, companyDetails: $companyDetails)';
 }
 
 
@@ -925,11 +1464,11 @@ abstract mixin class _$InternshipCompanyPostedCopyWith<$Res> implements $Interns
   factory _$InternshipCompanyPostedCopyWith(_InternshipCompanyPosted value, $Res Function(_InternshipCompanyPosted) _then) = __$InternshipCompanyPostedCopyWithImpl;
 @override @useResult
 $Res call({
- InternshipCompanyDetails? companyDetails, String? profileImageUrl
+@JsonKey(name: '_id') String? id, String? profileImageUrl, String? backgroundImageUrl, InternshipEmployerDetails? employerDetails, InternshipCompanyDetails? companyDetails
 });
 
 
-@override $InternshipCompanyDetailsCopyWith<$Res>? get companyDetails;
+@override $InternshipEmployerDetailsCopyWith<$Res>? get employerDetails;@override $InternshipCompanyDetailsCopyWith<$Res>? get companyDetails;
 
 }
 /// @nodoc
@@ -942,15 +1481,30 @@ class __$InternshipCompanyPostedCopyWithImpl<$Res>
 
 /// Create a copy of InternshipCompanyPosted
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? companyDetails = freezed,Object? profileImageUrl = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? profileImageUrl = freezed,Object? backgroundImageUrl = freezed,Object? employerDetails = freezed,Object? companyDetails = freezed,}) {
   return _then(_InternshipCompanyPosted(
-companyDetails: freezed == companyDetails ? _self.companyDetails : companyDetails // ignore: cast_nullable_to_non_nullable
-as InternshipCompanyDetails?,profileImageUrl: freezed == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
-as String?,
+id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,profileImageUrl: freezed == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
+as String?,backgroundImageUrl: freezed == backgroundImageUrl ? _self.backgroundImageUrl : backgroundImageUrl // ignore: cast_nullable_to_non_nullable
+as String?,employerDetails: freezed == employerDetails ? _self.employerDetails : employerDetails // ignore: cast_nullable_to_non_nullable
+as InternshipEmployerDetails?,companyDetails: freezed == companyDetails ? _self.companyDetails : companyDetails // ignore: cast_nullable_to_non_nullable
+as InternshipCompanyDetails?,
   ));
 }
 
 /// Create a copy of InternshipCompanyPosted
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$InternshipEmployerDetailsCopyWith<$Res>? get employerDetails {
+    if (_self.employerDetails == null) {
+    return null;
+  }
+
+  return $InternshipEmployerDetailsCopyWith<$Res>(_self.employerDetails!, (value) {
+    return _then(_self.copyWith(employerDetails: value));
+  });
+}/// Create a copy of InternshipCompanyPosted
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
@@ -967,9 +1521,284 @@ $InternshipCompanyDetailsCopyWith<$Res>? get companyDetails {
 
 
 /// @nodoc
+mixin _$InternshipEmployerDetails {
+
+ String? get name; String? get designation; String? get workEmail; String? get mobile; String? get linkedIn;
+/// Create a copy of InternshipEmployerDetails
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$InternshipEmployerDetailsCopyWith<InternshipEmployerDetails> get copyWith => _$InternshipEmployerDetailsCopyWithImpl<InternshipEmployerDetails>(this as InternshipEmployerDetails, _$identity);
+
+  /// Serializes this InternshipEmployerDetails to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternshipEmployerDetails&&(identical(other.name, name) || other.name == name)&&(identical(other.designation, designation) || other.designation == designation)&&(identical(other.workEmail, workEmail) || other.workEmail == workEmail)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.linkedIn, linkedIn) || other.linkedIn == linkedIn));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,designation,workEmail,mobile,linkedIn);
+
+@override
+String toString() {
+  return 'InternshipEmployerDetails(name: $name, designation: $designation, workEmail: $workEmail, mobile: $mobile, linkedIn: $linkedIn)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $InternshipEmployerDetailsCopyWith<$Res>  {
+  factory $InternshipEmployerDetailsCopyWith(InternshipEmployerDetails value, $Res Function(InternshipEmployerDetails) _then) = _$InternshipEmployerDetailsCopyWithImpl;
+@useResult
+$Res call({
+ String? name, String? designation, String? workEmail, String? mobile, String? linkedIn
+});
+
+
+
+
+}
+/// @nodoc
+class _$InternshipEmployerDetailsCopyWithImpl<$Res>
+    implements $InternshipEmployerDetailsCopyWith<$Res> {
+  _$InternshipEmployerDetailsCopyWithImpl(this._self, this._then);
+
+  final InternshipEmployerDetails _self;
+  final $Res Function(InternshipEmployerDetails) _then;
+
+/// Create a copy of InternshipEmployerDetails
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? name = freezed,Object? designation = freezed,Object? workEmail = freezed,Object? mobile = freezed,Object? linkedIn = freezed,}) {
+  return _then(_self.copyWith(
+name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,designation: freezed == designation ? _self.designation : designation // ignore: cast_nullable_to_non_nullable
+as String?,workEmail: freezed == workEmail ? _self.workEmail : workEmail // ignore: cast_nullable_to_non_nullable
+as String?,mobile: freezed == mobile ? _self.mobile : mobile // ignore: cast_nullable_to_non_nullable
+as String?,linkedIn: freezed == linkedIn ? _self.linkedIn : linkedIn // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [InternshipEmployerDetails].
+extension InternshipEmployerDetailsPatterns on InternshipEmployerDetails {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _InternshipEmployerDetails value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _InternshipEmployerDetails() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _InternshipEmployerDetails value)  $default,){
+final _that = this;
+switch (_that) {
+case _InternshipEmployerDetails():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _InternshipEmployerDetails value)?  $default,){
+final _that = this;
+switch (_that) {
+case _InternshipEmployerDetails() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? name,  String? designation,  String? workEmail,  String? mobile,  String? linkedIn)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _InternshipEmployerDetails() when $default != null:
+return $default(_that.name,_that.designation,_that.workEmail,_that.mobile,_that.linkedIn);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? name,  String? designation,  String? workEmail,  String? mobile,  String? linkedIn)  $default,) {final _that = this;
+switch (_that) {
+case _InternshipEmployerDetails():
+return $default(_that.name,_that.designation,_that.workEmail,_that.mobile,_that.linkedIn);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? name,  String? designation,  String? workEmail,  String? mobile,  String? linkedIn)?  $default,) {final _that = this;
+switch (_that) {
+case _InternshipEmployerDetails() when $default != null:
+return $default(_that.name,_that.designation,_that.workEmail,_that.mobile,_that.linkedIn);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _InternshipEmployerDetails implements InternshipEmployerDetails {
+  const _InternshipEmployerDetails({this.name, this.designation, this.workEmail, this.mobile, this.linkedIn});
+  factory _InternshipEmployerDetails.fromJson(Map<String, dynamic> json) => _$InternshipEmployerDetailsFromJson(json);
+
+@override final  String? name;
+@override final  String? designation;
+@override final  String? workEmail;
+@override final  String? mobile;
+@override final  String? linkedIn;
+
+/// Create a copy of InternshipEmployerDetails
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$InternshipEmployerDetailsCopyWith<_InternshipEmployerDetails> get copyWith => __$InternshipEmployerDetailsCopyWithImpl<_InternshipEmployerDetails>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$InternshipEmployerDetailsToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternshipEmployerDetails&&(identical(other.name, name) || other.name == name)&&(identical(other.designation, designation) || other.designation == designation)&&(identical(other.workEmail, workEmail) || other.workEmail == workEmail)&&(identical(other.mobile, mobile) || other.mobile == mobile)&&(identical(other.linkedIn, linkedIn) || other.linkedIn == linkedIn));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,name,designation,workEmail,mobile,linkedIn);
+
+@override
+String toString() {
+  return 'InternshipEmployerDetails(name: $name, designation: $designation, workEmail: $workEmail, mobile: $mobile, linkedIn: $linkedIn)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$InternshipEmployerDetailsCopyWith<$Res> implements $InternshipEmployerDetailsCopyWith<$Res> {
+  factory _$InternshipEmployerDetailsCopyWith(_InternshipEmployerDetails value, $Res Function(_InternshipEmployerDetails) _then) = __$InternshipEmployerDetailsCopyWithImpl;
+@override @useResult
+$Res call({
+ String? name, String? designation, String? workEmail, String? mobile, String? linkedIn
+});
+
+
+
+
+}
+/// @nodoc
+class __$InternshipEmployerDetailsCopyWithImpl<$Res>
+    implements _$InternshipEmployerDetailsCopyWith<$Res> {
+  __$InternshipEmployerDetailsCopyWithImpl(this._self, this._then);
+
+  final _InternshipEmployerDetails _self;
+  final $Res Function(_InternshipEmployerDetails) _then;
+
+/// Create a copy of InternshipEmployerDetails
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? name = freezed,Object? designation = freezed,Object? workEmail = freezed,Object? mobile = freezed,Object? linkedIn = freezed,}) {
+  return _then(_InternshipEmployerDetails(
+name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
+as String?,designation: freezed == designation ? _self.designation : designation // ignore: cast_nullable_to_non_nullable
+as String?,workEmail: freezed == workEmail ? _self.workEmail : workEmail // ignore: cast_nullable_to_non_nullable
+as String?,mobile: freezed == mobile ? _self.mobile : mobile // ignore: cast_nullable_to_non_nullable
+as String?,linkedIn: freezed == linkedIn ? _self.linkedIn : linkedIn // ignore: cast_nullable_to_non_nullable
+as String?,
+  ));
+}
+
+
+}
+
+
+/// @nodoc
 mixin _$InternshipCompanyDetails {
 
- String? get companyName;
+ String? get companyName; String? get description; String? get companyType; String? get industryType; String? get numberOfEmployees; String? get establishedYear; String? get websiteUrl; String? get companyLinkedin; String? get linkedinUrl; String? get phoneNumber; String? get alternatePhoneNumber; String? get state; String? get city; String? get country; String? get pincode;
 /// Create a copy of InternshipCompanyDetails
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -982,16 +1811,16 @@ $InternshipCompanyDetailsCopyWith<InternshipCompanyDetails> get copyWith => _$In
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternshipCompanyDetails&&(identical(other.companyName, companyName) || other.companyName == companyName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternshipCompanyDetails&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.description, description) || other.description == description)&&(identical(other.companyType, companyType) || other.companyType == companyType)&&(identical(other.industryType, industryType) || other.industryType == industryType)&&(identical(other.numberOfEmployees, numberOfEmployees) || other.numberOfEmployees == numberOfEmployees)&&(identical(other.establishedYear, establishedYear) || other.establishedYear == establishedYear)&&(identical(other.websiteUrl, websiteUrl) || other.websiteUrl == websiteUrl)&&(identical(other.companyLinkedin, companyLinkedin) || other.companyLinkedin == companyLinkedin)&&(identical(other.linkedinUrl, linkedinUrl) || other.linkedinUrl == linkedinUrl)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.alternatePhoneNumber, alternatePhoneNumber) || other.alternatePhoneNumber == alternatePhoneNumber)&&(identical(other.state, state) || other.state == state)&&(identical(other.city, city) || other.city == city)&&(identical(other.country, country) || other.country == country)&&(identical(other.pincode, pincode) || other.pincode == pincode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,companyName);
+int get hashCode => Object.hash(runtimeType,companyName,description,companyType,industryType,numberOfEmployees,establishedYear,websiteUrl,companyLinkedin,linkedinUrl,phoneNumber,alternatePhoneNumber,state,city,country,pincode);
 
 @override
 String toString() {
-  return 'InternshipCompanyDetails(companyName: $companyName)';
+  return 'InternshipCompanyDetails(companyName: $companyName, description: $description, companyType: $companyType, industryType: $industryType, numberOfEmployees: $numberOfEmployees, establishedYear: $establishedYear, websiteUrl: $websiteUrl, companyLinkedin: $companyLinkedin, linkedinUrl: $linkedinUrl, phoneNumber: $phoneNumber, alternatePhoneNumber: $alternatePhoneNumber, state: $state, city: $city, country: $country, pincode: $pincode)';
 }
 
 
@@ -1002,7 +1831,7 @@ abstract mixin class $InternshipCompanyDetailsCopyWith<$Res>  {
   factory $InternshipCompanyDetailsCopyWith(InternshipCompanyDetails value, $Res Function(InternshipCompanyDetails) _then) = _$InternshipCompanyDetailsCopyWithImpl;
 @useResult
 $Res call({
- String? companyName
+ String? companyName, String? description, String? companyType, String? industryType, String? numberOfEmployees, String? establishedYear, String? websiteUrl, String? companyLinkedin, String? linkedinUrl, String? phoneNumber, String? alternatePhoneNumber, String? state, String? city, String? country, String? pincode
 });
 
 
@@ -1019,9 +1848,23 @@ class _$InternshipCompanyDetailsCopyWithImpl<$Res>
 
 /// Create a copy of InternshipCompanyDetails
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? companyName = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? companyName = freezed,Object? description = freezed,Object? companyType = freezed,Object? industryType = freezed,Object? numberOfEmployees = freezed,Object? establishedYear = freezed,Object? websiteUrl = freezed,Object? companyLinkedin = freezed,Object? linkedinUrl = freezed,Object? phoneNumber = freezed,Object? alternatePhoneNumber = freezed,Object? state = freezed,Object? city = freezed,Object? country = freezed,Object? pincode = freezed,}) {
   return _then(_self.copyWith(
 companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,companyType: freezed == companyType ? _self.companyType : companyType // ignore: cast_nullable_to_non_nullable
+as String?,industryType: freezed == industryType ? _self.industryType : industryType // ignore: cast_nullable_to_non_nullable
+as String?,numberOfEmployees: freezed == numberOfEmployees ? _self.numberOfEmployees : numberOfEmployees // ignore: cast_nullable_to_non_nullable
+as String?,establishedYear: freezed == establishedYear ? _self.establishedYear : establishedYear // ignore: cast_nullable_to_non_nullable
+as String?,websiteUrl: freezed == websiteUrl ? _self.websiteUrl : websiteUrl // ignore: cast_nullable_to_non_nullable
+as String?,companyLinkedin: freezed == companyLinkedin ? _self.companyLinkedin : companyLinkedin // ignore: cast_nullable_to_non_nullable
+as String?,linkedinUrl: freezed == linkedinUrl ? _self.linkedinUrl : linkedinUrl // ignore: cast_nullable_to_non_nullable
+as String?,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
+as String?,alternatePhoneNumber: freezed == alternatePhoneNumber ? _self.alternatePhoneNumber : alternatePhoneNumber // ignore: cast_nullable_to_non_nullable
+as String?,state: freezed == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
+as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String?,country: freezed == country ? _self.country : country // ignore: cast_nullable_to_non_nullable
+as String?,pincode: freezed == pincode ? _self.pincode : pincode // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -1107,10 +1950,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? companyName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? companyName,  String? description,  String? companyType,  String? industryType,  String? numberOfEmployees,  String? establishedYear,  String? websiteUrl,  String? companyLinkedin,  String? linkedinUrl,  String? phoneNumber,  String? alternatePhoneNumber,  String? state,  String? city,  String? country,  String? pincode)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InternshipCompanyDetails() when $default != null:
-return $default(_that.companyName);case _:
+return $default(_that.companyName,_that.description,_that.companyType,_that.industryType,_that.numberOfEmployees,_that.establishedYear,_that.websiteUrl,_that.companyLinkedin,_that.linkedinUrl,_that.phoneNumber,_that.alternatePhoneNumber,_that.state,_that.city,_that.country,_that.pincode);case _:
   return orElse();
 
 }
@@ -1128,10 +1971,10 @@ return $default(_that.companyName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? companyName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? companyName,  String? description,  String? companyType,  String? industryType,  String? numberOfEmployees,  String? establishedYear,  String? websiteUrl,  String? companyLinkedin,  String? linkedinUrl,  String? phoneNumber,  String? alternatePhoneNumber,  String? state,  String? city,  String? country,  String? pincode)  $default,) {final _that = this;
 switch (_that) {
 case _InternshipCompanyDetails():
-return $default(_that.companyName);case _:
+return $default(_that.companyName,_that.description,_that.companyType,_that.industryType,_that.numberOfEmployees,_that.establishedYear,_that.websiteUrl,_that.companyLinkedin,_that.linkedinUrl,_that.phoneNumber,_that.alternatePhoneNumber,_that.state,_that.city,_that.country,_that.pincode);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1148,10 +1991,10 @@ return $default(_that.companyName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? companyName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? companyName,  String? description,  String? companyType,  String? industryType,  String? numberOfEmployees,  String? establishedYear,  String? websiteUrl,  String? companyLinkedin,  String? linkedinUrl,  String? phoneNumber,  String? alternatePhoneNumber,  String? state,  String? city,  String? country,  String? pincode)?  $default,) {final _that = this;
 switch (_that) {
 case _InternshipCompanyDetails() when $default != null:
-return $default(_that.companyName);case _:
+return $default(_that.companyName,_that.description,_that.companyType,_that.industryType,_that.numberOfEmployees,_that.establishedYear,_that.websiteUrl,_that.companyLinkedin,_that.linkedinUrl,_that.phoneNumber,_that.alternatePhoneNumber,_that.state,_that.city,_that.country,_that.pincode);case _:
   return null;
 
 }
@@ -1163,10 +2006,24 @@ return $default(_that.companyName);case _:
 @JsonSerializable()
 
 class _InternshipCompanyDetails implements InternshipCompanyDetails {
-  const _InternshipCompanyDetails({this.companyName});
+  const _InternshipCompanyDetails({this.companyName, this.description, this.companyType, this.industryType, this.numberOfEmployees, this.establishedYear, this.websiteUrl, this.companyLinkedin, this.linkedinUrl, this.phoneNumber, this.alternatePhoneNumber, this.state, this.city, this.country, this.pincode});
   factory _InternshipCompanyDetails.fromJson(Map<String, dynamic> json) => _$InternshipCompanyDetailsFromJson(json);
 
 @override final  String? companyName;
+@override final  String? description;
+@override final  String? companyType;
+@override final  String? industryType;
+@override final  String? numberOfEmployees;
+@override final  String? establishedYear;
+@override final  String? websiteUrl;
+@override final  String? companyLinkedin;
+@override final  String? linkedinUrl;
+@override final  String? phoneNumber;
+@override final  String? alternatePhoneNumber;
+@override final  String? state;
+@override final  String? city;
+@override final  String? country;
+@override final  String? pincode;
 
 /// Create a copy of InternshipCompanyDetails
 /// with the given fields replaced by the non-null parameter values.
@@ -1181,16 +2038,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternshipCompanyDetails&&(identical(other.companyName, companyName) || other.companyName == companyName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternshipCompanyDetails&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.description, description) || other.description == description)&&(identical(other.companyType, companyType) || other.companyType == companyType)&&(identical(other.industryType, industryType) || other.industryType == industryType)&&(identical(other.numberOfEmployees, numberOfEmployees) || other.numberOfEmployees == numberOfEmployees)&&(identical(other.establishedYear, establishedYear) || other.establishedYear == establishedYear)&&(identical(other.websiteUrl, websiteUrl) || other.websiteUrl == websiteUrl)&&(identical(other.companyLinkedin, companyLinkedin) || other.companyLinkedin == companyLinkedin)&&(identical(other.linkedinUrl, linkedinUrl) || other.linkedinUrl == linkedinUrl)&&(identical(other.phoneNumber, phoneNumber) || other.phoneNumber == phoneNumber)&&(identical(other.alternatePhoneNumber, alternatePhoneNumber) || other.alternatePhoneNumber == alternatePhoneNumber)&&(identical(other.state, state) || other.state == state)&&(identical(other.city, city) || other.city == city)&&(identical(other.country, country) || other.country == country)&&(identical(other.pincode, pincode) || other.pincode == pincode));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,companyName);
+int get hashCode => Object.hash(runtimeType,companyName,description,companyType,industryType,numberOfEmployees,establishedYear,websiteUrl,companyLinkedin,linkedinUrl,phoneNumber,alternatePhoneNumber,state,city,country,pincode);
 
 @override
 String toString() {
-  return 'InternshipCompanyDetails(companyName: $companyName)';
+  return 'InternshipCompanyDetails(companyName: $companyName, description: $description, companyType: $companyType, industryType: $industryType, numberOfEmployees: $numberOfEmployees, establishedYear: $establishedYear, websiteUrl: $websiteUrl, companyLinkedin: $companyLinkedin, linkedinUrl: $linkedinUrl, phoneNumber: $phoneNumber, alternatePhoneNumber: $alternatePhoneNumber, state: $state, city: $city, country: $country, pincode: $pincode)';
 }
 
 
@@ -1201,7 +2058,7 @@ abstract mixin class _$InternshipCompanyDetailsCopyWith<$Res> implements $Intern
   factory _$InternshipCompanyDetailsCopyWith(_InternshipCompanyDetails value, $Res Function(_InternshipCompanyDetails) _then) = __$InternshipCompanyDetailsCopyWithImpl;
 @override @useResult
 $Res call({
- String? companyName
+ String? companyName, String? description, String? companyType, String? industryType, String? numberOfEmployees, String? establishedYear, String? websiteUrl, String? companyLinkedin, String? linkedinUrl, String? phoneNumber, String? alternatePhoneNumber, String? state, String? city, String? country, String? pincode
 });
 
 
@@ -1218,9 +2075,23 @@ class __$InternshipCompanyDetailsCopyWithImpl<$Res>
 
 /// Create a copy of InternshipCompanyDetails
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? companyName = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? companyName = freezed,Object? description = freezed,Object? companyType = freezed,Object? industryType = freezed,Object? numberOfEmployees = freezed,Object? establishedYear = freezed,Object? websiteUrl = freezed,Object? companyLinkedin = freezed,Object? linkedinUrl = freezed,Object? phoneNumber = freezed,Object? alternatePhoneNumber = freezed,Object? state = freezed,Object? city = freezed,Object? country = freezed,Object? pincode = freezed,}) {
   return _then(_InternshipCompanyDetails(
 companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
+as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,companyType: freezed == companyType ? _self.companyType : companyType // ignore: cast_nullable_to_non_nullable
+as String?,industryType: freezed == industryType ? _self.industryType : industryType // ignore: cast_nullable_to_non_nullable
+as String?,numberOfEmployees: freezed == numberOfEmployees ? _self.numberOfEmployees : numberOfEmployees // ignore: cast_nullable_to_non_nullable
+as String?,establishedYear: freezed == establishedYear ? _self.establishedYear : establishedYear // ignore: cast_nullable_to_non_nullable
+as String?,websiteUrl: freezed == websiteUrl ? _self.websiteUrl : websiteUrl // ignore: cast_nullable_to_non_nullable
+as String?,companyLinkedin: freezed == companyLinkedin ? _self.companyLinkedin : companyLinkedin // ignore: cast_nullable_to_non_nullable
+as String?,linkedinUrl: freezed == linkedinUrl ? _self.linkedinUrl : linkedinUrl // ignore: cast_nullable_to_non_nullable
+as String?,phoneNumber: freezed == phoneNumber ? _self.phoneNumber : phoneNumber // ignore: cast_nullable_to_non_nullable
+as String?,alternatePhoneNumber: freezed == alternatePhoneNumber ? _self.alternatePhoneNumber : alternatePhoneNumber // ignore: cast_nullable_to_non_nullable
+as String?,state: freezed == state ? _self.state : state // ignore: cast_nullable_to_non_nullable
+as String?,city: freezed == city ? _self.city : city // ignore: cast_nullable_to_non_nullable
+as String?,country: freezed == country ? _self.country : country // ignore: cast_nullable_to_non_nullable
+as String?,pincode: freezed == pincode ? _self.pincode : pincode // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

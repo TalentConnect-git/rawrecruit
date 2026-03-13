@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
 
@@ -26,9 +24,8 @@ class ReferralJobCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final package =
-        "${job.packageDetails?.currency ?? ""} ${job.packageDetails?.totalCTC ?? 0}";
-
-    log(job.toString(), name: 'Job');
+        "${job.packageDetails?.currency ?? ''} ${job.packageDetails?.totalCTC ?? 0}";
+    final posterName = job.candidatePosted?.name ?? '';
 
     return GestureDetector(
       onTap: onTap,
@@ -43,15 +40,39 @@ class ReferralJobCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// 🔹 Title + Status
+            /// 🔹 Title + Bookmark
             Row(
               children: [
                 Expanded(
-                  child: Text(
-                    job.jobTitle ?? "",
-                    style: AppTextStyles.s18W600.copyWith(
-                      color: AppColors.text,
-                    ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        job.jobTitle ?? '',
+                        style: AppTextStyles.s18W600.copyWith(
+                          color: AppColors.text,
+                        ),
+                      ),
+                      if (posterName.isNotEmpty) ...[
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.person_outline,
+                              size: 13,
+                              color: AppColors.text.withOpacity(0.55),
+                            ),
+                            const SizedBox(width: 4),
+                            Text(
+                              'Posted by $posterName',
+                              style: AppTextStyles.s12W400.copyWith(
+                                color: AppColors.text.withOpacity(0.6),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ],
                   ),
                 ),
 
@@ -76,26 +97,28 @@ class ReferralJobCard extends StatelessWidget {
             /// 🔹 YOE + Work Mode
             Row(
               children: [
-                _chip("YOE : ${job.yearsOfExperience ?? "-"}"),
+                _chip("YOE : ${job.yearsOfExperience ?? '-'}"),
                 const SizedBox(width: 8),
-                Text(job.workMode?.first ?? "", style: AppTextStyles.s12W400),
+                if ((job.workMode ?? []).isNotEmpty)
+                  Text(job.workMode!.first, style: AppTextStyles.s12W400),
               ],
             ),
 
             const SizedBox(height: 10),
 
             /// 🔹 Skills
-            Wrap(
-              spacing: 8,
-              runSpacing: 6,
-              children: (job.skills ?? []).map((e) => _skillChip(e)).toList(),
-            ),
+            if ((job.skills ?? []).isNotEmpty)
+              Wrap(
+                spacing: 8,
+                runSpacing: 6,
+                children: (job.skills ?? []).map((e) => _skillChip(e)).toList(),
+              ),
 
             const SizedBox(height: 10),
 
             /// 🔹 Description
             Text(
-              job.description ?? "",
+              job.description ?? '',
               style: AppTextStyles.s12W400,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
@@ -115,7 +138,9 @@ class ReferralJobCard extends StatelessWidget {
                         const Icon(Icons.location_on, size: 16),
                         const SizedBox(width: 4),
                         Text(
-                          job.location?.first ?? "",
+                          job.location?.isNotEmpty == true
+                              ? job.location!.first
+                              : '-',
                           style: AppTextStyles.s12W400,
                         ),
                       ],
@@ -159,28 +184,6 @@ class ReferralJobCard extends StatelessWidget {
       child: Text(
         text,
         style: AppTextStyles.s12W600.copyWith(color: AppColors.primary),
-      ),
-    );
-  }
-
-  Widget _statusChip(String? status) {
-    final isApproved = status?.toLowerCase() == "approved";
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: isApproved
-            ? Colors.green.withOpacity(0.1)
-            : Colors.orange.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        status ?? "",
-        style: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-          color: isApproved ? Colors.green : Colors.orange,
-        ),
       ),
     );
   }

@@ -89,6 +89,7 @@ class _ShortlistViewState extends State<ShortlistView> {
 
                                 return JobCard(
                                   jobId: job.id ?? '',
+                                  companyName: job.companyName ?? '',
 
                                   /// 🔥 SAME AS INTERNSHIP VIEW
                                   title: job.jobRoles?.isNotEmpty == true
