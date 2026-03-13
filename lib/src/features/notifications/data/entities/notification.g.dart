@@ -10,7 +10,7 @@ _Notification _$NotificationFromJson(Map<String, dynamic> json) =>
     _Notification(
       id: json['_id'] as String?,
       recipientId: json['recipientId'] as String?,
-      senderId: json['senderId'] as String?,
+      senderId: const UserProfileOrStringConvertor().fromJson(json['senderId']),
       type: $enumDecodeNullable(_$NotificationTypeEnumMap, json['type']),
       message: json['message'] as String?,
       referenceId: json['referenceId'] as String?,
@@ -30,25 +30,26 @@ _Notification _$NotificationFromJson(Map<String, dynamic> json) =>
           : DateTime.parse(json['updatedAt'] as String),
     );
 
-Map<String, dynamic> _$NotificationToJson(_Notification instance) =>
-    <String, dynamic>{
-      '_id': instance.id,
-      'recipientId': instance.recipientId,
-      'senderId': instance.senderId,
-      'type': _$NotificationTypeEnumMap[instance.type],
-      'message': instance.message,
-      'referenceId': instance.referenceId,
-      'fileUrl': instance.fileUrl,
-      'fileName': instance.fileName,
-      'eventTitle': instance.eventTitle,
-      'meetingLink': instance.meetingLink,
-      'jobType': _$JobTypeEnumMap[instance.jobType],
-      'read': instance.read,
-      'jobId': instance.jobId,
-      'meta': instance.meta,
-      'createdAt': instance.createdAt?.toIso8601String(),
-      'updatedAt': instance.updatedAt?.toIso8601String(),
-    };
+Map<String, dynamic> _$NotificationToJson(
+  _Notification instance,
+) => <String, dynamic>{
+  '_id': instance.id,
+  'recipientId': instance.recipientId,
+  'senderId': const UserProfileOrStringConvertor().toJson(instance.senderId),
+  'type': _$NotificationTypeEnumMap[instance.type],
+  'message': instance.message,
+  'referenceId': instance.referenceId,
+  'fileUrl': instance.fileUrl,
+  'fileName': instance.fileName,
+  'eventTitle': instance.eventTitle,
+  'meetingLink': instance.meetingLink,
+  'jobType': _$JobTypeEnumMap[instance.jobType],
+  'read': instance.read,
+  'jobId': instance.jobId,
+  'meta': instance.meta,
+  'createdAt': instance.createdAt?.toIso8601String(),
+  'updatedAt': instance.updatedAt?.toIso8601String(),
+};
 
 const _$NotificationTypeEnumMap = {
   NotificationType.teamInvitation: 'TEAM_INVITATION',
