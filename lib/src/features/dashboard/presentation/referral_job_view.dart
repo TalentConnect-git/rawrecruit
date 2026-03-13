@@ -37,14 +37,6 @@ class _ReferralJobViewState extends State<ReferralJobView> {
           final shortlistVM = context.watch<ShortlistViewModel>();
 
           return Scaffold(
-            floatingActionButton: FloatingActionButton.extended(
-              onPressed: () {
-                context.pushNamed(RouteNames.referralPost);
-              },
-              label: const Text("Post"),
-              icon: const Icon(Icons.add),
-            ),
-
             body: vm.viewState == ViewState.busy
                 ? const Center(child: CircularProgressIndicator())
                 : ListView(
