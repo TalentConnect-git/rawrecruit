@@ -27,6 +27,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/ref
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
+import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view/interview_screen.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
@@ -36,6 +37,8 @@ import '../../features/dashboard/presentation/internship_detail_page.dart';
 import '../../features/dashboard/presentation/job_detail_page.dart';
 import '../../features/onboarding/presentation/add_edit_profile_view.dart';
 import '../../features/professional/job_postng/presentation/posted_job_view.dart';
+import '../../features/scheduled_interviews/presentation/view/interview_detail_screen.dart';
+import '../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 import '../services/dependency_locator.dart';
 
 class AppRouter {
@@ -108,41 +111,41 @@ class AppRouter {
         },
       ),
       GoRoute(
-  name: RouteNames.jobDetail,
-  path: '/jobDetail',
-  builder: (context, state) {
-    final job = state.extra as JobModel;
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => ShortlistViewModel()..fetchSaved(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ApplicationViewModel()..fetchApplications(),
-        ),
-      ],
-      child: JobDetailView(job: job),
-    );
-  },
-),
-GoRoute(
-  name: RouteNames.internshipDetail,
-  path: '/internshipDetail',
-  builder: (context, state) {
-    final internship = state.extra as InternshipModel;
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: (_) => ShortlistViewModel()..fetchSaved(),
-        ),
-        ChangeNotifierProvider(
-          create: (_) => ApplicationViewModel()..fetchApplications(),
-        ),
-      ],
-      child: InternshipDetailView(internship: internship),
-    );
-  },
-),
+        name: RouteNames.jobDetail,
+        path: '/jobDetail',
+        builder: (context, state) {
+          final job = state.extra as JobModel;
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => ShortlistViewModel()..fetchSaved(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => ApplicationViewModel()..fetchApplications(),
+              ),
+            ],
+            child: JobDetailView(job: job),
+          );
+        },
+      ),
+      GoRoute(
+        name: RouteNames.internshipDetail,
+        path: '/internshipDetail',
+        builder: (context, state) {
+          final internship = state.extra as InternshipModel;
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => ShortlistViewModel()..fetchSaved(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => ApplicationViewModel()..fetchApplications(),
+              ),
+            ],
+            child: InternshipDetailView(internship: internship),
+          );
+        },
+      ),
 
       GoRoute(
         name: RouteNames.addEditProfileView,
@@ -167,6 +170,21 @@ GoRoute(
           return NotificationView();
         },
       ),
+      GoRoute(
+        path: '/scheduled-interviews',
+        name: RouteNames.scheduledInterviews,
+        builder: (_, __) => ChangeNotifierProvider(
+          create: (_) => getIt<InterviewViewModel>(),
+          child: const InterviewsScreen(),
+        ),
+      ),
+      GoRoute(
+        path: "/interviewDetail",
+        name: RouteNames.interviewDetail,
+        builder: (_, state) =>
+            InterviewDetailScreen(interviewId: state.extra as String?),
+      ),
+
       ShellRoute(
         builder: (context, state, navigationShell) {
           return ChangeNotifierProvider.value(

@@ -21,4 +21,6 @@ class RouteNames {
   static final referralPostDetail = 'referralPostDetail';
   static final chatUserList = 'chatUserList';
   static final notification = 'notification';
+  static const String scheduledInterviews = 'scheduledInterviews';
+  static const String interviewDetail = 'interviewDetail';
 }

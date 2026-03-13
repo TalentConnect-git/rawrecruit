@@ -9,12 +9,15 @@ import 'package:rawrecruit/src/features/dashboard/data/data_source/dashboard_dat
 import 'package:rawrecruit/src/features/dashboard/data/data_source/dashbooard_data_source.dart';
 import 'package:rawrecruit/src/features/dashboard/data/repository/dashbard_repository_impl.dart';
 import 'package:rawrecruit/src/features/dashboard/data/repository/dashboard_repository.dart';
+
 import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/index.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/data/data_source/application_data_source.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/data/data_source/application_data_source_impl.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/data/repository/application_repo.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/data/repository/application_repo_impl.dart';
+import 'package:rawrecruit/src/features/scheduled_interviews/data/repository/scheduled_interview_repo.dart';
+import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/data/shortlist_data_source_impl.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
@@ -29,6 +32,9 @@ import '../../features/professional/professional_dashbaord/data/data_source/data
 import '../../features/professional/professional_dashbaord/data/data_source/data_source_impl.dart';
 import '../../features/professional/professional_dashbaord/data/repository/prof_dashboard_repository.dart';
 import '../../features/professional/professional_dashbaord/data/repository/prof_dashboard_repository_impl.dart';
+import '../../features/scheduled_interviews/data/data_source/scheduled_data_source.dart';
+import '../../features/scheduled_interviews/data/data_source/scheduled_data_source_impl.dart';
+import '../../features/scheduled_interviews/data/repository/scheduled_interview_repo_impl.dart';
 import '../../features/shortlist/data/shortlist_data_source.dart';
 
 GetIt getIt = GetIt.instance;
@@ -99,5 +105,12 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<ChatViewModel>(() => ChatViewModel())
     ..registerLazySingleton<NotificationViewModel>(
       () => NotificationViewModel(),
-    );
+    )
+    ..registerLazySingleton<InterviewDataSource>(
+      () => InterviewDataSourceImpl(),
+    )
+    ..registerLazySingleton<InterviewRepository>(
+      () => InterviewRepositoryImpl(dataSource: getIt<InterviewDataSource>()),
+    )
+    ..registerFactory<InterviewViewModel>(() => InterviewViewModel());
 }

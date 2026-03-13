@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
 
