@@ -628,97 +628,106 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   Widget _chipInputField(String label, TextEditingController controller) {
     return _chipMultiSelectField(label, controller, []);
   }
+Widget _chipMultiSelectField(
+  String label,
+  TextEditingController controller,
+  List<String> options,
+) {
+  return StatefulBuilder(
+    builder: (context, setLocalState) {
+      final fieldController = TextEditingController();
+      final focusNode = FocusNode();
 
-  Widget _chipMultiSelectField(
-    String label,
-    TextEditingController controller,
-    List<String> options,
-  ) {
-    final inputController = TextEditingController();
+      List<String> selectedItems = controller.text.isEmpty
+          ? []
+          : controller.text.split(',').map((e) => e.trim()).toList();
 
-    List<String> selectedItems = controller.text.isEmpty
-        ? []
-        : controller.text.split(',').map((e) => e.trim()).toList();
+      void syncController() {
+        controller.text = selectedItems.join(', ');
+      }
 
-    return StatefulBuilder(
-      builder: (context, setLocalState) {
-        void addItem(String value) {
-          final trimmed = value.trim();
+      void addItem(String value) {
+        final trimmed = value.trim();
 
-          if (trimmed.isEmpty) return;
+        if (trimmed.isEmpty) return;
 
-          if (!selectedItems.contains(trimmed)) {
-            selectedItems.add(trimmed);
-            controller.text = selectedItems.join(', ');
-            inputController.clear();
-            setLocalState(() {});
-          }
+        if (!selectedItems.contains(trimmed)) {
+          selectedItems.add(trimmed);
+          syncController();
+
+          fieldController.clear(); // ✅ clears typed text
+          focusNode.requestFocus(); // ✅ keeps cursor ready for next entry
+
+          setLocalState(() {});
         }
+      }
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(label),
+      void removeItem(String value) {
+        selectedItems.remove(value);
+        syncController();
+        setLocalState(() {});
+      }
 
-            const SizedBox(height: 8),
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label),
 
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 8,
-                children: [
-                  ...selectedItems.map(
-                    (item) => Chip(
-                      label: Text(item),
-                      onDeleted: () {
-                        selectedItems.remove(item);
-                        controller.text = selectedItems.join(', ');
-                        setLocalState(() {});
-                      },
-                    ),
-                  ),
+          const SizedBox(height: 8),
 
-                  SizedBox(
-                    width: 250,
-                    child: Autocomplete<String>(
-                      optionsBuilder: (textEditingValue) {
-                        if (textEditingValue.text.isEmpty) return options;
-
-                        return options.where(
-                          (item) => item.toLowerCase().contains(
-                            textEditingValue.text.toLowerCase(),
-                          ),
-                        );
-                      },
-                      onSelected: addItem,
-                      fieldViewBuilder:
-                          (context, textController, focusNode, onSubmit) {
-                            return TextField(
-                              controller: textController,
-                              focusNode: focusNode,
-                              decoration: const InputDecoration(
-                                hintText: "Add",
-                                border: InputBorder.none,
-                              ),
-                              onSubmitted: addItem,
-                            );
-                          },
-                    ),
-                  ),
-                ],
-              ),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
             ),
-          ],
-        );
-      },
-    );
-  }
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ...selectedItems.map(
+                  (item) => Chip(
+                    label: Text(item),
+                    onDeleted: () => removeItem(item),
+                  ),
+                ),
+
+                SizedBox(
+                  width: 250,
+                  child: Autocomplete<String>(
+                    optionsBuilder: (textEditingValue) {
+                      if (textEditingValue.text.isEmpty) return options;
+
+                      return options.where(
+                        (item) => item.toLowerCase().contains(
+                          textEditingValue.text.toLowerCase(),
+                        ),
+                      );
+                    },
+                    onSelected: addItem,
+                    fieldViewBuilder:
+                        (context, textController, textFocusNode, onSubmit) {
+                      return TextField(
+                        controller: fieldController, // ✅ use same controller
+                        focusNode: focusNode,
+                        decoration: const InputDecoration(
+                          hintText: "Add",
+                          border: InputBorder.none,
+                        ),
+                        onSubmitted: addItem,
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
 
   Future<void> parseResumeAndFill() async {
     try {
