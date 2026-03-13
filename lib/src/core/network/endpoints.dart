@@ -35,4 +35,5 @@ class Endpoints {
   static const String createConversation = "api/messages/conversation";
 
   static const String apiNotifications = "api/notifications";
+  static const String apiInterviews = '/interviews';
 }

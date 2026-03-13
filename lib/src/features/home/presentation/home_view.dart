@@ -92,6 +92,13 @@ class _HomeViewState extends State<HomeView> {
           title: Text('RawRecruit'),
           actions: [
             IconButton(
+              onPressed: () {
+                context.pushNamed(RouteNames.scheduledInterviews);
+              },
+              icon: const Icon(Icons.calendar_month_outlined),
+              tooltip: 'Scheduled Interviews',
+            ),
+            IconButton(
               onPressed: () async {
                 context.pushNamed(RouteNames.notification);
               },
@@ -114,7 +121,6 @@ class _HomeViewState extends State<HomeView> {
             ),
           ],
         ),
-
         body: widget.navigationShell,
         bottomNavigationBar: AppBottomNav(
           currentIndex: currentIndex,
