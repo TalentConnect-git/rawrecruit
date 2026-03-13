@@ -3,11 +3,10 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/features/dashboard/entities/job_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-
 import '../../../common/index.dart';
+import '../../../core/index.dart';
 import '../../application/presentation/view_model/application_view_model.dart';
 import '../../shortlist/presentation/view_model/shortlist_view_model.dart';
-
 
 class JobDetailView extends StatelessWidget {
   final JobModel job;
@@ -61,6 +60,29 @@ class JobDetailView extends StatelessWidget {
               ),
             ),
           ),
+
+          GestureDetector(
+            onTap: () async {
+              final url = Uri.tryParse(
+                'https://rawrecruit.in/student-dashboard/Off-campus/',
+              );
+              if (url != null) {
+                final canLaunch = await canLaunchUrl(url);
+                try {
+                  await launchUrl(url);
+                } catch (e) {
+                  Toasts.showErrorToast(
+                    context,
+                    message: 'Something went wrong, Try again later.',
+                  );
+                }
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Icon(Icons.share, color: AppColors.primary),
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: Padding(
@@ -80,8 +102,7 @@ class JobDetailView extends StatelessWidget {
                 ),
                 label: Text(isSaved ? 'Saved' : 'Save'),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor:
-                      isSaved ? AppColors.primary : AppColors.text,
+                  foregroundColor: isSaved ? AppColors.primary : AppColors.text,
                   side: BorderSide(
                     color: isSaved ? AppColors.primary : AppColors.border,
                   ),
@@ -146,15 +167,17 @@ class JobDetailView extends StatelessWidget {
             _row('Eligibility Criteria', job.eligibilityCriteria),
             _row('Degree', job.degree?.join(', ')),
             _row('Student Streams', job.studentStreams?.join(', ')),
-            _row('CGPA Required',
-                job.cgpa != null && job.cgpa != 0
-                    ? job.cgpa.toString()
-                    : null),
+            _row(
+              'CGPA Required',
+              job.cgpa != null && job.cgpa != 0 ? job.cgpa.toString() : null,
+            ),
             _row('Number of Openings', job.numberOfOpenings?.toString()),
             _row('Minimum Students', job.minimumStudents),
             _row('Views', job.views?.toString()),
-            _row('Match Score',
-                job.matchScore != null ? '${job.matchScore}%' : null),
+            _row(
+              'Match Score',
+              job.matchScore != null ? '${job.matchScore}%' : null,
+            ),
             const SizedBox(height: 16),
 
             // ── LOCATION & WORK ───────────────────────────────────────────
@@ -266,17 +289,18 @@ class JobDetailView extends StatelessWidget {
   }
 
   Widget _sectionHeader(String title) => Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title,
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.bold)),
-            const Divider(height: 8),
-          ],
+    padding: const EdgeInsets.only(bottom: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-      );
+        const Divider(height: 8),
+      ],
+    ),
+  );
 
   Widget _row(String label, String? value) {
     if ((value ?? '').trim().isEmpty || value == '0') {
@@ -289,63 +313,68 @@ class JobDetailView extends StatelessWidget {
         children: [
           SizedBox(
             width: 160,
-            child: Text('$label:',
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 13)),
+            child: Text(
+              '$label:',
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
           ),
-          Expanded(
-              child: Text(value!, style: const TextStyle(fontSize: 13))),
+          Expanded(child: Text(value!, style: const TextStyle(fontSize: 13))),
         ],
       ),
     );
   }
 
   Widget _linkRow(String label, String url) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 160,
-              child: Text('$label:',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 13)),
-            ),
-            Expanded(
-              child: GestureDetector(
-                onTap: () async {
-                  final uri = Uri.parse(url);
-                  if (await canLaunchUrl(uri)) {
-                    await launchUrl(uri,
-                        mode: LaunchMode.externalApplication);
-                  }
-                },
-                child: Text(url,
-                    style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline)),
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 160,
+          child: Text(
+            '$label:',
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          ),
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () async {
+              final uri = Uri.parse(url);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            },
+            child: Text(
+              url,
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
               ),
             ),
-          ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _chipWrap(List<String> items) => Wrap(
-        spacing: 8,
-        runSpacing: 6,
-        children: items
-            .map((e) => Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(e,
-                      style: AppTextStyles.s12W600
-                          .copyWith(color: AppColors.primary)),
-                ))
-            .toList(),
-      );
+    spacing: 8,
+    runSpacing: 6,
+    children: items
+        .map(
+          (e) => Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              e,
+              style: AppTextStyles.s12W600.copyWith(color: AppColors.primary),
+            ),
+          ),
+        )
+        .toList(),
+  );
 }

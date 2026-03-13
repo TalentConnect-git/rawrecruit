@@ -5,6 +5,7 @@ import 'package:rawrecruit/src/features/application/presentation/view_model/appl
 import 'package:rawrecruit/src/features/dashboard/data/dashboard_provider.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/internship_view.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/job_view.dart';
+import 'package:rawrecruit/src/features/dashboard/presentation/referral_job_view.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 class DashboardView extends StatefulWidget {
@@ -52,6 +53,8 @@ class _DashboardBody extends StatelessWidget {
                   Expanded(
                     child: provider.selectedTab == DashboardTab.internships
                         ? const InternshipView()
+                        : provider.selectedTab == DashboardTab.referral
+                        ? ReferralJobView()
                         : const JobView(),
                   ),
                 ],
@@ -86,7 +89,7 @@ class _SegmentToggle extends StatelessWidget {
           ),
           child: LayoutBuilder(
             builder: (context, constraints) {
-              final width = constraints.maxWidth / 2;
+              final width = constraints.maxWidth / 3;
 
               return Stack(
                 children: [
@@ -94,9 +97,7 @@ class _SegmentToggle extends StatelessWidget {
                   AnimatedPositioned(
                     duration: const Duration(milliseconds: 250),
                     curve: Curves.easeInOut,
-                    left: provider.selectedTab == DashboardTab.internships
-                        ? 0
-                        : width,
+                    left: provider.selectedTab.index * width,
                     child: Container(
                       width: width,
                       height: 50,
@@ -121,6 +122,12 @@ class _SegmentToggle extends StatelessWidget {
                         title: "Jobs",
                         isSelected: provider.selectedTab == DashboardTab.jobs,
                         onTap: () => provider.changeTab(DashboardTab.jobs),
+                      ),
+                      _segmentItem(
+                        title: "Referrals",
+                        isSelected:
+                            provider.selectedTab == DashboardTab.referral,
+                        onTap: () => provider.changeTab(DashboardTab.referral),
                       ),
                     ],
                   ),

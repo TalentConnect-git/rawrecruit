@@ -16,7 +16,7 @@ class _ChatUserListViewState extends State<ChatUserListView> {
   bool isOnline(String userId, ChatViewModel vm) {
     return vm.onlineUsers.contains(userId);
   }
-  
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +42,7 @@ class _ChatUserListViewState extends State<ChatUserListView> {
   Widget build(BuildContext context) {
     final vm = context.watch<ChatViewModel>();
     return Scaffold(
-      appBar: AppBar(title: const Text("Chats")),
+      backgroundColor: Colors.white,
       body: Builder(
         builder: (_) {
           if (vm.viewState == ViewState.busy) {
@@ -53,9 +53,10 @@ class _ChatUserListViewState extends State<ChatUserListView> {
             return const Center(child: Text("No Users Found"));
           }
 
-          return ListView.builder(
+          return ListView.separated(
             padding: const EdgeInsets.all(16),
             itemCount: vm.users.length,
+            separatorBuilder: (_, _) => Divider(),
             itemBuilder: (context, index) {
               final user = vm.users[index];
               final unread = vm.getUnreadCount(user.id!);
@@ -84,9 +85,9 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                         height: 12,
                         width: 12,
                         decoration: BoxDecoration(
-                         color: vm.onlineUsers.contains(user.id)
-    ? Colors.green
-    : Colors.white,
+                          color: vm.onlineUsers.contains(user.id)
+                              ? Colors.green
+                              : Colors.white,
                           borderRadius: BorderRadius.circular(10),
                           border: Border.all(color: Colors.grey, width: 2),
                         ),
@@ -111,21 +112,22 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                   (user.name != null && user.name!.trim().isNotEmpty)
                       ? user.name!
                       : (user.email ?? "-"),
+                  overflow: TextOverflow.ellipsis,
                 ),
                 subtitle: Text(user.userType ?? "-"),
                 onTap: () async {
                   final vm = context.read<ChatViewModel>();
 
                   await vm.startConversation(user.id!);
-                Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (_) => ChangeNotifierProvider.value(
-      value: vm, // pass existing ViewModel
-      child: ChatDetailView(user: user),
-    ),
-  ),
-);
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => ChangeNotifierProvider.value(
+                        value: vm, // pass existing ViewModel
+                        child: ChatDetailView(user: user),
+                      ),
+                    ),
+                  );
                 },
               );
             },
@@ -134,11 +136,9 @@ class _ChatUserListViewState extends State<ChatUserListView> {
       ),
     );
   }
+
   @override
   void dispose() {
-
-
-
     super.dispose();
   }
 }
