@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../common/index.dart';
 import '../entities/internship_model.dart';
-
 
 class InternshipDetailView extends StatelessWidget {
   final InternshipModel internship;
@@ -60,6 +60,29 @@ class InternshipDetailView extends StatelessWidget {
               ),
             ),
           ),
+
+          GestureDetector(
+            onTap: () async {
+              final url = Uri.tryParse(
+                'https://rawrecruit.in/student-dashboard/Internship/',
+              );
+              if (url != null) {
+                final canLaunch = await canLaunchUrl(url);
+                try {
+                  await launchUrl(url);
+                } catch (e) {
+                  Toasts.showErrorToast(
+                    context,
+                    message: 'Something went wrong, Try again later.',
+                  );
+                }
+              }
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 16),
+              child: Icon(Icons.share, color: AppColors.primary),
+            ),
+          ),
         ],
       ),
       bottomNavigationBar: Padding(
@@ -79,8 +102,7 @@ class InternshipDetailView extends StatelessWidget {
                 ),
                 label: Text(isSaved ? 'Saved' : 'Save'),
                 style: OutlinedButton.styleFrom(
-                  foregroundColor:
-                      isSaved ? AppColors.primary : AppColors.text,
+                  foregroundColor: isSaved ? AppColors.primary : AppColors.text,
                   side: BorderSide(
                     color: isSaved ? AppColors.primary : AppColors.border,
                   ),
@@ -92,8 +114,7 @@ class InternshipDetailView extends StatelessWidget {
             Expanded(
               flex: 2,
               child: ElevatedButton(
-                onPressed:
-                    isApplied ? null : () => applicationVM.apply(jobId),
+                onPressed: isApplied ? null : () => applicationVM.apply(jobId),
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.symmetric(vertical: 14),
                 ),
@@ -144,18 +165,21 @@ class InternshipDetailView extends StatelessWidget {
             _row('Min Education', internship.minEducation),
             _row('Degree', internship.degree?.join(', ')),
             _row('Student Streams', internship.studentStreams?.join(', ')),
-            _row('CGPA Required',
-                internship.cgpa != null && internship.cgpa != 0
-                    ? internship.cgpa.toString()
-                    : null),
-            _row('Number of Openings',
-                internship.numberOfOpenings?.toString()),
+            _row(
+              'CGPA Required',
+              internship.cgpa != null && internship.cgpa != 0
+                  ? internship.cgpa.toString()
+                  : null,
+            ),
+            _row('Number of Openings', internship.numberOfOpenings?.toString()),
             _row('Minimum Students', internship.minimumStudents),
             _row('Views', internship.views?.toString()),
-            _row('Match Score',
-                internship.matchScore != null
-                    ? '${internship.matchScore}%'
-                    : null),
+            _row(
+              'Match Score',
+              internship.matchScore != null
+                  ? '${internship.matchScore}%'
+                  : null,
+            ),
             const SizedBox(height: 16),
 
             // ── LOCATION & WORK ───────────────────────────────────────────
@@ -187,8 +211,7 @@ class InternshipDetailView extends StatelessWidget {
             // ── SELECTION PROCESS ─────────────────────────────────────────
             _sectionHeader('Selection Process'),
             _row('Rounds', internship.rounds?.join(', ')),
-            _row('Selection Process',
-                internship.selectionProcess?.join(', ')),
+            _row('Selection Process', internship.selectionProcess?.join(', ')),
             const SizedBox(height: 16),
 
             // ── SKILLS & TOOLS ────────────────────────────────────────────
@@ -212,8 +235,10 @@ class InternshipDetailView extends StatelessWidget {
             _sectionHeader('Benefits & Tags'),
             _row('Benefits', internship.benefits?.join(', ')),
             _row('Tags', internship.tags?.join(', ')),
-            _row('Amenities Required',
-                internship.amenitiesRequired?.join(', ')),
+            _row(
+              'Amenities Required',
+              internship.amenitiesRequired?.join(', '),
+            ),
             const SizedBox(height: 16),
 
             // ── CONTACT PERSON ────────────────────────────────────────────
@@ -266,17 +291,18 @@ class InternshipDetailView extends StatelessWidget {
   }
 
   Widget _sectionHeader(String title) => Padding(
-        padding: const EdgeInsets.only(bottom: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(title,
-                style: const TextStyle(
-                    fontSize: 16, fontWeight: FontWeight.bold)),
-            const Divider(height: 8),
-          ],
+    padding: const EdgeInsets.only(bottom: 10),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
-      );
+        const Divider(height: 8),
+      ],
+    ),
+  );
 
   Widget _row(String label, String? value) {
     if ((value ?? '').trim().isEmpty || value == '0') {
@@ -289,63 +315,68 @@ class InternshipDetailView extends StatelessWidget {
         children: [
           SizedBox(
             width: 160,
-            child: Text('$label:',
-                style: const TextStyle(
-                    fontWeight: FontWeight.w600, fontSize: 13)),
+            child: Text(
+              '$label:',
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+            ),
           ),
-          Expanded(
-              child: Text(value!, style: const TextStyle(fontSize: 13))),
+          Expanded(child: Text(value!, style: const TextStyle(fontSize: 13))),
         ],
       ),
     );
   }
 
   Widget _linkRow(String label, String url) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 160,
-              child: Text('$label:',
-                  style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 13)),
-            ),
-            Expanded(
-              child: GestureDetector(
-                onTap: () async {
-                  final uri = Uri.parse(url);
-                  if (await canLaunchUrl(uri)) {
-                    await launchUrl(uri,
-                        mode: LaunchMode.externalApplication);
-                  }
-                },
-                child: Text(url,
-                    style: const TextStyle(
-                        fontSize: 13,
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline)),
+    padding: const EdgeInsets.only(bottom: 8),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 160,
+          child: Text(
+            '$label:',
+            style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+          ),
+        ),
+        Expanded(
+          child: GestureDetector(
+            onTap: () async {
+              final uri = Uri.parse(url);
+              if (await canLaunchUrl(uri)) {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              }
+            },
+            child: Text(
+              url,
+              style: const TextStyle(
+                fontSize: 13,
+                color: Colors.blue,
+                decoration: TextDecoration.underline,
               ),
             ),
-          ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 
   Widget _chipWrap(List<String> items) => Wrap(
-        spacing: 8,
-        runSpacing: 6,
-        children: items
-            .map((e) => Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: AppColors.primary.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(e,
-                      style: AppTextStyles.s12W600
-                          .copyWith(color: AppColors.primary)),
-                ))
-            .toList(),
-      );
+    spacing: 8,
+    runSpacing: 6,
+    children: items
+        .map(
+          (e) => Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            decoration: BoxDecoration(
+              color: AppColors.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Text(
+              e,
+              style: AppTextStyles.s12W600.copyWith(color: AppColors.primary),
+            ),
+          ),
+        )
+        .toList(),
+  );
 }

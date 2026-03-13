@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../common/index.dart';
 import 'view_model/prof_dashboard_view_model.dart';
 
 class ReferralDetailView extends StatefulWidget {
@@ -16,17 +18,22 @@ class ReferralDetailView extends StatefulWidget {
 
 class _ReferralDetailViewState extends State<ReferralDetailView> {
   final viewModel = ProfessionalViewModel();
+  final shortlistVm = getIt<ShortlistViewModel>();
 
   @override
   void initState() {
     super.initState();
     viewModel.fetchReferralJobDetails(widget.jobId);
+    shortlistVm.fetchSaved();
   }
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: viewModel,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: viewModel),
+        ChangeNotifierProvider.value(value: shortlistVm),
+      ],
       child: Consumer<ProfessionalViewModel>(
         builder: (context, vm, _) {
           if (vm.viewState == ViewState.busy) {
@@ -44,13 +51,62 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
           final poster = job.candidatePosted;
 
           return Scaffold(
-            appBar: AppBar(title: Text(job.jobTitle ?? '')),
+            appBar: AppBar(
+              title: Text(job.jobTitle ?? ''),
+              actions: [
+                Selector<ShortlistViewModel, bool>(
+                  selector: (_, vm) => vm.savedJobIds.contains(job.id),
+                  builder: (_, isSaved, __) => GestureDetector(
+                    onTap: () => shortlistVm.toggleSave(
+                      jobId: job.id ?? '',
+                      jobType: "Off-campus",
+                      isSaved: isSaved,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: AnimatedSwitcher(
+                        duration: const Duration(milliseconds: 200),
+                        child: Icon(
+                          isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          key: ValueKey(isSaved),
+                          color: isSaved
+                              ? AppColors.primary
+                              : AppColors.text.withValues(alpha: 0.6),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+
+                GestureDetector(
+                  onTap: () async {
+                    final url = Uri.tryParse(
+                      'https://rawrecruit.in/professional-dashboard/Referral/',
+                    );
+                    if (url != null) {
+                      final canLaunch = await canLaunchUrl(url);
+                      try {
+                        await launchUrl(url);
+                      } catch (e) {
+                        Toasts.showErrorToast(
+                          context,
+                          message: 'Something went wrong, Try again later.',
+                        );
+                      }
+                    }
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 16),
+                    child: Icon(Icons.share, color: AppColors.primary),
+                  ),
+                ),
+              ],
+            ),
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   // ── JOB OVERVIEW ──────────────────────────────────────────
                   _sectionHeader('Job Overview'),
                   _row('Job Title', job.jobTitle),
@@ -63,7 +119,10 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                   _row('Years of Experience', job.yearsOfExperience),
                   _row('Work Authorization', job.workAuthorization),
                   _row('Number of Openings', job.numberOfOpenings?.toString()),
-                  _row('CGPA Required', job.cgpa == 0 ? '-' : job.cgpa?.toString()),
+                  _row(
+                    'CGPA Required',
+                    job.cgpa == 0 ? '-' : job.cgpa?.toString(),
+                  ),
                   // _row('Views', job.views?.toString()),
                   _row('Expires At', _formatDate(job.expireAt)),
                   _row('Posted At', _formatDate(job.createdAt)),
@@ -72,10 +131,30 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 
                   // ── LOCATION & WORK ───────────────────────────────────────
                   _sectionHeader('Location & Work'),
-                  _row('Location', job.location?.isNotEmpty == true ? job.location!.join(', ') : null),
-                  _row('Work Mode', job.workMode?.isNotEmpty == true ? job.workMode!.join(', ') : null),
-                  _row('Work Location', job.workLocation?.isNotEmpty == true ? job.workLocation!.join(', ') : null),
-                  _row('Employment Type', job.employmentType?.isNotEmpty == true ? job.employmentType!.join(', ') : null),
+                  _row(
+                    'Location',
+                    job.location?.isNotEmpty == true
+                        ? job.location!.join(', ')
+                        : null,
+                  ),
+                  _row(
+                    'Work Mode',
+                    job.workMode?.isNotEmpty == true
+                        ? job.workMode!.join(', ')
+                        : null,
+                  ),
+                  _row(
+                    'Work Location',
+                    job.workLocation?.isNotEmpty == true
+                        ? job.workLocation!.join(', ')
+                        : null,
+                  ),
+                  _row(
+                    'Employment Type',
+                    job.employmentType?.isNotEmpty == true
+                        ? job.employmentType!.join(', ')
+                        : null,
+                  ),
 
                   const SizedBox(height: 16),
 
@@ -84,17 +163,45 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                   _row('Currency', job.packageDetails?.currency),
                   _row('Total CTC', job.packageDetails?.totalCTC?.toString()),
                   _row('Fixed Pay', job.packageDetails?.fixedPay?.toString()),
-                  _row('Joining Bonus', job.packageDetails?.joiningBonus?.toString()),
+                  _row(
+                    'Joining Bonus',
+                    job.packageDetails?.joiningBonus?.toString(),
+                  ),
 
                   const SizedBox(height: 16),
 
                   // ── ELIGIBILITY ───────────────────────────────────────────
                   _sectionHeader('Eligibility'),
-                  _row('Degree', job.degree?.isNotEmpty == true ? job.degree!.join(', ') : null),
-                  _row('Student Streams', job.studentStreams?.isNotEmpty == true ? job.studentStreams!.join(', ') : null),
-                  _row('College Types', job.collegeTypes?.isNotEmpty == true ? job.collegeTypes!.join(', ') : null),
-                  _row('College Categories', job.collegeCategories?.isNotEmpty == true ? job.collegeCategories!.join(', ') : null),
-                  _row('Company Type', job.companyType?.isNotEmpty == true ? job.companyType!.join(', ') : null),
+                  _row(
+                    'Degree',
+                    job.degree?.isNotEmpty == true
+                        ? job.degree!.join(', ')
+                        : null,
+                  ),
+                  _row(
+                    'Student Streams',
+                    job.studentStreams?.isNotEmpty == true
+                        ? job.studentStreams!.join(', ')
+                        : null,
+                  ),
+                  _row(
+                    'College Types',
+                    job.collegeTypes?.isNotEmpty == true
+                        ? job.collegeTypes!.join(', ')
+                        : null,
+                  ),
+                  _row(
+                    'College Categories',
+                    job.collegeCategories?.isNotEmpty == true
+                        ? job.collegeCategories!.join(', ')
+                        : null,
+                  ),
+                  _row(
+                    'Company Type',
+                    job.companyType?.isNotEmpty == true
+                        ? job.companyType!.join(', ')
+                        : null,
+                  ),
 
                   const SizedBox(height: 16),
 
@@ -119,21 +226,43 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 
                   // ── SELECTION PROCESS ─────────────────────────────────────
                   _sectionHeader('Selection Process'),
-                  _row('Rounds', job.rounds?.isNotEmpty == true ? job.rounds!.join(', ') : null),
-                  _row('Selection Process', job.selectionProcess?.isNotEmpty == true ? job.selectionProcess!.join(', ') : null),
+                  _row(
+                    'Rounds',
+                    job.rounds?.isNotEmpty == true
+                        ? job.rounds!.join(', ')
+                        : null,
+                  ),
+                  _row(
+                    'Selection Process',
+                    job.selectionProcess?.isNotEmpty == true
+                        ? job.selectionProcess!.join(', ')
+                        : null,
+                  ),
 
                   const SizedBox(height: 16),
 
                   // ── BENEFITS & TAGS ───────────────────────────────────────
                   _sectionHeader('Benefits & Tags'),
-                  _row('Benefits', job.benefits?.isNotEmpty == true ? job.benefits!.join(', ') : null),
-                  _row('Tags', job.tags?.isNotEmpty == true ? job.tags!.join(', ') : null),
-                  _row('Amenities Required', job.amenitiesRequired?.isNotEmpty == true ? job.amenitiesRequired!.join(', ') : null),
+                  _row(
+                    'Benefits',
+                    job.benefits?.isNotEmpty == true
+                        ? job.benefits!.join(', ')
+                        : null,
+                  ),
+                  _row(
+                    'Tags',
+                    job.tags?.isNotEmpty == true ? job.tags!.join(', ') : null,
+                  ),
+                  _row(
+                    'Amenities Required',
+                    job.amenitiesRequired?.isNotEmpty == true
+                        ? job.amenitiesRequired!.join(', ')
+                        : null,
+                  ),
 
                   const SizedBox(height: 24),
 
                   // ── POSTED BY ─────────────────────────────────────────────
-              
                   const SizedBox(height: 40),
                 ],
               ),
@@ -184,10 +313,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
             width: 160,
             child: Text(
               '$label:',
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
-                fontSize: 13,
-              ),
+              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
             ),
           ),
           Expanded(
@@ -244,8 +370,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
       children: items
           .map(
             (e) => Container(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
                 color: Colors.blue.shade50,
                 borderRadius: BorderRadius.circular(20),
