@@ -12,12 +12,14 @@ class ReferralPostDataSourceImpl implements ReferralPostDataSource {
 
   @override
   ResultFuture<void> postReferralJob(ReferralPostModel model) async {
+
     final request = Request(
       method: RequestMethod.post,
       endpoint: "/api/hiring-channels/referral-posting",
       body: model.toJson(),
       isSafeRoute: true,
     );
+    
 
     try {
       await _networkService.request(request);
