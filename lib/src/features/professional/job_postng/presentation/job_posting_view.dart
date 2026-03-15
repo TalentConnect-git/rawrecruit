@@ -74,11 +74,36 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     'Learning Budget', 'Gym Membership', 'Others',
   ];
 
-  final List<String> fieldOfStudyOptions = [
-    'Computer Science', 'Information Technology', 'Engineering',
-    'Business Administration', 'Finance', 'Arts', 'Sciences',
-    'Mathematics', 'Medicine', 'Law', 'Others',
-  ];
+  // ── fieldOfStudyOptions — dynamic getter based on minEducation ────────────
+  List<String> get fieldOfStudyOptions {
+    switch (minEducation) {
+      case "High School":
+        return [
+          'Science Stream', 'Commerce Stream', 'Arts Stream',
+          'Vocational', 'Others',
+        ];
+      case "Bachelor's Degree":
+        return [
+          'Computer Science', 'Information Technology', 'Engineering',
+          'Business Administration', 'Finance', 'Arts', 'Sciences',
+          'Mathematics', 'Medicine', 'Law', 'Others',
+        ];
+      case "Master's Degree":
+        return [
+          'Computer Science', 'Information Technology', 'Engineering',
+          'MBA', 'Finance', 'Data Science', 'Public Policy',
+          'Mathematics', 'Medicine', 'Law', 'Research', 'Others',
+        ];
+      case "PhD":
+        return [
+          'Computer Science', 'Engineering', 'Data Science',
+          'Mathematics', 'Physics', 'Life Sciences', 'Economics',
+          'Medicine', 'Social Sciences', 'Humanities', 'Others',
+        ];
+      default:
+        return ['Others'];
+    }
+  }
 
   final List<String> tagOptions = [
     "Urgent hiring", "Fresher preferred", "Remote-friendly",
@@ -159,7 +184,17 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
               // ── Education & Experience ────────────────────────────────
               _dropdown("Minimum Education", minEducation, educationOptions,
-                  (val) => setState(() => minEducation = val!)),
+                  (val) => setState(() {
+                        minEducation = val!;
+                        fieldOfStudyController.clear(); // clear stale selections
+                      })),
+                        _ChipMultiSelectField(
+                key: ValueKey('fieldOfStudy_$minEducation'), // key forces rebuild on education change
+                label: "Preferred Field of Study",
+                controller: fieldOfStudyController,
+                options: fieldOfStudyOptions,
+              ),
+              const SizedBox(height: 16),
 
               _dropdown("Work Authorization", workAuthorization,
                   workAuthorizationOptions,
@@ -191,13 +226,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
               const SizedBox(height: 16),
 
               // ── Chip multi-select fields ──────────────────────────────
-              _ChipMultiSelectField(
-                key: const ValueKey('fieldOfStudy'),
-                label: "Preferred Field of Study",
-                controller: fieldOfStudyController,
-                options: fieldOfStudyOptions,
-              ),
-              const SizedBox(height: 16),
+            
 
               _ChipMultiSelectField(
                 key: const ValueKey('skills'),

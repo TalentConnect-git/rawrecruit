@@ -32,9 +32,178 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   // ── Enum lists ──────────────────────────────────────────────────────────────
 
   List<String> degreeOptions = [
-    "B.Tech", "B.E", "Bachelor of Science", "BCA", "B.Com", "BA",
-    "M.Tech", "M.E", "MSc", "MBA", "MCA", "PhD", "Diploma", "Other",
+    "B.Tech",
+    "B.E",
+    "Bachelor of Science",
+    "BCA",
+    "B.Com",
+    "BA",
+    "M.Tech",
+    "M.E",
+    "MSc",
+    "MBA",
+    "MCA",
+    "PhD",
+    "Diploma",
+    "Other",
   ];
+
+  /// Specialization options keyed by degree.
+  /// Falls back to [_defaultSpecializations] if degree not found.
+  static const Map<String, List<String>> _specializationByDegree = {
+    "B.Tech": [
+      "Computer Science & Engineering",
+      "Information Technology",
+      "Electronics & Communication Engineering",
+      "Electrical Engineering",
+      "Mechanical Engineering",
+      "Civil Engineering",
+      "Chemical Engineering",
+      "Aerospace Engineering",
+      "Biotechnology",
+      "Data Science & AI",
+      "Cybersecurity",
+      "Other",
+    ],
+    "B.E": [
+      "Computer Engineering",
+      "Electronics Engineering",
+      "Electrical Engineering",
+      "Mechanical Engineering",
+      "Civil Engineering",
+      "Chemical Engineering",
+      "Production Engineering",
+      "Instrumentation Engineering",
+      "Other",
+    ],
+    "Bachelor of Science": [
+      "Computer Science",
+      "Physics",
+      "Chemistry",
+      "Mathematics",
+      "Statistics",
+      "Biology",
+      "Biochemistry",
+      "Environmental Science",
+      "Microbiology",
+      "Data Science",
+      "Other",
+    ],
+    "BCA": [
+      "Computer Applications",
+      "Software Development",
+      "Data Analytics",
+      "Cloud Computing",
+      "Cybersecurity",
+      "Other",
+    ],
+    "B.Com": [
+      "Accounting & Finance",
+      "Banking & Insurance",
+      "Taxation",
+      "Business Economics",
+      "E-Commerce",
+      "Other",
+    ],
+    "BA": [
+      "English Literature",
+      "History",
+      "Political Science",
+      "Economics",
+      "Psychology",
+      "Sociology",
+      "Philosophy",
+      "Mass Communication",
+      "Journalism",
+      "Other",
+    ],
+    "M.Tech": [
+      "Computer Science & Engineering",
+      "Data Science & Machine Learning",
+      "VLSI Design",
+      "Embedded Systems",
+      "Software Engineering",
+      "Cybersecurity",
+      "Robotics & Automation",
+      "Thermal Engineering",
+      "Structural Engineering",
+      "Power Systems",
+      "Other",
+    ],
+    "M.E": [
+      "Computer Engineering",
+      "Electronics Engineering",
+      "Structural Engineering",
+      "Thermal Engineering",
+      "Manufacturing Engineering",
+      "Other",
+    ],
+    "MSc": [
+      "Computer Science",
+      "Data Science",
+      "Physics",
+      "Chemistry",
+      "Mathematics",
+      "Statistics",
+      "Biotechnology",
+      "Environmental Science",
+      "Other",
+    ],
+    "MBA": [
+      "Finance",
+      "Marketing",
+      "Human Resources",
+      "Operations Management",
+      "Information Technology",
+      "Business Analytics",
+      "International Business",
+      "Entrepreneurship",
+      "Supply Chain Management",
+      "Other",
+    ],
+    "MCA": [
+      "Software Engineering",
+      "Data Science",
+      "Cloud Computing",
+      "Cybersecurity",
+      "Artificial Intelligence",
+      "Other",
+    ],
+    "PhD": [
+      "Computer Science",
+      "Electronics",
+      "Mechanical Engineering",
+      "Civil Engineering",
+      "Physics",
+      "Chemistry",
+      "Mathematics",
+      "Management",
+      "Life Sciences",
+      "Social Sciences",
+      "Other",
+    ],
+    "Diploma": [
+      "Computer Engineering",
+      "Electronics & Telecommunication",
+      "Mechanical Engineering",
+      "Civil Engineering",
+      "Electrical Engineering",
+      "Information Technology",
+      "Other",
+    ],
+    "Other": [
+      "Other",
+    ],
+  };
+
+  static const List<String> _defaultSpecializations = ["Other"];
+
+  /// Returns the specialization options for the currently selected degree.
+  List<String> get _currentSpecializationOptions {
+    final deg = controller.degree.text;
+    if (deg.isEmpty) return _defaultSpecializations;
+    return _specializationByDegree[deg] ?? _defaultSpecializations;
+  }
 
   final semesterOptions = List.generate(8, (i) => "Semester ${i + 1}");
 
@@ -67,7 +236,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     "Male", "Female", "Non-binary", "Prefer not to say",
   ];
 
-  /// Ethnicity — enum only, no custom input
   final ethnicityOptions = [
     "Asian",
     "Black or African American",
@@ -78,7 +246,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     "Prefer not to say",
   ];
 
-  /// Visa Status — enum only, no custom input
   final visaStatusOptions = [
     "Citizen",
     "Permanent Resident",
@@ -118,10 +285,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     "Others",
   ];
 
-  /// Open To Shift — enum only
   final shiftOptions = ["Day", "Night", "Rotational", "Any"];
 
-  /// Marital Status — enum only
   final maritalStatusOptions = [
     "Single", "Married", "Divorced", "Widowed", "Prefer not to say",
   ];
@@ -222,13 +387,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                               (v == null || v.isEmpty) ? 'Phone number is required' : null,
                         ),
                         _dropdownField(controller.gender, 'Gender', genderOptions),
-                        // DOB — date picker
                         _datePickerField(controller.dob, 'Date of Birth'),
-                        // Ethnicity — enum only dropdown
                         _dropdownField(controller.ethnicity, 'Ethnicity', ethnicityOptions),
-                        // Marital Status — enum only dropdown
                         _dropdownField(controller.maritalStatus, 'Marital Status', maritalStatusOptions),
-                        // Visa Status — enum only dropdown
                         _dropdownField(controller.visaStatus, 'Visa Status / Work Authorization', visaStatusOptions),
                       ],
                     ),
@@ -239,10 +400,15 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                       spacing: 16,
                       children: [
                         AppTextFields(controller: controller.college, hint: 'College'),
-                        _dropdownField(controller.degree, 'Degree', degreeOptions),
+
+                        // 1️⃣ Degree — shown first
+                        _degreeDropdownField(),
+
+                        // 2️⃣ Specialization — shown after degree, options depend on selected degree
+                        _specializationDropdownField(),
+
                         _dropdownField(controller.semester, 'Semester', semesterOptions),
                         _dropdownField(controller.yearOfGraduation, 'Graduation Year', graduationYears),
-                        AppTextFields(controller: controller.specialization, hint: 'Specialization'),
                         AppTextFields(controller: controller.cgpa, hint: 'CGPA'),
                       ],
                     ),
@@ -417,6 +583,63 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     );
   }
 
+  // ── Education field helpers ──────────────────────────────────────────────────
+
+  /// Degree dropdown — when selection changes, reset specialization.
+  Widget _degreeDropdownField() {
+    final selectedValue =
+        degreeOptions.contains(controller.degree.text) ? controller.degree.text : null;
+    return DropdownButtonFormField<String>(
+      value: selectedValue,
+      decoration: const InputDecoration(
+        labelText: 'Degree',
+        border: OutlineInputBorder(),
+      ),
+      hint: const Text('Degree'),
+      items: degreeOptions
+          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+          .toList(),
+      onChanged: (val) {
+        setState(() {
+          controller.degree.text = val ?? '';
+          // Reset specialization whenever degree changes
+          controller.specialization.text = '';
+        });
+      },
+    );
+  }
+
+  /// Specialization dropdown — options are driven by the selected degree.
+  Widget _specializationDropdownField() {
+    final options = _currentSpecializationOptions;
+    final selectedValue =
+        options.contains(controller.specialization.text)
+            ? controller.specialization.text
+            : null;
+
+    return DropdownButtonFormField<String>(
+      value: selectedValue,
+      decoration: const InputDecoration(
+        labelText: 'Specialization',
+        border: OutlineInputBorder(),
+      ),
+      hint: Text(
+        controller.degree.text.isEmpty
+            ? 'Select a degree first'
+            : 'Specialization',
+      ),
+      // Disable the dropdown until a degree is selected
+      onChanged: controller.degree.text.isEmpty
+          ? null
+          : (val) {
+              setState(() => controller.specialization.text = val ?? '');
+            },
+      items: options
+          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+          .toList(),
+    );
+  }
+
   // ── Sub-form builders ────────────────────────────────────────────────────────
 
   Widget _achievementForm(AchievementController a) => Column(
@@ -494,7 +717,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     );
   }
 
-  /// Standard single-select dropdown (no "Others" free text).
   Widget _dropdownField(
     TextEditingController ctrl,
     String hint,
@@ -510,7 +732,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     );
   }
 
-  /// Date picker field — taps open a calendar, stores as yyyy-MM-dd string.
   Widget _datePickerField(TextEditingController ctrl, String hint) {
     return TextFormField(
       controller: ctrl,
@@ -545,17 +766,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       },
     );
   }
-
-  // ── Chip multi-select (fixed) ────────────────────────────────────────────────
-  //
-  // KEY FIXES:
-  //  1. `_ChipMultiSelectField` is now a proper StatefulWidget so controllers
-  //     and focus nodes are NOT recreated on every rebuild.
-  //  2. When options list is non-empty the enum chips are shown at the top
-  //     (scrollable row) for quick selection.
-  //  3. When "Others" is in the options list and the user selects it, a free-
-  //     text autocomplete input appears below the enum chips.
-  //  4. For Skills (empty options), only the free-text input is shown.
 
   Widget _chipMultiSelectField(
     String label,
@@ -648,9 +858,20 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
           final parsedDegree = edu['degree'].toString();
           if (!degreeOptions.contains(parsedDegree)) degreeOptions.add(parsedDegree);
           controller.degree.text = parsedDegree;
+          // Reset specialization when degree is set from resume
+          controller.specialization.text = '';
         }
-        if (controller.specialization.text.isEmpty && edu['field_of_study'] != null)
-          controller.specialization.text = edu['field_of_study'];
+        // Set specialization only if it's valid for the parsed degree
+        if (controller.specialization.text.isEmpty && edu['field_of_study'] != null) {
+          final parsedSpec = edu['field_of_study'].toString();
+          final specOptions = _specializationByDegree[controller.degree.text] ??
+              _defaultSpecializations;
+          if (!specOptions.contains(parsedSpec)) {
+            // Add the parsed value dynamically so the dropdown can show it
+            _specializationByDegree[controller.degree.text]?.add(parsedSpec);
+          }
+          controller.specialization.text = parsedSpec;
+        }
         if (controller.yearOfGraduation.text.isEmpty && edu['year'] != null)
           controller.yearOfGraduation.text = edu['year'].toString();
         if (controller.cgpa.text.isEmpty && edu['cgpa'] != null)
@@ -690,7 +911,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
   final TextEditingController _textController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
-  /// Whether user has tapped "Others" from the enum list.
   bool _showFreeText = false;
 
   List<String> get _selectedItems {
@@ -723,7 +943,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
   void _removeItem(String value) {
     final current = _selectedItems..remove(value);
     _sync(current);
-    // If "Others" chip was removed, hide free-text input
     if (value == 'Others') setState(() => _showFreeText = false);
     setState(() {});
   }
@@ -753,7 +972,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
   Widget build(BuildContext context) {
     final selected = _selectedItems;
     final hasEnums = widget.options.isNotEmpty;
-    // Items that are NOT from the enum list (custom free-text entries)
     final customItems =
         selected.where((s) => !widget.options.contains(s)).toList();
 
@@ -774,7 +992,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
 
-              // ── Enum option chips (tap to select/deselect) ──────────────
               if (hasEnums) ...[
                 Wrap(
                   spacing: 8,
@@ -798,7 +1015,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                 const Divider(height: 16),
               ],
 
-              // ── Selected custom items (shown as deletable chips) ─────────
               if (customItems.isNotEmpty) ...[
                 Wrap(
                   spacing: 8,
@@ -815,7 +1031,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                 const SizedBox(height: 6),
               ],
 
-              // ── Free-text input (always for Skills, or when Others selected)
               if (!hasEnums || _showFreeText) ...[
                 if (hasEnums)
                   const Text(
@@ -826,7 +1041,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                 Autocomplete<String>(
                   optionsBuilder: (textEditingValue) {
                     if (textEditingValue.text.isEmpty) return const [];
-                    // For Skills (no enum list), no autocomplete suggestions
                     return widget.options
                         .where((item) =>
                             item != 'Others' &&
@@ -838,8 +1052,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                   onSelected: _addItem,
                   fieldViewBuilder:
                       (context, textController, textFocusNode, onSubmit) {
-                    // Sync our controller into Autocomplete's internal controller
-                    // by forwarding to our stable _textController via listener trick
                     return TextField(
                       controller: _textController,
                       focusNode: _focusNode,
@@ -854,7 +1066,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                 ),
               ],
 
-              // ── If pure free-text (Skills): show selected items as chips ─
               if (!hasEnums && selected.isNotEmpty)
                 Wrap(
                   spacing: 8,
