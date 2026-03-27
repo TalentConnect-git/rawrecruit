@@ -1,24 +1,18 @@
 import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/application/entities/application_model.dart';
-import 'application_data_source.dart';
-class ApplicationDataSourceImpl
-    implements ApplicationDataSource {
 
-  final NetworkService _networkService =
-      NetworkService();
+import 'application_data_source.dart';
+
+class ApplicationDataSourceImpl implements ApplicationDataSource {
+  final NetworkService _networkService = NetworkService();
 
   @override
-  ResultFuture<void> applyOffCampus({
-    required String jobId,
-  }) async {
-
+  ResultFuture<void> applyOffCampus({required String jobId}) async {
     final request = Request(
       method: RequestMethod.post,
       endpoint: Endpoints.applyOffCampus,
-      body: {
-        "jobId": jobId,
-      },
+      body: {"jobId": jobId},
       isSafeRoute: true,
     );
 
@@ -29,31 +23,28 @@ class ApplicationDataSourceImpl
       return Left(APIException.from(e));
     }
   }
-@override
-ResultFuture<List<ApplicationModel>> fetchAppliedJobs() async {
-  final request = Request(
-    method: RequestMethod.get,
-    endpoint: Endpoints.applicationStatus,
-    isSafeRoute: true,
-  );
 
-  try {
-    final result =
-        await _networkService.request(request);
+  @override
+  ResultFuture<List<ApplicationModel>> fetchAppliedJobs() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.applicationStatus,
+      isSafeRoute: true,
+    );
 
-    final body = result.data as Map<String, dynamic>;
+    try {
+      final result = await _networkService.request(request);
 
-    // 🔥 CORRECT EXTRACTION
-    final List<dynamic> data = body['data'];
+      final body = result.data as Map<String, dynamic>;
 
-    final list = data
-        .map((e) =>
-            ApplicationModel.fromJson(e))
-        .toList();
+      // 🔥 CORRECT EXTRACTION
+      final List<dynamic> data = body['data'];
 
-    return Right(list);
+      final list = data.map((e) => ApplicationModel.fromJson(e)).toList();
 
-  } catch (e) {
-    return Left(APIException.from(e));
+      return Right(list);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}}
+}

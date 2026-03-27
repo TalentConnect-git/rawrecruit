@@ -53,13 +53,11 @@ class _PostedJobApplicationViewState extends State<PostedJobApplicationView> {
               child: ListView.separated(
                 itemBuilder: (_, index) {
                   final job = vm.application[index];
+
                   return ApplicationListItem(
-                     onTap: () {
-    context.pushNamed(
-    RouteNames.applicantDetail,
-      extra: job,
-    );
-  },
+                    onTap: () {
+                      context.pushNamed(RouteNames.applicantDetail, extra: job);
+                    },
                     application: job,
                     onApplyOrReject: (status) async {
                       final failure = await vm.updateApplicationStatus(

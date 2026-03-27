@@ -48,30 +48,77 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   // ── Enum options ────────────────────────────────────────────────────────────
 
   final List<String> jobTitleOptions = [
-    "Software Developer", "Frontend Developer", "Backend Developer",
-    "Full Stack Developer", "Mobile App Developer", "UI/UX Designer",
-    "Data Analyst", "Data Scientist", "Machine Learning Engineer",
-    "DevOps Engineer", "Cloud Architect", "QA Engineer",
-    "Cyber Security Specialist", "Network Engineer", "Business Analyst",
-    "Product Manager", "Project Manager", "HR Recruiter",
-    "Marketing Specialist", "Sales Executive", "Finance Analyst", "Others",
+    "Software Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "Mobile App Developer",
+    "UI/UX Designer",
+    "Data Analyst",
+    "Data Scientist",
+    "Machine Learning Engineer",
+    "DevOps Engineer",
+    "Cloud Architect",
+    "QA Engineer",
+    "Cyber Security Specialist",
+    "Network Engineer",
+    "Business Analyst",
+    "Product Manager",
+    "Project Manager",
+    "HR Recruiter",
+    "Marketing Specialist",
+    "Sales Executive",
+    "Finance Analyst",
+    "Others",
   ];
 
   final List<String> skillOptions = [
-    'Flutter', 'Dart', 'React', 'Node.js', 'Python', 'Java', 'TypeScript',
-    'JavaScript', 'HTML', 'CSS', 'SQL', 'MongoDB', 'Firebase', 'AWS',
-    'Docker', 'Kubernetes', 'Git', 'REST API', 'GraphQL', 'Others',
+    'Flutter',
+    'Dart',
+    'React',
+    'Node.js',
+    'Python',
+    'Java',
+    'TypeScript',
+    'JavaScript',
+    'HTML',
+    'CSS',
+    'SQL',
+    'MongoDB',
+    'Firebase',
+    'AWS',
+    'Docker',
+    'Kubernetes',
+    'Git',
+    'REST API',
+    'GraphQL',
+    'Others',
   ];
 
   final List<String> certificationOptions = [
-    'AWS Certified', 'Microsoft Certified', 'Google Cloud Certified',
-    'Cisco Certified', 'PMP', 'CFA', 'CISSP', 'Scrum Master', 'Others',
+    'AWS Certified',
+    'Microsoft Certified',
+    'Google Cloud Certified',
+    'Cisco Certified',
+    'PMP',
+    'CFA',
+    'CISSP',
+    'Scrum Master',
+    'Others',
   ];
 
   final List<String> benefitOptions = [
-    'Health Insurance', '401(k)', 'Paid Time Off', 'Flexible Schedule',
-    'Dental Insurance', 'Vision Insurance', 'Remote Work', 'Stock Options',
-    'Learning Budget', 'Gym Membership', 'Others',
+    'Health Insurance',
+    '401(k)',
+    'Paid Time Off',
+    'Flexible Schedule',
+    'Dental Insurance',
+    'Vision Insurance',
+    'Remote Work',
+    'Stock Options',
+    'Learning Budget',
+    'Gym Membership',
+    'Others',
   ];
 
   // ── fieldOfStudyOptions — dynamic getter based on minEducation ────────────
@@ -79,26 +126,54 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     switch (minEducation) {
       case "High School":
         return [
-          'Science Stream', 'Commerce Stream', 'Arts Stream',
-          'Vocational', 'Others',
+          'Science Stream',
+          'Commerce Stream',
+          'Arts Stream',
+          'Vocational',
+          'Others',
         ];
       case "Bachelor's Degree":
         return [
-          'Computer Science', 'Information Technology', 'Engineering',
-          'Business Administration', 'Finance', 'Arts', 'Sciences',
-          'Mathematics', 'Medicine', 'Law', 'Others',
+          'Computer Science',
+          'Information Technology',
+          'Engineering',
+          'Business Administration',
+          'Finance',
+          'Arts',
+          'Sciences',
+          'Mathematics',
+          'Medicine',
+          'Law',
+          'Others',
         ];
       case "Master's Degree":
         return [
-          'Computer Science', 'Information Technology', 'Engineering',
-          'MBA', 'Finance', 'Data Science', 'Public Policy',
-          'Mathematics', 'Medicine', 'Law', 'Research', 'Others',
+          'Computer Science',
+          'Information Technology',
+          'Engineering',
+          'MBA',
+          'Finance',
+          'Data Science',
+          'Public Policy',
+          'Mathematics',
+          'Medicine',
+          'Law',
+          'Research',
+          'Others',
         ];
       case "PhD":
         return [
-          'Computer Science', 'Engineering', 'Data Science',
-          'Mathematics', 'Physics', 'Life Sciences', 'Economics',
-          'Medicine', 'Social Sciences', 'Humanities', 'Others',
+          'Computer Science',
+          'Engineering',
+          'Data Science',
+          'Mathematics',
+          'Physics',
+          'Life Sciences',
+          'Economics',
+          'Medicine',
+          'Social Sciences',
+          'Humanities',
+          'Others',
         ];
       default:
         return ['Others'];
@@ -106,25 +181,45 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   }
 
   final List<String> tagOptions = [
-    "Urgent hiring", "Fresher preferred", "Remote-friendly",
-    "Work from Home", "Internship-eligible",
+    "Urgent hiring",
+    "Fresher preferred",
+    "Remote-friendly",
+    "Work from Home",
+    "Internship-eligible",
   ];
 
   final List<String> indiaCities = [
-    "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai",
-    "Pune", "Kolkata", "Ahmedabad", "Jaipur", "Surat",
+    "Mumbai",
+    "Delhi",
+    "Bangalore",
+    "Hyderabad",
+    "Chennai",
+    "Pune",
+    "Kolkata",
+    "Ahmedabad",
+    "Jaipur",
+    "Surat",
   ];
 
   final List<String> educationOptions = [
-    "High School", "Bachelor's Degree", "Master's Degree", "PhD",
+    "High School",
+    "Bachelor's Degree",
+    "Master's Degree",
+    "PhD",
   ];
 
   final List<String> experienceOptions = [
-    "0-1 years", "1-3 years", "3-5 years", "5-10 years",
+    "0-1 years",
+    "1-3 years",
+    "3-5 years",
+    "5-10 years",
   ];
 
   final List<String> workAuthorizationOptions = [
-    "Citizens Only", "Permanent Residents", "Work Visa Holders", "Any",
+    "Citizens Only",
+    "Permanent Residents",
+    "Work Visa Holders",
+    "Any",
   ];
 
   final List<String> currencyOptions = ["INR", "USD", "EUR", "GBP", "AED"];
@@ -159,63 +254,112 @@ class _ReferralPostViewState extends State<ReferralPostView> {
           child: ListView(
             children: [
               // ── Job Title ─────────────────────────────────────────────
-              _dropdown("Job Title", selectedJobTitle, jobTitleOptions,
-                  (val) => setState(() => selectedJobTitle = val!)),
+              _dropdown(
+                "Job Title",
+                selectedJobTitle,
+                jobTitleOptions,
+                (val) => setState(() => selectedJobTitle = val!),
+              ),
               if (selectedJobTitle == "Others")
                 _field("Enter Custom Job Title", controller: titleController),
 
-              _field("Description",
-                  controller: descriptionController, maxLines: 3),
+              _field(
+                "Description",
+                controller: descriptionController,
+                maxLines: 3,
+              ),
 
               // ── Location & Work ───────────────────────────────────────
-              _dropdown("Location", selectedCity, indiaCities,
-                  (val) => setState(() => selectedCity = val!)),
+              _dropdown(
+                "Location",
+                selectedCity,
+                indiaCities,
+                (val) => setState(() => selectedCity = val!),
+              ),
 
-              _dropdown("Employment Type", employmentType,
-                  ["Full-time", "Part-time"],
-                  (val) => setState(() => employmentType = val!)),
+              _dropdown(
+                "Employment Type",
+                employmentType,
+                ["Full-time", "Part-time"],
+                (val) => setState(() => employmentType = val!),
+              ),
 
-              _dropdown("Work Mode", workMode, ["On-site", "Remote", "Hybrid"],
-                  (val) => setState(() => workMode = val!)),
+              _dropdown("Work Mode", workMode, [
+                "On-site",
+                "Remote",
+                "Hybrid",
+              ], (val) => setState(() => workMode = val!)),
 
-              _dropdown("Broadcast Type", broadcastType,
-                  ["Everyone", "Selected Colleges"],
-                  (val) => setState(() => broadcastType = val!)),
+              _dropdown(
+                "Broadcast Type",
+                broadcastType,
+                ["Everyone", "Selected Colleges"],
+                (val) => setState(() => broadcastType = val!),
+              ),
 
               // ── Education & Experience ────────────────────────────────
-              _dropdown("Minimum Education", minEducation, educationOptions,
-                  (val) => setState(() {
-                        minEducation = val!;
-                        fieldOfStudyController.clear(); // clear stale selections
-                      })),
-                        _ChipMultiSelectField(
-                key: ValueKey('fieldOfStudy_$minEducation'), // key forces rebuild on education change
+              _dropdown(
+                "Minimum Education",
+                minEducation,
+                educationOptions,
+                (val) => setState(() {
+                  minEducation = val!;
+                  fieldOfStudyController.clear(); // clear stale selections
+                }),
+              ),
+              _ChipMultiSelectField(
+                key: ValueKey(
+                  'fieldOfStudy_$minEducation',
+                ), // key forces rebuild on education change
                 label: "Preferred Field of Study",
                 controller: fieldOfStudyController,
                 options: fieldOfStudyOptions,
               ),
               const SizedBox(height: 16),
 
-              _dropdown("Work Authorization", workAuthorization,
-                  workAuthorizationOptions,
-                  (val) => setState(() => workAuthorization = val!)),
+              _dropdown(
+                "Work Authorization",
+                workAuthorization,
+                workAuthorizationOptions,
+                (val) => setState(() => workAuthorization = val!),
+              ),
 
-              _dropdown("Experience Range", experienceRange, experienceOptions,
-                  (val) => setState(() => experienceRange = val!)),
+              _dropdown(
+                "Experience Range",
+                experienceRange,
+                experienceOptions,
+                (val) => setState(() => experienceRange = val!),
+              ),
 
-              _field("Openings", controller: openingsController,
-                  keyboardType: TextInputType.number),
+              _field(
+                "Openings",
+                controller: openingsController,
+                keyboardType: TextInputType.number,
+              ),
 
               // ── Package Details ───────────────────────────────────────
               _sectionHeader("Package Details"),
-              _dropdown("Currency", currencyController.text, currencyOptions,
-                  (val) => setState(() => currencyController.text = val!)),
-              _field("Total CTC", controller: totalCTCController,
-                  keyboardType: TextInputType.number),
-              _field("Fixed Pay", controller: fixedPayController,
-                  keyboardType: TextInputType.number),
-              _field("Joining Bonus", controller: joiningBonusController,
-                  keyboardType: TextInputType.number),
+              _dropdown(
+                "Currency",
+                currencyController.text,
+                currencyOptions,
+                (val) => setState(() => currencyController.text = val!),
+              ),
+              _field(
+                "Total CTC",
+                controller: totalCTCController,
+                keyboardType: TextInputType.number,
+              ),
+              _field(
+                "Fixed Pay",
+                controller: fixedPayController,
+                keyboardType: TextInputType.number,
+              ),
+              _field(
+                "Joining Bonus",
+                controller: joiningBonusController,
+                keyboardType: TextInputType.number,
+              ),
 
               const SizedBox(height: 8),
 
@@ -226,8 +370,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
               const SizedBox(height: 16),
 
               // ── Chip multi-select fields ──────────────────────────────
-            
-
               _ChipMultiSelectField(
                 key: const ValueKey('skills'),
                 label: "Skills",
@@ -287,6 +429,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                     benefits: _splitController(benefitsController),
                     certifications: _splitController(certificationsController),
                     eligibilityCriteria: eligibilityController.text.trim(),
+                    approvalStatus: 'Pending',
                   );
 
                   final success = await vm.postJob(model);
@@ -366,8 +509,10 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   Widget _sectionHeader(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
-      child: Text(title,
-          style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold)),
+      child: Text(
+        title,
+        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+      ),
     );
   }
 
@@ -497,15 +642,17 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
   Widget build(BuildContext context) {
     final selected = _selectedItems;
     final hasEnums = widget.options.isNotEmpty;
-    final customItems =
-        selected.where((s) => !widget.options.contains(s)).toList();
+    final customItems = selected
+        .where((s) => !widget.options.contains(s))
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label,
-            style: const TextStyle(
-                fontSize: 14, fontWeight: FontWeight.w600)),
+        Text(
+          widget.label,
+          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+        ),
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
@@ -517,7 +664,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               // ── Enum chips ─────────────────────────────────────────
               if (hasEnums) ...[
                 Wrap(
@@ -549,10 +695,12 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                   spacing: 8,
                   runSpacing: 6,
                   children: customItems
-                      .map((item) => Chip(
-                            label: Text(item),
-                            onDeleted: () => _removeItem(item),
-                          ))
+                      .map(
+                        (item) => Chip(
+                          label: Text(item),
+                          onDeleted: () => _removeItem(item),
+                        ),
+                      )
                       .toList(),
                 ),
                 const SizedBox(height: 6),
@@ -561,34 +709,38 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
               // ── Free-text input (shown when Others selected) ───────
               if (!hasEnums || _showFreeText) ...[
                 if (hasEnums)
-                  const Text('Add custom entries:',
-                      style: TextStyle(fontSize: 12, color: Colors.grey)),
+                  const Text(
+                    'Add custom entries:',
+                    style: TextStyle(fontSize: 12, color: Colors.grey),
+                  ),
                 const SizedBox(height: 4),
                 Autocomplete<String>(
                   optionsBuilder: (textEditingValue) {
                     if (textEditingValue.text.isEmpty) return const [];
                     return widget.options
-                        .where((item) =>
-                            item != 'Others' &&
-                            item.toLowerCase().contains(
-                                  textEditingValue.text.toLowerCase(),
-                                ))
+                        .where(
+                          (item) =>
+                              item != 'Others' &&
+                              item.toLowerCase().contains(
+                                textEditingValue.text.toLowerCase(),
+                              ),
+                        )
                         .toList();
                   },
                   onSelected: _addItem,
                   fieldViewBuilder:
                       (context, textController, textFocusNode, onSubmit) {
-                    return TextField(
-                      controller: _textController,
-                      focusNode: _focusNode,
-                      decoration: const InputDecoration(
-                        hintText: 'Type and press Enter to add',
-                        border: InputBorder.none,
-                        isDense: true,
-                      ),
-                      onSubmitted: _addItem,
-                    );
-                  },
+                        return TextField(
+                          controller: _textController,
+                          focusNode: _focusNode,
+                          decoration: const InputDecoration(
+                            hintText: 'Type and press Enter to add',
+                            border: InputBorder.none,
+                            isDense: true,
+                          ),
+                          onSubmitted: _addItem,
+                        );
+                      },
                 ),
               ],
 
@@ -598,10 +750,12 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                   spacing: 8,
                   runSpacing: 6,
                   children: selected
-                      .map((item) => Chip(
-                            label: Text(item),
-                            onDeleted: () => _removeItem(item),
-                          ))
+                      .map(
+                        (item) => Chip(
+                          label: Text(item),
+                          onDeleted: () => _removeItem(item),
+                        ),
+                      )
                       .toList(),
                 ),
             ],

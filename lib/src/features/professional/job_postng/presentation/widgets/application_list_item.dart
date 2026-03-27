@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/utils/enum.dart';
@@ -55,58 +56,90 @@ class ApplicationListItem extends StatelessWidget {
               ],
             ),
 
-            /// Status Badge
-            if (status != null && status != ApplicationStatus.pending)
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 10,
-                ),
-                decoration: BoxDecoration(
-                  color: status.labelBGColor,
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  status.label,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    color: status.labelColor,
-                  ),
-                ),
-              )
-            else
-              Row(
-                mainAxisSize: MainAxisSize.min,
-                spacing: 16,
-                children: [
-                  GestureDetector(
-                    onTap: () {
-                      onApplyOrReject.call(ApplicationStatus.accepted);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
+            Row(
+              spacing: 16,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                /// Status Badge
+                if (status != null)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 10,
+                    ),
+                    decoration: BoxDecoration(
+                      color: status.labelBGColor,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      status.apiLabel,
+                      style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: status.labelColor,
                       ),
-                      child: Icon(Icons.check, color: Colors.white, size: 20),
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      onApplyOrReject.call(ApplicationStatus.rejected);
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
+
+                InkWell(
+                  onTap: () {
+                    showModalBottomSheet(
+                      context: context,
+                      constraints: BoxConstraints(
+                        minHeight: 200,
+                        maxHeight: 500,
                       ),
-                      child: Icon(Icons.close, color: Colors.white, size: 20),
-                    ),
-                  ),
-                ],
-              ),
+                      backgroundColor: Colors.white,
+                      builder: (sheetContext) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 20,
+                            horizontal: 16,
+                          ),
+                          child: Column(
+                            spacing: 16,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                'Application Status',
+                                style: AppTextStyles.s18W600,
+                              ),
+                              ListView.separated(
+                                itemCount: ApplicationStatus.values.length,
+                                separatorBuilder: (_, _) => Divider(),
+                                itemBuilder: (_, i) {
+                                  final status = ApplicationStatus.values[i];
+                                  return ListTile(
+                                    onTap: () {
+                                      sheetContext.pop();
+                                      onApplyOrReject.call(status);
+                                    },
+                                    leading: Container(
+                                      padding: EdgeInsets.all(4),
+                                      decoration: BoxDecoration(
+                                        color: status.labelBGColor,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: Icon(
+                                        status.icon,
+                                        color: Colors.white,
+                                        size: 20,
+                                      ),
+                                    ),
+                                    title: Text(status.label),
+                                  );
+                                },
+                                shrinkWrap: true,
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                  child: Icon(Icons.more_vert),
+                ),
+              ],
+            ),
           ],
         ),
       ),

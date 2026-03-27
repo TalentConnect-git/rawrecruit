@@ -16,6 +16,7 @@ class ApplicationDetailView extends StatelessWidget {
       case "shortlisted":
         return 1;
       case "accepted":
+      case "rejected":
         return 2;
       default:
         return 0;
@@ -72,7 +73,7 @@ class ApplicationDetailView extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(18),
               decoration: BoxDecoration(
-                color: AppColors.primary.withOpacity(0.08),
+                color: AppColors.primary.withValues(alpha: 0.08),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Column(
@@ -102,12 +103,15 @@ class ApplicationDetailView extends StatelessWidget {
                 boxShadow: [
                   BoxShadow(
                     blurRadius: 10,
-                    color: Colors.black.withOpacity(0.05),
+                    color: Colors.black.withValues(alpha: 0.05),
                     offset: const Offset(0, 4),
                   ),
                 ],
               ),
-              child: ApplicationProgressStepper(currentStep: _getStep(status)),
+              child: ApplicationProgressStepper(
+                currentStep: _getStep(status),
+                status: status,
+              ),
             ),
 
             const SizedBox(height: 30),
