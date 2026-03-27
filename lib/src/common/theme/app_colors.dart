@@ -18,4 +18,11 @@ class AppColors {
   static Color secBackground = Color(0xfffafafa);
   static Color secBorder = Color(0xff000000);
   static Color secShadow = Color(0xfffafafa);
+
+
+  static Color kBg = Colors.black;
+static Color kCard = Color(0xFF111827);
+static Color kBorder = Color(0xFF1F2937);
+static Color kGreen = Color(0xFF22C55E);
 }
+
