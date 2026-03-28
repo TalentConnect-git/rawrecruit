@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart' show RouteNames, UserType;
+import 'package:rawrecruit/src/feature/onboarding/presentation/flow_controller.dart';
 import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_view.dart';
@@ -11,7 +12,6 @@ import 'package:rawrecruit/src/features/dashboard/entities/internship_model.dart
 import 'package:rawrecruit/src/features/dashboard/entities/job_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
-import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
@@ -47,7 +47,7 @@ class AppRouter {
       GoRoute(
         name: RouteNames.splash,
         path: '/',
-        builder: (_, _) => SplashView(),
+        builder: (_, _) => OnboardingFlow(),
       ),
       GoRoute(
         name: RouteNames.login,
