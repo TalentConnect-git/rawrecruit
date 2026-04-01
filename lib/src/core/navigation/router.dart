@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart' show RouteNames, UserType;
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/first_step.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
 
 import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_detail_view.dart';
@@ -50,7 +51,7 @@ class AppRouter {
       GoRoute(
         name: RouteNames.splash,
         path: '/',
-        builder: (_, _) => PreferencesPage(),
+        builder: (_, _) => SplashView(),
       ),
       GoRoute(
         name: RouteNames.login,
