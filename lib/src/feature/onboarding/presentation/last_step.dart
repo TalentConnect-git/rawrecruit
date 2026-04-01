@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/onboarding/presentation/widgets/input_widgets.dart';
+
+import '../../revamp_onboarding/presentation/widgets/input_widgets.dart';
 
 class PreferencesPage extends StatefulWidget {
   final VoidCallback onBack;

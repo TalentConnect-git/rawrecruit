@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/feature/onboarding/presentation/widgets/input_widgets.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
 
-import '../../../common/index.dart';
-
+import '../../../../common/index.dart';
 class SkillsDomainPage extends StatefulWidget {
   final VoidCallback onBack;
 

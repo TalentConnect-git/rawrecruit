@@ -241,13 +241,13 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
 class AppHeader extends StatelessWidget {
   final String title;
   final String highlight;
-  final VoidCallback onBack;
+  final VoidCallback? onBack;
 
   const AppHeader({
     super.key,
     required this.title,
     required this.highlight,
-    required this.onBack,
+    this.onBack,
   });
 
   @override
@@ -255,22 +255,29 @@ class AppHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        GestureDetector(
-          onTap: onBack,
-          child: const Row(
-            children: [
-              Icon(Icons.arrow_back_ios, size: 16, color: Colors.grey),
-              SizedBox(width: 4),
-              Text("Back", style: TextStyle(color: Colors.grey)),
-            ],
+        /// 🔙 BACK BUTTON (only if onBack is provided)
+        if (onBack != null)
+          GestureDetector(
+            onTap: onBack,
+            child: const Row(
+              children: [
+                Icon(Icons.arrow_back_ios, size: 16, color: Colors.grey),
+                SizedBox(width: 4),
+                Text("Back", style: TextStyle(color: Colors.grey)),
+              ],
+            ),
           ),
-        ),
 
-        const SizedBox(height: 20),
+        /// Optional spacing only when back button exists
+        if (onBack != null) const SizedBox(height: 20),
 
+        /// TITLE
         RichText(
           text: TextSpan(
-            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
             children: [
               TextSpan(
                 text: "$title ",

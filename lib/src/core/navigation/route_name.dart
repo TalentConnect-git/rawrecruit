@@ -23,4 +23,7 @@ class RouteNames {
   static final notification = 'notification';
   static const String scheduledInterviews = 'scheduledInterviews';
   static const String interviewDetail = 'interviewDetail';
+  static const String userType ='userType';
+  static const String revampRegister='revampRegister';
+  static const String revampLogin='revampLogin';
 }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/common/index.dart';
+
 class ContinueButton extends StatelessWidget {
   final VoidCallback onTap;
 
@@ -20,7 +20,14 @@ class ContinueButton extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
             ),
           ),
-          child:  Text("Continue",style: TextStyle(fontSize: 18,color: Colors.black,fontWeight: FontWeight.bold),),
+          child: Text(
+            "Continue",
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
         ),
       ),
     );

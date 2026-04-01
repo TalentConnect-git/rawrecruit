@@ -24,6 +24,13 @@ String get userId => auth?.id ?? '';
   bool get isProfessional => userType == UserType.professional;
 
   Auth? _auth;
+  UserType? _selectedUserType;
+UserType? get selectedUserType => _selectedUserType;
+
+set selectedUserType(UserType? type) {
+  _selectedUserType = type;
+  notifyListeners();
+}
   Auth? get auth => _auth;
   set auth(Auth? auth) {
     _auth = auth;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/feature/onboarding/presentation/widgets/input_widgets.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 
-import 'widgets/wrapper.dart';
+import '../widgets/wrapper.dart';
 
 class AchievementsPage extends StatelessWidget {
     final VoidCallback onBack;

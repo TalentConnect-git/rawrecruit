@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/feature/onboarding/presentation/education_info.dart';
-import 'package:rawrecruit/src/feature/onboarding/presentation/widgets/progress_bar.dart';
-import 'last_step.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/steps/education_info.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/steps/resume_upload_page.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/progress_bar.dart';
+import 'first_step.dart';
+import 'steps/onboarding_complete_page.dart';
 import 'widgets/continue_button.dart';
 import 'index.dart';
 
@@ -16,7 +18,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   final PageController _controller = PageController();
   int currentPage = 0;
 
-  final int totalPages = 8;
+  final int totalPages = 9;
 
   /// 👉 NEXT
   void nextPage() {
@@ -49,10 +51,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
         child: Column(
           children: [
             /// 🔥 PROGRESS
-            ProgressBar(
-              currentPage: currentPage,
-              total: totalPages,
-            ),
+            ProgressBar(currentPage: currentPage, total: totalPages),
 
             /// 🔥 PAGES
             Expanded(
@@ -61,6 +60,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (i) => setState(() => currentPage = i),
                 children: [
+                  ResumeUploadPage(),
+
                   BasicPage(onBack: onBack),
                   EducationPage(onBack: onBack),
                   LinksPage(onBack: onBack),
@@ -68,15 +69,13 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                   SkillsDomainPage(onBack: onBack),
                   WorkPrefPage(onBack: onBack),
                   AchievementsPage(onBack: onBack),
-                  PreferencesPage(onBack : onBack)
+                  OnboardingCompletePage(onBack: onBack),
                 ],
               ),
             ),
 
             /// 🔥 BUTTON
-            ContinueButton(
-              onTap: nextPage,
-            ),
+            if (currentPage != totalPages - 1) ContinueButton(onTap: nextPage),
           ],
         ),
       ),
