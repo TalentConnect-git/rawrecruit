@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart' show RouteNames, UserType;
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/first_step.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
+
 import 'package:rawrecruit/src/features/application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/features/application/presentation/application_view.dart';
@@ -31,6 +35,8 @@ import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view/i
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
+import '../../feature/revamp_auth/index.dart';
+import '../../feature/revamp_profile/presentation/modern_profile_page.dart';
 import '../../features/application/presentation/view_model/application_view_model.dart';
 import '../../features/chat/index.dart';
 import '../../features/dashboard/presentation/internship_detail_page.dart';
@@ -52,12 +58,12 @@ class AppRouter {
       GoRoute(
         name: RouteNames.login,
         path: '/login',
-        builder: (_, _) => LoginView(),
+        builder: (_, _) => RevampLoginView(),
       ),
       GoRoute(
         name: RouteNames.register,
         path: '/register',
-        builder: (_, _) => RegisterView(),
+        builder: (_, _) => RevampRegisterView(),
       ),
       GoRoute(
         name: RouteNames.referralPostDetail,
@@ -155,6 +161,23 @@ class AppRouter {
           return AddEditProfileView(userProfile: userProfile);
         },
       ),
+       GoRoute(
+        name: RouteNames.onboarding,
+        path: '/onboarding',
+        builder: (context, state) {
+          return OnboardingFlow();
+        },
+      ),
+      
+      GoRoute(
+        name: RouteNames.userType,
+        path: '/userType',
+        builder: (context, state) {
+          return PreferencesPage();
+        },
+      ),
+          
+     
       GoRoute(
         name: RouteNames.applicantDetail,
         path: '/applicantDetail',
@@ -239,7 +262,7 @@ class AppRouter {
           GoRoute(
             name: RouteNames.myProfile,
             path: '/my-profile',
-            builder: (_, _) => MyProfileView(),
+            builder: (_, _) => ModernProfilePage(),
           ),
           GoRoute(
             name: RouteNames.chatUserList,

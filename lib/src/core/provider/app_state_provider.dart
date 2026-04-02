@@ -10,6 +10,7 @@ import 'package:rawrecruit/src/core/index.dart'
         APIFailure,
         SecretRepo,
         UserType;
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingRepository, UserProfile;
@@ -24,6 +25,13 @@ String get userId => auth?.id ?? '';
   bool get isProfessional => userType == UserType.professional;
 
   Auth? _auth;
+  UserType? _selectedUserType;
+UserType? get selectedUserType => _selectedUserType;
+
+set selectedUserType(UserType? type) {
+  _selectedUserType = type;
+  notifyListeners();
+}
   Auth? get auth => _auth;
   set auth(Auth? auth) {
     _auth = auth;
@@ -38,6 +46,12 @@ String get userId => auth?.id ?? '';
   UserProfile? get user => _user;
   set user(UserProfile? user) {
     _user = user;
+    notifyListeners();
+  }
+    OnboardingData? _onboardingData;
+  OnboardingData? get data => _onboardingData;
+  set data(OnboardingData? data) {
+    _onboardingData = data;
     notifyListeners();
   }
 

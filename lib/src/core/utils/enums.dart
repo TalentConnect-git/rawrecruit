@@ -18,6 +18,28 @@ extension UserTypeExt on UserType {
     }
   }
 
+  String get desc {
+    switch (this) {
+      case UserType.student:
+        return 'Let others find and refer you';
+      case UserType.fresher:
+        return 'Let others find and refer you';
+      case UserType.professional:
+        return 'Help candidates land roles at your company';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case UserType.student:
+        return Icons.person_add_alt_1;
+      case UserType.fresher:
+        return Icons.group;
+      case UserType.professional:
+        return Icons.work_outline;
+    }
+  }
+
   String get apiLabel {
     switch (this) {
       case UserType.student:

@@ -38,7 +38,7 @@ class _SplashViewState extends State<SplashView> {
         await appStateProvider.getUserDetails();
         if (appStateProvider.isAuthComplete) {
           if (appStateProvider.isProfileRemaining) {
-            next = RouteNames.addEditProfileView;
+            next = RouteNames.onboarding;
           } else {
             next = RouteNames.dashboard;
           }

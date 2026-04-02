@@ -40,7 +40,7 @@ class _HomeViewState extends State<HomeView> {
           popOnSuccess: false,
         );
         if (appStateProvider.isProfileRemaining) {
-          context.goNamed(RouteNames.addEditProfileView);
+          context.goNamed(RouteNames.onboarding);
         }
       }
     });

@@ -329,6 +329,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       child: Stack(
         children: [
           Scaffold(
+             backgroundColor: AppColors.kBg,
             appBar: RAppBar(
               leading: widget.userProfile != null
                   ? IconButton(
@@ -346,13 +347,16 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
             body: Form(
               key: _formKey,
               child: SingleChildScrollView(
+
                 physics: const BouncingScrollPhysics(),
                 padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
                 child: Column(
+
                   crossAxisAlignment: CrossAxisAlignment.center,
                   spacing: 20,
                   children: [
                     AppButton(
+                      backgroundColor: AppColors.kGreen,
                       onPressed: parseResumeAndFill,
                       child: const Text('Upload Resume & Autofill'),
                     ),
@@ -369,6 +373,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                           },
                         ),
                         AppTextFields(
+
                           controller: controller.name,
                           hint: 'Name',
                           validator: (v) =>
@@ -531,6 +536,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       AppButton(
+                        backgroundColor: AppColors.kGreen,
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
                             final failure =
@@ -716,21 +722,46 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       ),
     );
   }
+Widget _dropdownField(
+  TextEditingController ctrl,
+  String hint,
+  List<String> options,
 
-  Widget _dropdownField(
-    TextEditingController ctrl,
-    String hint,
-    List<String> options,
-  ) {
-    final selectedValue = options.contains(ctrl.text) ? ctrl.text : null;
-    return DropdownButtonFormField<String>(
-      value: selectedValue,
-      decoration: const InputDecoration(border: OutlineInputBorder()),
-      hint: Text(hint),
-      items: options.map((e) => DropdownMenuItem(value: e, child: Text(e))).toList(),
-      onChanged: (val) => setState(() => ctrl.text = val ?? ''),
-    );
-  }
+) {
+  final selectedValue = options.contains(ctrl.text) ? ctrl.text : null;
+  return DropdownButtonFormField<String>(
+    value: selectedValue,
+    decoration: InputDecoration(
+      border: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white), // ✅
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white), // ✅
+      ),
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: Colors.white), // ✅
+      ),
+         
+              floatingLabelStyle: AppTextStyles.s16W400.copyWith(
+                color: AppColors.white,
+              ),
+    ),
+    hint: Text(
+      hint,
+      style: TextStyle(color: Colors.white), // ✅
+    ),
+    items: options
+        .map((e) => DropdownMenuItem(
+              value: e,
+              child: Text(
+                e,
+                style: TextStyle(color: Colors.white), // optional but better
+              ),
+            ))
+        .toList(),
+    onChanged: (val) => setState(() => ctrl.text = val ?? ''),
+  );
+}
 
   Widget _datePickerField(TextEditingController ctrl, String hint) {
     return TextFormField(
