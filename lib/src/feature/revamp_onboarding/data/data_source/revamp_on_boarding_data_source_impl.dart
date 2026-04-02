@@ -1,0 +1,131 @@
+import 'dart:io';
+
+import 'package:dartz/dartz.dart';
+import 'package:dio/dio.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:rawrecruit/src/core/index.dart'
+    show
+        Request,
+        ResultFuture,
+        RequestMethod,
+        Endpoints,
+        APIException,
+        getIt,
+        NetworkService,
+        AppStateProvider;
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
+
+import 'revamp_on_boarding_data_source.dart';
+
+class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
+  final NetworkService _networkService = NetworkService();
+
+  @override
+  ResultFuture<OnboardingData?> getOnboardingUserProfile() async {
+    final Request request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.apiOnboardingMe,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final profile = OnboardingData.fromJson(response);
+        getIt<AppStateProvider>().data = profile;
+        return Right(profile);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  @override
+  ResultFuture<OnboardingData?> submitOnboardingUserProfile({
+    required Map<String, dynamic> body,
+    File? resume,
+    XFile? image,
+  }) async {
+    try {
+      // Build multipart form — file goes under key 'resume'
+      final formData = FormData.fromMap({
+        ...body,
+        if (resume != null)
+          'resume': await MultipartFile.fromFile(
+            resume.path,
+            filename: resume.path.split('/').last,
+          ),
+        if (image != null)
+          'profileImage': await MultipartFile.fromFile(
+            image.path,
+            filename: image.path.split('/').last,
+          ),
+      });
+
+      final Request request = Request(
+        method: RequestMethod.post,
+        endpoint: Endpoints.apiOnboarding,
+        isSafeRoute: true,
+        formData: formData, // ← FormData, not body
+      );
+
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final profile = OnboardingData.fromJson(response['onboarding']);
+        return Right(profile);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  @override
+  ResultFuture<OnboardingData?> updateOnboardingUserProfile({
+    required Map<String, dynamic> body,
+    File? resume, // ← ADD
+    XFile? image,
+  }) async {
+    try {
+      final formData = FormData.fromMap({
+        ...body,
+        if (image != null)
+          'profileImage': await MultipartFile.fromFile(
+            image.path,
+            filename: image.path.split('/').last,
+          ),
+        if (resume != null)
+          'resume': await MultipartFile.fromFile(
+            resume.path,
+            filename: resume.path.split('/').last,
+          ),
+      });
+
+      final Request request = Request(
+        method: RequestMethod.put,
+        endpoint: Endpoints.apiOnboardingUpdate,
+        isSafeRoute: true,
+        formData: formData, // ← FormData instead of body
+      );
+
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final profile = OnboardingData.fromJson(response['data']);
+        return Right(profile);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+}

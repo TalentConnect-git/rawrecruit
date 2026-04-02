@@ -72,31 +72,31 @@ class _AppTextFieldsState extends State<AppTextFields> {
             validator: widget.validator,
             decoration: InputDecoration(
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.text),
+                borderSide: BorderSide(color: AppColors.border),
                 borderRadius: BorderRadius.circular(8),
               ),
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primary),
+                borderSide: BorderSide(color: AppColors.kGreen),
                 borderRadius: BorderRadius.circular(8),
               ),
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.text),
+                borderSide: BorderSide(color: AppColors.white),
                 borderRadius: BorderRadius.circular(8),
               ),
               errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.text),
+                borderSide: BorderSide(color: AppColors.errorBorder),
                 borderRadius: BorderRadius.circular(8),
               ),
               focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primary),
+                borderSide: BorderSide(color: AppColors.kGreen),
                 borderRadius: BorderRadius.circular(8),
               ),
               labelText: widget.hint ?? '',
               labelStyle: AppTextStyles.s16W500.copyWith(
-                color: AppColors.secText,
+                color: AppColors.white,
               ),
               floatingLabelStyle: AppTextStyles.s16W400.copyWith(
-                color: AppColors.primary,
+                color: AppColors.white,
               ),
               errorStyle: AppTextStyles.s12W600.copyWith(color: Colors.red),
               isDense: true,
@@ -112,14 +112,14 @@ class _AppTextFieldsState extends State<AppTextFields> {
                           visible
                               ? Icons.remove_red_eye
                               : Icons.remove_red_eye_outlined,
-                          color: visible ? AppColors.primary : AppColors.text,
+                          color: visible ? AppColors.kGreen : AppColors.text,
                           size: 24,
                         ),
                       ),
                     )
                   : widget.suffixIcon,
             ),
-            style: AppTextStyles.s16W400.copyWith(color: AppColors.text),
+            style: AppTextStyles.s16W400.copyWith(color: AppColors.white),
           );
         },
       ),

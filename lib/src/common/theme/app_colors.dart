@@ -8,11 +8,14 @@ class AppColors {
   static Color primary = Color(0xff2f9db6);
   static Color background = Color(0xfffafafa);
   static Color border = Color(0xff858585);
+    static Color errorBorder = Color.fromARGB(255, 240, 41, 41);
+
   static Color shadow = Color(0xff000000).withValues(alpha: 0.2);
 
   static Color secText = Color(0xff858585);
   static Color secCard = Color(0xfffafafa);
   static Color secChip = Color(0xfffafafa);
+   static Color white = Color(0xffffffff);
   static Color secChipText = Color(0xff216579);
   static Color secondary = Color(0xfffafafa);
   static Color secBackground = Color(0xfffafafa);

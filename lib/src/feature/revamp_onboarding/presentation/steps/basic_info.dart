@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
+import '../../data/revamp_entities/onboarding_model.dart';
 import '../widgets/input_widgets.dart';
-
-class BasicPage extends StatelessWidget {
+class BasicPage extends StatefulWidget {
   final VoidCallback onBack;
+  final OnboardingData data;
 
-  const BasicPage({super.key, required this.onBack});
+  const BasicPage({
+    super.key,
+    required this.onBack,
+    required this.data,
+  });
 
-  /// ✅ Use SAME options as original file
+  /// ✅ OPTIONS HERE
   static const genderOptions = [
     "Male",
     "Female",
@@ -43,15 +48,69 @@ class BasicPage extends StatelessWidget {
   ];
 
   @override
+  State<BasicPage> createState() => _BasicPageState();
+}
+
+class _BasicPageState extends State<BasicPage> {
+  late TextEditingController nameCtrl;
+  late TextEditingController emailCtrl;
+  late TextEditingController phoneCtrl;
+  late TextEditingController dobCtrl;
+
+  String? gender;
+  String? ethnicity;
+  String? maritalStatus;
+  String? visaStatus;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final d = widget.data;
+
+    nameCtrl = TextEditingController(text: d.name);
+    emailCtrl = TextEditingController(text: d.email);
+    phoneCtrl = TextEditingController(text: d.phone);
+    dobCtrl = TextEditingController(text: d.dob);
+
+    gender = d.gender;
+    ethnicity = d.ethnicity;
+    maritalStatus = d.maritalStatus;
+    visaStatus = d.visaStatus;
+  }
+
+  void saveData() {
+    final d = widget.data;
+
+    d.name = nameCtrl.text;
+    d.email = emailCtrl.text;
+    d.phone = phoneCtrl.text;
+    d.dob = dobCtrl.text;
+
+    d.gender = gender;
+    d.ethnicity = ethnicity;
+    d.maritalStatus = maritalStatus;
+    d.visaStatus = visaStatus;
+  }
+
+  @override
+  void dispose() {
+    nameCtrl.dispose();
+    emailCtrl.dispose();
+    phoneCtrl.dispose();
+    dobCtrl.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Wrapper(
       title: "Basic",
       children: [
-        /// 🔙 HEADER
         AppHeader(
           title: "Your Professional",
           highlight: "details",
-          onBack: onBack,
+          onBack: widget.onBack,
         ),
 
         const SizedBox(height: 10),
@@ -63,34 +122,66 @@ class BasicPage extends StatelessWidget {
 
         const SizedBox(height: 16),
 
-        /// 🔥 INPUTS
-        const AppInput("Full Name"),
-        const AppInput("Email"),
-        const AppInput("Phone"),
+        AppInput("Full Name",
+            controller: nameCtrl, onChanged: (_) => saveData()),
+
+        AppInput("Email",
+            controller: emailCtrl, onChanged: (_) => saveData()),
+
+        AppInput("Phone",
+            controller: phoneCtrl, onChanged: (_) => saveData()),
 
         const SizedBox(height: 8),
 
-        /// 🔽 DROPDOWNS (NOW CORRECT)
         AppDropdown(
           hint: "Gender",
-          options: genderOptions,
+          value: gender,
+          options: BasicPage.genderOptions,
+          onChanged: (val) {
+            setState(() {
+              gender = val;
+              saveData();
+            });
+          },
         ),
 
-        const AppInput("Date of Birth"),
+        AppInput("Date of Birth",
+            controller: dobCtrl, onChanged: (_) => saveData()),
 
         AppDropdown(
           hint: "Ethnicity",
-          options: ethnicityOptions,
+          value: ethnicity,
+          options: BasicPage.ethnicityOptions,
+          onChanged: (val) {
+            setState(() {
+              ethnicity = val;
+              saveData();
+            });
+          },
         ),
 
         AppDropdown(
           hint: "Marital Status",
-          options: maritalStatusOptions,
+          value: maritalStatus,
+          options: BasicPage.maritalStatusOptions,
+          onChanged: (val) {
+            setState(() {
+              maritalStatus = val;
+              saveData();
+            });
+          },
         ),
 
         AppDropdown(
           hint: "Visa Status / Work Authorization",
-          options: visaStatusOptions,
+          value: visaStatus,
+          options: BasicPage.visaStatusOptions,
+          onChanged: (val) {
+            setState(() {
+              visaStatus = val;
+              saveData();
+            });
+          },
         ),
 
         const SizedBox(height: 20),

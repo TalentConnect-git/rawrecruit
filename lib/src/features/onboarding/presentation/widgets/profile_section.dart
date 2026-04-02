@@ -20,7 +20,7 @@ class ProfileSection extends StatelessWidget {
     return Container(
       padding: EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: AppColors.kCard,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(color: AppColors.shadow, blurRadius: 1, spreadRadius: 1),
@@ -34,8 +34,7 @@ class ProfileSection extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(label, style: AppTextStyles.s18W600),
-              ?trailing,
+Text(label, style: AppTextStyles.s18W600.copyWith(color: Colors.white), ),              ?trailing,
             ],
           ),
           ...children,

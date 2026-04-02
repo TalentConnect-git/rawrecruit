@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
-
 import '../../../../common/index.dart';
+import '../../data/revamp_entities/onboarding_model.dart';
+
 class SkillsDomainPage extends StatefulWidget {
   final VoidCallback onBack;
+  final OnboardingData data;
 
-  const SkillsDomainPage({super.key, required this.onBack});
+  const SkillsDomainPage({
+    super.key,
+    required this.onBack,
+    required this.data,
+  });
 
   @override
   State<SkillsDomainPage> createState() => _SkillsDomainPageState();
@@ -14,7 +20,7 @@ class SkillsDomainPage extends StatefulWidget {
 class _SkillsDomainPageState extends State<SkillsDomainPage> {
   final TextEditingController searchCtrl = TextEditingController();
 
-  List<String> selected = ["React", "TypeScript"];
+  List<String> selected = [];
 
   final List<String> popular = [
     "React",
@@ -37,14 +43,41 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
     "Swift",
   ];
 
+  @override
+  void initState() {
+    super.initState();
+
+    /// 🔥 LOAD FROM SHARED DATA
+    selected = List.from(widget.data.skills);
+  }
+
+  /// 🔥 SAVE TO SHARED DATA
+  void saveData() {
+    widget.data.skills = selected;
+  }
+
+  /// 🔥 ADD SKILL
   void addSkill(String skill) {
     if (!selected.contains(skill)) {
-      setState(() => selected.add(skill));
+      setState(() {
+        selected.add(skill);
+        saveData();
+      });
     }
   }
 
+  /// 🔥 REMOVE SKILL
   void removeSkill(String skill) {
-    setState(() => selected.remove(skill));
+    setState(() {
+      selected.remove(skill);
+      saveData();
+    });
+  }
+
+  @override
+  void dispose() {
+    searchCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,6 +88,7 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            /// 🔙 HEADER
             AppHeader(
               title: "Your",
               highlight: "skills",
@@ -70,7 +104,7 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
 
             const SizedBox(height: 16),
 
-            /// SEARCH FIELD
+            /// 🔍 SEARCH FIELD
             TextField(
               controller: searchCtrl,
               style: const TextStyle(color: Colors.white),
@@ -95,27 +129,32 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
 
             const SizedBox(height: 12),
 
-            /// SELECTED CHIPS
-            Wrap(
-              spacing: 8,
-              children: selected.map((skill) {
-                return Chip(
-                  label: Text(skill),
-                  backgroundColor: const Color(0xFF22C55E),
-                  labelStyle: const TextStyle(color: Colors.black),
-                  deleteIcon: const Icon(Icons.close, size: 18),
-                  onDeleted: () => removeSkill(skill),
-                );
-              }).toList(),
-            ),
+            /// ✅ SELECTED SKILLS
+            if (selected.isNotEmpty)
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: selected.map((skill) {
+                  return Chip(
+                    label: Text(skill),
+                    backgroundColor: const Color(0xFF22C55E),
+                    labelStyle: const TextStyle(color: Colors.black),
+                    deleteIcon: const Icon(Icons.close, size: 18),
+                    onDeleted: () => removeSkill(skill),
+                  );
+                }).toList(),
+              ),
 
             const SizedBox(height: 20),
 
-            const Text("POPULAR SKILLS", style: TextStyle(color: Colors.grey)),
+            const Text(
+              "POPULAR SKILLS",
+              style: TextStyle(color: Colors.grey),
+            ),
 
             const SizedBox(height: 10),
 
-            /// POPULAR CHIPS
+            /// 🔥 POPULAR SKILLS
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -123,7 +162,13 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
                 final isSelected = selected.contains(skill);
 
                 return GestureDetector(
-                  onTap: () => addSkill(skill),
+                  onTap: () {
+                    if (isSelected) {
+                      removeSkill(skill);
+                    } else {
+                      addSkill(skill);
+                    }
+                  },
                   child: Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
@@ -145,6 +190,8 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
                 );
               }).toList(),
             ),
+
+            const SizedBox(height: 20),
           ],
         ),
       ),

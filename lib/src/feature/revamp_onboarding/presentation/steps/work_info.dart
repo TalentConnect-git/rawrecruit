@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
+import '../../data/revamp_entities/onboarding_model.dart';
 
-class WorkPrefPage extends StatelessWidget {
+class WorkPrefPage extends StatefulWidget {
   final VoidCallback onBack;
+  final OnboardingData data;
 
-  const WorkPrefPage({super.key, required this.onBack});
+  const WorkPrefPage({
+    super.key,
+    required this.onBack,
+    required this.data,
+  });
 
-  /// ✅ FROM YOUR ORIGINAL FILE :contentReference[oaicite:1]{index=1}
+  @override
+  State<WorkPrefPage> createState() => _WorkPrefPageState();
+
   static const employmentOptions = [
     "Full-time",
     "Part-time",
@@ -83,17 +91,74 @@ class WorkPrefPage extends StatelessWidget {
     "Chinese",
     "Others",
   ];
+}
+
+class _WorkPrefPageState extends State<WorkPrefPage> {
+  String? employmentType;
+  String? lookingFor;
+
+  List<String> industry = [];
+  List<String> jobRoles = [];
+  List<String> languages = [];
+
+  late TextEditingController locationCtrl;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final d = widget.data;
+
+    employmentType =
+        d.employmentType.isNotEmpty ? d.employmentType.first : null;
+
+    lookingFor =
+        d.lookingFor.isNotEmpty ? d.lookingFor.first : null;
+
+    industry = List.from(d.industry);
+    jobRoles = List.from(d.jobRoles);
+    languages = List.from(d.languagesKnown);
+
+    locationCtrl =
+        TextEditingController(text: d.locations.join(", "));
+  }
+
+  void saveData() {
+    final d = widget.data;
+
+    d.employmentType =
+        employmentType != null ? [employmentType!] : [];
+
+    d.lookingFor =
+        lookingFor != null ? [lookingFor!] : [];
+
+    d.industry = industry;
+    d.jobRoles = jobRoles;
+    d.languagesKnown = languages;
+
+    d.locations = locationCtrl.text
+        .split(",")
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+  }
+
+  @override
+  void dispose() {
+    locationCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Wrapper(
       title: "Work Preferences",
       children: [
-        /// 🔙 HEADER
+        /// HEADER
         AppHeader(
           title: "Your Work",
           highlight: "Preferences",
-          onBack: onBack,
+          onBack: widget.onBack,
         ),
 
         const SizedBox(height: 10),
@@ -105,42 +170,80 @@ class WorkPrefPage extends StatelessWidget {
 
         const SizedBox(height: 20),
 
-        /// 🔥 EMPLOYMENT TYPE (SINGLE SELECT)
+        /// EMPLOYMENT TYPE
         AppDropdown(
           hint: "Employment Type",
-          options: employmentOptions,
+          options: WorkPrefPage.employmentOptions,
+          value: employmentType,
+          onChanged: (val) {
+            setState(() {
+              employmentType = val;
+              saveData();
+            });
+          },
         ),
+
         const SizedBox(height: 10),
 
-        /// 🔥 INDUSTRY (MULTI SELECT)
+        /// INDUSTRY
         AppMultiSelectChips(
           label: "Industry",
-          options: industryOptions,
+          options: WorkPrefPage.industryOptions,
+          initialValues: industry,
+          onChanged: (val) {
+            industry = val;
+            saveData();
+          },
         ),
+
         const SizedBox(height: 10),
 
-        /// 🔥 JOB ROLES (MULTI SELECT)
+        /// JOB ROLES
         AppMultiSelectChips(
           label: "Job Roles",
-          options: jobRoleOptions,
+          options: WorkPrefPage.jobRoleOptions,
+          initialValues: jobRoles,
+          onChanged: (val) {
+            jobRoles = val;
+            saveData();
+          },
         ),
+
         const SizedBox(height: 10),
 
-        /// 🔥 LOOKING FOR (SINGLE SELECT)
+        /// LOOKING FOR
         AppDropdown(
           hint: "Looking For",
-          options: lookingForOptions,
+          options: WorkPrefPage.lookingForOptions,
+          value: lookingFor,
+          onChanged: (val) {
+            setState(() {
+              lookingFor = val;
+              saveData();
+            });
+          },
         ),
 
         const SizedBox(height: 10),
 
-        /// 🔥 LOCATIONS (TEXT FOR NOW)
-        const AppInput("Preferred Locations"),
-SizedBox(height: 10,),
-        /// 🔥 LANGUAGES (MULTI SELECT)
+        /// LOCATIONS
+        AppInput(
+          "Preferred Locations (comma separated)",
+          controller: locationCtrl,
+          onChanged: (_) => saveData(),
+        ),
+
+        const SizedBox(height: 10),
+
+        /// LANGUAGES
         AppMultiSelectChips(
           label: "Languages Known",
-          options: languageOptions,
+          options: WorkPrefPage.languageOptions,
+          initialValues: languages,
+          onChanged: (val) {
+            languages = val;
+            saveData();
+          },
         ),
 
         const SizedBox(height: 20),

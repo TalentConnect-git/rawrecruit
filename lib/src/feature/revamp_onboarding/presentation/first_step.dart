@@ -7,7 +7,6 @@ import '../../../core/index.dart';
 import '../../../core/utils/enums.dart';
 
 class PreferencesPage extends StatefulWidget {
-
   const PreferencesPage({super.key});
 
   @override
@@ -16,18 +15,19 @@ class PreferencesPage extends StatefulWidget {
 
 class _PreferencesPageState extends State<PreferencesPage> {
   int selectedIndex = 0;
-UserType _mapIndexToUserType(int index) {
-  switch (index) {
-    case 0:
-      return UserType.student;
-    case 1:
-      return UserType.fresher;
-    case 2:
-      return UserType.professional;
-    default:
-      return UserType.student;
+  UserType _mapIndexToUserType(int index) {
+    switch (index) {
+      case 0:
+        return UserType.student;
+      case 1:
+        return UserType.fresher;
+      case 2:
+        return UserType.professional;
+      default:
+        return UserType.student;
+    }
   }
-}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,7 +45,7 @@ UserType _mapIndexToUserType(int index) {
                     AppHeader(
                       title: "How do you want to",
                       highlight: "use RawRecruit?",
-                //  onBack: () => {},
+                      //  onBack: () => {},
                     ),
 
                     const SizedBox(height: 8),
@@ -58,27 +58,27 @@ UserType _mapIndexToUserType(int index) {
                     const SizedBox(height: 24),
 
                     /// CARD 1
-                  _optionCard(
-  index: 0,
-  icon: Icons.school,
-  title: "Student",
-  subtitle: "Currently studying & exploring opportunities",
-),
-SizedBox(height: 15,),
+                    _optionCard(
+                      index: 0,
+                      icon: Icons.school,
+                      title: "Student",
+                      subtitle: "Currently studying & exploring opportunities",
+                    ),
+                    SizedBox(height: 15),
 
-_optionCard(
-  index: 1,
-  icon: Icons.person_outline,
-  title: "Fresher",
-  subtitle: "Recently graduated, looking for first job",
-),
-SizedBox(height: 15,),
-_optionCard(
-  index: 2,
-  icon: Icons.work,
-  title: "Professional",
-  subtitle: "Working professional seeking growth",
-),
+                    _optionCard(
+                      index: 1,
+                      icon: Icons.person_outline,
+                      title: "Fresher",
+                      subtitle: "Recently graduated, looking for first job",
+                    ),
+                    SizedBox(height: 15),
+                    _optionCard(
+                      index: 2,
+                      icon: Icons.work,
+                      title: "Professional",
+                      subtitle: "Working professional seeking growth",
+                    ),
                     const SizedBox(height: 16),
 
                     /// FOOTER TEXT
@@ -110,21 +110,22 @@ _optionCard(
                       borderRadius: BorderRadius.circular(12),
                     ),
                   ),
-                onPressed: () {
-  final userType = _mapIndexToUserType(selectedIndex);
+                  onPressed: () {
+                    final userType = _mapIndexToUserType(selectedIndex);
 
-  /// 🔥 STORE GLOBALLY
-getIt<AppStateProvider>().selectedUserType = userType;
-  /// 👉 GO TO REGISTER
-  context.pushNamed(RouteNames.register);
-},
+                    /// 🔥 STORE GLOBALLY
+                    getIt<AppStateProvider>().selectedUserType = userType;
+
+                    /// 👉 GO TO REGISTER
+                    context.pushNamed(RouteNames.register);
+                  },
                   child: const Text(
                     "Continue >",
                     style: TextStyle(color: Colors.black),
                   ),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -188,7 +189,9 @@ getIt<AppStateProvider>().selectedUserType = userType;
                         const SizedBox(width: 8),
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 2),
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.kGreen.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(8),
@@ -201,22 +204,20 @@ getIt<AppStateProvider>().selectedUserType = userType;
                             ),
                           ),
                         ),
-                      ]
+                      ],
                     ],
                   ),
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style:
-                        const TextStyle(color: Colors.grey, fontSize: 12),
+                    style: const TextStyle(color: Colors.grey, fontSize: 12),
                   ),
                 ],
               ),
             ),
 
             /// CHECK ICON
-            if (isSelected)
-              Icon(Icons.check_circle, color: AppColors.kGreen),
+            if (isSelected) Icon(Icons.check_circle, color: AppColors.kGreen),
           ],
         ),
       ),

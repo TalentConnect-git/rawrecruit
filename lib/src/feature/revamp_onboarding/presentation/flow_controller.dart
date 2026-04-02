@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/data_source/revamp_on_boarding_data_source_impl.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/index.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/steps/education_info.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/steps/resume_upload_page.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/progress_bar.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/data_source/revamp_on_boarding_data_source.dart';
+
 import 'first_step.dart';
 import 'steps/onboarding_complete_page.dart';
 import 'widgets/continue_button.dart';
@@ -20,6 +27,14 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   final int totalPages = 9;
 
+  /// 🔥 SHARED DATA
+  final OnboardingData data = OnboardingData();
+
+  /// 🔥 REPO
+  final repo = RevampOnboardingRepositoryImpl(
+    onboardingDataSource: RevampOnboardingDataSourceImpl(),
+  );
+
   /// 👉 NEXT
   void nextPage() {
     if (currentPage < totalPages - 1) {
@@ -30,7 +45,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     }
   }
 
-  /// 👉 BACK (IMPORTANT FIX)
+  /// 👉 BACK
   void onBack() {
     if (currentPage > 0) {
       _controller.previousPage(
@@ -38,8 +53,34 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
         curve: Curves.easeInOut,
       );
     } else {
-      // optional: exit onboarding
       Navigator.pop(context);
+    }
+  }
+
+  /// 🚀 FINAL SUBMIT
+  Future<void> submitOnboarding() async {
+    try {
+      final body = data.toJson();
+
+      final result = await repo.submitOnboardingUserProfile(
+        body: body,
+      );
+
+      result.fold(
+        (failure) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(failure.message ?? '')),
+          );
+        },
+        (profile) {
+          context.pushReplacementNamed(
+                              RouteNames.dashboard,
+                              extra: getIt<AppStateProvider>().userType,
+                            );
+        },
+      );
+    } catch (e) {
+      debugPrint(e.toString());
     }
   }
 
@@ -50,7 +91,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       body: SafeArea(
         child: Column(
           children: [
-            /// 🔥 PROGRESS
+            /// 🔥 PROGRESS BAR
             ProgressBar(currentPage: currentPage, total: totalPages),
 
             /// 🔥 PAGES
@@ -60,22 +101,30 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                 physics: const NeverScrollableScrollPhysics(),
                 onPageChanged: (i) => setState(() => currentPage = i),
                 children: [
+                  /// (skip resume for now or keep simple)
                   ResumeUploadPage(),
 
-                  BasicPage(onBack: onBack),
-                  EducationPage(onBack: onBack),
-                  LinksPage(onBack: onBack),
-                  CareerPage(onBack: onBack),
-                  SkillsDomainPage(onBack: onBack),
-                  WorkPrefPage(onBack: onBack),
-                  AchievementsPage(onBack: onBack),
-                  OnboardingCompletePage(onBack: onBack),
+                  /// 🔥 ALL PAGES CONNECTED TO DATA
+                  BasicPage(onBack: onBack, data: data),
+                  EducationPage(onBack: onBack, data: data),
+                  LinksPage(onBack: onBack, data: data),
+                  CareerPage(onBack: onBack, data: data),
+                  SkillsDomainPage(onBack: onBack, data: data),
+                  WorkPrefPage(onBack: onBack, data: data),
+                  AchievementsPage(onBack: onBack, data: data),
+
+                  /// 🔥 FINAL PAGE
+                  OnboardingCompletePage(
+                    onBack: onBack,
+                    onSubmit: submitOnboarding,
+                  ),
                 ],
               ),
             ),
 
-            /// 🔥 BUTTON
-            if (currentPage != totalPages - 1) ContinueButton(onTap: nextPage),
+            /// 🔥 CONTINUE BUTTON
+            if (currentPage != totalPages - 1)
+              ContinueButton(onTap: nextPage),
           ],
         ),
       ),

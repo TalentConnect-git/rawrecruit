@@ -1,30 +1,106 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
+import '../../data/revamp_entities/onboarding_model.dart';
 
-class CareerPage extends StatelessWidget {
+class CareerPage extends StatefulWidget {
   final VoidCallback onBack;
+  final OnboardingData data;
 
-  const CareerPage({super.key, required this.onBack});
+  const CareerPage({
+    super.key,
+    required this.onBack,
+    required this.data,
+  });
 
-  /// ✅ FROM YOUR ORIGINAL FILE :contentReference[oaicite:0]{index=0}
+  @override
+  State<CareerPage> createState() => _CareerPageState();
+
   static const shiftOptions = [
     "Day",
     "Night",
     "Rotational",
     "Any",
   ];
+}
+
+class _CareerPageState extends State<CareerPage> {
+  String? shift;
+
+  late TextEditingController currentSalaryCtrl;
+  late TextEditingController currentCurrencyCtrl;
+  late TextEditingController expectedSalaryCtrl;
+  late TextEditingController expectedCurrencyCtrl;
+  late TextEditingController aboutCtrl;
+
+  /// ✅ FIXED (STRING instead of list)
+  String? certifications;
+
+  @override
+  void initState() {
+    super.initState();
+
+    final d = widget.data;
+
+    shift = d.openToShift;
+
+    currentSalaryCtrl =
+        TextEditingController(text: d.currentSalaryAmount);
+    currentCurrencyCtrl =
+        TextEditingController(text: d.currentSalaryCurrency);
+
+    expectedSalaryCtrl =
+        TextEditingController(text: d.expectedSalaryAmount);
+    expectedCurrencyCtrl =
+        TextEditingController(text: d.expectedSalaryCurrency);
+
+    aboutCtrl = TextEditingController(text: d.about);
+
+    /// ✅ convert existing string → UI list format
+    certifications = d.certifications;
+  }
+
+  void saveData() {
+    final d = widget.data;
+
+    d.openToShift = shift;
+
+    d.currentSalaryAmount = currentSalaryCtrl.text;
+    d.currentSalaryCurrency = currentCurrencyCtrl.text;
+
+    d.expectedSalaryAmount = expectedSalaryCtrl.text;
+    d.expectedSalaryCurrency = expectedCurrencyCtrl.text;
+
+    d.about = aboutCtrl.text;
+
+    /// ✅ store as STRING
+    d.certifications = certifications;
+  }
+
+  @override
+  void dispose() {
+    currentSalaryCtrl.dispose();
+    currentCurrencyCtrl.dispose();
+    expectedSalaryCtrl.dispose();
+    expectedCurrencyCtrl.dispose();
+    aboutCtrl.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    /// 🔥 convert string → list for UI
+    final selectedList = certifications != null && certifications!.isNotEmpty
+        ? certifications!.split(",")
+        : <String>[];
+
     return Wrapper(
       title: "Career",
       children: [
-        /// 🔙 HEADER
         AppHeader(
           title: "Your Career",
           highlight: "details",
-          onBack: onBack,
+          onBack: widget.onBack,
         ),
 
         const SizedBox(height: 10),
@@ -36,21 +112,38 @@ class CareerPage extends StatelessWidget {
 
         const SizedBox(height: 16),
 
-        /// 🔥 FIXED DROPDOWN
+        /// SHIFT
         AppDropdown(
           hint: "Open To Shift",
-          options: shiftOptions,
+          options: CareerPage.shiftOptions,
+          value: shift,
+          onChanged: (val) {
+            setState(() {
+              shift = val;
+              saveData();
+            });
+          },
         ),
 
-        /// 🔥 INPUTS (FIXED)
-        const AppInput("Current Salary"),
-        const AppInput("Current Currency"),
-        const AppInput("Expected Salary"),
-        const AppInput("Expected Currency"),
+        /// SALARY
+        AppInput("Current Salary",
+            controller: currentSalaryCtrl,
+            onChanged: (_) => saveData()),
+
+        AppInput("Current Currency",
+            controller: currentCurrencyCtrl,
+            onChanged: (_) => saveData()),
+
+        AppInput("Expected Salary",
+            controller: expectedSalaryCtrl,
+            onChanged: (_) => saveData()),
+
+        AppInput("Expected Currency",
+            controller: expectedCurrencyCtrl,
+            onChanged: (_) => saveData()),
 
         const SizedBox(height: 20),
 
-        /// 🔥 KEEP THIS SECTION (AS YOU WANTED)
         const Text(
           "Certifications and more",
           style: TextStyle(color: Colors.grey),
@@ -58,21 +151,36 @@ class CareerPage extends StatelessWidget {
 
         const SizedBox(height: 10),
 
-        const AppInput("About"),
-           const SizedBox(height: 8),
-   AppMultiSelectChips(
-  label: "Certifications",
-  options: [
-    "AWS Certified",
-    "Google Cloud",
-    "Azure",
-    "PMP",
-    "Scrum Master",
-    "Oracle",
-    "Cisco",
-    "Others",
-  ],
-),
+        /// ABOUT
+        AppInput(
+          "About",
+          controller: aboutCtrl,
+          maxLines: 4,
+          onChanged: (_) => saveData(),
+        ),
+
+        const SizedBox(height: 8),
+
+        /// ✅ CERTIFICATIONS (STRING <-> LIST CONVERSION)
+        AppMultiSelectChips(
+          label: "Certifications",
+          options: [
+            "AWS Certified",
+            "Google Cloud",
+            "Azure",
+            "PMP",
+            "Scrum Master",
+            "Oracle",
+            "Cisco",
+            "Others",
+          ],
+          initialValues: selectedList,
+          onChanged: (val) {
+            /// convert list → string
+            certifications = val.join(",");
+            saveData();
+          },
+        ),
 
         const SizedBox(height: 20),
       ],

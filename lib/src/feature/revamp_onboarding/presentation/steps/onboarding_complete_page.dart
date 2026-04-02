@@ -4,13 +4,38 @@ import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wr
 
 import '../widgets/input_widgets.dart';
 
-class OnboardingCompletePage extends StatelessWidget {
+class OnboardingCompletePage extends StatefulWidget {
   final VoidCallback onBack;
+  final Future<void> Function() onSubmit; // 🔥 IMPORTANT
 
   const OnboardingCompletePage({
     super.key,
     required this.onBack,
+    required this.onSubmit,
   });
+
+  @override
+  State<OnboardingCompletePage> createState() =>
+      _OnboardingCompletePageState();
+}
+
+class _OnboardingCompletePageState
+    extends State<OnboardingCompletePage> {
+  bool isLoading = false;
+
+  Future<void> handleSubmit() async {
+    setState(() => isLoading = true);
+
+    try {
+      await widget.onSubmit();
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+
+    if (mounted) {
+      setState(() => isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +46,7 @@ class OnboardingCompletePage extends StatelessWidget {
         AppHeader(
           title: "",
           highlight: "",
-          onBack: onBack,
+          onBack: widget.onBack,
         ),
 
         const SizedBox(height: 20),
@@ -95,7 +120,8 @@ class OnboardingCompletePage extends StatelessWidget {
           decoration: BoxDecoration(
             color: AppColors.kCard,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.kGreen.withOpacity(0.4)),
+            border:
+                Border.all(color: AppColors.kGreen.withOpacity(0.4)),
           ),
           child: Row(
             children: const [
@@ -113,7 +139,7 @@ class OnboardingCompletePage extends StatelessWidget {
 
         const SizedBox(height: 30),
 
-        /// 👉 CTA BUTTON
+        /// 🔥 CTA BUTTON
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -124,11 +150,20 @@ class OnboardingCompletePage extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
             ),
-            onPressed: () => {},
-            child: const Text(
-              "👉 Go to Home  >",
-              style: TextStyle(color: Colors.black),
-            ),
+            onPressed: isLoading ? null : handleSubmit,
+            child: isLoading
+                ? const SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.black,
+                    ),
+                  )
+                : const Text(
+                    "👉 Go to Home  >",
+                    style: TextStyle(color: Colors.black),
+                  ),
           ),
         ),
 
@@ -161,9 +196,7 @@ class OnboardingCompletePage extends StatelessWidget {
             ),
             child: Icon(icon, color: iconColor, size: 18),
           ),
-
           const SizedBox(width: 12),
-
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -175,8 +208,8 @@ class OnboardingCompletePage extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style:
-                      const TextStyle(color: Colors.grey, fontSize: 12),
+                  style: const TextStyle(
+                      color: Colors.grey, fontSize: 12),
                 ),
               ],
             ),

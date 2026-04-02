@@ -2,16 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
 class AppInput extends StatelessWidget {
   final String hint;
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
+  final TextInputType? keyboardType;
+  final int maxLines;
 
-  const AppInput(this.hint, {super.key});
+  const AppInput(
+    this.hint, {
+    super.key,
+    this.controller,
+    this.onChanged,
+    this.keyboardType,
+    this.maxLines = 1,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(top: 16),
       child: TextField(
+        controller: controller,
+        onChanged: onChanged,
+        keyboardType: keyboardType,
+        maxLines: maxLines,
         style: const TextStyle(color: Colors.white),
-         decoration: appInputDecoration(hint),
+        decoration: appInputDecoration(hint),
       ),
     );
   }
@@ -86,15 +101,18 @@ class _AppDropdownState extends State<AppDropdown> {
     );
   }
 }
-
 class AppMultiSelectChips extends StatefulWidget {
   final String label;
   final List<String> options;
+  final List<String> initialValues;
+  final Function(List<String>)? onChanged;
 
   const AppMultiSelectChips({
     super.key,
     required this.label,
     required this.options,
+    this.initialValues = const [],
+    this.onChanged,
   });
 
   @override
@@ -107,6 +125,22 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
   List<String> selected = [];
   bool showCustom = false;
 
+  @override
+  void initState() {
+    super.initState();
+
+    selected = List.from(widget.initialValues);
+
+    /// show custom input if "Others" selected
+    showCustom = selected.contains("Others");
+  }
+
+  void notifyParent() {
+    if (widget.onChanged != null) {
+      widget.onChanged!(selected);
+    }
+  }
+
   void toggle(String value) {
     setState(() {
       if (selected.contains(value)) {
@@ -117,18 +151,30 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
         if (value == "Others") showCustom = true;
       }
     });
+
+    notifyParent();
   }
 
   void addCustom(String val) {
     if (val.trim().isEmpty) return;
+
     setState(() {
       selected.add(val.trim());
       customCtrl.clear();
     });
+
+    notifyParent();
   }
 
   void remove(String val) {
     setState(() => selected.remove(val));
+    notifyParent();
+  }
+
+  @override
+  void dispose() {
+    customCtrl.dispose();
+    super.dispose();
   }
 
   @override
@@ -152,8 +198,7 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
           width: double.infinity,
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color:     Colors.grey.shade900,
-
+            color: Colors.grey.shade900,
             borderRadius: BorderRadius.circular(14),
             border: Border.all(color: AppColors.kBorder),
           ),
@@ -198,17 +243,17 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
 
               const SizedBox(height: 12),
 
-              /// CUSTOM INPUT (ONLY IF OTHERS SELECTED)
+              /// CUSTOM INPUT
               if (showCustom) ...[
                 TextField(
                   controller: customCtrl,
                   style: const TextStyle(color: Colors.white),
                   onSubmitted: addCustom,
                   decoration: InputDecoration(
-                    hintText: "Add custom certification",
+                    hintText: "Add custom value",
                     hintStyle: const TextStyle(color: Colors.grey),
                     filled: true,
-        fillColor: Colors.grey.shade900,
+                    fillColor: Colors.grey.shade900,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -217,7 +262,7 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
                 const SizedBox(height: 10),
               ],
 
-              /// SELECTED CHIPS
+              /// CUSTOM CHIPS
               if (customItems.isNotEmpty)
                 Wrap(
                   spacing: 8,
