@@ -13,7 +13,7 @@ class SplashView extends StatefulWidget {
 }
 
 class _SplashViewState extends State<SplashView> {
-  String next = RouteNames.login;
+  String next = RouteNames.revampLogin;
   final ValueNotifier<bool> isLoading = ValueNotifier(false);
 
   final appStateProvider = getIt<AppStateProvider>();
@@ -44,11 +44,11 @@ class _SplashViewState extends State<SplashView> {
           }
         } else {
           await SecretRepo.remove('auth_token');
-          next = RouteNames.login;
+          next = RouteNames.revampLogin;
         }
       } catch (e) {
         await SecretRepo.remove('auth_token');
-        next = RouteNames.login;
+        next = RouteNames.revampLogin;
       }
     }
 

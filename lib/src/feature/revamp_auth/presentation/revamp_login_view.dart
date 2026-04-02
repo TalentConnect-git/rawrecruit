@@ -167,7 +167,7 @@ class _LoginViewState extends State<RevampLoginView> {
                   /// 🔹 SIGN UP
                   GestureDetector(
                     onTap: () {
-                      context.pushReplacementNamed(RouteNames.revampRegister);
+                      context.pushReplacementNamed(RouteNames.userType);
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,

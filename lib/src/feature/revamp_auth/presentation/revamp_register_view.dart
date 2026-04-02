@@ -52,8 +52,10 @@ void initState() {
         backgroundColor: Colors.black,
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.all(20),
-            child: Form(
+padding: EdgeInsets.symmetric(
+  horizontal: 20,
+  vertical: MediaQuery.of(context).size.height * 0.15,
+),            child: Form(
               key: _formKey,
 
               /// ✅ USING UPDATED AUTH CARD (IMPORTANT)
