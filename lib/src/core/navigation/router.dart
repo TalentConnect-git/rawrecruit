@@ -53,16 +53,7 @@ class AppRouter {
         path: '/',
         builder: (_, _) => SplashView(),
       ),
-      GoRoute(
-        name: RouteNames.login,
-        path: '/login',
-        builder: (_, _) => LoginView(),
-      ),
-      GoRoute(
-        name: RouteNames.register,
-        path: '/register',
-        builder: (_, _) => RegisterView(),
-      ),
+      
       GoRoute(
         name: RouteNames.referralPostDetail,
         path: '/referral-post-detail',
@@ -168,22 +159,7 @@ class AppRouter {
         },
       ),
           
-      GoRoute(
-        name: RouteNames.revampRegister,
-        path: '/revampRegister',
-        builder: (context, state) {
-          return RevampRegisterView();
-        },
-      ),
-
-      GoRoute(
-        name: RouteNames.revampLogin,
-        path: '/revampLogin',
-        builder: (context, state) {
-          return RevampLoginView();
-        },
-      ),
-
+     
       GoRoute(
         name: RouteNames.applicantDetail,
         path: '/applicantDetail',

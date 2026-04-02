@@ -240,7 +240,7 @@ padding: EdgeInsets.symmetric(
                     Center(
                       child: GestureDetector(
                         onTap: () {
-                          context.pushReplacementNamed(RouteNames.revampLogin);
+                          context.pushReplacementNamed(RouteNames.login);
                         },
                         child: RichText(
                           text: const TextSpan(

@@ -116,7 +116,7 @@ _optionCard(
   /// 🔥 STORE GLOBALLY
 getIt<AppStateProvider>().selectedUserType = userType;
   /// 👉 GO TO REGISTER
-  context.pushNamed(RouteNames.revampRegister);
+  context.pushNamed(RouteNames.register);
 },
                   child: const Text(
                     "Continue >",
