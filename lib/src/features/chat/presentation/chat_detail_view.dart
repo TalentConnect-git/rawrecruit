@@ -44,13 +44,15 @@ class _ChatDetailViewState extends State<ChatDetailView> {
     final vm = context.watch<ChatViewModel>();
 
     return Scaffold(
+      backgroundColor: AppColors.kBg,
+
       body: Column(
         children: [
           Container(
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 20),
             decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(bottom: BorderSide(color: Colors.black)),
+              color: AppColors.kBg,
+              border: Border(bottom: BorderSide(color: Colors.white12)),
             ),
 
             child: Row(
@@ -58,13 +60,13 @@ class _ChatDetailViewState extends State<ChatDetailView> {
               children: [
                 GestureDetector(
                   onTap: context.pop,
-                  child: Icon(Icons.keyboard_arrow_left),
+                  child: Icon(Icons.keyboard_arrow_left, color: Colors.white),
                 ),
 
                 Stack(
                   children: [
                     CircleAvatar(
-                      radius: 20,
+                      backgroundColor: AppColors.kGreen,
                       backgroundImage:
                           (widget.user.profileImage != null &&
                               widget.user.profileImage!.isNotEmpty)
@@ -73,7 +75,12 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                       child:
                           (widget.user.profileImage == null ||
                               widget.user.profileImage!.isEmpty)
-                          ? const Icon(Icons.person)
+                          ? Text(
+                              name(widget.user).getInitials,
+                              style: AppTextStyles.s18W600.copyWith(
+                                color: AppColors.kBg,
+                              ),
+                            )
                           : null,
                     ),
 
@@ -102,36 +109,16 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (widget.user.name == null && widget.user.email == null)
-                        Flexible(
-                          child: Text(
-                            'Anonymous User',
-                            style: AppTextStyles.s16W600.copyWith(
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            maxLines: 1,
+                      Flexible(
+                        child: Text(
+                          name(widget.user),
+                          style: AppTextStyles.s16W400.copyWith(
+                            overflow: TextOverflow.ellipsis,
+                            color: Colors.white,
                           ),
+                          maxLines: 1,
                         ),
-                      if (widget.user.name != null)
-                        Flexible(
-                          child: Text(
-                            widget.user.name ?? "-",
-                            style: AppTextStyles.s16W600.copyWith(
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            maxLines: 1,
-                          ),
-                        ),
-                      if (widget.user.email != null)
-                        Flexible(
-                          child: Text(
-                            widget.user.email ?? "-",
-                            style: AppTextStyles.s16W400.copyWith(
-                              overflow: TextOverflow.ellipsis,
-                            ),
-                            maxLines: 1,
-                          ),
-                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -157,7 +144,7 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                     padding: const EdgeInsets.all(10),
                     margin: const EdgeInsets.all(6),
                     decoration: BoxDecoration(
-                      color: isMe ? Colors.blue : Colors.grey.shade300,
+                      color: isMe ? AppColors.kGreen : Colors.grey.shade300,
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Text(
@@ -181,7 +168,7 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                     controller: controller,
                     hint: 'Type message',
                     suffixIcon: IconButton(
-                      icon: const Icon(Icons.send),
+                      icon: Icon(Icons.send, color: AppColors.kGreen),
                       onPressed: () {
                         final text = controller.text;
 
@@ -200,5 +187,17 @@ class _ChatDetailViewState extends State<ChatDetailView> {
         ],
       ),
     );
+  }
+
+  String name(ChatUserModel user) {
+    if (user.name != null && user.name!.trim().isNotEmpty) {
+      return user.name!;
+    }
+
+    if (user.email != null && user.email!.trim().isNotEmpty) {
+      return user.email!;
+    }
+
+    return "Anonymous User";
   }
 }

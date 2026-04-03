@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/core/index.dart';
 
 enum UserType { student, fresher, professional }
 
@@ -117,27 +118,28 @@ extension UserStatusExt on UserStatus {
   }
 }
 
-enum NavItem { home, jobs, applications, shortlist, profile, chat }
+enum NavItem { home, referrer, applications, shortlist, chat }
 
 extension NavItemExt on NavItem {
-  static List<NavItem> get professionals => NavItem.values;
+  static List<NavItem> get professionals => NavItem.values
+      .where((element) => element != NavItem.applications)
+      .toList();
 
   static List<NavItem> get freshers =>
-      NavItem.values.where((element) => element != NavItem.jobs).toList();
+      NavItem.values.where((element) => element != NavItem.referrer).toList();
 
   String get label {
     switch (this) {
       case NavItem.home:
         return 'Home';
-      case NavItem.jobs:
-        return 'My Jobs';
-
+      case NavItem.referrer:
+        return 'Referrer';
       case NavItem.applications:
         return 'Application';
       case NavItem.shortlist:
         return 'Shortlist';
-      case NavItem.profile:
-        return 'Profile';
+      // case NavItem.profile:
+      //   return 'Profile';
       case NavItem.chat:
         return 'Chat';
     }
@@ -151,13 +153,12 @@ extension NavItemExt on NavItem {
         return Icons.assignment;
       case NavItem.shortlist:
         return Icons.bookmark;
-      case NavItem.jobs:
-        return Icons.bookmark_add;
-
-      case NavItem.profile:
-        return Icons.person;
+      case NavItem.referrer:
+        return Icons.group;
+      // case NavItem.profile:
+      //   return Icons.person;
       case NavItem.chat:
-        return Icons.chat;
+        return Icons.chat_bubble;
     }
   }
 
@@ -169,12 +170,29 @@ extension NavItemExt on NavItem {
         return Icons.assignment_outlined;
       case NavItem.shortlist:
         return Icons.bookmark_outline;
-      case NavItem.profile:
-        return Icons.person_outline;
-      case NavItem.jobs:
-        return Icons.bookmark_add_outlined;
+      // case NavItem.profile:
+      //   return Icons.person_outline;
+      case NavItem.referrer:
+        return Icons.group_outlined;
       case NavItem.chat:
-        return Icons.chat_outlined;
+        return Icons.chat_bubble_outline;
+    }
+  }
+
+  String get path {
+    switch (this) {
+      case NavItem.home:
+        return RouteNames.dashboard;
+      case NavItem.applications:
+        return RouteNames.application;
+      case NavItem.shortlist:
+        return RouteNames.shortlist;
+      // case NavItem.profile:
+      //   return Icons.person_outline;
+      case NavItem.referrer:
+        return RouteNames.jobPosted;
+      case NavItem.chat:
+        return RouteNames.chatUserList;
     }
   }
 }

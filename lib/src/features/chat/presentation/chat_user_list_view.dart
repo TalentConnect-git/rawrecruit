@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/common/theme/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/chat/data/entities/chat_user_model.dart';
 
 import '../index.dart';
 import 'chat_detail_view.dart';
@@ -42,7 +44,7 @@ class _ChatUserListViewState extends State<ChatUserListView> {
   Widget build(BuildContext context) {
     final vm = context.watch<ChatViewModel>();
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.kBg,
       body: Builder(
         builder: (_) {
           if (vm.viewState == ViewState.busy) {
@@ -54,18 +56,17 @@ class _ChatUserListViewState extends State<ChatUserListView> {
           }
 
           return ListView.separated(
-            padding: const EdgeInsets.all(16),
+            padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
             itemCount: vm.users.length,
-            separatorBuilder: (_, _) => Divider(),
+            separatorBuilder: (_, _) => Divider(color: AppColors.kBg),
             itemBuilder: (context, index) {
               final user = vm.users[index];
               final unread = vm.getUnreadCount(user.id!);
-              debugPrint("USER ID: ${user.id}");
-              debugPrint("ONLINE USERS: ${vm.onlineUsers}");
               return ListTile(
                 leading: Stack(
                   children: [
                     CircleAvatar(
+                      backgroundColor: AppColors.kGreen,
                       backgroundImage:
                           (user.profileImage != null &&
                               user.profileImage!.isNotEmpty)
@@ -74,7 +75,12 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                       child:
                           (user.profileImage == null ||
                               user.profileImage!.isEmpty)
-                          ? const Icon(Icons.person)
+                          ? Text(
+                              name(user).getInitials,
+                              style: AppTextStyles.s18W600.copyWith(
+                                color: AppColors.kBg,
+                              ),
+                            )
                           : null,
                     ),
 
@@ -109,12 +115,14 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                       )
                     : null,
                 title: Text(
-                  (user.name != null && user.name!.trim().isNotEmpty)
-                      ? user.name!
-                      : (user.email ?? "-"),
+                  name(user),
+                  style: AppTextStyles.s16W400.copyWith(color: Colors.white),
                   overflow: TextOverflow.ellipsis,
                 ),
-                subtitle: Text(user.userType ?? "-"),
+                subtitle: Text(
+                  user.userType?.toCapitalise ?? "-",
+                  style: AppTextStyles.s12W400.copyWith(color: Colors.white),
+                ),
                 onTap: () async {
                   final vm = context.read<ChatViewModel>();
 
@@ -135,6 +143,18 @@ class _ChatUserListViewState extends State<ChatUserListView> {
         },
       ),
     );
+  }
+
+  String name(ChatUserModel user) {
+    if (user.name != null && user.name!.trim().isNotEmpty) {
+      return user.name!;
+    }
+
+    if (user.email != null && user.email!.trim().isNotEmpty) {
+      return user.email!;
+    }
+
+    return "Anonymous User";
   }
 
   @override
