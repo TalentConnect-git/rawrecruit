@@ -31,6 +31,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/ref
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
+import 'package:rawrecruit/src/features/referral/presentation/index.dart';
 import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view/interview_screen.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
@@ -49,6 +50,7 @@ import '../services/dependency_locator.dart';
 
 class AppRouter {
   GoRouter router = GoRouter(
+    initialLocation: '/',
     routes: [
       GoRoute(
         name: RouteNames.splash,
@@ -161,14 +163,14 @@ class AppRouter {
           return AddEditProfileView(userProfile: userProfile);
         },
       ),
-       GoRoute(
+      GoRoute(
         name: RouteNames.onboarding,
         path: '/onboarding',
         builder: (context, state) {
           return OnboardingFlow();
         },
       ),
-      
+
       GoRoute(
         name: RouteNames.userType,
         path: '/userType',
@@ -176,8 +178,7 @@ class AppRouter {
           return PreferencesPage();
         },
       ),
-          
-     
+
       GoRoute(
         name: RouteNames.applicantDetail,
         path: '/applicantDetail',
@@ -207,6 +208,11 @@ class AppRouter {
         builder: (_, state) =>
             InterviewDetailScreen(interviewId: state.extra as String?),
       ),
+      GoRoute(
+        name: RouteNames.myProfile,
+        path: '/my-profile',
+        builder: (_, _) => ModernProfilePage(),
+      ),
 
       ShellRoute(
         builder: (context, state, navigationShell) {
@@ -222,7 +228,7 @@ class AppRouter {
             builder: (_, state) {
               final type = state.extra as UserType?;
               if (type == UserType.professional) {
-                return ReferralJobListing();
+                return ReferralHome();
               } else {
                 return DashboardView();
               }
@@ -257,12 +263,6 @@ class AppRouter {
                 return ApplicationsView();
               }
             },
-          ),
-
-          GoRoute(
-            name: RouteNames.myProfile,
-            path: '/my-profile',
-            builder: (_, _) => ModernProfilePage(),
           ),
           GoRoute(
             name: RouteNames.chatUserList,

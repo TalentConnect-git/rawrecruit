@@ -16,8 +16,10 @@ class RevampLoginView extends StatefulWidget {
 class _LoginViewState extends State<RevampLoginView> {
   final _formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController();
-  final passController = TextEditingController();
+  final emailController = TextEditingController(
+    text: 'namrahsarfaraz2006+test@gmail.com',
+  );
+  final passController = TextEditingController(text: 'Test@123');
 
   final RevampLoginViewModel loginViewModel = RevampLoginViewModel();
 
@@ -98,9 +100,7 @@ class _LoginViewState extends State<RevampLoginView> {
                           successMsg: 'Login Successful!',
                           popOnSuccess: false,
                           successCallback: () {
-                            context.pushReplacementNamed(
-                              RouteNames.dashboard,
-                            );
+                            context.pushReplacementNamed(RouteNames.dashboard);
                           },
                         );
                       }
@@ -116,8 +116,8 @@ class _LoginViewState extends State<RevampLoginView> {
                   Row(
                     children: [
                       Expanded(
-                          child: Divider(
-                              color: Colors.grey.withOpacity(0.3))),
+                        child: Divider(color: Colors.grey.withOpacity(0.3)),
+                      ),
                       const Padding(
                         padding: EdgeInsets.symmetric(horizontal: 8),
                         child: Text(
@@ -126,8 +126,8 @@ class _LoginViewState extends State<RevampLoginView> {
                         ),
                       ),
                       Expanded(
-                          child: Divider(
-                              color: Colors.grey.withOpacity(0.3))),
+                        child: Divider(color: Colors.grey.withOpacity(0.3)),
+                      ),
                     ],
                   ),
 
@@ -196,6 +196,7 @@ class _LoginViewState extends State<RevampLoginView> {
     );
   }
 }
+
 Widget _socialButton({
   required Widget icon,
   required String text,
@@ -216,10 +217,7 @@ Widget _socialButton({
         children: [
           icon,
           const SizedBox(width: 10),
-          Text(
-            text,
-            style: const TextStyle(color: Colors.white),
-          ),
+          Text(text, style: const TextStyle(color: Colors.white)),
         ],
       ),
     ),

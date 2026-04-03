@@ -50,19 +50,18 @@ class _HomeViewState extends State<HomeView> {
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
 
-    if (location.startsWith('/jobPosted')) return 1;
-
-    if (location.startsWith('/application')) {
-      return appStateProvider.isProfessional ? 2 : 1;
+    if (location.startsWith('/application') ||
+        location.startsWith('/jobPosted')) {
+      return 1;
     }
+    // if (location.startsWith('/my-profile')) {
+    //   return appStateProvider.isProfessional ? 4 : 3;
+    // }
     if (location.startsWith('/shortlist')) {
-      return appStateProvider.isProfessional ? 3 : 2;
-    }
-    if (location.startsWith('/my-profile')) {
-      return appStateProvider.isProfessional ? 4 : 3;
+      return 2;
     }
     if (location.startsWith('/chatUsers')) {
-      return appStateProvider.isProfessional ? 5 : 4;
+      return 3;
     }
 
     return 0;
@@ -89,13 +88,17 @@ class _HomeViewState extends State<HomeView> {
       child: Scaffold(
         key: _scaffoldKey,
         appBar: RAppBar(
-          title: Text('RawRecruit'),
+          title: Text(
+            'RawRecruit',
+            style: AppTextStyles.s24W600.copyWith(color: AppColors.kGreen),
+          ),
           actions: [
             IconButton(
               onPressed: () {
                 context.pushNamed(RouteNames.scheduledInterviews);
               },
               icon: const Icon(Icons.calendar_month_outlined),
+              color: Colors.white,
               tooltip: 'Scheduled Interviews',
             ),
             IconButton(
@@ -103,6 +106,26 @@ class _HomeViewState extends State<HomeView> {
                 context.pushNamed(RouteNames.notification);
               },
               icon: Icon(Icons.notifications),
+              color: Colors.white,
+            ),
+            InkWell(
+              onTap: () {
+                context.pushNamed(RouteNames.myProfile);
+              },
+              child: Container(
+                margin: EdgeInsets.all(8),
+                padding: EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.kGreen,
+                ),
+                child: Center(
+                  child: Text(
+                    appStateProvider.user?.name?.getInitials ?? '',
+                    style: AppTextStyles.s12W600.copyWith(color: AppColors.kBg),
+                  ),
+                ),
+              ),
             ),
             IconButton(
               onPressed: () async {
@@ -118,6 +141,7 @@ class _HomeViewState extends State<HomeView> {
                 );
               },
               icon: Icon(Icons.logout),
+              color: Colors.white,
             ),
           ],
         ),
@@ -125,48 +149,69 @@ class _HomeViewState extends State<HomeView> {
         bottomNavigationBar: AppBottomNav(
           currentIndex: currentIndex,
           hasUnread: chatVm.totalUnreadCount > 0,
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                context.goNamed(
-                  RouteNames.dashboard,
-                  extra: appStateProvider.userType,
-                );
-                break;
-              case 1:
-                if (appStateProvider.isProfessional) {
-                  context.goNamed(RouteNames.jobPosted);
-                } else {
-                  context.goNamed(RouteNames.application);
-                }
-                break;
-              case 2:
-                if (appStateProvider.isProfessional) {
-                  context.goNamed(
-                    RouteNames.application,
-                    extra: appStateProvider.userType,
-                  );
-                } else {
-                  context.goNamed(RouteNames.shortlist);
-                }
-                break;
-              case 3:
-                if (appStateProvider.isProfessional) {
-                  context.goNamed(RouteNames.shortlist);
-                } else {
-                  context.goNamed(RouteNames.myProfile);
-                }
-                break;
-              case 4:
-                if (appStateProvider.isProfessional) {
-                  context.goNamed(RouteNames.myProfile);
-                } else {
-                  context.goNamed(RouteNames.chatUserList);
-                }
-                break;
-              case 5:
-                context.goNamed(RouteNames.chatUserList);
+          onTap: (tab) {
+            final extra = appStateProvider.userType;
+            bool needExtra = false;
+            if (tab == NavItem.home || tab == NavItem.applications) {
+              needExtra = true;
             }
+            context.goNamed(tab.path, extra: needExtra ? extra : null);
+            // switch (tab) {
+            //   // case 0:
+            //   //   context.goNamed(
+            //   //     RouteNames.dashboard,
+            //   //     extra: appStateProvider.userType,
+            //   //   );
+            //   //   break;
+            //   // case 1:
+            //   //   if (appStateProvider.isProfessional) {
+            //   //     context.goNamed(RouteNames.jobPosted);
+            //   //   } else {
+            //   //     context.goNamed(RouteNames.application);
+            //   //   }
+            //   //   break;
+            //   // case 2:
+            //   //   if (appStateProvider.isProfessional) {
+            //   //     context.goNamed(
+            //   //       RouteNames.application,
+            //   //       extra: appStateProvider.userType,
+            //   //     );
+            //   //   } else {
+            //   //     context.goNamed(RouteNames.shortlist);
+            //   //   }
+            //   //   break;
+            //   // case 3:
+            //   //   if (appStateProvider.isProfessional) {
+            //   //     context.goNamed(RouteNames.shortlist);
+            //   //   } else {
+            //   //     context.goNamed(RouteNames.myProfile);
+            //   //   }
+            //   //   break;
+            //   // case 4:
+            //   //   if (appStateProvider.isProfessional) {
+            //   //     context.goNamed(RouteNames.myProfile);
+            //   //   } else {
+            //   //     context.goNamed(RouteNames.chatUserList);
+            //   //   }
+            //   //   break;
+            //   // case 5:
+            //   //   context.goNamed(RouteNames.chatUserList);
+            //   case NavItem.home:
+            //     // TODO: Handle this case.
+            //     throw UnimplementedError();
+            //   case NavItem.referrer:
+            //     // TODO: Handle this case.
+            //     throw UnimplementedError();
+            //   case NavItem.applications:
+            //     // TODO: Handle this case.
+            //     throw UnimplementedError();
+            //   case NavItem.shortlist:
+            //     // TODO: Handle this case.
+            //     throw UnimplementedError();
+            //   case NavItem.chat:
+            //     // TODO: Handle this case.
+            //     throw UnimplementedError();
+            // }
           },
         ),
       ),

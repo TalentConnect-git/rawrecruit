@@ -48,20 +48,32 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-
                     /// 🔹 HEADER
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: const [
-                        Text(
-                          "Profile",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                          ),
+                      children: [
+                        Row(
+                          spacing: 16,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            InkWell(
+                              onTap: context.pop,
+                              child: const Icon(
+                                Icons.arrow_back,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const Text(
+                              "Profile",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
-                        Icon(Icons.settings, color: Colors.grey),
+                        const Icon(Icons.settings, color: Colors.grey),
                       ],
                     ),
 
@@ -78,26 +90,32 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                     const SizedBox(height: 20),
 
                     /// 🔹 MENU OPTIONS (UNCHANGED + EDIT FIXED)
-                    _menuItem("Career Insights", onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const CareerInsightsPage(),
-                        ),
-                      );
-                    }),
+                    _menuItem(
+                      "Career Insights",
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const CareerInsightsPage(),
+                          ),
+                        );
+                      },
+                    ),
 
-                    _menuItem("Edit Profile", onTap: () async {
-                      final result = await context.pushNamed(
-                        RouteNames.addEditProfileView,
-                        extra: vm.userProfile,
-                      );
+                    _menuItem(
+                      "Edit Profile",
+                      onTap: () async {
+                        final result = await context.pushNamed(
+                          RouteNames.addEditProfileView,
+                          extra: vm.userProfile,
+                        );
 
-                      if (result == true) {
-                        final failure = await vm.getUserProfile();
-                        if (mounted) failure?.showError(context);
-                      }
-                    }),
+                        if (result == true) {
+                          final failure = await vm.getUserProfile();
+                          if (mounted) failure?.showError(context);
+                        }
+                      },
+                    ),
 
                     _menuItem("Resume Builder"),
                     _menuItem("Help & Support"),
@@ -226,11 +244,20 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: const [
-                  Text("Your Hiring Score", style: TextStyle(color: Colors.green)),
+                  Text(
+                    "Your Hiring Score",
+                    style: TextStyle(color: Colors.green),
+                  ),
                   SizedBox(height: 8),
-                  Text("72%", style: TextStyle(color: Colors.white, fontSize: 26)),
+                  Text(
+                    "72%",
+                    style: TextStyle(color: Colors.white, fontSize: 26),
+                  ),
                   SizedBox(height: 4),
-                  Text("Top 30%", style: TextStyle(color: Colors.grey, fontSize: 12)),
+                  Text(
+                    "Top 30%",
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
                 ],
               ),
               const CircularProgressIndicator(value: 0.72),
@@ -287,10 +314,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
               color: color.withOpacity(0.15),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Text(
-              tag,
-              style: TextStyle(color: color, fontSize: 11),
-            ),
+            child: Text(tag, style: TextStyle(color: color, fontSize: 11)),
           ),
         ],
       ),
@@ -322,11 +346,9 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
         child: Row(
           children: [
             Expanded(
-              child: Text(title,
-                  style: const TextStyle(color: Colors.white)),
+              child: Text(title, style: const TextStyle(color: Colors.white)),
             ),
-            const Icon(Icons.arrow_forward_ios,
-                size: 14, color: Colors.grey),
+            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
           ],
         ),
       ),
