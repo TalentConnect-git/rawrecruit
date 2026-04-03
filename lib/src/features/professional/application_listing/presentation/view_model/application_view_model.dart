@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/application/entities/application_model.dart';
+import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/data/repository/application_repo.dart';
 
 class ReferralApplicationsViewModel extends ViewStateProvider {

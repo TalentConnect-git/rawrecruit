@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/features/application/entities/application_model.dart';
+import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/presentation/application_detail_view.dart';
 
 class ReferralApplicationCard extends StatelessWidget {
