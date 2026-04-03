@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart' show RouteNames, UserType;
-import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
+import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
+import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
+import 'package:rawrecruit/src/feature/revamp_application/presentation/application_view.dart';
+import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/dashboard_view.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/internship_detail_page.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/job_detail_page.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/first_step.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
 
-import 'package:rawrecruit/src/features/application/entities/application_model.dart';
-import 'package:rawrecruit/src/features/application/presentation/application_detail_view.dart';
-import 'package:rawrecruit/src/features/application/presentation/application_view.dart';
-import 'package:rawrecruit/src/features/auth/index.dart'
-    show LoginView, RegisterView;
-import 'package:rawrecruit/src/features/dashboard/entities/internship_model.dart';
-import 'package:rawrecruit/src/features/dashboard/entities/job_model.dart';
-import 'package:rawrecruit/src/features/dashboard/presentation/dashboard_view.dart';
+
+
+import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashbooard_data_source.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/entities/internship_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/entities/job_model.dart';
+
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
@@ -38,10 +43,8 @@ import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortl
 
 import '../../feature/revamp_auth/index.dart';
 import '../../feature/revamp_profile/presentation/modern_profile_page.dart';
-import '../../features/application/presentation/view_model/application_view_model.dart';
 import '../../features/chat/index.dart';
-import '../../features/dashboard/presentation/internship_detail_page.dart';
-import '../../features/dashboard/presentation/job_detail_page.dart';
+
 import '../../features/onboarding/presentation/add_edit_profile_view.dart';
 import '../../features/professional/job_postng/presentation/posted_job_view.dart';
 import '../../features/scheduled_interviews/presentation/view/interview_detail_screen.dart';

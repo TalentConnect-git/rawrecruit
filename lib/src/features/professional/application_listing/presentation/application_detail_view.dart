@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/features/application/entities/application_model.dart';
+import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 
 class ReferralApplicationDetailScreen extends StatelessWidget {
   final ApplicationModel application;

@@ -334,14 +334,14 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
               leading: widget.userProfile != null
                   ? IconButton(
                       onPressed: () => context.pop(),
-                      icon: const Icon(Icons.keyboard_arrow_left),
+                      icon:  Icon(Icons.keyboard_arrow_left,color: AppColors.white,),
                     )
                   : null,
               title: Text(
                 widget.userProfile != null
                     ? 'Edit Profile'
                     : 'Complete your profile',
-                style: AppTextStyles.s16W600,
+                style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
               ),
             ),
             body: Form(
