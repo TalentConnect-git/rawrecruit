@@ -1,28 +1,26 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:rawrecruit/src/core/index.dart';
 
-import '../../onboarding/data/entities/index.dart' show UserProfile;
-
-class UserProfileOrStringConvertor
-    implements JsonConverter<UserProfile?, Object?> {
-  const UserProfileOrStringConvertor();
+class UserOrStringConvertor implements JsonConverter<User?, Object?> {
+  const UserOrStringConvertor();
 
   @override
-  UserProfile? fromJson(Object? json) {
+  User? fromJson(Object? json) {
     if (json == null) return null;
 
     if (json is String) {
-      return UserProfile(id: json);
+      return User(id: json);
     }
 
     if (json is Map<String, dynamic>) {
-      return UserProfile.fromJson(json);
+      return User.fromJson(json);
     }
 
-    throw Exception('Invalid UserProfile format');
+    throw Exception('Invalid User format');
   }
 
   @override
-  Object? toJson(UserProfile? object) {
+  Object? toJson(User? object) {
     if (object == null) return null;
 
     return object.toJson();

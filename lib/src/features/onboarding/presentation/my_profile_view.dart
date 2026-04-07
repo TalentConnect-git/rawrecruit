@@ -20,7 +20,7 @@ class _MyProfileViewState extends State<MyProfileView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final failure = await myProfileViewModel.getUserProfile();
+      final failure = await myProfileViewModel.getUser();
       if (mounted) failure?.showError(context);
     });
   }
@@ -36,7 +36,7 @@ class _MyProfileViewState extends State<MyProfileView> {
               return const Center(child: AppLoadingIndicator());
             }
 
-            final p = vm.userProfile;
+            final p = vm.user;
 
             return SingleChildScrollView(
               padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
@@ -44,7 +44,6 @@ class _MyProfileViewState extends State<MyProfileView> {
                 mainAxisSize: MainAxisSize.min,
                 spacing: 20,
                 children: [
-
                   // ── HEADER CARD ──────────────────────────────────────────
                   _card(
                     child: Row(
@@ -56,7 +55,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                             shape: BoxShape.circle,
                             color: AppColors.card,
                           ),
-                          child: vm.isProfileAvailable &&
+                          child:
+                              vm.isProfileAvailable &&
                                   (p?.profileImage ?? '').isNotEmpty
                               ? Image.network(
                                   p!.profileImage!,
@@ -83,10 +83,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                                 style: AppTextStyles.s16W400,
                               ),
                               if ((p?.phone ?? '').isNotEmpty)
-                                Text(
-                                  p!.phone!,
-                                  style: AppTextStyles.s14W400,
-                                ),
+                                Text(p!.phone!, style: AppTextStyles.s14W400),
                             ],
                           ),
                         ),
@@ -179,10 +176,7 @@ class _MyProfileViewState extends State<MyProfileView> {
                         spacing: 8,
                         children: [
                           _sectionTitle('About'),
-                          Text(
-                            p!.about!,
-                            style: AppTextStyles.s14W400,
-                          ),
+                          Text(p!.about!, style: AppTextStyles.s14W400),
                           if ((p.certifications ?? '').isNotEmpty) ...[
                             _sectionTitle('Certifications'),
                             Text(
@@ -267,8 +261,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                             (a) => _itemCard(
                               title: a.title ?? '-',
                               subtitle: a.organization ?? '',
-                              trailing:
-                                  [a.startDate, a.endDate].where((s) => (s ?? '').isNotEmpty).join(' – '),
+                              trailing: [
+                                a.startDate,
+                                a.endDate,
+                              ].where((s) => (s ?? '').isNotEmpty).join(' – '),
                               description: a.description,
                             ),
                           ),
@@ -302,8 +298,11 @@ class _MyProfileViewState extends State<MyProfileView> {
                                       onTap: () async {
                                         final uri = Uri.parse(pub.url!);
                                         if (await canLaunchUrl(uri)) {
-                                          await launchUrl(uri,
-                                              mode: LaunchMode.externalApplication);
+                                          await launchUrl(
+                                            uri,
+                                            mode:
+                                                LaunchMode.externalApplication,
+                                          );
                                         }
                                       },
                                       child: Text(
@@ -333,8 +332,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                               color: Colors.red.shade50,
                               borderRadius: BorderRadius.circular(8),
                             ),
-                            child: const Icon(Icons.picture_as_pdf,
-                                color: Colors.red),
+                            child: const Icon(
+                              Icons.picture_as_pdf,
+                              color: Colors.red,
+                            ),
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -357,8 +358,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                             onPressed: () async {
                               final uri = Uri.parse(p!.resume!);
                               if (await canLaunchUrl(uri)) {
-                                await launchUrl(uri,
-                                    mode: LaunchMode.externalApplication);
+                                await launchUrl(
+                                  uri,
+                                  mode: LaunchMode.externalApplication,
+                                );
                               }
                             },
                           ),
@@ -371,11 +374,10 @@ class _MyProfileViewState extends State<MyProfileView> {
                     onPressed: () async {
                       final result = await context.pushNamed(
                         RouteNames.addEditProfileView,
-                        extra: myProfileViewModel.userProfile,
+                        extra: myProfileViewModel.user,
                       );
                       if (result == true) {
-                        final failure =
-                            await myProfileViewModel.getUserProfile();
+                        final failure = await myProfileViewModel.getUser();
                         if (mounted) failure?.showError(context);
                       }
                     },
@@ -409,11 +411,7 @@ class _MyProfileViewState extends State<MyProfileView> {
       decoration: BoxDecoration(
         color: Colors.white,
         boxShadow: [
-          BoxShadow(
-            color: AppColors.shadow,
-            spreadRadius: 1,
-            blurRadius: 1,
-          ),
+          BoxShadow(color: AppColors.shadow, spreadRadius: 1, blurRadius: 1),
         ],
         borderRadius: BorderRadius.circular(12),
       ),
@@ -489,16 +487,19 @@ class _MyProfileViewState extends State<MyProfileView> {
             runSpacing: 8,
             children: items.map((item) {
               return Container(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 12),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 6,
+                  horizontal: 12,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.card,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   item,
-                  style:
-                      AppTextStyles.s14W600.copyWith(color: AppColors.chipText),
+                  style: AppTextStyles.s14W600.copyWith(
+                    color: AppColors.chipText,
+                  ),
                 ),
               );
             }).toList(),

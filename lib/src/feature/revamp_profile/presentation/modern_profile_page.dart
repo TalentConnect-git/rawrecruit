@@ -22,7 +22,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final failure = await vm.getUserProfile();
+      final failure = await vm.getUser();
       if (mounted) failure?.showError(context);
     });
   }
@@ -40,7 +40,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              final p = vm.userProfile;
+              final p = vm.user;
 
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -106,11 +106,11 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                       onTap: () async {
                         final result = await context.pushNamed(
                           RouteNames.addEditProfileView,
-                          extra: vm.userProfile,
+                          extra: vm.user,
                         );
 
                         if (result == true) {
-                          final failure = await vm.getUserProfile();
+                          final failure = await vm.getUser();
                           if (mounted) failure?.showError(context);
                         }
                       },

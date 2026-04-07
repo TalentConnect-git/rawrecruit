@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rawrecruit/src/core/models/user.dart';
 import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/utils/convertors.dart';
@@ -11,7 +12,7 @@ part 'referral_application.g.dart';
 abstract class ReferralApplication with _$ReferralApplication {
   const factory ReferralApplication({
     @JsonKey(name: '_id') String? id,
-    UserProfile? applicant,
+    User? applicant,
     String? applicantType,
     String? adminApprovalStatus,
     ReferralPostModel? job,

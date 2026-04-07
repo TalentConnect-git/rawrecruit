@@ -62,21 +62,19 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     try {
       final body = data.toJson();
 
-      final result = await repo.submitOnboardingUserProfile(
-        body: body,
-      );
+      final result = await repo.submitOnboardingUser(body: body);
 
       result.fold(
         (failure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(failure.message ?? '')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(failure.message ?? '')));
         },
         (profile) {
           context.pushReplacementNamed(
-                              RouteNames.dashboard,
-                              extra: getIt<AppStateProvider>().userType,
-                            );
+            RouteNames.dashboard,
+            extra: getIt<AppStateProvider>().userType,
+          );
         },
       );
     } catch (e) {
@@ -123,8 +121,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             ),
 
             /// 🔥 CONTINUE BUTTON
-            if (currentPage != totalPages - 1)
-              ContinueButton(onTap: nextPage),
+            if (currentPage != totalPages - 1) ContinueButton(onTap: nextPage),
           ],
         ),
       ),

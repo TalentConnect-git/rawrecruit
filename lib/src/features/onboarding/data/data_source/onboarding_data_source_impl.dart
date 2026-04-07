@@ -12,15 +12,16 @@ import 'package:rawrecruit/src/core/index.dart'
         APIException,
         getIt,
         NetworkService,
-        AppStateProvider;
+        AppStateProvider,
+        User;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
-    show OnboardingDataSource, UserProfile;
+    show OnboardingDataSource;
 
 class OnboardingDataSourceImpl implements OnboardingDataSource {
   final NetworkService _networkService = NetworkService();
 
   @override
-  ResultFuture<UserProfile?> getOnboardingUserProfile() async {
+  ResultFuture<User?> getOnboardingUser() async {
     final Request request = Request(
       method: RequestMethod.get,
       endpoint: Endpoints.apiOnboardingMe,
@@ -32,7 +33,7 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final profile = UserProfile.fromJson(response);
+        final profile = User.fromJson(response);
         getIt<AppStateProvider>().user = profile;
         return Right(profile);
       }
@@ -44,7 +45,7 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
   }
 
   @override
-  ResultFuture<UserProfile?> submitOnboardingUserProfile({
+  ResultFuture<User?> submitOnboardingUser({
     required Map<String, dynamic> body,
     File? resume,
     XFile? image,
@@ -76,7 +77,7 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final profile = UserProfile.fromJson(response['onboarding']);
+        final profile = User.fromJson(response['onboarding']);
         return Right(profile);
       }
     } catch (e) {
@@ -87,7 +88,7 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
   }
 
   @override
-  ResultFuture<UserProfile?> updateOnboardingUserProfile({
+  ResultFuture<User?> updateOnboardingUser({
     required Map<String, dynamic> body,
     File? resume, // ← ADD
     XFile? image,
@@ -118,7 +119,7 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final profile = UserProfile.fromJson(response['data']);
+        final profile = User.fromJson(response['data']);
         return Right(profile);
       }
     } catch (e) {

@@ -21,7 +21,7 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   final NetworkService _networkService = NetworkService();
 
   @override
-  ResultFuture<OnboardingData?> getOnboardingUserProfile() async {
+  ResultFuture<OnboardingData?> getOnboardingUser() async {
     final Request request = Request(
       method: RequestMethod.get,
       endpoint: Endpoints.apiOnboardingMe,
@@ -45,7 +45,7 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   }
 
   @override
-  ResultFuture<OnboardingData?> submitOnboardingUserProfile({
+  ResultFuture<OnboardingData?> submitOnboardingUser({
     required Map<String, dynamic> body,
     File? resume,
     XFile? image,
@@ -88,7 +88,7 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   }
 
   @override
-  ResultFuture<OnboardingData?> updateOnboardingUserProfile({
+  ResultFuture<OnboardingData?> updateOnboardingUser({
     required Map<String, dynamic> body,
     File? resume, // ← ADD
     XFile? image,
