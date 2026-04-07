@@ -190,7 +190,7 @@ extension NavItemExt on NavItem {
       // case NavItem.profile:
       //   return Icons.person_outline;
       case NavItem.referrer:
-        return RouteNames.jobPosted;
+        return RouteNames.referrer;
       case NavItem.chat:
         return RouteNames.chatUserList;
     }

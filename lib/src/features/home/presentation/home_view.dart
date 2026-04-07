@@ -51,7 +51,7 @@ class _HomeViewState extends State<HomeView> {
     final location = GoRouterState.of(context).uri.toString();
 
     if (location.startsWith('/application') ||
-        location.startsWith('/jobPosted')) {
+        location.startsWith('/referrer')) {
       return 1;
     }
     // if (location.startsWith('/my-profile')) {

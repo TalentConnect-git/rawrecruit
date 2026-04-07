@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -6,25 +8,17 @@ import 'package:rawrecruit/src/feature/revamp_application/entities/application_m
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/entities/internship_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/entities/job_model.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/internship_detail_page.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/job_detail_page.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/first_step.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
-
-
-
-import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashbooard_data_source.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/internship_model.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/job_model.dart';
-
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
-import 'package:rawrecruit/src/features/onboarding/index.dart'
-    show MyProfileView;
 import 'package:rawrecruit/src/features/professional/application_listing/presentation/application_list_view.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/applicant_detail_screen.dart';
@@ -37,6 +31,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/vie
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
+import 'package:rawrecruit/src/features/referrer/presentation/referrer_view.dart';
 import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view/interview_screen.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
@@ -44,9 +39,7 @@ import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortl
 import '../../feature/revamp_auth/index.dart';
 import '../../feature/revamp_profile/presentation/modern_profile_page.dart';
 import '../../features/chat/index.dart';
-
 import '../../features/onboarding/presentation/add_edit_profile_view.dart';
-import '../../features/professional/job_postng/presentation/posted_job_view.dart';
 import '../../features/scheduled_interviews/presentation/view/interview_detail_screen.dart';
 import '../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 import '../services/dependency_locator.dart';
@@ -230,6 +223,7 @@ class AppRouter {
             path: '/dashboard',
             builder: (_, state) {
               final type = state.extra as UserType?;
+              log('UserType: $type');
               if (type == UserType.professional) {
                 return ReferralHome();
               } else {
@@ -239,10 +233,10 @@ class AppRouter {
           ),
 
           GoRoute(
-            name: RouteNames.jobPosted,
-            path: '/jobPosted',
+            name: RouteNames.referrer,
+            path: '/referrer',
             builder: (context, state) {
-              return const PostedJobView();
+              return const ReferrerView();
             },
           ),
           GoRoute(

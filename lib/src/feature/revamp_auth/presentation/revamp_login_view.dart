@@ -100,7 +100,10 @@ class _LoginViewState extends State<RevampLoginView> {
                           successMsg: 'Login Successful!',
                           popOnSuccess: false,
                           successCallback: () {
-                            context.pushReplacementNamed(RouteNames.dashboard);
+                            context.pushReplacementNamed(
+                              RouteNames.dashboard,
+                              extra: getIt<AppStateProvider>().userType,
+                            );
                           },
                         );
                       }
