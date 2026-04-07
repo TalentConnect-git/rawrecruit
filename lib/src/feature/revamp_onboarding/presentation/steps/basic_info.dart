@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
-import '../../data/revamp_entities/onboarding_model.dart';
 import '../widgets/input_widgets.dart';
+
 class BasicPage extends StatefulWidget {
   final VoidCallback onBack;
-  final OnboardingData data;
+  final User data;
 
-  const BasicPage({
-    super.key,
-    required this.onBack,
-    required this.data,
-  });
+  const BasicPage({super.key, required this.onBack, required this.data});
 
   /// ✅ OPTIONS HERE
   static const genderOptions = [
@@ -122,14 +119,15 @@ class _BasicPageState extends State<BasicPage> {
 
         const SizedBox(height: 16),
 
-        AppInput("Full Name",
-            controller: nameCtrl, onChanged: (_) => saveData()),
+        AppInput(
+          "Full Name",
+          controller: nameCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
-        AppInput("Email",
-            controller: emailCtrl, onChanged: (_) => saveData()),
+        AppInput("Email", controller: emailCtrl, onChanged: (_) => saveData()),
 
-        AppInput("Phone",
-            controller: phoneCtrl, onChanged: (_) => saveData()),
+        AppInput("Phone", controller: phoneCtrl, onChanged: (_) => saveData()),
 
         const SizedBox(height: 8),
 
@@ -145,8 +143,11 @@ class _BasicPageState extends State<BasicPage> {
           },
         ),
 
-        AppInput("Date of Birth",
-            controller: dobCtrl, onChanged: (_) => saveData()),
+        AppInput(
+          "Date of Birth",
+          controller: dobCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
         AppDropdown(
           hint: "Ethnicity",

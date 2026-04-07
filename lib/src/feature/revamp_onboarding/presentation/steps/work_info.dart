@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
-import '../../data/revamp_entities/onboarding_model.dart';
 
 class WorkPrefPage extends StatefulWidget {
   final VoidCallback onBack;
-  final OnboardingData data;
+  final User data;
 
-  const WorkPrefPage({
-    super.key,
-    required this.onBack,
-    required this.data,
-  });
+  const WorkPrefPage({super.key, required this.onBack, required this.data});
 
   @override
   State<WorkPrefPage> createState() => _WorkPrefPageState();
@@ -23,11 +19,7 @@ class WorkPrefPage extends StatefulWidget {
     "Others",
   ];
 
-  static const lookingForOptions = [
-    "Internship",
-    "Job",
-    "Both",
-  ];
+  static const lookingForOptions = ["Internship", "Job", "Both"];
 
   static const industryOptions = [
     "Technology",
@@ -109,28 +101,25 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
 
     final d = widget.data;
 
-    employmentType =
-        d.employmentType.isNotEmpty ? d.employmentType.first : null;
+    employmentType = d.employmentType.isNotEmpty
+        ? d.employmentType.first
+        : null;
 
-    lookingFor =
-        d.lookingFor.isNotEmpty ? d.lookingFor.first : null;
+    lookingFor = d.lookingFor.isNotEmpty ? d.lookingFor.first : null;
 
     industry = List.from(d.industry);
     jobRoles = List.from(d.jobRoles);
     languages = List.from(d.languagesKnown);
 
-    locationCtrl =
-        TextEditingController(text: d.locations.join(", "));
+    locationCtrl = TextEditingController(text: d.locations.join(", "));
   }
 
   void saveData() {
     final d = widget.data;
 
-    d.employmentType =
-        employmentType != null ? [employmentType!] : [];
+    d.employmentType = employmentType != null ? [employmentType!] : [];
 
-    d.lookingFor =
-        lookingFor != null ? [lookingFor!] : [];
+    d.lookingFor = lookingFor != null ? [lookingFor!] : [];
 
     d.industry = industry;
     d.jobRoles = jobRoles;

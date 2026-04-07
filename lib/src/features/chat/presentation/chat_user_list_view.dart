@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/theme/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/chat/data/entities/chat_user_model.dart';
 
 import '../index.dart';
 import 'chat_detail_view.dart';
@@ -120,7 +119,7 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                   overflow: TextOverflow.ellipsis,
                 ),
                 subtitle: Text(
-                  user.userType?.toCapitalise ?? "-",
+                  user.profileType?.toCapitalise ?? "-",
                   style: AppTextStyles.s12W400.copyWith(color: Colors.white),
                 ),
                 onTap: () async {
@@ -145,7 +144,7 @@ class _ChatUserListViewState extends State<ChatUserListView> {
     );
   }
 
-  String name(ChatUserModel user) {
+  String name(User user) {
     if (user.name != null && user.name!.trim().isNotEmpty) {
       return user.name!;
     }

@@ -1,41 +1,36 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/core/index.dart'
+    show User, Achievement, Award, Publication;
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
-import '../../data/revamp_entities/achievement_model.dart';
-import '../../data/revamp_entities/award_model.dart';
-import '../../data/revamp_entities/onboarding_model.dart';
-import '../../data/revamp_entities/publication_model.dart';
+
 import '../widgets/wrapper.dart';
 
 class AchievementsPage extends StatefulWidget {
   final VoidCallback onBack;
-  final OnboardingData data;
+  final User data;
 
-  const AchievementsPage({
-    super.key,
-    required this.onBack,
-    required this.data,
-  });
+  const AchievementsPage({super.key, required this.onBack, required this.data});
 
   @override
   State<AchievementsPage> createState() => _AchievementsPageState();
 }
 
 class _AchievementsPageState extends State<AchievementsPage> {
-  List<AchievementModel> achievements = [];
-  List<AwardModel> awards = [];
-  List<PublicationModel> publications = [];
+  List<Achievement> achievements = [];
+  List<Award> awards = [];
+  List<Publication> publications = [];
 
   @override
   void initState() {
     super.initState();
 
-    achievements = widget.data.achievements;
-    awards = widget.data.awards;
-    publications = widget.data.publications;
+    achievements = widget.data.achievements ?? [];
+    awards = widget.data.awards ?? [];
+    publications = widget.data.publications ?? [];
 
-    if (achievements.isEmpty) achievements.add(AchievementModel());
-    if (awards.isEmpty) awards.add(AwardModel());
-    if (publications.isEmpty) publications.add(PublicationModel());
+    if (achievements.isEmpty) achievements.add(Achievement());
+    if (awards.isEmpty) awards.add(Award());
+    if (publications.isEmpty) publications.add(Publication());
   }
 
   void saveData() {
@@ -88,8 +83,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Achievements",
-            style: TextStyle(color: Colors.grey)),
+        const Text("Achievements", style: TextStyle(color: Colors.grey)),
 
         ...achievements.asMap().entries.map((entry) {
           int i = entry.key;
@@ -97,26 +91,32 @@ class _AchievementsPageState extends State<AchievementsPage> {
 
           return Column(
             children: [
-              AppInput("Title",
-                  controller: TextEditingController(text: item.title),
-                  onChanged: (v) {
-                    item.title = v;
-                    saveData();
-                  }),
+              AppInput(
+                "Title",
+                controller: TextEditingController(text: item.title),
+                onChanged: (v) {
+                  item.title = v;
+                  saveData();
+                },
+              ),
 
-              AppInput("Event",
-                  controller: TextEditingController(text: item.event),
-                  onChanged: (v) {
-                    item.event = v;
-                    saveData();
-                  }),
+              AppInput(
+                "Event",
+                controller: TextEditingController(text: item.event),
+                onChanged: (v) {
+                  item.event = v;
+                  saveData();
+                },
+              ),
 
-              AppInput("Date",
-                  controller: TextEditingController(text: item.date),
-                  onChanged: (v) {
-                    item.date = v;
-                    saveData();
-                  }),
+              AppInput(
+                "Date",
+                controller: TextEditingController(text: item.date),
+                onChanged: (v) {
+                  item.date = v;
+                  saveData();
+                },
+              ),
 
               Row(
                 children: [
@@ -140,7 +140,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
         TextButton(
           onPressed: () {
             setState(() {
-              achievements.add(AchievementModel());
+              achievements.add(Achievement());
             });
           },
           child: const Text("+ Add Achievement"),
@@ -165,44 +165,50 @@ class _AchievementsPageState extends State<AchievementsPage> {
 
           return Column(
             children: [
-              AppInput("Title",
-                  controller: TextEditingController(text: item.title),
-                  onChanged: (v) {
-                    item.title = v;
-                    saveData();
-                  }),
+              AppInput(
+                "Title",
+                controller: TextEditingController(text: item.title),
+                onChanged: (v) {
+                  item.title = v;
+                  saveData();
+                },
+              ),
 
-              AppInput("Organization",
-                  controller:
-                      TextEditingController(text: item.organization),
-                  onChanged: (v) {
-                    item.organization = v;
-                    saveData();
-                  }),
+              AppInput(
+                "Organization",
+                controller: TextEditingController(text: item.organization),
+                onChanged: (v) {
+                  item.organization = v;
+                  saveData();
+                },
+              ),
 
-              AppInput("Start Date",
-                  controller:
-                      TextEditingController(text: item.startDate),
-                  onChanged: (v) {
-                    item.startDate = v;
-                    saveData();
-                  }),
+              AppInput(
+                "Start Date",
+                controller: TextEditingController(text: item.startDate),
+                onChanged: (v) {
+                  item.startDate = v;
+                  saveData();
+                },
+              ),
 
-              AppInput("End Date",
-                  controller:
-                      TextEditingController(text: item.endDate),
-                  onChanged: (v) {
-                    item.endDate = v;
-                    saveData();
-                  }),
+              AppInput(
+                "End Date",
+                controller: TextEditingController(text: item.endDate),
+                onChanged: (v) {
+                  item.endDate = v;
+                  saveData();
+                },
+              ),
 
-              AppInput("Description",
-                  controller:
-                      TextEditingController(text: item.description),
-                  onChanged: (v) {
-                    item.description = v;
-                    saveData();
-                  }),
+              AppInput(
+                "Description",
+                controller: TextEditingController(text: item.description),
+                onChanged: (v) {
+                  item.description = v;
+                  saveData();
+                },
+              ),
 
               TextButton(
                 onPressed: () {
@@ -222,7 +228,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
         TextButton(
           onPressed: () {
             setState(() {
-              awards.add(AwardModel());
+              awards.add(Award());
             });
           },
           child: const Text("+ Add Award"),
@@ -239,8 +245,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Publications",
-            style: TextStyle(color: Colors.grey)),
+        const Text("Publications", style: TextStyle(color: Colors.grey)),
 
         ...publications.asMap().entries.map((entry) {
           int i = entry.key;
@@ -248,19 +253,23 @@ class _AchievementsPageState extends State<AchievementsPage> {
 
           return Column(
             children: [
-              AppInput("Title",
-                  controller: TextEditingController(text: item.title),
-                  onChanged: (v) {
-                    item.title = v;
-                    saveData();
-                  }),
+              AppInput(
+                "Title",
+                controller: TextEditingController(text: item.title),
+                onChanged: (v) {
+                  item.title = v;
+                  saveData();
+                },
+              ),
 
-              AppInput("URL",
-                  controller: TextEditingController(text: item.url),
-                  onChanged: (v) {
-                    item.url = v;
-                    saveData();
-                  }),
+              AppInput(
+                "URL",
+                controller: TextEditingController(text: item.url),
+                onChanged: (v) {
+                  item.url = v;
+                  saveData();
+                },
+              ),
 
               TextButton(
                 onPressed: () {
@@ -280,7 +289,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
         TextButton(
           onPressed: () {
             setState(() {
-              publications.add(PublicationModel());
+              publications.add(Publication());
             });
           },
           child: const Text("+ Add Publication"),

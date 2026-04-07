@@ -1,44 +1,41 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
-import '../../data/revamp_entities/onboarding_model.dart';
 
 class EducationPage extends StatefulWidget {
   final VoidCallback onBack;
-  final OnboardingData data;
+  final User data;
 
-  const EducationPage({
-    super.key,
-    required this.onBack,
-    required this.data,
-  });
+  const EducationPage({super.key, required this.onBack, required this.data});
   @override
   State<EducationPage> createState() => _EducationPageState();
 }
 
 class _EducationPageState extends State<EducationPage> {
   late TextEditingController collegeCtrl;
-late TextEditingController cgpaCtrl;
+  late TextEditingController cgpaCtrl;
 
-String? selectedDegree;
-String? selectedSpecialization;
-String? selectedSemester;
-String? selectedYear;
+  String? selectedDegree;
+  String? selectedSpecialization;
+  String? selectedSemester;
+  String? selectedYear;
 
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  final d = widget.data;
+    final d = widget.data;
 
-  collegeCtrl = TextEditingController(text: d.college);
-  cgpaCtrl = TextEditingController(text: d.cgpa);
+    collegeCtrl = TextEditingController(text: d.college);
+    cgpaCtrl = TextEditingController(text: d.cgpa);
 
-  selectedDegree = d.degree;
-  selectedSpecialization = d.specialization;
-  selectedSemester = d.semester;
-  selectedYear = d.yearOfGraduation;
-}
+    selectedDegree = d.degree;
+    selectedSpecialization = d.specialization;
+    selectedSemester = d.semester;
+    selectedYear = d.yearOfGraduation;
+  }
+
   /// 🔥 DEGREE OPTIONS
   final List<String> degreeOptions = [
     "B.Tech",
@@ -93,12 +90,7 @@ void initState() {
       "Cloud Computing",
       "Other",
     ],
-    "B.Com": [
-      "Accounting & Finance",
-      "Banking",
-      "Taxation",
-      "Other",
-    ],
+    "B.Com": ["Accounting & Finance", "Banking", "Taxation", "Other"],
     "BA": [
       "English Literature",
       "History",
@@ -140,12 +132,7 @@ void initState() {
       "Artificial Intelligence",
       "Other",
     ],
-    "PhD": [
-      "Computer Science",
-      "Engineering",
-      "Management",
-      "Other",
-    ],
+    "PhD": ["Computer Science", "Engineering", "Management", "Other"],
     "Diploma": [
       "Computer Engineering",
       "Mechanical",
@@ -155,24 +142,29 @@ void initState() {
     ],
     "Other": ["Other"],
   };
-void saveData() {
-  final d = widget.data;
+  void saveData() {
+    final d = widget.data;
 
-  d.college = collegeCtrl.text;
-  d.cgpa = cgpaCtrl.text;
+    d.college = collegeCtrl.text;
+    d.cgpa = cgpaCtrl.text;
 
-  d.degree = selectedDegree;
-  d.specialization = selectedSpecialization;
-  d.semester = selectedSemester;
-  d.yearOfGraduation = selectedYear;
-}
+    d.degree = selectedDegree;
+    d.specialization = selectedSpecialization;
+    d.semester = selectedSemester;
+    d.yearOfGraduation = selectedYear;
+  }
+
   /// 🔥 SEMESTERS
-  final List<String> semesterOptions =
-      List.generate(8, (i) => "Semester ${i + 1}");
+  final List<String> semesterOptions = List.generate(
+    8,
+    (i) => "Semester ${i + 1}",
+  );
 
   /// 🔥 YEARS
-  final List<String> graduationYears =
-      List.generate(91, (i) => (1960 + i).toString());
+  final List<String> graduationYears = List.generate(
+    91,
+    (i) => (1960 + i).toString(),
+  );
 
   /// 🔥 SPECIALIZATION LOGIC (FIXED)
   List<String> getSpecializations() {
@@ -202,81 +194,81 @@ void saveData() {
         const SizedBox(height: 16),
 
         /// 🔥 COLLEGE
-AppInput(
-  "College",
-  controller: collegeCtrl,
-  onChanged: (_) => saveData(),
-),
+        AppInput(
+          "College",
+          controller: collegeCtrl,
+          onChanged: (_) => saveData(),
+        ),
+
         /// 🔥 DEGREE
-       AppDropdown(
-  hint: "Degree",
-  options: degreeOptions,
-  value: selectedDegree,
-  onChanged: (val) {
-    setState(() {
-      selectedDegree = val;
-      selectedSpecialization = null;
-      saveData();
-    });
-  },
-),
+        AppDropdown(
+          hint: "Degree",
+          options: degreeOptions,
+          value: selectedDegree,
+          onChanged: (val) {
+            setState(() {
+              selectedDegree = val;
+              selectedSpecialization = null;
+              saveData();
+            });
+          },
+        ),
 
         /// 🔥 SPECIALIZATION (DEPENDENT)
-       AppDropdown(
-  hint: selectedDegree == null
-      ? "Select degree first"
-      : "Specialization",
-  options: getSpecializations(),
-  value: selectedSpecialization,
-  onChanged: selectedDegree == null
-      ? null
-      : (val) {
-          setState(() {
-            selectedSpecialization = val;
-            saveData();
-          });
-        },
-),
+        AppDropdown(
+          hint: selectedDegree == null
+              ? "Select degree first"
+              : "Specialization",
+          options: getSpecializations(),
+          value: selectedSpecialization,
+          onChanged: selectedDegree == null
+              ? null
+              : (val) {
+                  setState(() {
+                    selectedSpecialization = val;
+                    saveData();
+                  });
+                },
+        ),
 
         /// 🔥 SEMESTER
-    AppDropdown(
-  hint: "Semester",
-  options: semesterOptions,
-  value: selectedSemester,
-  onChanged: (val) {
-    setState(() {
-      selectedSemester = val;
-      saveData();
-    });
-  },
-),
+        AppDropdown(
+          hint: "Semester",
+          options: semesterOptions,
+          value: selectedSemester,
+          onChanged: (val) {
+            setState(() {
+              selectedSemester = val;
+              saveData();
+            });
+          },
+        ),
+
         /// 🔥 GRADUATION YEAR
-   AppDropdown(
-  hint: "Graduation Year",
-  options: graduationYears,
-  value: selectedYear,
-  onChanged: (val) {
-    setState(() {
-      selectedYear = val;
-      saveData();
-    });
-  },
-),
+        AppDropdown(
+          hint: "Graduation Year",
+          options: graduationYears,
+          value: selectedYear,
+          onChanged: (val) {
+            setState(() {
+              selectedYear = val;
+              saveData();
+            });
+          },
+        ),
+
         /// 🔥 CGPA
-       AppInput(
-  "CGPA",
-  controller: cgpaCtrl,
-  onChanged: (_) => saveData(),
-),
+        AppInput("CGPA", controller: cgpaCtrl, onChanged: (_) => saveData()),
 
         const SizedBox(height: 20),
       ],
     );
   }
+
   @override
-void dispose() {
-  collegeCtrl.dispose();
-  cgpaCtrl.dispose();
-  super.dispose();
-}
+  void dispose() {
+    collegeCtrl.dispose();
+    cgpaCtrl.dispose();
+    super.dispose();
+  }
 }

@@ -5,15 +5,15 @@ import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show
-        Request,
-        ResultFuture,
-        RequestMethod,
-        Endpoints,
         APIException,
-        getIt,
+        AppStateProvider,
+        Endpoints,
         NetworkService,
-        AppStateProvider;
-import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
+        Request,
+        RequestMethod,
+        ResultFuture,
+        User,
+        getIt;
 
 import 'revamp_on_boarding_data_source.dart';
 
@@ -21,31 +21,7 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   final NetworkService _networkService = NetworkService();
 
   @override
-  ResultFuture<OnboardingData?> getOnboardingUser() async {
-    final Request request = Request(
-      method: RequestMethod.get,
-      endpoint: Endpoints.apiOnboardingMe,
-      isSafeRoute: true,
-    );
-
-    try {
-      final result = await _networkService.request(request);
-      final response = result.data as Map<String, dynamic>;
-
-      if (response.isNotEmpty) {
-        final profile = OnboardingData.fromJson(response);
-        getIt<AppStateProvider>().data = profile;
-        return Right(profile);
-      }
-    } catch (e) {
-      return Left(APIException.from(e));
-    }
-
-    return Right(null);
-  }
-
-  @override
-  ResultFuture<OnboardingData?> submitOnboardingUser({
+  ResultFuture<User?> submitOnboardingUser({
     required Map<String, dynamic> body,
     File? resume,
     XFile? image,
@@ -77,7 +53,7 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final profile = OnboardingData.fromJson(response['onboarding']);
+        final profile = User.fromJson(response['onboarding']);
         return Right(profile);
       }
     } catch (e) {
@@ -88,7 +64,7 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   }
 
   @override
-  ResultFuture<OnboardingData?> updateOnboardingUser({
+  ResultFuture<User?> updateOnboardingUser({
     required Map<String, dynamic> body,
     File? resume, // ← ADD
     XFile? image,
@@ -119,7 +95,31 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final profile = OnboardingData.fromJson(response['data']);
+        final profile = User.fromJson(response['data']);
+        return Right(profile);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  @override
+  ResultFuture<User?> getOnboardingUser() async {
+    final Request request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.apiOnboardingMe,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final profile = User.fromJson(response);
+        getIt<AppStateProvider>().data = profile;
         return Right(profile);
       }
     } catch (e) {
