@@ -36,4 +36,7 @@ class Endpoints {
 
   static const String apiNotifications = "api/notifications";
   static const String apiInterviews = '/interviews';
+
+    static const String careerInsights = '/api/career-insights';
+static const String careerRanking = '/api/career-insights/ranking';
 }

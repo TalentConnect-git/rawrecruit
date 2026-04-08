@@ -11,7 +11,6 @@ import 'package:rawrecruit/src/core/index.dart'
         APIFailure,
         SecretRepo,
         UserType;
-import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingRepository;
@@ -51,9 +50,9 @@ class AppStateProvider extends ViewStateProvider {
     notifyListeners();
   }
 
-  OnboardingData? _onboardingData;
-  OnboardingData? get data => _onboardingData;
-  set data(OnboardingData? data) {
+  User? _onboardingData;
+  User? get data => _onboardingData;
+  set data(User? data) {
     _onboardingData = data;
     notifyListeners();
   }
@@ -70,6 +69,7 @@ class AppStateProvider extends ViewStateProvider {
   bool get isAuthComplete => auth != null;
 
   bool get isProfileRemaining => !isProfileComplete;
+
 
   bool isSaved(String? jobId) {
     for (String job in shortlistSchools) {

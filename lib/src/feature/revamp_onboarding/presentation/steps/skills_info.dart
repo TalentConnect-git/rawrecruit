@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import '../../../../common/index.dart';
@@ -44,14 +45,19 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
     super.initState();
 
     /// 🔥 LOAD FROM SHARED DATA
-    selected = List.from(widget.data.skills);
-  }
+selected = List.from(widget.data.skills ?? []);  }
 
   /// 🔥 SAVE TO SHARED DATA
-  void saveData() {
-    widget.data.skills = selected;
-  }
+void saveData() {
+  final currentUser =
+      context.read<AppStateProvider>().data ?? widget.data;
 
+  final updatedUser = currentUser.copyWith(
+    skills: selected,
+  );
+
+  context.read<AppStateProvider>().data = updatedUser;
+}
   /// 🔥 ADD SKILL
   void addSkill(String skill) {
     if (!selected.contains(skill)) {

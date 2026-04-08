@@ -17,4 +17,7 @@ abstract class RevampOnboardingRepository {
     File? resume,
     XFile? image,
   });
+
+    ResultFuture<Map<String, dynamic>> getCareerInsights();
+  ResultFuture<Map<String, dynamic>> getRanking();
 }

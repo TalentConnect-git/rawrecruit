@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
@@ -23,23 +24,23 @@ class _LinksPageState extends State<LinksPage> {
   void initState() {
     super.initState();
 
-    final d = widget.data;
-
-    githubCtrl = TextEditingController(text: d.github);
+final d = widget.data;    githubCtrl = TextEditingController(text: d.github);
     linkedinCtrl = TextEditingController(text: d.linkedin);
     portfolioCtrl = TextEditingController(text: d.portfolio);
-    resumeCtrl = TextEditingController(text: d.resumeUrl);
-  }
+resumeCtrl = TextEditingController(text: d.resume);  }
+void saveData() {
+  final currentUser =
+      context.read<AppStateProvider>().data ?? widget.data;
 
-  void saveData() {
-    final d = widget.data;
+  final updatedUser = currentUser.copyWith(
+    github: githubCtrl.text,
+    linkedin: linkedinCtrl.text,
+    portfolio: portfolioCtrl.text,
+    resume: resumeCtrl.text, // ✅ FIXED (also name correction)
+  );
 
-    d.github = githubCtrl.text;
-    d.linkedin = linkedinCtrl.text;
-    d.portfolio = portfolioCtrl.text;
-    d.resumeUrl = resumeCtrl.text;
-  }
-
+  context.read<AppStateProvider>().data = updatedUser;
+}
   @override
   void dispose() {
     githubCtrl.dispose();

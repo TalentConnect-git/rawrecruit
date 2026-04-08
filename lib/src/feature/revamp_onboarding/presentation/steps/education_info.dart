@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
@@ -25,8 +26,7 @@ class _EducationPageState extends State<EducationPage> {
   void initState() {
     super.initState();
 
-    final d = widget.data;
-
+final d = widget.data;
     collegeCtrl = TextEditingController(text: d.college);
     cgpaCtrl = TextEditingController(text: d.cgpa);
 
@@ -143,17 +143,20 @@ class _EducationPageState extends State<EducationPage> {
     "Other": ["Other"],
   };
   void saveData() {
-    final d = widget.data;
+  final currentUser =
+      context.read<AppStateProvider>().data ?? widget.data;
 
-    d.college = collegeCtrl.text;
-    d.cgpa = cgpaCtrl.text;
+  final updatedUser = currentUser.copyWith(
+    college: collegeCtrl.text,
+    cgpa: cgpaCtrl.text,
+    degree: selectedDegree,
+    specialization: selectedSpecialization,
+    semester: selectedSemester,
+    yearOfGraduation: selectedYear,
+  );
 
-    d.degree = selectedDegree;
-    d.specialization = selectedSpecialization;
-    d.semester = selectedSemester;
-    d.yearOfGraduation = selectedYear;
-  }
-
+  context.read<AppStateProvider>().data = updatedUser;
+}
   /// 🔥 SEMESTERS
   final List<String> semesterOptions = List.generate(
     8,

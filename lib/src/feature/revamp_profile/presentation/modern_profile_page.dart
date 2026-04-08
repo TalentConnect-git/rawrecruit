@@ -4,8 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/onboarding/presentation/view_model/my_profile_view_model.dart';
 
+import '../../revamp_onboarding/presentation/index.dart';
 import 'career_insight_page.dart';
 
 class ModernProfilePage extends StatefulWidget {
@@ -14,7 +14,6 @@ class ModernProfilePage extends StatefulWidget {
   @override
   State<ModernProfilePage> createState() => _ModernProfilePageState();
 }
-
 class _ModernProfilePageState extends State<ModernProfilePage> {
   final MyProfileViewModel vm = MyProfileViewModel();
 
@@ -22,8 +21,15 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final failure = await vm.getUser();
-      if (mounted) failure?.showError(context);
+    final results = await Future.wait([
+  vm.getUser(),
+  vm.getCareerInsights(),
+]);
+
+if (mounted) {
+  results[0]?.showError(context);
+  results[1]?.showError(context);
+}
     });
   }
 
@@ -45,23 +51,19 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
               return SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     /// 🔹 HEADER
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(
-                          spacing: 16,
-                          mainAxisSize: MainAxisSize.min,
                           children: [
                             InkWell(
                               onTap: context.pop,
-                              child: const Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                              ),
+                              child: const Icon(Icons.arrow_back,
+                                  color: Colors.white),
                             ),
+                            const SizedBox(width: 12),
                             const Text(
                               "Profile",
                               style: TextStyle(
@@ -78,48 +80,51 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
 
                     const SizedBox(height: 20),
 
-                    /// 🔥 TOP SECTION (NOW DYNAMIC)
+                    /// 🔥 PROFILE CARD
                     _topProfileSection(p),
 
+                    const SizedBox(height: 16),
+
+                    /// 🔥 STATS GRID
+                    _statsGrid(),
+
+                    const SizedBox(height: 16),
+
+                    /// 🔥 MENU LIST
+                    _menuItem("Edit Profile", Icons.edit, onTap: () async {
+                      final result = await context.pushNamed(
+                        RouteNames.addEditProfileView,
+                        extra: vm.user,
+                      );
+
+                      if (result == true) {
+                        final failure = await vm.getUser();
+                        if (mounted) failure?.showError(context);
+                      }
+                    }),
+                    _menuItem("My Posted Jobs", Icons.work),
+                    _menuItem("Referrals", Icons.share),
+                    _menuItem("Alumni Network", Icons.group),
+                    _menuItem("Career Insights", Icons.trending_up,
+                        onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => const CareerInsightsPage(),
+                        ),
+                      );
+                    }),
+                    _menuItem("Notifications", Icons.notifications),
+
+                    const SizedBox(height: 16),
+
+                    /// 🔥 SWITCH
+                    _userTypeSwitch(),
+
                     const SizedBox(height: 20),
 
-                    /// 🔹 SKILLS (DYNAMIC)
-                    _skillsImpactSection(p),
-
-                    const SizedBox(height: 20),
-
-                    /// 🔹 MENU OPTIONS (UNCHANGED + EDIT FIXED)
-                    _menuItem(
-                      "Career Insights",
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const CareerInsightsPage(),
-                          ),
-                        );
-                      },
-                    ),
-
-                    _menuItem(
-                      "Edit Profile",
-                      onTap: () async {
-                        final result = await context.pushNamed(
-                          RouteNames.addEditProfileView,
-                          extra: vm.user,
-                        );
-
-                        if (result == true) {
-                          final failure = await vm.getUser();
-                          if (mounted) failure?.showError(context);
-                        }
-                      },
-                    ),
-
-                    _menuItem("Resume Builder"),
-                    _menuItem("Help & Support"),
-
-                    const SizedBox(height: 30),
+                    /// 🔥 SIGN OUT
+                    _signOut(),
                   ],
                 ),
               );
@@ -132,140 +137,151 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
 
   /// 🔥 TOP SECTION (CONNECTED TO BACKEND)
   Widget _topProfileSection(p) {
-    return Column(
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: AppColors.kCard,
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColors.kBorder),
+    ),
+    child: Column(
       children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.kCard,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.kBorder),
-          ),
-          child: Row(
-            children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: AppColors.kGreen.withOpacity(0.2),
-                child: (p?.profileImage ?? '').isNotEmpty
-                    ? ClipOval(
-                        child: Image.network(
-                          p.profileImage!,
-                          width: 56,
-                          height: 56,
-                          fit: BoxFit.cover,
-                        ),
-                      )
-                    : Text(
-                        (p?.name?.isNotEmpty ?? false)
-                            ? p.name![0].toUpperCase()
-                            : "A",
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-              ),
-              const SizedBox(width: 12),
-
-              /// USER INFO
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      p?.name ?? "-",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      p?.email ?? "-",
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      p?.phone ?? "-",
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
-                    ),
-                  ],
-                ),
-              ),
-
-              /// SOCIAL ICONS (LINKED)
-              Row(
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      final url = p?.linkedin;
-                      if (url != null && url.isNotEmpty) {
-                        final uri = Uri.parse(url);
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri);
-                        }
-                      }
-                    },
-                    child: _iconBox(Icons.link),
-                  ),
-                  const SizedBox(width: 8),
-                  GestureDetector(
-                    onTap: () async {
-                      final url = p?.github;
-                      if (url != null && url.isNotEmpty) {
-                        final uri = Uri.parse(url);
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri);
-                        }
-                      }
-                    },
-                    child: _iconBox(Icons.code),
-                  ),
-                ],
-              ),
-            ],
+        /// Avatar
+        CircleAvatar(
+          radius: 32,
+          backgroundColor: AppColors.kGreen,
+          child: Text(
+            (p?.name?.isNotEmpty ?? false)
+                ? p.name![0].toUpperCase()
+                : "A",
+            style: const TextStyle(
+              color: Colors.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
           ),
         ),
 
-        const SizedBox(height: 16),
+        const SizedBox(height: 10),
 
-        /// 🔥 KEEP STATIC (NOT INTEGRATED YET)
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.kCard,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.kBorder),
+        /// Name
+        Text(
+          p?.name ?? "-",
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
-                  Text(
-                    "Your Hiring Score",
-                    style: TextStyle(color: Colors.green),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    "72%",
-                    style: TextStyle(color: Colors.white, fontSize: 26),
-                  ),
-                  SizedBox(height: 4),
-                  Text(
-                    "Top 30%",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
-                  ),
-                ],
+        ),
+
+        const SizedBox(height: 4),
+
+        /// Role (you can map from backend later)
+        Text(
+          "Senior Frontend Engineer",
+          style: TextStyle(color: Colors.grey[400], fontSize: 12),
+        ),
+
+        const SizedBox(height: 2),
+
+        /// Location
+        Text(
+          "Bangalore, India",
+          style: TextStyle(color: Colors.grey[500], fontSize: 11),
+        ),
+
+        const SizedBox(height: 12),
+
+        /// Skills Chips
+        Wrap(
+          spacing: 8,
+          runSpacing: 6,
+          children: (p?.skills ?? ["React", "Node.js"]).map<Widget>((s) {
+            return Container(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: 5),
+              decoration: BoxDecoration(
+                color: AppColors.kGreen.withOpacity(0.15),
+                borderRadius: BorderRadius.circular(20),
               ),
-              const CircularProgressIndicator(value: 0.72),
-            ],
+              child: Text(
+                s,
+                style: TextStyle(
+                  color: AppColors.kGreen,
+                  fontSize: 11,
+                ),
+              ),
+            );
+          }).toList(),
+        ),
+
+        const SizedBox(height: 12),
+
+        /// Profile completion
+        Text(
+          "95% profile complete",
+          style: TextStyle(
+            color: AppColors.kGreen,
+            fontSize: 12,
           ),
         ),
       ],
-    );
-  }
+    ),
+  );
+}
+Widget _statsGrid() {
+  final stats = [
+    ["78%", "Referral Success"],
+    ["94%", "Response Rate"],
+    ["5", "Jobs Posted"],
+    ["23", "Referred"],
+    ["3", "Applications"],
+    ["156", "Alumni"],
+  ];
+
+  return GridView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    itemCount: stats.length,
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 3,
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      childAspectRatio: 1.3,
+    ),
+    itemBuilder: (_, i) {
+      return Container(
+        decoration: BoxDecoration(
+          color: AppColors.kCard,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.kBorder),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              stats[i][0],
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              stats[i][1],
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 11,
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
 
   /// 🔥 SKILLS (CONNECTED)
   Widget _skillsImpactSection(p) {
@@ -331,26 +347,74 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
     );
   }
 
-  Widget _menuItem(String title, {VoidCallback? onTap}) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10),
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.kCard,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.kBorder),
-        ),
-        child: Row(
-          children: [
-            Expanded(
-              child: Text(title, style: const TextStyle(color: Colors.white)),
-            ),
-            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
-          ],
-        ),
+ Widget _menuItem(String title, IconData icon, {VoidCallback? onTap}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      margin: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: AppColors.kBorder),
       ),
-    );
-  }
+      child: Row(
+        children: [
+          Icon(icon, color: AppColors.kGreen),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Text(title,
+                style: const TextStyle(color: Colors.white)),
+          ),
+          const Icon(Icons.arrow_forward_ios,
+              size: 14, color: Colors.grey),
+        ],
+      ),
+    ),
+  );
+}
+Widget _signOut() {
+  return Center(
+    child: Text(
+      "Sign Out",
+      style: TextStyle(
+        color: Colors.red,
+        fontWeight: FontWeight.w500,
+      ),
+    ),
+  );
+}
+Widget _userTypeSwitch() {
+  return Container(
+    padding: const EdgeInsets.all(6),
+    decoration: BoxDecoration(
+      color: AppColors.kCard,
+      borderRadius: BorderRadius.circular(30),
+      border: Border.all(color: AppColors.kBorder),
+    ),
+    child: Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 10),
+            decoration: BoxDecoration(
+              color: AppColors.kGreen,
+              borderRadius: BorderRadius.circular(25),
+            ),
+            child: const Center(
+              child: Text("Professional",
+                  style: TextStyle(color: Colors.black)),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: Text("Student / Fresher",
+                style: TextStyle(color: Colors.grey)),
+          ),
+        ),
+      ],
+    ),
+  );
+}
 }
