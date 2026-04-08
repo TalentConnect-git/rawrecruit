@@ -12,9 +12,9 @@ import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_e
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
 
 class AddEditProfileView extends StatefulWidget {
-  const AddEditProfileView({this.userProfile, super.key});
+  const AddEditProfileView({this.user, super.key});
 
-  final UserProfile? userProfile;
+  final User? user;
 
   @override
   State<AddEditProfileView> createState() => _AddEditProfileViewState();
@@ -23,8 +23,7 @@ class AddEditProfileView extends StatefulWidget {
 class _AddEditProfileViewState extends State<AddEditProfileView> {
   final AddEditProfileViewModel addEditProfileViewModel =
       AddEditProfileViewModel();
-  late UserProfileController controller =
-      addEditProfileViewModel.userProfileController;
+  late UserController controller = addEditProfileViewModel.userController;
   final _formKey = GlobalKey<FormState>();
   bool _isParsingResume = false;
   File? _pickedResumeFile;
@@ -191,9 +190,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       "Information Technology",
       "Other",
     ],
-    "Other": [
-      "Other",
-    ],
+    "Other": ["Other"],
   };
 
   static const List<String> _defaultSpecializations = ["Other"];
@@ -207,24 +204,49 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
   final semesterOptions = List.generate(8, (i) => "Semester ${i + 1}");
 
-  final graduationYears =
-      List.generate(91, (i) => (1960 + i).toString());
+  final graduationYears = List.generate(91, (i) => (1960 + i).toString());
 
   final industryOptions = [
-    "Technology", "Finance", "Healthcare", "Education", "Manufacturing",
-    "Retail", "Automobile", "Construction", "Telecommunications", "Media",
-    "Hospitality", "Pharmaceutical", "Energy", "Logistics", "Agriculture",
+    "Technology",
+    "Finance",
+    "Healthcare",
+    "Education",
+    "Manufacturing",
+    "Retail",
+    "Automobile",
+    "Construction",
+    "Telecommunications",
+    "Media",
+    "Hospitality",
+    "Pharmaceutical",
+    "Energy",
+    "Logistics",
+    "Agriculture",
     "Others",
   ];
 
   final jobRoleOptions = [
-    "Software Developer", "Frontend Developer", "Backend Developer",
-    "Full Stack Developer", "Mobile App Developer", "UI/UX Designer",
-    "Data Analyst", "Data Scientist", "Machine Learning Engineer",
-    "DevOps Engineer", "Cloud Architect", "QA Engineer",
-    "Cyber Security Specialist", "Network Engineer", "Business Analyst",
-    "Product Manager", "Project Manager", "HR Recruiter",
-    "Marketing Specialist", "Sales Executive", "Finance Analyst",
+    "Software Developer",
+    "Frontend Developer",
+    "Backend Developer",
+    "Full Stack Developer",
+    "Mobile App Developer",
+    "UI/UX Designer",
+    "Data Analyst",
+    "Data Scientist",
+    "Machine Learning Engineer",
+    "DevOps Engineer",
+    "Cloud Architect",
+    "QA Engineer",
+    "Cyber Security Specialist",
+    "Network Engineer",
+    "Business Analyst",
+    "Product Manager",
+    "Project Manager",
+    "HR Recruiter",
+    "Marketing Specialist",
+    "Sales Executive",
+    "Finance Analyst",
     "Others",
   ];
 
@@ -232,9 +254,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
   final lookingForOptions = ["Internship", "Job", "Both"];
 
-  final genderOptions = [
-    "Male", "Female", "Non-binary", "Prefer not to say",
-  ];
+  final genderOptions = ["Male", "Female", "Non-binary", "Prefer not to say"];
 
   final ethnicityOptions = [
     "Asian",
@@ -256,39 +276,102 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   ];
 
   final toolsOptions = [
-    "VS Code", "Android Studio", "Xcode", "Postman", "Docker", "Kubernetes",
-    "GitHub", "GitLab", "JIRA", "Slack", "Figma", "Adobe XD", "Jenkins",
-    "Firebase", "AWS Console", "Google Cloud Platform",
+    "VS Code",
+    "Android Studio",
+    "Xcode",
+    "Postman",
+    "Docker",
+    "Kubernetes",
+    "GitHub",
+    "GitLab",
+    "JIRA",
+    "Slack",
+    "Figma",
+    "Adobe XD",
+    "Jenkins",
+    "Firebase",
+    "AWS Console",
+    "Google Cloud Platform",
     "Others",
   ];
 
   final languageOptions = [
-    "English", "Hindi", "Marathi", "Gujarati", "Tamil", "Telugu", "Kannada",
-    "Malayalam", "Punjabi", "Bengali", "French", "German", "Spanish",
-    "Japanese", "Chinese",
+    "English",
+    "Hindi",
+    "Marathi",
+    "Gujarati",
+    "Tamil",
+    "Telugu",
+    "Kannada",
+    "Malayalam",
+    "Punjabi",
+    "Bengali",
+    "French",
+    "German",
+    "Spanish",
+    "Japanese",
+    "Chinese",
     "Others",
   ];
 
   final domainKnowledgeOptions = [
-    "Web Development", "Mobile Development", "Machine Learning", "Deep Learning",
-    "Data Engineering", "Cloud Computing", "Blockchain", "IoT",
-    "Cybersecurity", "AR/VR", "Game Development", "Embedded Systems",
+    "Web Development",
+    "Mobile Development",
+    "Machine Learning",
+    "Deep Learning",
+    "Data Engineering",
+    "Cloud Computing",
+    "Blockchain",
+    "IoT",
+    "Cybersecurity",
+    "AR/VR",
+    "Game Development",
+    "Embedded Systems",
     "Others",
   ];
 
   final skillOptions = [
-    "Flutter", "Dart", "React", "React Native", "Angular", "Vue.js",
-    "Node.js", "Python", "Java", "Kotlin", "Swift", "JavaScript",
-    "TypeScript", "C++", "C#", "Go", "Rust", "PHP", "Ruby", "SQL",
-    "MongoDB", "Firebase", "GraphQL", "REST APIs", "Docker", "Kubernetes",
-    "AWS", "Azure", "Git", "Linux",
+    "Flutter",
+    "Dart",
+    "React",
+    "React Native",
+    "Angular",
+    "Vue.js",
+    "Node.js",
+    "Python",
+    "Java",
+    "Kotlin",
+    "Swift",
+    "JavaScript",
+    "TypeScript",
+    "C++",
+    "C#",
+    "Go",
+    "Rust",
+    "PHP",
+    "Ruby",
+    "SQL",
+    "MongoDB",
+    "Firebase",
+    "GraphQL",
+    "REST APIs",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "Azure",
+    "Git",
+    "Linux",
     "Others",
   ];
 
   final shiftOptions = ["Day", "Night", "Rotational", "Any"];
 
   final maritalStatusOptions = [
-    "Single", "Married", "Divorced", "Widowed", "Prefer not to say",
+    "Single",
+    "Married",
+    "Divorced",
+    "Widowed",
+    "Prefer not to say",
   ];
 
   // ── State ────────────────────────────────────────────────────────────────────
@@ -311,7 +394,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     controller.awards.add(AwardController());
     controller.publications.add(PublicationController());
 
-    addEditProfileViewModel.setUserProfileController(widget.userProfile);
+    addEditProfileViewModel.setUserController(widget.user);
   }
 
   @override
@@ -329,29 +412,31 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       child: Stack(
         children: [
           Scaffold(
-             backgroundColor: AppColors.kBg,
+            backgroundColor: AppColors.kBg,
             appBar: RAppBar(
-              leading: widget.userProfile != null
+              leading: widget.user != null
                   ? IconButton(
                       onPressed: () => context.pop(),
-                      icon:  Icon(Icons.keyboard_arrow_left,color: AppColors.white,),
+                      icon: Icon(
+                        Icons.keyboard_arrow_left,
+                        color: AppColors.white,
+                      ),
                     )
                   : null,
               title: Text(
-                widget.userProfile != null
-                    ? 'Edit Profile'
-                    : 'Complete your profile',
+                widget.user != null ? 'Edit Profile' : 'Complete your profile',
                 style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
               ),
             ),
             body: Form(
               key: _formKey,
               child: SingleChildScrollView(
-
                 physics: const BouncingScrollPhysics(),
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 20,
+                ),
                 child: Column(
-
                   crossAxisAlignment: CrossAxisAlignment.center,
                   spacing: 20,
                   children: [
@@ -367,35 +452,53 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                       spacing: 16,
                       children: [
                         ProfileImage(
-                          imagePath: widget.userProfile?.profileImage ?? '',
+                          imagePath: widget.user?.profileImage ?? '',
                           onImageSelected: (image) {
                             addEditProfileViewModel.pickedImage = image;
                           },
                         ),
                         AppTextFields(
-
                           controller: controller.name,
                           hint: 'Name',
-                          validator: (v) =>
-                              (v == null || v.isEmpty) ? 'Name is required' : null,
+                          validator: (v) => (v == null || v.isEmpty)
+                              ? 'Name is required'
+                              : null,
                         ),
                         AppTextFields(
                           controller: controller.email,
                           hint: 'Email',
-                          validator: (v) =>
-                              (v == null || v.isEmpty) ? 'Email is required' : null,
+                          validator: (v) => (v == null || v.isEmpty)
+                              ? 'Email is required'
+                              : null,
                         ),
                         AppTextFields(
                           controller: controller.phone,
                           hint: 'Phone',
-                          validator: (v) =>
-                              (v == null || v.isEmpty) ? 'Phone number is required' : null,
+                          validator: (v) => (v == null || v.isEmpty)
+                              ? 'Phone number is required'
+                              : null,
                         ),
-                        _dropdownField(controller.gender, 'Gender', genderOptions),
+                        _dropdownField(
+                          controller.gender,
+                          'Gender',
+                          genderOptions,
+                        ),
                         _datePickerField(controller.dob, 'Date of Birth'),
-                        _dropdownField(controller.ethnicity, 'Ethnicity', ethnicityOptions),
-                        _dropdownField(controller.maritalStatus, 'Marital Status', maritalStatusOptions),
-                        _dropdownField(controller.visaStatus, 'Visa Status / Work Authorization', visaStatusOptions),
+                        _dropdownField(
+                          controller.ethnicity,
+                          'Ethnicity',
+                          ethnicityOptions,
+                        ),
+                        _dropdownField(
+                          controller.maritalStatus,
+                          'Marital Status',
+                          maritalStatusOptions,
+                        ),
+                        _dropdownField(
+                          controller.visaStatus,
+                          'Visa Status / Work Authorization',
+                          visaStatusOptions,
+                        ),
                       ],
                     ),
 
@@ -404,7 +507,10 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                       label: 'Education',
                       spacing: 16,
                       children: [
-                        AppTextFields(controller: controller.college, hint: 'College'),
+                        AppTextFields(
+                          controller: controller.college,
+                          hint: 'College',
+                        ),
 
                         // 1️⃣ Degree — shown first
                         _degreeDropdownField(),
@@ -412,9 +518,20 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                         // 2️⃣ Specialization — shown after degree, options depend on selected degree
                         _specializationDropdownField(),
 
-                        _dropdownField(controller.semester, 'Semester', semesterOptions),
-                        _dropdownField(controller.yearOfGraduation, 'Graduation Year', graduationYears),
-                        AppTextFields(controller: controller.cgpa, hint: 'CGPA'),
+                        _dropdownField(
+                          controller.semester,
+                          'Semester',
+                          semesterOptions,
+                        ),
+                        _dropdownField(
+                          controller.yearOfGraduation,
+                          'Graduation Year',
+                          graduationYears,
+                        ),
+                        AppTextFields(
+                          controller: controller.cgpa,
+                          hint: 'CGPA',
+                        ),
                       ],
                     ),
 
@@ -423,10 +540,22 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                       label: 'Links',
                       spacing: 16,
                       children: [
-                        AppTextFields(controller: controller.github, hint: 'Github'),
-                        AppTextFields(controller: controller.linkedin, hint: 'LinkedIn'),
-                        AppTextFields(controller: controller.portfolio, hint: 'Portfolio'),
-                        AppTextFields(controller: controller.resume, hint: 'Resume URL'),
+                        AppTextFields(
+                          controller: controller.github,
+                          hint: 'Github',
+                        ),
+                        AppTextFields(
+                          controller: controller.linkedin,
+                          hint: 'LinkedIn',
+                        ),
+                        AppTextFields(
+                          controller: controller.portfolio,
+                          hint: 'Portfolio',
+                        ),
+                        AppTextFields(
+                          controller: controller.resume,
+                          hint: 'Resume URL',
+                        ),
                       ],
                     ),
 
@@ -435,11 +564,27 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                       label: 'Career',
                       spacing: 16,
                       children: [
-                        _dropdownField(controller.openToShift, 'Open To Shift', shiftOptions),
-                        AppTextFields(controller: controller.currentSalaryAmount, hint: 'Current Salary'),
-                        AppTextFields(controller: controller.currentSalaryCurrency, hint: 'Current Currency'),
-                        AppTextFields(controller: controller.expectedSalaryAmount, hint: 'Expected Salary'),
-                        AppTextFields(controller: controller.expectedSalaryCurrency, hint: 'Expected Currency'),
+                        _dropdownField(
+                          controller.openToShift,
+                          'Open To Shift',
+                          shiftOptions,
+                        ),
+                        AppTextFields(
+                          controller: controller.currentSalaryAmount,
+                          hint: 'Current Salary',
+                        ),
+                        AppTextFields(
+                          controller: controller.currentSalaryCurrency,
+                          hint: 'Current Currency',
+                        ),
+                        AppTextFields(
+                          controller: controller.expectedSalaryAmount,
+                          hint: 'Expected Salary',
+                        ),
+                        AppTextFields(
+                          controller: controller.expectedSalaryCurrency,
+                          hint: 'Expected Currency',
+                        ),
                       ],
                     ),
 
@@ -448,13 +593,23 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                       label: 'About',
                       spacing: 16,
                       children: [
-                        AppTextFields(controller: controller.about, hint: 'About'),
-                        AppTextFields(controller: controller.certifications, hint: 'Certifications'),
+                        AppTextFields(
+                          controller: controller.about,
+                          hint: 'About',
+                        ),
+                        AppTextFields(
+                          controller: controller.certifications,
+                          hint: 'Certifications',
+                        ),
                       ],
                     ),
 
                     // ── CHIP / MULTI-SELECT SECTIONS ──────────────────────
-                    _chipMultiSelectField('Skills', controller.skills.first, skillOptions),
+                    _chipMultiSelectField(
+                      'Skills',
+                      controller.skills.first,
+                      skillOptions,
+                    ),
                     _chipMultiSelectField(
                       'Domain Knowledge',
                       controller.domainKnowledge.first,
@@ -496,16 +651,24 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                     ProfileSection(
                       label: 'Achievements',
                       trailing: _addButton(() {
-                        setState(() => controller.achievements.add(AchievementController()));
+                        setState(
+                          () => controller.achievements.add(
+                            AchievementController(),
+                          ),
+                        );
                       }),
-                      children: controller.achievements.map(_achievementForm).toList(),
+                      children: controller.achievements
+                          .map(_achievementForm)
+                          .toList(),
                     ),
 
                     // ── AWARDS ────────────────────────────────────────────
                     ProfileSection(
                       label: 'Awards',
                       trailing: _addButton(() {
-                        setState(() => controller.awards.add(AwardController()));
+                        setState(
+                          () => controller.awards.add(AwardController()),
+                        );
                       }),
                       children: controller.awards.map(_awardForm).toList(),
                     ),
@@ -514,9 +677,15 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                     ProfileSection(
                       label: 'Publications',
                       trailing: _addButton(() {
-                        setState(() => controller.publications.add(PublicationController()));
+                        setState(
+                          () => controller.publications.add(
+                            PublicationController(),
+                          ),
+                        );
                       }),
-                      children: controller.publications.map(_publicationForm).toList(),
+                      children: controller.publications
+                          .map(_publicationForm)
+                          .toList(),
                     ),
 
                     const SizedBox(height: 80),
@@ -524,7 +693,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                 ),
               ),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerFloat,
             floatingActionButton: Selector<AddEditProfileViewModel, bool>(
               selector: (_, vm) => vm.isLoading,
               builder: (_, isLoading, _) {
@@ -539,16 +709,16 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                         backgroundColor: AppColors.kGreen,
                         onPressed: () async {
                           if (_formKey.currentState!.validate()) {
-                            final failure =
-                                await addEditProfileViewModel.saveProfile();
+                            final failure = await addEditProfileViewModel
+                                .saveProfile();
                             Toasts.showSuccessOrFailureToast(
                               context,
                               failure: failure,
-                              popOnSuccess: widget.userProfile != null,
+                              popOnSuccess: widget.user != null,
                               successTitle: 'Profile Updated!',
                               successMsg: 'Profile updated successfully',
                               successCallback: () {
-                                if (widget.userProfile == null) {
+                                if (widget.user == null) {
                                   context.goNamed(RouteNames.dashboard);
                                 }
                               },
@@ -557,7 +727,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                         },
                         child: Text(
                           'Save Profile',
-                          style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+                          style: AppTextStyles.s16W600.copyWith(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
                     ],
@@ -593,8 +765,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
   /// Degree dropdown — when selection changes, reset specialization.
   Widget _degreeDropdownField() {
-    final selectedValue =
-        degreeOptions.contains(controller.degree.text) ? controller.degree.text : null;
+    final selectedValue = degreeOptions.contains(controller.degree.text)
+        ? controller.degree.text
+        : null;
     return DropdownButtonFormField<String>(
       value: selectedValue,
       decoration: const InputDecoration(
@@ -618,10 +791,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   /// Specialization dropdown — options are driven by the selected degree.
   Widget _specializationDropdownField() {
     final options = _currentSpecializationOptions;
-    final selectedValue =
-        options.contains(controller.specialization.text)
-            ? controller.specialization.text
-            : null;
+    final selectedValue = options.contains(controller.specialization.text)
+        ? controller.specialization.text
+        : null;
 
     return DropdownButtonFormField<String>(
       value: selectedValue,
@@ -649,50 +821,50 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   // ── Sub-form builders ────────────────────────────────────────────────────────
 
   Widget _achievementForm(AchievementController a) => Column(
-        spacing: 16,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Achievement ${controller.achievements.indexOf(a) + 1}',
-            style: AppTextStyles.s14W600,
-          ),
-          AppTextFields(controller: a.title, hint: 'Title'),
-          AppTextFields(controller: a.event, hint: 'Event'),
-          AppTextFields(controller: a.date, hint: 'Date'),
-          const AppDivider(),
-        ],
-      );
+    spacing: 16,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Achievement ${controller.achievements.indexOf(a) + 1}',
+        style: AppTextStyles.s14W600,
+      ),
+      AppTextFields(controller: a.title, hint: 'Title'),
+      AppTextFields(controller: a.event, hint: 'Event'),
+      AppTextFields(controller: a.date, hint: 'Date'),
+      const AppDivider(),
+    ],
+  );
 
   Widget _awardForm(AwardController a) => Column(
-        spacing: 16,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Award ${controller.awards.indexOf(a) + 1}',
-            style: AppTextStyles.s14W600,
-          ),
-          AppTextFields(controller: a.title, hint: 'Title'),
-          AppTextFields(controller: a.organization, hint: 'Organization'),
-          AppTextFields(controller: a.startDate, hint: 'Start Date'),
-          AppTextFields(controller: a.endDate, hint: 'End Date'),
-          AppTextFields(controller: a.description, hint: 'Description'),
-          const AppDivider(),
-        ],
-      );
+    spacing: 16,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Award ${controller.awards.indexOf(a) + 1}',
+        style: AppTextStyles.s14W600,
+      ),
+      AppTextFields(controller: a.title, hint: 'Title'),
+      AppTextFields(controller: a.organization, hint: 'Organization'),
+      AppTextFields(controller: a.startDate, hint: 'Start Date'),
+      AppTextFields(controller: a.endDate, hint: 'End Date'),
+      AppTextFields(controller: a.description, hint: 'Description'),
+      const AppDivider(),
+    ],
+  );
 
   Widget _publicationForm(PublicationController p) => Column(
-        spacing: 16,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Publication ${controller.publications.indexOf(p) + 1}',
-            style: AppTextStyles.s14W600,
-          ),
-          AppTextFields(controller: p.title, hint: 'Title'),
-          AppTextFields(controller: p.url, hint: 'URL'),
-          const AppDivider(),
-        ],
-      );
+    spacing: 16,
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Text(
+        'Publication ${controller.publications.indexOf(p) + 1}',
+        style: AppTextStyles.s14W600,
+      ),
+      AppTextFields(controller: p.title, hint: 'Title'),
+      AppTextFields(controller: p.url, hint: 'URL'),
+      const AppDivider(),
+    ],
+  );
 
   // ── Reusable field helpers ───────────────────────────────────────────────────
 
@@ -722,46 +894,48 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       ),
     );
   }
-Widget _dropdownField(
-  TextEditingController ctrl,
-  String hint,
-  List<String> options,
 
-) {
-  final selectedValue = options.contains(ctrl.text) ? ctrl.text : null;
-  return DropdownButtonFormField<String>(
-    value: selectedValue,
-    decoration: InputDecoration(
-      border: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white), // ✅
+  Widget _dropdownField(
+    TextEditingController ctrl,
+    String hint,
+    List<String> options,
+  ) {
+    final selectedValue = options.contains(ctrl.text) ? ctrl.text : null;
+    return DropdownButtonFormField<String>(
+      value: selectedValue,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // ✅
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // ✅
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white), // ✅
+        ),
+
+        floatingLabelStyle: AppTextStyles.s16W400.copyWith(
+          color: AppColors.white,
+        ),
       ),
-      enabledBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white), // ✅
+      hint: Text(
+        hint,
+        style: TextStyle(color: Colors.white), // ✅
       ),
-      focusedBorder: OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white), // ✅
-      ),
-         
-              floatingLabelStyle: AppTextStyles.s16W400.copyWith(
-                color: AppColors.white,
-              ),
-    ),
-    hint: Text(
-      hint,
-      style: TextStyle(color: Colors.white), // ✅
-    ),
-    items: options
-        .map((e) => DropdownMenuItem(
+      items: options
+          .map(
+            (e) => DropdownMenuItem(
               value: e,
               child: Text(
                 e,
                 style: TextStyle(color: Colors.white), // optional but better
               ),
-            ))
-        .toList(),
-    onChanged: (val) => setState(() => ctrl.text = val ?? ''),
-  );
-}
+            ),
+          )
+          .toList(),
+      onChanged: (val) => setState(() => ctrl.text = val ?? ''),
+    );
+  }
 
   Widget _datePickerField(TextEditingController ctrl, String hint) {
     return TextFormField(
@@ -875,8 +1049,7 @@ Widget _dropdownField(
         controller.portfolio.text = data['portfolio_url'];
 
       if (data['skills'] != null && data['skills'] is List) {
-        controller.skills.first.text =
-            (data['skills'] as List).join(', ');
+        controller.skills.first.text = (data['skills'] as List).join(', ');
       }
 
       if (data['education'] != null &&
@@ -887,15 +1060,18 @@ Widget _dropdownField(
           controller.college.text = edu['institution'];
         if (edu['degree'] != null) {
           final parsedDegree = edu['degree'].toString();
-          if (!degreeOptions.contains(parsedDegree)) degreeOptions.add(parsedDegree);
+          if (!degreeOptions.contains(parsedDegree))
+            degreeOptions.add(parsedDegree);
           controller.degree.text = parsedDegree;
           // Reset specialization when degree is set from resume
           controller.specialization.text = '';
         }
         // Set specialization only if it's valid for the parsed degree
-        if (controller.specialization.text.isEmpty && edu['field_of_study'] != null) {
+        if (controller.specialization.text.isEmpty &&
+            edu['field_of_study'] != null) {
           final parsedSpec = edu['field_of_study'].toString();
-          final specOptions = _specializationByDegree[controller.degree.text] ??
+          final specOptions =
+              _specializationByDegree[controller.degree.text] ??
               _defaultSpecializations;
           if (!specOptions.contains(parsedSpec)) {
             // Add the parsed value dynamically so the dropdown can show it
@@ -1003,8 +1179,9 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
   Widget build(BuildContext context) {
     final selected = _selectedItems;
     final hasEnums = widget.options.isNotEmpty;
-    final customItems =
-        selected.where((s) => !widget.options.contains(s)).toList();
+    final customItems = selected
+        .where((s) => !widget.options.contains(s))
+        .toList();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -1022,7 +1199,6 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-
               if (hasEnums) ...[
                 Wrap(
                   spacing: 8,
@@ -1037,8 +1213,9 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                       checkmarkColor: AppColors.primary,
                       labelStyle: TextStyle(
                         color: isSelected ? AppColors.primary : null,
-                        fontWeight:
-                            isSelected ? FontWeight.w600 : FontWeight.normal,
+                        fontWeight: isSelected
+                            ? FontWeight.w600
+                            : FontWeight.normal,
                       ),
                     );
                   }).toList(),
@@ -1073,27 +1250,29 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                   optionsBuilder: (textEditingValue) {
                     if (textEditingValue.text.isEmpty) return const [];
                     return widget.options
-                        .where((item) =>
-                            item != 'Others' &&
-                            item.toLowerCase().contains(
-                                  textEditingValue.text.toLowerCase(),
-                                ))
+                        .where(
+                          (item) =>
+                              item != 'Others' &&
+                              item.toLowerCase().contains(
+                                textEditingValue.text.toLowerCase(),
+                              ),
+                        )
                         .toList();
                   },
                   onSelected: _addItem,
                   fieldViewBuilder:
                       (context, textController, textFocusNode, onSubmit) {
-                    return TextField(
-                      controller: _textController,
-                      focusNode: _focusNode,
-                      decoration: const InputDecoration(
-                        hintText: 'Type and press Enter to add',
-                        border: InputBorder.none,
-                        isDense: true,
-                      ),
-                      onSubmitted: _addItem,
-                    );
-                  },
+                        return TextField(
+                          controller: _textController,
+                          focusNode: _focusNode,
+                          decoration: const InputDecoration(
+                            hintText: 'Type and press Enter to add',
+                            border: InputBorder.none,
+                            isDense: true,
+                          ),
+                          onSubmitted: _addItem,
+                        );
+                      },
                 ),
               ],
 

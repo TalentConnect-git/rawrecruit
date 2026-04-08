@@ -11,7 +11,7 @@ _ReferralApplication _$ReferralApplicationFromJson(Map<String, dynamic> json) =>
       id: json['_id'] as String?,
       applicant: json['applicant'] == null
           ? null
-          : UserProfile.fromJson(json['applicant'] as Map<String, dynamic>),
+          : User.fromJson(json['applicant'] as Map<String, dynamic>),
       applicantType: json['applicantType'] as String?,
       adminApprovalStatus: json['adminApprovalStatus'] as String?,
       job: json['job'] == null

@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:rawrecruit/src/core/index.dart'
     show
+        User,
         Auth,
         ViewStateProvider,
         Failure,
@@ -13,42 +14,44 @@ import 'package:rawrecruit/src/core/index.dart'
 import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
-    show OnboardingRepository, UserProfile;
+    show OnboardingRepository;
 
 import '../network/socket_service.dart';
 
 class AppStateProvider extends ViewStateProvider {
   String get userEmail => auth?.email ?? '';
-String get userId => auth?.id ?? '';
+  String get userId => auth?.id ?? '';
   UserType? get userType => auth?.userType;
 
   bool get isProfessional => userType == UserType.professional;
 
   Auth? _auth;
   UserType? _selectedUserType;
-UserType? get selectedUserType => _selectedUserType;
+  UserType? get selectedUserType => _selectedUserType;
 
-set selectedUserType(UserType? type) {
-  _selectedUserType = type;
-  notifyListeners();
-}
+  set selectedUserType(UserType? type) {
+    _selectedUserType = type;
+    notifyListeners();
+  }
+
   Auth? get auth => _auth;
   set auth(Auth? auth) {
     _auth = auth;
     if (auth != null && auth.id != null) {
-    SocketService().connect(auth.id!);
-  }
+      SocketService().connect(auth.id!);
+    }
 
     notifyListeners();
   }
 
-  UserProfile? _user;
-  UserProfile? get user => _user;
-  set user(UserProfile? user) {
+  User? _user;
+  User? get user => _user;
+  set user(User? user) {
     _user = user;
     notifyListeners();
   }
-    OnboardingData? _onboardingData;
+
+  OnboardingData? _onboardingData;
   OnboardingData? get data => _onboardingData;
   set data(OnboardingData? data) {
     _onboardingData = data;
@@ -106,8 +109,7 @@ set selectedUserType(UserType? type) {
     final token = await SecretRepo.getString('auth_token');
     log(token ?? '', name: 'OnboardingToken');
 
-    final result = await getIt<OnboardingRepository>()
-        .getOnboardingUserProfile();
+    final result = await getIt<OnboardingRepository>().getOnboardingUser();
 
     result.fold(
       (exception) {

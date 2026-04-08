@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
-import '../../data/revamp_entities/onboarding_model.dart';
 
 class LinksPage extends StatefulWidget {
   final VoidCallback onBack;
-  final OnboardingData data;
+  final User data;
 
-  const LinksPage({
-    super.key,
-    required this.onBack,
-    required this.data,
-  });
+  const LinksPage({super.key, required this.onBack, required this.data});
 
   @override
   State<LinksPage> createState() => _LinksPageState();
@@ -73,17 +69,29 @@ class _LinksPageState extends State<LinksPage> {
 
         const SizedBox(height: 10),
 
-        AppInput("Github",
-            controller: githubCtrl, onChanged: (_) => saveData()),
+        AppInput(
+          "Github",
+          controller: githubCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
-        AppInput("LinkedIn",
-            controller: linkedinCtrl, onChanged: (_) => saveData()),
+        AppInput(
+          "LinkedIn",
+          controller: linkedinCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
-        AppInput("Portfolio",
-            controller: portfolioCtrl, onChanged: (_) => saveData()),
+        AppInput(
+          "Portfolio",
+          controller: portfolioCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
-        AppInput("Resume URL",
-            controller: resumeCtrl, onChanged: (_) => saveData()),
+        AppInput(
+          "Resume URL",
+          controller: resumeCtrl,
+          onChanged: (_) => saveData(),
+        ),
       ],
     );
   }

@@ -4,11 +4,10 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 
 import '../../../core/index.dart';
-import '../data/entities/chat_user_model.dart';
 import '../index.dart';
 
 class ChatDetailView extends StatefulWidget {
-  final ChatUserModel user;
+  final User user;
 
   const ChatDetailView({super.key, required this.user});
 
@@ -189,7 +188,7 @@ class _ChatDetailViewState extends State<ChatDetailView> {
     );
   }
 
-  String name(ChatUserModel user) {
+  String name(User user) {
     if (user.name != null && user.name!.trim().isNotEmpty) {
       return user.name!;
     }

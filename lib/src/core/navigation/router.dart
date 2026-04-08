@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rawrecruit/src/core/index.dart' show RouteNames, UserType;
+import 'package:rawrecruit/src/core/index.dart' show RouteNames, User, UserType;
 import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_view.dart';
@@ -18,7 +18,6 @@ import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_contr
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
-import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/presentation/application_list_view.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/applicant_detail_screen.dart';
@@ -155,8 +154,8 @@ class AppRouter {
         name: RouteNames.addEditProfileView,
         path: '/add-edit-profile-view',
         builder: (context, state) {
-          final userProfile = state.extra as UserProfile?;
-          return AddEditProfileView(userProfile: userProfile);
+          final user = state.extra as User?;
+          return AddEditProfileView(user: user);
         },
       ),
       GoRoute(

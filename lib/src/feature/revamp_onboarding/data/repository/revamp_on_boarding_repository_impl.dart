@@ -1,9 +1,7 @@
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:rawrecruit/src/core/network/typedef.dart';
-import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
-
+import 'package:rawrecruit/src/core/index.dart';
 
 import '../data_source/revamp_on_boarding_data_source.dart';
 import 'index.dart';
@@ -16,25 +14,25 @@ class RevampOnboardingRepositoryImpl implements RevampOnboardingRepository {
   final RevampOnboardingDataSource _onboardingDataSource;
 
   @override
-  ResultFuture<OnboardingData?> getOnboardingUserProfile() =>
-      _onboardingDataSource.getOnboardingUserProfile();
+  ResultFuture<User?> getOnboardingUser() =>
+      _onboardingDataSource.getOnboardingUser();
 
   @override
-  ResultFuture<OnboardingData?> submitOnboardingUserProfile({
+  ResultFuture<User?> submitOnboardingUser({
     required Map<String, dynamic> body,
     File? resume,
     XFile? image,
-  }) => _onboardingDataSource.submitOnboardingUserProfile(
+  }) => _onboardingDataSource.submitOnboardingUser(
     body: body,
     resume: resume,
     image: image,
   );
   @override
-  ResultFuture<OnboardingData?> updateOnboardingUserProfile({
+  ResultFuture<User?> updateOnboardingUser({
     required Map<String, dynamic> body,
     File? resume, // ← ADD
     XFile? image,
-  }) => _onboardingDataSource.updateOnboardingUserProfile(
+  }) => _onboardingDataSource.updateOnboardingUser(
     body: body,
     resume: resume, // ← ADD
     image: image,

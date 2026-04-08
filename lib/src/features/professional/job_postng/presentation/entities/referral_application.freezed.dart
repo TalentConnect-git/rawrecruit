@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReferralApplication {
 
-@JsonKey(name: '_id') String? get id; UserProfile? get applicant; String? get applicantType; String? get adminApprovalStatus; ReferralPostModel? get job;@ApplicationStatusConvertor() ApplicationStatus? get currentStatus; DateTime? get createdAt;
+@JsonKey(name: '_id') String? get id; User? get applicant; String? get applicantType; String? get adminApprovalStatus; ReferralPostModel? get job;@ApplicationStatusConvertor() ApplicationStatus? get currentStatus; DateTime? get createdAt;
 /// Create a copy of ReferralApplication
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $ReferralApplicationCopyWith<$Res>  {
   factory $ReferralApplicationCopyWith(ReferralApplication value, $Res Function(ReferralApplication) _then) = _$ReferralApplicationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, UserProfile? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job,@ApplicationStatusConvertor() ApplicationStatus? currentStatus, DateTime? createdAt
+@JsonKey(name: '_id') String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job,@ApplicationStatusConvertor() ApplicationStatus? currentStatus, DateTime? createdAt
 });
 
 
-$UserProfileCopyWith<$Res>? get applicant;$ReferralPostModelCopyWith<$Res>? get job;
+$UserCopyWith<$Res>? get applicant;$ReferralPostModelCopyWith<$Res>? get job;
 
 }
 /// @nodoc
@@ -69,7 +69,7 @@ class _$ReferralApplicationCopyWithImpl<$Res>
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,applicant: freezed == applicant ? _self.applicant : applicant // ignore: cast_nullable_to_non_nullable
-as UserProfile?,applicantType: freezed == applicantType ? _self.applicantType : applicantType // ignore: cast_nullable_to_non_nullable
+as User?,applicantType: freezed == applicantType ? _self.applicantType : applicantType // ignore: cast_nullable_to_non_nullable
 as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminApprovalStatus : adminApprovalStatus // ignore: cast_nullable_to_non_nullable
 as String?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
 as ReferralPostModel?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
@@ -81,12 +81,12 @@ as DateTime?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserProfileCopyWith<$Res>? get applicant {
+$UserCopyWith<$Res>? get applicant {
     if (_self.applicant == null) {
     return null;
   }
 
-  return $UserProfileCopyWith<$Res>(_self.applicant!, (value) {
+  return $UserCopyWith<$Res>(_self.applicant!, (value) {
     return _then(_self.copyWith(applicant: value));
   });
 }/// Create a copy of ReferralApplication
@@ -183,7 +183,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  UserProfile? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job, @ApplicationStatusConvertor()  ApplicationStatus? currentStatus,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job, @ApplicationStatusConvertor()  ApplicationStatus? currentStatus,  DateTime? createdAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReferralApplication() when $default != null:
 return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.currentStatus,_that.createdAt);case _:
@@ -204,7 +204,7 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApproval
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  UserProfile? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job, @ApplicationStatusConvertor()  ApplicationStatus? currentStatus,  DateTime? createdAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job, @ApplicationStatusConvertor()  ApplicationStatus? currentStatus,  DateTime? createdAt)  $default,) {final _that = this;
 switch (_that) {
 case _ReferralApplication():
 return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.currentStatus,_that.createdAt);case _:
@@ -224,7 +224,7 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApproval
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  UserProfile? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job, @ApplicationStatusConvertor()  ApplicationStatus? currentStatus,  DateTime? createdAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job, @ApplicationStatusConvertor()  ApplicationStatus? currentStatus,  DateTime? createdAt)?  $default,) {final _that = this;
 switch (_that) {
 case _ReferralApplication() when $default != null:
 return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.currentStatus,_that.createdAt);case _:
@@ -243,7 +243,7 @@ class _ReferralApplication implements ReferralApplication {
   factory _ReferralApplication.fromJson(Map<String, dynamic> json) => _$ReferralApplicationFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
-@override final  UserProfile? applicant;
+@override final  User? applicant;
 @override final  String? applicantType;
 @override final  String? adminApprovalStatus;
 @override final  ReferralPostModel? job;
@@ -283,11 +283,11 @@ abstract mixin class _$ReferralApplicationCopyWith<$Res> implements $ReferralApp
   factory _$ReferralApplicationCopyWith(_ReferralApplication value, $Res Function(_ReferralApplication) _then) = __$ReferralApplicationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, UserProfile? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job,@ApplicationStatusConvertor() ApplicationStatus? currentStatus, DateTime? createdAt
+@JsonKey(name: '_id') String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job,@ApplicationStatusConvertor() ApplicationStatus? currentStatus, DateTime? createdAt
 });
 
 
-@override $UserProfileCopyWith<$Res>? get applicant;@override $ReferralPostModelCopyWith<$Res>? get job;
+@override $UserCopyWith<$Res>? get applicant;@override $ReferralPostModelCopyWith<$Res>? get job;
 
 }
 /// @nodoc
@@ -304,7 +304,7 @@ class __$ReferralApplicationCopyWithImpl<$Res>
   return _then(_ReferralApplication(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,applicant: freezed == applicant ? _self.applicant : applicant // ignore: cast_nullable_to_non_nullable
-as UserProfile?,applicantType: freezed == applicantType ? _self.applicantType : applicantType // ignore: cast_nullable_to_non_nullable
+as User?,applicantType: freezed == applicantType ? _self.applicantType : applicantType // ignore: cast_nullable_to_non_nullable
 as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminApprovalStatus : adminApprovalStatus // ignore: cast_nullable_to_non_nullable
 as String?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
 as ReferralPostModel?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
@@ -317,12 +317,12 @@ as DateTime?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserProfileCopyWith<$Res>? get applicant {
+$UserCopyWith<$Res>? get applicant {
     if (_self.applicant == null) {
     return null;
   }
 
-  return $UserProfileCopyWith<$Res>(_self.applicant!, (value) {
+  return $UserCopyWith<$Res>(_self.applicant!, (value) {
     return _then(_self.copyWith(applicant: value));
   });
 }/// Create a copy of ReferralApplication

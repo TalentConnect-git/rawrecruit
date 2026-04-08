@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart'
-    show JobType, NotificationType, UserProfileOrStringConvertor;
-import 'package:rawrecruit/src/features/onboarding/data/entities/index.dart';
+    show JobType, NotificationType, UserOrStringConvertor;
 
 part 'notification.freezed.dart';
 part 'notification.g.dart';
@@ -11,7 +11,7 @@ abstract class Notification with _$Notification {
   const factory Notification({
     @JsonKey(name: '_id') String? id,
     String? recipientId,
-    @UserProfileOrStringConvertor() UserProfile? senderId,
+    @UserOrStringConvertor() User? senderId,
     NotificationType? type,
     String? message,
     String? referenceId,

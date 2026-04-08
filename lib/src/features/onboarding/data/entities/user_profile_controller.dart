@@ -4,8 +4,8 @@ import 'achievement_controller.dart';
 import 'award_controller.dart';
 import 'publication_controller.dart';
 
-class UserProfileController {
-  UserProfileController()
+class UserController {
+  UserController()
     : id = TextEditingController(),
       userId = TextEditingController(),
       v = TextEditingController(),

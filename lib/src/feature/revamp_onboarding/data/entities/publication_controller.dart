@@ -1,21 +1,18 @@
 import 'package:flutter/material.dart';
 
-class AchievementController {
-  AchievementController()
+class PublicationController {
+  PublicationController()
     : id = TextEditingController(),
       title = TextEditingController(),
-      event = TextEditingController(),
-      date = TextEditingController();
+      url = TextEditingController();
 
   TextEditingController id;
   TextEditingController title;
-  TextEditingController event;
-  TextEditingController date;
+  TextEditingController url;
 
   void dispose() {
     id.dispose();
     title.dispose();
-    event.dispose();
-    date.dispose();
+    url.dispose();
   }
 }

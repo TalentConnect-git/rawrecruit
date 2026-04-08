@@ -1,21 +1,18 @@
 import 'dart:io';
 
 import 'package:image_picker/image_picker.dart';
-import 'package:rawrecruit/src/core/index.dart' show ResultFuture;
-
-import '../revamp_entities/onboarding_model.dart';
-
+import 'package:rawrecruit/src/core/index.dart' show ResultFuture, User;
 
 abstract class RevampOnboardingRepository {
-  ResultFuture<OnboardingData?> getOnboardingUserProfile();
+  ResultFuture<User?> getOnboardingUser();
 
-  ResultFuture<OnboardingData?> submitOnboardingUserProfile({
+  ResultFuture<User?> submitOnboardingUser({
     required Map<String, dynamic> body,
     File? resume,
     XFile? image,
   });
 
-  ResultFuture<OnboardingData?> updateOnboardingUserProfile({
+  ResultFuture<User?> updateOnboardingUser({
     required Map<String, dynamic> body,
     File? resume,
     XFile? image,

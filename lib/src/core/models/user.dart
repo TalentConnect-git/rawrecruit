@@ -1,13 +1,12 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:rawrecruit/src/core/index.dart';
 
-import 'index.dart';
-
-part 'user_profile.freezed.dart';
-part 'user_profile.g.dart';
+part 'user.freezed.dart';
+part 'user.g.dart';
 
 @freezed
-abstract class UserProfile with _$UserProfile {
-  const factory UserProfile({
+abstract class User with _$User {
+  const factory User({
     @JsonKey(name: '_id') String? id,
     String? userId,
     @JsonKey(name: '__v') int? v,
@@ -45,6 +44,8 @@ abstract class UserProfile with _$UserProfile {
     String? degree,
     String? degreeCertificate,
     String? email,
+    String? mobile,
+    String? designation,
     String? gender,
     String? github,
     String? linkedin,
@@ -67,8 +68,7 @@ abstract class UserProfile with _$UserProfile {
     String? expectedSalaryCurrency,
     String? maritalStatus,
     String? visaStatus,
-  }) = _UserProfile;
+  }) = _User;
 
-  factory UserProfile.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileFromJson(json);
+  factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
 }

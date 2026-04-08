@@ -1,27 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
-import '../../data/revamp_entities/onboarding_model.dart';
 
 class CareerPage extends StatefulWidget {
   final VoidCallback onBack;
-  final OnboardingData data;
+  final User data;
 
-  const CareerPage({
-    super.key,
-    required this.onBack,
-    required this.data,
-  });
+  const CareerPage({super.key, required this.onBack, required this.data});
 
   @override
   State<CareerPage> createState() => _CareerPageState();
 
-  static const shiftOptions = [
-    "Day",
-    "Night",
-    "Rotational",
-    "Any",
-  ];
+  static const shiftOptions = ["Day", "Night", "Rotational", "Any"];
 }
 
 class _CareerPageState extends State<CareerPage> {
@@ -44,15 +35,13 @@ class _CareerPageState extends State<CareerPage> {
 
     shift = d.openToShift;
 
-    currentSalaryCtrl =
-        TextEditingController(text: d.currentSalaryAmount);
-    currentCurrencyCtrl =
-        TextEditingController(text: d.currentSalaryCurrency);
+    currentSalaryCtrl = TextEditingController(text: d.currentSalaryAmount);
+    currentCurrencyCtrl = TextEditingController(text: d.currentSalaryCurrency);
 
-    expectedSalaryCtrl =
-        TextEditingController(text: d.expectedSalaryAmount);
-    expectedCurrencyCtrl =
-        TextEditingController(text: d.expectedSalaryCurrency);
+    expectedSalaryCtrl = TextEditingController(text: d.expectedSalaryAmount);
+    expectedCurrencyCtrl = TextEditingController(
+      text: d.expectedSalaryCurrency,
+    );
 
     aboutCtrl = TextEditingController(text: d.about);
 
@@ -126,21 +115,29 @@ class _CareerPageState extends State<CareerPage> {
         ),
 
         /// SALARY
-        AppInput("Current Salary",
-            controller: currentSalaryCtrl,
-            onChanged: (_) => saveData()),
+        AppInput(
+          "Current Salary",
+          controller: currentSalaryCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
-        AppInput("Current Currency",
-            controller: currentCurrencyCtrl,
-            onChanged: (_) => saveData()),
+        AppInput(
+          "Current Currency",
+          controller: currentCurrencyCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
-        AppInput("Expected Salary",
-            controller: expectedSalaryCtrl,
-            onChanged: (_) => saveData()),
+        AppInput(
+          "Expected Salary",
+          controller: expectedSalaryCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
-        AppInput("Expected Currency",
-            controller: expectedCurrencyCtrl,
-            onChanged: (_) => saveData()),
+        AppInput(
+          "Expected Currency",
+          controller: expectedCurrencyCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
         const SizedBox(height: 20),
 

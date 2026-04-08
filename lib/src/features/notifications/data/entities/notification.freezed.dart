@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Notification {
 
-@JsonKey(name: '_id') String? get id; String? get recipientId;@UserProfileOrStringConvertor() UserProfile? get senderId; NotificationType? get type; String? get message; String? get referenceId; String? get fileUrl; String? get fileName; String? get eventTitle; String? get meetingLink; JobType? get jobType; bool? get read; String? get jobId; Map<String, dynamic>? get meta; DateTime? get createdAt; DateTime? get updatedAt;
+@JsonKey(name: '_id') String? get id; String? get recipientId;@UserOrStringConvertor() User? get senderId; NotificationType? get type; String? get message; String? get referenceId; String? get fileUrl; String? get fileName; String? get eventTitle; String? get meetingLink; JobType? get jobType; bool? get read; String? get jobId; Map<String, dynamic>? get meta; DateTime? get createdAt; DateTime? get updatedAt;
 /// Create a copy of Notification
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $NotificationCopyWith<$Res>  {
   factory $NotificationCopyWith(Notification value, $Res Function(Notification) _then) = _$NotificationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? recipientId,@UserProfileOrStringConvertor() UserProfile? senderId, NotificationType? type, String? message, String? referenceId, String? fileUrl, String? fileName, String? eventTitle, String? meetingLink, JobType? jobType, bool? read, String? jobId, Map<String, dynamic>? meta, DateTime? createdAt, DateTime? updatedAt
+@JsonKey(name: '_id') String? id, String? recipientId,@UserOrStringConvertor() User? senderId, NotificationType? type, String? message, String? referenceId, String? fileUrl, String? fileName, String? eventTitle, String? meetingLink, JobType? jobType, bool? read, String? jobId, Map<String, dynamic>? meta, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-$UserProfileCopyWith<$Res>? get senderId;
+$UserCopyWith<$Res>? get senderId;
 
 }
 /// @nodoc
@@ -70,7 +70,7 @@ class _$NotificationCopyWithImpl<$Res>
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,recipientId: freezed == recipientId ? _self.recipientId : recipientId // ignore: cast_nullable_to_non_nullable
 as String?,senderId: freezed == senderId ? _self.senderId : senderId // ignore: cast_nullable_to_non_nullable
-as UserProfile?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as User?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as NotificationType?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,referenceId: freezed == referenceId ? _self.referenceId : referenceId // ignore: cast_nullable_to_non_nullable
 as String?,fileUrl: freezed == fileUrl ? _self.fileUrl : fileUrl // ignore: cast_nullable_to_non_nullable
@@ -90,12 +90,12 @@ as DateTime?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserProfileCopyWith<$Res>? get senderId {
+$UserCopyWith<$Res>? get senderId {
     if (_self.senderId == null) {
     return null;
   }
 
-  return $UserProfileCopyWith<$Res>(_self.senderId!, (value) {
+  return $UserCopyWith<$Res>(_self.senderId!, (value) {
     return _then(_self.copyWith(senderId: value));
   });
 }
@@ -180,7 +180,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? recipientId, @UserProfileOrStringConvertor()  UserProfile? senderId,  NotificationType? type,  String? message,  String? referenceId,  String? fileUrl,  String? fileName,  String? eventTitle,  String? meetingLink,  JobType? jobType,  bool? read,  String? jobId,  Map<String, dynamic>? meta,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? recipientId, @UserOrStringConvertor()  User? senderId,  NotificationType? type,  String? message,  String? referenceId,  String? fileUrl,  String? fileName,  String? eventTitle,  String? meetingLink,  JobType? jobType,  bool? read,  String? jobId,  Map<String, dynamic>? meta,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Notification() when $default != null:
 return $default(_that.id,_that.recipientId,_that.senderId,_that.type,_that.message,_that.referenceId,_that.fileUrl,_that.fileName,_that.eventTitle,_that.meetingLink,_that.jobType,_that.read,_that.jobId,_that.meta,_that.createdAt,_that.updatedAt);case _:
@@ -201,7 +201,7 @@ return $default(_that.id,_that.recipientId,_that.senderId,_that.type,_that.messa
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? recipientId, @UserProfileOrStringConvertor()  UserProfile? senderId,  NotificationType? type,  String? message,  String? referenceId,  String? fileUrl,  String? fileName,  String? eventTitle,  String? meetingLink,  JobType? jobType,  bool? read,  String? jobId,  Map<String, dynamic>? meta,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? recipientId, @UserOrStringConvertor()  User? senderId,  NotificationType? type,  String? message,  String? referenceId,  String? fileUrl,  String? fileName,  String? eventTitle,  String? meetingLink,  JobType? jobType,  bool? read,  String? jobId,  Map<String, dynamic>? meta,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Notification():
 return $default(_that.id,_that.recipientId,_that.senderId,_that.type,_that.message,_that.referenceId,_that.fileUrl,_that.fileName,_that.eventTitle,_that.meetingLink,_that.jobType,_that.read,_that.jobId,_that.meta,_that.createdAt,_that.updatedAt);case _:
@@ -221,7 +221,7 @@ return $default(_that.id,_that.recipientId,_that.senderId,_that.type,_that.messa
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? recipientId, @UserProfileOrStringConvertor()  UserProfile? senderId,  NotificationType? type,  String? message,  String? referenceId,  String? fileUrl,  String? fileName,  String? eventTitle,  String? meetingLink,  JobType? jobType,  bool? read,  String? jobId,  Map<String, dynamic>? meta,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? recipientId, @UserOrStringConvertor()  User? senderId,  NotificationType? type,  String? message,  String? referenceId,  String? fileUrl,  String? fileName,  String? eventTitle,  String? meetingLink,  JobType? jobType,  bool? read,  String? jobId,  Map<String, dynamic>? meta,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Notification() when $default != null:
 return $default(_that.id,_that.recipientId,_that.senderId,_that.type,_that.message,_that.referenceId,_that.fileUrl,_that.fileName,_that.eventTitle,_that.meetingLink,_that.jobType,_that.read,_that.jobId,_that.meta,_that.createdAt,_that.updatedAt);case _:
@@ -236,12 +236,12 @@ return $default(_that.id,_that.recipientId,_that.senderId,_that.type,_that.messa
 @JsonSerializable()
 
 class _Notification implements Notification {
-  const _Notification({@JsonKey(name: '_id') this.id, this.recipientId, @UserProfileOrStringConvertor() this.senderId, this.type, this.message, this.referenceId, this.fileUrl, this.fileName, this.eventTitle, this.meetingLink, this.jobType, this.read = false, this.jobId, final  Map<String, dynamic>? meta, this.createdAt, this.updatedAt}): _meta = meta;
+  const _Notification({@JsonKey(name: '_id') this.id, this.recipientId, @UserOrStringConvertor() this.senderId, this.type, this.message, this.referenceId, this.fileUrl, this.fileName, this.eventTitle, this.meetingLink, this.jobType, this.read = false, this.jobId, final  Map<String, dynamic>? meta, this.createdAt, this.updatedAt}): _meta = meta;
   factory _Notification.fromJson(Map<String, dynamic> json) => _$NotificationFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
 @override final  String? recipientId;
-@override@UserProfileOrStringConvertor() final  UserProfile? senderId;
+@override@UserOrStringConvertor() final  User? senderId;
 @override final  NotificationType? type;
 @override final  String? message;
 @override final  String? referenceId;
@@ -297,11 +297,11 @@ abstract mixin class _$NotificationCopyWith<$Res> implements $NotificationCopyWi
   factory _$NotificationCopyWith(_Notification value, $Res Function(_Notification) _then) = __$NotificationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? recipientId,@UserProfileOrStringConvertor() UserProfile? senderId, NotificationType? type, String? message, String? referenceId, String? fileUrl, String? fileName, String? eventTitle, String? meetingLink, JobType? jobType, bool? read, String? jobId, Map<String, dynamic>? meta, DateTime? createdAt, DateTime? updatedAt
+@JsonKey(name: '_id') String? id, String? recipientId,@UserOrStringConvertor() User? senderId, NotificationType? type, String? message, String? referenceId, String? fileUrl, String? fileName, String? eventTitle, String? meetingLink, JobType? jobType, bool? read, String? jobId, Map<String, dynamic>? meta, DateTime? createdAt, DateTime? updatedAt
 });
 
 
-@override $UserProfileCopyWith<$Res>? get senderId;
+@override $UserCopyWith<$Res>? get senderId;
 
 }
 /// @nodoc
@@ -319,7 +319,7 @@ class __$NotificationCopyWithImpl<$Res>
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,recipientId: freezed == recipientId ? _self.recipientId : recipientId // ignore: cast_nullable_to_non_nullable
 as String?,senderId: freezed == senderId ? _self.senderId : senderId // ignore: cast_nullable_to_non_nullable
-as UserProfile?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
+as User?,type: freezed == type ? _self.type : type // ignore: cast_nullable_to_non_nullable
 as NotificationType?,message: freezed == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String?,referenceId: freezed == referenceId ? _self.referenceId : referenceId // ignore: cast_nullable_to_non_nullable
 as String?,fileUrl: freezed == fileUrl ? _self.fileUrl : fileUrl // ignore: cast_nullable_to_non_nullable
@@ -340,12 +340,12 @@ as DateTime?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$UserProfileCopyWith<$Res>? get senderId {
+$UserCopyWith<$Res>? get senderId {
     if (_self.senderId == null) {
     return null;
   }
 
-  return $UserProfileCopyWith<$Res>(_self.senderId!, (value) {
+  return $UserCopyWith<$Res>(_self.senderId!, (value) {
     return _then(_self.copyWith(senderId: value));
   });
 }

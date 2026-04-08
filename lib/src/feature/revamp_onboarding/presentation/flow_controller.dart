@@ -3,13 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/data/data_source/revamp_on_boarding_data_source_impl.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/data/index.dart';
-import 'package:rawrecruit/src/feature/revamp_onboarding/data/revamp_entities/onboarding_model.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/steps/education_info.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/steps/resume_upload_page.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/progress_bar.dart';
-import 'package:rawrecruit/src/feature/revamp_onboarding/data/data_source/revamp_on_boarding_data_source.dart';
 
-import 'first_step.dart';
 import 'steps/onboarding_complete_page.dart';
 import 'widgets/continue_button.dart';
 import 'index.dart';
@@ -28,7 +25,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   final int totalPages = 9;
 
   /// 🔥 SHARED DATA
-  final OnboardingData data = OnboardingData();
+  final User data = User();
 
   /// 🔥 REPO
   final repo = RevampOnboardingRepositoryImpl(
@@ -62,21 +59,19 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
     try {
       final body = data.toJson();
 
-      final result = await repo.submitOnboardingUserProfile(
-        body: body,
-      );
+      final result = await repo.submitOnboardingUser(body: body);
 
       result.fold(
         (failure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(failure.message ?? '')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text(failure.message ?? '')));
         },
         (profile) {
           context.pushReplacementNamed(
-                              RouteNames.dashboard,
-                              extra: getIt<AppStateProvider>().userType,
-                            );
+            RouteNames.dashboard,
+            extra: getIt<AppStateProvider>().userType,
+          );
         },
       );
     } catch (e) {
@@ -123,8 +118,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
             ),
 
             /// 🔥 CONTINUE BUTTON
-            if (currentPage != totalPages - 1)
-              ContinueButton(onTap: nextPage),
+            if (currentPage != totalPages - 1) ContinueButton(onTap: nextPage),
           ],
         ),
       ),

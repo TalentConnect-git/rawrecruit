@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import '../../../../common/index.dart';
-import '../../data/revamp_entities/onboarding_model.dart';
 
 class SkillsDomainPage extends StatefulWidget {
   final VoidCallback onBack;
-  final OnboardingData data;
+  final User data;
 
-  const SkillsDomainPage({
-    super.key,
-    required this.onBack,
-    required this.data,
-  });
+  const SkillsDomainPage({super.key, required this.onBack, required this.data});
 
   @override
   State<SkillsDomainPage> createState() => _SkillsDomainPageState();
@@ -147,10 +143,7 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
 
             const SizedBox(height: 20),
 
-            const Text(
-              "POPULAR SKILLS",
-              style: TextStyle(color: Colors.grey),
-            ),
+            const Text("POPULAR SKILLS", style: TextStyle(color: Colors.grey)),
 
             const SizedBox(height: 10),
 
