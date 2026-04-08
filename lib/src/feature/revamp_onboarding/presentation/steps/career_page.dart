@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
@@ -31,9 +32,7 @@ class _CareerPageState extends State<CareerPage> {
   void initState() {
     super.initState();
 
-    final d = widget.data;
-
-    shift = d.openToShift;
+final d = widget.data;    shift = d.openToShift;
 
     currentSalaryCtrl = TextEditingController(text: d.currentSalaryAmount);
     currentCurrencyCtrl = TextEditingController(text: d.currentSalaryCurrency);
@@ -48,24 +47,22 @@ class _CareerPageState extends State<CareerPage> {
     /// ✅ convert existing string → UI list format
     certifications = d.certifications;
   }
+void saveData() {
+  final currentUser =
+      context.read<AppStateProvider>().data ?? widget.data;
 
-  void saveData() {
-    final d = widget.data;
+  final updatedUser = currentUser.copyWith(
+    openToShift: shift,
+    currentSalaryAmount: currentSalaryCtrl.text,
+    currentSalaryCurrency: currentCurrencyCtrl.text,
+    expectedSalaryAmount: expectedSalaryCtrl.text,
+    expectedSalaryCurrency: expectedCurrencyCtrl.text,
+    about: aboutCtrl.text,
+    certifications: certifications,
+  );
 
-    d.openToShift = shift;
-
-    d.currentSalaryAmount = currentSalaryCtrl.text;
-    d.currentSalaryCurrency = currentCurrencyCtrl.text;
-
-    d.expectedSalaryAmount = expectedSalaryCtrl.text;
-    d.expectedSalaryCurrency = expectedCurrencyCtrl.text;
-
-    d.about = aboutCtrl.text;
-
-    /// ✅ store as STRING
-    d.certifications = certifications;
-  }
-
+  context.read<AppStateProvider>().data = updatedUser;
+}
   @override
   void dispose() {
     currentSalaryCtrl.dispose();

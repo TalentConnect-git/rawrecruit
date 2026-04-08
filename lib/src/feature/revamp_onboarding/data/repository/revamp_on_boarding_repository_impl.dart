@@ -37,4 +37,12 @@ class RevampOnboardingRepositoryImpl implements RevampOnboardingRepository {
     resume: resume, // ← ADD
     image: image,
   );
+
+    @override
+  ResultFuture<Map<String, dynamic>> getCareerInsights() =>
+      _onboardingDataSource.getCareerInsights();
+
+  @override
+  ResultFuture<Map<String, dynamic>> getRanking() =>
+      _onboardingDataSource.getRanking();
 }

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show User, Achievement, Award, Publication;
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 
+import '../../../../core/provider/index.dart';
 import '../widgets/wrapper.dart';
 
 class AchievementsPage extends StatefulWidget {
@@ -32,12 +34,18 @@ class _AchievementsPageState extends State<AchievementsPage> {
     if (awards.isEmpty) awards.add(Award());
     if (publications.isEmpty) publications.add(Publication());
   }
+void saveData() {
+  final currentUser =
+      context.read<AppStateProvider>().data ?? widget.data;
 
-  void saveData() {
-    widget.data.achievements = achievements;
-    widget.data.awards = awards;
-    widget.data.publications = publications;
-  }
+  final updatedUser = currentUser.copyWith(
+    achievements: achievements,
+    awards: awards,
+    publications: publications,
+  );
+
+  context.read<AppStateProvider>().data = updatedUser;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -94,18 +102,19 @@ class _AchievementsPageState extends State<AchievementsPage> {
               AppInput(
                 "Title",
                 controller: TextEditingController(text: item.title),
-                onChanged: (v) {
-                  item.title = v;
-                  saveData();
-                },
+              onChanged: (v) {
+  setState(() {
+    achievements[i] = item.copyWith(title: v);
+    saveData();
+  });
+}
               ),
 
               AppInput(
                 "Event",
                 controller: TextEditingController(text: item.event),
                 onChanged: (v) {
-                  item.event = v;
-                  saveData();
+achievements[i] = item.copyWith(event: v);                  saveData();
                 },
               ),
 
@@ -113,8 +122,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                 "Date",
                 controller: TextEditingController(text: item.date),
                 onChanged: (v) {
-                  item.date = v;
-                  saveData();
+achievements[i] = item.copyWith(date: v);                  saveData();
                 },
               ),
 
@@ -169,8 +177,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                 "Title",
                 controller: TextEditingController(text: item.title),
                 onChanged: (v) {
-                  item.title = v;
-                  saveData();
+awards[i] = item.copyWith(title: v);                  saveData();
                 },
               ),
 
@@ -178,7 +185,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                 "Organization",
                 controller: TextEditingController(text: item.organization),
                 onChanged: (v) {
-                  item.organization = v;
+            awards[i] = item.copyWith(organization: v);    
                   saveData();
                 },
               ),
@@ -187,7 +194,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                 "Start Date",
                 controller: TextEditingController(text: item.startDate),
                 onChanged: (v) {
-                  item.startDate = v;
+                  awards[i] = item.copyWith(startDate: v);    
                   saveData();
                 },
               ),
@@ -196,7 +203,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                 "End Date",
                 controller: TextEditingController(text: item.endDate),
                 onChanged: (v) {
-                  item.endDate = v;
+                      awards[i] = item.copyWith(endDate: v);    
                   saveData();
                 },
               ),
@@ -205,8 +212,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                 "Description",
                 controller: TextEditingController(text: item.description),
                 onChanged: (v) {
-                  item.description = v;
-                  saveData();
+     awards[i] = item.copyWith(description: v);                      saveData();
                 },
               ),
 
@@ -257,8 +263,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                 "Title",
                 controller: TextEditingController(text: item.title),
                 onChanged: (v) {
-                  item.title = v;
-                  saveData();
+publications[i] = item.copyWith(title: v);                  saveData();
                 },
               ),
 
@@ -266,8 +271,7 @@ class _AchievementsPageState extends State<AchievementsPage> {
                 "URL",
                 controller: TextEditingController(text: item.url),
                 onChanged: (v) {
-                  item.url = v;
-                  saveData();
+publications[i] = item.copyWith(url: v);                  saveData();
                 },
               ),
 

@@ -17,4 +17,7 @@ abstract class RevampOnboardingDataSource {
     File? resume, // ← ADD
     XFile? image,
   });
+
+    ResultFuture<Map<String, dynamic>> getCareerInsights();
+  ResultFuture<Map<String, dynamic>> getRanking();
 }

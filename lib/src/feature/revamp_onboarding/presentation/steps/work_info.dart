@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
@@ -101,35 +102,39 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
 
     final d = widget.data;
 
-    employmentType = d.employmentType.isNotEmpty
-        ? d.employmentType.first
+    employmentType = (d.employmentType != null && d.employmentType!.isNotEmpty)
+        ? d.employmentType!.first
         : null;
 
-    lookingFor = d.lookingFor.isNotEmpty ? d.lookingFor.first : null;
+    lookingFor = (d.lookingFor != null && d.lookingFor!.isNotEmpty)
+        ? d.lookingFor!.first
+        : null;
 
-    industry = List.from(d.industry);
-    jobRoles = List.from(d.jobRoles);
-    languages = List.from(d.languagesKnown);
+    industry = List.from(d.industry ?? []);
+    jobRoles = List.from(d.jobRoles ?? []);
+    languages = List.from(d.languagesKnown ?? []);
 
-    locationCtrl = TextEditingController(text: d.locations.join(", "));
+    locationCtrl = TextEditingController(text: (d.locations ?? []).join(", "));
   }
 
   void saveData() {
-    final d = widget.data;
+     final currentUser =
+      context.read<AppStateProvider>().data ?? widget.data;
 
-    d.employmentType = employmentType != null ? [employmentType!] : [];
+  final updatedUser = currentUser.copyWith(
+      employmentType: employmentType != null ? [employmentType!] : [],
+      lookingFor: lookingFor != null ? [lookingFor!] : [],
+      industry: industry,
+      jobRoles: jobRoles,
+      languagesKnown: languages,
+      locations: locationCtrl.text
+          .split(",")
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList(),
+    );
 
-    d.lookingFor = lookingFor != null ? [lookingFor!] : [];
-
-    d.industry = industry;
-    d.jobRoles = jobRoles;
-    d.languagesKnown = languages;
-
-    d.locations = locationCtrl.text
-        .split(",")
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList();
+    context.read<AppStateProvider>().data = updatedUser;
   }
 
   @override

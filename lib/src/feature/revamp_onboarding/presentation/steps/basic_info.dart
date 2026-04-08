@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
 import '../widgets/input_widgets.dart';
@@ -63,8 +64,7 @@ class _BasicPageState extends State<BasicPage> {
   void initState() {
     super.initState();
 
-    final d = widget.data;
-
+  final d = widget.data;
     nameCtrl = TextEditingController(text: d.name);
     emailCtrl = TextEditingController(text: d.email);
     phoneCtrl = TextEditingController(text: d.phone);
@@ -75,20 +75,23 @@ class _BasicPageState extends State<BasicPage> {
     maritalStatus = d.maritalStatus;
     visaStatus = d.visaStatus;
   }
+void saveData() {
+ final currentUser =
+      context.read<AppStateProvider>().data ?? widget.data;
+  final updatedUser = currentUser.copyWith(
+    name: nameCtrl.text,
+    email: emailCtrl.text,
+    phone: phoneCtrl.text,
+    dob: dobCtrl.text,
+    gender: gender,
+    ethnicity: ethnicity,
+    maritalStatus: maritalStatus,
+    visaStatus: visaStatus,
+  );
 
-  void saveData() {
-    final d = widget.data;
-
-    d.name = nameCtrl.text;
-    d.email = emailCtrl.text;
-    d.phone = phoneCtrl.text;
-    d.dob = dobCtrl.text;
-
-    d.gender = gender;
-    d.ethnicity = ethnicity;
-    d.maritalStatus = maritalStatus;
-    d.visaStatus = visaStatus;
-  }
+  // ✅ store updated user in global state
+  context.read<AppStateProvider>().data = updatedUser;
+}
 
   @override
   void dispose() {

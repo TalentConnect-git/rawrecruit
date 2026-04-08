@@ -20,6 +20,43 @@ import 'revamp_on_boarding_data_source.dart';
 class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   final NetworkService _networkService = NetworkService();
 
+  /// 🔥 COMMON FORM BUILDER (reusable)
+  Future<FormData> _buildFormData({
+    required Map<String, dynamic> body,
+    File? resume,
+    XFile? image,
+  }) async {
+    final Map<String, dynamic> formMap = {};
+
+    /// ✅ Handle all fields
+    body.forEach((key, value) {
+      if (value is List) {
+        for (int i = 0; i < value.length; i++) {
+          formMap['$key[$i]'] = value[i];
+        }
+      } else if (value != null && value.toString().isNotEmpty) {
+        formMap[key] = value;
+      }
+    });
+
+    /// ✅ Attach files
+    if (resume != null) {
+      formMap['resume'] = await MultipartFile.fromFile(
+        resume.path,
+        filename: resume.path.split('/').last,
+      );
+    }
+
+    if (image != null) {
+      formMap['profileImage'] = await MultipartFile.fromFile(
+        image.path,
+        filename: image.path.split('/').last,
+      );
+    }
+
+    return FormData.fromMap(formMap);
+  }
+
   @override
   ResultFuture<User?> submitOnboardingUser({
     required Map<String, dynamic> body,
@@ -27,26 +64,17 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
     XFile? image,
   }) async {
     try {
-      // Build multipart form — file goes under key 'resume'
-      final formData = FormData.fromMap({
-        ...body,
-        if (resume != null)
-          'resume': await MultipartFile.fromFile(
-            resume.path,
-            filename: resume.path.split('/').last,
-          ),
-        if (image != null)
-          'profileImage': await MultipartFile.fromFile(
-            image.path,
-            filename: image.path.split('/').last,
-          ),
-      });
+      final formData = await _buildFormData(
+        body: body,
+        resume: resume,
+        image: image,
+      );
 
       final Request request = Request(
         method: RequestMethod.post,
         endpoint: Endpoints.apiOnboarding,
         isSafeRoute: true,
-        formData: formData, // ← FormData, not body
+        formData: formData,
       );
 
       final result = await _networkService.request(request);
@@ -66,29 +94,21 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   @override
   ResultFuture<User?> updateOnboardingUser({
     required Map<String, dynamic> body,
-    File? resume, // ← ADD
+    File? resume,
     XFile? image,
   }) async {
     try {
-      final formData = FormData.fromMap({
-        ...body,
-        if (image != null)
-          'profileImage': await MultipartFile.fromFile(
-            image.path,
-            filename: image.path.split('/').last,
-          ),
-        if (resume != null)
-          'resume': await MultipartFile.fromFile(
-            resume.path,
-            filename: resume.path.split('/').last,
-          ),
-      });
+      final formData = await _buildFormData(
+        body: body,
+        resume: resume,
+        image: image,
+      );
 
       final Request request = Request(
         method: RequestMethod.put,
         endpoint: Endpoints.apiOnboardingUpdate,
         isSafeRoute: true,
-        formData: formData, // ← FormData instead of body
+        formData: formData,
       );
 
       final result = await _networkService.request(request);
@@ -127,5 +147,37 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
     }
 
     return Right(null);
+  }
+  
+    @override
+  ResultFuture<Map<String, dynamic>> getCareerInsights() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.careerInsights,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      return Right(result.data['data']);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  ResultFuture<Map<String, dynamic>> getRanking() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.careerRanking,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      return Right(result.data['data']);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
 }

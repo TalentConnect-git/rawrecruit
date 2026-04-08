@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/data/data_source/revamp_on_boarding_data_source_impl.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/data/index.dart';
@@ -57,8 +58,10 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   /// 🚀 FINAL SUBMIT
   Future<void> submitOnboarding() async {
     try {
-      final body = data.toJson();
+final currentUser =
+    context.read<AppStateProvider>().data ?? data;
 
+final body = currentUser.toJson();
       final result = await repo.submitOnboardingUser(body: body);
 
       result.fold(

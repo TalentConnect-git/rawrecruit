@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/config/index.dart'
     show getApiConfig, FlavorConfig, initializeFirebaseApp;
     import 'package:rawrecruit/src/core/services/shared_pref_helper.dart';
 import 'package:rawrecruit/src/core/index.dart'
-    show initDependencyLocator, getIt, NotificationService;
+    show initDependencyLocator, getIt, NotificationService, AppStateProvider;
 
 import 'app.dart';
 
@@ -14,7 +15,16 @@ Future<void> bootstrap(Flavor flavor) async {
   await _preInit(flavor);
   await _init(flavor);
 
-  runApp(const App());
+runApp(
+  MultiProvider(
+    providers: [
+      ChangeNotifierProvider(
+        create: (_) => AppStateProvider(),
+      ),
+    ],
+    child: const App(),
+  ),
+);
 }
 
 Future<void> _init(Flavor flavor) async {

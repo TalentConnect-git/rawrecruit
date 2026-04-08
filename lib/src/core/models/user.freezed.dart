@@ -259,8 +259,8 @@ return $default(_that.id,_that.userId,_that.v,_that.achievements,_that.awards,_t
 }
 
 /// @nodoc
-@JsonSerializable()
 
+@JsonSerializable(explicitToJson: true)
 class _User implements User {
   const _User({@JsonKey(name: '_id') this.id, this.userId, @JsonKey(name: '__v') this.v, final  List<Achievement>? achievements, final  List<Award>? awards, final  List<Publication>? publications, this.createdAt, this.updatedAt, this.profileImage, this.currentCompany, this.noticePeriod, final  List<String>? domainKnowledge, final  List<String>? employmentType, final  List<String>? experiences, final  List<String>? industry, final  List<String>? internationalExperience, final  List<String>? jobRoles, final  List<String>? languagesKnown, final  List<String>? leadership, final  List<String>? locations, final  List<String>? lookingFor, this.resume, final  List<String>? skills, final  List<String>? toolsAndPlatforms, this.about, this.certifications, this.cgpa, this.college, this.degree, this.degreeCertificate, this.email, this.mobile, this.designation, this.gender, this.github, this.linkedin, this.name, this.openToShift, this.phone, this.portfolio, this.profileType, this.referralSource, this.semester, this.servingNoticePeriod, this.specialization, this.yearOfGraduation, this.currentSalaryAmount, this.currentSalaryCurrency, this.dob, this.ethnicity, this.expectedSalaryAmount, this.expectedSalaryCurrency, this.maritalStatus, this.visaStatus}): _achievements = achievements,_awards = awards,_publications = publications,_domainKnowledge = domainKnowledge,_employmentType = employmentType,_experiences = experiences,_industry = industry,_internationalExperience = internationalExperience,_jobRoles = jobRoles,_languagesKnown = languagesKnown,_leadership = leadership,_locations = locations,_lookingFor = lookingFor,_skills = skills,_toolsAndPlatforms = toolsAndPlatforms;
   factory _User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);
