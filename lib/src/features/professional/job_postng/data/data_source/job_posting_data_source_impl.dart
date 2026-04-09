@@ -115,4 +115,37 @@ class ReferralPostDataSourceImpl implements ReferralPostDataSource {
     }
     return const Right(null);
   }
+
+  
+  @override
+  ResultFuture<List<Job>> getOffCampusJobs() async {
+    final Request request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.apiOffCampusJobs,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      final List data = response['data'] ?? [];
+
+final jobs = data
+    .map((e) {
+      try {
+        return Job.fromJson(e);
+      } catch (err) {
+        print("PARSE ERROR: $err");
+        return null;
+      }
+    })
+    .whereType<Job>()
+    .toList();
+    print("FINAL JOBS COUNT: ${jobs.length}");
+      return Right(jobs);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
 }

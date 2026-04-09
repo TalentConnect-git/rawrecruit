@@ -8,6 +8,6 @@ abstract class ApplicationRepository {
     required String jobId,
   });
 
-  ResultFuture<List<ApplicationModel>>
+  ResultFuture<List<Job>>
       fetchAppliedJobs(); // ✅ only one method
 }

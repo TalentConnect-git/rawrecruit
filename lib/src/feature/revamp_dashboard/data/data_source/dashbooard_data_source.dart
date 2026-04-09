@@ -1,10 +1,12 @@
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/internship_model.dart';
 
 import '../../../../core/index.dart';
-import '../../entities/job_model.dart';
+
 
 abstract class DashboardDataSource {
-  ResultFuture<List<JobModel>> getOffCampusJobs();
+  ResultFuture<List<Job>> getOffCampusJobs();
 
-  ResultFuture<List<InternshipModel>> getInternships();
+  ResultFuture<List<Job>> getInternships();
+    ResultFuture<List<Job>> getReferralJobs();
+  ResultFuture<Job> getReferralJobDetails(String id);
+  ResultFuture<void> applyReferral(String referralId);
 }

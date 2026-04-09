@@ -20,26 +20,21 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   status: json['status'] as String?,
   workAuthorization: json['workAuthorization'] as String?,
   minEducation: json['minEducation'] as String?,
-  yearsOfExperience: json['yearsOfExperience'] as String?,
-  cgpa: json['cgpa'] as String?,
+  yearsOfExperience: json['yearsOfExperience'],
+  cgpa: json['cgpa'],
   numberOfOpenings: (json['numberOfOpenings'] as num?)?.toInt(),
   views: (json['views'] as num?)?.toInt(),
   matchScore: (json['matchScore'] as num?)?.toInt(),
-  jobRoles: (json['jobRoles'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-  skills: (json['skills'] as List<dynamic>?)?.map((e) => e as String).toList(),
+  jobRoles: _safeList(json['jobRoles']),
+  location: _safeList(json['location']),
+  workMode: _safeList(json['workMode']),
+  skills: _safeList(json['skills']),
+  benefits: _safeList(json['benefits']),
   certifications: (json['certifications'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
   degree: (json['degree'] as List<dynamic>?)?.map((e) => e as String).toList(),
   studentStreams: (json['studentStreams'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-  location: (json['location'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-  workMode: (json['workMode'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
   employmentType: (json['employmentType'] as List<dynamic>?)
@@ -67,9 +62,6 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   amenitiesRequired: (json['amenitiesRequired'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  benefits: (json['benefits'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
   toolsAndPlatforms: (json['toolsAndPlatforms'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
@@ -79,7 +71,7 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
       .toList(),
   venue: json['venue'] as String?,
   internshipDuration: json['internshipDuration'] as String?,
-  minimumStudents: json['minimumStudents'] as String?,
+  minimumStudents: json['minimumStudents'],
   packageDetails: json['packageDetails'] == null
       ? null
       : PackageDetail.fromJson(json['packageDetails'] as Map<String, dynamic>),
@@ -141,12 +133,13 @@ Map<String, dynamic> _$JobToJson(_Job instance) => <String, dynamic>{
   'views': instance.views,
   'matchScore': instance.matchScore,
   'jobRoles': instance.jobRoles,
+  'location': instance.location,
+  'workMode': instance.workMode,
   'skills': instance.skills,
+  'benefits': instance.benefits,
   'certifications': instance.certifications,
   'degree': instance.degree,
   'studentStreams': instance.studentStreams,
-  'location': instance.location,
-  'workMode': instance.workMode,
   'employmentType': instance.employmentType,
   'workLocation': instance.workLocation,
   'companyType': instance.companyType,
@@ -156,7 +149,6 @@ Map<String, dynamic> _$JobToJson(_Job instance) => <String, dynamic>{
   'selectionProcess': instance.selectionProcess,
   'workAchievements': instance.workAchievements,
   'amenitiesRequired': instance.amenitiesRequired,
-  'benefits': instance.benefits,
   'toolsAndPlatforms': instance.toolsAndPlatforms,
   'tags': instance.tags,
   'numberOfStudent': instance.numberOfStudent,

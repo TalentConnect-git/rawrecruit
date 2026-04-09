@@ -30,4 +30,6 @@ class ReferralPostViewModel extends ViewStateProvider {
 
     return success;
   }
+  
+
 }

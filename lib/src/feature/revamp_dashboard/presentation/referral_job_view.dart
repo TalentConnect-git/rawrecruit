@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/view_model/prof_dashboard_view_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/widgets/referal_job_card.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
@@ -61,7 +62,7 @@ class _ReferralJobViewState extends State<ReferralJobView> {
                           job.id,
                         );
 
-                        return ReferralJobCard(
+                        return JobCard(
                           job: job,
                           isSaved: isSaved,
                           isApplied: isApplied,

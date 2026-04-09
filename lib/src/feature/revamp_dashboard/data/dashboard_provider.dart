@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/job_model.dart';
-
-import '../entities/internship_model.dart';
+import 'package:rawrecruit/src/core/index.dart';
 
 enum DashboardTab { internships, jobs, referral }
 
@@ -99,7 +97,7 @@ class DashboardProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  List<JobModel> applyJobFilters(List<JobModel> jobs) {
+  List<Job> applyJobFilters(List<Job> jobs) {
     var filtered = jobs.where((job) {
       if (selectedWorkMode != null) {
         final modes = job.workMode ?? [];
@@ -143,7 +141,7 @@ class DashboardProvider extends ChangeNotifier {
     return _sortJobs(filtered);
   }
 
-  List<JobModel> _sortJobs(List<JobModel> jobs) {
+  List<Job> _sortJobs(List<Job> jobs) {
     switch (_sortOption) {
       case SortOption.newestFirst:
         jobs.sort(
@@ -187,8 +185,8 @@ class DashboardProvider extends ChangeNotifier {
     return jobs;
   }
 
-  List<InternshipModel> applyInternshipFilters(
-    List<InternshipModel> internships,
+  List<Job> applyInternshipFilters(
+    List<Job> internships,
   ) {
     var filtered = internships.where((internship) {
       if (selectedWorkMode != null) {
@@ -223,7 +221,7 @@ class DashboardProvider extends ChangeNotifier {
     return _sortInternships(filtered);
   }
 
-  List<InternshipModel> _sortInternships(List<InternshipModel> internships) {
+  List<Job> _sortInternships(List<Job> internships) {
     switch (_sortOption) {
       case SortOption.newestFirst:
         internships.sort(

@@ -16,4 +16,7 @@ abstract class ReferralPostRepository {
     required String applicationId,
     required String status,
   });
+
+  ResultFuture<List<Job>> getOffCampusJobs();
+
 }

@@ -9,7 +9,7 @@ class ApplicationViewModel extends ViewStateProvider {
   final _repository = GetIt.instance<ApplicationRepository>();
 
   /// 🔹 Full list (for Applications screen)
-  List<ApplicationModel> appliedApplications = [];
+  List<Job> appliedApplications = [];
 
   /// 🔹 Only IDs (for dashboard Apply button state)
   final Set<String> appliedJobIds = {};
@@ -28,24 +28,26 @@ class ApplicationViewModel extends ViewStateProvider {
   }
 
   /// 🔹 FETCH APPLIED LIST
-  Future<void> fetchApplications() async {
-    setViewState(ViewState.busy);
+ Future<void> fetchApplications() async {
+  print("running fetch applications");
+ setViewState(ViewState.busy);
+  notifyListeners();
 
-    final result = await _repository.fetchAppliedJobs();
+  final result = await _repository.fetchAppliedJobs();
 
-    result.fold((failure) {}, (data) {
-      appliedApplications = data.cast<ApplicationModel>();
+  result.fold(
+    (failure) {
+    setViewState(ViewState.idle);
+    },
+ (jobs) {
+  appliedApplications = jobs;
 
-      appliedJobIds.clear();
+  print("🔥 JOBS LENGTH: ${jobs.length}");
 
-      for (final item in data) {
-        if (item.jobDetails?.id != null) {
-          appliedJobIds.add(item.jobDetails!.id!);
-        }
-      }
-    });
+  setViewState(ViewState.idle);
+},
+  );
 
-    setViewState(ViewState.complete);
-    notifyListeners();
-  }
+  notifyListeners();
+}
 }

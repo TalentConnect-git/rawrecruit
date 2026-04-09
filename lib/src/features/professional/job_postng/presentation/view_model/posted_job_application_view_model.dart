@@ -57,4 +57,8 @@ class PostedJobApplicationViewModel extends ViewStateProvider {
 
     return failure;
   }
+
+
+  
+
 }

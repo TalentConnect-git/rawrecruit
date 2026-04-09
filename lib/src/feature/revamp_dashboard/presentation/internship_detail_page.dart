@@ -4,10 +4,9 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import '../../../common/index.dart';
-import '../entities/internship_model.dart';
 
 class InternshipDetailView extends StatelessWidget {
-  final InternshipModel internship;
+  final Job internship;
 
   const InternshipDetailView({super.key, required this.internship});
 
@@ -19,25 +18,31 @@ class InternshipDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final jobId = internship.id ?? '';
+
     final shortlistVM = context.watch<ShortlistViewModel>();
     final applicationVM = context.watch<ApplicationViewModel>();
 
     final isSaved = shortlistVM.savedJobIds.contains(jobId);
     final isApplied = applicationVM.isApplied(jobId);
 
-    final company = internship.companyPosted?.companyDetails;
     final pkg = internship.packageDetails;
+    final contact = internship.contactPerson;
+    final company = internship.companyPosted?.companyDetails;
+    final employer = internship.companyPosted?.employerDetails;
 
     return Scaffold(
+      backgroundColor: AppColors.secBorder,
+
       appBar: AppBar(
         backgroundColor: AppColors.kCard,
- iconTheme: IconThemeData(
-    color: AppColors.white, // 🔥 back arrow color
-  ),
-        title: Text(internship.jobRoles?.first ?? 'Internship Detail',style: TextStyle(color: AppColors.white,fontWeight:FontWeight.bold)),
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: Text(
+          internship.jobRoles?.first ?? 'Internship Detail',
+          style: const TextStyle(color: Colors.white),
+        ),
       ),
-backgroundColor: AppColors.secBorder,
-      // ✅ Bottom buttons same as screenshot
+
+      /// 🔻 BUTTONS
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
         child: Row(
@@ -49,261 +54,267 @@ backgroundColor: AppColors.secBorder,
                   jobType: 'Internship',
                   isSaved: isSaved,
                 ),
-                child: Text(isSaved ? 'Saved' : 'Save',style: TextStyle(color: AppColors.kGreen),),
+                child: Text(
+                  isSaved ? 'Saved' : 'Save',
+                  style: TextStyle(color: AppColors.kGreen),
+                ),
               ),
             ),
             const SizedBox(width: 12),
-          Expanded(
-  flex: 2,
-  child: ElevatedButton(
-    onPressed: isApplied ? null : () => applicationVM.apply(jobId),
-
-    style: ElevatedButton.styleFrom(
-      backgroundColor: isApplied
-          ? Colors.grey.shade800 // disabled bg
-          : AppColors.kGreen,     // 🔥 main bg
-      foregroundColor: Colors.white, // text color
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      elevation: 0, // clean flat look like profile UI
-    ),
-
-    child: Text(
-      isApplied ? 'Applied' : 'Apply Now',
-      style:  TextStyle(
-        fontWeight: FontWeight.w600,
-        color: AppColors.white
-      ),
-    ),
-  ),
-),
+            Expanded(
+              flex: 2,
+              child: ElevatedButton(
+                onPressed:
+                    isApplied ? null : () => applicationVM.apply(jobId),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                      isApplied ? Colors.grey : AppColors.kGreen,
+                ),
+                child: Text(isApplied ? 'Applied' : 'Apply Now'),
+              ),
+            ),
           ],
         ),
       ),
 
+      /// 🔥 BODY
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // 🔹 INTERNSHIP OVERVIEW
-            _sectionCard(
-              title: 'Internship Overview',
-              icon: Icons.description_outlined,
-              child: Column(
-                children: [
-                  Row(
-                    children: [
-                      _info('Job Type', internship.jobType),
-                      const SizedBox(width: 12),
-                      _statusChip(internship.jobStatus ?? 'Active'),
-                    ],
-                  ),
-                  const SizedBox(height: 12),
+            /// 🔥 HEADER
+            _header(),
 
-                  _infoFull('Description', internship.description),
+            const SizedBox(height: 20),
 
-                  const SizedBox(height: 12),
+            /// 🔥 ABOUT
+            if ((internship.description ?? '').isNotEmpty)
+              _sectionText("About the Role", internship.description),
 
-                  Row(
-                    children: [
-                      _info('Duration', internship.internshipDuration),
-                      const SizedBox(width: 12),
-                      _info('CGPA', internship.cgpa?.toString()),
-                    ],
-                  ),
+            /// 🔥 RESPONSIBILITIES
+            if ((internship.workAchievements ?? []).isNotEmpty)
+              _sectionList("Responsibilities", internship.workAchievements),
 
-                  const SizedBox(height: 12),
+            /// 🔥 REQUIREMENTS
+            if ((internship.skills ?? []).isNotEmpty)
+              _sectionList("Requirements", internship.skills),
 
-                  Row(
-                    children: [
-                      _info('Openings', internship.numberOfOpenings?.toString()),
-                      const SizedBox(width: 12),
-                      _info('Posted', _fmt(internship.createdAt)),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            /// 🔥 IMPORTANT DATES
+            _sectionInfo("Important Dates", [
+              _info("Start Date", _fmt(internship.startDate)),
+              _info("End Date", _fmt(internship.endDate)),
+              _info("Posted", _fmt(internship.createdAt)),
+            ]),
 
-            // 🔹 LOCATION
-            _sectionCard(
-              title: 'Location & Work',
-              icon: Icons.location_on_outlined,
-              child: Column(
-                children: [
-                  _infoFull('Location', internship.location?.join(', ')),
-                  const SizedBox(height: 12),
-                  Row(
-                    children: [
-                      _info('Work Mode', internship.workMode?.join(', ')),
-                      const SizedBox(width: 12),
-                      _info('Employment Type',
-                          internship.employmentType?.join(', ')),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            /// 🔥 STIPEND
+            _sectionInfo("Stipend", [
+              _info("CTC", pkg?.totalCTC?.toString()),
+              _info("Fixed Pay", pkg?.fixedPay?.toString()),
+              _info("Bonus", pkg?.joiningBonus?.toString()),
+            ]),
 
-            // 🔹 PACKAGE
-            _sectionCard(
-              title: 'Stipend',
-              icon: Icons.currency_rupee,
-              child: Column(
-                children: [
-                  _infoFull('Currency', pkg?.currency),
-                  const SizedBox(height: 12),
+            /// 🔥 SELECTION PROCESS
+            if ((internship.selectionProcess ?? []).isNotEmpty)
+              _sectionList("Selection Process", internship.selectionProcess),
 
-                  Text(
-                    '₹${pkg?.totalCTC ?? ''}',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+            /// 🔥 TOOLS
+            if ((internship.toolsAndPlatforms ?? []).isNotEmpty)
+              _sectionList("Tools & Platforms", internship.toolsAndPlatforms),
 
-                  const SizedBox(height: 12),
+            /// 🔥 BENEFITS
+            if ((internship.benefits ?? []).isNotEmpty)
+              _sectionList("Benefits", internship.benefits),
 
-                  Row(
-                    children: [
-                      _info('Fixed Pay', '₹${pkg?.fixedPay ?? ''}'),
-                      const SizedBox(width: 12),
-                      _info('Bonus', '₹${pkg?.joiningBonus ?? ''}'),
-                    ],
-                  ),
-                ],
-              ),
-            ),
+            /// 🔥 CONTACT
+            if (contact != null)
+              _sectionInfo("Contact Person", [
+                _info("Name", contact.name),
+                _info("Email", contact.email),
+                _info("Mobile", contact.mobile),
+              ]),
 
-            // 🔹 SELECTION
-            _sectionCard(
-              title: 'Selection Process',
-              icon: Icons.groups_outlined,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _infoFull(
-                      'Total Rounds', internship.rounds?.length.toString()),
+            /// 🔥 COMPANY
+            if (company != null)
+              _sectionInfo("Company Details", [
+                _info("Name", company.companyName),
+                _info("Industry", company.industryType),
+                _info("City", company.city),
+              ]),
 
-                  const SizedBox(height: 12),
+            /// 🔥 EMPLOYER
+            if (employer != null)
+              _sectionInfo("Employer", [
+                _info("Name", employer.name),
+                _info("Designation", employer.designation),
+              ]),
 
-                  ...?internship.selectionProcess?.map(
-                    (e) => Padding(
-                      padding: const EdgeInsets.only(bottom: 6),
-                      child: Text("• $e"),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            const SizedBox(height: 40),
           ],
         ),
       ),
     );
   }
 
-  // ✅ SECTION CARD
-Widget _sectionCard({
-  required String title,
-  required IconData icon,
-  required Widget child,
-}) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 16),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: AppColors.kCard, // 🔥 DARK CARD
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: AppColors.kBorder), // 🔥 BORDER
-    ),
-    child: Column(
+  /// 🔥 HEADER (FULL LIKE JOB)
+  Widget _header() {
+    final title = internship.jobRoles?.isNotEmpty == true
+        ? internship.jobRoles!.first
+        : internship.jobTitle ?? "-";
+
+    final company = internship.companyName ?? "-";
+    final location = internship.location?.join(', ') ?? "-";
+    final workMode = internship.workMode?.join(', ');
+    final salary = internship.packageDetails?.totalCTC != null
+        ? "₹${internship.packageDetails!.totalCTC}"
+        : null;
+
+    final match = internship.matchScore ?? 0;
+    final referrers = internship.views ?? 0;
+    final alumni = internship.numberOfStudent ?? 0;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.kBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
+          ),
+
+          const SizedBox(height: 6),
+
+          Text(company, style: const TextStyle(color: Colors.grey)),
+
+          const SizedBox(height: 10),
+
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
+            children: [
+              _iconText(Icons.location_on, location),
+              if (workMode != null)
+                _iconText(Icons.work_outline, workMode),
+              if (salary != null)
+                _iconText(Icons.currency_rupee, salary),
+            ],
+          ),
+
+          const SizedBox(height: 12),
+
+          Row(
+            children: [
+              Text("$match% match",
+                  style: const TextStyle(color: Colors.green)),
+
+              const SizedBox(width: 12),
+
+              Text("$referrers referrers",
+                  style: const TextStyle(color: Colors.grey)),
+
+              const SizedBox(width: 12),
+
+              Text("$alumni alumni",
+                  style: const TextStyle(color: Colors.green)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _iconText(IconData icon, String text) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 14, color: Colors.grey),
+        const SizedBox(width: 4),
+        Text(text, style: const TextStyle(color: Colors.grey)),
+      ],
+    );
+  }
+
+  Widget _sectionText(String title, String? content) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
-          children: [
-            Icon(icon, size: 18, color: AppColors.kGreen), // 🔥 GREEN ICON
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
-                color: Colors.white, // 🔥 WHITE TEXT
+        Text(title,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Text(content ?? "-",
+            style: const TextStyle(color: Colors.grey)),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _sectionList(String title, List<String>? items) {
+    if (items == null || items.isEmpty) return const SizedBox();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        ...items.map(
+          (e) => Row(
+            children: [
+              const Text("• ", style: TextStyle(color: Colors.green)),
+              Expanded(
+                child: Text(e,
+                    style: const TextStyle(color: Colors.grey)),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-        const SizedBox(height: 12),
-        child,
+        const SizedBox(height: 20),
       ],
-    ),
-  );
-}
-Widget _info(String title, String? value) {
-  return Expanded(
-    child: Column(
+    );
+  }
+
+  Widget _sectionInfo(String title, List<Widget> children) {
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontSize: 11,
-            color: Colors.grey, // 🔥 subtle label
-          ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value ?? '-',
-          style: const TextStyle(
-            fontSize: 13,
-            color: Colors.white, // 🔥 MAIN TEXT WHITE
-            fontWeight: FontWeight.w500,
-          ),
-        ),
+        Text(title,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        ...children,
+        const SizedBox(height: 20),
       ],
-    ),
-  );
-}
-Widget _infoFull(String title, String? value) {
-  return Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        title,
-        style: const TextStyle(
-          fontSize: 11,
-          color: Colors.grey,
-        ),
+    );
+  }
+
+  Widget _info(String title, String? value) {
+    if ((value ?? '').isEmpty) return const SizedBox();
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(
+        children: [
+          Expanded(
+              flex: 2,
+              child:
+                  Text(title, style: const TextStyle(color: Colors.grey))),
+          Expanded(
+              flex: 3,
+              child: Text(value ?? '',
+                  style: const TextStyle(color: Colors.white))),
+        ],
       ),
-      const SizedBox(height: 4),
-      Text(
-        value ?? '-',
-        style: const TextStyle(
-          fontSize: 13,
-          color: Colors.white,
-        ),
-      ),
-    ],
-  );
-}
-Widget _statusChip(String text) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-    decoration: BoxDecoration(
-      color: AppColors.kGreen.withOpacity(0.15), // 🔥 GREEN BG
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: Text(
-      text,
-      style: TextStyle(
-        color: AppColors.kGreen, // 🔥 GREEN TEXT
-        fontSize: 11,
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-  );
-}
+    );
+  }
 }

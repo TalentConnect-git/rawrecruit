@@ -14,6 +14,7 @@ class PostedJobViewModel extends ViewStateProvider {
     notifyListeners();
   }
 
+  List<Job> job = [];
   Future<Failure?> getPostedJobs() async {
     Failure? failure;
 
@@ -34,4 +35,26 @@ class PostedJobViewModel extends ViewStateProvider {
 
     return failure;
   }
+
+
+  Future<Failure?> getJobs() async {
+    Failure? failure;
+
+    setViewState(ViewState.busy);
+
+    final result = await _referralPostRepository.getOffCampusJobs();
+
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (data) {
+        job = data;
+      },
+    );
+
+    setViewState(ViewState.complete);
+    return failure;
+  }
+  
 }

@@ -23,28 +23,62 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       return Left(APIException.from(e));
     }
   }
+@override
+ResultFuture<List<Job>> fetchAppliedJobs() async {
+  final request = Request(
+    method: RequestMethod.get,
+    endpoint: Endpoints.applicationStatus,
+    isSafeRoute: true,
+  );
 
-  @override
-  ResultFuture<List<ApplicationModel>> fetchAppliedJobs() async {
-    final request = Request(
-      method: RequestMethod.get,
-      endpoint: Endpoints.applicationStatus,
-      isSafeRoute: true,
-    );
+  try {
+    final result = await _networkService.request(request);
 
-    try {
-      final result = await _networkService.request(request);
+    final body = result.data as Map<String, dynamic>;
+    final List<dynamic> data = body['data'];
 
-      final body = result.data as Map<String, dynamic>;
+    print("🔥 RAW DATA LENGTH: ${data.length}");
 
-      // 🔥 CORRECT EXTRACTION
-      final List<dynamic> data = body['data'];
+    final list = data.map((e) {
+      final job = e['jobDetails'];
+      final company = e['companyProfile'];
 
-      final list = data.map((e) => ApplicationModel.fromJson(e)).toList();
+      print("👉 JOB: $job");
+      print("👉 COMPANY: $company");
 
-      return Right(list);
-    } catch (e) {
-      return Left(APIException.from(e));
-    }
+      if (job == null) return null;
+
+      try {
+        return Job.fromJson({
+          ...job,
+
+          // 🔥 FIX: remove problematic object fields
+          "companyPosted": null,
+          "jobCompanyPosted": null,
+          "candidatePosted": null,
+          "contactPerson": null,
+
+          // ✅ inject company name
+          "companyName":
+              company?['companyDetails']?['companyName'] ?? "-",
+
+          // ✅ inject status
+          "status": e['currentStatus'] ?? "pending",
+        });
+      } catch (err) {
+        print("❌ ERROR parsing Job: $err");
+        return null;
+      }
+    }).whereType<Job>().toList();
+
+    print("✅ MAPPED LIST LENGTH: ${list.length}");
+
+    return Right(list);
+  } catch (e, stack) {
+    print("❌ ERROR IN DATASOURCE: $e");
+    print("❌ STACK: $stack");
+
+    return Left(APIException.from(e));
   }
+}
 }

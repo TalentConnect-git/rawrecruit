@@ -15,8 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ShortlistModel {
 
-@JsonKey(name: '_id') String? get id; String? get jobType; String? get currentStatus; DateTime? get createdAt;/// 🔥 ADD THIS
- JobModel? get job;
+@JsonKey(name: '_id') String? get id; String? get jobType; String? get currentStatus; DateTime? get createdAt;@JsonKey(fromJson: _jobFromJson, toJson: _jobToJson) Job? get job;
 /// Create a copy of ShortlistModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -49,11 +48,11 @@ abstract mixin class $ShortlistModelCopyWith<$Res>  {
   factory $ShortlistModelCopyWith(ShortlistModel value, $Res Function(ShortlistModel) _then) = _$ShortlistModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? jobType, String? currentStatus, DateTime? createdAt, JobModel? job
+@JsonKey(name: '_id') String? id, String? jobType, String? currentStatus, DateTime? createdAt,@JsonKey(fromJson: _jobFromJson, toJson: _jobToJson) Job? job
 });
 
 
-$JobModelCopyWith<$Res>? get job;
+$JobCopyWith<$Res>? get job;
 
 }
 /// @nodoc
@@ -73,19 +72,19 @@ as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
-as JobModel?,
+as Job?,
   ));
 }
 /// Create a copy of ShortlistModel
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$JobModelCopyWith<$Res>? get job {
+$JobCopyWith<$Res>? get job {
     if (_self.job == null) {
     return null;
   }
 
-  return $JobModelCopyWith<$Res>(_self.job!, (value) {
+  return $JobCopyWith<$Res>(_self.job!, (value) {
     return _then(_self.copyWith(job: value));
   });
 }
@@ -170,7 +169,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobType,  String? currentStatus,  DateTime? createdAt,  JobModel? job)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobType,  String? currentStatus,  DateTime? createdAt, @JsonKey(fromJson: _jobFromJson, toJson: _jobToJson)  Job? job)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ShortlistModel() when $default != null:
 return $default(_that.id,_that.jobType,_that.currentStatus,_that.createdAt,_that.job);case _:
@@ -191,7 +190,7 @@ return $default(_that.id,_that.jobType,_that.currentStatus,_that.createdAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobType,  String? currentStatus,  DateTime? createdAt,  JobModel? job)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobType,  String? currentStatus,  DateTime? createdAt, @JsonKey(fromJson: _jobFromJson, toJson: _jobToJson)  Job? job)  $default,) {final _that = this;
 switch (_that) {
 case _ShortlistModel():
 return $default(_that.id,_that.jobType,_that.currentStatus,_that.createdAt,_that.job);case _:
@@ -211,7 +210,7 @@ return $default(_that.id,_that.jobType,_that.currentStatus,_that.createdAt,_that
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? jobType,  String? currentStatus,  DateTime? createdAt,  JobModel? job)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? jobType,  String? currentStatus,  DateTime? createdAt, @JsonKey(fromJson: _jobFromJson, toJson: _jobToJson)  Job? job)?  $default,) {final _that = this;
 switch (_that) {
 case _ShortlistModel() when $default != null:
 return $default(_that.id,_that.jobType,_that.currentStatus,_that.createdAt,_that.job);case _:
@@ -226,15 +225,14 @@ return $default(_that.id,_that.jobType,_that.currentStatus,_that.createdAt,_that
 @JsonSerializable()
 
 class _ShortlistModel implements ShortlistModel {
-  const _ShortlistModel({@JsonKey(name: '_id') this.id, this.jobType, this.currentStatus, this.createdAt, this.job});
+  const _ShortlistModel({@JsonKey(name: '_id') this.id, this.jobType, this.currentStatus, this.createdAt, @JsonKey(fromJson: _jobFromJson, toJson: _jobToJson) this.job});
   factory _ShortlistModel.fromJson(Map<String, dynamic> json) => _$ShortlistModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
 @override final  String? jobType;
 @override final  String? currentStatus;
 @override final  DateTime? createdAt;
-/// 🔥 ADD THIS
-@override final  JobModel? job;
+@override@JsonKey(fromJson: _jobFromJson, toJson: _jobToJson) final  Job? job;
 
 /// Create a copy of ShortlistModel
 /// with the given fields replaced by the non-null parameter values.
@@ -269,11 +267,11 @@ abstract mixin class _$ShortlistModelCopyWith<$Res> implements $ShortlistModelCo
   factory _$ShortlistModelCopyWith(_ShortlistModel value, $Res Function(_ShortlistModel) _then) = __$ShortlistModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? jobType, String? currentStatus, DateTime? createdAt, JobModel? job
+@JsonKey(name: '_id') String? id, String? jobType, String? currentStatus, DateTime? createdAt,@JsonKey(fromJson: _jobFromJson, toJson: _jobToJson) Job? job
 });
 
 
-@override $JobModelCopyWith<$Res>? get job;
+@override $JobCopyWith<$Res>? get job;
 
 }
 /// @nodoc
@@ -293,7 +291,7 @@ as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
-as JobModel?,
+as Job?,
   ));
 }
 
@@ -301,12 +299,12 @@ as JobModel?,
 /// with the given fields replaced by the non-null parameter values.
 @override
 @pragma('vm:prefer-inline')
-$JobModelCopyWith<$Res>? get job {
+$JobCopyWith<$Res>? get job {
     if (_self.job == null) {
     return null;
   }
 
-  return $JobModelCopyWith<$Res>(_self.job!, (value) {
+  return $JobCopyWith<$Res>(_self.job!, (value) {
     return _then(_self.copyWith(job: value));
   });
 }
