@@ -1,75 +1,117 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/continue_button.dart';
 
 class ReferralHomeHeader extends StatelessWidget {
   const ReferralHomeHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.kBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white30, width: 0.5),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.kGreen,
-            blurRadius: 3,
-            spreadRadius: 1,
-            offset: Offset(1, 1),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// Greeting
+        Text(
+          'Good morning',
+          style: AppTextStyles.s14W400.copyWith(
+            color: AppColors.secText,
           ),
-        ],
+        ),
+
+        const SizedBox(height: 6),
+
+        /// Name + emoji
+        Row(
+          children: [
+            Text(
+              'Hey, Priya',
+              style: AppTextStyles.s22W600.copyWith(
+                color: AppColors.white,
+              ),
+            ),
+            const SizedBox(width: 6),
+            const Text(
+              '👋',
+              style: TextStyle(fontSize: 20),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 20),
+
+        /// Stats Cards
+        Row(
+          children: [
+            Expanded(
+              child: _buildStatCard(
+                icon: Icons.description_outlined,
+                value: '5',
+                label: 'Posted\nJobs',
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildStatCard(
+                icon: Icons.inbox_outlined,
+                value: '3',
+                label: 'Requests',
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildStatCard(
+                icon: Icons.emoji_events_outlined,
+                value: '78%',
+                label: 'Success',
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildStatCard(
+                icon: Icons.flash_on_outlined,
+                value: '94%',
+                label: 'Response',
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatCard({
+    required IconData icon,
+    required String value,
+    required String label,
+  }) {
+    return Container(
+      padding: const EdgeInsets.symmetric(vertical: 16),
+      decoration: BoxDecoration(
+        color: AppColors.kTile,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white10),
       ),
       child: Column(
-        spacing: 24,
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 8,
-            children: [
-              Icon(Icons.auto_graph, color: AppColors.kGreen),
-              Text(
-                'Active Now',
-                style: AppTextStyles.s16W600.copyWith(color: AppColors.kGreen),
-              ),
-            ],
+          Icon(icon, color: AppColors.secText, size: 20),
+
+          const SizedBox(height: 10),
+
+          Text(
+            value,
+            style: AppTextStyles.s18W600.copyWith(
+              color: AppColors.white,
+            ),
           ),
-          Column(
-            spacing: 8,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Refer Others',
-                style: AppTextStyles.s24W600.copyWith(color: AppColors.white),
-              ),
-              Text(
-                '2 Candidates are waiting for your referral',
-                style: AppTextStyles.s18W600.copyWith(color: AppColors.secText),
-              ),
-            ],
-          ),
-          Row(
-            spacing: 16,
-            children: [
-              AppButton(
-                onPressed: () {},
-                label: 'Get Referred',
-                foregroundColor: AppColors.kBg,
-                backgroundColor: AppColors.kGreen,
-                circularRadius: 12,
-              ),
-              AppButton.outlined(
-                onPressed: () {},
-                label: 'Refer Candidates',
-                foregroundColor: AppColors.kBg,
-                backgroundColor: AppColors.kGreen,
-                circularRadius: 12,
-              ),
-            ],
+
+          const SizedBox(height: 4),
+
+          Text(
+            label,
+            textAlign: TextAlign.center,
+            style: AppTextStyles.s12W400.copyWith(
+              color: AppColors.secText,
+            ),
           ),
         ],
       ),

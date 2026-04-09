@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/job_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../common/index.dart';
 import '../../../core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 
 class JobDetailView extends StatelessWidget {
-  final JobModel job;
+  final Job job;
 
   const JobDetailView({super.key, required this.job});
 
@@ -20,34 +18,30 @@ class JobDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final jobId = job.id ?? '';
+
     final shortlistVM = context.watch<ShortlistViewModel>();
     final applicationVM = context.watch<ApplicationViewModel>();
 
     final isSaved = shortlistVM.savedJobIds.contains(jobId);
     final isApplied = applicationVM.isApplied(jobId);
 
+    final pkg = job.packageDetails;
     final company = job.companyPosted?.companyDetails;
     final employer = job.companyPosted?.employerDetails;
     final contact = job.contactPerson;
-    final pkg = job.packageDetails;
 
     return Scaffold(
       backgroundColor: AppColors.secBorder,
 
-      /// 🔹 APPBAR
       appBar: AppBar(
         backgroundColor: AppColors.kCard,
         iconTheme: const IconThemeData(color: Colors.white),
         title: Text(
           job.jobRoles?.first ?? job.jobTitle ?? 'Job Detail',
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: const TextStyle(color: Colors.white),
         ),
       ),
 
-      /// 🔻 BUTTONS
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
         child: Row(
@@ -58,9 +52,6 @@ class JobDetailView extends StatelessWidget {
                   jobId: jobId,
                   jobType: 'Off-campus',
                   isSaved: isSaved,
-                ),
-                style: OutlinedButton.styleFrom(
-                  side: BorderSide(color: AppColors.kBorder),
                 ),
                 child: Text(
                   isSaved ? 'Saved' : 'Save',
@@ -75,210 +66,92 @@ class JobDetailView extends StatelessWidget {
                 onPressed:
                     isApplied ? null : () => applicationVM.apply(jobId),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: isApplied
-                      ? Colors.grey.shade800
-                      : AppColors.kGreen,
-                  foregroundColor: Colors.white,
-                  elevation: 0,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+                  backgroundColor:
+                      isApplied ? Colors.grey : AppColors.kGreen,
                 ),
-                child: Text(
-                  isApplied ? 'Applied' : 'Apply Now',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
+                child: Text(isApplied ? 'Applied' : 'Apply Now'),
               ),
             ),
           ],
         ),
       ),
 
-      /// 🔹 BODY
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            /// 🔹 JOB OVERVIEW
-            _section(
-              'Job Overview',
-              Icons.description_outlined,
-              [
-                _infoRow('Job Title', job.jobTitle),
-                _infoRow('Roles', job.jobRoles?.join(', ')),
-                _infoRow('Type', job.jobType),
-                _infoRow('Status', job.jobStatus),
-                _infoRow('Approval', job.approvalStatus),
-                _infoRow('Description', job.description),
-                _infoRow('Eligibility', job.eligibilityCriteria),
-                _infoRow('Degree', job.degree?.join(', ')),
-                _infoRow('Streams', job.studentStreams?.join(', ')),
-                _infoRow('CGPA', job.cgpa?.toString()),
-                _infoRow('Openings', job.numberOfOpenings?.toString()),
-                _infoRow('Min Students', job.minimumStudents),
-                _infoRow('Views', job.views?.toString()),
-                _infoRow('Match Score', '${job.matchScore ?? ''}%'),
-              ],
-            ),
+            /// 🔥 HEADER
+            _header(),
 
-            /// 🔹 LOCATION
-            _section(
-              'Location & Work',
-              Icons.location_on_outlined,
-              [
-                _infoRow('Location', job.location?.join(', ')),
-                _infoRow('Venue', job.venue),
-                _infoRow('Work Mode', job.workMode?.join(', ')),
-                _infoRow('Work Location', job.workLocation?.join(', ')),
-                _infoRow(
-                    'Employment Type', job.employmentType?.join(', ')),
-              ],
-            ),
+            const SizedBox(height: 20),
 
-            /// 🔹 DATES
-            _section(
-              'Important Dates',
-              Icons.calendar_today_outlined,
-              [
-                _infoRow('Start Date', _fmt(job.startDate)),
-                _infoRow('End Date', _fmt(job.endDate)),
-                _infoRow('Online Test', _fmt(job.onlineTestDate)),
-                _infoRow(
-                    'Interview Start', _fmt(job.interviewWindow?.start)),
-                _infoRow(
-                    'Interview End', _fmt(job.interviewWindow?.end)),
-                _infoRow('Offer Date', _fmt(job.offerRolloutDate)),
-                _infoRow('Expires', _fmt(job.expireAt)),
-                _infoRow('Posted', _fmt(job.createdAt)),
-              ],
-            ),
+            /// 🔥 ABOUT
+            if ((job.description ?? '').isNotEmpty)
+              _sectionText("About the Role", job.description),
 
-            /// 🔹 PACKAGE
-            _section(
-              'Package Details',
-              Icons.currency_rupee,
-              [
-                _infoRow('Currency', pkg?.currency),
-                _infoRow('CTC', pkg?.totalCTC?.toString()),
-                _infoRow('Fixed Pay', pkg?.fixedPay?.toString()),
-                _infoRow('Bonus', pkg?.joiningBonus?.toString()),
-              ],
-            ),
+            /// 🔥 RESPONSIBILITIES
+            if ((job.workAchievements ?? []).isNotEmpty)
+              _sectionList("Responsibilities", job.workAchievements),
 
-            /// 🔹 SELECTION PROCESS
-            ExpandableSection(
-              title: 'Selection Process',
-              icon: Icons.groups_outlined,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    '${job.rounds?.length ?? 0} rounds',
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 12),
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: List.generate(
-                      job.selectionProcess?.length ?? 0,
-                      (i) => chip(
-                        '${i + 1}. ${job.selectionProcess![i]}',
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            /// 🔹 SKILLS
+            /// 🔥 REQUIREMENTS
             if ((job.skills ?? []).isNotEmpty)
-              ExpandableSection(
-                title: 'Skills Required',
-                icon: Icons.school_outlined,
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: job.skills!
-                      .map((e) => chip(e, isPrimary: true))
-                      .toList(),
-                ),
-              ),
+              _sectionList("Requirements", job.skills),
 
-            /// 🔹 TOOLS
+            /// 🔥 PREFERRED
+            if ((job.certifications ?? []).isNotEmpty)
+              _sectionList("Preferred", job.certifications),
+
+            /// 🔥 IMPORTANT DATES
+            _sectionInfo("Important Dates", [
+              _info("Start Date", _fmt(job.startDate)),
+              _info("End Date", _fmt(job.endDate)),
+              _info("Test Date", _fmt(job.onlineTestDate)),
+              _info("Offer Date", _fmt(job.offerRolloutDate)),
+              _info("Expires", _fmt(job.expireAt)),
+            ]),
+
+            /// 🔥 PACKAGE
+            _sectionInfo("Package Details", [
+              _info("CTC", pkg?.totalCTC?.toString()),
+              _info("Fixed Pay", pkg?.fixedPay?.toString()),
+              _info("Bonus", pkg?.joiningBonus?.toString()),
+            ]),
+
+            /// 🔥 SELECTION PROCESS
+            if ((job.selectionProcess ?? []).isNotEmpty)
+              _sectionList("Selection Process", job.selectionProcess),
+
+            /// 🔥 TOOLS
             if ((job.toolsAndPlatforms ?? []).isNotEmpty)
-              ExpandableSection(
-                title: 'Tools & Platforms',
-                icon: Icons.handyman_outlined,
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: job.toolsAndPlatforms!
-                      .map((e) => chip(e))
-                      .toList(),
-                ),
-              ),
+              _sectionList("Tools & Platforms", job.toolsAndPlatforms),
 
-            /// 🔹 BENEFITS
-            _section(
-              'Benefits & Tags',
-              Icons.card_giftcard,
-              [
-                _infoRow('Benefits', job.benefits?.join(', ')),
-                _infoRow('Tags', job.tags?.join(', ')),
-                _infoRow(
-                    'Amenities', job.amenitiesRequired?.join(', ')),
-              ],
-            ),
+            /// 🔥 BENEFITS
+            _sectionList("Benefits", job.benefits),
 
-            /// 🔹 CONTACT
+            /// 🔥 CONTACT
             if (contact != null)
-              _section(
-                'Contact Person',
-                Icons.person_outline,
-                [
-                  _infoRow('Name', contact.name),
-                  _infoRow('Designation', contact.designation),
-                  _infoRow('Email', contact.email),
-                  _infoRow('Mobile', contact.mobile),
-                ],
-              ),
+              _sectionInfo("Contact Person", [
+                _info("Name", contact.name),
+                _info("Email", contact.email),
+                _info("Mobile", contact.mobile),
+              ]),
 
-            /// 🔹 COMPANY
+            /// 🔥 COMPANY
             if (company != null)
-              _section(
-                'Company Details',
-                Icons.business,
-                [
-                  _infoRow('Name', company.companyName),
-                  _infoRow('Description', company.description),
-                  _infoRow('Type', company.companyType),
-                  _infoRow('Industry', company.industryType),
-                  _infoRow('Employees', company.numberOfEmployees),
-                  _infoRow('Established', company.establishedYear),
-                  _infoRow('City', company.city),
-                  _infoRow('State', company.state),
-                  _infoRow('Country', company.country),
-                  _infoRow('Pincode', company.pincode),
-                ],
-              ),
+              _sectionInfo("Company Details", [
+                _info("Name", company.companyName),
+                _info("Industry", company.industryType),
+                _info("City", company.city),
+              ]),
 
-            /// 🔹 EMPLOYER
+            /// 🔥 EMPLOYER
             if (employer != null)
-              _section(
-                'Employer',
-                Icons.badge_outlined,
-                [
-                  _infoRow('Name', employer.name),
-                  _infoRow('Designation', employer.designation),
-                  _infoRow('Email', employer.workEmail),
-                  _infoRow('Mobile', employer.mobile),
-                ],
-              ),
+              _sectionInfo("Employer", [
+                _info("Name", employer.name),
+                _info("Designation", employer.designation),
+              ]),
 
             const SizedBox(height: 40),
           ],
@@ -287,118 +160,197 @@ class JobDetailView extends StatelessWidget {
     );
   }
 
-  /// 🔹 SECTION WRAPPER
-  Widget _section(String title, IconData icon, List<Widget> children) {
-    return ExpandableSection(
-      title: title,
-      icon: icon,
-      child: Column(children: children),
+  /// 🔥 HEADER
+ Widget _header() {
+  final title = job.jobRoles?.isNotEmpty == true
+      ? job.jobRoles!.first
+      : job.jobTitle ?? "-";
+
+  final company = job.companyName ?? "-";
+
+  final location = job.location?.join(', ') ?? "-";
+
+  final workMode = job.workMode?.isNotEmpty == true
+      ? job.workMode!.join(', ')
+      : null;
+
+  final salary = job.packageDetails?.totalCTC != null
+      ? "₹${job.packageDetails!.totalCTC} LPA"
+      : null;
+
+  final experience = job.yearsOfExperience?.toString();
+
+  final match = job.matchScore ?? 0;
+
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: AppColors.kCard,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: AppColors.kBorder),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        /// 🔥 TITLE
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 6),
+
+        /// 🔥 COMPANY
+        Text(
+          company,
+          style: const TextStyle(color: Colors.grey),
+        ),
+
+        const SizedBox(height: 12),
+
+        /// 🔥 LOCATION + MODE + SALARY
+        Wrap(
+          spacing: 12,
+          runSpacing: 8,
+          children: [
+            _iconText(Icons.location_on, location),
+
+            if (workMode != null)
+              _iconText(Icons.work_outline, workMode),
+
+            if (salary != null)
+              _iconText(Icons.currency_rupee, salary),
+          ],
+        ),
+
+        const SizedBox(height: 10),
+
+        /// 🔥 EXPERIENCE
+        if (experience != null)
+          _iconText(Icons.access_time, "$experience years"),
+
+        const SizedBox(height: 12),
+
+        /// 🔥 MATCH + REFERRERS + ALUMNI
+        Row(
+          children: [
+            Text(
+              "$match% match",
+              style: const TextStyle(
+                color: Colors.green,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            Text(
+              "${job.views ?? 0} referrers",
+              style: const TextStyle(color: Colors.grey),
+            ),
+
+            const SizedBox(width: 12),
+
+            Text(
+              "${job.numberOfStudent ?? 0} alumni",
+              style: const TextStyle(color: Colors.green),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+Widget _iconText(IconData icon, String text) {
+  return Row(
+    mainAxisSize: MainAxisSize.min,
+    children: [
+      Icon(icon, size: 14, color: Colors.grey),
+      const SizedBox(width: 4),
+      Text(
+        text,
+        style: const TextStyle(color: Colors.grey),
+      ),
+    ],
+  );
+}
+  /// 🔥 TEXT
+  Widget _sectionText(String title, String? content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Text(content ?? "-",
+            style: const TextStyle(color: Colors.grey)),
+        const SizedBox(height: 20),
+      ],
     );
   }
 
-  /// 🔹 INFO ROW
-  Widget _infoRow(String title, String? value) {
+  /// 🔥 LIST
+  Widget _sectionList(String title, List<String>? items) {
+    if (items == null || items.isEmpty) return const SizedBox();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        ...items.map((e) => Row(
+              children: [
+                const Text("• ", style: TextStyle(color: Colors.green)),
+                Expanded(
+                  child: Text(e,
+                      style: const TextStyle(color: Colors.grey)),
+                ),
+              ],
+            )),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  /// 🔥 INFO GRID
+  Widget _sectionInfo(String title, List<Widget> children) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style: const TextStyle(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        ...children,
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _info(String title, String? value) {
     if ((value ?? '').isEmpty) return const SizedBox();
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 6),
       child: Row(
         children: [
           Expanded(
-            flex: 2,
-            child:
-                Text(title, style: const TextStyle(color: Colors.grey)),
-          ),
+              flex: 2,
+              child:
+                  Text(title, style: const TextStyle(color: Colors.grey))),
           Expanded(
-            flex: 3,
-            child:
-                Text(value ?? '', style: const TextStyle(color: Colors.white)),
-          ),
+              flex: 3,
+              child: Text(value ?? '',
+                  style: const TextStyle(color: Colors.white))),
         ],
       ),
     );
   }
-}
-
-/// 🔥 EXPANDABLE CARD
-
-class ExpandableSection extends StatefulWidget {
-  final String title;
-  final IconData icon;
-  final Widget child;
-
-  const ExpandableSection(
-      {super.key, required this.title, required this.icon, required this.child});
-
-  @override
-  State<ExpandableSection> createState() => _ExpandableSectionState();
-}
-
-class _ExpandableSectionState extends State<ExpandableSection> {
-  bool open = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.kCard,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kBorder),
-      ),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: () => setState(() => open = !open),
-            child: Row(
-              children: [
-                Icon(widget.icon, color: AppColors.kGreen),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    widget.title,
-                    style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Icon(
-                  open
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  color: Colors.grey,
-                ),
-              ],
-            ),
-          ),
-          if (open) ...[
-            Divider(color: AppColors.kBorder),
-            const SizedBox(height: 10),
-            widget.child,
-          ]
-        ],
-      ),
-    );
-  }
-}
-
-/// 🔹 CHIP
-Widget chip(String text, {bool isPrimary = false}) {
-  return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-    decoration: BoxDecoration(
-      color: isPrimary
-          ? AppColors.kGreen.withOpacity(0.15)
-          : Colors.black.withOpacity(0.2),
-      borderRadius: BorderRadius.circular(20),
-      border: Border.all(color: AppColors.kBorder),
-    ),
-    child: Text(
-      text,
-      style: TextStyle(
-        fontSize: 12,
-        color: isPrimary ? AppColors.kGreen : Colors.white,
-      ),
-    ),
-  );
 }

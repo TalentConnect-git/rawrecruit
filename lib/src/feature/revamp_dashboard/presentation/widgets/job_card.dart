@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/job_model.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/internship_model.dart';
+import 'package:rawrecruit/src/core/index.dart';
+
 import '../../../../common/index.dart';
 
 class JobCard extends StatelessWidget {
@@ -23,70 +23,95 @@ class JobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    /// 🔹 SAFE DATA EXTRACTION
-    String title = "No Title";
-    String company = "Unknown Company";
-    String workMode = "On-site";
+    print("Job runtime type: ${job.runtimeType}");
+
+    /// 🔹 DEFAULT SAFE VALUES
+    String title = "Opportunity";
+    String company = "Company";
+    String workMode = "Remote";
     String location = "India";
-    String salary = "Not disclosed";
+    String salary = "Check details";
 
-    if (job is JobModel) {
-      final j = job as JobModel;
+    int match = 0;
+    int referrers = 5;
+    int alumni = 8;
 
-      title = j.jobTitle ?? "No Title";
+    /// ✅ UNIVERSAL SAFE PARSER
+    try {
+      final j = job;
 
-      company = j.companyName ??
-          j.companyPosted?.companyDetails?.companyName ??
-          "Unknown Company";
+      /// 🔥 TITLE
+      title =
+          (j?.jobTitle ??
+                  j?.jobRoles?.first ??
+                  j?["jobTitle"] ??
+                  (j?["jobRoles"] is List && j["jobRoles"].isNotEmpty
+                      ? j["jobRoles"][0]
+                      : null) ??
+                  "Opportunity")
+              .toString();
 
-      workMode = (j.workMode?.isNotEmpty ?? false)
-          ? j.workMode!.first
-          : "On-site";
-
-      location = (j.location?.isNotEmpty ?? false)
-          ? j.location!.first
-          : (j.workLocation?.isNotEmpty ?? false)
-              ? j.workLocation!.first
-              : "India";
-
-      salary = _formatSalary(j.packageDetails?.totalCTC);
-    } else if (job is InternshipModel) {
-      final j = job as InternshipModel;
-
-      title = j.jobRoles?.isNotEmpty == true
-          ? j.jobRoles!.first
-          : "No Title";
-
+      /// 🔥 COMPANY
       company =
-          j.companyPosted?.companyDetails?.companyName ??
-          "Unknown Company";
+          (j?.companyName ??
+                  j?.companyPosted?.companyDetails?.companyName ??
+                  j?["companyName"] ??
+                  j?["companyPosted"]?["companyDetails"]?["companyName"] ??
+                  "Company")
+              .toString();
 
-      workMode = (j.workMode?.isNotEmpty ?? false)
-          ? j.workMode!.first
-          : "On-site";
+      /// 🔥 WORK MODE
+      workMode =
+          (j?.workMode?.isNotEmpty == true
+                  ? j.workMode.first
+                  : (j?["workMode"] is List && j["workMode"].isNotEmpty
+                      ? j["workMode"][0]
+                      : null) ??
+                      "Remote")
+              .toString();
 
-      location = (j.location?.isNotEmpty ?? false)
-          ? j.location!.first
-          : "India";
+      /// 🔥 LOCATION
+      location =
+          (j?.location?.isNotEmpty == true
+                  ? j.location.first
+                  : (j?["location"] is List && j["location"].isNotEmpty
+                      ? j["location"][0]
+                      : null) ??
+                      "India")
+              .toString();
 
-      salary = _formatSalary(j.packageDetails?.totalCTC);
+      /// 🔥 SALARY (FIXED)
+      final ctc =
+          j?.packageDetails?.totalCTC ?? j?["packageDetails"]?["totalCTC"];
+
+      if (ctc != null) {
+        salary = ctc < 100000
+            ? "₹$ctc / month"
+            : _formatSalary(ctc);
+      }
+
+      /// 🔥 MATCH
+      match = j?.matchScore ?? j?["matchScore"] ?? 0;
+    } catch (e) {
+      /// NEVER BREAK UI
+      print("JobCard parsing error: $e");
     }
 
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 14),
+        margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.kCard,
-          borderRadius: BorderRadius.circular(14),
+          color: AppColors.kTile,
+          borderRadius: BorderRadius.circular(10),
           border: Border.all(color: AppColors.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            /// 🔥 TITLE + BOOKMARK
+            /// 🔥 TITLE + MATCH %
             Row(
               children: [
                 Expanded(
@@ -97,6 +122,61 @@ class JobCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                Text(
+                  "$match% match",
+                  style: AppTextStyles.s12W600.copyWith(
+                    color: AppColors.kGreen,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 6),
+
+            /// 🔹 COMPANY + LOCATION + MODE
+            Text(
+              "$company • $location • $workMode",
+              style: AppTextStyles.s12W400.copyWith(
+                color: AppColors.white.withOpacity(0.6),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            /// 🔹 BOTTOM ROW
+            Row(
+              children: [
+                Text(
+                  salary,
+                  style: AppTextStyles.s12W600.copyWith(
+                    color: AppColors.white,
+                  ),
+                ),
+                const SizedBox(width: 10),
+
+                Text(
+                  "$referrers referrers",
+                  style: AppTextStyles.s12W400.copyWith(
+                    color: AppColors.white.withOpacity(0.6),
+                  ),
+                ),
+                const SizedBox(width: 10),
+
+                Row(
+                  children: [
+                    Icon(Icons.school,
+                        size: 14, color: AppColors.kGreen),
+                    const SizedBox(width: 4),
+                    Text(
+                      "$alumni alumni",
+                      style: AppTextStyles.s12W600.copyWith(
+                        color: AppColors.kGreen,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const Spacer(),
 
                 GestureDetector(
                   onTap: onBookmarkToggle,
@@ -115,103 +195,20 @@ class JobCard extends StatelessWidget {
                 ),
               ],
             ),
-
-            const SizedBox(height: 6),
-
-            /// 🔥 POSTED BY + APPLY BUTTON (NEW POSITION)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                     Icon(Icons.person_outline, size: 14,color: AppColors.kGreen,),
-                    const SizedBox(width: 4),
-                    Text(
-                      "Posted by $company",
-                      style: AppTextStyles.s12W400.copyWith(
-                        color: AppColors.white.withOpacity(0.6),
-                      ),
-                    ),
-                  ],
-                ),
-
-                /// ✅ APPLY BUTTON HERE
-                ElevatedButton(
-                  onPressed: isApplied ? null : onApply,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.kGreen,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 6),
-                  ),
-                  child: Text(
-                    isApplied ? "Applied" : "Apply",
-                    style:  TextStyle(fontSize: 12,color: AppColors.white),
-                  ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 8),
-
-            /// 🔹 CHIPS
-            Row(
-              children: [
-                _tag("0-1 years"),
-                const SizedBox(width: 6),
-                _tag(workMode),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            /// 🔹 LOCATION
-            Row(
-              children: [
-                 Icon(Icons.location_on_outlined, size: 14,color: AppColors.kGreen,),
-                const SizedBox(width: 4),
-                Text(
-                  location,
-                  style: AppTextStyles.s12W400.copyWith(color: AppColors.white),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 6),
-
-            /// 🔹 SALARY
-            Text(
-              salary,
-              style: AppTextStyles.s14W600.copyWith(
-                color: AppColors.kGreen,
-              ),
-            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _tag(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.background,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        text,
-        style: AppTextStyles.s12W600,
-      ),
-    );
+ String _formatSalary(int? ctc) {
+  if (ctc == null) return "Not disclosed";
+
+  if (ctc < 100000) {
+    return "₹$ctc / month";
   }
 
-  String _formatSalary(int? ctc) {
-    if (ctc == null) return "Not disclosed";
-    final lpa = (ctc / 100000).toStringAsFixed(0);
-    return "₹$lpa LPA";
-  }
+  final lpa = (ctc / 100000).toStringAsFixed(0);
+  return "₹$lpa LPA";
+}
 }

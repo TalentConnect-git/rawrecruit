@@ -20,6 +20,7 @@ runApp(
     providers: [
       ChangeNotifierProvider(
         create: (_) => AppStateProvider(),
+        
       ),
     ],
     child: const App(),

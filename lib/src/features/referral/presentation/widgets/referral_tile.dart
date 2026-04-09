@@ -9,40 +9,40 @@ class ReferralTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => context.pushNamed(RouteNames.referrer),
+      onTap: () => context.pushNamed(RouteNames.referralPost),
       child: Container(
-        padding: EdgeInsets.all(12),
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
         decoration: BoxDecoration(
-          color: AppColors.kTile,
-          borderRadius: BorderRadius.circular(16),
+          color: AppColors.kGreen,
+          borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-              color: Colors.white10,
-              blurRadius: 2,
+              color: AppColors.kGreen.withOpacity(0.4),
+              blurRadius: 12,
               spreadRadius: 1,
-              offset: Offset(0, 1),
+              offset: const Offset(0, 4),
             ),
           ],
         ),
-        child: Row(
-          spacing: 20,
-          children: [
-            Container(
-              padding: EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Color(0xff3C321D),
-                borderRadius: BorderRadius.circular(12),
+        child: Center(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Icon(
+                Icons.add,
+                color: Colors.black,
+                size: 20,
               ),
-              child: Icon(Icons.group, color: Color(0xffF7B23B)),
-            ),
-            Expanded(
-              child: Text(
-                'Go to Referrar Dashboard',
-                style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+              const SizedBox(width: 8),
+              Text(
+                'Post a Referral Job',
+                style: AppTextStyles.s16W600.copyWith(
+                  color: Colors.black,
+                ),
               ),
-            ),
-            Icon(Icons.keyboard_arrow_right, color: AppColors.secText),
-          ],
+            ],
+          ),
         ),
       ),
     );

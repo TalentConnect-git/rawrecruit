@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
+
 class ApplicationCard extends StatelessWidget {
-  final ApplicationModel model;
+  final Job model;
 
   const ApplicationCard({super.key, required this.model});
 
@@ -34,14 +34,12 @@ class ApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = model.jobDetails?.jobRoles?.isNotEmpty == true
-        ? model.jobDetails!.jobRoles!.first
+    final title = model.jobRoles?.isNotEmpty == true
+        ? model.jobRoles!.first
         : "-";
+final company = model.companyName ?? "-";
 
-    final company =
-        model.companyProfile?.companyDetails?.companyName ?? "-";
-
-    final status = model.currentStatus ?? "pending";
+    final status = model.status ?? "pending";
 
     final step = _getStep(status);
     final progress = _getProgress(status);
@@ -61,7 +59,7 @@ class ApplicationCard extends StatelessWidget {
         margin: const EdgeInsets.only(bottom: 16),
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.kCard,
+          color: AppColors.kTile,
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: AppColors.kBorder),
         ),

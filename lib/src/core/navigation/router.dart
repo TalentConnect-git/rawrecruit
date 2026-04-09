@@ -3,13 +3,12 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rawrecruit/src/core/index.dart' show RouteNames, User, UserType;
+import 'package:rawrecruit/src/core/index.dart' show RouteNames, User, UserType, Job;
 import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/internship_model.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/job_model.dart';
+
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/internship_detail_page.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/job_detail_page.dart';
@@ -109,7 +108,7 @@ class AppRouter {
         name: RouteNames.applicationDetail,
         path: '/applicationDetail',
         builder: (context, state) {
-          final model = state.extra as ApplicationModel?;
+          final model = state.extra as Job?;
           return ApplicationDetailView(model: model);
         },
       ),
@@ -117,7 +116,7 @@ class AppRouter {
         name: RouteNames.jobDetail,
         path: '/jobDetail',
         builder: (context, state) {
-          final job = state.extra as JobModel;
+          final job = state.extra as Job;
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(
@@ -135,7 +134,7 @@ class AppRouter {
         name: RouteNames.internshipDetail,
         path: '/internshipDetail',
         builder: (context, state) {
-          final internship = state.extra as InternshipModel;
+          final internship = state.extra as Job;
           return MultiProvider(
             providers: [
               ChangeNotifierProvider(

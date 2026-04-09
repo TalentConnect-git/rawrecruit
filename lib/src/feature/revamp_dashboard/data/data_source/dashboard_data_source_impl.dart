@@ -2,8 +2,7 @@ import 'package:dartz/dartz.dart';
 
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashbooard_data_source.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/internship_model.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/entities/job_model.dart';
+
 
 import '../../../../core/index.dart';
 
@@ -11,7 +10,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   final NetworkService _networkService = NetworkService();
 
   @override
-  ResultFuture<List<JobModel>> getOffCampusJobs() async {
+  ResultFuture<List<Job>> getOffCampusJobs() async {
     final Request request = Request(
       method: RequestMethod.get,
       endpoint: Endpoints.apiOffCampusJobs,
@@ -24,8 +23,18 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
       final List data = response['data'] ?? [];
 
-      final jobs = data.map((e) => JobModel.fromJson(e)).toList();
-
+final jobs = data
+    .map((e) {
+      try {
+        return Job.fromJson(e);
+      } catch (err) {
+        print("PARSE ERROR: $err");
+        return null;
+      }
+    })
+    .whereType<Job>()
+    .toList();
+    print("FINAL JOBS COUNT: ${jobs.length}");
       return Right(jobs);
     } catch (e) {
       return Left(APIException.from(e));
@@ -33,7 +42,74 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   }
 
   @override
-  ResultFuture<List<InternshipModel>> getInternships() async {
+  ResultFuture<List<Job>> getReferralJobs() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint:
+Endpoints.referalListing,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result =
+          await _networkService.request(request);
+
+      final list =
+          (result.data["data"] as List)
+              .map((e) =>
+                  Job.fromJson(e))
+              .toList();
+
+      return Right(list);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+ResultFuture<Job> getReferralJobDetails(String id) async {
+
+  final request = Request(
+    method: RequestMethod.get,
+    endpoint: "/jobs/jobDetails/referral/$id",
+    isSafeRoute: true,
+  );
+
+  try {
+    final result =
+        await _networkService.request(request);
+
+    final data =
+        (result.data as List).first;
+
+    return Right(
+      Job.fromJson(data),
+    );
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
+@override
+ResultFuture<void> applyReferral(String referralId) async {
+
+  final request = Request(
+    method: RequestMethod.post,
+    endpoint: "/application/candidate/referral",
+    body: {
+      "referralId": referralId,
+    },
+    isSafeRoute: true,
+  );
+
+  try {
+    await _networkService.request(request);
+    return const Right(null);
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
+  @override
+  ResultFuture<List<Job>> getInternships() async {
     final Request request = Request(
       method: RequestMethod.get,
       endpoint: Endpoints.apiInternshipPostings,
@@ -46,7 +122,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
       final List data = response['data'] ?? [];
 
-      final internships = data.map((e) => InternshipModel.fromJson(e)).toList();
+      final internships = data.map((e) => Job.fromJson(e)).toList();
 
       return Right(internships);
     } catch (e) {

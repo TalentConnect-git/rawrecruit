@@ -18,26 +18,22 @@ class JobView extends StatefulWidget {
 }
 
 class _JobViewState extends State<JobView> {
-  final viewModel = DashboardViewModel();
+@override
+void initState() {
+  super.initState();
 
-  @override
-  void initState() {
-    super.initState();
-
-    viewModel.getJobs();
-
-    /// 🔥 Fetch saved opportunities once
-    Future.microtask(() {
-      context.read<ShortlistViewModel>().fetchSaved();
-    });
-  }
+  Future.microtask(() {
+    context.read<DashboardViewModel>().getJobs();
+    context.read<ShortlistViewModel>().fetchSaved();
+  });
+}
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider.value(
-      value: viewModel,
-      child: Consumer<DashboardViewModel>(
-        builder: (context, vm, _) {
+return Consumer<DashboardViewModel>(
+  builder: (context, vm, _) {
+    print("JOBS LENGTH: ${vm.jobs.length}");
+      
           if (vm.viewState == ViewState.busy) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -45,16 +41,15 @@ class _JobViewState extends State<JobView> {
           /// 🔥 Apply filters
           final dashboardProvider = context.watch<DashboardProvider>();
 
-          final filteredJobs = dashboardProvider.applyJobFilters(vm.jobs);
-
+final jobsToShow = vm.jobs;
           /// 🔥 Read shortlist viewmodel
           final shortlistVM = context.watch<ShortlistViewModel>();
           final applicationVM = context.watch<ApplicationViewModel>();
 
           return ListView.builder(
-            itemCount: filteredJobs.length,
-            itemBuilder: (context, index) {
-              final job = filteredJobs[index];
+         itemCount: jobsToShow.length,
+itemBuilder: (context, index) {
+  final job = jobsToShow[index];
 
               /// 🔥 Check if saved
               final isSaved = shortlistVM.savedJobIds.contains(job.id);
@@ -83,7 +78,6 @@ class _JobViewState extends State<JobView> {
             },
           );
         },
-      ),
-    );
+);
   }
 }

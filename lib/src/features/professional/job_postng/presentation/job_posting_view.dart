@@ -246,212 +246,273 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     final vm = context.watch<ReferralPostViewModel>();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Post Referral")),
+       backgroundColor: AppColors.kBg,
+  appBar: AppBar(
+    backgroundColor: AppColors.kCard,
+    iconTheme: const IconThemeData(color: Colors.white),
+    title: const Text(
+      "Post Referral",
+      style: TextStyle(color: Colors.white),
+    ),
+  ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child: ListView(
-            children: [
-              // ── Job Title ─────────────────────────────────────────────
-              _dropdown(
-                "Job Title",
-                selectedJobTitle,
-                jobTitleOptions,
-                (val) => setState(() => selectedJobTitle = val!),
-              ),
-              if (selectedJobTitle == "Others")
-                _field("Enter Custom Job Title", controller: titleController),
+          child:ListView(
+  children: [
 
-              _field(
-                "Description",
-                controller: descriptionController,
-                maxLines: 3,
-              ),
+    /// 🔥 JOB INFO
+    _card(
+      title: "Job Info",
+      children: [
+        _dropdownDark(
+          "Job Title",
+          selectedJobTitle,
+          jobTitleOptions,
+          (val) => setState(() => selectedJobTitle = val!),
+        ),
 
-              // ── Location & Work ───────────────────────────────────────
-              _dropdown(
-                "Location",
-                selectedCity,
-                indiaCities,
-                (val) => setState(() => selectedCity = val!),
-              ),
-
-              _dropdown(
-                "Employment Type",
-                employmentType,
-                ["Full-time", "Part-time"],
-                (val) => setState(() => employmentType = val!),
-              ),
-
-              _dropdown("Work Mode", workMode, [
-                "On-site",
-                "Remote",
-                "Hybrid",
-              ], (val) => setState(() => workMode = val!)),
-
-              _dropdown(
-                "Broadcast Type",
-                broadcastType,
-                ["Everyone", "Selected Colleges"],
-                (val) => setState(() => broadcastType = val!),
-              ),
-
-              // ── Education & Experience ────────────────────────────────
-              _dropdown(
-                "Minimum Education",
-                minEducation,
-                educationOptions,
-                (val) => setState(() {
-                  minEducation = val!;
-                  fieldOfStudyController.clear(); // clear stale selections
-                }),
-              ),
-              _ChipMultiSelectField(
-                key: ValueKey(
-                  'fieldOfStudy_$minEducation',
-                ), // key forces rebuild on education change
-                label: "Preferred Field of Study",
-                controller: fieldOfStudyController,
-                options: fieldOfStudyOptions,
-              ),
-              const SizedBox(height: 16),
-
-              _dropdown(
-                "Work Authorization",
-                workAuthorization,
-                workAuthorizationOptions,
-                (val) => setState(() => workAuthorization = val!),
-              ),
-
-              _dropdown(
-                "Experience Range",
-                experienceRange,
-                experienceOptions,
-                (val) => setState(() => experienceRange = val!),
-              ),
-
-              _field(
-                "Openings",
-                controller: openingsController,
-                keyboardType: TextInputType.number,
-              ),
-
-              // ── Package Details ───────────────────────────────────────
-              _sectionHeader("Package Details"),
-              _dropdown(
-                "Currency",
-                currencyController.text,
-                currencyOptions,
-                (val) => setState(() => currencyController.text = val!),
-              ),
-              _field(
-                "Total CTC",
-                controller: totalCTCController,
-                keyboardType: TextInputType.number,
-              ),
-              _field(
-                "Fixed Pay",
-                controller: fixedPayController,
-                keyboardType: TextInputType.number,
-              ),
-              _field(
-                "Joining Bonus",
-                controller: joiningBonusController,
-                keyboardType: TextInputType.number,
-              ),
-
-              const SizedBox(height: 8),
-
-              // ── Tags — enum only, no custom ───────────────────────────
-              _sectionHeader("Tags"),
-              _tagsEnumField(),
-
-              const SizedBox(height: 16),
-
-              // ── Chip multi-select fields ──────────────────────────────
-              _ChipMultiSelectField(
-                key: const ValueKey('skills'),
-                label: "Skills",
-                controller: skillsController,
-                options: skillOptions,
-              ),
-              const SizedBox(height: 16),
-
-              _ChipMultiSelectField(
-                key: const ValueKey('certifications'),
-                label: "Certifications",
-                controller: certificationsController,
-                options: certificationOptions,
-              ),
-              const SizedBox(height: 16),
-
-              _ChipMultiSelectField(
-                key: const ValueKey('benefits'),
-                label: "Benefits",
-                controller: benefitsController,
-                options: benefitOptions,
-              ),
-              const SizedBox(height: 16),
-
-              _field("Eligibility Criteria", controller: eligibilityController),
-
-              const SizedBox(height: 20),
-
-              // ── Submit ────────────────────────────────────────────────
-              ElevatedButton(
-                onPressed: () async {
-                  final model = ReferralPostModel(
-                    jobTitle: selectedJobTitle == "Others"
-                        ? titleController.text.trim()
-                        : selectedJobTitle,
-                    description: descriptionController.text.trim(),
-                    employmentType: employmentType,
-                    workMode: workMode,
-                    broadcastType: broadcastType,
-                    jobType: "Referral",
-                    location: [selectedCity],
-                    minEducation: minEducation,
-                    numberOfOpenings:
-                        int.tryParse(openingsController.text) ?? 0,
-                    packageDetails: PackageDetails(
-                      currency: currencyController.text.trim(),
-                      totalCTC: int.tryParse(totalCTCController.text) ?? 0,
-                      fixedPay: int.tryParse(fixedPayController.text) ?? 0,
-                      joiningBonus:
-                          int.tryParse(joiningBonusController.text) ?? 0,
-                    ),
-                    skills: _splitController(skillsController),
-                    studentStreams: _splitController(fieldOfStudyController),
-                    tags: selectedTags.toList(),
-                    workAuthorization: workAuthorization,
-                    yearsOfExperience: experienceRange,
-                    benefits: _splitController(benefitsController),
-                    certifications: _splitController(certificationsController),
-                    eligibilityCriteria: eligibilityController.text.trim(),
-                    approvalStatus: 'Pending',
-                  );
-
-                  final success = await vm.postJob(model);
-
-                  if (success && mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text("Referral Successfully Added"),
-                        backgroundColor: Colors.green,
-                      ),
-                    );
-                    Future.delayed(const Duration(seconds: 1), () {
-                      if (mounted) Navigator.pop(context);
-                    });
-                  }
-                },
-                child: const Text("Post Job"),
-              ),
-
-              const SizedBox(height: 40),
-            ],
+        if (selectedJobTitle == "Others")
+          _fieldDark(
+            "Enter Custom Job Title",
+            controller: titleController,
           ),
+
+        _fieldDark(
+          "Description",
+          controller: descriptionController,
+          maxLines: 3,
+        ),
+      ],
+    ),
+
+    /// 🔥 LOCATION & WORK
+    _card(
+      title: "Location & Work",
+      children: [
+        _dropdownDark(
+          "Location",
+          selectedCity,
+          indiaCities,
+          (val) => setState(() => selectedCity = val!),
+        ),
+
+        _dropdownDark(
+          "Employment Type",
+          employmentType,
+          ["Full-time", "Part-time"],
+          (val) => setState(() => employmentType = val!),
+        ),
+
+        _dropdownDark(
+          "Work Mode",
+          workMode,
+          ["On-site", "Remote", "Hybrid"],
+          (val) => setState(() => workMode = val!),
+        ),
+
+        _dropdownDark(
+          "Broadcast Type",
+          broadcastType,
+          ["Everyone", "Selected Colleges"],
+          (val) => setState(() => broadcastType = val!),
+        ),
+      ],
+    ),
+
+    /// 🔥 EDUCATION & EXPERIENCE
+    _card(
+      title: "Education & Experience",
+      children: [
+        _dropdownDark(
+          "Minimum Education",
+          minEducation,
+          educationOptions,
+          (val) => setState(() {
+            minEducation = val!;
+            fieldOfStudyController.clear();
+          }),
+        ),
+
+        _ChipMultiSelectField(
+          key: ValueKey('fieldOfStudy_$minEducation'),
+          label: "Preferred Field of Study",
+          controller: fieldOfStudyController,
+          options: fieldOfStudyOptions,
+        ),
+
+        const SizedBox(height: 12),
+
+        _dropdownDark(
+          "Work Authorization",
+          workAuthorization,
+          workAuthorizationOptions,
+          (val) => setState(() => workAuthorization = val!),
+        ),
+
+        _dropdownDark(
+          "Experience Range",
+          experienceRange,
+          experienceOptions,
+          (val) => setState(() => experienceRange = val!),
+        ),
+
+        _fieldDark(
+          "Openings",
+          controller: openingsController,
+          keyboardType: TextInputType.number,
+        ),
+      ],
+    ),
+
+    /// 🔥 PACKAGE DETAILS
+    _card(
+      title: "Package Details",
+      children: [
+        _dropdownDark(
+          "Currency",
+          currencyController.text,
+          currencyOptions,
+          (val) => setState(() => currencyController.text = val!),
+        ),
+
+        _fieldDark(
+          "Total CTC",
+          controller: totalCTCController,
+          keyboardType: TextInputType.number,
+        ),
+
+        _fieldDark(
+          "Fixed Pay",
+          controller: fixedPayController,
+          keyboardType: TextInputType.number,
+        ),
+
+        _fieldDark(
+          "Joining Bonus",
+          controller: joiningBonusController,
+          keyboardType: TextInputType.number,
+        ),
+      ],
+    ),
+
+    /// 🔥 TAGS
+    _card(
+      title: "Tags",
+      children: [
+        _tagsEnumField(),
+      ],
+    ),
+
+    /// 🔥 SKILLS & CERTIFICATIONS
+    _card(
+      title: "Skills & Certifications",
+      children: [
+        _ChipMultiSelectField(
+          key: const ValueKey('skills'),
+          label: "Skills",
+          controller: skillsController,
+          options: skillOptions,
+        ),
+
+        const SizedBox(height: 12),
+
+        _ChipMultiSelectField(
+          key: const ValueKey('certifications'),
+          label: "Certifications",
+          controller: certificationsController,
+          options: certificationOptions,
+        ),
+
+        const SizedBox(height: 12),
+
+        _ChipMultiSelectField(
+          key: const ValueKey('benefits'),
+          label: "Benefits",
+          controller: benefitsController,
+          options: benefitOptions,
+        ),
+
+        const SizedBox(height: 12),
+
+        _fieldDark(
+          "Eligibility Criteria",
+          controller: eligibilityController,
+        ),
+      ],
+    ),
+
+    const SizedBox(height: 20),
+
+    /// 🔥 SUBMIT BUTTON
+    SizedBox(
+      height: 52,
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: AppColors.kGreen,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(12),
+          ),
+        ),
+        onPressed: () async {
+          final model = ReferralPostModel(
+            jobTitle: selectedJobTitle == "Others"
+                ? titleController.text.trim()
+                : selectedJobTitle,
+            description: descriptionController.text.trim(),
+            employmentType: employmentType,
+            workMode: workMode,
+            broadcastType: broadcastType,
+            jobType: "Referral",
+            location: [selectedCity],
+            minEducation: minEducation,
+            numberOfOpenings:
+                int.tryParse(openingsController.text) ?? 0,
+            packageDetails: PackageDetails(
+              currency: currencyController.text.trim(),
+              totalCTC: int.tryParse(totalCTCController.text) ?? 0,
+              fixedPay: int.tryParse(fixedPayController.text) ?? 0,
+              joiningBonus:
+                  int.tryParse(joiningBonusController.text) ?? 0,
+            ),
+            skills: _splitController(skillsController),
+            studentStreams: _splitController(fieldOfStudyController),
+            tags: selectedTags.toList(),
+            workAuthorization: workAuthorization,
+            yearsOfExperience: experienceRange,
+            benefits: _splitController(benefitsController),
+            certifications: _splitController(certificationsController),
+            eligibilityCriteria: eligibilityController.text.trim(),
+            approvalStatus: 'Pending',
+          );
+
+          final success = await vm.postJob(model);
+
+          if (success && mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text("Referral Successfully Added"),
+                backgroundColor: Colors.green,
+              ),
+            );
+
+            Future.delayed(const Duration(seconds: 1), () {
+              if (mounted) Navigator.pop(context);
+            });
+          }
+        },
+        child:  Text(
+          "Post Job",
+          style: TextStyle(fontWeight: FontWeight.bold,color: AppColors.white),
+        ),
+      ),
+    ),
+
+    const SizedBox(height: 40),
+  ],
+)
+       
         ),
       ),
     );
@@ -484,10 +545,11 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                 }
               });
             },
-            selectedColor: AppColors.primary.withOpacity(0.15),
-            checkmarkColor: AppColors.primary,
+            backgroundColor: AppColors.kTile,
+            selectedColor: AppColors.kGreen,
+            checkmarkColor: AppColors.white,
             labelStyle: TextStyle(
-              color: isSelected ? AppColors.primary : null,
+              color: isSelected ? AppColors.white : null,
               fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
             ),
           );
@@ -516,47 +578,86 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     );
   }
 
-  Widget _field(
-    String label, {
-    required TextEditingController controller,
-    int maxLines = 1,
-    TextInputType keyboardType = TextInputType.text,
-  }) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: TextFormField(
-        controller: controller,
-        maxLines: maxLines,
-        keyboardType: keyboardType,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
+  Widget _fieldDark(
+  String label, {
+  required TextEditingController controller,
+  int maxLines = 1,
+  TextInputType keyboardType = TextInputType.text,
+}) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: TextFormField(
+      controller: controller,
+      maxLines: maxLines,
+      keyboardType: keyboardType,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.grey),
+        filled: true,
+        fillColor: AppColors.kCard,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
         ),
       ),
-    );
-  }
-
-  Widget _dropdown(
-    String label,
-    String value,
-    List<String> items,
-    Function(String?) onChanged,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 16),
-      child: DropdownButtonFormField<String>(
-        value: value,
-        decoration: InputDecoration(
-          labelText: label,
-          border: const OutlineInputBorder(),
+    ),
+  );
+}
+Widget _dropdownDark(
+  String label,
+  String value,
+  List<String> items,
+  Function(String?) onChanged,
+) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: DropdownButtonFormField<String>(
+      value: value,
+      dropdownColor: AppColors.kCard,
+      style: const TextStyle(color: Colors.white),
+      decoration: InputDecoration(
+        labelText: label,
+        labelStyle: const TextStyle(color: Colors.grey),
+        filled: true,
+        fillColor: AppColors.kCard,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide.none,
         ),
-        items: items
-            .map((e) => DropdownMenuItem(value: e, child: Text(e)))
-            .toList(),
-        onChanged: onChanged,
       ),
-    );
-  }
+      items: items
+          .map((e) => DropdownMenuItem(
+                value: e,
+                child: Text(e, style: const TextStyle(color: Colors.white)),
+              ))
+          .toList(),
+      onChanged: onChanged,
+    ),
+  );
+}
+ Widget _card({required String title, required List<Widget> children}) {
+  return Container(
+    margin: const EdgeInsets.only(bottom: 16),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: AppColors.kTile,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: AppColors.border),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
+        ),
+        const SizedBox(height: 12),
+        ...children,
+      ],
+    ),
+  );
+}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -648,6 +749,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
+    
       children: [
         Text(
           widget.label,
@@ -672,13 +774,14 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                   children: widget.options.map((option) {
                     final isSelected = selected.contains(option);
                     return FilterChip(
+                      backgroundColor: AppColors.kTile,
                       label: Text(option),
                       selected: isSelected,
                       onSelected: (_) => _toggleEnumChip(option),
-                      selectedColor: AppColors.primary.withOpacity(0.15),
-                      checkmarkColor: AppColors.primary,
+                      selectedColor: AppColors.kGreen,
+                      checkmarkColor: AppColors.white,
                       labelStyle: TextStyle(
-                        color: isSelected ? AppColors.primary : null,
+                        color: isSelected ? AppColors.white : null,
                         fontWeight: isSelected
                             ? FontWeight.w600
                             : FontWeight.normal,
@@ -764,4 +867,5 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
       ],
     );
   }
+ 
 }

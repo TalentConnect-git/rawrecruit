@@ -21,7 +21,7 @@ class ApplicationRepositoryImpl
   }
 
   @override
-  ResultFuture<List<ApplicationModel>>
+  ResultFuture<List<Job>>
       fetchAppliedJobs() {
 
     return _dataSource.fetchAppliedJobs();

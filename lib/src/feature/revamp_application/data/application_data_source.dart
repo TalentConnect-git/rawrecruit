@@ -7,6 +7,6 @@ abstract class ApplicationDataSource {
     required String jobId,
   });
 
-  ResultFuture<List<ApplicationModel>>
+  ResultFuture<List<Job>>
       fetchAppliedJobs();
 }

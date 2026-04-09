@@ -32,4 +32,8 @@ class ReferralPostRepositoryImpl implements ReferralPostRepository {
     applicationId: applicationId,
     status: status,
   );
+
+    @override
+  ResultFuture<List<Job>> getOffCampusJobs() =>
+      _dataSource.getOffCampusJobs();
 }
