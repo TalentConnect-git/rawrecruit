@@ -50,21 +50,23 @@ class _HomeViewState extends State<HomeView> {
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
 
-    if (location.startsWith('/application') ||
-        location.startsWith('/referrer')) {
-      return 2;
-    }
-    // if (location.startsWith('/my-profile')) {
-    //   return appStateProvider.isProfessional ? 4 : 3;
-    // }
-    if (location.startsWith('/shortlist')) {
-      return 3;
-    }
-    if (location.startsWith('/chatUsers')) {
-      return 4;
+    if (location.startsWith('/application')) {
+      return 1; // ✅ Jobs
     }
 
-    return 0;
+    if (location.startsWith('/referrer')) {
+      return 2; // ✅ Referrer
+    }
+
+    if (location.startsWith('/shortlist')) {
+      return 3; // ✅ Alumnis
+    }
+
+    if (location.startsWith('/chatUsers')) {
+      return 4; // ✅ Chat
+    }
+
+    return 0; // ✅ Home
   }
 
   @override
@@ -135,15 +137,9 @@ class _HomeViewState extends State<HomeView> {
           hasUnread: chatVm.totalUnreadCount > 0,
           onTap: (tab) {
             final extra = appStateProvider.userType;
-            bool needExtra = false;
-            if (tab == NavItem.home || tab == NavItem.referrals) {
-              needExtra = true;
-            }
-            if (tab == NavItem.jobs || tab == NavItem.alumnis) {
-              Toasts.showInfoToast(context, message: 'In development');
-            } else {
-              context.goNamed(tab.path, extra: needExtra ? extra : null);
-            }
+
+            context.goNamed(tab.path, extra: extra);
+
             // switch (tab) {
             //   // case 0:
             //   //   context.goNamed(

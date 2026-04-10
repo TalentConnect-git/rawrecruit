@@ -3,17 +3,23 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rawrecruit/src/core/index.dart' show RouteNames, User, UserType, Job;
+import 'package:rawrecruit/src/core/index.dart'
+    show RouteNames, User, UserType, Job;
+import 'package:rawrecruit/src/feature/revamp_alumni/presentation/alumni_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/alumni_detail_view.dart';
 
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/internship_detail_page.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/job_detail_page.dart';
+import 'package:rawrecruit/src/feature/revamp_jobs/presentation/student_jobs_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/first_step.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
+import 'package:rawrecruit/src/feature/revamp_referrer/presentation/professional_referrer_tab.dart';
+import 'package:rawrecruit/src/feature/revamp_referrer/student_referrer_tab.dart';
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
@@ -35,6 +41,7 @@ import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.da
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../feature/revamp_auth/index.dart';
+import '../../feature/revamp_jobs/presentation/professional_jobs_tab.dart';
 import '../../feature/revamp_profile/presentation/modern_profile_page.dart';
 import '../../features/chat/index.dart';
 import '../../features/onboarding/presentation/add_edit_profile_view.dart';
@@ -77,7 +84,14 @@ class AppRouter {
           return ReferralDetailView(jobId: jobId);
         },
       ),
-
+      GoRoute(
+        name: RouteNames.alumniDetail,
+        path: "/alumni-detail",
+        builder: (context, state) {
+          final jobs = state.extra as List<Job>;
+          return AlumniDetailView(jobs: jobs);
+        },
+      ),
       GoRoute(
         name: RouteNames.referralPost,
         path: '/referralPost',
@@ -234,13 +248,19 @@ class AppRouter {
             name: RouteNames.referrer,
             path: '/referrer',
             builder: (context, state) {
-              return const ReferrerView();
+              final type = state.extra as UserType?;
+
+              if (type == UserType.professional) {
+                return const ProfessionalReferralView(); // ✅ professional
+              } else {
+                return const StudentApplicationsView(); // ✅ student
+              }
             },
           ),
           GoRoute(
             name: RouteNames.shortlist,
             path: '/shortlist',
-            builder: (_, _) => ShortlistView(),
+            builder: (_, _) => AlumniHiringView(),
           ),
 
           GoRoute(
@@ -250,12 +270,9 @@ class AppRouter {
               final type = state.extra as UserType?;
 
               if (type == UserType.professional) {
-                return ChangeNotifierProvider(
-                  create: (_) => ReferralApplicationsViewModel(),
-                  child: const ReferralApplicationsScreen(),
-                );
+                return const ProfessionalJobsView(); // ✅
               } else {
-                return ApplicationsView();
+                return StudentJobsView(); // ✅
               }
             },
           ),

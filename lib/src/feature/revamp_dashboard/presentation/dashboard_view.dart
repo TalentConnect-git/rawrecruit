@@ -11,7 +11,10 @@ import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
+import 'widgets/alumni_card.dart';
+
 class DashboardView extends StatefulWidget {
+
   const DashboardView({super.key});
   @override
   State<DashboardView> createState() => _DashboardViewState();
@@ -99,8 +102,8 @@ class _DashboardCombinedViewState
     Future.microtask(() {
       context.read<DashboardViewModel>().getJobs();
       context.read<DashboardViewModel>().getInternships();
-      context.read<DashboardViewModel>().fetchProfessionalData(); // 👈 add if not present
-
+      context.read<DashboardViewModel>().fetchProfessionalData(); 
+  context.read<DashboardViewModel>().getAlumniData();
       context.read<ShortlistViewModel>().fetchSaved();
       context.read<ApplicationViewModel>().fetchApplications();
     });
@@ -131,11 +134,24 @@ if (applicationVM.appliedApplications.isEmpty)
     ),
   )
 else
-  ...applicationVM.appliedApplications.take(3).map((job) {
+  ...applicationVM.appliedApplications.take(7).map((job) {
     return ApplicationCard(
       model: job,
     );
   }),
+_SectionHeader(title: "Alumni Hiring Network"),
+
+SizedBox(
+  height: 170,
+  child: ListView.builder(
+    scrollDirection: Axis.horizontal,
+    itemCount: vm.groupedAlumni.values.take(3).length,
+    itemBuilder: (context, index) {
+      final jobs = vm.groupedAlumni.values.toList()[index];
+      return AlumniCard(jobs: jobs,);
+    },
+  ),
+),
             /// 🔥 REFERRAL SECTION
             _SectionHeader(title: "Referral Jobs for You"),
             ...vm.referralJobs.take(3).map((job) {

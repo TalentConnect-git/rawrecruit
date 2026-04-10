@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/alumni_card.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/my_job_card.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
@@ -28,7 +30,6 @@ void initState() {
   WidgetsBinding.instance.addPostFrameCallback((_) async {
     await postedJobViewModel.getPostedJobs();
     await postedJobViewModel.getJobs();
-    
   });
 }
 final PostedJobViewModel postedJobViewModel =
@@ -40,13 +41,16 @@ final PostedJobViewModel postedJobViewModel =
     providers: [
       ChangeNotifierProvider.value(value: referralHomeViewModel),
       ChangeNotifierProvider.value(value: postedJobViewModel),
-
+ChangeNotifierProvider(create: (_) => DashboardViewModel()),
       /// 🔥 ADD THESE (missing!)
       ChangeNotifierProvider(create: (_) => ShortlistViewModel()),
       ChangeNotifierProvider(create: (_) => ApplicationViewModel()),
     ],
     child: Builder( // 👈 IMPORTANT
       builder: (context) {
+ WidgetsBinding.instance.addPostFrameCallback((_) {
+    context.read<DashboardViewModel>().getAlumniData();
+  });
 
         final shortlistVM = context.watch<ShortlistViewModel>();
         final applicationVM = context.watch<ApplicationViewModel>();
@@ -189,76 +193,40 @@ Consumer<PostedJobViewModel>(
   },
 ),
              
-              const SizedBox(height: 24), /// Referrers Section
-              Text(
-                'Referrers Who Can Help',
-                style:
-                    AppTextStyles.s16W600.copyWith(color: Colors.white),
-              ),
+            const SizedBox(height: 24),
 
-              const SizedBox(height: 12),
+Text(
+  'Alumni Hiring Network',
+  style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+),
 
-              SizedBox(
-                height: 230,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 3,
-                  separatorBuilder: (_, _) => const SizedBox(width: 12),
-                  itemBuilder: (_, index) {
-                    return Container(
-                      width: 160,
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AppColors.kTile,
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            children: [
-                              Container(
-                                height: 60,
-                                width: 60,
-                                decoration: const BoxDecoration(
-                                  color: Color(0xff1E2229),
-                                  shape: BoxShape.circle,
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    'JD',
-                                    style: AppTextStyles.s16W600.copyWith(
-                                        color: AppColors.white),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 12),
-                              Text(
-                                'John Doe',
-                                style: AppTextStyles.s16W600.copyWith(
-                                    color: AppColors.white),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                'Java, Flutter',
-                                style: AppTextStyles.s16W600.copyWith(
-                                    color: AppColors.secText),
-                              ),
-                            ],
-                          ),
-                          AppButton.outlined(
-                            onPressed: () {},
-                            label: 'Request',
-                            foregroundColor: AppColors.kBg,
-                            backgroundColor: AppColors.kGreen,
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                ),
-              ),
+const SizedBox(height: 12),
 
+Consumer<DashboardViewModel>(
+  builder: (context, vm, _) {
+    if (vm.groupedAlumni.isEmpty) {
+      return Text(
+        "No alumni available",
+        style: AppTextStyles.s14W400.copyWith(
+          color: AppColors.secText,
+        ),
+      );
+    }
+
+    return SizedBox(
+      height: 170,
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: vm.groupedAlumni.values.take(3).length,
+        itemBuilder: (context, index) {
+          final jobs = vm.groupedAlumni.values.toList()[index];
+
+          return AlumniCard(jobs: jobs);
+        },
+      ),
+    );
+  },
+),
               const SizedBox(height: 24),
 
               /// Jobs Section

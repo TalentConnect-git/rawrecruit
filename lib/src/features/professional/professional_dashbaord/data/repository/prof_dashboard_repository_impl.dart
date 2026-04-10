@@ -29,4 +29,6 @@ ResultFuture<ReferralJobModel> getReferralJobDetails(String id) {
 ResultFuture<void> applyReferral(String referralId) {
   return _dataSource.applyReferral(referralId);
 }
+
+
 }

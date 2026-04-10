@@ -31,4 +31,8 @@ ResultFuture<Job> getReferralJobDetails(String id) {
 ResultFuture<void> applyReferral(String referralId) {
   return _dataSource.applyReferral(referralId);
 }
+@override
+ResultFuture<List<Job>> getAlumni() {
+  return _dataSource.getAlumni();
+}
 }
