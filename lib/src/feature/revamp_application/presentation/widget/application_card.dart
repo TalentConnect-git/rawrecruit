@@ -34,10 +34,17 @@ class ApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = model.jobRoles?.isNotEmpty == true
-        ? model.jobRoles!.first
-        : "-";
-final company = model.companyName ?? "-";
+final title = (model.jobRoles?.isNotEmpty == true)
+    ? model.jobRoles!.first
+    : (model.jobTitle?.isNotEmpty == true
+        ? model.jobTitle!
+        : "-");
+
+final company = (model.companyName?.isNotEmpty == true)
+    ? model.companyName!
+    : (model.jobType == "Referral"
+        ? "Referral"
+        : "-");
 
     final status = model.status ?? "pending";
 

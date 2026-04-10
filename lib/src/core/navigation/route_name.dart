@@ -26,5 +26,5 @@ class RouteNames {
   static const String userType = 'userType';
   static const String onboarding = 'onboarding';
   static const String referrer = 'referrer';
-
+static const String alumniDetail='alumniDetail';
 }

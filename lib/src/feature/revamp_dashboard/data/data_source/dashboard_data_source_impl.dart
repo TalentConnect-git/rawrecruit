@@ -129,4 +129,25 @@ ResultFuture<void> applyReferral(String referralId) async {
       return Left(APIException.from(e));
     }
   }
+
+  @override
+ResultFuture<List<Job>> getAlumni() async {
+  final request = Request(
+    method: RequestMethod.get,
+    endpoint: "/api/candidate/alumni",
+    isSafeRoute: true,
+  );
+
+  try {
+    final result = await _networkService.request(request);
+
+    final List list = result.data['jobs'] ?? []; // ✅ IMPORTANT
+
+    final alumniList = list.map((e) => Job.fromJson(e)).toList();
+
+    return Right(alumniList);
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
 }

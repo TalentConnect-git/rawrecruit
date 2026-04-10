@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -33,6 +35,9 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
       providers: [
         ChangeNotifierProvider.value(value: viewModel),
         ChangeNotifierProvider.value(value: shortlistVm),
+        ChangeNotifierProvider(
+          create: (_) => ApplicationViewModel()..fetchApplications(),
+        ),
       ],
       child: Consumer<ProfessionalViewModel>(
         builder: (context, vm, _) {
@@ -42,227 +47,144 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
             );
           }
 
-          final job = vm.selectedReferralJob;
+          final referral = vm.selectedReferralJob;
+          final job = referral != null ? mapReferralToJob(referral) : null;
 
           if (job == null) {
             return const Scaffold(body: Center(child: Text("No Data")));
           }
 
-          final poster = job.candidatePosted;
+          final shortlistVM = context.watch<ShortlistViewModel>();
+          final applicationVM = context.watch<ApplicationViewModel>();
+
+          final jobId = job.id ?? '';
+          final isSaved = shortlistVM.savedJobIds.contains(jobId);
+          final isApplied = applicationVM.isApplied(jobId);
 
           return Scaffold(
+            backgroundColor: AppColors.secBorder,
+
+            /// 🔥 APPBAR
             appBar: AppBar(
-              title: Text(job.jobTitle ?? ''),
+              backgroundColor: AppColors.kCard,
+              iconTheme: const IconThemeData(color: Colors.white),
+              title: Text(job.jobTitle ?? '',
+                  style: const TextStyle(color: Colors.white)),
               actions: [
-                Selector<ShortlistViewModel, bool>(
-                  selector: (_, vm) => vm.savedJobIds.contains(job.id),
-                  builder: (_, isSaved, __) => GestureDetector(
-                    onTap: () => shortlistVm.toggleSave(
-                      jobId: job.id ?? '',
-                      jobType: "Off-campus",
-                      isSaved: isSaved,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      child: AnimatedSwitcher(
-                        duration: const Duration(milliseconds: 200),
-                        child: Icon(
-                          isSaved ? Icons.bookmark : Icons.bookmark_border,
-                          key: ValueKey(isSaved),
-                          color: isSaved
-                              ? AppColors.primary
-                              : AppColors.text.withValues(alpha: 0.6),
-                        ),
-                      ),
+                GestureDetector(
+                  onTap: () => shortlistVM.toggleSave(
+                    jobId: jobId,
+                    jobType: "Referral",
+                    isSaved: isSaved,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Icon(
+                      isSaved ? Icons.bookmark : Icons.bookmark_border,
+                      color: isSaved ? AppColors.kGreen : Colors.grey,
                     ),
                   ),
                 ),
-
                 GestureDetector(
                   onTap: () async {
                     final url = Uri.tryParse(
-                      'https://rawrecruit.in/professional-dashboard/Referral/',
-                    );
-                    if (url != null) {
-                      final canLaunch = await canLaunchUrl(url);
-                      try {
-                        await launchUrl(url);
-                      } catch (e) {
-                        Toasts.showErrorToast(
-                          context,
-                          message: 'Something went wrong, Try again later.',
-                        );
-                      }
-                    }
+                        'https://rawrecruit.in/professional-dashboard/Referral/');
+                    if (url != null) await launchUrl(url);
                   },
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16),
-                    child: Icon(Icons.share, color: AppColors.primary),
+                    child: Icon(Icons.share, color: AppColors.kGreen),
                   ),
                 ),
               ],
             ),
+
+            /// 🔥 APPLY BAR
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton(
+                      onPressed: () => shortlistVM.toggleSave(
+                        jobId: jobId,
+                        jobType: "Referral",
+                        isSaved: isSaved,
+                      ),
+                      child: Text(
+                        isSaved ? "Saved" : "Save",
+                        style: TextStyle(color: AppColors.kGreen),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    flex: 2,
+                    child: ElevatedButton(
+                      onPressed:
+                          isApplied ? null : () => applicationVM.apply(jobId),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isApplied ? Colors.grey : AppColors.kGreen,
+                      ),
+                      child: Text(isApplied ? "Applied" : "Apply Now"),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            /// 🔥 BODY
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── JOB OVERVIEW ──────────────────────────────────────────
-                  _sectionHeader('Job Overview'),
-                  _row('Job Title', job.jobTitle),
-                  _row('Job Type', job.jobType),
-                  _row('Job Status', job.jobStatus),
-                  // _row('Approval Status', job.approvalStatus),
-                  _row('Description', job.description),
-                  _row('Eligibility Criteria', job.eligibilityCriteria),
-                  _row('Min Education', job.minEducation),
-                  _row('Years of Experience', job.yearsOfExperience),
-                  _row('Work Authorization', job.workAuthorization),
-                  _row('Number of Openings', job.numberOfOpenings?.toString()),
-                  _row(
-                    'CGPA Required',
-                    job.cgpa == 0 ? '-' : job.cgpa?.toString(),
-                  ),
-                  // _row('Views', job.views?.toString()),
-                  _row('Expires At', _formatDate(job.expireAt)),
-                  _row('Posted At', _formatDate(job.createdAt)),
 
-                  const SizedBox(height: 16),
+                  _header(job),
 
-                  // ── LOCATION & WORK ───────────────────────────────────────
-                  _sectionHeader('Location & Work'),
-                  _row(
-                    'Location',
-                    job.location?.isNotEmpty == true
-                        ? job.location!.join(', ')
-                        : null,
-                  ),
-                  _row(
-                    'Work Mode',
-                    job.workMode?.isNotEmpty == true
-                        ? job.workMode!.join(', ')
-                        : null,
-                  ),
-                  _row(
-                    'Work Location',
-                    job.workLocation?.isNotEmpty == true
-                        ? job.workLocation!.join(', ')
-                        : null,
-                  ),
-                  _row(
-                    'Employment Type',
-                    job.employmentType?.isNotEmpty == true
-                        ? job.employmentType!.join(', ')
-                        : null,
-                  ),
+                  const SizedBox(height: 20),
 
-                  const SizedBox(height: 16),
+                  _sectionText("Description", job.description),
 
-                  // ── PACKAGE DETAILS ───────────────────────────────────────
-                  _sectionHeader('Package Details'),
-                  _row('Currency', job.packageDetails?.currency),
-                  _row('Total CTC', job.packageDetails?.totalCTC?.toString()),
-                  _row('Fixed Pay', job.packageDetails?.fixedPay?.toString()),
-                  _row(
-                    'Joining Bonus',
-                    job.packageDetails?.joiningBonus?.toString(),
-                  ),
+                  _sectionInfo("Job Overview", [
+                    _info("Job Title", job.jobTitle),
+                    _info("Job Type", job.jobType),
+                    _info("Status", job.jobStatus),
+                    _info("Approval", job.approvalStatus),
+                  ]),
 
-                  const SizedBox(height: 16),
+                  _sectionInfo("Basic Info", [
+                    _info("Experience", job.yearsOfExperience),
+                    _info("Education", job.minEducation),
+                    _info("Openings", job.numberOfOpenings),
+                    _info("CGPA", job.cgpa),
+                  ]),
 
-                  // ── ELIGIBILITY ───────────────────────────────────────────
-                  _sectionHeader('Eligibility'),
-                  _row(
-                    'Degree',
-                    job.degree?.isNotEmpty == true
-                        ? job.degree!.join(', ')
-                        : null,
-                  ),
-                  _row(
-                    'Student Streams',
-                    job.studentStreams?.isNotEmpty == true
-                        ? job.studentStreams!.join(', ')
-                        : null,
-                  ),
-                  _row(
-                    'College Types',
-                    job.collegeTypes?.isNotEmpty == true
-                        ? job.collegeTypes!.join(', ')
-                        : null,
-                  ),
-                  _row(
-                    'College Categories',
-                    job.collegeCategories?.isNotEmpty == true
-                        ? job.collegeCategories!.join(', ')
-                        : null,
-                  ),
-                  _row(
-                    'Company Type',
-                    job.companyType?.isNotEmpty == true
-                        ? job.companyType!.join(', ')
-                        : null,
-                  ),
+                  _sectionInfo("Location & Work", [
+                    _info("Location", job.location),
+                    _info("Work Mode", job.workMode),
+                    _info("Employment Type", job.employmentType),
+                  ]),
 
-                  const SizedBox(height: 16),
+                  _sectionInfo("Package", [
+                    _info("Currency", job.packageDetails?.currency),
+                    _info("CTC", job.packageDetails?.totalCTC),
+                    _info("Fixed Pay", job.packageDetails?.fixedPay),
+                    _info("Joining Bonus", job.packageDetails?.joiningBonus),
+                  ]),
 
-                  // ── SKILLS & TOOLS ────────────────────────────────────────
-                  if ((job.skills ?? []).isNotEmpty) ...[
-                    _sectionHeader('Skills Required'),
-                    _chipWrap(job.skills!),
-                    const SizedBox(height: 16),
-                  ],
+                  _sectionList("Skills", job.skills),
+                  _sectionList("Tools", job.toolsAndPlatforms),
+                  _sectionList("Certifications", job.certifications),
+                  _sectionList("Benefits", job.benefits),
+                  _sectionList("Selection Process", job.selectionProcess),
 
-                  if ((job.toolsAndPlatforms ?? []).isNotEmpty) ...[
-                    _sectionHeader('Tools & Platforms'),
-                    _chipWrap(job.toolsAndPlatforms!),
-                    const SizedBox(height: 16),
-                  ],
+                  _sectionInfo("Other", [
+                    _info("Views", job.views),
+                    _info("Status", job.status),
+                  ]),
 
-                  if ((job.certifications ?? []).isNotEmpty) ...[
-                    _sectionHeader('Certifications'),
-                    _chipWrap(job.certifications!),
-                    const SizedBox(height: 16),
-                  ],
-
-                  // ── SELECTION PROCESS ─────────────────────────────────────
-                  _sectionHeader('Selection Process'),
-                  _row(
-                    'Rounds',
-                    job.rounds?.isNotEmpty == true
-                        ? job.rounds!.join(', ')
-                        : null,
-                  ),
-                  _row(
-                    'Selection Process',
-                    job.selectionProcess?.isNotEmpty == true
-                        ? job.selectionProcess!.join(', ')
-                        : null,
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // ── BENEFITS & TAGS ───────────────────────────────────────
-                  _sectionHeader('Benefits & Tags'),
-                  _row(
-                    'Benefits',
-                    job.benefits?.isNotEmpty == true
-                        ? job.benefits!.join(', ')
-                        : null,
-                  ),
-                  _row(
-                    'Tags',
-                    job.tags?.isNotEmpty == true ? job.tags!.join(', ') : null,
-                  ),
-                  _row(
-                    'Amenities Required',
-                    job.amenitiesRequired?.isNotEmpty == true
-                        ? job.amenitiesRequired!.join(', ')
-                        : null,
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  // ── POSTED BY ─────────────────────────────────────────────
                   const SizedBox(height: 40),
                 ],
               ),
@@ -273,118 +195,161 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
     );
   }
 
-  // ── Helpers ──────────────────────────────────────────────────────────────────
-
-  String _formatDate(DateTime? date) {
-    if (date == null) return '-';
-    return "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}";
-  }
-
-  Widget _sectionHeader(String title) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+  /// 🔥 HEADER
+  Widget _header(Job job) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.kBorder),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-          ),
-          const Divider(height: 8),
+          Text(job.jobTitle ?? "-",
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold)),
+          const SizedBox(height: 6),
+          Text(job.companyName ?? "-",
+              style: const TextStyle(color: Colors.grey)),
+          const SizedBox(height: 10),
+          Text(job.location?.join(', ') ?? "-",
+              style: const TextStyle(color: Colors.grey)),
         ],
       ),
     );
   }
 
-  Widget _rowLabel(String label) {
-    return Text(
-      label,
-      style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 14),
+  /// 🔥 TEXT
+  Widget _sectionText(String title, String? content) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style:
+                const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Text(content?.isNotEmpty == true ? content! : "-",
+            style: const TextStyle(color: Colors.grey)),
+        const SizedBox(height: 20),
+      ],
     );
   }
 
-  Widget _row(String label, String? value) {
+  /// 🔥 LIST
+  Widget _sectionList(String title, List<String>? items) {
+    final list = items ?? [];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style:
+                const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        list.isEmpty
+            ? const Text("-", style: TextStyle(color: Colors.grey))
+            : Column(
+                children: list
+                    .map((e) => Row(
+                          children: [
+                            const Text("• ",
+                                style: TextStyle(color: Colors.green)),
+                            Expanded(
+                                child: Text(e,
+                                    style:
+                                        const TextStyle(color: Colors.grey))),
+                          ],
+                        ))
+                    .toList(),
+              ),
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  /// 🔥 INFO
+  Widget _sectionInfo(String title, List<Widget> children) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(title,
+            style:
+                const TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        ...children,
+        const SizedBox(height: 20),
+      ],
+    );
+  }
+
+  Widget _info(String title, dynamic value) {
+    String display;
+
+    if (value == null) {
+      display = "-";
+    } else if (value is List) {
+      display = value.isEmpty ? "-" : value.join(", ");
+    } else if (value.toString().isEmpty) {
+      display = "-";
+    } else {
+      display = value.toString();
+    }
+
     return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.only(bottom: 6),
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 160,
-            child: Text(
-              '$label:',
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-            ),
-          ),
           Expanded(
-            child: Text(
-              (value != null && value.isNotEmpty) ? value : '-',
-              style: const TextStyle(fontSize: 13),
-            ),
-          ),
+              flex: 2,
+              child: Text(title,
+                  style: const TextStyle(color: Colors.grey))),
+          Expanded(
+              flex: 3,
+              child: Text(display,
+                  style: TextStyle(
+                      color: display == "-" ? Colors.grey : Colors.white))),
         ],
       ),
     );
   }
 
-  Widget _linkRow(String label, String url) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 160,
-            child: Text(
-              '$label:',
-              style: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
-            ),
-          ),
-          Expanded(
-            child: GestureDetector(
-              onTap: () async {
-                final uri = Uri.parse(url);
-                if (await canLaunchUrl(uri)) {
-                  await launchUrl(uri, mode: LaunchMode.externalApplication);
-                }
-              },
-              child: Text(
-                url,
-                style: const TextStyle(
-                  fontSize: 13,
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-              ),
-            ),
-          ),
-        ],
+  /// 🔥 MODEL CONVERTER
+  Job mapReferralToJob(ReferralJobModel r) {
+    return Job(
+      id: r.id,
+      jobTitle: r.jobTitle,
+      description: r.description,
+      jobType: r.jobType,
+      jobStatus: r.jobStatus,
+      minEducation: r.minEducation,
+      yearsOfExperience: r.yearsOfExperience,
+      location: r.location,
+      workMode: r.workMode,
+      skills: r.skills,
+      benefits: r.benefits,
+      selectionProcess: r.selectionProcess,
+      numberOfOpenings: r.numberOfOpenings,
+      eligibilityCriteria: r.eligibilityCriteria,
+      cgpa: r.cgpa,
+      views: r.views,
+      status: r.status,
+      toolsAndPlatforms: r.toolsAndPlatforms,
+      employmentType: r.employmentType,
+      certifications: r.certifications,
+      packageDetails: PackageDetail(
+        totalCTC: r.packageDetails?.totalCTC,
+        fixedPay: r.packageDetails?.fixedPay,
+        joiningBonus: r.packageDetails?.joiningBonus,
+        currency: r.packageDetails?.currency,
       ),
-    );
-  }
-
-  Widget _chipWrap(List<String> items) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 6,
-      children: items
-          .map(
-            (e) => Container(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.blue.shade50,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Text(
-                e,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ),
-          )
-          .toList(),
+      candidatePosted: User(
+        name: r.candidatePosted?.name,
+        college: r.candidatePosted?.college,
+      ),
     );
   }
 }

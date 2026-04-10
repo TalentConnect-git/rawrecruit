@@ -12,15 +12,20 @@ class ApplicationDetailView extends StatelessWidget {
   Widget build(BuildContext context) {
     final job = model;
 
-    final companyName = job?.companyName ?? "-";
 
     /// 🔥 RAW + NORMALIZED STATUS
     final rawStatus = job?.status ?? "";
     final status = _normalizeStatus(rawStatus);
 
-    final jobTitle = (job?.jobRoles ?? []).isNotEmpty
-        ? job?.jobRoles?.firstOrNull
-        : "-";
+   final jobTitle = (job?.jobRoles?.isNotEmpty == true)
+    ? job!.jobRoles!.first
+    : (job?.jobTitle ?? "-");
+
+final companyName = (job?.companyName?.isNotEmpty == true)
+    ? job!.companyName!
+    : (job?.jobType == "Referral"
+        ? "Referral"
+        : "-");
 
     final location = (job?.location ?? []).isNotEmpty
         ? job?.location?.firstOrNull

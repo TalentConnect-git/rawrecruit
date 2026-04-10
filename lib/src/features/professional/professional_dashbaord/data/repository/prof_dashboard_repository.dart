@@ -7,4 +7,5 @@ abstract class ProfessionalRepository {
   ResultFuture<List<ReferralJobModel>> getReferralJobs();
   ResultFuture<ReferralJobModel> getReferralJobDetails(String id);
   ResultFuture<void> applyReferral(String referralId);
+  
 }

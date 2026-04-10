@@ -106,9 +106,35 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         }
                       },
                     ),
-                    _menuItem("My Posted Jobs", Icons.work),
-                    _menuItem("Referrals", Icons.share),
-                    _menuItem("Alumni Network", Icons.group),
+                    _menuItem(
+  "My Posted Jobs",
+  Icons.work,
+  onTap: () {
+    context.goNamed(
+      RouteNames.application,
+      extra: UserType.professional,
+    );
+  },
+),
+
+_menuItem(
+  "Referrals",
+  Icons.share,
+  onTap: () {
+    context.goNamed(
+      RouteNames.referrer,
+      extra: UserType.professional,
+    );
+  },
+),
+
+_menuItem(
+  "Alumni Network",
+  Icons.group,
+  onTap: () {
+    context.goNamed(RouteNames.shortlist);
+  },
+),
                     _menuItem(
                       "Career Insights",
                       Icons.trending_up,
@@ -123,12 +149,10 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                     ),
                     _menuItem("Notifications", Icons.notifications),
 
-                    const SizedBox(height: 16),
-
-                    /// 🔥 SWITCH
-                    _userTypeSwitch(),
-
                     const SizedBox(height: 20),
+
+                 
+
 
                     /// 🔥 SIGN OUT
                     _signOut(),
@@ -394,41 +418,5 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
     );
   }
 
-  Widget _userTypeSwitch() {
-    return Container(
-      padding: const EdgeInsets.all(6),
-      decoration: BoxDecoration(
-        color: AppColors.kCard,
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(color: AppColors.kBorder),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(
-                color: AppColors.kGreen,
-                borderRadius: BorderRadius.circular(25),
-              ),
-              child: const Center(
-                child: Text(
-                  "Professional",
-                  style: TextStyle(color: Colors.black),
-                ),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Center(
-              child: Text(
-                "Student / Fresher",
-                style: TextStyle(color: Colors.grey),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+
 }

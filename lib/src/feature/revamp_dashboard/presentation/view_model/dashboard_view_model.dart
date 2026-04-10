@@ -7,7 +7,26 @@ class DashboardViewModel extends ViewStateProvider {
 
   List<Job> jobs = [];
   List<Job> internships = [];
+List<Job> alumni = [];
+Map<String, List<Job>> groupedAlumni = {};
 
+void processAlumni(List<Job> list) {
+  final Map<String, List<Job>> temp = {};
+
+  for (final job in list) {
+    final id = job.candidatePosted?.id ?? "";
+
+    if (id.isEmpty) continue;
+
+    if (temp.containsKey(id)) {
+      temp[id]!.add(job);
+    } else {
+      temp[id] = [job];
+    }
+  }
+
+  groupedAlumni = temp;
+}
   Future<Failure?> getJobs() async {
     Failure? failure;
 
@@ -27,7 +46,18 @@ class DashboardViewModel extends ViewStateProvider {
     setViewState(ViewState.complete);
     return failure;
   }
+Future<void> getAlumniData() async {
+  final result = await _repository.getAlumni();
 
+  result.fold(
+    (_) {},
+    (data) {
+      processAlumni(data); // ✅ IMPORTANT
+    },
+  );
+
+  notifyListeners();
+}
   Future<Failure?> getInternships() async {
     Failure? failure;
 
