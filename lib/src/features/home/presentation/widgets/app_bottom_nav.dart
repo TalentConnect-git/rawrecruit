@@ -18,9 +18,11 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final items = getIt<AppStateProvider>().isProfessional
-        ? NavItemExt.professionals
-        : NavItemExt.freshers;
+    // final items = getIt<AppStateProvider>().isProfessional
+    //     ? NavItemExt.professionals
+    //     : NavItemExt.freshers;
+
+    final items = NavItem.values;
 
     return Container(
       decoration: BoxDecoration(

@@ -71,9 +71,18 @@ extension StringExt on String {
   }
 
   String get getInitials {
-    if (isEmpty) return this;
-    if (length > 2) return this[0].toUpperCase() + this[1].toUpperCase();
-    return this;
+    final words = trim().split(RegExp(r'\s+'));
+
+    if (words.isEmpty || words.first.isEmpty) return '';
+
+    if (words.length > 1) {
+      return (words[0][0] + words[1][0]).toUpperCase();
+    }
+
+    final word = words[0];
+    return word.length >= 2
+        ? (word[0] + word[1]).toUpperCase()
+        : word[0].toUpperCase();
   }
 
   /// Converts card fee ranges to short display versions

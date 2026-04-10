@@ -52,16 +52,16 @@ class _HomeViewState extends State<HomeView> {
 
     if (location.startsWith('/application') ||
         location.startsWith('/referrer')) {
-      return 1;
+      return 2;
     }
     // if (location.startsWith('/my-profile')) {
     //   return appStateProvider.isProfessional ? 4 : 3;
     // }
     if (location.startsWith('/shortlist')) {
-      return 2;
+      return 3;
     }
     if (location.startsWith('/chatUsers')) {
-      return 3;
+      return 4;
     }
 
     return 0;
@@ -127,22 +127,6 @@ class _HomeViewState extends State<HomeView> {
                 ),
               ),
             ),
-            IconButton(
-              onPressed: () async {
-                final failure = await getIt<AppStateProvider>().logout();
-                Toasts.showSuccessOrFailureToast(
-                  context,
-                  failure: failure,
-                  popOnSuccess: false,
-                  successMsg: 'Logout Successful!',
-                  successCallback: () {
-                    context.goNamed(RouteNames.login);
-                  },
-                );
-              },
-              icon: Icon(Icons.logout),
-              color: Colors.white,
-            ),
           ],
         ),
         body: widget.navigationShell,
@@ -152,10 +136,14 @@ class _HomeViewState extends State<HomeView> {
           onTap: (tab) {
             final extra = appStateProvider.userType;
             bool needExtra = false;
-            if (tab == NavItem.home || tab == NavItem.applications) {
+            if (tab == NavItem.home || tab == NavItem.referrals) {
               needExtra = true;
             }
-            context.goNamed(tab.path, extra: needExtra ? extra : null);
+            if (tab == NavItem.jobs || tab == NavItem.alumnis) {
+              Toasts.showInfoToast(context, message: 'In development');
+            } else {
+              context.goNamed(tab.path, extra: needExtra ? extra : null);
+            }
             // switch (tab) {
             //   // case 0:
             //   //   context.goNamed(

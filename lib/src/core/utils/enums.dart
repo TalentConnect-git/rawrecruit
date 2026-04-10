@@ -118,26 +118,26 @@ extension UserStatusExt on UserStatus {
   }
 }
 
-enum NavItem { home, referrer, applications, shortlist, chat }
+enum NavItem { home, jobs, referrals, alumnis, chat }
 
 extension NavItemExt on NavItem {
-  static List<NavItem> get professionals => NavItem.values
-      .where((element) => element != NavItem.applications)
-      .toList();
+  // static List<NavItem> get professionals => NavItem.values
+  //     .where((element) => element != NavItem.applications)
+  //     .toList();
 
-  static List<NavItem> get freshers =>
-      NavItem.values.where((element) => element != NavItem.referrer).toList();
+  // static List<NavItem> get freshers =>
+  //     NavItem.values.where((element) => element != NavItem.referrals).toList();
 
   String get label {
     switch (this) {
       case NavItem.home:
         return 'Home';
-      case NavItem.referrer:
+      case NavItem.referrals:
         return 'Referrer';
-      case NavItem.applications:
-        return 'Application';
-      case NavItem.shortlist:
-        return 'Shortlist';
+      case NavItem.jobs:
+        return 'Jobs';
+      case NavItem.alumnis:
+        return 'Alumnis';
       // case NavItem.profile:
       //   return 'Profile';
       case NavItem.chat:
@@ -149,11 +149,11 @@ extension NavItemExt on NavItem {
     switch (this) {
       case NavItem.home:
         return Icons.home;
-      case NavItem.applications:
-        return Icons.assignment;
-      case NavItem.shortlist:
-        return Icons.bookmark;
-      case NavItem.referrer:
+      case NavItem.jobs:
+        return Icons.work;
+      case NavItem.alumnis:
+        return Icons.group;
+      case NavItem.referrals:
         return Icons.group;
       // case NavItem.profile:
       //   return Icons.person;
@@ -166,13 +166,13 @@ extension NavItemExt on NavItem {
     switch (this) {
       case NavItem.home:
         return Icons.home_outlined;
-      case NavItem.applications:
-        return Icons.assignment_outlined;
-      case NavItem.shortlist:
-        return Icons.bookmark_outline;
+      case NavItem.jobs:
+        return Icons.work_outline;
+      case NavItem.alumnis:
+        return Icons.group_outlined;
       // case NavItem.profile:
       //   return Icons.person_outline;
-      case NavItem.referrer:
+      case NavItem.referrals:
         return Icons.group_outlined;
       case NavItem.chat:
         return Icons.chat_bubble_outline;
@@ -183,13 +183,13 @@ extension NavItemExt on NavItem {
     switch (this) {
       case NavItem.home:
         return RouteNames.dashboard;
-      case NavItem.applications:
+      case NavItem.jobs:
         return RouteNames.application;
-      case NavItem.shortlist:
+      case NavItem.alumnis:
         return RouteNames.shortlist;
       // case NavItem.profile:
       //   return Icons.person_outline;
-      case NavItem.referrer:
+      case NavItem.referrals:
         return RouteNames.referrer;
       case NavItem.chat:
         return RouteNames.chatUserList;
