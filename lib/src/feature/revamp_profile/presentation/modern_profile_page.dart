@@ -17,19 +17,31 @@ class ModernProfilePage extends StatefulWidget {
 
 class _ModernProfilePageState extends State<ModernProfilePage> {
   final MyProfileViewModel vm = MyProfileViewModel();
+@override
+void initState() {
+  super.initState();
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final results = await Future.wait([vm.getUser(), vm.getCareerInsights()]);
+  WidgetsBinding.instance.addPostFrameCallback((_) async {
+    final appState = getIt<AppStateProvider>();
 
-      if (mounted) {
-        results[0]?.showError(context);
-        results[1]?.showError(context);
-      }
-    });
-  }
+    /// 🔥 First get user (important)
+    final userResult = await vm.getUser();
+
+    /// 🔥 Then call correct API based on user type
+    final results = await Future.wait([
+      vm.getCareerInsights(),
+      if (appState.isProfessional)
+        vm.getReferralMetrics()
+      else
+        vm.getCandidateStats(),
+    ]);
+
+    if (mounted) {
+      userResult?.showError(context);
+      results[0]?.showError(context);
+    }
+  });
+}
 
   @override
   Widget build(BuildContext context) {
@@ -86,7 +98,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                     const SizedBox(height: 16),
 
                     /// 🔥 STATS GRID
-                    _statsGrid(),
+                    _statsGrid(vm),
 
                     const SizedBox(height: 16),
 
@@ -107,34 +119,34 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                       },
                     ),
                     _menuItem(
-  "My Posted Jobs",
-  Icons.work,
-  onTap: () {
-    context.goNamed(
-      RouteNames.application,
-      extra: UserType.professional,
-    );
-  },
-),
+                      "My Posted Jobs",
+                      Icons.work,
+                      onTap: () {
+                        context.goNamed(
+                          RouteNames.application,
+                          extra: UserType.professional,
+                        );
+                      },
+                    ),
 
-_menuItem(
-  "Referrals",
-  Icons.share,
-  onTap: () {
-    context.goNamed(
-      RouteNames.referrer,
-      extra: UserType.professional,
-    );
-  },
-),
+                    _menuItem(
+                      "Referrals",
+                      Icons.share,
+                      onTap: () {
+                        context.goNamed(
+                          RouteNames.referrer,
+                          extra: UserType.professional,
+                        );
+                      },
+                    ),
 
-_menuItem(
-  "Alumni Network",
-  Icons.group,
-  onTap: () {
-    context.goNamed(RouteNames.shortlist);
-  },
-),
+                    _menuItem(
+                      "Alumni Network",
+                      Icons.group,
+                      onTap: () {
+                        context.goNamed(RouteNames.shortlist);
+                      },
+                    ),
                     _menuItem(
                       "Career Insights",
                       Icons.trending_up,
@@ -150,9 +162,6 @@ _menuItem(
                     _menuItem("Notifications", Icons.notifications),
 
                     const SizedBox(height: 20),
-
-                 
-
 
                     /// 🔥 SIGN OUT
                     _signOut(),
@@ -208,7 +217,7 @@ _menuItem(
 
           /// Role (you can map from backend later)
           Text(
-            "Senior Frontend Engineer",
+            p?.college ?? '',
             style: TextStyle(color: Colors.grey[400], fontSize: 12),
           ),
 
@@ -216,7 +225,7 @@ _menuItem(
 
           /// Location
           Text(
-            "Bangalore, India",
+           p?.locations?.join(', ') ?? '',
             style: TextStyle(color: Colors.grey[500], fontSize: 11),
           ),
 
@@ -246,66 +255,68 @@ _menuItem(
 
           const SizedBox(height: 12),
 
-          /// Profile completion
-          Text(
-            "95% profile complete",
-            style: TextStyle(color: AppColors.kGreen, fontSize: 12),
-          ),
+      
         ],
       ),
     );
   }
+Widget _statsGrid(MyProfileViewModel vm) {
+  final appState = getIt<AppStateProvider>();
 
-  Widget _statsGrid() {
-    final stats = [
-      ["78%", "Referral Success"],
-      ["94%", "Response Rate"],
-      ["5", "Jobs Posted"],
-      ["23", "Referred"],
-      ["3", "Applications"],
-      ["156", "Alumni"],
-    ];
+  final stats = appState.isProfessional
+      ? [
+          ["${vm.referralSuccessRate}%", "Referral Success"],
+          ["${vm.responseRate}%", "Response Rate"],
+          ["${vm.totalReferrals}", "Referrals Posted"],
+          ["${vm.referredToCompany}", "Referred"],
+          ["${vm.totalApplications}", "Applications"],
+          ["${vm.acceptedByCompany}", "Accepted"],
+        ]
+      : [
+          ["${vm.savedJobs}", "Saved Jobs"],
+          ["${vm.totalApps}", "Applications"],
+          ["${vm.referralApps}", "Referral Applications"],
+        ];
 
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: stats.length,
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 3,
-        crossAxisSpacing: 10,
-        mainAxisSpacing: 10,
-        childAspectRatio: 1.3,
-      ),
-      itemBuilder: (_, i) {
-        return Container(
-          decoration: BoxDecoration(
-            color: AppColors.kCard,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.kBorder),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                stats[i][0],
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+  return GridView.builder(
+    shrinkWrap: true,
+    physics: const NeverScrollableScrollPhysics(),
+    itemCount: stats.length,
+    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+      crossAxisCount: 3, // ✅ SAME UI
+      crossAxisSpacing: 10,
+      mainAxisSpacing: 10,
+      childAspectRatio: 1.3,
+    ),
+    itemBuilder: (_, i) {
+      return Container(
+        decoration: BoxDecoration(
+          color: AppColors.kCard,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: AppColors.kBorder),
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              stats[i][0],
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-              const SizedBox(height: 4),
-              Text(
-                stats[i][1],
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey, fontSize: 11),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
+            ),
+            const SizedBox(height: 4),
+            Text(
+              stats[i][1],
+              textAlign: TextAlign.center,
+              style: const TextStyle(color: Colors.grey, fontSize: 11),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+}
   /// 🔥 SKILLS (CONNECTED)
   Widget _skillsImpactSection(p) {
     final skills = p?.skills ?? [];
@@ -417,6 +428,4 @@ _menuItem(
       ),
     );
   }
-
-
 }

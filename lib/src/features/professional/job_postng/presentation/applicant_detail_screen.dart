@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../common/index.dart';
+
 class ApplicationDetailsView extends StatelessWidget {
   final ReferralApplication application;
 
@@ -16,7 +18,7 @@ class ApplicationDetailsView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Application Details"),
+        title:  Text("Application Details",style: TextStyle(color :AppColors.white),),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

@@ -63,9 +63,12 @@ itemBuilder: (context, index) {
                     isSaved: isSaved,
                   );
                 },
-                onApply: () {
-                  applicationVM.apply(job.id ?? '');
-                },
+               onApply: () {
+  applicationVM.apply(
+    jobId: job.id ?? '',
+    jobType: "Off-campus",
+  );
+},
                 isApplied: applicationVM.isApplied(job.id ?? ''),
               onTap: () async {
   await context.pushNamed(RouteNames.jobDetail, extra: job);

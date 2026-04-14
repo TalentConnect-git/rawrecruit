@@ -20,4 +20,5 @@ abstract class RevampOnboardingRepository {
 
     ResultFuture<Map<String, dynamic>> getCareerInsights();
   ResultFuture<Map<String, dynamic>> getRanking();
+  ResultFuture<Map<String, dynamic>> getReferralMetrics();
 }

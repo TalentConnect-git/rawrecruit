@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 
+import '../../../../common/index.dart';
+
 class ReferralApplicationDetailScreen extends StatelessWidget {
   final ApplicationModel application;
 
@@ -28,7 +30,7 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF7F8FA),
       appBar: AppBar(
-        title: const Text("Application Details"),
+        title:  Text("Application Details",style: TextStyle(color :AppColors.white),),
         elevation: 0,
       ),
       body: ListView(

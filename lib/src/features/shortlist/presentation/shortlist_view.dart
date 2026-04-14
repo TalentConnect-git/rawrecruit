@@ -104,9 +104,10 @@ class _ShortlistViewState extends State<ShortlistView> {
 
                                   /// Apply
                                   isApplied: isApplied,
-                                  onApply: () async {
-                                    await applicationVM.apply(job.id ?? '');
-                                  },
+                                 onApply: () => applicationVM.apply(
+  jobId: job.id ?? '',
+  jobType: item.jobType ?? '' // or pass manually
+),
 
                                   onTap: () {
                                     context.pushNamed(

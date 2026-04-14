@@ -180,4 +180,20 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
       return Left(APIException.from(e));
     }
   }
+
+  @override
+ResultFuture<Map<String, dynamic>> getReferralMetrics() async {
+  final request = Request(
+    method: RequestMethod.get,
+    endpoint: "/application/professional/referral-metrics",
+    isSafeRoute: true,
+  );
+
+  try {
+    final result = await _networkService.request(request);
+    return Right(result.data['data']);
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
 }

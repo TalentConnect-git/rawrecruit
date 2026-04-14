@@ -3,11 +3,12 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 import '../referral_detail_page.dart';
+import '../referred_detail_page.dart';
 
-class ApplicantCard extends StatelessWidget {
+class ReferredApplicantCard extends StatelessWidget {
   final ReferralApplication application;
 
-  const ApplicantCard({super.key, required this.application});
+  const ReferredApplicantCard({super.key, required this.application});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,7 @@ final jobTitle = application.jobTitle ?? "-";
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (_) => ReferralDetailPage(application: application),
+            builder: (_) => ReferredCandidateDetailPage(application: application),
           ),
         );
       },

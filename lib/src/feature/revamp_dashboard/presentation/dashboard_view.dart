@@ -164,8 +164,10 @@ SizedBox(
                 job: job,
                 isSaved: isSaved,
                 isApplied: isApplied,
-                onApply: () => applicationVM.apply(job.id ?? ''),
-                 onTap: () {
+onApply: () => applicationVM.apply(
+  jobId: job.id ?? '',
+  jobType:'Referral',
+),                 onTap: () {
                             context.pushNamed(
                               RouteNames.referralDetail,
                               extra: job.id,
@@ -195,8 +197,10 @@ SizedBox(
                 job: job,
                 isSaved: isSaved,
                 isApplied: isApplied,
-                onApply: () => applicationVM.apply(job.id ?? ''),
-                onBookmarkToggle: () {
+onApply: () => applicationVM.apply(
+  jobId: job.id ?? '',
+  jobType:"Internship",
+),                onBookmarkToggle: () {
                   shortlistVM.toggleSave(
                     jobId: job.id ?? '',
                     jobType: "Internship",
@@ -228,8 +232,10 @@ SizedBox(
                 job: job,
                 isSaved: isSaved,
                 isApplied: isApplied,
-                onApply: () => applicationVM.apply(job.id ?? ''),
-                onBookmarkToggle: () {
+onApply: () => applicationVM.apply(
+  jobId: job.id ?? '',
+  jobType: 'Off-campus',
+),                onBookmarkToggle: () {
                   shortlistVM.toggleSave(
                     jobId: job.id ?? '',
                     jobType: "Off-campus",
