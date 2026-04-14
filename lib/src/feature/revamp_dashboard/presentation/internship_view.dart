@@ -75,9 +75,10 @@ class _InternshipViewState extends State<InternshipView> {
                   );
                 },
                 isApplied: isApplied,
-                onApply: () {
-                  applicationVM.apply(internship.id ?? '');
-                },
+                onApply: () => applicationVM.apply(
+  jobId: internship.id ?? '',
+  jobType:  'Internship',
+),
               onTap: () async {
   await context.pushNamed(
     RouteNames.internshipDetail,

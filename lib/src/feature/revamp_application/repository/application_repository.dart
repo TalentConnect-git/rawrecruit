@@ -11,7 +11,9 @@ abstract class ApplicationRepository {
 
   ResultFuture<List<Job>>
       fetchAppliedJobs(); // ✅ only one method
-
+ResultFuture<void> applyReferral(String referralId);
+ResultFuture<void> applyInternship(String jobId);
         ResultFuture<List<ReferralApplication>> fetchReferralApplications();
+        ResultFuture<List<ReferralApplication>> fetchReferredByMe();
 
 }

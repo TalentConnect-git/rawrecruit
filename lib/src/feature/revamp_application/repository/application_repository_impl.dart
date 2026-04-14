@@ -20,6 +20,15 @@ class ApplicationRepositoryImpl
       jobId: jobId,
     );
   }
+  @override
+ResultFuture<void> applyReferral(String referralId) {
+  return _dataSource.applyReferral(referralId);
+}
+
+@override
+ResultFuture<void> applyInternship(String jobId) {
+  return _dataSource.applyInternship(jobId);
+}
 
   @override
   ResultFuture<List<Job>>
@@ -27,7 +36,10 @@ class ApplicationRepositoryImpl
 
     return _dataSource.fetchAppliedJobs();
   }
-
+@override
+ResultFuture<List<ReferralApplication>> fetchReferredByMe() {
+  return _dataSource.fetchReferredByMe();
+}
   @override
 ResultFuture<List<ReferralApplication>> fetchReferralApplications() {
   return _dataSource.fetchReferralApplications();

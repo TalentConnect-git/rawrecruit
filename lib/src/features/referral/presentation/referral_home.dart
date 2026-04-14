@@ -279,8 +279,10 @@ Consumer<DashboardViewModel>(
                 job: job,
                 isSaved: isSaved,
                 isApplied: isApplied,
-                onApply: () => applicationVM.apply(job.id ?? ''),
-                onBookmarkToggle: () {
+onApply: () => applicationVM.apply(
+  jobId: job.id ?? '',
+  jobType: 'Off-campus', // or pass manually
+),                onBookmarkToggle: () {
                   shortlistVM.toggleSave(
                     jobId: job.id ?? '',
                     jobType: "Off-campus",

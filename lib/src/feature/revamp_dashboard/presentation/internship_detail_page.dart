@@ -64,8 +64,12 @@ class InternshipDetailView extends StatelessWidget {
             Expanded(
               flex: 2,
               child: ElevatedButton(
-                onPressed:
-                    isApplied ? null : () => applicationVM.apply(jobId),
+               onPressed: isApplied
+    ? null
+    : () => applicationVM.apply(
+          jobId: jobId,
+          jobType: "Internship",
+        ),
                 style: ElevatedButton.styleFrom(
                   backgroundColor:
                       isApplied ? Colors.grey : AppColors.kGreen,

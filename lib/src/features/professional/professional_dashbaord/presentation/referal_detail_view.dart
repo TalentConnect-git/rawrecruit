@@ -121,8 +121,12 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                   Expanded(
                     flex: 2,
                     child: ElevatedButton(
-                      onPressed:
-                          isApplied ? null : () => applicationVM.apply(jobId),
+                    onPressed: isApplied
+    ? null
+    : () => applicationVM.apply(
+          jobId: jobId,
+          jobType: "Referral",
+        ),
                       style: ElevatedButton.styleFrom(
                         backgroundColor:
                             isApplied ? Colors.grey : AppColors.kGreen,

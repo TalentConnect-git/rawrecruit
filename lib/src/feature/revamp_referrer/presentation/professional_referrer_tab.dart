@@ -6,6 +6,8 @@ import 'package:rawrecruit/src/feature/revamp_application/presentation/view_mode
 import 'package:rawrecruit/src/feature/revamp_application/presentation/widget/application_card.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/applicant_card.dart';
 
+import '../../../features/professional/job_postng/presentation/widgets/referred_applicant_card.dart';
+
 class ProfessionalReferralView extends StatefulWidget {
   const ProfessionalReferralView({super.key});
 
@@ -14,15 +16,15 @@ class ProfessionalReferralView extends StatefulWidget {
       _ProfessionalReferralViewState();
 }
 
-class _ProfessionalReferralViewState
-    extends State<ProfessionalReferralView> {
+class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
   int selectedTab = 0;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       create: (_) => ApplicationViewModel()..fetchApplications(),
-      child: Builder( // ✅ CRITICAL FIX (gives correct context)
+      child: Builder(
+        // ✅ CRITICAL FIX (gives correct context)
         builder: (context) {
           return Scaffold(
             backgroundColor: AppColors.kBg,
@@ -67,6 +69,9 @@ class _ProfessionalReferralViewState
           if (index == 1 && vm.referralApplications.isEmpty) {
             vm.fetchReferralRequests();
           }
+          if (index == 2 && vm.referredByMe.isEmpty) {
+            vm.fetchReferredByMe();
+          }
         },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4),
@@ -97,8 +102,9 @@ class _ProfessionalReferralViewState
         return _appliedByMe();
       case 1:
         return _requestsReceived();
+
       case 2:
-        return _placeholder("Referred by me API coming soon");
+        return _referredByMe();
       default:
         return const SizedBox();
     }
@@ -159,14 +165,38 @@ class _ProfessionalReferralViewState
       },
     );
   }
+Widget _referredByMe() {
+  return Consumer<ApplicationViewModel>(
+    builder: (context, vm, _) {
+      if (vm.viewState == ViewState.busy) {
+        return const Center(child: CircularProgressIndicator());
+      }
 
+      if (vm.referredByMe.isEmpty) {
+        return const Center(
+          child: Text(
+            "No referred candidates",
+            style: TextStyle(color: Colors.grey),
+          ),
+        );
+      }
+
+      return ListView.builder(
+        itemCount: vm.referredByMe.length,
+        itemBuilder: (context, index) {
+          final app = vm.referredByMe[index];
+
+          /// ✅ SAME CARD REUSE
+          return ReferredApplicantCard(application: app);
+        },
+      );
+    },
+  );
+}
   /// 🔥 PLACEHOLDER
   Widget _placeholder(String text) {
     return Center(
-      child: Text(
-        text,
-        style: const TextStyle(color: Colors.grey),
-      ),
+      child: Text(text, style: const TextStyle(color: Colors.grey)),
     );
   }
 }

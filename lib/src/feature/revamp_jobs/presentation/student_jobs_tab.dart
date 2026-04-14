@@ -202,8 +202,10 @@ class _StudentJobsViewState extends State<StudentJobsView> {
       job: job,
       isSaved: isSaved,
       isApplied: isApplied,
-      onApply: () => applicationVM.apply(job.id ?? ''),
-      onBookmarkToggle: () {
+onApply: () => applicationVM.apply(
+  jobId: job.id ?? '',
+  jobType: job.jobType ?? 'Off-campus',
+),      onBookmarkToggle: () {
         shortlistVM.toggleSave(
           jobId: job.id ?? '',
           jobType: job.jobType ?? '',
