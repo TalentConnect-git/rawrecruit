@@ -59,28 +59,31 @@ Either<APIException, void> result;
 
   /// 🔹 FETCH APPLIED LIST
  Future<void> fetchApplications() async {
-  print("running fetch applications");
- setViewState(ViewState.busy);
-  notifyListeners();
+    setViewState(ViewState.busy);
+    notifyListeners();
 
-  final result = await _repository.fetchAppliedJobs();
+    final offCampus = await _repository.fetchAppliedJobs();
+    final referral = await _repository.fetchReferralAppliedJobs();
+    final internship = await _repository.fetchInternshipAppliedJobs();
 
-  result.fold(
-    (failure) {
-    setViewState(ViewState.idle);
-    },
- (jobs) {
-  appliedApplications = jobs;
+    List<Job> all = [];
 
-  print("🔥 JOBS LENGTH: ${jobs.length}");
+    offCampus.fold((_) {}, (data) => all.addAll(data));
+    referral.fold((_) {}, (data) => all.addAll(data));
+    internship.fold((_) {}, (data) => all.addAll(data));
 
-  setViewState(ViewState.idle);
-},
-  );
+    appliedApplications = all;
 
-  notifyListeners();
-}
+    appliedJobIds.clear();
+    for (final job in all) {
+      if (job.id != null) {
+        appliedJobIds.add(job.id!);
+      }
+    }
 
+    setViewState(ViewState.complete);
+    notifyListeners();
+  }
 
   /// ✅ NEW FUNCTION
   Future<void> fetchReferralRequests() async {

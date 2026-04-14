@@ -44,4 +44,14 @@ ResultFuture<List<ReferralApplication>> fetchReferredByMe() {
 ResultFuture<List<ReferralApplication>> fetchReferralApplications() {
   return _dataSource.fetchReferralApplications();
 }
+
+ @override
+  ResultFuture<List<Job>> fetchReferralAppliedJobs() {
+    return _dataSource.fetchReferralAppliedJobs();
+  }
+
+  @override
+  ResultFuture<List<Job>> fetchInternshipAppliedJobs() {
+    return _dataSource.fetchInternshipAppliedJobs();
+  }
 }

@@ -9,7 +9,6 @@ import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/my_job_card.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
-
 import '../../../core/index.dart';
 import '../../professional/job_postng/presentation/view_model/posted_job_view_model.dart';
 import '../../shortlist/presentation/view_model/shortlist_view_model.dart';
@@ -281,21 +280,20 @@ Consumer<DashboardViewModel>(
                 isApplied: isApplied,
 onApply: () => applicationVM.apply(
   jobId: job.id ?? '',
-  jobType: 'Off-campus', // or pass manually
+  jobType: 'Referral', // or pass manually
 ),                onBookmarkToggle: () {
                   shortlistVM.toggleSave(
                     jobId: job.id ?? '',
-                    jobType: "Off-campus",
+                    jobType: "Referral",
                     isSaved: isSaved,
                   );
                 },
-                       onTap: () async {
-  await context.pushNamed(RouteNames.jobDetail, extra: job);
-  if (context.mounted) {
-    context.read<ShortlistViewModel>().fetchSaved();
-    context.read<ApplicationViewModel>().fetchApplications();
-  }
-},
+                      onTap: () {
+  context.pushNamed(
+    RouteNames.referralDetail,
+    extra: job.id, // ✅ ONLY ID
+  );
+}
               );
       },
     );

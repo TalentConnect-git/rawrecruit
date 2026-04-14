@@ -126,17 +126,17 @@ final companyName = (job?.companyName?.isNotEmpty == true)
 
             _timelineItem("Pending", true),
 
-            _timelineItem(
+          
+            // _timelineItem(
+            //   "Shortlisted",
+            //   status == "shortlisted" ||
+            //       status == "accepted" ||
+            //       status == "rejected",
+            // ),
+  _timelineItem(
               "Referred",
               status == "referred" ||
                   status == "shortlisted" ||
-                  status == "accepted" ||
-                  status == "rejected",
-            ),
-
-            _timelineItem(
-              "Shortlisted",
-              status == "shortlisted" ||
                   status == "accepted" ||
                   status == "rejected",
             ),

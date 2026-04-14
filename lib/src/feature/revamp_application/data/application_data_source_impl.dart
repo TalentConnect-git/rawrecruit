@@ -1,6 +1,6 @@
+
 import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 
 import 'application_data_source.dart';
@@ -8,6 +8,33 @@ import 'application_data_source.dart';
 class ApplicationDataSourceImpl implements ApplicationDataSource {
   final NetworkService _networkService = NetworkService();
 
+  /// 🔥 COMMON SAFE MAPPER (MOST IMPORTANT FIX)
+  Job _mapToJob(Map<String, dynamic> e, String type) {
+    final job = e['jobDetails'];
+    final company = e['companyProfile'];
+
+    return Job.fromJson({
+      ...(job ?? {}),
+
+      /// 🔥 prevent parsing crash
+      "companyPosted": null,
+      "jobCompanyPosted": null,
+      "candidatePosted": null,
+      "contactPerson": null,
+
+      /// ✅ company name safe
+      "companyName":
+          company?['companyDetails']?['companyName'] ?? "-",
+
+      /// ✅ status
+      "status": e["currentStatus"] ?? "pending",
+
+      /// ✅ VERY IMPORTANT (for filtering)
+      "jobType": type,
+    });
+  }
+
+  /// 🔹 APPLY OFF-CAMPUS
   @override
   ResultFuture<void> applyOffCampus({required String jobId}) async {
     final request = Request(
@@ -25,196 +52,205 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     }
   }
 
-@override
-ResultFuture<List<ReferralApplication>> fetchReferredByMe() async {
-  final request = Request(
-    method: RequestMethod.get,
-    endpoint: "/application/company/referred-candidates",
-    isSafeRoute: true,
-  );
+  /// 🔹 APPLY REFERRAL
+  @override
+  ResultFuture<void> applyReferral(String referralId) async {
+    final request = Request(
+      method: RequestMethod.post,
+      endpoint: "/application/candidate/referral",
+      body: {
+        "referralId": referralId,
+      },
+      isSafeRoute: true,
+    );
 
-  try {
-    final result = await _networkService.request(request);
-
-    final body = result.data as Map<String, dynamic>;
-    final List data = body['data'];
-
-    final list = data.map<ReferralApplication>((e) {
-      return ReferralApplication.fromJson({
-        "_id": e["_id"],
-
-        "applicantType": e["applicantType"],
-        "adminApprovalStatus": e["adminApprovalStatus"],
-        "createdAt": e["createdAt"],
-
-        /// ✅ RAW STATUS (IMPORTANT)
-        "statusText": e["currentStatus"],
-
-        "matchScore": e["matchScore"],
-        "jobTitle": e["jobTitle"],
-        "skills": e["skills"] ?? [],
-
-        /// ✅ USER MAPPING
-        "applicant": {
-          "name": e["applicantName"],
-          "email": e["applicantEmail"],
-          "phone": e["applicantPhone"],
-          "college": e["academicBackground"]?["collegeName"],
-        },
-
-        /// OPTIONAL JOB
-        "job": {
-          "title": e["jobTitle"],
-          "id": e["jobId"],
-        }
-      });
-    }).toList();
-
-    return Right(list);
-  } catch (e) {
-    return Left(APIException.from(e));
+    try {
+      await _networkService.request(request);
+      return const Right(null);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
-@override
-ResultFuture<List<ReferralApplication>> fetchReferralApplications() async {
-  final request = Request(
-    method: RequestMethod.get,
-    endpoint: "/application/all-referrals",
-    isSafeRoute: true,
-  );
 
-  try {
-    final result = await _networkService.request(request);
+  /// 🔹 APPLY INTERNSHIP
+  @override
+  ResultFuture<void> applyInternship(String jobId) async {
+    final request = Request(
+      method: RequestMethod.post,
+      endpoint: "/application/candidate/internship",
+      body: {
+        "internshipId": jobId,
+      },
+      isSafeRoute: true,
+    );
 
-    final body = result.data as Map<String, dynamic>;
-    final List data = body['data'];
-
-    final list = data.map<ReferralApplication>((e) {
-      return ReferralApplication.fromJson({
-        "_id": e["_id"],
-
-        "applicantType": e["applicantType"],
-        "adminApprovalStatus": e["adminApprovalStatus"],
-        "createdAt": e["createdAt"],
-"statusText": e["currentStatus"],        
-           "matchScore": e["matchScore"],
-"jobTitle": e["jobTitle"],
-"skills": e["skills"] ?? [],
-        /// 🔥 CONVERT FLAT API → NESTED USER
-        "applicant": {
-          "name": e["applicantName"],
-          "email": e["applicantEmail"],
-          "phone": e["applicantPhone"],
-          "college": e["academicBackground"]?["collegeName"],
-        },
-
-        /// OPTIONAL JOB
-        "job": {
-          "title": e["jobTitle"],
-          "id": e["jobId"],
-        }
-      });
-    }).toList();
-
-    return Right(list);
-  } catch (e) {
-    return Left(APIException.from(e));
+    try {
+      await _networkService.request(request);
+      return const Right(null);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
-@override
-ResultFuture<List<Job>> fetchAppliedJobs() async {
-  final request = Request(
-    method: RequestMethod.get,
-    endpoint: Endpoints.applicationStatus,
-    isSafeRoute: true,
-  );
 
-  try {
-    final result = await _networkService.request(request);
+  /// 🔹 FETCH OFF-CAMPUS APPLICATIONS
+  @override
+  ResultFuture<List<Job>> fetchAppliedJobs() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.applicationStatus,
+      isSafeRoute: true,
+    );
 
-    final body = result.data as Map<String, dynamic>;
-    final List<dynamic> data = body['data'];
+    try {
+      final result = await _networkService.request(request);
 
-    print("🔥 RAW DATA LENGTH: ${data.length}");
+      final body = result.data as Map<String, dynamic>;
+      final List data = body['data'];
 
-    final list = data.map((e) {
-      final job = e['jobDetails'];
-      final company = e['companyProfile'];
+      final list = data
+          .map((e) => _mapToJob(e, "Off-campus"))
+          .toList();
 
-      print("👉 JOB: $job");
-      print("👉 COMPANY: $company");
+      return Right(list);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
 
-      if (job == null) return null;
+  /// 🔹 FETCH REFERRAL APPLICATIONS (FOR STUDENT)
+  @override
+  ResultFuture<List<Job>> fetchReferralAppliedJobs() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "application/status/candidate/Referral",
+      isSafeRoute: true,
+    );
 
-      try {
-        return Job.fromJson({
-          ...job,
+    try {
+      final result = await _networkService.request(request);
 
-          // 🔥 FIX: remove problematic object fields
-          "companyPosted": null,
-          "jobCompanyPosted": null,
-          "candidatePosted": null,
-          "contactPerson": null,
+      final List data = result.data['data'];
 
-          // ✅ inject company name
-          "companyName":
-              company?['companyDetails']?['companyName'] ?? "-",
+      final list = data
+          .map((e) => _mapToJob(e, "Referral"))
+          .toList();
 
-          // ✅ inject status
-          "status": e['currentStatus'] ?? "pending",
+      return Right(list);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  /// 🔹 FETCH INTERNSHIP APPLICATIONS
+  @override
+  ResultFuture<List<Job>> fetchInternshipAppliedJobs() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "application/status/candidate/Internship",
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+
+      final List data = result.data['data'];
+
+      final list = data
+          .map((e) => _mapToJob(e, "Internship"))
+          .toList();
+
+      return Right(list);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  /// 🔹 FETCH REFERRALS (PROFESSIONAL SIDE)
+  @override
+  ResultFuture<List<ReferralApplication>> fetchReferralApplications() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "/application/all-referrals",
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+
+      final body = result.data as Map<String, dynamic>;
+      final List data = body['data'];
+
+      final list = data.map<ReferralApplication>((e) {
+        return ReferralApplication.fromJson({
+          "_id": e["_id"],
+          "applicantType": e["applicantType"],
+          "adminApprovalStatus": e["adminApprovalStatus"],
+          "createdAt": e["createdAt"],
+          "statusText": e["currentStatus"],
+          "matchScore": e["matchScore"],
+          "jobTitle": e["jobTitle"],
+          "skills": e["skills"] ?? [],
+          "applicant": {
+            "name": e["applicantName"],
+            "email": e["applicantEmail"],
+            "phone": e["applicantPhone"],
+            "college": e["academicBackground"]?["collegeName"],
+          },
+          "job": {
+            "title": e["jobTitle"],
+            "id": e["jobId"],
+          }
         });
-      } catch (err) {
-        print("❌ ERROR parsing Job: $err");
-        return null;
-      }
-    }).whereType<Job>().toList();
+      }).toList();
 
-    print("✅ MAPPED LIST LENGTH: ${list.length}");
+      return Right(list);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
 
-    return Right(list);
-  } catch (e, stack) {
-    print("❌ ERROR IN DATASOURCE: $e");
-    print("❌ STACK: $stack");
+  /// 🔹 FETCH REFERRED BY ME
+  @override
+  ResultFuture<List<ReferralApplication>> fetchReferredByMe() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "/application/company/referred-candidates",
+      isSafeRoute: true,
+    );
 
-    return Left(APIException.from(e));
+    try {
+      final result = await _networkService.request(request);
+
+      final body = result.data as Map<String, dynamic>;
+      final List data = body['data'];
+
+      final list = data.map<ReferralApplication>((e) {
+        return ReferralApplication.fromJson({
+          "_id": e["_id"],
+          "applicantType": e["applicantType"],
+          "adminApprovalStatus": e["adminApprovalStatus"],
+          "createdAt": e["createdAt"],
+          "statusText": e["currentStatus"],
+          "matchScore": e["matchScore"],
+          "jobTitle": e["jobTitle"],
+          "skills": e["skills"] ?? [],
+          "applicant": {
+            "name": e["applicantName"],
+            "email": e["applicantEmail"],
+            "phone": e["applicantPhone"],
+            "college": e["academicBackground"]?["collegeName"],
+          },
+          "job": {
+            "title": e["jobTitle"],
+            "id": e["jobId"],
+          }
+        });
+      }).toList();
+
+      return Right(list);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
 }
 
-@override
-ResultFuture<void> applyReferral(String referralId) async {
-  final request = Request(
-    method: RequestMethod.post,
-    endpoint: "/application/candidate/referral",
-    body: {
-      "referralId": referralId,
-    },
-    isSafeRoute: true,
-  );
-
-  try {
-    await _networkService.request(request);
-    return const Right(null);
-  } catch (e) {
-    return Left(APIException.from(e));
-  }
-}
-
-@override
-ResultFuture<void> applyInternship(String jobId) async {
-  final request = Request(
-    method: RequestMethod.post,
-    endpoint: "/application/candidate/internship", // confirm if needed
-    body: {
-      "jobId": jobId,
-    },
-    isSafeRoute: true,
-  );
-
-  try {
-    await _networkService.request(request);
-    return const Right(null);
-  } catch (e) {
-    return Left(APIException.from(e));
-  }
-}
-}

@@ -292,12 +292,21 @@ Widget _actions(
               : AppColors.kGreen,
           minimumSize: const Size(double.infinity, 50),
         ),
-        onPressed: () async {
-          await vm.updateApplicationStatus(
-            id: id,
-            status: ApplicationStatus.referred,
-          );
-        },
+       onPressed: () async {
+  await vm.updateApplicationStatus(
+    id: id,
+    status: ApplicationStatus.referred,
+  );
+
+  if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Status updated successfully"),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+},
         child: Text(
           "Refer Candidate",
           style: TextStyle(color: AppColors.white),
@@ -315,11 +324,20 @@ Widget _actions(
           minimumSize: const Size(double.infinity, 50),
         ),
         onPressed: () async {
-          await vm.updateApplicationStatus(
-            id: id,
-            status: ApplicationStatus.accepted,
-          );
-        },
+  await vm.updateApplicationStatus(
+    id: id,
+    status: ApplicationStatus.accepted,
+  );
+
+  if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Status updated successfully"),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+},
         child: Text(
           "Accept",
           style: TextStyle(color: AppColors.white),
@@ -336,12 +354,21 @@ Widget _actions(
               : Colors.grey[800],
           minimumSize: const Size(double.infinity, 50),
         ),
-        onPressed: () async {
-          await vm.updateApplicationStatus(
-            id: id,
-            status: ApplicationStatus.rejected,
-          );
-        },
+      onPressed: () async {
+  await vm.updateApplicationStatus(
+    id: id,
+    status: ApplicationStatus.rejected,
+  );
+
+  if (context.mounted) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text("Status updated successfully"),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+},
         child: Text(
           "Reject Request",
           style: TextStyle(color: AppColors.white),

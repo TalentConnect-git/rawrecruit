@@ -14,7 +14,6 @@ import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortl
 import 'widgets/alumni_card.dart';
 
 class DashboardView extends StatefulWidget {
-
   const DashboardView({super.key});
   @override
   State<DashboardView> createState() => _DashboardViewState();
@@ -51,23 +50,19 @@ class _DashboardBody extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                   /// 🔥 NEW HEADER
-    const _DashboardHeader(),
+                  /// 🔥 NEW HEADER
+                  const _DashboardHeader(),
 
-    const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-    /// 🔥 NEW CAREER CARD
-    const _CareerReadinessCard(),
+                  /// 🔥 NEW CAREER CARD
+                  const _CareerReadinessCard(),
 
-    const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-                
                   // const _SortFilterRow(),
                   // const SizedBox(height: 16),
-
-                Expanded(
-  child: const _DashboardCombinedView(),
-),
+                  Expanded(child: const _DashboardCombinedView()),
                 ],
               ),
             ),
@@ -84,17 +79,15 @@ class _DashboardBody extends StatelessWidget {
     );
   }
 }
+
 class _DashboardCombinedView extends StatefulWidget {
   const _DashboardCombinedView();
 
   @override
-  State<_DashboardCombinedView> createState() =>
-      _DashboardCombinedViewState();
+  State<_DashboardCombinedView> createState() => _DashboardCombinedViewState();
 }
 
-class _DashboardCombinedViewState
-    extends State<_DashboardCombinedView> {
-
+class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
   @override
   void initState() {
     super.initState();
@@ -102,8 +95,8 @@ class _DashboardCombinedViewState
     Future.microtask(() {
       context.read<DashboardViewModel>().getJobs();
       context.read<DashboardViewModel>().getInternships();
-      context.read<DashboardViewModel>().fetchProfessionalData(); 
-  context.read<DashboardViewModel>().getAlumniData();
+      context.read<DashboardViewModel>().fetchProfessionalData();
+      context.read<DashboardViewModel>().getAlumniData();
       context.read<ShortlistViewModel>().fetchSaved();
       context.read<ApplicationViewModel>().fetchApplications();
     });
@@ -119,61 +112,72 @@ class _DashboardCombinedViewState
 
         final shortlistVM = context.watch<ShortlistViewModel>();
         final applicationVM = context.watch<ApplicationViewModel>();
+        final all = applicationVM.appliedApplications;
 
+        final referrals = all
+            .where((e) => (e.jobType ?? "").toLowerCase() == "referral")
+            .take(1)
+            .toList();
+
+        final internships = all
+            .where((e) => (e.jobType ?? "").toLowerCase() == "internship")
+            .take(1)
+            .toList();
+
+        final offCampus = all
+            .where((e) => (e.jobType ?? "").toLowerCase() == "off-campus")
+            .take(1)
+            .toList();
+
+        final mixed = [...referrals, ...internships, ...offCampus];
         return ListView(
           children: [
-/// 🔥 MY APPLICATIONS SECTION
-_SectionHeader(title: "My Applications"),
+            /// 🔥 MY APPLICATIONS SECTION
+            _SectionHeader(title: "My Applications"),
 
-if (applicationVM.appliedApplications.isEmpty)
-  const Padding(
-    padding: EdgeInsets.symmetric(vertical: 10),
-    child: Text(
-      "No Applications Yet",
-      style: TextStyle(color: Colors.grey),
-    ),
-  )
-else
-  ...applicationVM.appliedApplications.take(7).map((job) {
-    return ApplicationCard(
-      model: job,
-    );
-  }),
-_SectionHeader(title: "Alumni Hiring Network"),
+            if (applicationVM.appliedApplications.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  "No Applications Yet",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              )
+            else
+              ...mixed.map((job) {
+                return ApplicationCard(model: job);
+              }),
+            _SectionHeader(title: "Alumni Hiring Network"),
 
-SizedBox(
-  height: 170,
-  child: ListView.builder(
-    scrollDirection: Axis.horizontal,
-    itemCount: vm.groupedAlumni.values.take(3).length,
-    itemBuilder: (context, index) {
-      final jobs = vm.groupedAlumni.values.toList()[index];
-      return AlumniCard(jobs: jobs,);
-    },
-  ),
-),
+            SizedBox(
+              height: 170,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: vm.groupedAlumni.values.take(3).length,
+                itemBuilder: (context, index) {
+                  final jobs = vm.groupedAlumni.values.toList()[index];
+                  return AlumniCard(jobs: jobs);
+                },
+              ),
+            ),
+
             /// 🔥 REFERRAL SECTION
             _SectionHeader(title: "Referral Jobs for You"),
             ...vm.referralJobs.take(3).map((job) {
-              final isSaved =
-                  shortlistVM.savedJobIds.contains(job.id);
-              final isApplied =
-                  applicationVM.isApplied(job.id ?? '');
+              final isSaved = shortlistVM.savedJobIds.contains(job.id);
+              final isApplied = applicationVM.isApplied(job.id ?? '');
 
               return JobCard(
                 job: job,
                 isSaved: isSaved,
                 isApplied: isApplied,
-onApply: () => applicationVM.apply(
-  jobId: job.id ?? '',
-  jobType:'Referral',
-),                 onTap: () {
-                            context.pushNamed(
-                              RouteNames.referralDetail,
-                              extra: job.id,
-                            );
-                          
-},
+                onApply: () => applicationVM.apply(
+                  jobId: job.id ?? '',
+                  jobType: 'Referral',
+                ),
+                onTap: () {
+                  context.pushNamed(RouteNames.referralDetail, extra: job.id);
+                },
                 onBookmarkToggle: () {
                   shortlistVM.toggleSave(
                     jobId: job.id ?? '',
@@ -187,68 +191,65 @@ onApply: () => applicationVM.apply(
             /// 🔥 INTERNSHIP SECTION
             _SectionHeader(title: "Internship Opportunities"),
             ...vm.internships.take(3).map((job) {
-              final isSaved =
-                  shortlistVM.savedJobIds.contains(job.id);
-              final isApplied =
-                  applicationVM.isApplied(job.id ?? '');
-             
+              final isSaved = shortlistVM.savedJobIds.contains(job.id);
+              final isApplied = applicationVM.isApplied(job.id ?? '');
 
               return JobCard(
                 job: job,
                 isSaved: isSaved,
                 isApplied: isApplied,
-onApply: () => applicationVM.apply(
-  jobId: job.id ?? '',
-  jobType:"Internship",
-),                onBookmarkToggle: () {
+                onApply: () => applicationVM.apply(
+                  jobId: job.id ?? '',
+                  jobType: "Internship",
+                ),
+                onBookmarkToggle: () {
                   shortlistVM.toggleSave(
                     jobId: job.id ?? '',
                     jobType: "Internship",
                     isSaved: isSaved,
                   );
                 },
-                 onTap: () async {
-  await context.pushNamed(
-    RouteNames.internshipDetail,
-    extra: job,
-  );
-  if (context.mounted) {
-    context.read<ShortlistViewModel>().fetchSaved();
-    context.read<ApplicationViewModel>().fetchApplications();
-  }
-},
+                onTap: () async {
+                  await context.pushNamed(
+                    RouteNames.internshipDetail,
+                    extra: job,
+                  );
+                  if (context.mounted) {
+                    context.read<ShortlistViewModel>().fetchSaved();
+                    context.read<ApplicationViewModel>().fetchApplications();
+                  }
+                },
               );
             }),
 
             /// 🔥 OFF CAMPUS SECTION
             _SectionHeader(title: "Off-Campus Drives"),
             ...vm.jobs.take(3).map((job) {
-              final isSaved =
-                  shortlistVM.savedJobIds.contains(job.id);
-              final isApplied =
-                  applicationVM.isApplied(job.id ?? '');
+              final isSaved = shortlistVM.savedJobIds.contains(job.id);
+              final isApplied = applicationVM.isApplied(job.id ?? '');
 
               return JobCard(
                 job: job,
                 isSaved: isSaved,
                 isApplied: isApplied,
-onApply: () => applicationVM.apply(
-  jobId: job.id ?? '',
-  jobType: 'Off-campus',
-),                onBookmarkToggle: () {
+                onApply: () => applicationVM.apply(
+                  jobId: job.id ?? '',
+                  jobType: 'Off-campus',
+                ),
+                onBookmarkToggle: () {
                   shortlistVM.toggleSave(
                     jobId: job.id ?? '',
                     jobType: "Off-campus",
                     isSaved: isSaved,
                   );
                 },
-                       onTap: () async {
-  await context.pushNamed(RouteNames.jobDetail, extra: job);
-  if (context.mounted) {
-    context.read<ShortlistViewModel>().fetchSaved();
-    context.read<ApplicationViewModel>().fetchApplications();
-  }
-},
+                onTap: () async {
+                  await context.pushNamed(RouteNames.jobDetail, extra: job);
+                  if (context.mounted) {
+                    context.read<ShortlistViewModel>().fetchSaved();
+                    context.read<ApplicationViewModel>().fetchApplications();
+                  }
+                },
               );
             }),
           ],
@@ -257,6 +258,7 @@ onApply: () => applicationVM.apply(
     );
   }
 }
+
 class _SectionHeader extends StatelessWidget {
   final String title;
 
@@ -289,6 +291,7 @@ class _SectionHeader extends StatelessWidget {
     );
   }
 }
+
 class _SegmentToggle extends StatelessWidget {
   const _SegmentToggle();
 
@@ -485,7 +488,6 @@ class _SegmentToggle extends StatelessWidget {
 //   }
 // }
 
-
 // class _FilterBottomSheet extends StatelessWidget {
 //   const _FilterBottomSheet();
 
@@ -647,29 +649,27 @@ class _SegmentToggle extends StatelessWidget {
 //   }
 // }
 
-
-
 class _DashboardHeader extends StatelessWidget {
   const _DashboardHeader();
 
   @override
   Widget build(BuildContext context) {
     final hour = DateTime.now().hour;
-
+    final appState = getIt<AppStateProvider>();
     String greeting = "Hello";
-    if (hour < 12) greeting = "Good morning";
-    else if (hour < 17) greeting = "Good afternoon";
-    else greeting = "Good evening";
+    if (hour < 12)
+      greeting = "Good morning";
+    else if (hour < 17)
+      greeting = "Good afternoon";
+    else
+      greeting = "Good evening";
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           "$greeting,",
-          style: const TextStyle(
-            color: Colors.grey,
-            fontSize: 14,
-          ),
+          style: const TextStyle(color: Colors.grey, fontSize: 14),
         ),
         const SizedBox(height: 4),
         Row(
@@ -690,6 +690,7 @@ class _DashboardHeader extends StatelessWidget {
     );
   }
 }
+
 class _CareerReadinessCard extends StatelessWidget {
   const _CareerReadinessCard();
 
@@ -707,7 +708,6 @@ class _CareerReadinessCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
           /// 🔹 TITLE
           Row(
             children: [
@@ -756,8 +756,7 @@ class _CareerReadinessCard extends StatelessWidget {
               value: percent / 100,
               minHeight: 8,
               backgroundColor: Colors.black.withOpacity(0.3),
-              valueColor:
-                  AlwaysStoppedAnimation(AppColors.kGreen),
+              valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
             ),
           ),
 
@@ -777,7 +776,9 @@ class _CareerReadinessCard extends StatelessWidget {
       ),
     );
   }
-}class _smallChip extends StatelessWidget {
+}
+
+class _smallChip extends StatelessWidget {
   final String text;
   const _smallChip(this.text);
 
@@ -792,10 +793,7 @@ class _CareerReadinessCard extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: TextStyle(
-          fontSize: 11,
-          color: AppColors.kGreen,
-        ),
+        style: TextStyle(fontSize: 11, color: AppColors.kGreen),
       ),
     );
   }
