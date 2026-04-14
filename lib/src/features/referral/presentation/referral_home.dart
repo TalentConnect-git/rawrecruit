@@ -6,6 +6,7 @@ import 'package:rawrecruit/src/feature/revamp_application/presentation/view_mode
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/alumni_card.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/my_job_card.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
 
@@ -41,16 +42,22 @@ final PostedJobViewModel postedJobViewModel =
     providers: [
       ChangeNotifierProvider.value(value: referralHomeViewModel),
       ChangeNotifierProvider.value(value: postedJobViewModel),
-ChangeNotifierProvider(create: (_) => DashboardViewModel()),
+ChangeNotifierProvider(
+  create: (_) => DashboardViewModel()..getAlumniData(),
+),
+
+ChangeNotifierProvider(
+  create: (_) => MyProfileViewModel()
+    ..getUser()
+    ..getReferralMetrics(),
+),
       /// 🔥 ADD THESE (missing!)
       ChangeNotifierProvider(create: (_) => ShortlistViewModel()),
       ChangeNotifierProvider(create: (_) => ApplicationViewModel()),
     ],
     child: Builder( // 👈 IMPORTANT
       builder: (context) {
- WidgetsBinding.instance.addPostFrameCallback((_) {
-    context.read<DashboardViewModel>().getAlumniData();
-  });
+
 
         final shortlistVM = context.watch<ShortlistViewModel>();
         final applicationVM = context.watch<ApplicationViewModel>();
@@ -64,7 +71,9 @@ ChangeNotifierProvider(create: (_) => DashboardViewModel()),
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               /// 🔥 NEW HEADER
-              const ReferralHomeHeader(),
+ReferralHomeHeader(
+  vm: context.watch<MyProfileViewModel>(),
+),
 
               const SizedBox(height: 24),
 

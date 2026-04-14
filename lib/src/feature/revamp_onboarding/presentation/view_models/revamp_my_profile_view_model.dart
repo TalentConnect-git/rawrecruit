@@ -1,9 +1,10 @@
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/index.dart';
 
 class MyProfileViewModel extends ViewStateProvider {
-  final OnboardingRepository _onboardingRepository =
-      getIt<OnboardingRepository>();
+  final RevampOnboardingRepository _onboardingRepository =
+      getIt<RevampOnboardingRepository>();
 Map<String, dynamic>? careerInsights;
 Map<String, dynamic>? careerRanking;
   User? _user;
@@ -24,7 +25,50 @@ Map<String, dynamic>? careerRanking;
     _isEditing = value;
     notifyListeners();
   }
+Map<String, dynamic>? referralMetrics;
+Map<String, dynamic>? candidateStats;
 
+Future<Failure?> getCandidateStats() async {
+  Failure? failure;
+
+  try {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "/application/dashboard/candidate/stats",
+      isSafeRoute: true,
+    );
+
+    final response = await getIt<NetworkService>().request(request);
+
+    candidateStats = response.data['data'];
+  } catch (e) {
+    failure = APIFailure.fromException(
+      exception: APIException.from(e),
+    );
+  }
+
+  notifyListeners();
+  return failure;
+}
+Future<Failure?> getReferralMetrics() async {
+  Failure? failure;
+
+  setViewState(ViewState.busy);
+
+  final result = await _onboardingRepository.getReferralMetrics();
+
+  result.fold(
+    (e) {
+      failure = APIFailure.fromException(exception: e);
+    },
+    (r) {
+      referralMetrics = r;
+    },
+  );
+
+  setViewState(ViewState.complete);
+  return failure;
+}
   Future<Failure?> getUser() async {
     Failure? failure;
 
@@ -112,6 +156,28 @@ Future<Failure?> getCareerInsights() async {
 
   return failure;
 }
+int get savedJobs => candidateStats?['savedCount'] ?? 0;
+
+int get totalApps => candidateStats?['totalApplications'] ?? 0;
+
+int get referralApps => candidateStats?['referralApplications'] ?? 0;
+int get totalReferrals =>
+    referralMetrics?['totalReferralsPosted'] ?? 0;
+
+int get totalApplications =>
+    referralMetrics?['totalApplicationsReceived'] ?? 0;
+
+int get referredToCompany =>
+    referralMetrics?['totalReferredToCompany'] ?? 0;
+
+int get acceptedByCompany =>
+    referralMetrics?['totalAcceptedByCompany'] ?? 0;
+
+double get responseRate =>
+    (referralMetrics?['responseRate'] as num?)?.toDouble() ?? 0;
+
+double get referralSuccessRate =>
+    (referralMetrics?['referralSuccessRate'] as num?)?.toDouble() ?? 0;
   int get hiringScore => careerInsights?['hiringScore'] ?? 0;
 
 int get resumeScore => careerInsights?['resumeScore'] ?? 0;

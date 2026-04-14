@@ -4,6 +4,7 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/widget/application_card.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/applicant_card.dart';
 
 class ProfessionalReferralView extends StatefulWidget {
   const ProfessionalReferralView({super.key});
@@ -19,30 +20,19 @@ class _ProfessionalReferralViewState
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => ApplicationViewModel()),
-      ],
-      child: Builder(
+    return ChangeNotifierProvider(
+      create: (_) => ApplicationViewModel()..fetchApplications(),
+      child: Builder( // ✅ CRITICAL FIX (gives correct context)
         builder: (context) {
-
-          /// 🔥 LOAD APPLICATIONS (same as dashboard)
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.read<ApplicationViewModel>().fetchApplications();
-          });
-
           return Scaffold(
             backgroundColor: AppColors.kBg,
             body: Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  _buildTabs(),
+                  _buildTabs(context),
                   const SizedBox(height: 10),
-
-                  Expanded(
-                    child: _buildBody(),
-                  ),
+                  Expanded(child: _buildBody()),
                 ],
               ),
             ),
@@ -52,23 +42,32 @@ class _ProfessionalReferralViewState
     );
   }
 
-  /// 🔥 TABS UI
-  Widget _buildTabs() {
+  /// 🔥 TABS
+  Widget _buildTabs(BuildContext context) {
     return Row(
       children: [
-        _tab("Applied by Me", 0),
-        _tab("Requests Received", 1),
-        _tab("Referred by Me", 2),
+        _tab("Applied by Me", 0, context),
+        _tab("Requests Received", 1, context),
+        _tab("Referred by Me", 2, context),
       ],
     );
   }
 
-  Widget _tab(String title, int index) {
+  Widget _tab(String title, int index, BuildContext context) {
     final isSelected = selectedTab == index;
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() => selectedTab = index),
+        onTap: () {
+          setState(() => selectedTab = index);
+
+          final vm = context.read<ApplicationViewModel>();
+
+          /// ✅ CALL ONLY WHEN NEEDED
+          if (index == 1 && vm.referralApplications.isEmpty) {
+            vm.fetchReferralRequests();
+          }
+        },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -97,7 +96,7 @@ class _ProfessionalReferralViewState
       case 0:
         return _appliedByMe();
       case 1:
-        return _placeholder("Requests API coming soon");
+        return _requestsReceived();
       case 2:
         return _placeholder("Referred by me API coming soon");
       default:
@@ -105,7 +104,35 @@ class _ProfessionalReferralViewState
     }
   }
 
-  /// 🔥 APPLIED BY ME (REUSE DASHBOARD LOGIC)
+  /// ✅ REQUESTS RECEIVED
+  Widget _requestsReceived() {
+    return Consumer<ApplicationViewModel>(
+      builder: (context, vm, _) {
+        if (vm.viewState == ViewState.busy) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (vm.referralApplications.isEmpty) {
+          return const Center(
+            child: Text(
+              "No requests received",
+              style: TextStyle(color: Colors.grey),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: vm.referralApplications.length,
+          itemBuilder: (context, index) {
+            final app = vm.referralApplications[index];
+            return ApplicantCard(application: app);
+          },
+        );
+      },
+    );
+  }
+
+  /// ✅ APPLIED BY ME
   Widget _appliedByMe() {
     return Consumer<ApplicationViewModel>(
       builder: (context, vm, _) {
@@ -122,10 +149,12 @@ class _ProfessionalReferralViewState
           );
         }
 
-        return ListView(
-          children: vm.appliedApplications.map((job) {
-            return ApplicationCard(model: job); // ✅ SAME CARD
-          }).toList(),
+        return ListView.builder(
+          itemCount: vm.appliedApplications.length,
+          itemBuilder: (context, index) {
+            final job = vm.appliedApplications[index];
+            return ApplicationCard(model: job);
+          },
         );
       },
     );

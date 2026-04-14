@@ -2,6 +2,7 @@ import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/feature/revamp_application/data/application_data_source.dart';
 import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/repository/application_repository.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 
 import '../../../core/index.dart';
 class ApplicationRepositoryImpl
@@ -26,4 +27,9 @@ class ApplicationRepositoryImpl
 
     return _dataSource.fetchAppliedJobs();
   }
+
+  @override
+ResultFuture<List<ReferralApplication>> fetchReferralApplications() {
+  return _dataSource.fetchReferralApplications();
+}
 }

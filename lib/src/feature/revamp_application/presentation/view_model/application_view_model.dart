@@ -2,11 +2,13 @@ import 'package:get_it/get_it.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/repository/application_repository.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 
 enum ApplicationTab { offCampus, internship }
 
 class ApplicationViewModel extends ViewStateProvider {
   final _repository = GetIt.instance<ApplicationRepository>();
+  List<ReferralApplication> referralApplications = [];
 
   /// 🔹 Full list (for Applications screen)
   List<Job> appliedApplications = [];
@@ -50,4 +52,23 @@ class ApplicationViewModel extends ViewStateProvider {
 
   notifyListeners();
 }
+
+
+  /// ✅ NEW FUNCTION
+  Future<void> fetchReferralRequests() async {
+    setViewState(ViewState.busy);
+    notifyListeners();
+
+    final result = await _repository.fetchReferralApplications();
+
+    result.fold(
+      (failure) => setViewState(ViewState.idle),
+      (data) {
+        referralApplications = data;
+        setViewState(ViewState.idle);
+      },
+    );
+
+    notifyListeners();
+  }
 }

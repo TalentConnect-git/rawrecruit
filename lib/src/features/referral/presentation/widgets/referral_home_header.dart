@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
 
 class ReferralHomeHeader extends StatelessWidget {
-  const ReferralHomeHeader({super.key});
+  final MyProfileViewModel vm;
+
+  const ReferralHomeHeader({super.key, required this.vm});
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +28,7 @@ class ReferralHomeHeader extends StatelessWidget {
         Row(
           children: [
             Text(
-              'Hey, Priya',
+              'Hey, ${vm.user?.name ?? "User"}',
               style: AppTextStyles.s22W600.copyWith(
                 color: AppColors.white,
               ),
@@ -41,35 +46,63 @@ class ReferralHomeHeader extends StatelessWidget {
         /// Stats Cards
         Row(
           children: [
+            /// 🔹 Referrals Posted
             Expanded(
-              child: _buildStatCard(
-                icon: Icons.description_outlined,
-                value: '5',
-                label: 'Posted\nJobs',
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () {
+                  context.goNamed(
+                    RouteNames.application,
+                    extra: UserType.professional,
+                  );
+                },
+                child: _buildStatCard(
+                  icon: Icons.description_outlined,
+                  value: "${vm.totalReferrals}",
+                  label: 'Referrals\nPosted',
+                ),
               ),
             ),
+
             const SizedBox(width: 12),
+
+            /// 🔹 Applications Received
             Expanded(
-              child: _buildStatCard(
-                icon: Icons.inbox_outlined,
-                value: '3',
-                label: 'Requests',
+              child: InkWell(
+                borderRadius: BorderRadius.circular(16),
+                onTap: () {
+                  context.goNamed(
+                    RouteNames.referrer,
+                    extra: UserType.professional,
+                  );
+                },
+                child: _buildStatCard(
+                  icon: Icons.inbox_outlined,
+                  value: "${vm.totalApplications}",
+                  label: 'Applications',
+                ),
               ),
             ),
+
             const SizedBox(width: 12),
+
+            /// 🔹 Success Rate
             Expanded(
               child: _buildStatCard(
                 icon: Icons.emoji_events_outlined,
-                value: '78%',
-                label: 'Success',
+                value: "${vm.referralSuccessRate}%",
+                label: 'Success\nRate',
               ),
             ),
+
             const SizedBox(width: 12),
+
+            /// 🔹 Response Rate
             Expanded(
               child: _buildStatCard(
                 icon: Icons.flash_on_outlined,
-                value: '94%',
-                label: 'Response',
+                value: "${vm.responseRate}%",
+                label: 'Response\nRate',
               ),
             ),
           ],
@@ -78,43 +111,48 @@ class ReferralHomeHeader extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard({
-    required IconData icon,
-    required String value,
-    required String label,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        color: AppColors.kTile,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white10),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, color: AppColors.secText, size: 20),
+ Widget _buildStatCard({
+  required IconData icon,
+  required String value,
+  required String label,
+}) {
+  return Container(
+    height: 110, // you can tweak 105–120
+    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 10),
+    decoration: BoxDecoration(
+      color: AppColors.kTile,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: Colors.white10),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 🔥 key fix
+      children: [
+        Icon(icon, color: AppColors.secText, size: 18),
 
-          const SizedBox(height: 10),
-
-          Text(
+        /// VALUE
+        FittedBox( // 🔥 prevents overflow
+          child: Text(
             value,
-            style: AppTextStyles.s18W600.copyWith(
+            style: AppTextStyles.s16W600.copyWith(
               color: AppColors.white,
             ),
           ),
+        ),
 
-          const SizedBox(height: 4),
-
-          Text(
+        /// LABEL
+        Flexible( // 🔥 prevents bottom overflow
+          child: Text(
             label,
             textAlign: TextAlign.center,
-            style: AppTextStyles.s12W400.copyWith(
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: AppTextStyles.s12W600.copyWith(
               color: AppColors.secText,
             ),
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      ],
+    ),
+  );
+}
 }

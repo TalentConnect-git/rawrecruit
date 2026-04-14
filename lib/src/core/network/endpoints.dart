@@ -39,4 +39,5 @@ class Endpoints {
 
     static const String careerInsights = '/api/career-insights';
 static const String careerRanking = '/api/career-insights/ranking';
+static const String professionalMatrics ='/application/professional/referral-metrics';
 }

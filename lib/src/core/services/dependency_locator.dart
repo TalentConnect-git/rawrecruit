@@ -8,12 +8,13 @@ import 'package:rawrecruit/src/feature/revamp_auth/data/index.dart';
 import 'package:rawrecruit/src/feature/revamp_auth/data/repository/revamp_auth_repository.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashboard_data_source_impl.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashbard_repository_impl.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/data_source/revamp_on_boarding_data_source_impl.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/data/index.dart';
 
 import 'package:rawrecruit/src/features/auth/index.dart';
 
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashbooard_data_source.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
-
 
 import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/index.dart';
@@ -28,6 +29,7 @@ import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortl
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository_impl.dart';
 
+import '../../feature/revamp_onboarding/data/data_source/revamp_on_boarding_data_source.dart';
 import '../../features/chat/index.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source_impl.dart';
@@ -77,6 +79,14 @@ Future<void> initDependencyLocator() async {
     )
     ..registerLazySingleton<ReferralPostRepository>(
       () => ReferralPostRepositoryImpl(getIt()),
+    )
+    ..registerLazySingleton<RevampOnboardingDataSource>(
+      () => RevampOnboardingDataSourceImpl(),
+    )
+    ..registerLazySingleton<RevampOnboardingRepository>(
+      () => RevampOnboardingRepositoryImpl(
+        onboardingDataSource: getIt<RevampOnboardingDataSource>(),
+      ),
     )
     ..registerLazySingleton<ShortlistDataSource>(
       () => ShortlistDataSourceImpl(),

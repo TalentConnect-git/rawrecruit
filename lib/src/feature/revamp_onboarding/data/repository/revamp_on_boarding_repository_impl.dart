@@ -45,4 +45,8 @@ class RevampOnboardingRepositoryImpl implements RevampOnboardingRepository {
   @override
   ResultFuture<Map<String, dynamic>> getRanking() =>
       _onboardingDataSource.getRanking();
+
+      @override
+ResultFuture<Map<String, dynamic>> getReferralMetrics() =>
+    _onboardingDataSource.getReferralMetrics();
 }

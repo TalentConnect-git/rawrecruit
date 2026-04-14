@@ -16,8 +16,13 @@ abstract class ReferralApplication with _$ReferralApplication {
     String? applicantType,
     String? adminApprovalStatus,
     ReferralPostModel? job,
+    String? statusText,
     @ApplicationStatusConvertor() ApplicationStatus? currentStatus,
     DateTime? createdAt,
+     int? matchScore,
+     String? jobTitle,
+List<String>? skills,
+
   }) = _ReferralApplication;
 
   factory ReferralApplication.fromJson(Map<String, dynamic> json) =>

@@ -17,4 +17,6 @@ abstract class OnboardingDataSource {
     File? resume, // ← ADD
     XFile? image,
   });
+
+  ResultFuture<Map<String, dynamic>> getReferralMetrics();
 }

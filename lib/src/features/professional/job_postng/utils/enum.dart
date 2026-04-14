@@ -5,7 +5,7 @@ enum ApplicationStatus {
   accepted('Accept', 'Accepted', Icons.check, Colors.white, Colors.green),
   rejected('Reject', 'Rejected', Icons.close, Colors.white, Colors.red),
   referred(
-    'Refer To Company',
+    'Referred To Company',
     'Referred To Company',
     Icons.link,
     Colors.white,
