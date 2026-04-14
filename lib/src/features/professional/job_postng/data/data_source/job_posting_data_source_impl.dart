@@ -121,7 +121,7 @@ class ReferralPostDataSourceImpl implements ReferralPostDataSource {
   ResultFuture<List<Job>> getOffCampusJobs() async {
     final Request request = Request(
       method: RequestMethod.get,
-      endpoint: Endpoints.apiOffCampusJobs,
+      endpoint: Endpoints.referalListing,
       isSafeRoute: true,
     );
 

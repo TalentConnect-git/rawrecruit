@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
@@ -8,24 +9,23 @@ class ApplicationCard extends StatelessWidget {
 
   const ApplicationCard({super.key, required this.model});
 
-  /// 🔥 STEP MAPPING
+  /// 🔥 STEP MAPPING (UPDATED - NO SHORTLISTED)
   int _getStep(String status) {
     switch (status.toLowerCase()) {
-      case "shortlisted":
-        return 1;
       case "referred to company":
-        return 2;
+        return 1;
       case "accepted":
       case "rejected":
-        return 3;
+        return 2;
       case "pending":
       default:
         return 0;
     }
   }
 
+  /// 🔥 PROGRESS (3 STEPS NOW)
   double _getProgress(String status) {
-    return (_getStep(status) + 1) / 4;
+    return (_getStep(status) + 1) / 3;
   }
 
   int _getPercentage(String status) {
@@ -34,17 +34,17 @@ class ApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-final title = (model.jobRoles?.isNotEmpty == true)
-    ? model.jobRoles!.first
-    : (model.jobTitle?.isNotEmpty == true
-        ? model.jobTitle!
-        : "-");
+    final title = (model.jobRoles?.isNotEmpty == true)
+        ? model.jobRoles!.first
+        : (model.jobTitle?.isNotEmpty == true
+            ? model.jobTitle!
+            : "-");
 
-final company = (model.companyName?.isNotEmpty == true)
-    ? model.companyName!
-    : (model.jobType == "Referral"
-        ? "Referral"
-        : "-");
+    final company = (model.companyName?.isNotEmpty == true)
+        ? model.companyName!
+        : (model.jobType == "Referral"
+            ? "Referral"
+            : "-");
 
     final status = model.status ?? "pending";
 
@@ -78,11 +78,14 @@ final company = (model.companyName?.isNotEmpty == true)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
                 Text(
@@ -97,12 +100,17 @@ final company = (model.companyName?.isNotEmpty == true)
 
             const SizedBox(height: 6),
 
-            Text(company,
-                style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            Text(
+              company,
+              style: const TextStyle(
+                color: Colors.grey,
+                fontSize: 12,
+              ),
+            ),
 
             const SizedBox(height: 16),
 
-            /// 🔥 PROGRESS LINE
+            /// 🔥 PROGRESS BAR
             LinearProgressIndicator(
               value: progress,
               backgroundColor: Colors.white.withOpacity(0.1),
@@ -113,18 +121,16 @@ final company = (model.companyName?.isNotEmpty == true)
 
             const SizedBox(height: 16),
 
-            /// 🔥 STEPPER
+            /// 🔥 STEPPER (UPDATED)
             Row(
               children: [
                 _step("Pending", 0, step, isRejected),
                 _line(),
-                _step("Shortlisted", 1, step, isRejected),
-                _line(),
-                _step("Referred", 2, step, isRejected),
+                _step("Referred", 1, step, isRejected),
                 _line(),
                 _step(
                   isRejected ? "Rejected" : "Final",
-                  3,
+                  2,
                   step,
                   isRejected,
                 ),
@@ -167,7 +173,7 @@ final company = (model.companyName?.isNotEmpty == true)
               color: isActive ? Colors.white : Colors.grey,
             ),
           ),
-        )
+        ),
       ],
     );
   }

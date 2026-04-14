@@ -15,5 +15,7 @@ ResultFuture<void> applyReferral(String referralId);
 ResultFuture<void> applyInternship(String jobId);
         ResultFuture<List<ReferralApplication>> fetchReferralApplications();
         ResultFuture<List<ReferralApplication>> fetchReferredByMe();
+         ResultFuture<List<Job>> fetchReferralAppliedJobs();
+  ResultFuture<List<Job>> fetchInternshipAppliedJobs();
 
 }

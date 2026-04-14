@@ -10,8 +10,11 @@ abstract class ApplicationDataSource {
 
   ResultFuture<List<Job>>
       fetchAppliedJobs();
+    ResultFuture<List<Job>> fetchReferralAppliedJobs();
+  ResultFuture<List<Job>> fetchInternshipAppliedJobs();
 ResultFuture<void> applyReferral(String referralId);
 ResultFuture<void> applyInternship(String jobId);
         ResultFuture<List<ReferralApplication>> fetchReferralApplications();
 ResultFuture<List<ReferralApplication>> fetchReferredByMe();
+
 }
