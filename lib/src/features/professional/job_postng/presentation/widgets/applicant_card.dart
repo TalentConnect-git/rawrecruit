@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
-import '../referral_detail_page.dart';
 
 class ApplicantCard extends StatelessWidget {
   final ReferralApplication application;
@@ -20,18 +20,13 @@ class ApplicantCard extends StatelessWidget {
     final match = application.matchScore ?? 0;
 
     /// ✅ COLLEGE
-final jobTitle = application.jobTitle ?? "-";
+    final jobTitle = application.jobTitle ?? "-";
     return InkWell(
       borderRadius: BorderRadius.circular(12),
 
       /// 🔥 NAVIGATION TO DETAIL PAGE
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ReferralDetailPage(application: application),
-          ),
-        );
+        context.pushNamed(RouteNames.referrerDetail, extra: application);
       },
 
       child: Container(
@@ -44,7 +39,6 @@ final jobTitle = application.jobTitle ?? "-";
         ),
         child: Row(
           children: [
-
             /// 🔥 AVATAR
             CircleAvatar(
               radius: 22,
@@ -62,12 +56,10 @@ final jobTitle = application.jobTitle ?? "-";
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-
                   /// ✅ NAME
                   Text(
                     name,
-                    style: AppTextStyles.s16W600
-                        .copyWith(color: Colors.white),
+                    style: AppTextStyles.s16W600.copyWith(color: Colors.white),
                   ),
 
                   const SizedBox(height: 6),
@@ -75,7 +67,6 @@ final jobTitle = application.jobTitle ?? "-";
                   /// ✅ MATCH + COLLEGE
                   Row(
                     children: [
-
                       /// MATCH SCORE
                       Text(
                         "$match% match",
@@ -87,23 +78,26 @@ final jobTitle = application.jobTitle ?? "-";
                       const SizedBox(width: 10),
 
                       /// COLLEGE (ELLIPSIS FIXED)
-                     Flexible(
-  child: Container(
-    padding: const EdgeInsets.symmetric(
-        horizontal: 8, vertical: 2),
-    decoration: BoxDecoration(
-      color: AppColors.kCard,
-      borderRadius: BorderRadius.circular(6),
-    ),
-    child: Text(
-      jobTitle,
-      maxLines: 1,
-      overflow: TextOverflow.ellipsis,
-      style: AppTextStyles.s12W400
-          .copyWith(color: Colors.grey),
-    ),
-  ),
-),
+                      Flexible(
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.kCard,
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            jobTitle,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.s12W400.copyWith(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
 
@@ -112,20 +106,14 @@ final jobTitle = application.jobTitle ?? "-";
                   /// ✅ TIME
                   Text(
                     _timeAgo(application.createdAt),
-                    style: AppTextStyles.s12W400.copyWith(
-                      color: Colors.grey,
-                    ),
+                    style: AppTextStyles.s12W400.copyWith(color: Colors.grey),
                   ),
                 ],
               ),
             ),
 
             /// 🔥 ARROW
-            const Icon(
-              Icons.arrow_forward_ios,
-              size: 14,
-              color: Colors.grey,
-            ),
+            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
           ],
         ),
       ),

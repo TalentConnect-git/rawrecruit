@@ -20,6 +20,7 @@ class Endpoints {
   static const apiOnboardingUpdate = 'api/onboarding/update';
 
   static const String referalListing = "api/student-dashboard/referral-jobs";
+  static const String applicationAllReferrals = "/application/all-referrals";
   static const String metrics = "application/professional/metrics";
 
   static const String applicationUpdateStatus = 'application/update-status';
@@ -37,7 +38,8 @@ class Endpoints {
   static const String apiNotifications = "api/notifications";
   static const String apiInterviews = '/interviews';
 
-    static const String careerInsights = '/api/career-insights';
-static const String careerRanking = '/api/career-insights/ranking';
-static const String professionalMatrics ='/application/professional/referral-metrics';
+  static const String careerInsights = '/api/career-insights';
+  static const String careerRanking = '/api/career-insights/ranking';
+  static const String professionalMatrics =
+      '/application/professional/referral-metrics';
 }

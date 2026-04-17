@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 
@@ -17,31 +16,31 @@ class ModernProfilePage extends StatefulWidget {
 
 class _ModernProfilePageState extends State<ModernProfilePage> {
   final MyProfileViewModel vm = MyProfileViewModel();
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  WidgetsBinding.instance.addPostFrameCallback((_) async {
-    final appState = getIt<AppStateProvider>();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final appState = getIt<AppStateProvider>();
 
-    /// 🔥 First get user (important)
-    final userResult = await vm.getUser();
+      /// 🔥 First get user (important)
+      final userResult = await vm.getUser();
 
-    /// 🔥 Then call correct API based on user type
-    final results = await Future.wait([
-      vm.getCareerInsights(),
-      if (appState.isProfessional)
-        vm.getReferralMetrics()
-      else
-        vm.getCandidateStats(),
-    ]);
+      /// 🔥 Then call correct API based on user type
+      final results = await Future.wait([
+        vm.getCareerInsights(),
+        if (appState.isProfessional)
+          vm.getReferralMetrics()
+        else
+          vm.getCandidateStats(),
+      ]);
 
-    if (mounted) {
-      userResult?.showError(context);
-      results[0]?.showError(context);
-    }
-  });
-}
+      if (mounted) {
+        userResult?.showError(context);
+        results[0]?.showError(context);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,33 +62,32 @@ void initState() {
                 child: Column(
                   children: [
                     /// 🔹 HEADER
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Row(
-                          children: [
-                            InkWell(
-                              onTap: context.pop,
-                              child: const Icon(
-                                Icons.arrow_back,
-                                color: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(width: 12),
-                            const Text(
-                              "Profile",
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                        const Icon(Icons.settings, color: Colors.grey),
-                      ],
-                    ),
-
+                    // Row(
+                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    //   children: [
+                    //     Row(
+                    //       children: [
+                    //         InkWell(
+                    //           onTap: context.pop,
+                    //           child: const Icon(
+                    //             Icons.arrow_back,
+                    //             color: Colors.white,
+                    //           ),
+                    //         ),
+                    //         const SizedBox(width: 12),
+                    //         const Text(
+                    //           "Profile",
+                    //           style: TextStyle(
+                    //             color: Colors.white,
+                    //             fontSize: 20,
+                    //             fontWeight: FontWeight.bold,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //     const Icon(Icons.settings, color: Colors.grey),
+                    //   ],
+                    // ),
                     const SizedBox(height: 20),
 
                     /// 🔥 PROFILE CARD
@@ -176,7 +174,7 @@ void initState() {
   }
 
   /// 🔥 TOP SECTION (CONNECTED TO BACKEND)
-  Widget _topProfileSection(p) {
+  Widget _topProfileSection(User? p) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -192,7 +190,7 @@ void initState() {
             radius: 32,
             backgroundColor: AppColors.kGreen,
             child: Text(
-              (p?.name?.isNotEmpty ?? false) ? p.name![0].toUpperCase() : "A",
+              (p?.name?.isNotEmpty ?? false) ? p!.name![0].toUpperCase() : "A",
               style: const TextStyle(
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
@@ -217,7 +215,7 @@ void initState() {
 
           /// Role (you can map from backend later)
           Text(
-            p?.college ?? '',
+            '${p?.currentCompany ?? 'Company'}, ${p?.college ?? '-'}',
             style: TextStyle(color: Colors.grey[400], fontSize: 12),
           ),
 
@@ -225,7 +223,7 @@ void initState() {
 
           /// Location
           Text(
-           p?.locations?.join(', ') ?? '',
+            '${p?.jobRoles?.firstOrNull ?? p?.designation ?? ''}, ${p?.locations?.join(', ') ?? ''}',
             style: TextStyle(color: Colors.grey[500], fontSize: 11),
           ),
 
@@ -254,69 +252,69 @@ void initState() {
           ),
 
           const SizedBox(height: 12),
-
-      
         ],
       ),
     );
   }
-Widget _statsGrid(MyProfileViewModel vm) {
-  final appState = getIt<AppStateProvider>();
 
-  final stats = appState.isProfessional
-      ? [
-          ["${vm.referralSuccessRate}%", "Referral Success"],
-          ["${vm.responseRate}%", "Response Rate"],
-          ["${vm.totalReferrals}", "Referrals Posted"],
-          ["${vm.referredToCompany}", "Referred"],
-          ["${vm.totalApplications}", "Applications"],
-          ["${vm.acceptedByCompany}", "Accepted"],
-        ]
-      : [
-          ["${vm.savedJobs}", "Saved Jobs"],
-          ["${vm.totalApps}", "Applications"],
-          ["${vm.referralApps}", "Referral Applications"],
-        ];
+  Widget _statsGrid(MyProfileViewModel vm) {
+    final appState = getIt<AppStateProvider>();
 
-  return GridView.builder(
-    shrinkWrap: true,
-    physics: const NeverScrollableScrollPhysics(),
-    itemCount: stats.length,
-    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-      crossAxisCount: 3, // ✅ SAME UI
-      crossAxisSpacing: 10,
-      mainAxisSpacing: 10,
-      childAspectRatio: 1.3,
-    ),
-    itemBuilder: (_, i) {
-      return Container(
-        decoration: BoxDecoration(
-          color: AppColors.kCard,
-          borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.kBorder),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              stats[i][0],
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+    final stats = appState.isProfessional
+        ? [
+            ["${vm.referralSuccessRate}%", "Referral Success"],
+            ["${vm.responseRate}%", "Response Rate"],
+            ["${vm.totalReferrals}", "Referrals Posted"],
+            ["${vm.referredToCompany}", "Referred"],
+            ["${vm.totalApplications}", "Applications"],
+            ["${vm.acceptedByCompany}", "Accepted"],
+          ]
+        : [
+            ["${vm.savedJobs}", "Saved Jobs"],
+            ["${vm.totalApps}", "Applications"],
+            ["${vm.referralApps}", "Referral Applications"],
+          ];
+
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: stats.length,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3, // ✅ SAME UI
+        crossAxisSpacing: 10,
+        mainAxisSpacing: 10,
+        childAspectRatio: 1.3,
+      ),
+      itemBuilder: (_, i) {
+        return Container(
+          decoration: BoxDecoration(
+            color: AppColors.kCard,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.kBorder),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                stats[i][0],
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              stats[i][1],
-              textAlign: TextAlign.center,
-              style: const TextStyle(color: Colors.grey, fontSize: 11),
-            ),
-          ],
-        ),
-      );
-    },
-  );
-}
+              const SizedBox(height: 4),
+              Text(
+                stats[i][1],
+                textAlign: TextAlign.center,
+                style: const TextStyle(color: Colors.grey, fontSize: 11),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   /// 🔥 SKILLS (CONNECTED)
   Widget _skillsImpactSection(p) {
     final skills = p?.skills ?? [];

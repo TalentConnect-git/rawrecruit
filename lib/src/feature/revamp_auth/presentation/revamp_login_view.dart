@@ -102,7 +102,9 @@ class _LoginViewState extends State<RevampLoginView> {
                           successCallback: () {
                             context.pushReplacementNamed(
                               RouteNames.dashboard,
-                              extra: getIt<AppStateProvider>().userType,
+                              extra: {
+                                'userType': getIt<AppStateProvider>().userType,
+                              },
                             );
                           },
                         );

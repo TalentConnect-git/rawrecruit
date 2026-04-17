@@ -6,9 +6,10 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/widget/application_card.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/dashboard_provider.dart';
-
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/dashboard_card.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import 'widgets/alumni_card.dart';
@@ -20,6 +21,17 @@ class DashboardView extends StatefulWidget {
 }
 
 class _DashboardViewState extends State<DashboardView> {
+  MyProfileViewModel myProfileViewModel = MyProfileViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final failure = await myProfileViewModel.getCandidateStats();
+      failure?.showError(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -28,6 +40,9 @@ class _DashboardViewState extends State<DashboardView> {
         ChangeNotifierProvider(create: (_) => ShortlistViewModel()),
         ChangeNotifierProvider(create: (_) => DashboardViewModel()),
         ChangeNotifierProvider(create: (_) => ApplicationViewModel()),
+        ChangeNotifierProvider<MyProfileViewModel>(
+          create: (_) => myProfileViewModel,
+        ),
       ],
       child: const _DashboardBody(),
     );
@@ -51,7 +66,7 @@ class _DashboardBody extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   /// 🔥 NEW HEADER
-                  const _DashboardHeader(),
+                  DashboardCard(vm: context.watch<MyProfileViewModel>()),
 
                   const SizedBox(height: 16),
 
@@ -150,7 +165,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
             _SectionHeader(title: "Alumni Hiring Network"),
 
             SizedBox(
-              height: 170,
+              height: 190,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: vm.groupedAlumni.values.take(3).length,
@@ -377,316 +392,6 @@ class _SegmentToggle extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-// class _SortFilterRow extends StatelessWidget {
-//   const _SortFilterRow();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final provider = context.watch<DashboardProvider>();
-
-//     return Row(
-//       children: [
-//         /// 🔹 SORT BUTTON (CARD STYLE)
-//         Expanded(
-//           child: GestureDetector(
-//             onTap: () => _showSortSheet(context),
-//             child: Container(
-//               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-//               decoration: BoxDecoration(
-//                 color: AppColors.kCard,
-//                 borderRadius: BorderRadius.circular(12),
-//                 border: Border.all(color: AppColors.kBorder),
-//               ),
-//               child: Row(
-//                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Text(
-//                     provider.sortOption.name,
-//                     style: const TextStyle(color: Colors.white),
-//                   ),
-//                   const Icon(Icons.swap_vert, color: Colors.grey, size: 18),
-//                 ],
-//               ),
-//             ),
-//           ),
-//         ),
-
-//         const SizedBox(width: 12),
-
-//         /// 🔹 FILTER BUTTON
-//         GestureDetector(
-//           onTap: () {
-//             final provider = context.read<DashboardProvider>();
-
-//             showModalBottomSheet(
-//               context: context,
-//               isScrollControlled: true,
-//               backgroundColor: Colors.transparent,
-//               builder: (_) {
-//                 return ChangeNotifierProvider.value(
-//                   value: provider,
-//                   child: const _FilterBottomSheet(),
-//                 );
-//               },
-//             );
-//           },
-//           child: Container(
-//             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-//             decoration: BoxDecoration(
-//               color: AppColors.kCard,
-//               borderRadius: BorderRadius.circular(12),
-//               border: Border.all(color: AppColors.kBorder),
-//             ),
-//             child: const Row(
-//               children: [
-//                 Icon(Icons.filter_list, color: Colors.grey, size: 18),
-//                 SizedBox(width: 6),
-//                 Text("Filters", style: TextStyle(color: Colors.white)),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-
-//   void _showSortSheet(BuildContext context) {
-//     final provider = context.read<DashboardProvider>();
-
-//     showModalBottomSheet(
-//       context: context,
-//       backgroundColor: Colors.transparent,
-//       builder: (_) {
-//         return Container(
-//           padding: const EdgeInsets.all(16),
-//           decoration: BoxDecoration(
-//             color: AppColors.kCard,
-//             borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-//           ),
-//           child: Column(
-//             mainAxisSize: MainAxisSize.min,
-//             children: SortOption.values.map((option) {
-//               return ListTile(
-//                 title: Text(option.name,
-//                     style: const TextStyle(color: Colors.white)),
-//                 trailing: provider.sortOption == option
-//                     ? Icon(Icons.check, color: AppColors.kGreen)
-//                     : null,
-//                 onTap: () {
-//                   provider.changeSort(option);
-//                   Navigator.pop(context);
-//                 },
-//               );
-//             }).toList(),
-//           ),
-//         );
-//       },
-//     );
-//   }
-// }
-
-// class _FilterBottomSheet extends StatelessWidget {
-//   const _FilterBottomSheet();
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final provider = context.watch<DashboardProvider>();
-
-//     return Container(
-//       padding: const EdgeInsets.all(20),
-//       decoration: BoxDecoration(
-//         color: AppColors.kCard,
-//         borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
-//       ),
-//       child: SingleChildScrollView(
-//         child: Column(
-//           crossAxisAlignment: CrossAxisAlignment.start,
-//           children: [
-
-//             /// 🔹 TITLE
-//             const Text(
-//               "Filters",
-//               style: TextStyle(
-//                 fontSize: 18,
-//                 fontWeight: FontWeight.bold,
-//                 color: Colors.white,
-//               ),
-//             ),
-
-//             const SizedBox(height: 20),
-
-//             /// 🔹 WORK MODE
-//             _dropdownCard(
-//               label: "Work Mode",
-//               value: provider.selectedWorkMode,
-//               items: const ["Hybrid", "Remote", "On-Site"],
-//               onChanged: (val) {
-//                 provider.selectedWorkMode = val;
-//                 provider.notifyListeners();
-//               },
-//             ),
-
-//             const SizedBox(height: 16),
-
-//             /// 🔹 LOCATION
-//             _dropdownCard(
-//               label: "Location",
-//               value: provider.selectedLocation,
-//               items: const ["Bengaluru", "Mumbai"],
-//               onChanged: (val) {
-//                 provider.selectedLocation = val;
-//                 provider.notifyListeners();
-//               },
-//             ),
-
-//             const SizedBox(height: 16),
-
-//             /// 🔹 CHECKBOX (CUSTOM STYLE)
-//             Container(
-//               padding: const EdgeInsets.all(14),
-//               decoration: BoxDecoration(
-//                 color: Colors.black.withOpacity(0.2),
-//                 borderRadius: BorderRadius.circular(12),
-//                 border: Border.all(color: AppColors.kBorder),
-//               ),
-//               child: Row(
-//                 children: [
-//                   Checkbox(
-//                     value: provider.paidOnly,
-//                     activeColor: AppColors.kGreen,
-//                     onChanged: (val) {
-//                       provider.paidOnly = val ?? false;
-//                       provider.notifyListeners();
-//                     },
-//                   ),
-//                   const Text(
-//                     "Show only paid",
-//                     style: TextStyle(color: Colors.white),
-//                   ),
-//                 ],
-//               ),
-//             ),
-
-//             const SizedBox(height: 24),
-
-//             /// 🔹 BUTTONS
-//             Row(
-//               children: [
-//                 Expanded(
-//                   child: OutlinedButton(
-//                     onPressed: () {
-//                       provider.clearFilters();
-//                       Navigator.pop(context);
-//                     },
-//                     style: OutlinedButton.styleFrom(
-//                       side: BorderSide(color: AppColors.kBorder),
-//                     ),
-//                     child: const Text("Clear",
-//                         style: TextStyle(color: Colors.white)),
-//                   ),
-//                 ),
-//                 const SizedBox(width: 12),
-//                 Expanded(
-//                   child: ElevatedButton(
-//                     onPressed: () => Navigator.pop(context),
-//                     style: ElevatedButton.styleFrom(
-//                       backgroundColor: AppColors.kGreen,
-//                     ),
-//                     child: const Text("Apply"),
-//                   ),
-//                 ),
-//               ],
-//             ),
-//           ],
-//         ),
-//       ),
-//     );
-//   }
-
-//   /// 🔹 CUSTOM DROPDOWN CARD
-//   Widget _dropdownCard({
-//     required String label,
-//     required String? value,
-//     required List<String> items,
-//     required Function(String?) onChanged,
-//   }) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Text(label,
-//             style: const TextStyle(color: Colors.grey, fontSize: 12)),
-//         const SizedBox(height: 6),
-//         Container(
-//           padding: const EdgeInsets.symmetric(horizontal: 12),
-//           decoration: BoxDecoration(
-//             color: Colors.black.withOpacity(0.2),
-//             borderRadius: BorderRadius.circular(12),
-//             border: Border.all(color: AppColors.kBorder),
-//           ),
-//           child: DropdownButton<String>(
-//             value: value,
-//             hint: const Text("Select",
-//                 style: TextStyle(color: Colors.grey)),
-//             dropdownColor: AppColors.kCard,
-//             isExpanded: true,
-//             underline: const SizedBox(),
-//             icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-//             items: items
-//                 .map((e) => DropdownMenuItem(
-//                       value: e,
-//                       child: Text(e,
-//                           style: const TextStyle(color: Colors.white)),
-//                     ))
-//                 .toList(),
-//             onChanged: onChanged,
-//           ),
-//         ),
-//       ],
-//     );
-//   }
-// }
-
-class _DashboardHeader extends StatelessWidget {
-  const _DashboardHeader();
-
-  @override
-  Widget build(BuildContext context) {
-    final hour = DateTime.now().hour;
-    final appState = getIt<AppStateProvider>();
-    String greeting = "Hello";
-    if (hour < 12)
-      greeting = "Good morning";
-    else if (hour < 17)
-      greeting = "Good afternoon";
-    else
-      greeting = "Good evening";
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "$greeting,",
-          style: const TextStyle(color: Colors.grey, fontSize: 14),
-        ),
-        const SizedBox(height: 4),
-        Row(
-          children: const [
-            Text(
-              "User", // 🔥 later connect from profile API
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 22,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(width: 6),
-            Text("👋", style: TextStyle(fontSize: 20)),
-          ],
-        ),
-      ],
     );
   }
 }

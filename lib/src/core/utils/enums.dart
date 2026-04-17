@@ -118,15 +118,15 @@ extension UserStatusExt on UserStatus {
   }
 }
 
-enum NavItem { home, jobs, referrals, alumnis, chat }
+enum NavItem { home, jobs, referrals, applications, alumnis, profile }
 
 extension NavItemExt on NavItem {
-  // static List<NavItem> get professionals => NavItem.values
-  //     .where((element) => element != NavItem.applications)
-  //     .toList();
+  static List<NavItem> get professionals => NavItem.values
+      .where((element) => element != NavItem.applications)
+      .toList();
 
-  // static List<NavItem> get freshers =>
-  //     NavItem.values.where((element) => element != NavItem.referrals).toList();
+  static List<NavItem> get freshers =>
+      NavItem.values.where((element) => element != NavItem.referrals).toList();
 
   String get label {
     switch (this) {
@@ -140,8 +140,10 @@ extension NavItemExt on NavItem {
         return 'Alumnis';
       // case NavItem.profile:
       //   return 'Profile';
-      case NavItem.chat:
-        return 'Chat';
+      case NavItem.profile:
+        return 'Profile';
+      case NavItem.applications:
+        return 'Applications';
     }
   }
 
@@ -154,11 +156,11 @@ extension NavItemExt on NavItem {
       case NavItem.alumnis:
         return Icons.group;
       case NavItem.referrals:
-        return Icons.group;
-      // case NavItem.profile:
-      //   return Icons.person;
-      case NavItem.chat:
-        return Icons.chat_bubble;
+        return Icons.share;
+      case NavItem.applications:
+        return Icons.assignment;
+      case NavItem.profile:
+        return Icons.person;
     }
   }
 
@@ -170,12 +172,12 @@ extension NavItemExt on NavItem {
         return Icons.work_outline;
       case NavItem.alumnis:
         return Icons.group_outlined;
-      // case NavItem.profile:
-      //   return Icons.person_outline;
+      case NavItem.applications:
+        return Icons.assignment_outlined;
       case NavItem.referrals:
-        return Icons.group_outlined;
-      case NavItem.chat:
-        return Icons.chat_bubble_outline;
+        return Icons.share_outlined;
+      case NavItem.profile:
+        return Icons.person_outline;
     }
   }
 
@@ -187,12 +189,12 @@ extension NavItemExt on NavItem {
         return RouteNames.application;
       case NavItem.alumnis:
         return RouteNames.shortlist;
-      // case NavItem.profile:
-      //   return Icons.person_outline;
+      case NavItem.applications:
+        return RouteNames.referrer;
       case NavItem.referrals:
         return RouteNames.referrer;
-      case NavItem.chat:
-        return RouteNames.chatUserList;
+      case NavItem.profile:
+        return RouteNames.myProfile;
     }
   }
 }

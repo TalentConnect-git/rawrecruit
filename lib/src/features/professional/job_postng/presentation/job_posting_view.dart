@@ -37,7 +37,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   String employmentType = "Full-time";
   String workMode = "On-site";
   String broadcastType = "Everyone";
-  String minEducation = "Bachelor's Degree";
+  String minEducation = "High School";
   String workAuthorization = "Citizens Only";
   String experienceRange = "0-1 years";
   String selectedCity = "Mumbai";
@@ -124,6 +124,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   // ── fieldOfStudyOptions — dynamic getter based on minEducation ────────────
   List<String> get fieldOfStudyOptions {
     switch (minEducation) {
+      /// HIGH SCHOOL
       case "High School":
         return [
           'Science Stream',
@@ -132,40 +133,132 @@ class _ReferralPostViewState extends State<ReferralPostView> {
           'Vocational',
           'Others',
         ];
-      case "Bachelor's Degree":
+
+      /// BACHELOR DEGREES
+      case "B.Tech":
+      case "B.E":
         return [
-          'Computer Science',
+          'Computer Engineering',
+          'Mechanical Engineering',
+          'Civil Engineering',
+          'Electrical Engineering',
+          'Electronics & Communication',
           'Information Technology',
-          'Engineering',
-          'Business Administration',
-          'Finance',
-          'Arts',
-          'Sciences',
-          'Mathematics',
-          'Medicine',
-          'Law',
+          'Artificial Intelligence',
           'Others',
         ];
-      case "Master's Degree":
+
+      case "B.Sc":
         return [
           'Computer Science',
-          'Information Technology',
-          'Engineering',
-          'MBA',
-          'Finance',
+          'Mathematics',
+          'Physics',
+          'Chemistry',
+          'Biotechnology',
           'Data Science',
-          'Public Policy',
-          'Mathematics',
-          'Medicine',
-          'Law',
-          'Research',
           'Others',
         ];
+
+      case "B.Com":
+        return [
+          'Accounting',
+          'Finance',
+          'Banking',
+          'Taxation',
+          'Economics',
+          'Others',
+        ];
+
+      case "B.A":
+        return [
+          'English',
+          'History',
+          'Political Science',
+          'Sociology',
+          'Psychology',
+          'Economics',
+          'Law',
+          'Others',
+        ];
+
+      case "BBA":
+        return [
+          'Marketing',
+          'Finance',
+          'Human Resources',
+          'International Business',
+          'Operations',
+          'Entrepreneurship',
+          'Others',
+        ];
+
+      /// MASTER DEGREES
+      case "M.Tech":
+        return [
+          'Computer Engineering',
+          'Software Engineering',
+          'Data Science',
+          'AI & ML',
+          'Structural Engineering',
+          'Others',
+        ];
+
+      case "M.Sc":
+        return [
+          'Computer Science',
+          'Mathematics',
+          'Physics',
+          'Chemistry',
+          'Biotechnology',
+          'Data Science',
+          'Others',
+        ];
+
+      case "M.Com":
+        return [
+          'Accounting',
+          'Finance',
+          'Banking',
+          'Economics',
+          'Taxation',
+          'Others',
+        ];
+
+      case "MBA":
+        return [
+          'Marketing',
+          'Finance',
+          'Human Resources',
+          'Operations',
+          'Business Analytics',
+          'International Business',
+          'Others',
+        ];
+
+      case "MCA":
+        return [
+          'Software Development',
+          'Data Science',
+          'AI & ML',
+          'Cyber Security',
+          'Cloud Computing',
+          'Others',
+        ];
+
+      case "M.Pharm":
+        return [
+          'Pharmaceutics',
+          'Pharmacology',
+          'Pharmaceutical Chemistry',
+          'Quality Assurance',
+          'Others',
+        ];
+
+      /// PhD
       case "PhD":
         return [
           'Computer Science',
           'Engineering',
-          'Data Science',
           'Mathematics',
           'Physics',
           'Life Sciences',
@@ -175,6 +268,18 @@ class _ReferralPostViewState extends State<ReferralPostView> {
           'Humanities',
           'Others',
         ];
+
+      /// Diploma
+      case "Postgraduate Diploma":
+        return [
+          'Management',
+          'Data Science',
+          'Cyber Security',
+          'Finance',
+          'Marketing',
+          'Others',
+        ];
+
       default:
         return ['Others'];
     }
@@ -203,9 +308,26 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
   final List<String> educationOptions = [
     "High School",
-    "Bachelor's Degree",
-    "Master's Degree",
+
+    // Bachelor's
+    "B.A",
+    "B.Com",
+    "B.E",
+    "B.Sc",
+    "B.Tech",
+    "BBA",
+
+    // Master's
+    "M.Com",
+    "M.Sc",
+    "M.Tech",
+    "MBA",
+    "MCA",
+    "M.Pharm",
+
+    // Higher
     "PhD",
+    "Postgraduate Diploma",
   ];
 
   final List<String> experienceOptions = [
@@ -246,273 +368,269 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     final vm = context.watch<ReferralPostViewModel>();
 
     return Scaffold(
-       backgroundColor: AppColors.kBg,
-  appBar: AppBar(
-    backgroundColor: AppColors.kCard,
-    iconTheme: const IconThemeData(color: Colors.white),
-    title: const Text(
-      "Post Referral",
-      style: TextStyle(color: Colors.white),
-    ),
-  ),
+      backgroundColor: AppColors.kBg,
+      appBar: AppBar(
+        backgroundColor: AppColors.kCard,
+        iconTheme: const IconThemeData(color: Colors.white),
+        title: const Text(
+          "Post Referral",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16),
         child: Form(
           key: _formKey,
-          child:ListView(
-  children: [
+          child: ListView(
+            children: [
+              /// 🔥 JOB INFO
+              _card(
+                title: "Job Info",
+                children: [
+                  _dropdownDark(
+                    "Job Title",
+                    selectedJobTitle,
+                    jobTitleOptions,
+                    (val) => setState(() => selectedJobTitle = val!),
+                  ),
 
-    /// 🔥 JOB INFO
-    _card(
-      title: "Job Info",
-      children: [
-        _dropdownDark(
-          "Job Title",
-          selectedJobTitle,
-          jobTitleOptions,
-          (val) => setState(() => selectedJobTitle = val!),
-        ),
+                  if (selectedJobTitle == "Others")
+                    _fieldDark(
+                      "Enter Custom Job Title",
+                      controller: titleController,
+                    ),
 
-        if (selectedJobTitle == "Others")
-          _fieldDark(
-            "Enter Custom Job Title",
-            controller: titleController,
-          ),
+                  _fieldDark(
+                    "Description",
+                    controller: descriptionController,
+                    maxLines: 3,
+                  ),
 
-        _fieldDark(
-          "Description",
-          controller: descriptionController,
-          maxLines: 3,
-        ),
-      ],
-    ),
-
-    /// 🔥 LOCATION & WORK
-    _card(
-      title: "Location & Work",
-      children: [
-        _dropdownDark(
-          "Location",
-          selectedCity,
-          indiaCities,
-          (val) => setState(() => selectedCity = val!),
-        ),
-
-        _dropdownDark(
-          "Employment Type",
-          employmentType,
-          ["Full-time", "Part-time"],
-          (val) => setState(() => employmentType = val!),
-        ),
-
-        _dropdownDark(
-          "Work Mode",
-          workMode,
-          ["On-site", "Remote", "Hybrid"],
-          (val) => setState(() => workMode = val!),
-        ),
-
-        _dropdownDark(
-          "Broadcast Type",
-          broadcastType,
-          ["Everyone", "Selected Colleges"],
-          (val) => setState(() => broadcastType = val!),
-        ),
-      ],
-    ),
-
-    /// 🔥 EDUCATION & EXPERIENCE
-    _card(
-      title: "Education & Experience",
-      children: [
-        _dropdownDark(
-          "Minimum Education",
-          minEducation,
-          educationOptions,
-          (val) => setState(() {
-            minEducation = val!;
-            fieldOfStudyController.clear();
-          }),
-        ),
-
-        _ChipMultiSelectField(
-          key: ValueKey('fieldOfStudy_$minEducation'),
-          label: "Preferred Field of Study",
-          controller: fieldOfStudyController,
-          options: fieldOfStudyOptions,
-        ),
-
-        const SizedBox(height: 12),
-
-        _dropdownDark(
-          "Work Authorization",
-          workAuthorization,
-          workAuthorizationOptions,
-          (val) => setState(() => workAuthorization = val!),
-        ),
-
-        _dropdownDark(
-          "Experience Range",
-          experienceRange,
-          experienceOptions,
-          (val) => setState(() => experienceRange = val!),
-        ),
-
-        _fieldDark(
-          "Openings",
-          controller: openingsController,
-          keyboardType: TextInputType.number,
-        ),
-      ],
-    ),
-
-    /// 🔥 PACKAGE DETAILS
-    _card(
-      title: "Package Details",
-      children: [
-        _dropdownDark(
-          "Currency",
-          currencyController.text,
-          currencyOptions,
-          (val) => setState(() => currencyController.text = val!),
-        ),
-
-        _fieldDark(
-          "Total CTC",
-          controller: totalCTCController,
-          keyboardType: TextInputType.number,
-        ),
-
-        _fieldDark(
-          "Fixed Pay",
-          controller: fixedPayController,
-          keyboardType: TextInputType.number,
-        ),
-
-        _fieldDark(
-          "Joining Bonus",
-          controller: joiningBonusController,
-          keyboardType: TextInputType.number,
-        ),
-      ],
-    ),
-
-    /// 🔥 TAGS
-    _card(
-      title: "Tags",
-      children: [
-        _tagsEnumField(),
-      ],
-    ),
-
-    /// 🔥 SKILLS & CERTIFICATIONS
-    _card(
-      title: "Skills & Certifications",
-      children: [
-        _ChipMultiSelectField(
-          key: const ValueKey('skills'),
-          label: "Skills",
-          controller: skillsController,
-          options: skillOptions,
-        ),
-
-        const SizedBox(height: 12),
-
-        _ChipMultiSelectField(
-          key: const ValueKey('certifications'),
-          label: "Certifications",
-          controller: certificationsController,
-          options: certificationOptions,
-        ),
-
-        const SizedBox(height: 12),
-
-        _ChipMultiSelectField(
-          key: const ValueKey('benefits'),
-          label: "Benefits",
-          controller: benefitsController,
-          options: benefitOptions,
-        ),
-
-        const SizedBox(height: 12),
-
-        _fieldDark(
-          "Eligibility Criteria",
-          controller: eligibilityController,
-        ),
-      ],
-    ),
-
-    const SizedBox(height: 20),
-
-    /// 🔥 SUBMIT BUTTON
-    SizedBox(
-      height: 52,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.kGreen,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
-        ),
-        onPressed: () async {
-          final model = ReferralPostModel(
-            jobTitle: selectedJobTitle == "Others"
-                ? titleController.text.trim()
-                : selectedJobTitle,
-            description: descriptionController.text.trim(),
-            employmentType: employmentType,
-            workMode: workMode,
-            broadcastType: broadcastType,
-            jobType: "Referral",
-            location: [selectedCity],
-            minEducation: minEducation,
-            numberOfOpenings:
-                int.tryParse(openingsController.text) ?? 0,
-            packageDetails: PackageDetails(
-              currency: currencyController.text.trim(),
-              totalCTC: int.tryParse(totalCTCController.text) ?? 0,
-              fixedPay: int.tryParse(fixedPayController.text) ?? 0,
-              joiningBonus:
-                  int.tryParse(joiningBonusController.text) ?? 0,
-            ),
-            skills: _splitController(skillsController),
-            studentStreams: _splitController(fieldOfStudyController),
-            tags: selectedTags.toList(),
-            workAuthorization: workAuthorization,
-            yearsOfExperience: experienceRange,
-            benefits: _splitController(benefitsController),
-            certifications: _splitController(certificationsController),
-            eligibilityCriteria: eligibilityController.text.trim(),
-            approvalStatus: 'Pending',
-          );
-
-          final success = await vm.postJob(model);
-
-          if (success && mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text("Referral Successfully Added"),
-                backgroundColor: Colors.green,
+                  _fieldDark(
+                    "Eligibility Criteria",
+                    controller: eligibilityController,
+                    maxLines: 3,
+                  ),
+                ],
               ),
-            );
 
-            Future.delayed(const Duration(seconds: 1), () {
-              if (mounted) Navigator.pop(context);
-            });
-          }
-        },
-        child:  Text(
-          "Post Job",
-          style: TextStyle(fontWeight: FontWeight.bold,color: AppColors.white),
-        ),
-      ),
-    ),
+              /// 🔥 LOCATION & WORK
+              _card(
+                title: "Location & Work",
+                children: [
+                  _dropdownDark(
+                    "Location",
+                    selectedCity,
+                    indiaCities,
+                    (val) => setState(() => selectedCity = val!),
+                  ),
 
-    const SizedBox(height: 40),
-  ],
-)
-       
+                  _dropdownDark(
+                    "Employment Type",
+                    employmentType,
+                    ["Full-time", "Part-time"],
+                    (val) => setState(() => employmentType = val!),
+                  ),
+
+                  _dropdownDark("Work Mode", workMode, [
+                    "On-site",
+                    "Remote",
+                    "Hybrid",
+                  ], (val) => setState(() => workMode = val!)),
+
+                  _dropdownDark(
+                    "Broadcast Type",
+                    broadcastType,
+                    ["Everyone", "Selected Colleges"],
+                    (val) => setState(() => broadcastType = val!),
+                  ),
+                ],
+              ),
+
+              /// 🔥 EDUCATION & EXPERIENCE
+              _card(
+                title: "Education & Experience",
+                children: [
+                  _dropdownDark(
+                    "Minimum Education",
+                    minEducation,
+                    educationOptions,
+                    (val) => setState(() {
+                      minEducation = val!;
+                      fieldOfStudyController.clear();
+                    }),
+                  ),
+
+                  _ChipMultiSelectField(
+                    key: ValueKey('fieldOfStudy_$minEducation'),
+                    label: "Preferred Field of Study",
+                    controller: fieldOfStudyController,
+                    options: fieldOfStudyOptions,
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  _dropdownDark(
+                    "Work Authorization",
+                    workAuthorization,
+                    workAuthorizationOptions,
+                    (val) => setState(() => workAuthorization = val!),
+                  ),
+
+                  _dropdownDark(
+                    "Experience Range",
+                    experienceRange,
+                    experienceOptions,
+                    (val) => setState(() => experienceRange = val!),
+                  ),
+
+                  _fieldDark(
+                    "Openings",
+                    controller: openingsController,
+                    keyboardType: TextInputType.number,
+                  ),
+                ],
+              ),
+
+              /// 🔥 PACKAGE DETAILS
+              _card(
+                title: "Package Details",
+                children: [
+                  _dropdownDark(
+                    "Currency",
+                    currencyController.text,
+                    currencyOptions,
+                    (val) => setState(() => currencyController.text = val!),
+                  ),
+
+                  _fieldDark(
+                    "Total CTC",
+                    controller: totalCTCController,
+                    keyboardType: TextInputType.number,
+                  ),
+
+                  _fieldDark(
+                    "Fixed Pay",
+                    controller: fixedPayController,
+                    keyboardType: TextInputType.number,
+                  ),
+
+                  _fieldDark(
+                    "Variable Pay",
+                    controller: joiningBonusController,
+                    keyboardType: TextInputType.number,
+                  ),
+                ],
+              ),
+
+              /// 🔥 TAGS
+              _card(title: "Tags", children: [_tagsEnumField()]),
+
+              /// 🔥 SKILLS & CERTIFICATIONS
+              _card(
+                title: "Skills & Certifications",
+                children: [
+                  _ChipMultiSelectField(
+                    key: const ValueKey('skills'),
+                    label: "Skills",
+                    controller: skillsController,
+                    options: skillOptions,
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  _ChipMultiSelectField(
+                    key: const ValueKey('certifications'),
+                    label: "Certifications",
+                    controller: certificationsController,
+                    options: certificationOptions,
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  _ChipMultiSelectField(
+                    key: const ValueKey('benefits'),
+                    label: "Benefits",
+                    controller: benefitsController,
+                    options: benefitOptions,
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 20),
+
+              /// 🔥 SUBMIT BUTTON
+              SizedBox(
+                height: 52,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.kGreen,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () async {
+                    final model = ReferralPostModel(
+                      jobTitle: selectedJobTitle == "Others"
+                          ? titleController.text.trim()
+                          : selectedJobTitle,
+                      description: descriptionController.text.trim(),
+                      employmentType: employmentType,
+                      workMode: workMode,
+                      broadcastType: broadcastType,
+                      jobType: "Referral",
+                      location: [selectedCity],
+                      minEducation: minEducation,
+                      numberOfOpenings:
+                          int.tryParse(openingsController.text) ?? 0,
+                      packageDetails: PackageDetails(
+                        currency: currencyController.text.trim(),
+                        totalCTC: int.tryParse(totalCTCController.text) ?? 0,
+                        fixedPay: int.tryParse(fixedPayController.text) ?? 0,
+                        joiningBonus:
+                            int.tryParse(joiningBonusController.text) ?? 0,
+                      ),
+                      skills: _splitController(skillsController),
+                      studentStreams: _splitController(fieldOfStudyController),
+                      tags: selectedTags.toList(),
+                      workAuthorization: workAuthorization,
+                      yearsOfExperience: experienceRange,
+                      benefits: _splitController(benefitsController),
+                      certifications: _splitController(
+                        certificationsController,
+                      ),
+                      eligibilityCriteria: eligibilityController.text.trim(),
+                      approvalStatus: 'Pending',
+                    );
+
+                    final success = await vm.postJob(model);
+
+                    if (success && mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text("Referral Successfully Added"),
+                          backgroundColor: Colors.green,
+                        ),
+                      );
+
+                      Future.delayed(const Duration(seconds: 1), () {
+                        if (mounted) Navigator.pop(context);
+                      });
+                    }
+                  },
+                  child: Text(
+                    "Post Job",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.white,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
@@ -579,85 +697,89 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   }
 
   Widget _fieldDark(
-  String label, {
-  required TextEditingController controller,
-  int maxLines = 1,
-  TextInputType keyboardType = TextInputType.text,
-}) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: TextFormField(
-      controller: controller,
-      maxLines: maxLines,
-      keyboardType: keyboardType,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.grey),
-        filled: true,
-        fillColor: AppColors.kCard,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+    String label, {
+    required TextEditingController controller,
+    int maxLines = 1,
+    TextInputType keyboardType = TextInputType.text,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: TextFormField(
+        controller: controller,
+        maxLines: maxLines,
+        keyboardType: keyboardType,
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.grey),
+          filled: true,
+          fillColor: AppColors.kCard,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
         ),
       ),
-    ),
-  );
-}
-Widget _dropdownDark(
-  String label,
-  String value,
-  List<String> items,
-  Function(String?) onChanged,
-) {
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: DropdownButtonFormField<String>(
-      value: value,
-      dropdownColor: AppColors.kCard,
-      style: const TextStyle(color: Colors.white),
-      decoration: InputDecoration(
-        labelText: label,
-        labelStyle: const TextStyle(color: Colors.grey),
-        filled: true,
-        fillColor: AppColors.kCard,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+    );
+  }
+
+  Widget _dropdownDark(
+    String label,
+    String value,
+    List<String> items,
+    Function(String?) onChanged,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: DropdownButtonFormField<String>(
+        value: value,
+        dropdownColor: AppColors.kCard,
+        style: const TextStyle(color: Colors.white),
+        decoration: InputDecoration(
+          labelText: label,
+          labelStyle: const TextStyle(color: Colors.grey),
+          filled: true,
+          fillColor: AppColors.kCard,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
         ),
-      ),
-      items: items
-          .map((e) => DropdownMenuItem(
+        items: items
+            .map(
+              (e) => DropdownMenuItem(
                 value: e,
                 child: Text(e, style: const TextStyle(color: Colors.white)),
-              ))
-          .toList(),
-      onChanged: onChanged,
-    ),
-  );
-}
- Widget _card({required String title, required List<Widget> children}) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 16),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: AppColors.kTile,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: AppColors.border),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
-        ),
-        const SizedBox(height: 12),
-        ...children,
-      ],
-    ),
-  );
-}
+              ),
+            )
+            .toList(),
+        onChanged: onChanged,
+      ),
+    );
+  }
+
+  Widget _card({required String title, required List<Widget> children}) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.kTile,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.border),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
+          ),
+          const SizedBox(height: 12),
+          ...children,
+        ],
+      ),
+    );
+  }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -749,11 +871,15 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-    
+
       children: [
         Text(
           widget.label,
-          style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+            color: Colors.white,
+          ),
         ),
         const SizedBox(height: 8),
         Container(
@@ -775,7 +901,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                     final isSelected = selected.contains(option);
                     return FilterChip(
                       backgroundColor: AppColors.kTile,
-                      label: Text(option),
+                      label: Text(option, style: TextStyle(color: Colors.grey)),
                       selected: isSelected,
                       onSelected: (_) => _toggleEnumChip(option),
                       selectedColor: AppColors.kGreen,
@@ -789,7 +915,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                     );
                   }).toList(),
                 ),
-                const Divider(height: 16),
+                const SizedBox(height: 12),
               ],
 
               // ── Custom items (free-text entries) ───────────────────
@@ -867,5 +993,4 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
       ],
     );
   }
- 
 }

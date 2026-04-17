@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart' show AppColors, AppTextStyles;
 import 'package:rawrecruit/src/core/index.dart'
-    show AppStateProvider, NavItem, NavItemExt, getIt;
+    show NavItem, NavItemExt, getIt, AppStateProvider;
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
 class AppBottomNav extends StatelessWidget {
@@ -18,11 +18,11 @@ class AppBottomNav extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // final items = getIt<AppStateProvider>().isProfessional
-    //     ? NavItemExt.professionals
-    //     : NavItemExt.freshers;
+    final items = getIt<AppStateProvider>().isProfessional
+        ? NavItemExt.professionals
+        : NavItemExt.freshers;
 
-    final items = NavItem.values;
+    // final items = NavItem.values;
 
     return Container(
       decoration: BoxDecoration(
@@ -47,7 +47,7 @@ class AppBottomNav extends StatelessWidget {
                   color: isSelected ? AppColors.kGreen : AppColors.secText,
                 ),
 
-                if (item == NavItem.chat && hasUnread)
+                if (item == NavItem.profile && hasUnread)
                   Positioned(
                     right: -2,
                     top: -2,

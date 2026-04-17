@@ -1,30 +1,26 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show RouteNames, User, UserType, Job;
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/alumni_tab.dart';
-import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/application_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/alumni_detail_view.dart';
-
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/internship_detail_page.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/job_detail_page.dart';
 import 'package:rawrecruit/src/feature/revamp_jobs/presentation/student_jobs_tab.dart';
+import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/first_step.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
 import 'package:rawrecruit/src/feature/revamp_referrer/presentation/professional_referrer_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_referrer/student_referrer_tab.dart';
+import 'package:rawrecruit/src/feature/revamp_referrer/utils/enums.dart';
+import 'package:rawrecruit/src/features/chat/presentation/chat_detail_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
-import 'package:rawrecruit/src/features/professional/application_listing/presentation/application_list_view.dart';
-import 'package:rawrecruit/src/features/professional/application_listing/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/applicant_detail_screen.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
@@ -35,9 +31,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/vie
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
-import 'package:rawrecruit/src/features/referrer/presentation/referrer_view.dart';
 import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view/interview_screen.dart';
-import 'package:rawrecruit/src/features/shortlist/presentation/shortlist_view.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../feature/revamp_auth/index.dart';
@@ -45,6 +39,7 @@ import '../../feature/revamp_jobs/presentation/professional_jobs_tab.dart';
 import '../../feature/revamp_profile/presentation/modern_profile_page.dart';
 import '../../features/chat/index.dart';
 import '../../features/onboarding/presentation/add_edit_profile_view.dart';
+import '../../features/professional/job_postng/presentation/referral_detail_page.dart';
 import '../../features/scheduled_interviews/presentation/view/interview_detail_screen.dart';
 import '../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 import '../services/dependency_locator.dart';
@@ -216,10 +211,35 @@ class AppRouter {
         builder: (_, state) =>
             InterviewDetailScreen(interviewId: state.extra as String?),
       ),
+
       GoRoute(
-        name: RouteNames.myProfile,
-        path: '/my-profile',
-        builder: (_, _) => ModernProfilePage(),
+        name: RouteNames.chatUserList,
+        path: '/chatUsers',
+        builder: (context, state) {
+          return const ChatUserListView();
+        },
+      ),
+
+      GoRoute(
+        name: RouteNames.chatUser,
+        path: '/chat-user',
+        builder: (context, state) {
+          User? user = state.extra as User?;
+          if (user == null) return Scaffold();
+          return ChatDetailView(user: user);
+        },
+      ),
+
+      GoRoute(
+        name: RouteNames.referrerDetail,
+        path: '/referrer-detail',
+        builder: (context, state) {
+          ReferralApplication? args = state.extra as ReferralApplication?;
+
+          if (args == null) return Scaffold();
+
+          return ReferralDetailPage(application: args);
+        },
       ),
 
       ShellRoute(
@@ -234,8 +254,11 @@ class AppRouter {
             name: RouteNames.dashboard,
             path: '/dashboard',
             builder: (_, state) {
-              final type = state.extra as UserType?;
-              log('UserType: $type');
+              final args = state.extra as Map<String, dynamic>?;
+
+              if (args == null || args.isEmpty) return Scaffold();
+
+              final type = args['userType'];
               if (type == UserType.professional) {
                 return ReferralHome();
               } else {
@@ -248,10 +271,18 @@ class AppRouter {
             name: RouteNames.referrer,
             path: '/referrer',
             builder: (context, state) {
-              final type = state.extra as UserType?;
+              final args = state.extra as Map<String, dynamic>?;
+
+              if (args == null || args.isEmpty) return Scaffold();
+
+              final type = args['userType'];
 
               if (type == UserType.professional) {
-                return const ProfessionalReferralView(); // ✅ professional
+                return ProfessionalReferralView(
+                  selectedType:
+                      args['applicationType']
+                          as ProfessionalReferrerApplicationType?,
+                ); // ✅ professional
               } else {
                 return const StudentApplicationsView(); // ✅ student
               }
@@ -267,21 +298,25 @@ class AppRouter {
             name: RouteNames.application,
             path: '/application',
             builder: (_, state) {
-              final type = state.extra as UserType?;
+              final args = state.extra as Map<String, dynamic>?;
+
+              if (args == null || args.isEmpty) return Scaffold();
+
+              final type = args['userType'];
 
               if (type == UserType.professional) {
-                return const ProfessionalJobsView(); // ✅
+                return ProfessionalJobsView(
+                  selectedType: args['jobType'] as ProfessionalJobType?,
+                ); // ✅
               } else {
                 return StudentJobsView(); // ✅
               }
             },
           ),
           GoRoute(
-            name: RouteNames.chatUserList,
-            path: '/chatUsers',
-            builder: (context, state) {
-              return const ChatUserListView();
-            },
+            name: RouteNames.myProfile,
+            path: '/my-profile',
+            builder: (_, _) => ModernProfilePage(),
           ),
         ],
       ),

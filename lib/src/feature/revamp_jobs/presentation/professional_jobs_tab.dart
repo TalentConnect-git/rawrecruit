@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
+import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/posted_job_view_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/my_job_card.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
@@ -10,15 +11,23 @@ import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortl
 import '../../../common/index.dart';
 import '../../../core/index.dart';
 import '../../revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
+
 class ProfessionalJobsView extends StatefulWidget {
-  const ProfessionalJobsView({super.key});
+  const ProfessionalJobsView({this.selectedType, super.key});
+  final ProfessionalJobType? selectedType;
 
   @override
   State<ProfessionalJobsView> createState() => _ProfessionalJobsViewState();
 }
 
 class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
-  int selectedTab = 0;
+  ProfessionalJobType selectedTab = ProfessionalJobType.available;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTab = widget.selectedType ?? ProfessionalJobType.available;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,9 +63,7 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
                   _buildTabs(),
                   const SizedBox(height: 10),
 
-                  Expanded(
-                    child: _buildBody(),
-                  ),
+                  Expanded(child: _buildBody()),
                 ],
               ),
             ),
@@ -68,21 +75,15 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
 
   /// 🔥 TABS
   Widget _buildTabs() {
-    return Row(
-      children: [
-        _tab("Available", 0),
-        _tab("My Posted", 1),
-        _tab("Saved", 2),
-      ],
-    );
+    return Row(children: [...ProfessionalJobType.values.map((t) => _tab(t))]);
   }
 
-  Widget _tab(String title, int index) {
-    final isSelected = selectedTab == index;
+  Widget _tab(ProfessionalJobType type) {
+    final isSelected = selectedTab == type;
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() => selectedTab = index),
+        onTap: () => setState(() => selectedTab = type),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
@@ -91,7 +92,7 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
           ),
           child: Center(
             child: Text(
-              title,
+              type.label,
               style: TextStyle(
                 color: isSelected ? Colors.black : Colors.white,
                 fontWeight: FontWeight.w600,
@@ -106,126 +107,123 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
   /// 🔥 BODY SWITCH
   Widget _buildBody() {
     switch (selectedTab) {
-      case 0:
+      case ProfessionalJobType.available:
         return _availableJobs();
-      case 1:
+      case ProfessionalJobType.posted:
         return _postedJobs();
-      case 2:
+      case ProfessionalJobType.saved:
         return _savedJobs();
-      default:
-        return const SizedBox();
     }
   }
 
   /// 🔥 AVAILABLE TAB (UPDATED)
- Widget _availableJobs() {
-  return Consumer2<DashboardViewModel, ShortlistViewModel>(
-    builder: (context, vm, shortlistVM, _) {
-      final applicationVM = context.watch<ApplicationViewModel>();
+  Widget _availableJobs() {
+    return Consumer2<DashboardViewModel, ShortlistViewModel>(
+      builder: (context, vm, shortlistVM, _) {
+        final applicationVM = context.watch<ApplicationViewModel>();
 
-      return ListView(
-        children: [
-          /// 🔥 OFF CAMPUS SECTION
-          const Text(
-            "Off-Campus Jobs",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-
-          if (vm.jobs.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                "No data available",
-                style: TextStyle(color: Colors.grey),
+        return ListView(
+          children: [
+            if (getIt<AppStateProvider>().userType !=
+                UserType.professional) ...[
+              /// 🔥 OFF CAMPUS SECTION
+              const SizedBox(height: 12),
+              const Text(
+                "Off-Campus Jobs",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            )
-          else
-            ...vm.jobs.map((job) {
-              final isSaved = shortlistVM.savedJobIds.contains(job.id);
-              final isApplied = applicationVM.isApplied(job.id ?? '');
+              const SizedBox(height: 10),
 
-              return JobCard(
-                job: job,
-                isSaved: isSaved,
-                isApplied: isApplied,
-onApply: () => applicationVM.apply(
-  jobId: job.id ?? '',
-  jobType: "Off-campus",
-),                onBookmarkToggle: () {
-                  shortlistVM.toggleSave(
-                    jobId: job.id ?? '',
-                    jobType: "Off-campus",
+              if (vm.jobs.isEmpty)
+                const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  child: Text(
+                    "No data available",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                )
+              else
+                ...vm.jobs.map((job) {
+                  final isSaved = shortlistVM.savedJobIds.contains(job.id);
+                  final isApplied = applicationVM.isApplied(job.id ?? '');
+
+                  return JobCard(
+                    job: job,
                     isSaved: isSaved,
+                    isApplied: isApplied,
+                    onApply: () => applicationVM.apply(
+                      jobId: job.id ?? '',
+                      jobType: "Off-campus",
+                    ),
+                    onBookmarkToggle: () {
+                      shortlistVM.toggleSave(
+                        jobId: job.id ?? '',
+                        jobType: "Off-campus",
+                        isSaved: isSaved,
+                      );
+                    },
+                    onTap: () {
+                      context.pushNamed(RouteNames.jobDetail, extra: job);
+                    },
                   );
-                },
-                onTap: () {
-                  context.pushNamed(
-                    RouteNames.jobDetail,
-                    extra: job,
-                  );
-                },
-              );
-            }),
+                }),
+            ],
 
-          const SizedBox(height: 20),
+            const SizedBox(height: 12),
 
-          /// 🔥 REFERRAL SECTION
-          const Text(
-            "Referral Jobs",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 10),
-
-          if (vm.referralJobs.isEmpty)
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 10),
-              child: Text(
-                "No data available",
-                style: TextStyle(color: Colors.grey),
+            /// 🔥 REFERRAL SECTION
+            const Text(
+              "Referral Jobs",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-            )
-          else
-            ...vm.referralJobs.map((job) {
-              final isSaved = shortlistVM.savedJobIds.contains(job.id);
-              final isApplied = applicationVM.isApplied(job.id ?? '');
+            ),
+            const SizedBox(height: 10),
 
-              return JobCard(
-                job: job,
-                isSaved: isSaved,
-                isApplied: isApplied,
-                onApply: () => applicationVM.apply(
-  jobId: job.id ?? '',
-  jobType: "Referral",
-),
-                onBookmarkToggle: () {
-                  shortlistVM.toggleSave(
+            if (vm.referralJobs.isEmpty)
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 10),
+                child: Text(
+                  "No data available",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              )
+            else
+              ...vm.referralJobs.map((job) {
+                final isSaved = shortlistVM.savedJobIds.contains(job.id);
+                final isApplied = applicationVM.isApplied(job.id ?? '');
+
+                return JobCard(
+                  job: job,
+                  isSaved: isSaved,
+                  isApplied: isApplied,
+                  onApply: () => applicationVM.apply(
                     jobId: job.id ?? '',
                     jobType: "Referral",
-                    isSaved: isSaved,
-                  );
-                },
-                onTap: () {
-                  context.pushNamed(
-                    RouteNames.referralDetail,
-                    extra: job.id,
-                  );
-                },
-              );
-            }),
-        ],
-      );
-    },
-  );
-}
+                  ),
+                  onBookmarkToggle: () {
+                    shortlistVM.toggleSave(
+                      jobId: job.id ?? '',
+                      jobType: "Referral",
+                      isSaved: isSaved,
+                    );
+                  },
+                  onTap: () {
+                    context.pushNamed(RouteNames.referralDetail, extra: job.id);
+                  },
+                );
+              }),
+          ],
+        );
+      },
+    );
+  }
 
   /// 🔥 POSTED TAB
   Widget _postedJobs() {
@@ -243,10 +241,7 @@ onApply: () => applicationVM.apply(
             return MyJobCard(
               job: job,
               onTap: () {
-                context.pushNamed(
-                  RouteNames.referralPostDetail,
-                  extra: job,
-                );
+                context.pushNamed(RouteNames.referralPostDetail, extra: job);
               },
             );
           },
@@ -267,10 +262,7 @@ onApply: () => applicationVM.apply(
 
         if (vm.saved.isEmpty) {
           return const Center(
-            child: Text(
-              "No saved jobs",
-              style: TextStyle(color: Colors.grey),
-            ),
+            child: Text("No saved jobs", style: TextStyle(color: Colors.grey)),
           );
         }
 
@@ -289,10 +281,11 @@ onApply: () => applicationVM.apply(
               job: job,
               isSaved: isSaved,
               isApplied: isApplied,
-onApply: () => applicationVM.apply(
-  jobId: job.id ?? '',
-  jobType: item.jobType ?? "Off-campus",
-),              onBookmarkToggle: () {
+              onApply: () => applicationVM.apply(
+                jobId: job.id ?? '',
+                jobType: item.jobType ?? "Off-campus",
+              ),
+              onBookmarkToggle: () {
                 vm.toggleSave(
                   jobId: job.id ?? '',
                   jobType: item.jobType ?? '',
@@ -301,15 +294,9 @@ onApply: () => applicationVM.apply(
               },
               onTap: () {
                 if (job.jobType == "Referral") {
-                  context.pushNamed(
-                    RouteNames.referralDetail,
-                    extra: job.id,
-                  );
+                  context.pushNamed(RouteNames.referralDetail, extra: job.id);
                 } else {
-                  context.pushNamed(
-                    RouteNames.jobDetail,
-                    extra: job,
-                  );
+                  context.pushNamed(RouteNames.jobDetail, extra: job);
                 }
               },
             );

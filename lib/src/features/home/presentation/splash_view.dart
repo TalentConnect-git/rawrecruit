@@ -54,7 +54,10 @@ class _SplashViewState extends State<SplashView> {
 
     if (!mounted) return;
 
-    context.pushReplacementNamed(next, extra: appStateProvider.userType);
+    context.pushReplacementNamed(
+      next,
+      extra: {'userType': appStateProvider.userType},
+    );
   }
 
   @override

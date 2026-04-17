@@ -62,7 +62,7 @@ class _HomeViewState extends State<HomeView> {
       return 3; // ✅ Alumnis
     }
 
-    if (location.startsWith('/chatUsers')) {
+    if (location.startsWith('/my-profile')) {
       return 4; // ✅ Chat
     }
 
@@ -110,23 +110,15 @@ class _HomeViewState extends State<HomeView> {
               icon: Icon(Icons.notifications),
               color: Colors.white,
             ),
-            InkWell(
-              onTap: () {
-                context.pushNamed(RouteNames.myProfile);
+            IconButton(
+              onPressed: () {
+                context.pushNamed(RouteNames.chatUserList);
               },
-              child: Container(
-                margin: EdgeInsets.all(8),
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.kGreen,
-                ),
-                child: Center(
-                  child: Text(
-                    appStateProvider.user?.name?.getInitials ?? '',
-                    style: AppTextStyles.s12W600.copyWith(color: AppColors.kBg),
-                  ),
-                ),
+              icon: Image.asset(
+                'assets/images/chat.png',
+                height: 24,
+                width: 24,
+                color: Colors.white,
               ),
             ),
           ],
@@ -136,7 +128,7 @@ class _HomeViewState extends State<HomeView> {
           currentIndex: currentIndex,
           hasUnread: chatVm.totalUnreadCount > 0,
           onTap: (tab) {
-            final extra = appStateProvider.userType;
+            final extra = {'userType': appStateProvider.userType};
 
             context.goNamed(tab.path, extra: extra);
 

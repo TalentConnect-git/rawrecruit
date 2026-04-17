@@ -14,19 +14,16 @@ class AlumniDetailView extends StatelessWidget {
 
     final name = first.candidatePosted?.name ?? "User";
     final college = first.candidatePosted?.college ?? "";
+    final skills = first.candidatePosted?.skills ?? ['Skill 1', 'Skill 2'];
     final role = first.jobTitle ?? "Professional";
     final location = first.location?.join(", ") ?? "Location";
-
-    final initials = name.isNotEmpty
-        ? name.split(" ").map((e) => e[0]).take(2).join()
-        : "U";
 
     return Scaffold(
       backgroundColor: AppColors.kBg,
       appBar: AppBar(
         backgroundColor: AppColors.kBg,
         elevation: 0,
-        title:  Text("Alumni Profile",style: TextStyle(color: AppColors.white),),
+        title: Text("Alumni Profile", style: TextStyle(color: AppColors.white)),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -47,7 +44,7 @@ class AlumniDetailView extends StatelessWidget {
                     radius: 32,
                     backgroundColor: AppColors.kGreen,
                     child: Text(
-                      initials,
+                      name.getInitials,
                       style: const TextStyle(
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
@@ -86,6 +83,11 @@ class AlumniDetailView extends StatelessWidget {
                   /// College line
                   Text(college, style: TextStyle(color: AppColors.kGreen)),
 
+                  const SizedBox(height: 6),
+
+                  /// College line
+                  _skillChip('Verified Professional'),
+
                   const SizedBox(height: 16),
 
                   /// 🔥 STATS ROW
@@ -98,6 +100,63 @@ class AlumniDetailView extends StatelessWidget {
                     ],
                   ),
                 ],
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "About",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Align(
+              alignment: AlignmentGeometry.centerLeft,
+              child: Text(
+                first.candidatePosted?.about ?? '-',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            const Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                "Skills & Domain",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            Align(
+              alignment: AlignmentGeometry.centerLeft,
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  spacing: 8,
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [...skills.map((s) => _skillChip(s))],
+                ),
               ),
             ),
 
@@ -118,7 +177,42 @@ class AlumniDetailView extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            ...jobs.map((job) => _jobTile(context,job)).toList(),
+            ...jobs.map((job) => _jobTile(context, job)).toList(),
+
+            const SizedBox(height: 80),
+          ],
+        ),
+      ),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            Expanded(
+              child: AppButton(
+                onPressed: () {
+                  context.pushNamed(
+                    RouteNames.chatUser,
+                    extra: first.candidatePosted,
+                  );
+                },
+                backgroundColor: AppColors.kGreen,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  spacing: 16,
+                  children: [
+                    Icon(Icons.message, color: AppColors.kBg),
+                    Text(
+                      'Message',
+                      style: AppTextStyles.s16W600.copyWith(
+                        color: AppColors.kBg,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -159,92 +253,95 @@ class AlumniDetailView extends StatelessWidget {
       ),
     );
   }
-Widget _jobTile(BuildContext context, Job job) {
-  final title = job.jobTitle ?? "Role";
 
-  final company =
-      job.companyName ??
-      job.candidatePosted?.college ??
-      "Company";
-
-  final pkg = job.packageDetails;
-
-  String salary = "";
-
-  if (pkg != null) {
-    if ((pkg.fixedPay ?? 0) > 0) {
-      salary = "₹${_formatSalary(pkg.fixedPay ?? 0)}";
-    } else if ((pkg.totalCTC ?? 0) > 0) {
-      salary = "₹${_formatSalary(pkg.totalCTC ?? 0)}";
-    }
+  Widget _skillChip(String skill) {
+    return Container(
+      padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(60),
+        border: Border.all(color: AppColors.white, width: 0.5),
+        color: Color(0xff222222),
+      ),
+      child: Text(
+        skill,
+        style: AppTextStyles.s12W400.copyWith(color: AppColors.white),
+      ),
+    );
   }
 
-  return GestureDetector(
-    onTap: () async {
-      /// 🔥 SAME LOGIC AS DASHBOARD
-      if (job.jobType == "Internship") {
-        await context.pushNamed(
-          RouteNames.internshipDetail,
-          extra: job,
-        );
-      } else if (job.jobType == "Referral") {
-        await context.pushNamed(
-          RouteNames.referralDetail,
-          extra: job.id,
-        );
-      } else {
-        await context.pushNamed(
-          RouteNames.jobDetail,
-          extra: job,
-        );
+  Widget _jobTile(BuildContext context, Job job) {
+    final title = job.jobTitle ?? "Role";
+
+    final company =
+        job.companyName ?? job.candidatePosted?.college ?? "Company";
+
+    final pkg = job.packageDetails;
+
+    String salary = "";
+
+    if (pkg != null) {
+      if ((pkg.fixedPay ?? 0) > 0) {
+        salary = "₹${_formatSalary(pkg.fixedPay ?? 0)}";
+      } else if ((pkg.totalCTC ?? 0) > 0) {
+        salary = "₹${_formatSalary(pkg.totalCTC ?? 0)}";
       }
-    },
+    }
 
-    child: SizedBox(
-      width: double.infinity,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.all(14),
-        decoration: BoxDecoration(
-          color: const Color(0xFF111827),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.08)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
+    return GestureDetector(
+      onTap: () async {
+        /// 🔥 SAME LOGIC AS DASHBOARD
+        if (job.jobType == "Internship") {
+          await context.pushNamed(RouteNames.internshipDetail, extra: job);
+        } else if (job.jobType == "Referral") {
+          await context.pushNamed(RouteNames.referralDetail, extra: job.id);
+        } else {
+          await context.pushNamed(RouteNames.jobDetail, extra: job);
+        }
+      },
+
+      child: SizedBox(
+        width: double.infinity,
+        child: Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            color: const Color(0xFF111827),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withOpacity(0.08)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 14,
+                ),
               ),
-            ),
 
-            const SizedBox(height: 6),
+              const SizedBox(height: 6),
 
-            Text(
-              salary.isNotEmpty ? "$company • $salary" : company,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
+              Text(
+                salary.isNotEmpty ? "$company • $salary" : company,
+                style: const TextStyle(color: Colors.grey, fontSize: 12),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
-    ),
-  );
-}
- String _formatSalary(num amount) {
-  if (amount >= 10000000) {
-    return "${(amount / 10000000).toStringAsFixed(0)} Cr";
-  } else if (amount >= 100000) {
-    return "${(amount / 100000).toStringAsFixed(0)} LPA";
-  } else if (amount >= 1000) {
-    return "${(amount / 1000).toStringAsFixed(0)}K";
+    );
   }
-  return amount.toString();
-}
+
+  String _formatSalary(num amount) {
+    if (amount >= 10000000) {
+      return "${(amount / 10000000).toStringAsFixed(0)} Cr";
+    } else if (amount >= 100000) {
+      return "${(amount / 100000).toStringAsFixed(0)} LPA";
+    } else if (amount >= 1000) {
+      return "${(amount / 1000).toStringAsFixed(0)}K";
+    }
+    return amount.toString();
+  }
 }

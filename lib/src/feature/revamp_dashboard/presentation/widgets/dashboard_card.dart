@@ -4,12 +4,11 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
-import 'package:rawrecruit/src/feature/revamp_referrer/utils/enums.dart';
 
-class ReferralHomeHeader extends StatelessWidget {
+class DashboardCard extends StatelessWidget {
   final MyProfileViewModel vm;
 
-  const ReferralHomeHeader({super.key, required this.vm});
+  const DashboardCard({super.key, required this.vm});
 
   @override
   Widget build(BuildContext context) {
@@ -49,15 +48,15 @@ class ReferralHomeHeader extends StatelessWidget {
                   context.goNamed(
                     RouteNames.application,
                     extra: {
-                      'userType': UserType.professional,
-                      'jobType': ProfessionalJobType.posted,
+                      'userType': UserType.student,
+                      'jobType': ProfessionalJobType.saved,
                     },
                   );
                 },
                 child: _buildStatCard(
                   icon: Icons.description_outlined,
-                  value: "${vm.totalReferrals}",
-                  label: 'Referrals\nPosted',
+                  value: "${vm.savedJobs}",
+                  label: 'Saved Jobs',
                 ),
               ),
             ),
@@ -72,15 +71,15 @@ class ReferralHomeHeader extends StatelessWidget {
                   context.goNamed(
                     RouteNames.referrer,
                     extra: {
-                      'userType': UserType.professional,
-                      'applicationType':
-                          ProfessionalReferrerApplicationType.requestsReceived,
+                      'userType': UserType.student,
+                      // 'applicationType':
+                      //     ProfessionalReferrerApplicationType.requestsReceived,
                     },
                   );
                 },
                 child: _buildStatCard(
                   icon: Icons.inbox_outlined,
-                  value: "${vm.totalApplications}",
+                  value: "${vm.totalApps}",
                   label: 'Applications',
                 ),
               ),
@@ -92,21 +91,21 @@ class ReferralHomeHeader extends StatelessWidget {
             Expanded(
               child: _buildStatCard(
                 icon: Icons.emoji_events_outlined,
-                value: "${vm.referralSuccessRate}%",
-                label: 'Success\nRate',
+                value: "${vm.profileScore}%",
+                label: 'Profile\nScore',
               ),
             ),
 
-            const SizedBox(width: 12),
-
-            /// 🔹 Response Rate
-            Expanded(
-              child: _buildStatCard(
-                icon: Icons.flash_on_outlined,
-                value: "${vm.responseRate}%",
-                label: 'Response\nRate',
-              ),
-            ),
+            // const SizedBox(width: 12),
+            //
+            // /// 🔹 Response Rate
+            // Expanded(
+            //   child: _buildStatCard(
+            //     icon: Icons.flash_on_outlined,
+            //     value: "${vm.responseRate}%",
+            //     label: 'Response\nRate',
+            //   ),
+            // ),
           ],
         ),
       ],

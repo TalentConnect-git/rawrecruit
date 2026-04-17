@@ -19,6 +19,7 @@ class RouteNames {
   static final professionalAppliedJobs = 'professionalAppliedJobs';
   static final professionalAppliedJobsDetail = 'professionalAppliedJobsDetail';
   static final referralPostDetail = 'referralPostDetail';
+  static final chatUser = 'chat-user';
   static final chatUserList = 'chatUserList';
   static final notification = 'notification';
   static const String scheduledInterviews = 'scheduledInterviews';
@@ -26,5 +27,6 @@ class RouteNames {
   static const String userType = 'userType';
   static const String onboarding = 'onboarding';
   static const String referrer = 'referrer';
-static const String alumniDetail='alumniDetail';
+  static const String referrerDetail = 'referrer-detail';
+  static const String alumniDetail = 'alumniDetail';
 }

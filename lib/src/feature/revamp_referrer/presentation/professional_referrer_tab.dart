@@ -4,12 +4,14 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/widget/application_card.dart';
+import 'package:rawrecruit/src/feature/revamp_referrer/utils/enums.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/applicant_card.dart';
 
 import '../../../features/professional/job_postng/presentation/widgets/referred_applicant_card.dart';
 
 class ProfessionalReferralView extends StatefulWidget {
-  const ProfessionalReferralView({super.key});
+  const ProfessionalReferralView({this.selectedType, super.key});
+  final ProfessionalReferrerApplicationType? selectedType;
 
   @override
   State<ProfessionalReferralView> createState() =>
@@ -17,7 +19,14 @@ class ProfessionalReferralView extends StatefulWidget {
 }
 
 class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
-  int selectedTab = 0;
+  ProfessionalReferrerApplicationType selectedTab =
+      ProfessionalReferrerApplicationType.appliedByMe;
+
+  @override
+  void initState() {
+    super.initState();
+    selectedTab = widget.selectedType ?? selectedTab;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,28 +57,30 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
   Widget _buildTabs(BuildContext context) {
     return Row(
       children: [
-        _tab("Applied by Me", 0, context),
-        _tab("Requests Received", 1, context),
-        _tab("Referred by Me", 2, context),
+        ...ProfessionalReferrerApplicationType.values.map(
+          (t) => _tab(t, context),
+        ),
       ],
     );
   }
 
-  Widget _tab(String title, int index, BuildContext context) {
-    final isSelected = selectedTab == index;
+  Widget _tab(ProfessionalReferrerApplicationType type, BuildContext context) {
+    final isSelected = selectedTab == type;
 
     return Expanded(
       child: GestureDetector(
         onTap: () {
-          setState(() => selectedTab = index);
+          setState(() => selectedTab = type);
 
           final vm = context.read<ApplicationViewModel>();
 
           /// ✅ CALL ONLY WHEN NEEDED
-          if (index == 1 && vm.referralApplications.isEmpty) {
+          if (type == ProfessionalReferrerApplicationType.requestsReceived &&
+              vm.referralApplications.isEmpty) {
             vm.fetchReferralRequests();
           }
-          if (index == 2 && vm.referredByMe.isEmpty) {
+          if (type == ProfessionalReferrerApplicationType.referredByMe &&
+              vm.referredByMe.isEmpty) {
             vm.fetchReferredByMe();
           }
         },
@@ -82,7 +93,7 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
           ),
           child: Center(
             child: Text(
-              title,
+              type.label,
               style: TextStyle(
                 color: isSelected ? Colors.black : Colors.white,
                 fontSize: 12,
@@ -98,15 +109,12 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
   /// 🔥 BODY SWITCH
   Widget _buildBody() {
     switch (selectedTab) {
-      case 0:
+      case ProfessionalReferrerApplicationType.appliedByMe:
         return _appliedByMe();
-      case 1:
+      case ProfessionalReferrerApplicationType.requestsReceived:
         return _requestsReceived();
-
-      case 2:
+      case ProfessionalReferrerApplicationType.referredByMe:
         return _referredByMe();
-      default:
-        return const SizedBox();
     }
   }
 
@@ -165,34 +173,36 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
       },
     );
   }
-Widget _referredByMe() {
-  return Consumer<ApplicationViewModel>(
-    builder: (context, vm, _) {
-      if (vm.viewState == ViewState.busy) {
-        return const Center(child: CircularProgressIndicator());
-      }
 
-      if (vm.referredByMe.isEmpty) {
-        return const Center(
-          child: Text(
-            "No referred candidates",
-            style: TextStyle(color: Colors.grey),
-          ),
+  Widget _referredByMe() {
+    return Consumer<ApplicationViewModel>(
+      builder: (context, vm, _) {
+        if (vm.viewState == ViewState.busy) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (vm.referredByMe.isEmpty) {
+          return const Center(
+            child: Text(
+              "No referred candidates",
+              style: TextStyle(color: Colors.grey),
+            ),
+          );
+        }
+
+        return ListView.builder(
+          itemCount: vm.referredByMe.length,
+          itemBuilder: (context, index) {
+            final app = vm.referredByMe[index];
+
+            /// ✅ SAME CARD REUSE
+            return ReferredApplicantCard(application: app);
+          },
         );
-      }
+      },
+    );
+  }
 
-      return ListView.builder(
-        itemCount: vm.referredByMe.length,
-        itemBuilder: (context, index) {
-          final app = vm.referredByMe[index];
-
-          /// ✅ SAME CARD REUSE
-          return ReferredApplicantCard(application: app);
-        },
-      );
-    },
-  );
-}
   /// 🔥 PLACEHOLDER
   Widget _placeholder(String text) {
     return Center(
