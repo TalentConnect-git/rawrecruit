@@ -112,11 +112,20 @@ class AddEditProfileViewModel extends ViewStateProvider {
       c.employmentType.add(TextEditingController(text: e));
     }
     c.employmentType.add(TextEditingController());
+for (final e in user.experiences ?? []) {
+  final ec = ExperienceController();
 
-    for (final e in user.experiences ?? []) {
-      c.experiences.add(TextEditingController(text: e));
-    }
-    c.experiences.add(TextEditingController());
+  ec.company.text = e.company ?? '';
+  ec.role.text = e.role ?? '';
+  ec.startDate.text = e.startDate ?? '';
+  ec.endDate.text = e.endDate ?? '';
+  ec.description.text = e.description ?? '';
+  ec.isCurrent = e.isCurrent ?? false;
+
+  c.experiences.add(ec);
+}
+
+c.experiences.add(ExperienceController());
 
     for (final e in user.industry ?? []) {
       c.industry.add(TextEditingController(text: e));

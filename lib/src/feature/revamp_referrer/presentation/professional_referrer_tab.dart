@@ -6,7 +6,6 @@ import 'package:rawrecruit/src/feature/revamp_application/presentation/view_mode
 import 'package:rawrecruit/src/feature/revamp_application/presentation/widget/application_card.dart';
 import 'package:rawrecruit/src/feature/revamp_referrer/utils/enums.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/applicant_card.dart';
-
 import '../../../features/professional/job_postng/presentation/widgets/referred_applicant_card.dart';
 
 class ProfessionalReferralView extends StatefulWidget {
@@ -18,9 +17,12 @@ class ProfessionalReferralView extends StatefulWidget {
       _ProfessionalReferralViewState();
 }
 
-class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
+class _ProfessionalReferralViewState
+    extends State<ProfessionalReferralView> {
   ProfessionalReferrerApplicationType selectedTab =
       ProfessionalReferrerApplicationType.appliedByMe;
+
+  bool _initialApiCalled = false; // ✅ prevent multiple calls
 
   @override
   void initState() {
@@ -33,8 +35,26 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
     return ChangeNotifierProvider(
       create: (_) => ApplicationViewModel()..fetchApplications(),
       child: Builder(
-        // ✅ CRITICAL FIX (gives correct context)
         builder: (context) {
+          final vm = context.read<ApplicationViewModel>();
+
+          /// ✅ SAFE INITIAL API CALL
+          if (!_initialApiCalled) {
+            _initialApiCalled = true;
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              if (selectedTab ==
+                  ProfessionalReferrerApplicationType.requestsReceived) {
+                vm.fetchReferralRequests();
+              }
+
+              if (selectedTab ==
+                  ProfessionalReferrerApplicationType.referredByMe) {
+                vm.fetchReferredByMe();
+              }
+            });
+          }
+
           return Scaffold(
             backgroundColor: AppColors.kBg,
             body: Padding(
@@ -64,7 +84,8 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
     );
   }
 
-  Widget _tab(ProfessionalReferrerApplicationType type, BuildContext context) {
+  Widget _tab(
+      ProfessionalReferrerApplicationType type, BuildContext context) {
     final isSelected = selectedTab == type;
 
     return Expanded(
@@ -75,11 +96,14 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
           final vm = context.read<ApplicationViewModel>();
 
           /// ✅ CALL ONLY WHEN NEEDED
-          if (type == ProfessionalReferrerApplicationType.requestsReceived &&
+          if (type ==
+                  ProfessionalReferrerApplicationType.requestsReceived &&
               vm.referralApplications.isEmpty) {
             vm.fetchReferralRequests();
           }
-          if (type == ProfessionalReferrerApplicationType.referredByMe &&
+
+          if (type ==
+                  ProfessionalReferrerApplicationType.referredByMe &&
               vm.referredByMe.isEmpty) {
             vm.fetchReferredByMe();
           }
@@ -174,6 +198,7 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
     );
   }
 
+  /// ✅ REFERRED BY ME
   Widget _referredByMe() {
     return Consumer<ApplicationViewModel>(
       builder: (context, vm, _) {
@@ -194,19 +219,10 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
           itemCount: vm.referredByMe.length,
           itemBuilder: (context, index) {
             final app = vm.referredByMe[index];
-
-            /// ✅ SAME CARD REUSE
             return ReferredApplicantCard(application: app);
           },
         );
       },
-    );
-  }
-
-  /// 🔥 PLACEHOLDER
-  Widget _placeholder(String text) {
-    return Center(
-      child: Text(text, style: const TextStyle(color: Colors.grey)),
     );
   }
 }

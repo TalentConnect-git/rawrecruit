@@ -4,6 +4,7 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/view_model/alumni_view_model.dart';
 
 import 'widgets/alumni_hiring_card.dart';
+
 class AlumniHiringView extends StatefulWidget {
   const AlumniHiringView({super.key});
 
@@ -12,6 +13,11 @@ class AlumniHiringView extends StatefulWidget {
 }
 
 class _AlumniHiringViewState extends State<AlumniHiringView> {
+  int selectedTab = 0;
+
+  /// 🔥 TODO: replace with real user type logic
+  bool get isProfessional => true;
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -47,46 +53,140 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
 
               const SizedBox(height: 16),
 
+              /// 🔥 TABS
+              _tabs(),
+
+              const SizedBox(height: 16),
+
               /// 🔥 LIST
-              Expanded(
-                child: Consumer<AlumniViewModel>(
-                  builder: (context, vm, _) {
-                    if (vm.isLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
-
-                    /// 🔥 USE GROUPED LIST
-                    final groupedList =
-                        vm.groupedAlumni.values.toList();
-
-                    if (groupedList.isEmpty) {
-                      return const Center(
-                        child: Text(
-                          "No alumni found",
-                          style: TextStyle(color: Colors.grey),
-                        ),
-                      );
-                    }
-
-                    return ListView.builder(
-                      itemCount: groupedList.length,
-                      itemBuilder: (_, index) {
-                        final jobs = groupedList[index];
-
-                        return AlumniHiringCard(
-                          jobs: jobs, // ✅ grouped jobs
-                        );
-                      },
-                    );
-                  },
-                ),
-              ),
+              Expanded(child: _buildList()),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  /// 🔥 TABS UI (PILL STYLE)
+  Widget _tabs() {
+    final tabs = isProfessional
+        ? ["Hiring", "My College", "My Company"]
+        : ["Hiring", "My College"];
+
+    return Container(
+      padding: const EdgeInsets.all(4),
+      decoration: BoxDecoration(
+        color: const Color(0xFF1F2937),
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Row(
+        children: List.generate(tabs.length, (index) {
+          final isSelected = selectedTab == index;
+
+          return Expanded(
+            child: GestureDetector(
+              onTap: () => setState(() => selectedTab = index),
+              child: AnimatedContainer(
+                duration: const Duration(milliseconds: 250),
+                curve: Curves.easeInOut,
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? AppColors.kGreen
+                      : Colors.transparent,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: Center(
+                  child: Text(
+                    tabs[index],
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w600,
+                      color:
+                          isSelected ? Colors.black : Colors.grey,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          );
+        }),
+      ),
+    );
+  }
+
+  /// 🔥 LIST BASED ON TAB
+  Widget _buildList() {
+    return Consumer<AlumniViewModel>(
+      builder: (context, vm, _) {
+        if (vm.isLoading) {
+          return const Center(
+            child: CircularProgressIndicator(),
+          );
+        }
+
+        final groupedList = vm.groupedAlumni.values.toList();
+
+        if (groupedList.isEmpty) {
+          return const Center(
+            child: Text(
+              "No alumni found",
+              style: TextStyle(color: Colors.grey),
+            ),
+          );
+        }
+
+        /// 🔥 TAB SWITCH
+        switch (selectedTab) {
+
+          /// ✅ HIRING TAB
+          case 0:
+            final hiring = groupedList
+                .where((jobs) => jobs.isNotEmpty)
+                .toList();
+
+            if (hiring.isEmpty) {
+              return const Center(
+                child: Text(
+                  "No hiring alumni",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              );
+            }
+
+            return ListView.builder(
+              itemCount: hiring.length,
+              itemBuilder: (_, index) {
+                return AlumniHiringCard(
+                  jobs: hiring[index],
+                );
+              },
+            );
+
+          /// ✅ MY COLLEGE TAB
+          case 1:
+            return ListView.builder(
+              itemCount: groupedList.length,
+              itemBuilder: (_, index) {
+                return AlumniHiringCard(
+                  jobs: groupedList[index],
+                );
+              },
+            );
+
+          /// ✅ MY COMPANY TAB (placeholder)
+          case 2:
+            return const Center(
+              child: Text(
+                "No company data yet",
+                style: TextStyle(color: Colors.grey),
+              ),
+            );
+
+          default:
+            return const SizedBox();
+        }
+      },
     );
   }
 }

@@ -672,7 +672,24 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                       }),
                       children: controller.awards.map(_awardForm).toList(),
                     ),
+ProfileSection(
+  label: 'Experience',
+  trailing: _addButton(() {
+    setState(() {
+      controller.experiences.add(ExperienceController());
+    });
+  }),
+  children: controller.experiences
+      .asMap()
+      .entries
+      .map((entry) {
+        final index = entry.key;
+        final e = entry.value;
 
+        return _experienceCard(e, index);
+      })
+      .toList(),
+),
                     // ── PUBLICATIONS ──────────────────────────────────────
                     ProfileSection(
                       label: 'Publications',
@@ -787,7 +804,167 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       },
     );
   }
+Widget _experienceCard(ExperienceController e, int index) {
+  return Container(
+    margin: const EdgeInsets.only(bottom: 16),
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: const Color(0xFF111827),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(color: Colors.white.withOpacity(0.06)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _header(index),
+        const SizedBox(height: 12),
 
+        _companyField(e),
+        const SizedBox(height: 12),
+
+        _roleField(e),
+        const SizedBox(height: 10),
+
+        _currentCheckbox(e),
+
+        const SizedBox(height: 10),
+
+        _dateRow(e),
+
+        const SizedBox(height: 12),
+
+        _descriptionField(e),
+      ],
+    ),
+  );
+}
+Widget _header(int index) {
+  return Row(
+    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    children: [
+      Text(
+        "Experience ${index + 1}",
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+      GestureDetector(
+        onTap: () {
+          setState(() {
+            controller.experiences.removeAt(index);
+          });
+        },
+        child: const Text(
+          "Remove",
+          style: TextStyle(color: Colors.red),
+        ),
+      ),
+    ],
+  );
+}
+Widget _companyField(ExperienceController e) {
+  return _input(
+    controller: e.company,
+    hint: "Select or type company name...",
+  );
+}
+Widget _roleField(ExperienceController e) {
+  return _input(
+    controller: e.role,
+    hint: "e.g., Software Engineer",
+  );
+}
+Widget _currentCheckbox(ExperienceController e) {
+  return Row(
+    children: [
+      Checkbox(
+        value: e.isCurrent,
+        onChanged: (val) {
+          setState(() => e.isCurrent = val ?? false);
+        },
+      ),
+      const Text(
+        "I currently work here",
+        style: TextStyle(color: Colors.white),
+      ),
+    ],
+  );
+}
+Widget _dateRow(ExperienceController e) {
+  return Row(
+    children: [
+      Expanded(
+        child: _dateField(e.startDate, "Start Date"),
+      ),
+      const SizedBox(width: 10),
+      Expanded(
+        child: _dateField(
+          e.endDate,
+          "End Date",
+          enabled: !e.isCurrent, // 🔥 disable if current job
+        ),
+      ),
+    ],
+  );
+}
+Widget _dateField(TextEditingController controller, String hint,
+    {bool enabled = true}) {
+  return GestureDetector(
+    onTap: !enabled
+        ? null
+        : () async {
+            final date = await showDatePicker(
+              context: context,
+              firstDate: DateTime(2000),
+              lastDate: DateTime.now(),
+              initialDate: DateTime.now(),
+            );
+
+            if (date != null) {
+              controller.text =
+                  "${date.month}/${date.year}";
+            }
+          },
+    child: AbsorbPointer(
+      child: _input(
+        controller: controller,
+        hint: hint,
+        enabled: enabled,
+      ),
+    ),
+  );
+}
+Widget _descriptionField(ExperienceController e) {
+  return _input(
+    controller: e.description,
+    hint: "Briefly describe your responsibilities...",
+    maxLines: 3,
+  );
+}
+Widget _input({
+  required TextEditingController controller,
+  required String hint,
+  int maxLines = 1,
+  bool enabled = true,
+}) {
+  return TextField(
+    controller: controller,
+    maxLines: maxLines,
+    enabled: enabled,
+    style: const TextStyle(color: Colors.white),
+    decoration: InputDecoration(
+      hintText: hint,
+      hintStyle: const TextStyle(color: Colors.grey),
+      filled: true,
+      fillColor: const Color(0xFF1F2937),
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+    ),
+  );
+}
   /// Specialization dropdown — options are driven by the selected degree.
   Widget _specializationDropdownField() {
     final options = _currentSpecializationOptions;
@@ -1295,4 +1472,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
       ],
     );
   }
+  
 }
+
+

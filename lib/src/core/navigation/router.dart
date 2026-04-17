@@ -10,6 +10,7 @@ import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/alumni_deta
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/internship_detail_page.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/job_detail_page.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_jobs/presentation/student_jobs_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/first_step.dart';
@@ -71,14 +72,28 @@ class AppRouter {
           return ReferralPostDetailView(job: job);
         },
       ),
-      GoRoute(
-        name: RouteNames.referralDetail,
-        path: '/referralDetail',
-        builder: (context, state) {
-          final jobId = state.extra as String;
-          return ReferralDetailView(jobId: jobId);
-        },
-      ),
+    GoRoute(
+  name: RouteNames.referralDetail,
+  path: '/referralDetail',
+  builder: (context, state) {
+    final jobId = state.extra as String;
+
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => DashboardViewModel()..getAlumniData(), // ✅ REQUIRED
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ApplicationViewModel()..fetchApplications(),
+        ),
+        ChangeNotifierProvider(
+          create: (_) => ShortlistViewModel()..fetchSaved(),
+        ),
+      ],
+      child: ReferralDetailView(jobId: jobId),
+    );
+  },
+),
       GoRoute(
         name: RouteNames.alumniDetail,
         path: "/alumni-detail",
@@ -134,6 +149,9 @@ class AppRouter {
               ChangeNotifierProvider(
                 create: (_) => ApplicationViewModel()..fetchApplications(),
               ),
+              ChangeNotifierProvider(
+  create: (_) => DashboardViewModel()..getAlumniData(),
+),
             ],
             child: JobDetailView(job: job),
           );
@@ -152,6 +170,9 @@ class AppRouter {
               ChangeNotifierProvider(
                 create: (_) => ApplicationViewModel()..fetchApplications(),
               ),
+                ChangeNotifierProvider(
+  create: (_) => DashboardViewModel()..getAlumniData(),
+),
             ],
             child: InternshipDetailView(internship: internship),
           );
@@ -250,23 +271,31 @@ class AppRouter {
           );
         },
         routes: [
-          GoRoute(
-            name: RouteNames.dashboard,
-            path: '/dashboard',
-            builder: (_, state) {
-              final args = state.extra as Map<String, dynamic>?;
+        GoRoute(
+  name: RouteNames.dashboard,
+  path: '/dashboard',
+  builder: (_, state) {
+    final extra = state.extra;
 
-              if (args == null || args.isEmpty) return Scaffold();
+    UserType? type;
 
-              final type = args['userType'];
-              if (type == UserType.professional) {
-                return ReferralHome();
-              } else {
-                return DashboardView();
-              }
-            },
-          ),
+    /// ✅ SAFE PARSING (handles all cases)
+    if (extra is Map<String, dynamic>) {
+      type = extra['userType'] as UserType?;
+    } else if (extra is UserType) {
+      type = extra;
+    }
 
+    /// ✅ DEFAULT FALLBACK (VERY IMPORTANT)
+    type ??= UserType.student; // or fetch from AppStateProvider
+
+    if (type == UserType.professional) {
+      return ReferralHome();
+    } else {
+      return DashboardView();
+    }
+  },
+),
           GoRoute(
             name: RouteNames.referrer,
             path: '/referrer',

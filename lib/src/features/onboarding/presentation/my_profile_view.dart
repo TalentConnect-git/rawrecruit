@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/core/models/experience.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/view_model/my_profile_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -225,9 +226,8 @@ class _MyProfileViewState extends State<MyProfileView> {
                     _chipCard('Preferred Locations', p!.locations!),
 
                   // ── EXPERIENCES ──────────────────────────────────────────
-                  if ((p?.experiences ?? []).isNotEmpty)
-                    _chipCard('Experiences', p!.experiences!),
-
+                 if ((p?.experiences ?? []).isNotEmpty)
+  _experienceCardList(p!.experiences!),
                   // ── ACHIEVEMENTS ─────────────────────────────────────────
                   if ((p?.achievements ?? []).isNotEmpty)
                     _card(
@@ -398,7 +398,52 @@ class _MyProfileViewState extends State<MyProfileView> {
       ),
     );
   }
+Widget _experienceCardList(List<Experience> experiences) {
+  return _card(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _sectionTitle('Experience'),
+        const SizedBox(height: 10),
 
+        ...experiences.map((e) {
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  e.role ?? '-',
+                  style: AppTextStyles.s14W600,
+                ),
+
+                Text(
+                  e.company ?? '',
+                  style: AppTextStyles.s14W400.copyWith(
+                    color: AppColors.chipText,
+                  ),
+                ),
+
+                Text(
+                  "${e.startDate ?? ''} - ${e.isCurrent == true ? 'Present' : e.endDate ?? ''}",
+                  style: AppTextStyles.s12W400.copyWith(
+                    color: AppColors.chipText,
+                  ),
+                ),
+
+                if ((e.description ?? '').isNotEmpty)
+                  Text(
+                    e.description!,
+                    style: AppTextStyles.s14W400,
+                  ),
+              ],
+            ),
+          );
+        }),
+      ],
+    ),
+  );
+}
   // ── Helper builders ──────────────────────────────────────────────────────────
 
   bool _anyNonEmpty(List<String?> values) =>

@@ -122,7 +122,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                       onTap: () {
                         context.goNamed(
                           RouteNames.application,
-                          extra: UserType.professional,
+                          extra: {UserType.professional},
                         );
                       },
                     ),
@@ -133,7 +133,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                       onTap: () {
                         context.goNamed(
                           RouteNames.referrer,
-                          extra: UserType.professional,
+                          extra: {UserType.professional},
                         );
                       },
                     ),
