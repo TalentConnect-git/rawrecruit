@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
-
 import '../../../../core/index.dart';
 
 class AlumniCard extends StatelessWidget {
-  final List<Job> jobs; // 👈 grouped jobs
+  final List<Job> jobs;
 
   const AlumniCard({super.key, required this.jobs});
 
   @override
   Widget build(BuildContext context) {
     final first = jobs.first;
+    final candidate = first.candidatePosted;
 
-    final name = first.candidatePosted?.name ?? "User";
+    final name = candidate?.name ?? "User";
     final role = first.jobTitle ?? "Professional";
 
     final initials = name.isNotEmpty
@@ -22,117 +22,164 @@ class AlumniCard extends StatelessWidget {
 
     final jobCount = jobs.length;
 
-    return GestureDetector(
+    return InkWell(
+      borderRadius: BorderRadius.circular(18),
       onTap: () {
         context.pushNamed(
           "alumniDetail",
-          extra: jobs, // 👈 passing grouped jobs
+          extra: jobs,
         );
       },
       child: Container(
         margin: const EdgeInsets.only(right: 14),
-        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 14),
-        width: 190,
+        padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+        width: 200,
         decoration: BoxDecoration(
-          color: const Color(0xFF111827), // 🔥 DARK CARD
+          color: const Color(0xFF111827),
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: Colors.white.withOpacity(0.08)),
         ),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min, // 🔥 prevents overflow
           children: [
-            /// 🔥 CIRCLE INITIALS (GREEN)
-            CircleAvatar(
-              radius: 26,
-              backgroundColor: AppColors.kGreen,
-              child: Text(
-                initials,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+
+            /// 🔹 TOP CONTENT
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                /// AVATAR
+                CircleAvatar(
+                  radius: 26,
+                  backgroundColor: AppColors.kGreen,
+                  child: Text(
+                    initials,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
                 ),
-              ),
+
+                const SizedBox(height: 12),
+
+                /// NAME
+                Text(
+                  name,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                    fontSize: 14,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                /// ROLE
+                Text(
+                  role,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+
+                const SizedBox(height: 4),
+
+                /// DESIGNATION + COMPANY
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        first.jobRoles?.firstOrNull ?? 'Designation',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            color: Colors.grey, fontSize: 12),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        first.companyName ?? 'Company',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                            color: Colors.grey, fontSize: 12),
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 8),
+
+                /// 🔹 HIRING STATUS
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: const BoxDecoration(
+                        color: Colors.green,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
+                    const SizedBox(width: 6),
+                    Text(
+                      "Hiring • $jobCount jobs",
+                      style: const TextStyle(
+                        color: Colors.green,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ),
 
             const SizedBox(height: 12),
 
-            /// NAME
-            Text(
-              name,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-              ),
-            ),
-
-            const SizedBox(height: 4),
-
-            Text(
-              role,
-              textAlign: TextAlign.center,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(color: Colors.grey, fontSize: 12),
-            ),
-
-            const SizedBox(height: 4),
-
-            Flexible(
-              child: Row(
-                spacing: 2,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  /// ROLE
-                  Flexible(
-                    child: Text(
-                      first.jobRoles?.firstOrNull ?? 'Designation,',
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
-                    ),
-                  ),
-
-                  Flexible(
-                    child: Text(
-                      first.companyName ?? 'Company Name',
-                      textAlign: TextAlign.center,
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 8),
-
-            /// 🔥 HIRING STATUS
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
-                  ),
+            /// 🔥 MESSAGE BUTTON
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                if (candidate != null) {
+                  context.pushNamed(
+                    RouteNames.chatUser,
+                    extra: candidate,
+                  );
+                }
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                    horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: AppColors.kGreen.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(20),
                 ),
-                const SizedBox(width: 6),
-                Text(
-                  "Hiring • $jobCount jobs",
-                  style: const TextStyle(
-                    color: Colors.green,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                  ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.message,
+                        size: 14, color: Colors.green),
+                    SizedBox(width: 6),
+                    Text(
+                      "Message",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           ],
         ),

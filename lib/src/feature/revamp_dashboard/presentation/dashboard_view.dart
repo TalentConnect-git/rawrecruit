@@ -68,10 +68,35 @@ class _DashboardBody extends StatelessWidget {
                   /// 🔥 NEW HEADER
                   DashboardCard(vm: context.watch<MyProfileViewModel>()),
 
-                  const SizedBox(height: 16),
+             const SizedBox(height: 16),
 
-                  /// 🔥 NEW CAREER CARD
-                  const _CareerReadinessCard(),
+SingleChildScrollView(
+  scrollDirection: Axis.horizontal,
+  child: Row(
+    children: [
+      InfoChip(
+        text:
+            "you have applied to ${context.watch<ApplicationViewModel>().appliedApplications.length} applications",
+        
+      ),
+
+      const SizedBox(width: 8),
+
+      InfoChip(
+        text:
+            "${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni hiring in your network",
+      ),
+
+      const SizedBox(width: 8),
+
+      InfoChip(
+        text:
+            "you have ${context.watch<ShortlistViewModel>().savedJobIds.length} saved jobs",
+      ),
+    ],
+  ),
+),
+
 
                   const SizedBox(height: 16),
 
@@ -165,7 +190,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
             _SectionHeader(title: "Alumni Hiring Network"),
 
             SizedBox(
-              height: 190,
+              height: 240,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: vm.groupedAlumni.values.take(3).length,
@@ -395,110 +420,33 @@ class _SegmentToggle extends StatelessWidget {
     );
   }
 }
-
-class _CareerReadinessCard extends StatelessWidget {
-  const _CareerReadinessCard();
-
-  @override
-  Widget build(BuildContext context) {
-    final percent = 70; // 🔥 later from API
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.kCard,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kBorder),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// 🔹 TITLE
-          Row(
-            children: [
-              Icon(Icons.auto_awesome, color: AppColors.kGreen, size: 18),
-              const SizedBox(width: 8),
-              const Text(
-                "Career Readiness",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          /// 🔹 PERCENT + TEXT
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                "$percent%",
-                style: const TextStyle(
-                  fontSize: 28,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              const SizedBox(width: 10),
-              const Expanded(
-                child: Text(
-                  "ready for Backend Engineer roles",
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          /// 🔹 PROGRESS BAR
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: LinearProgressIndicator(
-              value: percent / 100,
-              minHeight: 8,
-              backgroundColor: Colors.black.withOpacity(0.3),
-              valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          /// 🔹 SKILLS CHIPS
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: const [
-              _smallChip("System Design"),
-              _smallChip("AWS"),
-              _smallChip("Microservices"),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _smallChip extends StatelessWidget {
+class InfoChip extends StatelessWidget {
   final String text;
-  const _smallChip(this.text);
+  final VoidCallback? onTap;
+
+  const InfoChip({
+    super.key,
+    required this.text,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      decoration: BoxDecoration(
-        color: AppColors.kGreen.withOpacity(0.15),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.kBorder),
-      ),
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 11, color: AppColors.kGreen),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(60),
+          border: Border.all(color: AppColors.white, width: 0.5),
+          color: const Color(0xff222222),
+        ),
+        child: Text(
+          text,
+          style: AppTextStyles.s12W400.copyWith(
+            color: AppColors.white,
+          ),
+        ),
       ),
     );
   }

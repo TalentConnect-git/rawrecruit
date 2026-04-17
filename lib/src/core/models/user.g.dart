@@ -31,7 +31,7 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
       ?.map((e) => e as String)
       .toList(),
   experiences: (json['experiences'] as List<dynamic>?)
-      ?.map((e) => e as String)
+      ?.map((e) => Experience.fromJson(e as Map<String, dynamic>))
       .toList(),
   industry: (json['industry'] as List<dynamic>?)
       ?.map((e) => e as String)
@@ -105,7 +105,7 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'noticePeriod': instance.noticePeriod,
   'domainKnowledge': instance.domainKnowledge,
   'employmentType': instance.employmentType,
-  'experiences': instance.experiences,
+  'experiences': instance.experiences?.map((e) => e.toJson()).toList(),
   'industry': instance.industry,
   'internationalExperience': instance.internationalExperience,
   'jobRoles': instance.jobRoles,

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/feature/revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -188,7 +190,9 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                     _info("Views", job.views),
                     _info("Status", job.status),
                   ]),
+         const SizedBox(height: 24),
 
+    _alumniSection(),
                   const SizedBox(height: 40),
                 ],
               ),
@@ -198,35 +202,239 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
       ),
     );
   }
-
-  /// 🔥 HEADER
   Widget _header(Job job) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.kCard,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kBorder),
+  final role = job.jobTitle ?? "Backend Developer";
+  final company = job.companyName ?? "Microsoft";
+
+  final location = job.location?.join(", ") ?? "Hyderabad";
+  final mode = job.workMode?.join(", ") ?? "Hybrid";
+  final type = job.jobType ?? "Full-time";
+
+  final salary = job.packageDetails?.totalCTC != null
+      ? "₹${job.packageDetails!.totalCTC} LPA"
+      : "₹15-22 LPA";
+
+  final experience = job.yearsOfExperience != null
+      ? "${job.yearsOfExperience} years"
+      : "0-1 years";
+
+  final deadline = job.expireAt != null
+      ? "${job.expireAt!.day} Jan ${job.expireAt!.year}"
+      : "20 Jan 2025";
+
+  return Container(
+    padding: const EdgeInsets.all(16),
+    decoration: BoxDecoration(
+      color: const Color(0xFF0B0F14),
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(color: Colors.white.withOpacity(0.06)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+
+        /// 🔥 TOP ROW (LOGO + TEXT)
+        Row(
+          children: [
+            /// LOGO BOX
+            Container(
+              height: 52,
+              width: 52,
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Center(
+                child: Text(
+                  company.isNotEmpty ? company[0] : "M",
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
+                  ),
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            /// TITLE + COMPANY
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  role,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 18,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  company,
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 14),
+
+        /// 🔥 TAG CHIPS
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: [
+            _tag("📍 $location"),
+            _tag("👜 $mode"),
+            _tag("⏱ $type"),
+            _tag("📅 Deadline: $deadline"),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        /// 🔥 SALARY + EXPERIENCE BAR
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.04),
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: Colors.white.withOpacity(0.05)),
+          ),
+          child: Row(
+            children: [
+              /// SALARY
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      salary,
+                      style: const TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      "Salary",
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+
+              /// DIVIDER
+              Container(
+                height: 32,
+                width: 1,
+                color: Colors.white.withOpacity(0.08),
+              ),
+
+              /// EXPERIENCE
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      experience,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    const Text(
+                      "Experience",
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+Widget _tag(String text) {
+  return Container(
+    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.08),
+      borderRadius: BorderRadius.circular(20),
+    ),
+    child: Text(
+      text,
+      style: const TextStyle(
+        color: Colors.grey,
+        fontSize: 12,
       ),
-      child: Column(
+    ),
+  );
+}
+
+Widget _infoBox(String value, String label) {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(0.05),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Column(
+      children: [
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.green,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(label, style: const TextStyle(color: Colors.grey)),
+      ],
+    ),
+  );
+}
+Widget _alumniSection() {
+  return Consumer<DashboardViewModel>(
+    builder: (context, vm, _) {
+      if (vm.groupedAlumni.isEmpty) {
+        return const Text(
+          "No alumni available",
+          style: TextStyle(color: Colors.grey),
+        );
+      }
+
+      final list = vm.groupedAlumni.values.toList();
+
+      return Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(job.jobTitle ?? "-",
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold)),
-          const SizedBox(height: 6),
-          Text(job.companyName ?? "-",
-              style: const TextStyle(color: Colors.grey)),
-          const SizedBox(height: 10),
-          Text(job.location?.join(', ') ?? "-",
-              style: const TextStyle(color: Colors.grey)),
-        ],
-      ),
-    );
-  }
+          const Text(
+            "Alumni Who Can Help",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
 
+          ...list.take(3).map(
+            (e) => AlumniHiringCard(jobs: e),
+          ),
+        ],
+      );
+    },
+  );
+}
   /// 🔥 TEXT
   Widget _sectionText(String title, String? content) {
     return Column(

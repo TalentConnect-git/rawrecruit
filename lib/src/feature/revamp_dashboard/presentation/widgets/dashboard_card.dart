@@ -95,6 +95,15 @@ class DashboardCard extends StatelessWidget {
                 label: 'Profile\nScore',
               ),
             ),
+            
+            const SizedBox(width: 12),
+  Expanded(
+              child: _buildStatCard(
+                icon: Icons.emoji_events_outlined,
+                value: "${vm.profileScore}%",
+                label: 'Hiring\nScore',
+              ),
+            ),
 
             // const SizedBox(width: 12),
             //

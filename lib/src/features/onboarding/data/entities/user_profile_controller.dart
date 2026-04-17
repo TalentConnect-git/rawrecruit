@@ -4,6 +4,16 @@ import 'achievement_controller.dart';
 import 'award_controller.dart';
 import 'publication_controller.dart';
 
+class ExperienceController {
+  TextEditingController company = TextEditingController();
+  TextEditingController role = TextEditingController();
+  TextEditingController startDate = TextEditingController();
+  TextEditingController endDate = TextEditingController();
+  TextEditingController description = TextEditingController();
+
+  bool isCurrent = false;
+}
+
 class UserController {
   UserController()
     : id = TextEditingController(),
@@ -52,7 +62,7 @@ class UserController {
   /// List<String> fields
   List<TextEditingController> domainKnowledge = [];
   List<TextEditingController> employmentType = [];
-  List<TextEditingController> experiences = [];
+  List<ExperienceController> experiences = [];
   List<TextEditingController> industry = [];
   List<TextEditingController> internationalExperience = [];
   List<TextEditingController> jobRoles = [];
@@ -164,7 +174,26 @@ class UserController {
       'skills': cleanList(skills),
       'domainKnowledge': cleanList(domainKnowledge),
       'employmentType': cleanList(employmentType),
-      'experiences': cleanList(experiences),
+      'experiences': experiences
+          .where(
+            (e) =>
+                e.company.text.isNotEmpty ||
+                e.role.text.isNotEmpty ||
+                e.startDate.text.isNotEmpty ||
+                e.endDate.text.isNotEmpty ||
+                e.description.text.isNotEmpty,
+          )
+          .map(
+            (e) => cleanMap({
+              'company': clean(e.company.text),
+              'role': clean(e.role.text),
+              'isCurrent': e.isCurrent,
+              'startDate': clean(e.startDate.text),
+              'endDate': clean(e.endDate.text),
+              'description': clean(e.description.text),
+            }),
+          )
+          .toList(),
       'industry': cleanList(industry),
       'internationalExperience': cleanList(internationalExperience),
       'jobRoles': cleanList(jobRoles),
@@ -273,9 +302,13 @@ class UserController {
     for (final controller in employmentType) {
       controller.dispose();
     }
-    for (final controller in experiences) {
-      controller.dispose();
-    }
+   for (final e in experiences) {
+  e.company.dispose();
+  e.role.dispose();
+  e.startDate.dispose();
+  e.endDate.dispose();
+  e.description.dispose();
+}
     for (final controller in industry) {
       controller.dispose();
     }

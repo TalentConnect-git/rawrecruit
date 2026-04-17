@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import '../../../common/index.dart';
+import '../../revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
+import 'view_model/dashboard_view_model.dart';
 
 class InternshipDetailView extends StatelessWidget {
   final Job internship;
@@ -153,7 +156,57 @@ class InternshipDetailView extends StatelessWidget {
                 _info("Name", employer.name),
                 _info("Designation", employer.designation),
               ]),
+const SizedBox(height: 24),
 
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      "Alumni Who Can Help",
+      style: TextStyle(
+        color: Colors.white,
+        fontSize: 16,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+    GestureDetector(
+      onTap: () {
+        context.goNamed(RouteNames.shortlist);
+      },
+      child: Text(
+        "View All",
+        style: TextStyle(color: AppColors.kGreen),
+      ),
+    ),
+  ],
+),
+
+const SizedBox(height: 12),
+
+/// 🔥 ALUMNI LIST
+Consumer<DashboardViewModel>(
+  builder: (context, vm, _) {
+    if (vm.groupedAlumni.isEmpty) {
+      return const Text(
+        "No alumni available",
+        style: TextStyle(color: Colors.grey),
+      );
+    }
+
+    final alumniList = vm.groupedAlumni.values.toList();
+
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: alumniList.length.clamp(0, 3),
+      itemBuilder: (context, index) {
+        return AlumniHiringCard(
+          jobs: alumniList[index],
+        );
+      },
+    );
+  },
+),
             const SizedBox(height: 40),
           ],
         ),
