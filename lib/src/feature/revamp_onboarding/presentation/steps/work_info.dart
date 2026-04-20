@@ -100,8 +100,7 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
   void initState() {
     super.initState();
 
-    final d = widget.data;
-
+final d = widget.data;
     employmentType = (d.employmentType != null && d.employmentType!.isNotEmpty)
         ? d.employmentType!.first
         : null;

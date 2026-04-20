@@ -33,8 +33,8 @@ class JobCard extends StatelessWidget {
     String salary = "Check details";
 
     int match = 0;
-    int referrers = 5;
-    int alumni = 8;
+
+    int alumni = 0;
 
     /// ✅ UNIVERSAL SAFE PARSER
     try {
@@ -92,6 +92,7 @@ class JobCard extends StatelessWidget {
 
       /// 🔥 MATCH
       match = j?.matchScore ?? j?["matchScore"] ?? 0;
+      alumni = j?.alumniCount ?? j?["alumniCount"] ?? 0;
     } catch (e) {
       /// NEVER BREAK UI
       print("JobCard parsing error: $e");
@@ -154,13 +155,8 @@ class JobCard extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
 
-                Text(
-                  "$referrers referrers",
-                  style: AppTextStyles.s12W400.copyWith(
-                    color: AppColors.white.withOpacity(0.6),
-                  ),
-                ),
-                const SizedBox(width: 10),
+                
+          
 
                 Row(
                   children: [

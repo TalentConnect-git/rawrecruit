@@ -32,7 +32,7 @@ class _CareerPageState extends State<CareerPage> {
   void initState() {
     super.initState();
 
-final d = widget.data;    shift = d.openToShift;
+final d = widget.data;  shift = d.openToShift;
 
     currentSalaryCtrl = TextEditingController(text: d.currentSalaryAmount);
     currentCurrencyCtrl = TextEditingController(text: d.currentSalaryCurrency);

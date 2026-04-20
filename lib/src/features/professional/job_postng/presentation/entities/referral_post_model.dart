@@ -27,12 +27,25 @@ abstract class ReferralPostModel with _$ReferralPostModel {
     List<String>? benefits,
     List<String>? certifications,
     String? eligibilityCriteria,
+      Metrics? metrics,
   }) = _ReferralPostModel;
 
   factory ReferralPostModel.fromJson(Map<String, dynamic> json) =>
       _$ReferralPostModelFromJson(json);
 }
+@freezed
+abstract class Metrics with _$Metrics {
+  const factory Metrics({
+    int? totalApplicationsReceived,
+    int? totalReferredToCompany,
+    int? totalAcceptedByCompany,
+    int? responseRate,
+    int? referralSuccessRate,
+  }) = _Metrics;
 
+  factory Metrics.fromJson(Map<String, dynamic> json) =>
+      _$MetricsFromJson(json);
+}
 @freezed
 abstract class PackageDetails with _$PackageDetails {
   const factory PackageDetails({

@@ -3,7 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-
+import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../revamp_onboarding/presentation/index.dart';
 import 'career_insight_page.dart';
 
@@ -186,19 +187,13 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
       child: Column(
         children: [
           /// Avatar
-          CircleAvatar(
-            radius: 32,
-            backgroundColor: AppColors.kGreen,
-            child: Text(
-              (p?.name?.isNotEmpty ?? false) ? p!.name![0].toUpperCase() : "A",
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-          ),
-
+         SizedBox(
+  height: 64,
+  width: 64,
+  child: ProfileImage(
+    imagePath: p?.profileImage ?? '',
+onImageSelected:null),
+),
           const SizedBox(height: 10),
 
           /// Name
@@ -229,6 +224,44 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
           ),
 
           const SizedBox(height: 12),
+
+/// 🔥 Resume Button
+if ((p?.resume ?? '').isNotEmpty)
+  GestureDetector(
+    onTap: () async {
+      final url = p!.resume!;
+
+      // open in browser
+      await launchUrl(
+        Uri.parse(url),
+        mode: LaunchMode.externalApplication,
+      );
+    },
+    child: Container(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+      decoration: BoxDecoration(
+        color: AppColors.kGreen,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: const [
+          Icon(Icons.download, color: Colors.black, size: 16),
+          SizedBox(width: 6),
+          Text(
+            "View Resume",
+            style: TextStyle(
+              color: Colors.black,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    ),
+  ),
+
+  const SizedBox(height: 10),
 
           /// Role (you can map from backend later)
           Text(

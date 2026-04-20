@@ -24,7 +24,7 @@ class _LinksPageState extends State<LinksPage> {
   void initState() {
     super.initState();
 
-final d = widget.data;    githubCtrl = TextEditingController(text: d.github);
+final d = widget.data; githubCtrl = TextEditingController(text: d.github);
     linkedinCtrl = TextEditingController(text: d.linkedin);
     portfolioCtrl = TextEditingController(text: d.portfolio);
 resumeCtrl = TextEditingController(text: d.resume);  }

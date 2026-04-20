@@ -100,7 +100,7 @@ final body = currentUser.toJson();
                 onPageChanged: (i) => setState(() => currentPage = i),
                 children: [
                   /// (skip resume for now or keep simple)
-                  ResumeUploadPage(),
+                ResumeUploadPage(onNext: nextPage),
 
                   /// 🔥 ALL PAGES CONNECTED TO DATA
                   BasicPage(onBack: onBack, data: data),
