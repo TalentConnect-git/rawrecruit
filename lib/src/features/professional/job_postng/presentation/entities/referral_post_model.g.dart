@@ -41,6 +41,9 @@ _ReferralPostModel _$ReferralPostModelFromJson(
       ?.map((e) => e as String)
       .toList(),
   eligibilityCriteria: json['eligibilityCriteria'] as String?,
+  metrics: json['metrics'] == null
+      ? null
+      : Metrics.fromJson(json['metrics'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
@@ -67,7 +70,25 @@ Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
       'benefits': instance.benefits,
       'certifications': instance.certifications,
       'eligibilityCriteria': instance.eligibilityCriteria,
+      'metrics': instance.metrics,
     };
+
+_Metrics _$MetricsFromJson(Map<String, dynamic> json) => _Metrics(
+  totalApplicationsReceived: (json['totalApplicationsReceived'] as num?)
+      ?.toInt(),
+  totalReferredToCompany: (json['totalReferredToCompany'] as num?)?.toInt(),
+  totalAcceptedByCompany: (json['totalAcceptedByCompany'] as num?)?.toInt(),
+  responseRate: (json['responseRate'] as num?)?.toInt(),
+  referralSuccessRate: (json['referralSuccessRate'] as num?)?.toInt(),
+);
+
+Map<String, dynamic> _$MetricsToJson(_Metrics instance) => <String, dynamic>{
+  'totalApplicationsReceived': instance.totalApplicationsReceived,
+  'totalReferredToCompany': instance.totalReferredToCompany,
+  'totalAcceptedByCompany': instance.totalAcceptedByCompany,
+  'responseRate': instance.responseRate,
+  'referralSuccessRate': instance.referralSuccessRate,
+};
 
 _PackageDetails _$PackageDetailsFromJson(Map<String, dynamic> json) =>
     _PackageDetails(

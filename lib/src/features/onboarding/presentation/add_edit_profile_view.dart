@@ -1165,110 +1165,134 @@ Widget _input({
   // ── Resume parser ────────────────────────────────────────────────────────────
 
   Future<void> parseResumeAndFill() async {
-    try {
-      debugPrint("Starting resume upload");
+  try {
+    debugPrint("Starting resume upload");
 
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-        withData: false,
-      );
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      withData: false,
+    );
 
-      if (result == null) {
-        debugPrint("No file selected");
-        return;
-      }
-
-      final file = result.files.single;
-      if (file.path == null) {
-        debugPrint("File path is null");
-        return;
-      }
-
-      _pickedResumeFile = File(file.path!);
-      addEditProfileViewModel.pickedResumeFile = _pickedResumeFile;
-      setState(() => _isParsingResume = true);
-
-      final dio = Dio(
-        BaseOptions(
-          receiveTimeout: const Duration(seconds: 60),
-          sendTimeout: const Duration(seconds: 60),
-        ),
-      );
-
-      final formData = FormData.fromMap({
-        'file': await MultipartFile.fromFile(file.path!, filename: file.name),
-      });
-
-      final response = await dio.post(
-        'https://resume-parser-sgtj.onrender.com/api/resume/parse',
-        data: formData,
-        options: Options(headers: {'Content-Type': 'multipart/form-data'}),
-      );
-
-      final data = response.data;
-
-      if (controller.name.text.isEmpty && data['name'] != null)
-        controller.name.text = data['name'];
-      if (controller.email.text.isEmpty && data['email'] != null)
-        controller.email.text = data['email'];
-      if (controller.phone.text.isEmpty && data['phone'] != null)
-        controller.phone.text = data['phone'];
-      if (controller.gender.text.isEmpty && data['gender'] != null)
-        controller.gender.text = data['gender'];
-      if (controller.about.text.isEmpty && data['about'] != null)
-        controller.about.text = data['about'];
-      if (controller.linkedin.text.isEmpty && data['linkedin_url'] != null)
-        controller.linkedin.text = data['linkedin_url'];
-      if (controller.github.text.isEmpty && data['github_url'] != null)
-        controller.github.text = data['github_url'];
-      if (controller.portfolio.text.isEmpty && data['portfolio_url'] != null)
-        controller.portfolio.text = data['portfolio_url'];
-
-      if (data['skills'] != null && data['skills'] is List) {
-        controller.skills.first.text = (data['skills'] as List).join(', ');
-      }
-
-      if (data['education'] != null &&
-          data['education'] is List &&
-          (data['education'] as List).isNotEmpty) {
-        final edu = data['education'].last;
-        if (controller.college.text.isEmpty && edu['institution'] != null)
-          controller.college.text = edu['institution'];
-        if (edu['degree'] != null) {
-          final parsedDegree = edu['degree'].toString();
-          if (!degreeOptions.contains(parsedDegree))
-            degreeOptions.add(parsedDegree);
-          controller.degree.text = parsedDegree;
-          // Reset specialization when degree is set from resume
-          controller.specialization.text = '';
-        }
-        // Set specialization only if it's valid for the parsed degree
-        if (controller.specialization.text.isEmpty &&
-            edu['field_of_study'] != null) {
-          final parsedSpec = edu['field_of_study'].toString();
-          final specOptions =
-              _specializationByDegree[controller.degree.text] ??
-              _defaultSpecializations;
-          if (!specOptions.contains(parsedSpec)) {
-            // Add the parsed value dynamically so the dropdown can show it
-            _specializationByDegree[controller.degree.text]?.add(parsedSpec);
-          }
-          controller.specialization.text = parsedSpec;
-        }
-        if (controller.yearOfGraduation.text.isEmpty && edu['year'] != null)
-          controller.yearOfGraduation.text = edu['year'].toString();
-        if (controller.cgpa.text.isEmpty && edu['cgpa'] != null)
-          controller.cgpa.text = edu['cgpa'].toString();
-      }
-
-      setState(() {});
-    } catch (e) {
-      debugPrint("FULL ERROR: $e");
-    } finally {
-      setState(() => _isParsingResume = false);
+    if (result == null) {
+      debugPrint("No file selected");
+      return;
     }
+
+    final file = result.files.single;
+
+    if (file.path == null) {
+      debugPrint("File path is null");
+      return;
+    }
+
+    _pickedResumeFile = File(file.path!);
+    addEditProfileViewModel.pickedResumeFile = _pickedResumeFile;
+
+    setState(() => _isParsingResume = true);
+
+    /// 🔥 FORM DATA
+    final formData = FormData.fromMap({
+      'resume': await MultipartFile.fromFile(
+        file.path!,
+        filename: file.name,
+      ),
+    });
+
+    /// 🔥 USE NETWORK SERVICE (IMPORTANT)
+    final networkService = NetworkService();
+
+    final response = await networkService.request(
+      Request(
+        method: RequestMethod.post,
+        endpoint: "/api/upload/resume",
+        formData: formData,
+        isSafeRoute: true, // 🔥 TOKEN AUTOMATIC
+      ),
+    );
+
+    debugPrint("STATUS: ${response.statusCode}");
+    debugPrint("FULL RESPONSE: ${response.data}");
+
+    /// 🔥 SAFE PARSING
+    final data = response.data["data"] ?? response.data;
+
+    if (data == null) {
+      debugPrint("No data found in response");
+      return;
+    }
+
+    debugPrint("PARSED DATA: $data");
+
+    /// 🔥 BASIC FIELDS
+ controller.name.text = data['name'] ?? controller.name.text;
+controller.email.text = data['email'] ?? controller.email.text;
+controller.phone.text = data['phone'] ?? controller.phone.text;
+controller.gender.text = data['gender'] ?? controller.gender.text;
+controller.about.text = data['about'] ?? controller.about.text;
+controller.linkedin.text = data['linkedin_url'] ?? controller.linkedin.text;
+controller.github.text = data['github_url'] ?? controller.github.text;
+controller.portfolio.text = data['portfolio_url'] ?? controller.portfolio.text;
+
+    /// 🔥 SKILLS
+    if (data['skills'] != null && data['skills'] is List) {
+      controller.skills.first.text = (data['skills'] as List).join(', ');
+    }
+
+    /// 🔥 EDUCATION
+    if (data['education'] != null &&
+        data['education'] is List &&
+        (data['education'] as List).isNotEmpty) {
+
+      final edu = data['education'].last;
+
+      controller.college.text =
+          controller.college.text.isEmpty ? (edu['institution'] ?? '') : controller.college.text;
+
+      if (edu['degree'] != null) {
+        final parsedDegree = edu['degree'].toString();
+
+        if (!degreeOptions.contains(parsedDegree)) {
+          degreeOptions.add(parsedDegree);
+        }
+
+        controller.degree.text = parsedDegree;
+        controller.specialization.text = '';
+      }
+
+      if (edu['field_of_study'] != null) {
+        final parsedSpec = edu['field_of_study'].toString();
+
+        final specOptions =
+            _specializationByDegree[controller.degree.text] ??
+                _defaultSpecializations;
+
+        if (!specOptions.contains(parsedSpec)) {
+          _specializationByDegree[controller.degree.text]?.add(parsedSpec);
+        }
+
+        controller.specialization.text = parsedSpec;
+      }
+
+      controller.yearOfGraduation.text =
+          controller.yearOfGraduation.text.isEmpty
+              ? (edu['year']?.toString() ?? '')
+              : controller.yearOfGraduation.text;
+
+      controller.cgpa.text =
+          controller.cgpa.text.isEmpty
+              ? (edu['cgpa']?.toString() ?? '')
+              : controller.cgpa.text;
+    }
+
+    setState(() {});
+  } catch (e, s) {
+    debugPrint("FULL ERROR: $e");
+    debugPrint("STACK: $s");
+  } finally {
+    setState(() => _isParsingResume = false);
   }
+}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────

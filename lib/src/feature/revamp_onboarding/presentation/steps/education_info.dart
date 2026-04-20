@@ -26,8 +26,7 @@ class _EducationPageState extends State<EducationPage> {
   void initState() {
     super.initState();
 
-final d = widget.data;
-    collegeCtrl = TextEditingController(text: d.college);
+final d = widget.data;   collegeCtrl = TextEditingController(text: d.college);
     cgpaCtrl = TextEditingController(text: d.cgpa);
 
     selectedDegree = d.degree;

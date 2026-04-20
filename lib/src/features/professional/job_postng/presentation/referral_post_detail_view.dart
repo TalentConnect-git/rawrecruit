@@ -90,6 +90,7 @@ class _ReferralPostDetailViewState
     final title = job.jobTitle ?? "Frontend Engineer";
     final company =  "pGoogle";
     final location = job.location?.first ?? "Bangalore";
+final metrics = job.metrics;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -151,15 +152,40 @@ class _ReferralPostDetailViewState
           const SizedBox(height: 16),
 
           /// STATS
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              _stat("${applications.length}", "Candidates"),
-              _stat("12", "Requests"),
-              _stat("8", "Referred"),
-              _stat("3", "Interviews"),
-            ],
-          ),
+        Row(
+  children: [
+    Expanded(
+      child: _stat(
+        "${metrics?.totalApplicationsReceived ?? 0}",
+        "Candidates",
+      ),
+    ),
+    Expanded(
+      child: _stat(
+        "${metrics?.responseRate ?? 0} %",
+        "Response",
+      ),
+    ),
+    Expanded(
+      child: _stat(
+        "${metrics?.totalReferredToCompany ?? 0}",
+        "Referred",
+      ),
+    ),
+    Expanded(
+      child: _stat(
+        "${metrics?.totalAcceptedByCompany ?? 0}",
+        "Interviews",
+      ),
+    ),
+    Expanded(
+      child: _stat(
+        "${metrics?.referralSuccessRate ?? 0} %",
+        "Success",
+      ),
+    ),
+  ],
+),
         ],
       ),
     );
@@ -173,7 +199,7 @@ class _ReferralPostDetailViewState
                 color: Colors.white, fontWeight: FontWeight.bold)),
         const SizedBox(height: 4),
         Text(label,
-            style: const TextStyle(color: Colors.grey, fontSize: 12)),
+            style: const TextStyle(color: Colors.grey, fontSize: 10)),
       ],
     );
   }

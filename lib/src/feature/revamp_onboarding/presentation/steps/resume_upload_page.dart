@@ -1,18 +1,22 @@
+import 'package:dio/dio.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
+import '../../../../core/index.dart';
 import '../widgets/input_widgets.dart';
 
 class ResumeUploadPage extends StatelessWidget {
+  final VoidCallback onNext;
 
-  const ResumeUploadPage({super.key});
+  const ResumeUploadPage({super.key, required this.onNext});
 
   @override
   Widget build(BuildContext context) {
     return Wrapper(
       title: "Resume",
       children: [
-        /// 🔙 HEADER
         AppHeader(
           title: "Upload your",
           highlight: "resume",
@@ -28,11 +32,11 @@ class ResumeUploadPage extends StatelessWidget {
         const SizedBox(height: 20),
 
         /// 📄 UPLOAD BOX
-        _uploadBox(),
+        _uploadBox(context),
 
         const SizedBox(height: 20),
 
-        /// OR DIVIDER
+        /// OR
         Row(
           children: [
             Expanded(child: Divider(color: AppColors.kBorder)),
@@ -46,12 +50,11 @@ class ResumeUploadPage extends StatelessWidget {
 
         const SizedBox(height: 20),
 
-        /// 🔗 LINKEDIN OPTION
         _linkedInCard(),
 
         const SizedBox(height: 20),
 
-        /// ⚡ FOOTER INFO
+        /// INFO
         Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
@@ -74,10 +77,10 @@ class ResumeUploadPage extends StatelessWidget {
 
         const SizedBox(height: 10),
 
-        /// ⏭ SKIP
+        /// ⏭ SKIP (FIXED)
         Center(
           child: TextButton(
-            onPressed: () {},
+            onPressed: onNext, // ✅ JUST MOVE NEXT
             child: const Text(
               "Skip for now",
               style: TextStyle(color: Colors.grey),
@@ -90,22 +93,151 @@ class ResumeUploadPage extends StatelessWidget {
     );
   }
 
-  /// 📄 UPLOAD UI
-  Widget _uploadBox() {
+  /// 🔥 USE EXISTING PROFILE METHOD
+Future<void> _handleUpload(BuildContext context) async {
+  bool isDialogOpen = false;
+
+  try {
+    /// 🔥 SHOW LOADER
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (_) => const Center(child: CircularProgressIndicator()),
+    );
+    isDialogOpen = true;
+
+    /// 🔥 CALL PARSE METHOD
+    final parsedData = await parseResumeAndFill();
+
+    /// 🔥 CLOSE LOADER SAFELY
+    if (isDialogOpen && Navigator.canPop(context)) {
+      Navigator.pop(context);
+      isDialogOpen = false;
+    }
+
+    /// ❌ IF FAILED → SHOW MESSAGE (NO CRASH)
+    if (parsedData == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Resume upload failed")),
+      );
+      return;
+    }
+
+    /// 🔥 UPDATE GLOBAL STATE
+    final currentUser =
+        context.read<AppStateProvider>().data ?? User();
+
+    context.read<AppStateProvider>().data = currentUser.copyWith(
+      name: parsedData['name'],
+      email: parsedData['email'],
+      phone: parsedData['phone'],
+      gender: parsedData['gender'],
+      about: parsedData['about'],
+      linkedin: parsedData['linkedin_url'],
+      github: parsedData['github_url'],
+      portfolio: parsedData['portfolio_url'],
+      skills: (parsedData['skills'] as List?)
+          ?.map((e) => e.toString())
+          .toList(),
+    );
+
+    /// 🚀 GO NEXT PAGE
+    onNext();
+
+  } catch (e) {
+    /// 🔥 CLOSE LOADER SAFELY
+    if (isDialogOpen && Navigator.canPop(context)) {
+      Navigator.pop(context);
+      isDialogOpen = false;
+    }
+
+    /// ❌ SHOW ERROR (NO CRASH)
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text("Something went wrong")),
+    );
+
+    debugPrint("UPLOAD ERROR: $e");
+  }
+}
+Future<Map<String, dynamic>?> parseResumeAndFill() async {
+  try {
+    debugPrint("Starting resume parsing...");
+
+    /// 📂 PICK FILE
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+    );
+
+    if (result == null) return null;
+
+    final file = result.files.single;
+
+    if (file.path == null) return null;
+
+    /// 🔥 DIRECT DIO (same as profile)
+    final dio = Dio(
+      BaseOptions(
+        receiveTimeout: const Duration(seconds: 60),
+        sendTimeout: const Duration(seconds: 60),
+      ),
+    );
+
+    final formData = FormData.fromMap({
+      'resume': await MultipartFile.fromFile(
+        file.path!,
+        filename: file.name, // 🔥 IMPORTANT
+      ),
+    });
+
+    final token = await SecretRepo.getString('auth_token');
+
+    final response = await dio.post(
+      'https://api.rawrecruit.in/api/upload/resume',
+      data: formData,
+      options: Options(
+        headers: {
+          "Authorization": "Bearer $token",
+          "Content-Type": "multipart/form-data",
+        },
+        validateStatus: (status) => true, // 🔥 prevents crash
+      ),
+    );
+
+    debugPrint("STATUS: ${response.statusCode}");
+    debugPrint("DATA: ${response.data}");
+
+    /// ❌ HANDLE FAILURE (NO CRASH)
+    if (response.statusCode != 200 ||
+        response.data == null ||
+        response.data['success'] == false) {
+      debugPrint("UPLOAD FAILED: ${response.data}");
+      return null;
+    }
+
+    /// ✅ SUCCESS
+    final data = response.data["data"] ?? response.data;
+
+    return data;
+
+  } catch (e, s) {
+    debugPrint("RESUME ERROR: $e");
+    debugPrint("STACK: $s");
+    return null;
+  }
+}
+  /// 📄 UPLOAD BOX
+  Widget _uploadBox(BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.kBorder,
-          style: BorderStyle.solid, // dashed needs custom painter if needed
-        ),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: Column(
         children: [
-          /// ICON
           Container(
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
@@ -125,15 +257,15 @@ class ResumeUploadPage extends StatelessWidget {
           const SizedBox(height: 4),
 
           const Text(
-            "PDF, DOC, DOCX • Max 5MB",
+            "PDF • Max 5MB",
             style: TextStyle(color: Colors.grey, fontSize: 12),
           ),
 
           const SizedBox(height: 12),
 
-          /// BUTTON
+          /// 🔥 BUTTON CONNECTED
           OutlinedButton(
-            onPressed: () {},
+            onPressed: () => _handleUpload(context),
             style: OutlinedButton.styleFrom(
               side: BorderSide(color: AppColors.kBorder),
               shape: RoundedRectangleBorder(
@@ -157,37 +289,15 @@ class ResumeUploadPage extends StatelessWidget {
         border: Border.all(color: AppColors.kBorder),
       ),
       child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: BoxDecoration(
-              color: Colors.deepPurple.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: const Icon(Icons.auto_awesome, color: Colors.deepPurple),
-          ),
-
-          const SizedBox(width: 12),
-
-          const Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "Autofill from LinkedIn",
-                  style: TextStyle(color: Colors.white),
-                ),
-                SizedBox(height: 4),
-                Text(
-                  "Import profile in one click",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ],
+        children: const [
+          Icon(Icons.auto_awesome, color: Colors.deepPurple),
+          SizedBox(width: 12),
+          Expanded(
+            child: Text(
+              "Autofill from LinkedIn",
+              style: TextStyle(color: Colors.white),
             ),
           ),
-
-          const Icon(Icons.arrow_forward_ios,
-              color: Colors.grey, size: 14),
         ],
       ),
     );

@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
@@ -40,10 +41,77 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   String minEducation = "High School";
   String workAuthorization = "Citizens Only";
   String experienceRange = "0-1 years";
-  String selectedCity = "Mumbai";
+  String selectedState = "";
+  String selectedCity = "";
 
+  List<String> states = [];
+  List<String> cities = [];
+
+  bool isLoadingStates = false;
+  bool isLoadingCities = false;
   // Tags — enum only, multi-select via Set
   final Set<String> selectedTags = {};
+ Future<void> fetchStates() async {
+  try {
+    setState(() => isLoadingStates = true);
+
+    final res = await Dio().get(
+      "https://countriesnow.space/api/v0.1/countries/states/q",
+      queryParameters: {
+        "country": "india",
+      },
+    );
+
+    print("STATE DATA: ${res.data}");
+
+    if (res.statusCode == 200 &&
+        res.data["data"] != null &&
+        res.data["data"]["states"] is List) {
+
+      final List stateList = res.data["data"]["states"];
+
+      states = stateList
+          .map((e) => e["name"].toString())
+          .toList();
+    }
+  } catch (e) {
+    print("STATE API ERROR: $e");
+  } finally {
+    setState(() => isLoadingStates = false);
+  }
+}
+Future<void> fetchCities(String state) async {
+  try {
+    setState(() {
+      isLoadingCities = true;
+      cities = [];
+      selectedCity = "";
+    });
+
+    final res = await Dio().get(
+      "https://countriesnow.space/api/v0.1/countries/state/cities/q",
+      queryParameters: {
+        "country": "india",
+        "state": state.toLowerCase(),
+      },
+    );
+
+    print("CITY DATA: ${res.data}");
+
+    if (res.statusCode == 200 && res.data["data"] is List) {
+      cities = List<String>.from(res.data["data"]);
+    }
+  } catch (e) {
+    print("CITY API ERROR: $e");
+  } finally {
+    setState(() => isLoadingCities = false);
+  }
+}
+  @override
+  void initState() {
+    super.initState();
+    fetchStates(); // 🔥 ADD THIS
+  }
 
   // ── Enum options ────────────────────────────────────────────────────────────
 
@@ -418,12 +486,31 @@ class _ReferralPostViewState extends State<ReferralPostView> {
               _card(
                 title: "Location & Work",
                 children: [
-                  _dropdownDark(
-                    "Location",
-                    selectedCity,
-                    indiaCities,
-                    (val) => setState(() => selectedCity = val!),
-                  ),
+                  /// 🔥 STATE DROPDOWN
+                  isLoadingStates
+                      ? const CircularProgressIndicator()
+                      : _dropdownDark(
+                          "State",
+                          selectedState.isEmpty ? null : selectedState,
+                          states,
+                          (val) {
+                            setState(() {
+                              selectedState = val!;
+                            });
+                            fetchCities(val!); // 🔥 load cities
+                          },
+                        ),
+
+                  /// 🔥 CITY DROPDOWN
+                  if (selectedState.isNotEmpty)
+                    isLoadingCities
+                        ? const CircularProgressIndicator()
+                        : _dropdownDark(
+                            "City",
+                            selectedCity.isEmpty ? null : selectedCity,
+                            cities,
+                            (val) => setState(() => selectedCity = val!),
+                          ),
 
                   _dropdownDark(
                     "Employment Type",
@@ -461,7 +548,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                     }),
                   ),
 
-                  _ChipMultiSelectField(
+                  MultiSelectDropdownChips(
                     key: ValueKey('fieldOfStudy_$minEducation'),
                     label: "Preferred Field of Study",
                     controller: fieldOfStudyController,
@@ -530,7 +617,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
               _card(
                 title: "Skills & Certifications",
                 children: [
-                  _ChipMultiSelectField(
+                  MultiSelectDropdownChips(
                     key: const ValueKey('skills'),
                     label: "Skills",
                     controller: skillsController,
@@ -539,7 +626,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
                   const SizedBox(height: 12),
 
-                  _ChipMultiSelectField(
+                  MultiSelectDropdownChips(
                     key: const ValueKey('certifications'),
                     label: "Certifications",
                     controller: certificationsController,
@@ -548,7 +635,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
                   const SizedBox(height: 12),
 
-                  _ChipMultiSelectField(
+                  MultiSelectDropdownChips(
                     key: const ValueKey('benefits'),
                     label: "Benefits",
                     controller: benefitsController,
@@ -706,9 +793,17 @@ class _ReferralPostViewState extends State<ReferralPostView> {
       padding: const EdgeInsets.only(bottom: 12),
       child: TextFormField(
         controller: controller,
+
+        /// 🔥 IMPORTANT CHANGES
         maxLines: maxLines,
-        keyboardType: keyboardType,
+        minLines: maxLines > 1 ? 3 : 1,
+        keyboardType: maxLines > 1 ? TextInputType.multiline : keyboardType,
+        textInputAction: maxLines > 1
+            ? TextInputAction.newline
+            : TextInputAction.done,
+
         style: const TextStyle(color: Colors.white),
+
         decoration: InputDecoration(
           labelText: label,
           labelStyle: const TextStyle(color: Colors.grey),
@@ -725,7 +820,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
   Widget _dropdownDark(
     String label,
-    String value,
+    String? value,
     List<String> items,
     Function(String?) onChanged,
   ) {
@@ -782,213 +877,165 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   }
 }
 
-// ─────────────────────────────────────────────────────────────────────────────
-//  _ChipMultiSelectField — same widget as add_edit_profile_view
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _ChipMultiSelectField extends StatefulWidget {
-  const _ChipMultiSelectField({
-    required this.label,
-    required this.controller,
-    required this.options,
+class MultiSelectDropdownChips extends StatefulWidget {
+  const MultiSelectDropdownChips({
     super.key,
+    required this.label,
+    required this.options,
+    required this.controller,
   });
 
   final String label;
-  final TextEditingController controller;
   final List<String> options;
+  final TextEditingController controller;
 
   @override
-  State<_ChipMultiSelectField> createState() => _ChipMultiSelectFieldState();
+  State<MultiSelectDropdownChips> createState() =>
+      _MultiSelectDropdownChipsState();
 }
 
-class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
-  final TextEditingController _textController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-  bool _showFreeText = false;
-
-  List<String> get _selectedItems {
-    if (widget.controller.text.isEmpty) return [];
-    return widget.controller.text
-        .split(',')
-        .map((e) => e.trim())
-        .where((e) => e.isNotEmpty)
-        .toList();
-  }
-
-  void _sync(List<String> items) {
-    widget.controller.text = items.join(', ');
-  }
-
-  void _addItem(String value) {
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) return;
-    final current = _selectedItems;
-    if (!current.contains(trimmed)) {
-      current.add(trimmed);
-      _sync(current);
-    }
-    _textController.clear();
-    _focusNode.requestFocus();
-    setState(() {});
-  }
-
-  void _removeItem(String value) {
-    final current = _selectedItems..remove(value);
-    _sync(current);
-    if (value == 'Others') setState(() => _showFreeText = false);
-    setState(() {});
-  }
-
-  void _toggleEnumChip(String value) {
-    final current = _selectedItems;
-    if (current.contains(value)) {
-      current.remove(value);
-      _sync(current);
-      if (value == 'Others') _showFreeText = false;
-    } else {
-      current.add(value);
-      _sync(current);
-      if (value == 'Others') _showFreeText = true;
-    }
-    setState(() {});
-  }
+class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
+  List<String> selected = [];
+  final TextEditingController customController = TextEditingController();
 
   @override
-  void dispose() {
-    _textController.dispose();
-    _focusNode.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+
+    selected = widget.controller.text.isEmpty
+        ? []
+        : widget.controller.text.split(',').map((e) => e.trim()).toList();
+  }
+
+  void _updateController() {
+    widget.controller.text = selected.join(', ');
+  }
+
+  void _toggleItem(String item) {
+    setState(() {
+      if (selected.contains(item)) {
+        selected.remove(item);
+      } else {
+        selected.add(item);
+      }
+      _updateController();
+    });
+  }
+
+  void _addCustom() {
+    final val = customController.text.trim();
+    if (val.isEmpty) return;
+
+    setState(() {
+      selected.add(val);
+      _updateController();
+    });
+
+    customController.clear();
   }
 
   @override
   Widget build(BuildContext context) {
-    final selected = _selectedItems;
-    final hasEnums = widget.options.isNotEmpty;
-    final customItems = selected
-        .where((s) => !widget.options.contains(s))
-        .toList();
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-
       children: [
-        Text(
-          widget.label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: Colors.white,
+        Text(widget.label, style: const TextStyle(color: Colors.white)),
+        const SizedBox(height: 8),
+
+        /// 🔥 Dropdown-like UI
+        PopupMenuButton(
+          color: AppColors.kCard,
+          offset: const Offset(0, 45),
+
+          itemBuilder: (context) {
+            return [
+              PopupMenuItem(
+                enabled: false,
+                child: StatefulBuilder(
+                  builder: (context, setStatePopup) {
+                    return Column(
+                      children: [
+                        ...widget.options.map((item) {
+                          final isSelected = selected.contains(item);
+
+                          return CheckboxListTile(
+                            value: isSelected,
+                            dense: true,
+                            title: Text(
+                              item,
+                              style: const TextStyle(color: Colors.white),
+                            ),
+                            activeColor: AppColors.kGreen,
+                            onChanged: (_) {
+                              setStatePopup(() {
+                                _toggleItem(item);
+                              });
+                            },
+                          );
+                        }),
+
+                        /// 🔥 Others input
+                        if (selected.contains("Others")) ...[
+                          TextField(
+                            controller: customController,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              hintText: "Add custom",
+                              hintStyle: TextStyle(color: Colors.grey),
+                            ),
+                            onSubmitted: (_) {
+                              _addCustom();
+                              setStatePopup(() {});
+                            },
+                          ),
+                        ],
+                      ],
+                    );
+                  },
+                ),
+              ),
+            ];
+          },
+
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+            decoration: BoxDecoration(
+              color: AppColors.kCard,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: Colors.grey),
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  selected.isEmpty
+                      ? "Select options"
+                      : "${selected.length} selected",
+                  style: const TextStyle(color: Colors.grey),
+                ),
+                const Icon(Icons.arrow_drop_down, color: Colors.grey),
+              ],
+            ),
           ),
         ),
-        const SizedBox(height: 8),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ── Enum chips ─────────────────────────────────────────
-              if (hasEnums) ...[
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
-                  children: widget.options.map((option) {
-                    final isSelected = selected.contains(option);
-                    return FilterChip(
-                      backgroundColor: AppColors.kTile,
-                      label: Text(option, style: TextStyle(color: Colors.grey)),
-                      selected: isSelected,
-                      onSelected: (_) => _toggleEnumChip(option),
-                      selectedColor: AppColors.kGreen,
-                      checkmarkColor: AppColors.white,
-                      labelStyle: TextStyle(
-                        color: isSelected ? AppColors.white : null,
-                        fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.normal,
-                      ),
-                    );
-                  }).toList(),
-                ),
-                const SizedBox(height: 12),
-              ],
 
-              // ── Custom items (free-text entries) ───────────────────
-              if (customItems.isNotEmpty) ...[
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
-                  children: customItems
-                      .map(
-                        (item) => Chip(
-                          label: Text(item),
-                          onDeleted: () => _removeItem(item),
-                        ),
-                      )
-                      .toList(),
-                ),
-                const SizedBox(height: 6),
-              ],
+        const SizedBox(height: 10),
 
-              // ── Free-text input (shown when Others selected) ───────
-              if (!hasEnums || _showFreeText) ...[
-                if (hasEnums)
-                  const Text(
-                    'Add custom entries:',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                const SizedBox(height: 4),
-                Autocomplete<String>(
-                  optionsBuilder: (textEditingValue) {
-                    if (textEditingValue.text.isEmpty) return const [];
-                    return widget.options
-                        .where(
-                          (item) =>
-                              item != 'Others' &&
-                              item.toLowerCase().contains(
-                                textEditingValue.text.toLowerCase(),
-                              ),
-                        )
-                        .toList();
-                  },
-                  onSelected: _addItem,
-                  fieldViewBuilder:
-                      (context, textController, textFocusNode, onSubmit) {
-                        return TextField(
-                          controller: _textController,
-                          focusNode: _focusNode,
-                          decoration: const InputDecoration(
-                            hintText: 'Type and press Enter to add',
-                            border: InputBorder.none,
-                            isDense: true,
-                          ),
-                          onSubmitted: _addItem,
-                        );
-                      },
-                ),
-              ],
-
-              // ── Free-text only mode (no enums) ────────────────────
-              if (!hasEnums && selected.isNotEmpty)
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
-                  children: selected
-                      .map(
-                        (item) => Chip(
-                          label: Text(item),
-                          onDeleted: () => _removeItem(item),
-                        ),
-                      )
-                      .toList(),
-                ),
-            ],
-          ),
+        /// 🔥 Chips
+        Wrap(
+          spacing: 8,
+          runSpacing: 6,
+          children: selected.map((item) {
+            return Chip(
+              label: Text(item),
+              onDeleted: () {
+                setState(() {
+                  selected.remove(item);
+                  _updateController();
+                });
+              },
+            );
+          }).toList(),
         ),
       ],
     );

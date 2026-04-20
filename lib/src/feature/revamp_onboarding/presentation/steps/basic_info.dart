@@ -64,8 +64,7 @@ class _BasicPageState extends State<BasicPage> {
   void initState() {
     super.initState();
 
-  final d = widget.data;
-    nameCtrl = TextEditingController(text: d.name);
+final d = widget.data;  nameCtrl = TextEditingController(text: d.name);
     emailCtrl = TextEditingController(text: d.email);
     phoneCtrl = TextEditingController(text: d.phone);
     dobCtrl = TextEditingController(text: d.dob);
