@@ -1,4 +1,3 @@
-
 import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
@@ -23,8 +22,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       "contactPerson": null,
 
       /// ✅ company name safe
-      "companyName":
-          company?['companyDetails']?['companyName'] ?? "-",
+      "companyName": company?['companyDetails']?['companyName'] ?? "-",
 
       /// ✅ status
       "status": e["currentStatus"] ?? "pending",
@@ -58,9 +56,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     final request = Request(
       method: RequestMethod.post,
       endpoint: "/application/candidate/referral",
-      body: {
-        "referralId": referralId,
-      },
+      body: {"referralId": referralId},
       isSafeRoute: true,
     );
 
@@ -78,9 +74,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     final request = Request(
       method: RequestMethod.post,
       endpoint: "/application/candidate/internship",
-      body: {
-        "internshipId": jobId,
-      },
+      body: {"internshipId": jobId},
       isSafeRoute: true,
     );
 
@@ -107,9 +101,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       final body = result.data as Map<String, dynamic>;
       final List data = body['data'];
 
-      final list = data
-          .map((e) => _mapToJob(e, "Off-campus"))
-          .toList();
+      final list = data.map((e) => _mapToJob(e, "Off-campus")).toList();
 
       return Right(list);
     } catch (e) {
@@ -131,9 +123,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
       final List data = result.data['data'];
 
-      final list = data
-          .map((e) => _mapToJob(e, "Referral"))
-          .toList();
+      final list = data.map((e) => _mapToJob(e, "Referral")).toList();
 
       return Right(list);
     } catch (e) {
@@ -155,9 +145,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
       final List data = result.data['data'];
 
-      final list = data
-          .map((e) => _mapToJob(e, "Internship"))
-          .toList();
+      final list = data.map((e) => _mapToJob(e, "Internship")).toList();
 
       return Right(list);
     } catch (e) {
@@ -178,35 +166,20 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       final result = await _networkService.request(request);
 
       final body = result.data as Map<String, dynamic>;
-      final List data = body['data'];
+      final List<dynamic> data = body['data'] as List<dynamic>;
 
-      final list = data.map<ReferralApplication>((e) {
-        return ReferralApplication.fromJson({
-          "_id": e["_id"],
-          "applicantType": e["applicantType"],
-          "adminApprovalStatus": e["adminApprovalStatus"],
-          "createdAt": e["createdAt"],
-          "statusText": e["currentStatus"],
-          "matchScore": e["matchScore"],
-          "jobTitle": e["jobTitle"],
-          "skills": e["skills"] ?? [],
-          "applicant": {
-            "name": e["applicantName"],
-            "email": e["applicantEmail"],
-            "phone": e["applicantPhone"],
-            "college": e["academicBackground"]?["collegeName"],
-          },
-          "job": {
-            "title": e["jobTitle"],
-            "id": e["jobId"],
-          }
-        });
-      }).toList();
+      if (data.isNotEmpty) {
+        final list = data.map<ReferralApplication>((e) {
+          return ReferralApplication.fromJson(e as Map<String, dynamic>);
+        }).toList();
 
-      return Right(list);
+        return Right(list);
+      }
     } catch (e) {
       return Left(APIException.from(e));
     }
+
+    return Right([]);
   }
 
   /// 🔹 FETCH REFERRED BY ME
@@ -225,26 +198,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       final List data = body['data'];
 
       final list = data.map<ReferralApplication>((e) {
-        return ReferralApplication.fromJson({
-          "_id": e["_id"],
-          "applicantType": e["applicantType"],
-          "adminApprovalStatus": e["adminApprovalStatus"],
-          "createdAt": e["createdAt"],
-          "statusText": e["currentStatus"],
-          "matchScore": e["matchScore"],
-          "jobTitle": e["jobTitle"],
-          "skills": e["skills"] ?? [],
-          "applicant": {
-            "name": e["applicantName"],
-            "email": e["applicantEmail"],
-            "phone": e["applicantPhone"],
-            "college": e["academicBackground"]?["collegeName"],
-          },
-          "job": {
-            "title": e["jobTitle"],
-            "id": e["jobId"],
-          }
-        });
+        return ReferralApplication.fromJson(e as Map<String, dynamic>);
       }).toList();
 
       return Right(list);
@@ -253,4 +207,3 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     }
   }
 }
-

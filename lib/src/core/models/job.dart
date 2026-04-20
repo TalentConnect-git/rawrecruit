@@ -33,20 +33,15 @@ abstract class Job with _$Job {
     int? matchScore,
 
     // Lists - Roles & Skills
-@JsonKey(fromJson: _safeList)
-List<String>? jobRoles,
+    @JsonKey(fromJson: _safeList) List<String>? jobRoles,
 
-@JsonKey(fromJson: _safeList)
-List<String>? location,
+    @JsonKey(fromJson: _safeList) List<String>? location,
 
-@JsonKey(fromJson: _safeList)
-List<String>? workMode,
+    @JsonKey(fromJson: _safeList) List<String>? workMode,
 
-@JsonKey(fromJson: _safeList)
-List<String>? skills,
+    @JsonKey(fromJson: _safeList) List<String>? skills,
 
-@JsonKey(fromJson: _safeList)
-List<String>? benefits,
+    @JsonKey(fromJson: _safeList) List<String>? benefits,
     List<String>? certifications,
     List<String>? degree,
     List<String>? studentStreams,
@@ -91,9 +86,9 @@ List<String>? benefits,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) = _Job;
-factory Job.fromJson(Map<String, dynamic> json) =>
-    _$JobFromJson(json);
+  factory Job.fromJson(Map<String, dynamic> json) => _$JobFromJson(json);
 }
+
 List<String>? _safeList(dynamic value) {
   if (value is List) {
     return value.map((e) => e.toString()).toList();

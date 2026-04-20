@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/view_model/alumni_view_model.dart';
 
 import 'widgets/alumni_hiring_card.dart';
@@ -16,12 +17,13 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
   int selectedTab = 0;
 
   /// 🔥 TODO: replace with real user type logic
-  bool get isProfessional => true;
+  bool get isProfessional =>
+      getIt<AppStateProvider>().userType == UserType.professional;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AlumniViewModel()..fetchAlumni(),
+      create: (_) => AlumniViewModel()..fetchCollegeAlumni(),
       child: Scaffold(
         backgroundColor: AppColors.kBg,
         body: Padding(
@@ -36,10 +38,8 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: "Search alumni...",
-                      hintStyle:
-                          const TextStyle(color: Colors.grey),
-                      prefixIcon:
-                          const Icon(Icons.search, color: Colors.grey),
+                      hintStyle: const TextStyle(color: Colors.grey),
+                      prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       filled: true,
                       fillColor: const Color(0xFF1F2937),
                       border: OutlineInputBorder(
@@ -91,9 +91,7 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
                 curve: Curves.easeInOut,
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 decoration: BoxDecoration(
-                  color: isSelected
-                      ? AppColors.kGreen
-                      : Colors.transparent,
+                  color: isSelected ? AppColors.kGreen : Colors.transparent,
                   borderRadius: BorderRadius.circular(25),
                 ),
                 child: Center(
@@ -102,8 +100,7 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color:
-                          isSelected ? Colors.black : Colors.grey,
+                      color: isSelected ? Colors.black : Colors.grey,
                     ),
                   ),
                 ),
@@ -120,9 +117,7 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
     return Consumer<AlumniViewModel>(
       builder: (context, vm, _) {
         if (vm.isLoading) {
-          return const Center(
-            child: CircularProgressIndicator(),
-          );
+          return const Center(child: CircularProgressIndicator());
         }
 
         final groupedList = vm.groupedAlumni.values.toList();
@@ -138,7 +133,6 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
 
         /// 🔥 TAB SWITCH
         switch (selectedTab) {
-
           /// ✅ HIRING TAB
           case 0:
             final hiring = groupedList
@@ -157,9 +151,7 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
             return ListView.builder(
               itemCount: hiring.length,
               itemBuilder: (_, index) {
-                return AlumniHiringCard(
-                  jobs: hiring[index],
-                );
+                return AlumniHiringCard(jobs: hiring[index]);
               },
             );
 
@@ -168,9 +160,7 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
             return ListView.builder(
               itemCount: groupedList.length,
               itemBuilder: (_, index) {
-                return AlumniHiringCard(
-                  jobs: groupedList[index],
-                );
+                return AlumniHiringCard(jobs: groupedList[index]);
               },
             );
 

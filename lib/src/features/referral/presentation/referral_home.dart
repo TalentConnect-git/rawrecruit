@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -14,6 +16,7 @@ import 'package:rawrecruit/src/features/referral/presentation/widgets/incoming_r
 
 import '../../../core/index.dart';
 import '../../../feature/revamp_referrer/utils/enums.dart';
+import '../../professional/job_postng/presentation/entities/referral_application.dart';
 import '../../professional/job_postng/presentation/view_model/posted_job_view_model.dart';
 import '../../shortlist/presentation/view_model/shortlist_view_model.dart';
 
@@ -107,7 +110,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                               color: Color(0xff222222),
                             ),
                             child: Text(
-                              '${context.watch<ReferralHomeViewModel>().incomingRequests.length} candidates waiting for response',
+                              '${context.watch<ReferralHomeViewModel>().referralApplications.length} candidates waiting for response',
                               style: AppTextStyles.s12W400.copyWith(
                                 color: AppColors.white,
                               ),
@@ -192,14 +195,15 @@ class _ReferralHomeState extends State<ReferralHome> {
                   const SizedBox(height: 12),
 
                   /// Incoming Requests List
-                  Selector<ReferralHomeViewModel, List<IncomingRequest>>(
-                    selector: (_, vm) => vm.incomingRequests,
+                  Selector<ReferralHomeViewModel, List<ReferralApplication>>(
+                    selector: (_, vm) => vm.referralApplications,
                     builder: (_, requests, __) => ListView.separated(
                       itemCount: requests.take(3).length,
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
                       separatorBuilder: (_, _) => const SizedBox(height: 8),
                       itemBuilder: (_, index) {
+                        log('Request $index: ${requests[index]}');
                         return IncomingRequestCard(request: requests[index]);
                       },
                     ),

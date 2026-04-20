@@ -20,7 +20,7 @@ class ApplicantCard extends StatelessWidget {
     final match = application.matchScore ?? 0;
 
     /// ✅ COLLEGE
-    final jobTitle = application.jobTitle ?? "-";
+    final jobTitle = application.job?.jobTitle ?? "-";
     return InkWell(
       borderRadius: BorderRadius.circular(12),
 

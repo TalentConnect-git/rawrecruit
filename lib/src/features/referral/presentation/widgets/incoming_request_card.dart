@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/features/referral/data/entities/incoming_request.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../common/index.dart';
 import '../../../../core/index.dart';
+import '../../../professional/job_postng/presentation/entities/referral_application.dart';
 
 class IncomingRequestCard extends StatelessWidget {
   const IncomingRequestCard({required this.request, super.key});
 
-  final IncomingRequest request;
+  final ReferralApplication request;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // context.pushNamed(RouteNames.referrerDetail, extra: request);
+        context.pushNamed(RouteNames.referrerDetail, extra: request);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -32,7 +33,7 @@ class IncomingRequestCard extends StatelessWidget {
                 shape: BoxShape.circle,
               ),
               child: Text(
-                request.applicantName?.getInitials ?? '',
+                request.applicant?.name?.getInitials ?? '',
                 style: AppTextStyles.s18W600.copyWith(color: AppColors.kBg),
               ),
             ),
@@ -48,7 +49,7 @@ class IncomingRequestCard extends StatelessWidget {
                     children: [
                       Flexible(
                         child: Text(
-                          request.applicantName ?? '',
+                          request.applicant?.name ?? '',
                           style: AppTextStyles.s16W600.copyWith(
                             color: AppColors.white,
                             overflow: TextOverflow.ellipsis,
@@ -56,21 +57,21 @@ class IncomingRequestCard extends StatelessWidget {
                         ),
                       ),
 
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          _statusChip(request.currentStatus ?? ''),
-                          Icon(
-                            Icons.keyboard_arrow_right,
-                            size: 28,
-                            color: AppColors.white,
-                          ),
-                        ],
-                      ),
+                      // Row(
+                      //   mainAxisSize: MainAxisSize.min,
+                      //   children: [
+                      //     _statusChip(request.currentStatus?.label ?? ''),
+                      //     Icon(
+                      //       Icons.keyboard_arrow_right,
+                      //       size: 28,
+                      //       color: AppColors.white,
+                      //     ),
+                      //   ],
+                      // ),
                     ],
                   ),
                   Text(
-                    'For ${request.jobTitle}',
+                    'For ${request.job?.jobTitle ?? ''}',
                     style: AppTextStyles.s16W600.copyWith(
                       color: AppColors.secText,
                     ),

@@ -1,8 +1,5 @@
 import 'package:dartz/dartz.dart';
-
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashbooard_data_source.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
-
 
 import '../../../../core/index.dart';
 
@@ -23,18 +20,18 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
       final List data = response['data'] ?? [];
 
-final jobs = data
-    .map((e) {
-      try {
-        return Job.fromJson(e);
-      } catch (err) {
-        print("PARSE ERROR: $err");
-        return null;
-      }
-    })
-    .whereType<Job>()
-    .toList();
-    print("FINAL JOBS COUNT: ${jobs.length}");
+      final jobs = data
+          .map((e) {
+            try {
+              return Job.fromJson(e);
+            } catch (err) {
+              print("PARSE ERROR: $err");
+              return null;
+            }
+          })
+          .whereType<Job>()
+          .toList();
+      print("FINAL JOBS COUNT: ${jobs.length}");
       return Right(jobs);
     } catch (e) {
       return Left(APIException.from(e));
@@ -45,20 +42,16 @@ final jobs = data
   ResultFuture<List<Job>> getReferralJobs() async {
     final request = Request(
       method: RequestMethod.get,
-      endpoint:
-Endpoints.referalListing,
+      endpoint: Endpoints.referalListing,
       isSafeRoute: true,
     );
 
     try {
-      final result =
-          await _networkService.request(request);
+      final result = await _networkService.request(request);
 
-      final list =
-          (result.data["data"] as List)
-              .map((e) =>
-                  Job.fromJson(e))
-              .toList();
+      final list = (result.data["data"] as List)
+          .map((e) => Job.fromJson(e))
+          .toList();
 
       return Right(list);
     } catch (e) {
@@ -67,47 +60,41 @@ Endpoints.referalListing,
   }
 
   @override
-ResultFuture<Job> getReferralJobDetails(String id) async {
-
-  final request = Request(
-    method: RequestMethod.get,
-    endpoint: "/jobs/jobDetails/referral/$id",
-    isSafeRoute: true,
-  );
-
-  try {
-    final result =
-        await _networkService.request(request);
-
-    final data =
-        (result.data as List).first;
-
-    return Right(
-      Job.fromJson(data),
+  ResultFuture<Job> getReferralJobDetails(String id) async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "/jobs/jobDetails/referral/$id",
+      isSafeRoute: true,
     );
-  } catch (e) {
-    return Left(APIException.from(e));
-  }
-}
-@override
-ResultFuture<void> applyReferral(String referralId) async {
 
-  final request = Request(
-    method: RequestMethod.post,
-    endpoint: "/application/candidate/referral",
-    body: {
-      "referralId": referralId,
-    },
-    isSafeRoute: true,
-  );
+    try {
+      final result = await _networkService.request(request);
 
-  try {
-    await _networkService.request(request);
-    return const Right(null);
-  } catch (e) {
-    return Left(APIException.from(e));
+      final data = (result.data as List).first;
+
+      return Right(Job.fromJson(data));
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
+
+  @override
+  ResultFuture<void> applyReferral(String referralId) async {
+    final request = Request(
+      method: RequestMethod.post,
+      endpoint: "/application/candidate/referral",
+      body: {"referralId": referralId},
+      isSafeRoute: true,
+    );
+
+    try {
+      await _networkService.request(request);
+      return const Right(null);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
   @override
   ResultFuture<List<Job>> getInternships() async {
     final Request request = Request(
@@ -131,23 +118,44 @@ ResultFuture<void> applyReferral(String referralId) async {
   }
 
   @override
-ResultFuture<List<Job>> getAlumni() async {
-  final request = Request(
-    method: RequestMethod.get,
-    endpoint: "/api/candidate/alumni",
-    isSafeRoute: true,
-  );
+  ResultFuture<List<Job>> getCollegeAlumni() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "/api/candidate/college-alumni",
+      isSafeRoute: true,
+    );
 
-  try {
-    final result = await _networkService.request(request);
+    try {
+      final result = await _networkService.request(request);
 
-    final List list = result.data['jobs'] ?? []; // ✅ IMPORTANT
+      final List list = result.data['jobs'] ?? []; // ✅ IMPORTANT
 
-    final alumniList = list.map((e) => Job.fromJson(e)).toList();
+      final alumniList = list.map((e) => Job.fromJson(e)).toList();
 
-    return Right(alumniList);
-  } catch (e) {
-    return Left(APIException.from(e));
+      return Right(alumniList);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
+
+  @override
+  ResultFuture<List<Job>> getCompanyAlumni() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "/api/candidate/college-alumni",
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+
+      final List list = result.data['jobs'] ?? []; // ✅ IMPORTANT
+
+      final alumniList = list.map((e) => Job.fromJson(e)).toList();
+
+      return Right(alumniList);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
 }

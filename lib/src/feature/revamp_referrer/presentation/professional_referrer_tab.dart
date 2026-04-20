@@ -6,6 +6,7 @@ import 'package:rawrecruit/src/feature/revamp_application/presentation/view_mode
 import 'package:rawrecruit/src/feature/revamp_application/presentation/widget/application_card.dart';
 import 'package:rawrecruit/src/feature/revamp_referrer/utils/enums.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/applicant_card.dart';
+
 import '../../../features/professional/job_postng/presentation/widgets/referred_applicant_card.dart';
 
 class ProfessionalReferralView extends StatefulWidget {
@@ -17,8 +18,7 @@ class ProfessionalReferralView extends StatefulWidget {
       _ProfessionalReferralViewState();
 }
 
-class _ProfessionalReferralViewState
-    extends State<ProfessionalReferralView> {
+class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
   ProfessionalReferrerApplicationType selectedTab =
       ProfessionalReferrerApplicationType.appliedByMe;
 
@@ -84,8 +84,7 @@ class _ProfessionalReferralViewState
     );
   }
 
-  Widget _tab(
-      ProfessionalReferrerApplicationType type, BuildContext context) {
+  Widget _tab(ProfessionalReferrerApplicationType type, BuildContext context) {
     final isSelected = selectedTab == type;
 
     return Expanded(
@@ -96,14 +95,12 @@ class _ProfessionalReferralViewState
           final vm = context.read<ApplicationViewModel>();
 
           /// ✅ CALL ONLY WHEN NEEDED
-          if (type ==
-                  ProfessionalReferrerApplicationType.requestsReceived &&
+          if (type == ProfessionalReferrerApplicationType.requestsReceived &&
               vm.referralApplications.isEmpty) {
             vm.fetchReferralRequests();
           }
 
-          if (type ==
-                  ProfessionalReferrerApplicationType.referredByMe &&
+          if (type == ProfessionalReferrerApplicationType.referredByMe &&
               vm.referredByMe.isEmpty) {
             vm.fetchReferredByMe();
           }

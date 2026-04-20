@@ -86,7 +86,9 @@ class AlumniDetailView extends StatelessWidget {
                   const SizedBox(height: 6),
 
                   /// College line
-                  _skillChip('Verified Professional'),
+                  _skillChip(
+                    '${(first.candidatePosted?.emailVerified ?? false) ? 'Verified' : 'Unverified'} Professional',
+                  ),
 
                   const SizedBox(height: 16),
 

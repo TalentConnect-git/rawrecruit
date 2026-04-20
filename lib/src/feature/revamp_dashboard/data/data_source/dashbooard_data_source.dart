@@ -7,5 +7,6 @@ abstract class DashboardDataSource {
   ResultFuture<List<Job>> getReferralJobs();
   ResultFuture<Job> getReferralJobDetails(String id);
   ResultFuture<void> applyReferral(String referralId);
-  ResultFuture<List<Job>> getAlumni();
+  ResultFuture<List<Job>> getCollegeAlumni();
+  ResultFuture<List<Job>> getCompanyAlumni();
 }

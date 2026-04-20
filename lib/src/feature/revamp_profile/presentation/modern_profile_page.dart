@@ -211,7 +211,24 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
             ),
           ),
 
-          const SizedBox(height: 4),
+          const SizedBox(height: 8),
+
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(60),
+              border: Border.all(color: AppColors.white, width: 0.5),
+              color: Color(0xff222222),
+            ),
+            child: Text(
+              p?.emailVerified ?? false
+                  ? 'Verified'
+                  : 'Unverified Professional',
+              style: AppTextStyles.s12W400.copyWith(color: AppColors.white),
+            ),
+          ),
+
+          const SizedBox(height: 12),
 
           /// Role (you can map from backend later)
           Text(
