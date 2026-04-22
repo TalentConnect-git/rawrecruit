@@ -51,6 +51,32 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   bool isLoadingCities = false;
   // Tags — enum only, multi-select via Set
   final Set<String> selectedTags = {};
+
+  final PageController _pageController = PageController();
+
+int currentStep = 0;
+
+final int totalSteps = 6;
+
+void nextStep() {
+  if (currentStep < totalSteps - 1) {
+    _pageController.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+}
+
+void previousStep() {
+  if (currentStep > 0) {
+    _pageController.previousPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  } else {
+    Navigator.pop(context);
+  }
+}
  Future<void> fetchStates() async {
   try {
     setState(() => isLoadingStates = true);
@@ -445,281 +471,392 @@ Future<void> fetchCities(String state) async {
           style: TextStyle(color: Colors.white),
         ),
       ),
-      body: Padding(
+   body: SafeArea(
+  child: Column(
+    children: [
+      /// 🔥 PROGRESS BAR
+      Padding(
         padding: const EdgeInsets.all(16),
+        child: LinearProgressIndicator(
+          value: (currentStep + 1) / totalSteps,
+          backgroundColor: Colors.grey.shade800,
+          color: AppColors.kGreen,
+          minHeight: 8,
+          borderRadius: BorderRadius.circular(20),
+        ),
+      ),
+
+      Expanded(
         child: Form(
           key: _formKey,
-          child: ListView(
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            onPageChanged: (i) {
+              setState(() {
+                currentStep = i;
+              });
+            },
             children: [
-              /// 🔥 JOB INFO
-              _card(
-                title: "Job Info",
-                children: [
-                  _dropdownDark(
-                    "Job Title",
-                    selectedJobTitle,
-                    jobTitleOptions,
-                    (val) => setState(() => selectedJobTitle = val!),
-                  ),
+              /// STEP 1 — JOB INFO
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: _card(
+                  title: "Job Info",
+                  children: [
+                    _dropdownDark(
+                      "Job Title",
+                      selectedJobTitle,
+                      jobTitleOptions,
+                      (val) => setState(() => selectedJobTitle = val!),
+                    ),
 
-                  if (selectedJobTitle == "Others")
+                    if (selectedJobTitle == "Others")
+                      _fieldDark(
+                        "Enter Custom Job Title",
+                        controller: titleController,
+                      ),
+
                     _fieldDark(
-                      "Enter Custom Job Title",
-                      controller: titleController,
+                      "Description",
+                      controller: descriptionController,
+                      maxLines: 3,
                     ),
 
-                  _fieldDark(
-                    "Description",
-                    controller: descriptionController,
-                    maxLines: 3,
-                  ),
-
-                  _fieldDark(
-                    "Eligibility Criteria",
-                    controller: eligibilityController,
-                    maxLines: 3,
-                  ),
-                ],
-              ),
-
-              /// 🔥 LOCATION & WORK
-              _card(
-                title: "Location & Work",
-                children: [
-                  /// 🔥 STATE DROPDOWN
-                  isLoadingStates
-                      ? const CircularProgressIndicator()
-                      : _dropdownDark(
-                          "State",
-                          selectedState.isEmpty ? null : selectedState,
-                          states,
-                          (val) {
-                            setState(() {
-                              selectedState = val!;
-                            });
-                            fetchCities(val!); // 🔥 load cities
-                          },
-                        ),
-
-                  /// 🔥 CITY DROPDOWN
-                  if (selectedState.isNotEmpty)
-                    isLoadingCities
-                        ? const CircularProgressIndicator()
-                        : _dropdownDark(
-                            "City",
-                            selectedCity.isEmpty ? null : selectedCity,
-                            cities,
-                            (val) => setState(() => selectedCity = val!),
-                          ),
-
-                  _dropdownDark(
-                    "Employment Type",
-                    employmentType,
-                    ["Full-time", "Part-time"],
-                    (val) => setState(() => employmentType = val!),
-                  ),
-
-                  _dropdownDark("Work Mode", workMode, [
-                    "On-site",
-                    "Remote",
-                    "Hybrid",
-                  ], (val) => setState(() => workMode = val!)),
-
-                  _dropdownDark(
-                    "Broadcast Type",
-                    broadcastType,
-                    ["Everyone", "Selected Colleges"],
-                    (val) => setState(() => broadcastType = val!),
-                  ),
-                ],
-              ),
-
-              /// 🔥 EDUCATION & EXPERIENCE
-              _card(
-                title: "Education & Experience",
-                children: [
-                  _dropdownDark(
-                    "Minimum Education",
-                    minEducation,
-                    educationOptions,
-                    (val) => setState(() {
-                      minEducation = val!;
-                      fieldOfStudyController.clear();
-                    }),
-                  ),
-
-                  MultiSelectDropdownChips(
-                    key: ValueKey('fieldOfStudy_$minEducation'),
-                    label: "Preferred Field of Study",
-                    controller: fieldOfStudyController,
-                    options: fieldOfStudyOptions,
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  _dropdownDark(
-                    "Work Authorization",
-                    workAuthorization,
-                    workAuthorizationOptions,
-                    (val) => setState(() => workAuthorization = val!),
-                  ),
-
-                  _dropdownDark(
-                    "Experience Range",
-                    experienceRange,
-                    experienceOptions,
-                    (val) => setState(() => experienceRange = val!),
-                  ),
-
-                  _fieldDark(
-                    "Openings",
-                    controller: openingsController,
-                    keyboardType: TextInputType.number,
-                  ),
-                ],
-              ),
-
-              /// 🔥 PACKAGE DETAILS
-              _card(
-                title: "Package Details",
-                children: [
-                  _dropdownDark(
-                    "Currency",
-                    currencyController.text,
-                    currencyOptions,
-                    (val) => setState(() => currencyController.text = val!),
-                  ),
-
-                  _fieldDark(
-                    "Total CTC",
-                    controller: totalCTCController,
-                    keyboardType: TextInputType.number,
-                  ),
-
-                  _fieldDark(
-                    "Fixed Pay",
-                    controller: fixedPayController,
-                    keyboardType: TextInputType.number,
-                  ),
-
-                  _fieldDark(
-                    "Variable Pay",
-                    controller: joiningBonusController,
-                    keyboardType: TextInputType.number,
-                  ),
-                ],
-              ),
-
-              /// 🔥 TAGS
-              _card(title: "Tags", children: [_tagsEnumField()]),
-
-              /// 🔥 SKILLS & CERTIFICATIONS
-              _card(
-                title: "Skills & Certifications",
-                children: [
-                  MultiSelectDropdownChips(
-                    key: const ValueKey('skills'),
-                    label: "Skills",
-                    controller: skillsController,
-                    options: skillOptions,
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  MultiSelectDropdownChips(
-                    key: const ValueKey('certifications'),
-                    label: "Certifications",
-                    controller: certificationsController,
-                    options: certificationOptions,
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  MultiSelectDropdownChips(
-                    key: const ValueKey('benefits'),
-                    label: "Benefits",
-                    controller: benefitsController,
-                    options: benefitOptions,
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 20),
-
-              /// 🔥 SUBMIT BUTTON
-              SizedBox(
-                height: 52,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.kGreen,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                    _fieldDark(
+                      "Eligibility Criteria",
+                      controller: eligibilityController,
+                      maxLines: 3,
                     ),
-                  ),
-                  onPressed: () async {
-                    final model = ReferralPostModel(
-                      jobTitle: selectedJobTitle == "Others"
-                          ? titleController.text.trim()
-                          : selectedJobTitle,
-                      description: descriptionController.text.trim(),
-                      employmentType: employmentType,
-                      workMode: workMode,
-                      broadcastType: broadcastType,
-                      jobType: "Referral",
-                      location: [selectedCity],
-                      minEducation: minEducation,
-                      numberOfOpenings:
-                          int.tryParse(openingsController.text) ?? 0,
-                      packageDetails: PackageDetails(
-                        currency: currencyController.text.trim(),
-                        totalCTC: int.tryParse(totalCTCController.text) ?? 0,
-                        fixedPay: int.tryParse(fixedPayController.text) ?? 0,
-                        joiningBonus:
-                            int.tryParse(joiningBonusController.text) ?? 0,
-                      ),
-                      skills: _splitController(skillsController),
-                      studentStreams: _splitController(fieldOfStudyController),
-                      tags: selectedTags.toList(),
-                      workAuthorization: workAuthorization,
-                      yearsOfExperience: experienceRange,
-                      benefits: _splitController(benefitsController),
-                      certifications: _splitController(
-                        certificationsController,
-                      ),
-                      eligibilityCriteria: eligibilityController.text.trim(),
-                      approvalStatus: 'Pending',
-                    );
-
-                    final success = await vm.postJob(model);
-
-                    if (success && mounted) {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Referral Successfully Added"),
-                          backgroundColor: Colors.green,
-                        ),
-                      );
-
-                      Future.delayed(const Duration(seconds: 1), () {
-                        if (mounted) Navigator.pop(context);
-                      });
-                    }
-                  },
-                  child: Text(
-                    "Post Job",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: AppColors.white,
-                    ),
-                  ),
+                  ],
                 ),
               ),
 
-              const SizedBox(height: 40),
+              /// STEP 2 — LOCATION
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: _card(
+                  title: "Location & Work",
+                  children: [
+                    isLoadingStates
+                        ? const CircularProgressIndicator()
+                        : _dropdownDark(
+                            "State",
+                            selectedState.isEmpty
+                                ? null
+                                : selectedState,
+                            states,
+                            (val) {
+                              setState(() {
+                                selectedState = val!;
+                              });
+
+                              fetchCities(val!);
+                            },
+                          ),
+
+                    if (selectedState.isNotEmpty)
+                      isLoadingCities
+                          ? const CircularProgressIndicator()
+                          : _dropdownDark(
+                              "City",
+                              selectedCity.isEmpty
+                                  ? null
+                                  : selectedCity,
+                              cities,
+                              (val) => setState(
+                                () => selectedCity = val!,
+                              ),
+                            ),
+
+                    _dropdownDark(
+                      "Employment Type",
+                      employmentType,
+                      ["Full-time", "Part-time"],
+                      (val) =>
+                          setState(() => employmentType = val!),
+                    ),
+
+                    _dropdownDark(
+                      "Work Mode",
+                      workMode,
+                      ["On-site", "Remote", "Hybrid"],
+                      (val) => setState(() => workMode = val!),
+                    ),
+                  ],
+                ),
+              ),
+
+              /// STEP 3 — EDUCATION
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: _card(
+                  title: "Education & Experience",
+                  children: [
+                    _dropdownDark(
+                      "Minimum Education",
+                      minEducation,
+                      educationOptions,
+                      (val) => setState(() {
+                        minEducation = val!;
+                        fieldOfStudyController.clear();
+                      }),
+                    ),
+
+                    MultiSelectDropdownChips(
+                      key: ValueKey(
+                        'fieldOfStudy_$minEducation',
+                      ),
+                      label: "Preferred Field of Study",
+                      controller: fieldOfStudyController,
+                      options: fieldOfStudyOptions,
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    _dropdownDark(
+                      "Experience Range",
+                      experienceRange,
+                      experienceOptions,
+                      (val) => setState(
+                        () => experienceRange = val!,
+                      ),
+                    ),
+
+                    _fieldDark(
+                      "Openings",
+                      controller: openingsController,
+                      keyboardType: TextInputType.number,
+                    ),
+                  ],
+                ),
+              ),
+
+              /// STEP 4 — PACKAGE
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: _card(
+                  title: "Package Details",
+                  children: [
+                    _dropdownDark(
+                      "Currency",
+                      currencyController.text,
+                      currencyOptions,
+                      (val) => setState(
+                        () => currencyController.text = val!,
+                      ),
+                    ),
+
+                    _fieldDark(
+                      "Total CTC",
+                      controller: totalCTCController,
+                      keyboardType: TextInputType.number,
+                    ),
+
+                    _fieldDark(
+                      "Fixed Pay",
+                      controller: fixedPayController,
+                      keyboardType: TextInputType.number,
+                    ),
+
+                    _fieldDark(
+                      "Variable Pay",
+                      controller: joiningBonusController,
+                      keyboardType: TextInputType.number,
+                    ),
+                  ],
+                ),
+              ),
+
+              /// STEP 5 — TAGS
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: _card(
+                  title: "Tags",
+                  children: [_tagsEnumField()],
+                ),
+              ),
+
+              /// STEP 6 — SKILLS
+              SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: _card(
+                  title: "Skills & Certifications",
+                  children: [
+                    MultiSelectDropdownChips(
+                      key: const ValueKey('skills'),
+                      label: "Skills",
+                      controller: skillsController,
+                      options: skillOptions,
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    MultiSelectDropdownChips(
+                      key: const ValueKey(
+                        'certifications',
+                      ),
+                      label: "Certifications",
+                      controller: certificationsController,
+                      options: certificationOptions,
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    MultiSelectDropdownChips(
+                      key: const ValueKey('benefits'),
+                      label: "Benefits",
+                      controller: benefitsController,
+                      options: benefitOptions,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),
       ),
+
+      /// 🔥 BOTTOM BUTTONS
+      Padding(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+           Expanded(
+        child: SizedBox(
+          height: 56,
+          child: OutlinedButton(
+            style: OutlinedButton.styleFrom(
+              side: BorderSide(color: AppColors.kGreen),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: previousStep,
+            child: const Text(
+              "Back",
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+              ),
+            ),
+          ),
+        ),
+      ),
+            const SizedBox(width: 12),
+
+         
+      Expanded(
+        child: SizedBox(
+          height: 56,
+          child: ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.kGreen,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: currentStep == totalSteps - 1
+                ? () async {
+                        final model = ReferralPostModel(
+                          jobTitle:
+                              selectedJobTitle == "Others"
+                                  ? titleController.text.trim()
+                                  : selectedJobTitle,
+                          description:
+                              descriptionController.text.trim(),
+                          employmentType: employmentType,
+                          workMode: workMode,
+                          broadcastType: broadcastType,
+                          jobType: "Referral",
+                          location: [selectedCity],
+                          minEducation: minEducation,
+                          numberOfOpenings:
+                              int.tryParse(
+                                openingsController.text,
+                              ) ??
+                              0,
+                          packageDetails: PackageDetails(
+                            currency:
+                                currencyController.text.trim(),
+                            totalCTC:
+                                int.tryParse(
+                                  totalCTCController.text,
+                                ) ??
+                                0,
+                            fixedPay:
+                                int.tryParse(
+                                  fixedPayController.text,
+                                ) ??
+                                0,
+                            joiningBonus:
+                                int.tryParse(
+                                  joiningBonusController.text,
+                                ) ??
+                                0,
+                          ),
+                          skills: _splitController(
+                            skillsController,
+                          ),
+                          studentStreams:
+                              _splitController(
+                                fieldOfStudyController,
+                              ),
+                          tags: selectedTags.toList(),
+                          workAuthorization:
+                              workAuthorization,
+                          yearsOfExperience:
+                              experienceRange,
+                          benefits: _splitController(
+                            benefitsController,
+                          ),
+                          certifications:
+                              _splitController(
+                                certificationsController,
+                              ),
+                          eligibilityCriteria:
+                              eligibilityController.text
+                                  .trim(),
+                          approvalStatus: 'Pending',
+                        );
+
+                        final success =
+                            await vm.postJob(model);
+
+                        if (success && mounted) {
+                          ScaffoldMessenger.of(
+                            context,
+                          ).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                "Referral Successfully Added",
+                              ),
+                            ),
+                          );
+
+                          Navigator.pop(context);
+                        }
+                      }
+                    : nextStep,
+              child: Text(
+  currentStep == totalSteps - 1
+      ? "Post Job"
+      : "Continue",
+  style: const TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.bold,
+    fontSize: 16,
+  ),
+),
+              ),
+            ),
+         ) ],
+        ),
+      ),
+    ],
+  ),
+),
     );
   }
 

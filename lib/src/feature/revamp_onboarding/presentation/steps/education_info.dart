@@ -173,67 +173,75 @@ final d = widget.data;   collegeCtrl = TextEditingController(text: d.college);
     if (selectedDegree == null) return ["Select degree first"];
     return specializationMap[selectedDegree!] ?? ["Other"];
   }
+@override
+Widget build(BuildContext context) {
+final isProfessional =
+    getIt<AppStateProvider>().userType ==
+        UserType.professional;
 
-  @override
-  Widget build(BuildContext context) {
-    return Wrapper(
-      title: "Education",
-      children: [
-        /// 🔙 HEADER
-        AppHeader(
-          title: "Your Educational",
-          highlight: "details",
-          onBack: widget.onBack,
-        ),
+final isFresher =
+    getIt<AppStateProvider>().userType ==
+        UserType.fresher;
 
-        const SizedBox(height: 10),
+  return Wrapper(
+    title: "Education",
+    children: [
+      /// 🔙 HEADER
+      AppHeader(
+        title: "Your Educational",
+        highlight: "details",
+        onBack: widget.onBack,
+      ),
 
-        const Text(
-          "What's your qualifications?",
-          style: TextStyle(color: Colors.grey),
-        ),
+      const SizedBox(height: 10),
 
-        const SizedBox(height: 16),
+      const Text(
+        "What's your qualifications?",
+        style: TextStyle(color: Colors.grey),
+      ),
 
-        /// 🔥 COLLEGE
-        AppInput(
-          "College",
-          controller: collegeCtrl,
-          onChanged: (_) => saveData(),
-        ),
+      const SizedBox(height: 16),
 
-        /// 🔥 DEGREE
-        AppDropdown(
-          hint: "Degree",
-          options: degreeOptions,
-          value: selectedDegree,
-          onChanged: (val) {
-            setState(() {
-              selectedDegree = val;
-              selectedSpecialization = null;
-              saveData();
-            });
-          },
-        ),
+      /// 🔥 COLLEGE
+      AppInput(
+        "College",
+        controller: collegeCtrl,
+        onChanged: (_) => saveData(),
+      ),
 
-        /// 🔥 SPECIALIZATION (DEPENDENT)
-        AppDropdown(
-          hint: selectedDegree == null
-              ? "Select degree first"
-              : "Specialization",
-          options: getSpecializations(),
-          value: selectedSpecialization,
-          onChanged: selectedDegree == null
-              ? null
-              : (val) {
-                  setState(() {
-                    selectedSpecialization = val;
-                    saveData();
-                  });
-                },
-        ),
+      /// 🔥 DEGREE
+      AppDropdown(
+        hint: "Degree",
+        options: degreeOptions,
+        value: selectedDegree,
+        onChanged: (val) {
+          setState(() {
+            selectedDegree = val;
+            selectedSpecialization = null;
+            saveData();
+          });
+        },
+      ),
 
-        /// 🔥 SEMESTER
+      /// 🔥 SPECIALIZATION
+      AppDropdown(
+        hint: selectedDegree == null
+            ? "Select degree first"
+            : "Specialization",
+        options: getSpecializations(),
+        value: selectedSpecialization,
+        onChanged: selectedDegree == null
+            ? null
+            : (val) {
+                setState(() {
+                  selectedSpecialization = val;
+                  saveData();
+                });
+              },
+      ),
+
+      /// 🔥 SEMESTER
+      if (!isProfessional && !isFresher)
         AppDropdown(
           hint: "Semester",
           options: semesterOptions,
@@ -246,26 +254,31 @@ final d = widget.data;   collegeCtrl = TextEditingController(text: d.college);
           },
         ),
 
-        /// 🔥 GRADUATION YEAR
-        AppDropdown(
-          hint: "Graduation Year",
-          options: graduationYears,
-          value: selectedYear,
-          onChanged: (val) {
-            setState(() {
-              selectedYear = val;
-              saveData();
-            });
-          },
+      /// 🔥 GRADUATION YEAR
+      AppDropdown(
+        hint: "Graduation Year",
+        options: graduationYears,
+        value: selectedYear,
+        onChanged: (val) {
+          setState(() {
+            selectedYear = val;
+            saveData();
+          });
+        },
+      ),
+
+      /// 🔥 CGPA
+      if (!isProfessional)
+        AppInput(
+          "CGPA",
+          controller: cgpaCtrl,
+          onChanged: (_) => saveData(),
         ),
 
-        /// 🔥 CGPA
-        AppInput("CGPA", controller: cgpaCtrl, onChanged: (_) => saveData()),
-
-        const SizedBox(height: 20),
-      ],
-    );
-  }
+      const SizedBox(height: 20),
+    ],
+  );
+}
 
   @override
   void dispose() {

@@ -8,8 +8,8 @@ import 'package:rawrecruit/src/features/professional/job_postng/data/repository/
 import 'widgets/applicant_card.dart';
 
 class ReferralPostDetailView extends StatefulWidget {
+  
   final ReferralPostModel job;
-
   const ReferralPostDetailView({super.key, required this.job});
 
   @override
@@ -88,7 +88,7 @@ class _ReferralPostDetailViewState
     final job = widget.job;
 
     final title = job.jobTitle ?? "Frontend Engineer";
-    final company =  "pGoogle";
+    final company =  job.jobType ?? "";
     final location = job.location?.first ?? "Bangalore";
 final metrics = job.metrics;
 
