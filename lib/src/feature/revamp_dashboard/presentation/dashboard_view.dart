@@ -68,35 +68,33 @@ class _DashboardBody extends StatelessWidget {
                   /// 🔥 NEW HEADER
                   DashboardCard(vm: context.watch<MyProfileViewModel>()),
 
-             const SizedBox(height: 16),
+                  const SizedBox(height: 16),
 
-SingleChildScrollView(
-  scrollDirection: Axis.horizontal,
-  child: Row(
-    children: [
-      InfoChip(
-        text:
-            "you have applied to ${context.watch<ApplicationViewModel>().appliedApplications.length} applications",
-        
-      ),
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Row(
+                      children: [
+                        InfoChip(
+                          text:
+                              "you have applied to ${context.watch<ApplicationViewModel>().appliedApplications.length} applications",
+                        ),
 
-      const SizedBox(width: 8),
+                        const SizedBox(width: 8),
 
-      InfoChip(
-        text:
-            "${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni hiring in your network",
-      ),
+                        InfoChip(
+                          text:
+                              "${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni hiring in your network",
+                        ),
 
-      const SizedBox(width: 8),
+                        const SizedBox(width: 8),
 
-      InfoChip(
-        text:
-            "you have ${context.watch<ShortlistViewModel>().savedJobIds.length} saved jobs",
-      ),
-    ],
-  ),
-),
-
+                        InfoChip(
+                          text:
+                              "you have ${context.watch<ShortlistViewModel>().savedJobIds.length} saved jobs",
+                        ),
+                      ],
+                    ),
+                  ),
 
                   const SizedBox(height: 16),
 
@@ -173,7 +171,15 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
         return ListView(
           children: [
             /// 🔥 MY APPLICATIONS SECTION
-            _SectionHeader(title: "My Applications"),
+            _SectionHeader(
+              title: "My Applications",
+              onTap: () {
+                context.pushNamed(
+                  RouteNames.referrer,
+                  extra: {'userType': UserType.fresher},
+                );
+              },
+            ),
 
             if (applicationVM.appliedApplications.isEmpty)
               const Padding(
@@ -187,7 +193,15 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
               ...mixed.map((job) {
                 return ApplicationCard(model: job);
               }),
-            _SectionHeader(title: "Alumni Hiring Network"),
+            _SectionHeader(
+              title: "Alumni Hiring Network",
+              onTap: () {
+                context.pushNamed(
+                  RouteNames.shortlist,
+                  extra: {'userType': UserType.fresher},
+                );
+              },
+            ),
 
             SizedBox(
               height: 240,
@@ -202,7 +216,18 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
             ),
 
             /// 🔥 REFERRAL SECTION
-            _SectionHeader(title: "Referral Jobs for You"),
+            _SectionHeader(
+              title: "Referral Jobs for You",
+              onTap: () {
+                context.pushNamed(
+                  RouteNames.application,
+                  extra: {
+                    'userType': UserType.fresher,
+                    'studentJobType': StudentJobType.referral,
+                  },
+                );
+              },
+            ),
             ...vm.referralJobs.take(3).map((job) {
               final isSaved = shortlistVM.savedJobIds.contains(job.id);
               final isApplied = applicationVM.isApplied(job.id ?? '');
@@ -229,7 +254,18 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
             }),
 
             /// 🔥 INTERNSHIP SECTION
-            _SectionHeader(title: "Internship Opportunities"),
+            _SectionHeader(
+              title: "Internship Opportunities",
+              onTap: () {
+                context.pushNamed(
+                  RouteNames.application,
+                  extra: {
+                    'userType': UserType.fresher,
+                    'studentJobType': StudentJobType.internship,
+                  },
+                );
+              },
+            ),
             ...vm.internships.take(3).map((job) {
               final isSaved = shortlistVM.savedJobIds.contains(job.id);
               final isApplied = applicationVM.isApplied(job.id ?? '');
@@ -263,7 +299,18 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
             }),
 
             /// 🔥 OFF CAMPUS SECTION
-            _SectionHeader(title: "Off-Campus Drives"),
+            _SectionHeader(
+              title: "Off-Campus Drives",
+              onTap: () {
+                context.pushNamed(
+                  RouteNames.application,
+                  extra: {
+                    'userType': UserType.fresher,
+                    'studentJobType': StudentJobType.offCampus,
+                  },
+                );
+              },
+            ),
             ...vm.jobs.take(3).map((job) {
               final isSaved = shortlistVM.savedJobIds.contains(job.id);
               final isApplied = applicationVM.isApplied(job.id ?? '');
@@ -301,8 +348,9 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
 
 class _SectionHeader extends StatelessWidget {
   final String title;
+  final VoidCallback onTap;
 
-  const _SectionHeader({required this.title});
+  const _SectionHeader({required this.title, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -319,11 +367,14 @@ class _SectionHeader extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
-          Text(
-            "View All",
-            style: TextStyle(
-              color: AppColors.kGreen,
-              fontWeight: FontWeight.w600,
+          GestureDetector(
+            onTap: onTap,
+            child: Text(
+              "View All",
+              style: TextStyle(
+                color: AppColors.kGreen,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         ],
@@ -420,15 +471,12 @@ class _SegmentToggle extends StatelessWidget {
     );
   }
 }
+
 class InfoChip extends StatelessWidget {
   final String text;
   final VoidCallback? onTap;
 
-  const InfoChip({
-    super.key,
-    required this.text,
-    this.onTap,
-  });
+  const InfoChip({super.key, required this.text, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -443,9 +491,7 @@ class InfoChip extends StatelessWidget {
         ),
         child: Text(
           text,
-          style: AppTextStyles.s12W400.copyWith(
-            color: AppColors.white,
-          ),
+          style: AppTextStyles.s12W400.copyWith(color: AppColors.white),
         ),
       ),
     );

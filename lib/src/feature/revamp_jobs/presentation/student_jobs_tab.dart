@@ -3,22 +3,35 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
-import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/posted_job_view_model.dart';
-import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/my_job_card.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../../common/index.dart';
 import '../../../core/index.dart';
 import '../../revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
+
 class StudentJobsView extends StatefulWidget {
-  const StudentJobsView({super.key});
+  const StudentJobsView({this.jobType, super.key});
+
+  final StudentJobType? jobType;
 
   @override
   State<StudentJobsView> createState() => _StudentJobsViewState();
 }
 
 class _StudentJobsViewState extends State<StudentJobsView> {
-  int selectedTab = 0;
+  StudentJobType selectedTab = StudentJobType.referral;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      setState(() {
+        if (widget.jobType != null) {
+          selectedTab = widget.jobType!;
+        }
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,9 +63,7 @@ class _StudentJobsViewState extends State<StudentJobsView> {
                   _buildTabs(),
                   const SizedBox(height: 10),
 
-                  Expanded(
-                    child: _buildBody(),
-                  ),
+                  Expanded(child: _buildBody()),
                 ],
               ),
             ),
@@ -66,15 +77,12 @@ class _StudentJobsViewState extends State<StudentJobsView> {
   Widget _buildTabs() {
     return Row(
       children: [
-        _tab("Referral Jobs", 0),
-        _tab("Off-Campus", 1),
-        _tab("Internships", 2),
-        _tab("Saved", 3),
+        ...StudentJobType.values.map((type) => _tab(type.label, type)),
       ],
     );
   }
 
-  Widget _tab(String title, int index) {
+  Widget _tab(String title, StudentJobType index) {
     final isSelected = selectedTab == index;
 
     return Expanded(
@@ -105,16 +113,14 @@ class _StudentJobsViewState extends State<StudentJobsView> {
   /// 🔥 BODY SWITCH
   Widget _buildBody() {
     switch (selectedTab) {
-      case 0:
+      case StudentJobType.referral:
         return _referralJobs();
-      case 1:
+      case StudentJobType.offCampus:
         return _offCampusJobs();
-      case 2:
+      case StudentJobType.internship:
         return _internships();
-      case 3:
+      case StudentJobType.saved:
         return _savedJobs();
-      default:
-        return const SizedBox();
     }
   }
 
@@ -202,10 +208,11 @@ class _StudentJobsViewState extends State<StudentJobsView> {
       job: job,
       isSaved: isSaved,
       isApplied: isApplied,
-onApply: () => applicationVM.apply(
-  jobId: job.id ?? '',
-  jobType: job.jobType ?? 'Off-campus',
-),      onBookmarkToggle: () {
+      onApply: () => applicationVM.apply(
+        jobId: job.id ?? '',
+        jobType: job.jobType ?? 'Off-campus',
+      ),
+      onBookmarkToggle: () {
         shortlistVM.toggleSave(
           jobId: job.id ?? '',
           jobType: job.jobType ?? '',
@@ -214,15 +221,9 @@ onApply: () => applicationVM.apply(
       },
       onTap: () {
         if (job.jobType == "Referral") {
-          context.pushNamed(
-            RouteNames.referralDetail,
-            extra: job.id,
-          );
+          context.pushNamed(RouteNames.referralDetail, extra: job.id);
         } else {
-          context.pushNamed(
-            RouteNames.jobDetail,
-            extra: job,
-          );
+          context.pushNamed(RouteNames.jobDetail, extra: job);
         }
       },
     );
@@ -230,10 +231,7 @@ onApply: () => applicationVM.apply(
 
   Widget _empty() {
     return const Center(
-      child: Text(
-        "No data available",
-        style: TextStyle(color: Colors.grey),
-      ),
+      child: Text("No data available", style: TextStyle(color: Colors.grey)),
     );
   }
 }

@@ -198,3 +198,14 @@ extension NavItemExt on NavItem {
     }
   }
 }
+
+enum StudentJobType {
+  referral('Referral Jobs'),
+  offCampus('Off-Campus'),
+  internship('Internships'),
+  saved('Saved');
+
+  const StudentJobType(this.label);
+
+  final String label;
+}

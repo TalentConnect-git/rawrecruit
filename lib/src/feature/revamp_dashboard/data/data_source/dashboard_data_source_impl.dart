@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashbooard_data_source.dart';
 
@@ -118,7 +120,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   }
 
   @override
-  ResultFuture<List<Job>> getCollegeAlumni() async {
+  ResultFuture<List<User>> getCollegeAlumni() async {
     final request = Request(
       method: RequestMethod.get,
       endpoint: "/api/candidate/college-alumni",
@@ -128,12 +130,13 @@ class DashboardDataSourceImpl implements DashboardDataSource {
     try {
       final result = await _networkService.request(request);
 
-      final List list = result.data['jobs'] ?? []; // ✅ IMPORTANT
+      final List list = result.data['alumni'] ?? []; // ✅ IMPORTANT
 
-      final alumniList = list.map((e) => Job.fromJson(e)).toList();
+      final alumniList = list.map((e) => User.fromJson(e)).toList();
 
       return Right(alumniList);
-    } catch (e) {
+    } catch (e, s) {
+      log('$e\n\n$s');
       return Left(APIException.from(e));
     }
   }

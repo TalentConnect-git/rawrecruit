@@ -31,7 +31,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
   }
 
   @override
-  ResultFuture<List<Job>> getCollegeAlumni() => _dataSource.getCollegeAlumni();
+  ResultFuture<List<User>> getCollegeAlumni() => _dataSource.getCollegeAlumni();
 
   @override
   ResultFuture<List<Job>> getCompanyAlumni() => _dataSource.getCompanyAlumni();

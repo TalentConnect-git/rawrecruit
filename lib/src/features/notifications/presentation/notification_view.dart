@@ -32,13 +32,13 @@ class _NotificationViewState extends State<NotificationView> {
     return ChangeNotifierProvider.value(
       value: notificationViewModel,
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColors.kBg,
         appBar: RAppBar(
           leading: GestureDetector(
             onTap: () {
               context.pop();
             },
-            child: Icon(Icons.keyboard_arrow_left),
+            child: Icon(Icons.keyboard_arrow_left, color: AppColors.white),
           ),
 
           label: 'Notifications',
@@ -53,7 +53,7 @@ class _NotificationViewState extends State<NotificationView> {
               return Center(
                 child: Text(
                   'Notifications Not Found!',
-                  style: AppTextStyles.s18W400,
+                  style: AppTextStyles.s18W400.copyWith(color: AppColors.white),
                 ),
               );
             }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart'
-    show RouteNames, User, UserType, Job;
+    show RouteNames, User, UserType, Job, StudentJobType;
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/alumni_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
@@ -340,7 +340,9 @@ class AppRouter {
                   selectedType: args['jobType'] as ProfessionalJobType?,
                 ); // ✅
               } else {
-                return StudentJobsView(); // ✅
+                return StudentJobsView(
+                  jobType: args['studentJobType'] as StudentJobType?,
+                ); // ✅
               }
             },
           ),

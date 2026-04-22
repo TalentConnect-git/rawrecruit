@@ -3,8 +3,10 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../revamp_onboarding/presentation/index.dart';
 import 'career_insight_page.dart';
 
@@ -117,29 +119,32 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         }
                       },
                     ),
-                   if (getIt<AppStateProvider>().isProfessional) ...[
-  _menuItem(
-    "My Posted Jobs",
-    Icons.work,
-    onTap: () {
-      context.goNamed(
-        RouteNames.application,
-        extra: {UserType.professional},
-      );
-    },
-  ),
+                    if (getIt<AppStateProvider>().isProfessional) ...[
+                      _menuItem(
+                        "My Posted Jobs",
+                        Icons.work,
+                        onTap: () {
+                          context.goNamed(
+                            RouteNames.application,
+                            extra: {
+                              'userType': UserType.professional,
+                              'jobType': ProfessionalJobType.posted,
+                            },
+                          );
+                        },
+                      ),
 
-  _menuItem(
-    "Referrals",
-    Icons.share,
-    onTap: () {
-      context.goNamed(
-        RouteNames.referrer,
-        extra: {UserType.professional},
-      );
-    },
-  ),
-],
+                      _menuItem(
+                        "Referrals",
+                        Icons.share,
+                        onTap: () {
+                          context.goNamed(
+                            RouteNames.referrer,
+                            extra: {'userType': UserType.professional},
+                          );
+                        },
+                      ),
+                    ],
 
                     _menuItem(
                       "Alumni Network",
@@ -160,7 +165,13 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         );
                       },
                     ),
-                    _menuItem("Notifications", Icons.notifications),
+                    _menuItem(
+                      "Notifications",
+                      Icons.notifications,
+                      onTap: () {
+                        context.pushNamed(RouteNames.notification);
+                      },
+                    ),
 
                     const SizedBox(height: 20),
 
@@ -189,13 +200,14 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
       child: Column(
         children: [
           /// Avatar
-         SizedBox(
-  height: 64,
-  width: 64,
-  child: ProfileImage(
-    imagePath: p?.profileImage ?? '',
-onImageSelected:null),
-),
+          SizedBox(
+            height: 64,
+            width: 64,
+            child: ProfileImage(
+              imagePath: p?.profileImage ?? '',
+              onImageSelected: null,
+            ),
+          ),
           const SizedBox(height: 10),
 
           /// Name
@@ -209,63 +221,63 @@ onImageSelected:null),
           ),
 
           const SizedBox(height: 8),
-if (getIt<AppStateProvider>().isProfessional)
-  Container(
-    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-    decoration: BoxDecoration(
-      borderRadius: BorderRadius.circular(60),
-      border: Border.all(color: AppColors.white, width: 0.5),
-      color: const Color(0xff222222),
-    ),
-    child: Text(
-      p?.emailVerified ?? false
-          ? 'Verified'
-          : 'Unverified Professional',
-      style: AppTextStyles.s12W400.copyWith(
-        color: AppColors.white,
-      ),
-    ),
-    
-  ),
+          if (getIt<AppStateProvider>().isProfessional)
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(60),
+                border: Border.all(color: AppColors.white, width: 0.5),
+                color: const Color(0xff222222),
+              ),
+              child: Text(
+                p?.emailVerified ?? false
+                    ? 'Verified'
+                    : 'Unverified Professional',
+                style: AppTextStyles.s12W400.copyWith(color: AppColors.white),
+              ),
+            ),
           const SizedBox(height: 12),
 
-/// 🔥 Resume Button
-if ((p?.resume ?? '').isNotEmpty)
-  GestureDetector(
-    onTap: () async {
-      final url = p!.resume!;
+          /// 🔥 Resume Button
+          if ((p?.resume ?? '').isNotEmpty)
+            GestureDetector(
+              onTap: () async {
+                final url = p!.resume!;
 
-      // open in browser
-      await launchUrl(
-        Uri.parse(url),
-        mode: LaunchMode.externalApplication,
-      );
-    },
-    child: Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: AppColors.kGreen,
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: const [
-          Icon(Icons.download, color: Colors.black, size: 16),
-          SizedBox(width: 6),
-          Text(
-            "View Resume",
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 12,
-              fontWeight: FontWeight.w600,
+                // open in browser
+                await launchUrl(
+                  Uri.parse(url),
+                  mode: LaunchMode.externalApplication,
+                );
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.kGreen,
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: const [
+                    Icon(Icons.download, color: Colors.black, size: 16),
+                    SizedBox(width: 6),
+                    Text(
+                      "View Resume",
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
-          ),
-        ],
-      ),
-    ),
-  ),
 
-  const SizedBox(height: 10),
+          const SizedBox(height: 10),
 
           /// Role (you can map from backend later)
           Text(
