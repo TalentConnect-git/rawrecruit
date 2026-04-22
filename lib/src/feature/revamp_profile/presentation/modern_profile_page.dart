@@ -117,27 +117,29 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         }
                       },
                     ),
-                    _menuItem(
-                      "My Posted Jobs",
-                      Icons.work,
-                      onTap: () {
-                        context.goNamed(
-                          RouteNames.application,
-                          extra: {UserType.professional},
-                        );
-                      },
-                    ),
+                   if (getIt<AppStateProvider>().isProfessional) ...[
+  _menuItem(
+    "My Posted Jobs",
+    Icons.work,
+    onTap: () {
+      context.goNamed(
+        RouteNames.application,
+        extra: {UserType.professional},
+      );
+    },
+  ),
 
-                    _menuItem(
-                      "Referrals",
-                      Icons.share,
-                      onTap: () {
-                        context.goNamed(
-                          RouteNames.referrer,
-                          extra: {UserType.professional},
-                        );
-                      },
-                    ),
+  _menuItem(
+    "Referrals",
+    Icons.share,
+    onTap: () {
+      context.goNamed(
+        RouteNames.referrer,
+        extra: {UserType.professional},
+      );
+    },
+  ),
+],
 
                     _menuItem(
                       "Alumni Network",
@@ -207,22 +209,24 @@ onImageSelected:null),
           ),
 
           const SizedBox(height: 8),
-
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(60),
-              border: Border.all(color: AppColors.white, width: 0.5),
-              color: Color(0xff222222),
-            ),
-            child: Text(
-              p?.emailVerified ?? false
-                  ? 'Verified'
-                  : 'Unverified Professional',
-              style: AppTextStyles.s12W400.copyWith(color: AppColors.white),
-            ),
-          ),
-
+if (getIt<AppStateProvider>().isProfessional)
+  Container(
+    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+    decoration: BoxDecoration(
+      borderRadius: BorderRadius.circular(60),
+      border: Border.all(color: AppColors.white, width: 0.5),
+      color: const Color(0xff222222),
+    ),
+    child: Text(
+      p?.emailVerified ?? false
+          ? 'Verified'
+          : 'Unverified Professional',
+      style: AppTextStyles.s12W400.copyWith(
+        color: AppColors.white,
+      ),
+    ),
+    
+  ),
           const SizedBox(height: 12),
 
 /// 🔥 Resume Button
