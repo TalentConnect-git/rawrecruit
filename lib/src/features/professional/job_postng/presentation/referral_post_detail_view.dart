@@ -20,13 +20,13 @@ class ReferralPostDetailView extends StatefulWidget {
 class _ReferralPostDetailViewState
     extends State<ReferralPostDetailView> {
   int selectedTab = 0;
-
-  List<ReferralApplication> applications = [];
+bool isPaused = false;  List<ReferralApplication> applications = [];
   bool isLoadingApps = true;
 
   @override
   void initState() {
     super.initState();
+    isPaused = widget.job.inactive ?? false;
     _fetchApplications();
   }
 
@@ -206,16 +206,19 @@ final metrics = job.metrics;
 
   /// 🔥 ACTIONS
  Widget _actions() {
-  final isPaused = widget.job.inactive ?? false;
+  // final isPaused = widget.job.inactive ?? false;
 
   return Row(
     children: [
-      Expanded(
-        child: _btn(
-          isPaused ? Icons.play_arrow : Icons.pause,
-          isPaused ? "Resume" : "Pause",
-        ),
-      ),
+     Expanded(
+  child: GestureDetector(
+    onTap: _togglePauseJob,
+    child: _btn(
+      isPaused ? Icons.play_arrow : Icons.pause,
+      isPaused ? "Resume" : "Pause",
+    ),
+  ),
+),
       const SizedBox(width: 12),
       Expanded(
         child: GestureDetector(
@@ -226,7 +229,50 @@ final metrics = job.metrics;
     ],
   );
 }
+Future<void> _togglePauseJob() async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
 
+  final result = await getIt<ReferralPostRepository>()
+      .toggleReferralJobStatus(
+        jobId: widget.job.id ?? "",
+      );
+
+  if (mounted) Navigator.pop(context);
+
+  result.fold(
+    (failure) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+!isPaused                ? "Failed to resume job"
+                : "Failed to pause job",
+          ),
+        ),
+      );
+    },
+    (_) {
+      setState(() {
+  isPaused = !isPaused;
+});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+  isPaused
+      ? "Job paused successfully"
+      : "Job resumed successfully",
+),
+        ),
+      );
+    },
+  );
+}
 Future<void> _showDeleteDialog() async {
   showDialog(
     context: context,

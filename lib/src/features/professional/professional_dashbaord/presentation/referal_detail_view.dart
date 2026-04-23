@@ -155,7 +155,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 
                   _sectionInfo("Job Overview", [
                     _info("Job Title", job.jobTitle),
-                    _info("Job Type", job.jobType),
+                    // _info("Job Type", job.jobType),
                     _info("Status", job.jobStatus),
                     _info("Approval", job.approvalStatus),
                   ]),
@@ -292,7 +292,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
           children: [
             _tag("📍 $location"),
             _tag("👜 $mode"),
-            _tag("⏱ $type"),
+            // _tag("⏱ $type"),
             _tag("📅 Deadline: $deadline"),
           ],
         ),

@@ -170,4 +170,22 @@ ResultFuture<void> deleteReferralJob({
     return Left(APIException.from(e));
   }
 }
+
+@override
+ResultFuture<void> toggleReferralJobStatus({
+  required String jobId,
+}) async {
+  final request = Request(
+    method: RequestMethod.patch,
+    endpoint: '/company/jobmanagement/referral/$jobId',
+    isSafeRoute: true,
+  );
+
+  try {
+    await _networkService.request(request);
+    return const Right(null);
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
 }

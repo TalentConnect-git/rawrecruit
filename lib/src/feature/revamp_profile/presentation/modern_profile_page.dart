@@ -280,10 +280,12 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
           const SizedBox(height: 10),
 
           /// Role (you can map from backend later)
-          Text(
-            '${p?.currentCompany ?? 'Company'}, ${p?.college ?? '-'}',
-            style: TextStyle(color: Colors.grey[400], fontSize: 12),
-          ),
+         Text(
+  getIt<AppStateProvider>().isProfessional
+      ? (p?.currentCompany ?? 'Company')
+      : (p?.college ?? '-'),
+  style: TextStyle(color: Colors.grey[400], fontSize: 12),
+),
 
           const SizedBox(height: 2),
 

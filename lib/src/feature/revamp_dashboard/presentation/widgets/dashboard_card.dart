@@ -45,13 +45,13 @@ class DashboardCard extends StatelessWidget {
               child: InkWell(
                 borderRadius: BorderRadius.circular(16),
                 onTap: () {
-                  context.goNamed(
-                    RouteNames.application,
-                    extra: {
-                      'userType': UserType.student,
-                      'jobType': ProfessionalJobType.saved,
-                    },
-                  );
+               context.goNamed(
+  RouteNames.application,
+  extra: {
+    'userType': UserType.student,
+    'studentJobType': StudentJobType.saved,
+  },
+);
                 },
                 child: _buildStatCard(
                   icon: Icons.description_outlined,

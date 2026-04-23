@@ -42,4 +42,16 @@ ResultFuture<void> deleteReferralJob({
   required String jobId,
 }) =>
     _dataSource.deleteReferralJob(jobId: jobId);
+
+
+  
+
+@override
+ResultFuture<void> toggleReferralJobStatus({
+  required String jobId,
+}) {
+  return _dataSource.toggleReferralJobStatus(
+    jobId: jobId,
+  );
+}
 }
