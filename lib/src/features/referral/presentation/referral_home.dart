@@ -8,6 +8,7 @@ import 'package:rawrecruit/src/feature/revamp_application/presentation/view_mode
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/alumni_card.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
+import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/my_job_card.dart';
 import 'package:rawrecruit/src/features/referral/data/entities/incoming_request.dart';
@@ -212,13 +213,34 @@ class _ReferralHomeState extends State<ReferralHome> {
 
                   /// 🔥 MY POSTED JOBS SECTION
                   const SizedBox(height: 24),
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      'Alumni Hiring Network',
+      style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+    ),
+    GestureDetector(
+      onTap: () {
+        context.pushNamed(RouteNames.shortlist);
+      },
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 4,
+        ),
+        child: Text(
+          'View All',
+          style: AppTextStyles.s14W600.copyWith(
+            color: AppColors.kGreen,
+          ),
+        ),
+      ),
+    ),
+  ],
+),
 
-                  Text(
-                    'Alumni Hiring Network',
-                    style: AppTextStyles.s16W600.copyWith(color: Colors.white),
-                  ),
-
-                  const SizedBox(height: 12),
+const SizedBox(height: 12),
 
                   Consumer<DashboardViewModel>(
                     builder: (context, vm, _) {
@@ -249,12 +271,44 @@ class _ReferralHomeState extends State<ReferralHome> {
                   const SizedBox(height: 24),
 
                   /// Jobs Section
-                  Text(
-                    'Jobs For You',
-                    style: AppTextStyles.s16W600.copyWith(color: Colors.white),
-                  ),
+             /// Jobs Section
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      'Jobs For You',
+      style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+    ),
+    GestureDetector(
+      onTap: () {
+  context.pushNamed(
+  RouteNames.application,
+  extra: {
+    'userType': UserType.professional,
+    'jobType': ProfessionalJobType.available,
+  },
+);
+},
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 4,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Text(
+          'View All',
+          style: AppTextStyles.s14W600.copyWith(
+            color: AppColors.kGreen,
+          ),
+        ),
+      ),
+    ),
+  ],
+),
 
-                  const SizedBox(height: 12),
+const SizedBox(height: 12),
 
                   Consumer<PostedJobViewModel>(
                     builder: (context, vm, _) {
@@ -315,13 +369,43 @@ class _ReferralHomeState extends State<ReferralHome> {
                   ),
 
                   const SizedBox(height: 24),
+Row(
+  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  children: [
+    Text(
+      'My Posted Jobs',
+      style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+    ),
+    GestureDetector(
+    onTap: () {
+ context.pushNamed(
+  RouteNames.application,
+  extra: {
+    'userType': UserType.professional,
+    'jobType': ProfessionalJobType.posted,
+  },
+);
+},
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+          horizontal: 12,
+          vertical: 4,
+        ),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Text(
+          'View All',
+          style: AppTextStyles.s14W600.copyWith(
+            color: AppColors.kGreen,
+          ),
+        ),
+      ),
+    ),
+  ],
+),
 
-                  Text(
-                    'My Posted Jobs',
-                    style: AppTextStyles.s16W600.copyWith(color: Colors.white),
-                  ),
-
-                  const SizedBox(height: 12),
+const SizedBox(height: 12),
 
                   Consumer<PostedJobViewModel>(
                     builder: (context, vm, _) {

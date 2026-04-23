@@ -36,4 +36,10 @@ class ReferralPostRepositoryImpl implements ReferralPostRepository {
     @override
   ResultFuture<List<Job>> getOffCampusJobs() =>
       _dataSource.getOffCampusJobs();
+
+      @override
+ResultFuture<void> deleteReferralJob({
+  required String jobId,
+}) =>
+    _dataSource.deleteReferralJob(jobId: jobId);
 }

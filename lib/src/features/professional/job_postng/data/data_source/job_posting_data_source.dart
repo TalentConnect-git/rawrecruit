@@ -17,5 +17,7 @@ abstract class ReferralPostDataSource {
     required String status,
   });
    ResultFuture<List<Job>> getOffCampusJobs();
-
+ResultFuture<void> deleteReferralJob({
+  required String jobId,
+});
 }

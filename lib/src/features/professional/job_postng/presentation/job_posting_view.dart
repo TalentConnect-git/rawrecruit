@@ -764,6 +764,7 @@ Future<void> fetchCities(String state) async {
                               selectedJobTitle == "Others"
                                   ? titleController.text.trim()
                                   : selectedJobTitle,
+                                  inactive: false,
                           description:
                               descriptionController.text.trim(),
                           employmentType: employmentType,
