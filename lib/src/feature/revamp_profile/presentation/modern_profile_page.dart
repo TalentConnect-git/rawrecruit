@@ -280,12 +280,12 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
           const SizedBox(height: 10),
 
           /// Role (you can map from backend later)
-         Text(
-  getIt<AppStateProvider>().isProfessional
-      ? (p?.currentCompany ?? 'Company')
-      : (p?.college ?? '-'),
-  style: TextStyle(color: Colors.grey[400], fontSize: 12),
-),
+          Text(
+            getIt<AppStateProvider>().isProfessional
+                ? (p?.currentCompany ?? 'Company')
+                : (p?.college ?? '-'),
+            style: TextStyle(color: Colors.grey[400], fontSize: 12),
+          ),
 
           const SizedBox(height: 2),
 
@@ -340,7 +340,9 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
         : [
             ["${vm.savedJobs}", "Saved Jobs"],
             ["${vm.totalApps}", "Applications"],
-            ["${vm.referralApps}", "Referral Applications"],
+            ["${vm.referralApps}", "Referral Apps"],
+            ["${vm.resumeScore}%", "Resume Score"], // ✅ NEW
+            ["${vm.hiringScore}%", "Hiring Score"], // ✅ NEW
           ];
 
     return GridView.builder(

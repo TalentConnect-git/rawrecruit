@@ -27,8 +27,13 @@ class _DashboardViewState extends State<DashboardView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final failure = await myProfileViewModel.getCandidateStats();
-      failure?.showError(context);
+      final results = await Future.wait([
+        myProfileViewModel.getCandidateStats(),
+        myProfileViewModel.getCareerInsights(), // 🔥 THIS WAS MISSING
+      ]);
+
+      results[0]?.showError(context); // candidate stats error
+      results[1]?.showError(context); // career insights error
     });
   }
 
