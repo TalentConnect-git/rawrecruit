@@ -31,9 +31,7 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   workMode: _safeList(json['workMode']),
   skills: _safeList(json['skills']),
   benefits: _safeList(json['benefits']),
-  certifications: (json['certifications'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
+  certifications: _safeList(json['certifications']),
   degree: (json['degree'] as List<dynamic>?)?.map((e) => e as String).toList(),
   studentStreams: (json['studentStreams'] as List<dynamic>?)
       ?.map((e) => e as String)
@@ -82,9 +80,9 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   interviewWindow: json['interviewWindow'] == null
       ? null
       : Timeline.fromJson(json['interviewWindow'] as Map<String, dynamic>),
-  candidatePosted: json['candidatePosted'] == null
-      ? null
-      : User.fromJson(json['candidatePosted'] as Map<String, dynamic>),
+  candidatePosted: const UserOrStringConvertor().fromJson(
+    json['candidatePosted'],
+  ),
   companyPosted: json['companyPosted'] == null
       ? null
       : JobPosting.fromJson(json['companyPosted'] as Map<String, dynamic>),
@@ -160,7 +158,9 @@ Map<String, dynamic> _$JobToJson(_Job instance) => <String, dynamic>{
   'packageDetails': instance.packageDetails,
   'contactPerson': instance.contactPerson,
   'interviewWindow': instance.interviewWindow,
-  'candidatePosted': instance.candidatePosted,
+  'candidatePosted': const UserOrStringConvertor().toJson(
+    instance.candidatePosted,
+  ),
   'companyPosted': instance.companyPosted,
   'jobCompanyPosted': instance.jobCompanyPosted,
   'onlineTestDate': instance.onlineTestDate?.toIso8601String(),

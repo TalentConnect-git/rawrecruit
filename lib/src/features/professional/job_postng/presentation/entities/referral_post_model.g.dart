@@ -13,10 +13,8 @@ _ReferralPostModel _$ReferralPostModelFromJson(
   jobTitle: json['jobTitle'] as String?,
   description: json['description'] as String?,
   approvalStatus: json['approvalStatus'] as String?,
-  employmentType: const StringOrListConvertor().fromJson(
-    json['employmentType'],
-  ),
-  workMode: const StringOrListConvertor().fromJson(json['workMode']),
+  employmentType: json['employmentType'] as String?,
+  workMode: json['workMode'] as String?,
   broadcastType: json['broadcastType'] as String?,
   jobType: json['jobType'] as String?,
   location: (json['location'] as List<dynamic>?)
@@ -53,10 +51,8 @@ Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
       'jobTitle': instance.jobTitle,
       'description': instance.description,
       'approvalStatus': instance.approvalStatus,
-      'employmentType': const StringOrListConvertor().toJson(
-        instance.employmentType,
-      ),
-      'workMode': const StringOrListConvertor().toJson(instance.workMode),
+      'employmentType': instance.employmentType,
+      'workMode': instance.workMode,
       'broadcastType': instance.broadcastType,
       'jobType': instance.jobType,
       'location': instance.location,

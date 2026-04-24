@@ -71,6 +71,8 @@ abstract class User with _$User {
     String? expectedSalaryCurrency,
     String? maritalStatus,
     String? visaStatus,
+
+    List<Job>? referralJobs,
   }) = _User;
 
   factory User.fromJson(Map<String, dynamic> json) => _$UserFromJson(json);

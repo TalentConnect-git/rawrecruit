@@ -90,6 +90,9 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   expectedSalaryCurrency: json['expectedSalaryCurrency'] as String?,
   maritalStatus: json['maritalStatus'] as String?,
   visaStatus: json['visaStatus'] as String?,
+  referralJobs: (json['referralJobs'] as List<dynamic>?)
+      ?.map((e) => Job.fromJson(e as Map<String, dynamic>))
+      .toList(),
 );
 
 Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
@@ -148,4 +151,5 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'expectedSalaryCurrency': instance.expectedSalaryCurrency,
   'maritalStatus': instance.maritalStatus,
   'visaStatus': instance.visaStatus,
+  'referralJobs': instance.referralJobs?.map((e) => e.toJson()).toList(),
 };

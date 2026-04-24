@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReferralPostModel {
 
-@JsonKey(name: '_id') String? get id; String? get jobTitle; String? get description; String? get approvalStatus;@StringOrListConvertor() String? get employmentType;@StringOrListConvertor() String? get workMode; String? get broadcastType; String? get jobType; List<String>? get location; String? get minEducation; int? get numberOfOpenings; PackageDetails? get packageDetails; List<String>? get skills; List<String>? get studentStreams; List<String>? get tags; String? get workAuthorization; String? get yearsOfExperience; bool? get inactive; List<String>? get benefits; List<String>? get certifications; String? get eligibilityCriteria; Metrics? get metrics;
+@JsonKey(name: '_id') String? get id; String? get jobTitle; String? get description; String? get approvalStatus; String? get employmentType; String? get workMode; String? get broadcastType; String? get jobType; List<String>? get location; String? get minEducation; int? get numberOfOpenings; PackageDetails? get packageDetails; List<String>? get skills; List<String>? get studentStreams; List<String>? get tags; String? get workAuthorization; String? get yearsOfExperience; bool? get inactive; List<String>? get benefits; List<String>? get certifications; String? get eligibilityCriteria; Metrics? get metrics;
 /// Create a copy of ReferralPostModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $ReferralPostModelCopyWith<$Res>  {
   factory $ReferralPostModelCopyWith(ReferralPostModel value, $Res Function(ReferralPostModel) _then) = _$ReferralPostModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? approvalStatus,@StringOrListConvertor() String? employmentType,@StringOrListConvertor() String? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, bool? inactive, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria, Metrics? metrics
+@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? approvalStatus, String? employmentType, String? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, bool? inactive, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria, Metrics? metrics
 });
 
 
@@ -198,7 +198,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus, @StringOrListConvertor()  String? employmentType, @StringOrListConvertor()  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  bool? inactive,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria,  Metrics? metrics)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus,  String? employmentType,  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  bool? inactive,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria,  Metrics? metrics)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReferralPostModel() when $default != null:
 return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.inactive,_that.benefits,_that.certifications,_that.eligibilityCriteria,_that.metrics);case _:
@@ -219,7 +219,7 @@ return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus, @StringOrListConvertor()  String? employmentType, @StringOrListConvertor()  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  bool? inactive,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria,  Metrics? metrics)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus,  String? employmentType,  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  bool? inactive,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria,  Metrics? metrics)  $default,) {final _that = this;
 switch (_that) {
 case _ReferralPostModel():
 return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.inactive,_that.benefits,_that.certifications,_that.eligibilityCriteria,_that.metrics);case _:
@@ -239,7 +239,7 @@ return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus, @StringOrListConvertor()  String? employmentType, @StringOrListConvertor()  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  bool? inactive,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria,  Metrics? metrics)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus,  String? employmentType,  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  bool? inactive,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria,  Metrics? metrics)?  $default,) {final _that = this;
 switch (_that) {
 case _ReferralPostModel() when $default != null:
 return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.inactive,_that.benefits,_that.certifications,_that.eligibilityCriteria,_that.metrics);case _:
@@ -254,15 +254,15 @@ return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_
 @JsonSerializable()
 
 class _ReferralPostModel implements ReferralPostModel {
-  const _ReferralPostModel({@JsonKey(name: '_id') this.id, this.jobTitle, this.description, this.approvalStatus, @StringOrListConvertor() this.employmentType, @StringOrListConvertor() this.workMode, this.broadcastType, this.jobType, final  List<String>? location, this.minEducation, this.numberOfOpenings, this.packageDetails, final  List<String>? skills, final  List<String>? studentStreams, final  List<String>? tags, this.workAuthorization, this.yearsOfExperience, this.inactive, final  List<String>? benefits, final  List<String>? certifications, this.eligibilityCriteria, this.metrics}): _location = location,_skills = skills,_studentStreams = studentStreams,_tags = tags,_benefits = benefits,_certifications = certifications;
+  const _ReferralPostModel({@JsonKey(name: '_id') this.id, this.jobTitle, this.description, this.approvalStatus, this.employmentType, this.workMode, this.broadcastType, this.jobType, final  List<String>? location, this.minEducation, this.numberOfOpenings, this.packageDetails, final  List<String>? skills, final  List<String>? studentStreams, final  List<String>? tags, this.workAuthorization, this.yearsOfExperience, this.inactive, final  List<String>? benefits, final  List<String>? certifications, this.eligibilityCriteria, this.metrics}): _location = location,_skills = skills,_studentStreams = studentStreams,_tags = tags,_benefits = benefits,_certifications = certifications;
   factory _ReferralPostModel.fromJson(Map<String, dynamic> json) => _$ReferralPostModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
 @override final  String? jobTitle;
 @override final  String? description;
 @override final  String? approvalStatus;
-@override@StringOrListConvertor() final  String? employmentType;
-@override@StringOrListConvertor() final  String? workMode;
+@override final  String? employmentType;
+@override final  String? workMode;
 @override final  String? broadcastType;
 @override final  String? jobType;
  final  List<String>? _location;
@@ -361,7 +361,7 @@ abstract mixin class _$ReferralPostModelCopyWith<$Res> implements $ReferralPostM
   factory _$ReferralPostModelCopyWith(_ReferralPostModel value, $Res Function(_ReferralPostModel) _then) = __$ReferralPostModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? approvalStatus,@StringOrListConvertor() String? employmentType,@StringOrListConvertor() String? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, bool? inactive, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria, Metrics? metrics
+@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? approvalStatus, String? employmentType, String? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, bool? inactive, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria, Metrics? metrics
 });
 
 

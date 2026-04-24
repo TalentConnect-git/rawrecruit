@@ -17,6 +17,7 @@ class AlumniDetailView extends StatelessWidget {
     final skills = first.candidatePosted?.skills ?? ['Skill 1', 'Skill 2'];
     final role = first.jobTitle ?? "Professional";
     final location = first.location?.join(", ") ?? "Location";
+    final referrals = first.candidatePosted?.referralJobs ?? [];
 
     return Scaffold(
       backgroundColor: AppColors.kBg,
@@ -179,7 +180,7 @@ class AlumniDetailView extends StatelessWidget {
 
             const SizedBox(height: 10),
 
-            ...jobs.map((job) => _jobTile(context, job)).toList(),
+            ...referrals.map((job) => _jobTile(context, job)).toList(),
 
             const SizedBox(height: 80),
           ],

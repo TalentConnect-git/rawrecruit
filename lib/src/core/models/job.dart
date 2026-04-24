@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rawrecruit/src/core/index.dart';
 
+import '../../features/notifications/index.dart';
+
 part 'job.freezed.dart';
 part 'job.g.dart';
 
@@ -31,7 +33,7 @@ abstract class Job with _$Job {
     int? numberOfOpenings,
     int? views,
     int? matchScore,
-int? alumniCount,
+    int? alumniCount,
     // Lists - Roles & Skills
     @JsonKey(fromJson: _safeList) List<String>? jobRoles,
 
@@ -42,7 +44,7 @@ int? alumniCount,
     @JsonKey(fromJson: _safeList) List<String>? skills,
 
     @JsonKey(fromJson: _safeList) List<String>? benefits,
-    List<String>? certifications,
+    @JsonKey(fromJson: _safeList) List<String>? certifications,
     List<String>? degree,
     List<String>? studentStreams,
 
@@ -73,7 +75,9 @@ int? alumniCount,
     PackageDetail? packageDetails,
     User? contactPerson,
     Timeline? interviewWindow,
-    @JsonKey(name: 'candidatePosted') User? candidatePosted,
+    @UserOrStringConvertor()
+    @JsonKey(name: 'candidatePosted')
+    User? candidatePosted,
     JobPosting? companyPosted,
     JobPosting? jobCompanyPosted,
 
@@ -92,6 +96,10 @@ int? alumniCount,
 List<String>? _safeList(dynamic value) {
   if (value is List) {
     return value.map((e) => e.toString()).toList();
+  }
+
+  if (value is String) {
+    return [value];
   }
   return null;
 }
