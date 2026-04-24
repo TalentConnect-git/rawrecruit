@@ -17,8 +17,8 @@ class AlumniHiringCard extends StatelessWidget {
 
     final college = candidate?.college ?? "Your College";
     final year = "2024";
-    final designation = "Software Engineer";
-    final company = job.companyName ?? "Company Name";
+    final designation = candidate?.jobRoles?.join(", ") ?? "role";
+    final company = candidate?.currentCompany ?? "company";
 
     final location = job.location;
 
@@ -87,10 +87,7 @@ class AlumniHiringCard extends StatelessWidget {
                   /// 🔥 DESIGNATION + COMPANY
                   Text(
                     "$designation at $company",
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 13,
-                    ),
+                    style: const TextStyle(color: Colors.grey, fontSize: 13),
                   ),
 
                   const SizedBox(height: 6),
@@ -98,14 +95,10 @@ class AlumniHiringCard extends StatelessWidget {
                   /// 🔥 COLLEGE + YEAR
                   Text(
                     "$college • $year",
-                    style: const TextStyle(
-                      color: Colors.grey,
-                      fontSize: 13,
-                    ),
+                    style: const TextStyle(color: Colors.grey, fontSize: 13),
                   ),
 
                   const SizedBox(height: 10), // 🔥 more spacing
-
                   /// 🔹 Bottom Row
                   Row(
                     children: [
@@ -148,15 +141,20 @@ class AlumniHiringCard extends StatelessWidget {
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 6),
+                            horizontal: 12,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: AppColors.kGreen.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(22),
                           ),
                           child: const Row(
                             children: [
-                              Icon(Icons.message,
-                                  size: 14, color: Colors.green),
+                              Icon(
+                                Icons.message,
+                                size: 14,
+                                color: Colors.green,
+                              ),
                               SizedBox(width: 6),
                               Text(
                                 "Message",

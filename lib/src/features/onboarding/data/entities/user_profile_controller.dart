@@ -49,7 +49,9 @@ class UserController {
       expectedSalaryCurrency = TextEditingController(),
       maritalStatus = TextEditingController(),
       visaStatus = TextEditingController(),
-      servingNoticePeriod = TextEditingController();
+    servingNoticePeriod = TextEditingController(),
+currentCompany = TextEditingController(),
+noticePeriod = TextEditingController();
 
   /// Basic Fields
   TextEditingController id;
@@ -108,7 +110,8 @@ class UserController {
   TextEditingController maritalStatus;
   TextEditingController visaStatus;
   TextEditingController servingNoticePeriod;
-
+TextEditingController currentCompany;
+TextEditingController noticePeriod;
   Map<String, dynamic> toMap() {
     String? clean(String? v) => v == null || v.trim().isEmpty ? null : v.trim();
 
@@ -152,6 +155,8 @@ class UserController {
       'linkedin': clean(linkedin.text),
       'name': clean(name.text),
       'openToShift': clean(openToShift.text),
+      'currentCompany': clean(currentCompany.text),
+'noticePeriod': clean(noticePeriod.text),
       'phone': clean(phone.text),
       'portfolio': clean(portfolio.text),
       'profileType': clean(profileType.text),
@@ -187,7 +192,7 @@ class UserController {
             (e) => cleanMap({
               'company': clean(e.company.text),
               'role': clean(e.role.text),
-              'isCurrent': e.isCurrent,
+              'isCurrent': e.isCurrent ? 'true' : 'false',
               'startDate': clean(e.startDate.text),
               'endDate': clean(e.endDate.text),
               'description': clean(e.description.text),
@@ -295,20 +300,21 @@ class UserController {
     maritalStatus.dispose();
     visaStatus.dispose();
     servingNoticePeriod.dispose();
-
+currentCompany.dispose();
+noticePeriod.dispose();
     for (final controller in domainKnowledge) {
       controller.dispose();
     }
     for (final controller in employmentType) {
       controller.dispose();
     }
-   for (final e in experiences) {
-  e.company.dispose();
-  e.role.dispose();
-  e.startDate.dispose();
-  e.endDate.dispose();
-  e.description.dispose();
-}
+    for (final e in experiences) {
+      e.company.dispose();
+      e.role.dispose();
+      e.startDate.dispose();
+      e.endDate.dispose();
+      e.description.dispose();
+    }
     for (final controller in industry) {
       controller.dispose();
     }

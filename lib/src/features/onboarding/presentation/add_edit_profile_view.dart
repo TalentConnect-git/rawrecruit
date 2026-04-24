@@ -400,21 +400,32 @@ void nextStep() {
   void initState() {
     super.initState();
 
-    controller.skills.add(TextEditingController());
-    controller.domainKnowledge.add(TextEditingController());
-    controller.employmentType.add(TextEditingController());
-    controller.industry.add(TextEditingController());
-    controller.jobRoles.add(TextEditingController());
-    controller.languagesKnown.add(TextEditingController());
-    controller.locations.add(TextEditingController());
-    controller.lookingFor.add(TextEditingController());
-    controller.toolsAndPlatforms.add(TextEditingController());
+    // controller.skills.add(TextEditingController());
+    // controller.domainKnowledge.add(TextEditingController());
+    // controller.employmentType.add(TextEditingController());
+    // controller.industry.add(TextEditingController());
+    // controller.jobRoles.add(TextEditingController());
+    // controller.languagesKnown.add(TextEditingController());
+    // controller.locations.add(TextEditingController());
+    // controller.lookingFor.add(TextEditingController());
+    // controller.toolsAndPlatforms.add(TextEditingController());
 
-    controller.achievements.add(AchievementController());
-    controller.awards.add(AwardController());
-    controller.publications.add(PublicationController());
+    // controller.achievements.add(AchievementController());
+    // controller.awards.add(AwardController());
+    // controller.publications.add(PublicationController());
 
     addEditProfileViewModel.setUserController(widget.user);
+    if (controller.experiences.isEmpty) {
+  controller.experiences.add(
+    ExperienceController(),
+  );
+}
+
+if (controller.skills.isEmpty) {
+  controller.skills.add(
+    TextEditingController(),
+  );
+}
   }
 final isProfessional =
     getIt<AppStateProvider>().userType ==
@@ -645,36 +656,77 @@ final isFresher =
                 label: 'Career',
                 spacing: 16,
                 children: [
+if (isProfessional) ...[
 
+  AppTextFields(
+    controller: controller.currentCompany,
+    hint: 'Current Company',
+    onChanged: (_) => markChanged(),
+  ),
+
+  AppTextFields(
+    controller: controller.noticePeriod,
+    hint: 'Notice Period (days)',
+    onChanged: (_) => markChanged(),
+  ),
+
+  const SizedBox(height: 12),
+
+],
                   _dropdownField(
                     controller.openToShift,
                     'Open To Shift',
                     shiftOptions,
                   ),
+Row(
+  children: [
 
-                  AppTextFields(
-                    controller: controller.currentSalaryAmount,
-                    hint: 'Current Salary',
-                      onChanged: (_) => markChanged(),
-                  ),
+    Expanded(
+      child: AppTextFields(
+        controller: controller.currentSalaryAmount,
+        hint: 'Current Salary',
+        onChanged: (_) => markChanged(),
+      ),
+    ),
 
-                  AppTextFields(
-                    controller: controller.currentSalaryCurrency,
-                    hint: 'Current Currency',
-                      onChanged: (_) => markChanged(),
-                  ),
+    const SizedBox(width: 12),
 
-                  AppTextFields(
-                    controller: controller.expectedSalaryAmount,
-                    hint: 'Expected Salary',
-                      onChanged: (_) => markChanged(),
-                  ),
+    SizedBox(
+      width: 110,
+      child: _dropdownField(
+        controller.currentSalaryCurrency,
+        'Cur',
+        ['USD', 'INR', 'EUR', 'GBP'],
+      ),
+    ),
+  ],
+),
 
-                  AppTextFields(
-                    controller: controller.expectedSalaryCurrency,
-                    hint: 'Expected Currency',
-                      onChanged: (_) => markChanged(),
-                  ),
+const SizedBox(height: 16),
+
+Row(
+  children: [
+
+    Expanded(
+      child: AppTextFields(
+        controller: controller.expectedSalaryAmount,
+        hint: 'Expected Salary',
+        onChanged: (_) => markChanged(),
+      ),
+    ),
+
+    const SizedBox(width: 12),
+
+    SizedBox(
+      width: 110,
+      child: _dropdownField(
+        controller.expectedSalaryCurrency,
+        'Cur',
+        ['USD', 'INR', 'EUR', 'GBP'],
+      ),
+    ),
+  ],
+),
                 ],
               ),
             ),
@@ -906,15 +958,9 @@ final isFresher =
                   ),
                 ),
 
-            onPressed: () async {
+        onPressed: () async {
 
   if (!_formKey.currentState!.validate()) {
-    return;
-  }
-
-  /// no changes
-  if (!hasChanges) {
-    context.pop(true);
     return;
   }
 
@@ -962,31 +1008,12 @@ final isFresher =
                   ),
                 ),
 
-              onPressed: () async {
+           onPressed: () async {
 
   if (!_formKey.currentState!.validate()) {
     return;
   }
 
-  /// 🔥 NO CHANGES
-  if (!hasChanges) {
-
-    if (currentStep == totalSteps - 1) {
-
-      if (mounted) {
-        context.pop(true);
-      }
-
-    } else {
-
-      nextStep();
-
-    }
-
-    return;
-  }
-
-  /// 🔥 SAVE ONLY IF CHANGED
   final failure =
       await addEditProfileViewModel
           .saveProfile();
@@ -1283,52 +1310,111 @@ Widget _input({
   }
 
   // ── Sub-form builders ────────────────────────────────────────────────────────
+Widget _achievementForm(
+    AchievementController a) => Column(
+  spacing: 16,
+  crossAxisAlignment:
+      CrossAxisAlignment.start,
+  children: [
 
-  Widget _achievementForm(AchievementController a) => Column(
-    spacing: 16,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Achievement ${controller.achievements.indexOf(a) + 1}',
-        style: AppTextStyles.s14W600,
-      ),
-      AppTextFields(controller: a.title, hint: 'Title'),
-      AppTextFields(controller: a.event, hint: 'Event'),
-      AppTextFields(controller: a.date, hint: 'Date'),
-      const AppDivider(),
-    ],
-  );
+    Text(
+      'Achievement ${controller.achievements.indexOf(a) + 1}',
+      style: AppTextStyles.s14W600,
+    ),
 
-  Widget _awardForm(AwardController a) => Column(
-    spacing: 16,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Award ${controller.awards.indexOf(a) + 1}',
-        style: AppTextStyles.s14W600,
-      ),
-      AppTextFields(controller: a.title, hint: 'Title'),
-      AppTextFields(controller: a.organization, hint: 'Organization'),
-      AppTextFields(controller: a.startDate, hint: 'Start Date'),
-      AppTextFields(controller: a.endDate, hint: 'End Date'),
-      AppTextFields(controller: a.description, hint: 'Description'),
-      const AppDivider(),
-    ],
-  );
+    AppTextFields(
+      controller: a.title,
+      hint: 'Title',
+      onChanged: (_) => markChanged(),
+    ),
 
-  Widget _publicationForm(PublicationController p) => Column(
-    spacing: 16,
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-      Text(
-        'Publication ${controller.publications.indexOf(p) + 1}',
-        style: AppTextStyles.s14W600,
-      ),
-      AppTextFields(controller: p.title, hint: 'Title'),
-      AppTextFields(controller: p.url, hint: 'URL'),
-      const AppDivider(),
-    ],
-  );
+    AppTextFields(
+      controller: a.event,
+      hint: 'Event',
+      onChanged: (_) => markChanged(),
+    ),
+
+    AppTextFields(
+      controller: a.date,
+      hint: 'Date',
+      onChanged: (_) => markChanged(),
+    ),
+
+    const AppDivider(),
+  ],
+);
+Widget _awardForm(
+    AwardController a) => Column(
+  spacing: 16,
+  crossAxisAlignment:
+      CrossAxisAlignment.start,
+  children: [
+
+    Text(
+      'Award ${controller.awards.indexOf(a) + 1}',
+      style: AppTextStyles.s14W600,
+    ),
+
+    AppTextFields(
+      controller: a.title,
+      hint: 'Title',
+      onChanged: (_) => markChanged(),
+    ),
+
+    AppTextFields(
+      controller: a.organization,
+      hint: 'Organization',
+      onChanged: (_) => markChanged(),
+    ),
+
+    AppTextFields(
+      controller: a.startDate,
+      hint: 'Start Date',
+      onChanged: (_) => markChanged(),
+    ),
+
+    AppTextFields(
+      controller: a.endDate,
+      hint: 'End Date',
+      onChanged: (_) => markChanged(),
+    ),
+
+    AppTextFields(
+      controller: a.description,
+      hint: 'Description',
+      onChanged: (_) => markChanged(),
+    ),
+
+    const AppDivider(),
+  ],
+);
+Widget _publicationForm(
+    PublicationController p) => Column(
+  spacing: 16,
+  crossAxisAlignment:
+      CrossAxisAlignment.start,
+  children: [
+
+    Text(
+      'Publication ${controller.publications.indexOf(p) + 1}',
+      style: AppTextStyles.s14W600,
+    ),
+
+    AppTextFields(
+      controller: p.title,
+      hint: 'Title',
+      onChanged: (_) => markChanged(),
+    ),
+
+    AppTextFields(
+      controller: p.url,
+      hint: 'URL',
+      onChanged: (_) => markChanged(),
+    ),
+
+    const AppDivider(),
+  ],
+);
 
   // ── Reusable field helpers ───────────────────────────────────────────────────
 

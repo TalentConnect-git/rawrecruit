@@ -204,7 +204,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
   }
   Widget _header(Job job) {
   final role = job.jobTitle ?? "Backend Developer";
-  final company = job.companyName ?? "Microsoft";
+  final company = job.companyName ?? "company name";
 
   final location = job.location?.join(", ") ?? "Hyderabad";
   final mode = job.workMode?.join(", ") ?? "Hybrid";
@@ -287,8 +287,8 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 
         /// 🔥 TAG CHIPS
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 4,
+          runSpacing: 4,
           children: [
             _tag("📍 $location"),
             _tag("👜 $mode"),
@@ -366,7 +366,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 }
 Widget _tag(String text) {
   return Container(
-    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
     decoration: BoxDecoration(
       color: Colors.white.withOpacity(0.08),
       borderRadius: BorderRadius.circular(20),
@@ -375,7 +375,7 @@ Widget _tag(String text) {
       text,
       style: const TextStyle(
         color: Colors.grey,
-        fontSize: 12,
+        fontSize: 11,
       ),
     ),
   );

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:dartz/dartz.dart';
@@ -29,15 +30,62 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
     final Map<String, dynamic> formMap = {};
 
     /// ✅ Handle all fields
-    body.forEach((key, value) {
-      if (value is List) {
-        for (int i = 0; i < value.length; i++) {
-          formMap['$key[$i]'] = value[i];
-        }
-      } else if (value != null && value.toString().isNotEmpty) {
-        formMap[key] = value;
+  body.forEach((key, value) {
+ if (value is List) {
+
+  if (value.isEmpty) return;
+
+  /// nested objects
+  if (value.first is Map) {
+
+    final cleanedList = value.map((e) {
+
+      final map =
+          Map<String, dynamic>.from(e);
+
+      map.removeWhere(
+        (k, v) =>
+            v == null ||
+            v.toString()
+                .trim()
+                .isEmpty,
+      );
+
+      return map;
+
+    }).where((e) => e.isNotEmpty)
+      .toList();
+
+    if (cleanedList.isNotEmpty) {
+      formMap[key] =
+          jsonEncode(cleanedList);
+    }
+
+  }
+
+  /// simple string lists
+  else {
+
+    for (int i = 0;
+        i < value.length;
+        i++) {
+
+      final item =
+          value[i]
+              .toString()
+              .trim();
+
+      if (item.isNotEmpty) {
+        formMap['$key[$i]'] =
+            item;
       }
-    });
+    }
+  }
+} else if (value != null &&
+      value.toString().isNotEmpty) {
+    formMap[key] = value.toString();
+  }
+});
 
     /// ✅ Attach files
     if (resume != null) {

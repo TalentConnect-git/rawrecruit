@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
-
+import 'package:dio/dio.dart';
 class WorkPrefPage extends StatefulWidget {
   final VoidCallback onBack;
   final User data;
@@ -104,7 +104,9 @@ final d = widget.data;
     employmentType = (d.employmentType != null && d.employmentType!.isNotEmpty)
         ? d.employmentType!.first
         : null;
+selectedCities = List.from(d.locations ?? []);
 
+fetchStates();
     lookingFor = (d.lookingFor != null && d.lookingFor!.isNotEmpty)
         ? d.lookingFor!.first
         : null;
@@ -115,7 +117,61 @@ final d = widget.data;
 
     locationCtrl = TextEditingController(text: (d.locations ?? []).join(", "));
   }
+  Future<void> fetchStates() async {
+  try {
+    setState(() => isLoadingStates = true);
 
+    final res = await Dio().get(
+      "https://countriesnow.space/api/v0.1/countries/states/q",
+      queryParameters: {
+        "country": "india",
+      },
+    );
+
+    if (res.statusCode == 200 &&
+        res.data["data"] != null &&
+        res.data["data"]["states"] is List) {
+      final List stateList = res.data["data"]["states"];
+
+      states = stateList
+          .map<String>((e) => e["name"].toString())
+          .toList();
+    }
+  } finally {
+    setState(() => isLoadingStates = false);
+  }
+}
+
+Future<void> fetchCities(String state) async {
+  try {
+    setState(() {
+      isLoadingCities = true;
+      cities = [];
+    });
+
+    final res = await Dio().get(
+      "https://countriesnow.space/api/v0.1/countries/state/cities/q",
+      queryParameters: {
+        "country": "india",
+        "state": state.toLowerCase(),
+      },
+    );
+
+    if (res.statusCode == 200 && res.data["data"] is List) {
+      cities = List<String>.from(res.data["data"]);
+    }
+  } finally {
+    setState(() => isLoadingCities = false);
+  }
+}
+String selectedState = "";
+
+List<String> states = [];
+List<String> cities = [];
+List<String> selectedCities = [];
+
+bool isLoadingStates = false;
+bool isLoadingCities = false;
   void saveData() {
      final currentUser =
       context.read<AppStateProvider>().data ?? widget.data;
@@ -220,10 +276,76 @@ final d = widget.data;
         const SizedBox(height: 10),
 
         /// LOCATIONS
-        AppInput(
-          "Preferred Locations (comma separated)",
-          controller: locationCtrl,
-          onChanged: (_) => saveData(),
+       isLoadingStates
+    ? const CircularProgressIndicator()
+    : AppDropdown(
+        hint: "Select State",
+        options: states,
+        value: selectedState.isEmpty ? null : selectedState,
+        onChanged: (val) {
+          setState(() {
+            selectedState = val!;
+          });
+
+          if (val != null) {
+  fetchCities(val);
+}
+        },
+      ),
+
+const SizedBox(height: 10),
+if (selectedState.isNotEmpty)
+  isLoadingCities
+      ? const CircularProgressIndicator()
+      : Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+
+            /// CITY DROPDOWN
+            AppDropdown(
+              hint: "Select City",
+              options: cities,
+              value: null,
+              onChanged: (val) {
+                if (val == null) return;
+
+                setState(() {
+                  if (!selectedCities.contains(val)) {
+                    selectedCities.add(val);
+                  }
+
+                  locationCtrl.text =
+                      selectedCities.join(",");
+
+                  saveData();
+                });
+              },
+            ),
+
+            const SizedBox(height: 10),
+
+            /// SELECTED CITY CHIPS
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: selectedCities.map((city) {
+                return Chip(
+                  label: Text(city),
+
+                  onDeleted: () {
+                    setState(() {
+                      selectedCities.remove(city);
+
+                      locationCtrl.text =
+                          selectedCities.join(",");
+
+                      saveData();
+                    });
+                  },
+                );
+              }).toList(),
+            ),
+          ],
         ),
 
         const SizedBox(height: 10),
