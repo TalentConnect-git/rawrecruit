@@ -14,16 +14,29 @@ class AlumniHiringView extends StatefulWidget {
 }
 
 class _AlumniHiringViewState extends State<AlumniHiringView> {
-  int selectedTab = 0;
+  AlumniType selectedTab = AlumniType.hiring;
 
   /// 🔥 TODO: replace with real user type logic
   bool get isProfessional =>
       getIt<AppStateProvider>().userType == UserType.professional;
 
+  AlumniViewModel alumniViewModel = AlumniViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.wait([
+        alumniViewModel.fetchCollegeAlumni(),
+        alumniViewModel.fetchCompanyAlumni(),
+      ], eagerError: true);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => AlumniViewModel()..fetchCollegeAlumni(),
+      create: (_) => alumniViewModel,
       child: Scaffold(
         backgroundColor: AppColors.kBg,
         body: Padding(
@@ -34,7 +47,9 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
               Consumer<AlumniViewModel>(
                 builder: (context, vm, _) {
                   return TextField(
-                    onChanged: vm.search,
+                    onChanged: (value) {
+                      vm.search(value, selectedTab);
+                    },
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: "Search alumni...",
@@ -59,7 +74,7 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
               const SizedBox(height: 16),
 
               /// 🔥 LIST
-              Expanded(child: _buildList()),
+              Expanded(child: _buildBody()),
             ],
           ),
         ),
@@ -69,9 +84,7 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
 
   /// 🔥 TABS UI (PILL STYLE)
   Widget _tabs() {
-    final tabs = isProfessional
-        ? ["Hiring", "My College", "My Company"]
-        : ["Hiring", "My College"];
+    final tabs = isProfessional ? AlumniType.values : AlumniType.freshers;
 
     return Container(
       padding: const EdgeInsets.all(4),
@@ -80,47 +93,60 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
-        children: List.generate(tabs.length, (index) {
-          final isSelected = selectedTab == index;
-
-          return Expanded(
-            child: GestureDetector(
-              onTap: () => setState(() => selectedTab = index),
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 250),
-                curve: Curves.easeInOut,
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: isSelected ? AppColors.kGreen : Colors.transparent,
-                  borderRadius: BorderRadius.circular(25),
-                ),
-                child: Center(
-                  child: Text(
-                    tabs[index],
-                    style: TextStyle(
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      color: isSelected ? Colors.black : Colors.grey,
+        children: [
+          ...tabs.map((t) {
+            return Expanded(
+              child: GestureDetector(
+                onTap: () => setState(() => selectedTab = t),
+                child: AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+                  curve: Curves.easeInOut,
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    color: t == selectedTab
+                        ? AppColors.kGreen
+                        : Colors.transparent,
+                    borderRadius: BorderRadius.circular(25),
+                  ),
+                  child: Center(
+                    child: Text(
+                      t.label,
+                      style: TextStyle(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: t == selectedTab ? Colors.black : Colors.grey,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
-        }),
+            );
+          }),
+        ],
       ),
     );
   }
 
+  Widget _buildBody() {
+    switch (selectedTab) {
+      case AlumniType.hiring:
+        return _buildList(AlumniType.hiring);
+      case AlumniType.college:
+        return _buildList(AlumniType.college);
+      case AlumniType.company:
+        return _buildList(AlumniType.company);
+    }
+  }
+
   /// 🔥 LIST BASED ON TAB
-  Widget _buildList() {
+  Widget _buildList(AlumniType type) {
     return Consumer<AlumniViewModel>(
       builder: (context, vm, _) {
         if (vm.isLoading) {
           return const Center(child: CircularProgressIndicator());
         }
 
-        final groupedList = vm.groupedAlumni.values.toList();
+        final groupedList = vm.jobs(type);
 
         if (groupedList.isEmpty) {
           return const Center(
@@ -131,51 +157,12 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
           );
         }
 
-        /// 🔥 TAB SWITCH
-        switch (selectedTab) {
-          /// ✅ HIRING TAB
-          case 0:
-            final hiring = groupedList
-                .where((jobs) => jobs.isNotEmpty)
-                .toList();
-
-            if (hiring.isEmpty) {
-              return const Center(
-                child: Text(
-                  "No hiring alumni",
-                  style: TextStyle(color: Colors.grey),
-                ),
-              );
-            }
-
-            return ListView.builder(
-              itemCount: hiring.length,
-              itemBuilder: (_, index) {
-                return AlumniHiringCard(jobs: hiring[index]);
-              },
-            );
-
-          /// ✅ MY COLLEGE TAB
-          case 1:
-            return ListView.builder(
-              itemCount: groupedList.length,
-              itemBuilder: (_, index) {
-                return AlumniHiringCard(jobs: groupedList[index]);
-              },
-            );
-
-          /// ✅ MY COMPANY TAB (placeholder)
-          case 2:
-            return const Center(
-              child: Text(
-                "No company data yet",
-                style: TextStyle(color: Colors.grey),
-              ),
-            );
-
-          default:
-            return const SizedBox();
-        }
+        return ListView.builder(
+          itemCount: groupedList.length,
+          itemBuilder: (_, index) {
+            return AlumniHiringCard(jobs: groupedList[index]);
+          },
+        );
       },
     );
   }

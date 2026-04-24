@@ -4,6 +4,7 @@ import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashbooard_data_source.dart';
 
 import '../../../../core/index.dart';
+import '../../../revamp_alumni/data/company_alumni_response.dart';
 
 class DashboardDataSourceImpl implements DashboardDataSource {
   final NetworkService _networkService = NetworkService();
@@ -142,21 +143,21 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   }
 
   @override
-  ResultFuture<List<Job>> getCompanyAlumni() async {
+  ResultFuture<CompanyAlumniResponse> getCompanyAlumni() async {
     final request = Request(
       method: RequestMethod.get,
-      endpoint: "/api/candidate/college-alumni",
+      endpoint: "/api/candidate/company-alumni",
       isSafeRoute: true,
     );
 
     try {
       final result = await _networkService.request(request);
 
-      final List list = result.data['jobs'] ?? []; // ✅ IMPORTANT
+      final response = result.data as Map<String, dynamic>; // ✅ IMPORTANT
 
-      final alumniList = list.map((e) => Job.fromJson(e)).toList();
+      final alumni = CompanyAlumniResponse.fromJson(response);
 
-      return Right(alumniList);
+      return Right(alumni);
     } catch (e) {
       return Left(APIException.from(e));
     }

@@ -248,8 +248,33 @@ class AlumniViewModel extends ChangeNotifier {
     // ),
   ];
   List<User> filtered = [];
-  Map<String, List<Job>> groupedAlumni = {};
   bool isLoading = false;
+
+  Map<String, List<Job>> collegeAlumni = {};
+  Map<String, List<Job>> companyAlumni = {};
+
+  List<List<Job>> get hiringAlumni {
+    final college = collegeAlumni.values
+        .where((jobs) => jobs.isNotEmpty)
+        .toList();
+
+    final company = companyAlumni.values
+        .where((jobs) => jobs.isNotEmpty)
+        .toList();
+
+    return [...college, ...company];
+  }
+
+  List<List<Job>> jobs(AlumniType type) {
+    switch (type) {
+      case AlumniType.hiring:
+        return hiringAlumni;
+      case AlumniType.college:
+        return collegeAlumni.values.toList();
+      case AlumniType.company:
+        return companyAlumni.values.toList();
+    }
+  }
 
   /// 🔥 SEARCH
   Future<void> fetchCollegeAlumni() async {
@@ -265,16 +290,16 @@ class AlumniViewModel extends ChangeNotifier {
       }
 
       /// 🔥 GROUP BY USER ID
-      groupedAlumni = {};
+      collegeAlumni = {};
 
       for (var job in _all) {
         final id = job.id ?? "unknown";
 
-        if (!groupedAlumni.containsKey(id)) {
-          groupedAlumni[id] = [];
+        if (!collegeAlumni.containsKey(id)) {
+          collegeAlumni[id] = [];
         }
 
-        groupedAlumni[id]!.add(Job(candidatePosted: job));
+        collegeAlumni[id]!.add(Job(candidatePosted: job));
       }
     });
 
@@ -282,35 +307,38 @@ class AlumniViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Future<void> fetchCompanyAlumni() async {
-  //   isLoading = true;
-  //   notifyListeners();
-  //
-  //   final result = await _repo.getCollegeAlumni();
-  //
-  //   result.fold((_) {}, (data) {
-  //     _all = data;
-  //     filtered = data;
-  //
-  //     /// 🔥 GROUP BY USER ID
-  //     groupedAlumni = {};
-  //
-  //     for (var job in data) {
-  //       final id = ?.id ?? "unknown";
-  //
-  //       if (!groupedAlumni.containsKey(id)) {
-  //         groupedAlumni[id] = [];
-  //       }
-  //
-  //       groupedAlumni[id]!.add(job);
-  //     }
-  //   });
-  //
-  //   isLoading = false;
-  //   notifyListeners();
-  // }
+  Future<void> fetchCompanyAlumni() async {
+    isLoading = true;
+    notifyListeners();
 
-  void search(String query) {
+    final result = await _repo.getCompanyAlumni();
+
+    result.fold((_) {}, (res) {
+      final userCompany = getIt<AppStateProvider>().user?.currentCompany;
+
+      final data = res.alumni?[userCompany] ?? [];
+      _all = data;
+      filtered = data;
+
+      /// 🔥 GROUP BY USER ID
+      companyAlumni = {};
+
+      for (var job in data) {
+        final id = job.id ?? "unknown";
+
+        if (!companyAlumni.containsKey(id)) {
+          companyAlumni[id] = [];
+        }
+
+        companyAlumni[id]!.add(Job(candidatePosted: job));
+      }
+    });
+
+    isLoading = false;
+    notifyListeners();
+  }
+
+  void search(String query, AlumniType type) {
     if (query.isEmpty) {
       filtered = _all;
     } else {
@@ -321,16 +349,16 @@ class AlumniViewModel extends ChangeNotifier {
     }
 
     /// 🔥 regroup filtered list
-    groupedAlumni = {};
+    collegeAlumni = {};
 
     for (var job in filtered) {
       final id = job.id ?? "unknown";
 
-      if (!groupedAlumni.containsKey(id)) {
-        groupedAlumni[id] = [];
+      if (!collegeAlumni.containsKey(id)) {
+        collegeAlumni[id] = [];
       }
 
-      groupedAlumni[id]!.add(Job(candidatePosted: job));
+      collegeAlumni[id]!.add(Job(candidatePosted: job));
     }
 
     notifyListeners();

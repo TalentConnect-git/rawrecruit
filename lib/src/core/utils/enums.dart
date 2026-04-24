@@ -209,3 +209,16 @@ enum StudentJobType {
 
   final String label;
 }
+
+enum AlumniType {
+  hiring('Hiring'),
+  college('My College'),
+  company('My Company');
+
+  const AlumniType(this.label);
+
+  final String label;
+
+  static List<AlumniType> get freshers =>
+      AlumniType.values.where((a) => a != AlumniType.company).toList();
+}

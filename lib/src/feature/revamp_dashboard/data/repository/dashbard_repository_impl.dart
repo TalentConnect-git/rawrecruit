@@ -2,6 +2,7 @@ import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashboo
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
 
 import '../../../../core/index.dart';
+import '../../../revamp_alumni/data/company_alumni_response.dart';
 
 class DashboardRepositoryImpl implements DashboardRepository {
   DashboardRepositoryImpl({required DashboardDataSource dataSource})
@@ -34,5 +35,6 @@ class DashboardRepositoryImpl implements DashboardRepository {
   ResultFuture<List<User>> getCollegeAlumni() => _dataSource.getCollegeAlumni();
 
   @override
-  ResultFuture<List<Job>> getCompanyAlumni() => _dataSource.getCompanyAlumni();
+  ResultFuture<CompanyAlumniResponse> getCompanyAlumni() =>
+      _dataSource.getCompanyAlumni();
 }
