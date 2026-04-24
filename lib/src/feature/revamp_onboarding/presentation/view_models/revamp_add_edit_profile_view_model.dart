@@ -61,6 +61,11 @@ class AddEditProfileViewModel extends ViewStateProvider {
     c.linkedin.text = user.linkedin ?? '';
     c.name.text = user.name ?? '';
     c.openToShift.text = user.openToShift ?? '';
+    c.currentCompany.text =
+    user.currentCompany ?? '';
+
+c.noticePeriod.text =
+    user.noticePeriod ?? '';
     c.phone.text = user.phone ?? '';
     c.portfolio.text = user.portfolio ?? '';
     c.profileType.text = user.profileType ?? '';
@@ -168,38 +173,37 @@ c.experiences.add(ExperienceController());
     c.toolsAndPlatforms.add(TextEditingController());
 
     /// -------- ACHIEVEMENTS --------
-    for (final a in user.achievements ?? []) {
-      final ac = AchievementController();
-      ac.id.text = a.id ?? '';
-      ac.title.text = a.title ?? '';
-      ac.event.text = a.event ?? '';
-      ac.date.text = a.date ?? '';
-      c.achievements.add(ac);
-    }
-    c.achievements.add(AchievementController());
+  /// -------- ACHIEVEMENTS --------
+for (final a in user.achievements ?? []) {
+  final ac = AchievementController();
+  ac.id.text = a.id ?? '';
+  ac.title.text = a.title ?? '';
+  ac.event.text = a.event ?? '';
+  ac.date.text = a.date ?? '';
+  c.achievements.add(ac);
+}
 
-    /// -------- AWARDS --------
-    for (final a in user.awards ?? []) {
-      final aw = AwardController();
-      aw.id.text = a.id ?? '';
-      aw.title.text = a.title ?? '';
-      aw.organization.text = a.organization ?? '';
-      aw.startDate.text = a.startDate ?? '';
-      aw.endDate.text = a.endDate ?? '';
-      aw.description.text = a.description ?? '';
-      c.awards.add(aw);
-    }
-    c.awards.add(AwardController());
+/// -------- AWARDS --------
+for (final a in user.awards ?? []) {
+  final aw = AwardController();
+  aw.id.text = a.id ?? '';
+  aw.title.text = a.title ?? '';
+  aw.organization.text = a.organization ?? '';
+  aw.startDate.text = a.startDate ?? '';
+  aw.endDate.text = a.endDate ?? '';
+  aw.description.text = a.description ?? '';
+  c.awards.add(aw);
+}
 
-    /// -------- PUBLICATIONS --------
-    for (final p in user.publications ?? []) {
-      final pc = PublicationController();
-      pc.id.text = p.id ?? '';
-      pc.title.text = p.title ?? '';
-      pc.url.text = p.url ?? '';
-      c.publications.add(pc);
-    }
-    c.publications.add(PublicationController());
+/// -------- PUBLICATIONS --------
+for (final p in user.publications ?? []) {
+  final pc = PublicationController();
+  pc.id.text = p.id ?? '';
+  pc.title.text = p.title ?? '';
+  pc.url.text = p.url ?? '';
+  c.publications.add(pc);
+}
+    // c.publications.add(PublicationController());
 
     notifyListeners();
   }

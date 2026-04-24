@@ -26,9 +26,9 @@ class _AchievementsPageState extends State<AchievementsPage> {
   void initState() {
     super.initState();
 
-    achievements = widget.data.achievements ?? [];
-    awards = widget.data.awards ?? [];
-    publications = widget.data.publications ?? [];
+    // achievements = widget.data.achievements ?? [];
+    // awards = widget.data.awards ?? [];
+    // publications = widget.data.publications ?? [];
 
     if (achievements.isEmpty) achievements.add(Achievement());
     if (awards.isEmpty) awards.add(Award());
@@ -38,10 +38,27 @@ void saveData() {
   final currentUser =
       context.read<AppStateProvider>().data ?? widget.data;
 
+  final filteredAchievements = achievements.where((e) {
+    return (e.title?.trim().isNotEmpty ?? false) ||
+        (e.event?.trim().isNotEmpty ?? false) ||
+        (e.date?.trim().isNotEmpty ?? false);
+  }).toList();
+
+  final filteredAwards = awards.where((e) {
+    return (e.title?.trim().isNotEmpty ?? false) ||
+        (e.organization?.trim().isNotEmpty ?? false) ||
+        (e.description?.trim().isNotEmpty ?? false);
+  }).toList();
+
+  final filteredPublications = publications.where((e) {
+    return (e.title?.trim().isNotEmpty ?? false) ||
+        (e.url?.trim().isNotEmpty ?? false);
+  }).toList();
+
   final updatedUser = currentUser.copyWith(
-    achievements: achievements,
-    awards: awards,
-    publications: publications,
+    achievements: filteredAchievements,
+    awards: filteredAwards,
+    publications: filteredPublications,
   );
 
   context.read<AppStateProvider>().data = updatedUser;

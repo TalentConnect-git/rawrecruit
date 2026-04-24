@@ -49,7 +49,7 @@ class DashboardCard extends StatelessWidget {
                     RouteNames.application,
                     extra: {
                       'userType': UserType.student,
-                      'jobType': ProfessionalJobType.saved,
+                      'studentJobType': StudentJobType.saved,
                     },
                   );
                 },
@@ -88,19 +88,22 @@ class DashboardCard extends StatelessWidget {
             const SizedBox(width: 12),
 
             /// 🔹 Success Rate
+            /// 🔹 Resume Score
             Expanded(
               child: _buildStatCard(
-                icon: Icons.emoji_events_outlined,
-                value: "${vm.profileScore}%",
-                label: 'Profile\nScore',
+                icon: Icons.description_outlined,
+                value: "${vm.resumeScore}%",
+                label: 'Resume\nScore',
               ),
             ),
-            
+
             const SizedBox(width: 12),
-  Expanded(
+
+            /// 🔹 Hiring Score
+            Expanded(
               child: _buildStatCard(
-                icon: Icons.emoji_events_outlined,
-                value: "${vm.profileScore}%",
+                icon: Icons.trending_up,
+                value: "${vm.hiringScore}%",
                 label: 'Hiring\nScore',
               ),
             ),

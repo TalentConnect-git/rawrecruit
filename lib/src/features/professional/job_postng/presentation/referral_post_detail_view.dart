@@ -20,13 +20,13 @@ class ReferralPostDetailView extends StatefulWidget {
 class _ReferralPostDetailViewState
     extends State<ReferralPostDetailView> {
   int selectedTab = 0;
-
-  List<ReferralApplication> applications = [];
+bool isPaused = false;  List<ReferralApplication> applications = [];
   bool isLoadingApps = true;
 
   @override
   void initState() {
     super.initState();
+    isPaused = widget.job.inactive ?? false;
     _fetchApplications();
   }
 
@@ -205,16 +205,150 @@ final metrics = job.metrics;
   }
 
   /// 🔥 ACTIONS
-  Widget _actions() {
-    return Row(
-      children: [
-        Expanded(child: _btn(Icons.pause, "Pause")),
-        const SizedBox(width: 12),
-        Expanded(child: _btn(Icons.delete, "Delete")),
-      ],
-    );
-  }
+ Widget _actions() {
+  // final isPaused = widget.job.inactive ?? false;
 
+  return Row(
+    children: [
+     Expanded(
+  child: GestureDetector(
+    onTap: _togglePauseJob,
+    child: _btn(
+      isPaused ? Icons.play_arrow : Icons.pause,
+      isPaused ? "Resume" : "Pause",
+    ),
+  ),
+),
+      const SizedBox(width: 12),
+      Expanded(
+        child: GestureDetector(
+          onTap: _showDeleteDialog,
+          child: _btn(Icons.delete, "Delete"),
+        ),
+      ),
+    ],
+  );
+}
+Future<void> _togglePauseJob() async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
+
+  final result = await getIt<ReferralPostRepository>()
+      .toggleReferralJobStatus(
+        jobId: widget.job.id ?? "",
+      );
+
+  if (mounted) Navigator.pop(context);
+
+  result.fold(
+    (failure) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+!isPaused                ? "Failed to resume job"
+                : "Failed to pause job",
+          ),
+        ),
+      );
+    },
+    (_) {
+      setState(() {
+  isPaused = !isPaused;
+});
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+  isPaused
+      ? "Job paused successfully"
+      : "Job resumed successfully",
+),
+        ),
+      );
+    },
+  );
+}
+Future<void> _showDeleteDialog() async {
+  showDialog(
+    context: context,
+    builder: (_) {
+      return AlertDialog(
+        backgroundColor: const Color(0xFF1F2937),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16),
+        ),
+        title: const Text(
+          "Delete Job",
+          style: TextStyle(color: Colors.white),
+        ),
+        content: const Text(
+          "Are you sure you want to delete this job? This action cannot be undone.",
+          style: TextStyle(color: Colors.grey),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text(
+              "Cancel",
+              style: TextStyle(color: Colors.grey),
+            ),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+            ),
+            onPressed: () async {
+              Navigator.pop(context);
+              await _deleteJob();
+            },
+            child: const Text(
+              "Delete",
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+        ],
+      );
+    },
+  );
+}
+Future<void> _deleteJob() async {
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (_) => const Center(
+      child: CircularProgressIndicator(),
+    ),
+  );
+
+  final result = await getIt<ReferralPostRepository>()
+      .deleteReferralJob(jobId: widget.job.id ?? "");
+
+  if (mounted) Navigator.pop(context);
+
+  result.fold(
+    (failure) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Failed to delete job"),
+        ),
+      );
+    },
+    (_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text("Job deleted successfully"),
+        ),
+      );
+
+      Navigator.pop(context, true);
+    },
+  );
+}
   Widget _btn(IconData icon, String text) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),

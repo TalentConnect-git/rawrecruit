@@ -34,6 +34,7 @@ _ReferralPostModel _$ReferralPostModelFromJson(
   tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
   workAuthorization: json['workAuthorization'] as String?,
   yearsOfExperience: json['yearsOfExperience'] as String?,
+  inactive: json['inactive'] as bool?,
   benefits: (json['benefits'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
@@ -67,6 +68,7 @@ Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
       'tags': instance.tags,
       'workAuthorization': instance.workAuthorization,
       'yearsOfExperience': instance.yearsOfExperience,
+      'inactive': instance.inactive,
       'benefits': instance.benefits,
       'certifications': instance.certifications,
       'eligibilityCriteria': instance.eligibilityCriteria,

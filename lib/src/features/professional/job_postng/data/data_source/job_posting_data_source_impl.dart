@@ -9,25 +9,29 @@ import 'job_posting_data_source.dart';
 
 class ReferralPostDataSourceImpl implements ReferralPostDataSource {
   final NetworkService _networkService = NetworkService();
+@override
+ResultFuture<void> postReferralJob(
+  ReferralPostModel model,
+) async {
 
-  @override
-  ResultFuture<void> postReferralJob(ReferralPostModel model) async {
+  final body = model.toJson();
 
-    final request = Request(
-      method: RequestMethod.post,
-      endpoint: "/api/hiring-channels/referral-posting",
-      body: model.toJson(),
-      isSafeRoute: true,
-    );
-    
+  body.remove('_id');
 
-    try {
-      await _networkService.request(request);
-      return const Right(null);
-    } catch (e) {
-      return Left(APIException.from(e));
-    }
+  final request = Request(
+    method: RequestMethod.post,
+    endpoint: "/api/hiring-channels/referral-posting",
+    body: body,
+    isSafeRoute: true,
+  );
+
+  try {
+    await _networkService.request(request);
+    return const Right(null);
+  } catch (e) {
+    return Left(APIException.from(e));
   }
+}
 
   @override
   ResultFuture<List<ReferralApplication>> getApplicationByReferralJobId({
@@ -148,4 +152,40 @@ final jobs = data
       return Left(APIException.from(e));
     }
   }
+
+  @override
+ResultFuture<void> deleteReferralJob({
+  required String jobId,
+}) async {
+  final request = Request(
+    method: RequestMethod.delete,
+    endpoint: '/api/delete-job/$jobId',
+    isSafeRoute: true,
+  );
+
+  try {
+    await _networkService.request(request);
+    return const Right(null);
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
+
+@override
+ResultFuture<void> toggleReferralJobStatus({
+  required String jobId,
+}) async {
+  final request = Request(
+    method: RequestMethod.patch,
+    endpoint: '/company/jobmanagement/referral/$jobId',
+    isSafeRoute: true,
+  );
+
+  try {
+    await _networkService.request(request);
+    return const Right(null);
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
 }

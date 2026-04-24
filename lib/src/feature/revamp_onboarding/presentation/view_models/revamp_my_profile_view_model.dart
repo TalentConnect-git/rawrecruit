@@ -5,8 +5,9 @@ import 'package:rawrecruit/src/features/onboarding/data/index.dart';
 class MyProfileViewModel extends ViewStateProvider {
   final RevampOnboardingRepository _onboardingRepository =
       getIt<RevampOnboardingRepository>();
-Map<String, dynamic>? careerInsights;
-Map<String, dynamic>? careerRanking;
+  Map<String, dynamic>? careerInsights;
+  Map<String, dynamic>? careerRanking;
+
   User? _user;
   User? get user => _user;
   set user(User? user) {
@@ -25,50 +26,51 @@ Map<String, dynamic>? careerRanking;
     _isEditing = value;
     notifyListeners();
   }
-Map<String, dynamic>? referralMetrics;
-Map<String, dynamic>? candidateStats;
 
-Future<Failure?> getCandidateStats() async {
-  Failure? failure;
+  Map<String, dynamic>? referralMetrics;
+  Map<String, dynamic>? candidateStats;
 
-  try {
-    final request = Request(
-      method: RequestMethod.get,
-      endpoint: "/application/dashboard/candidate/stats",
-      isSafeRoute: true,
-    );
+  Future<Failure?> getCandidateStats() async {
+    Failure? failure;
 
-    final response = await getIt<NetworkService>().request(request);
+    try {
+      final request = Request(
+        method: RequestMethod.get,
+        endpoint: "/application/dashboard/candidate/stats",
+        isSafeRoute: true,
+      );
 
-    candidateStats = response.data['data'];
-  } catch (e) {
-    failure = APIFailure.fromException(
-      exception: APIException.from(e),
-    );
+      final response = await getIt<NetworkService>().request(request);
+
+      candidateStats = response.data['data'];
+    } catch (e) {
+      failure = APIFailure.fromException(exception: APIException.from(e));
+    }
+
+    notifyListeners();
+    return failure;
   }
 
-  notifyListeners();
-  return failure;
-}
-Future<Failure?> getReferralMetrics() async {
-  Failure? failure;
+  Future<Failure?> getReferralMetrics() async {
+    Failure? failure;
 
-  setViewState(ViewState.busy);
+    setViewState(ViewState.busy);
 
-  final result = await _onboardingRepository.getReferralMetrics();
+    final result = await _onboardingRepository.getReferralMetrics();
 
-  result.fold(
-    (e) {
-      failure = APIFailure.fromException(exception: e);
-    },
-    (r) {
-      referralMetrics = r;
-    },
-  );
+    result.fold(
+      (e) {
+        failure = APIFailure.fromException(exception: e);
+      },
+      (r) {
+        referralMetrics = r;
+      },
+    );
 
-  setViewState(ViewState.complete);
-  return failure;
-}
+    setViewState(ViewState.complete);
+    return failure;
+  }
+
   Future<Failure?> getUser() async {
     Failure? failure;
 
@@ -110,91 +112,87 @@ Future<Failure?> getReferralMetrics() async {
 
     return failure;
   }
-Future<Failure?> getCareerInsights() async {
-  Failure? failure;
 
-  setViewState(ViewState.busy);
+  Future<Failure?> getCareerInsights() async {
+    Failure? failure;
 
-  try {
-    final request1 = Request(
-      method: RequestMethod.get,
-      endpoint: Endpoints.careerInsights,
-      isSafeRoute: true,
-    );
+    setViewState(ViewState.busy);
 
-    final request2 = Request(
-      method: RequestMethod.get,
-      endpoint: Endpoints.careerRanking,
-      isSafeRoute: true,
-    );
+    try {
+      final request1 = Request(
+        method: RequestMethod.get,
+        endpoint: Endpoints.careerInsights,
+        isSafeRoute: true,
+      );
 
-    /// 🔥 CALL BOTH SAFELY
-    final responses = await Future.wait([
-      getIt<NetworkService>().request(request1)
-          .catchError((_) => null), // prevent crash
-      getIt<NetworkService>().request(request2)
-          .catchError((_) => null),
-    ]);
+      final request2 = Request(
+        method: RequestMethod.get,
+        endpoint: Endpoints.careerRanking,
+        isSafeRoute: true,
+      );
 
-    /// ✅ HANDLE RESPONSES
-    if (responses[0] != null) {
-      careerInsights = responses[0]!.data['data'];
+      /// 🔥 CALL BOTH SAFELY
+      final responses = await Future.wait([
+        getIt<NetworkService>()
+            .request(request1)
+            .catchError((_) => null), // prevent crash
+        getIt<NetworkService>().request(request2).catchError((_) => null),
+      ]);
+
+      /// ✅ HANDLE RESPONSES
+      if (responses[0] != null) {
+        careerInsights = responses[0]!.data['data'];
+      }
+
+      if (responses[1] != null) {
+        careerRanking = responses[1]!.data['data'];
+      }
+    } catch (e) {
+      failure = APIFailure.fromException(exception: APIException.from(e));
     }
 
-    if (responses[1] != null) {
-      careerRanking = responses[1]!.data['data'];
-    }
+    setViewState(ViewState.complete);
 
-  } catch (e) {
-    failure = APIFailure.fromException(
-      exception: APIException.from(e),
-    );
+    notifyListeners();
+
+    return failure;
   }
 
-  setViewState(ViewState.complete);
-  notifyListeners();
+  int get savedJobs => candidateStats?['savedCount'] ?? 0;
 
-  return failure;
-}
-int get savedJobs => candidateStats?['savedCount'] ?? 0;
+  int get totalApps => candidateStats?['totalApplications'] ?? 0;
 
-int get totalApps => candidateStats?['totalApplications'] ?? 0;
+  int get referralApps => candidateStats?['referralApplications'] ?? 0;
+  int get totalReferrals => referralMetrics?['totalReferralsPosted'] ?? 0;
 
-int get referralApps => candidateStats?['referralApplications'] ?? 0;
-int get totalReferrals =>
-    referralMetrics?['totalReferralsPosted'] ?? 0;
+  int get totalApplications =>
+      referralMetrics?['totalApplicationsReceived'] ?? 0;
 
-int get totalApplications =>
-    referralMetrics?['totalApplicationsReceived'] ?? 0;
+  int get referredToCompany => referralMetrics?['totalReferredToCompany'] ?? 0;
 
-int get referredToCompany =>
-    referralMetrics?['totalReferredToCompany'] ?? 0;
+  int get acceptedByCompany => referralMetrics?['totalAcceptedByCompany'] ?? 0;
 
-int get acceptedByCompany =>
-    referralMetrics?['totalAcceptedByCompany'] ?? 0;
+  double get responseRate =>
+      (referralMetrics?['responseRate'] as num?)?.toDouble() ?? 0;
 
-double get responseRate =>
-    (referralMetrics?['responseRate'] as num?)?.toDouble() ?? 0;
-
-double get referralSuccessRate =>
-    (referralMetrics?['referralSuccessRate'] as num?)?.toDouble() ?? 0;
+  double get referralSuccessRate =>
+      (referralMetrics?['referralSuccessRate'] as num?)?.toDouble() ?? 0;
   int get hiringScore => careerInsights?['hiringScore'] ?? 0;
 
-int get resumeScore => careerInsights?['resumeScore'] ?? 0;
+  int get resumeScore => careerInsights?['resumeScore'] ?? 0;
 
-int get profileScore =>
-    careerInsights?['hiringBreakdown']?['profileScore'] ?? 0;
+  int get profileScore =>
+      careerInsights?['hiringBreakdown']?['profileScore'] ?? 0;
 
-String get rankingLabel =>
-    careerRanking?['rankingLabel'] ?? "-";
+  String get rankingLabel => careerRanking?['rankingLabel'] ?? "-";
 
-List<String> get missingSkills =>
-    List<String>.from(careerInsights?['missingSkills'] ?? []);
+  List<String> get missingSkills =>
+      List<String>.from(careerInsights?['missingSkills'] ?? []);
 
-List<String> get highDemandSkills =>
-    List<String>.from(
-        careerInsights?['categorizedSkills']?['highInDemand'] ?? []);
+  List<String> get highDemandSkills => List<String>.from(
+    careerInsights?['categorizedSkills']?['highInDemand'] ?? [],
+  );
 
-List<String> get suggestions =>
-    List<String>.from(careerInsights?['suggestions'] ?? []);
+  List<String> get suggestions =>
+      List<String>.from(careerInsights?['suggestions'] ?? []);
 }

@@ -281,7 +281,9 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
 
           /// Role (you can map from backend later)
           Text(
-            '${p?.currentCompany ?? 'Company'}, ${p?.college ?? '-'}',
+            getIt<AppStateProvider>().isProfessional
+                ? (p?.currentCompany ?? 'Company')
+                : (p?.college ?? '-'),
             style: TextStyle(color: Colors.grey[400], fontSize: 12),
           ),
 
@@ -338,7 +340,9 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
         : [
             ["${vm.savedJobs}", "Saved Jobs"],
             ["${vm.totalApps}", "Applications"],
-            ["${vm.referralApps}", "Referral Applications"],
+            ["${vm.referralApps}", "Referral Apps"],
+            ["${vm.resumeScore}%", "Resume Score"], // ✅ NEW
+            ["${vm.hiringScore}%", "Hiring Score"], // ✅ NEW
           ];
 
     return GridView.builder(
