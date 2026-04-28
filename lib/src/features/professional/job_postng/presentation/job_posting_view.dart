@@ -767,8 +767,8 @@ Future<void> fetchCities(String state) async {
                                   inactive: false,
                           description:
                               descriptionController.text.trim(),
-                          employmentType: employmentType,
-                          workMode: workMode,
+                   employmentType: [employmentType],
+workMode: [workMode],
                           broadcastType: broadcastType,
                           jobType: "Referral",
                           location: [selectedCity],
@@ -1089,27 +1089,29 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
             return [
               PopupMenuItem(
                 enabled: false,
-                child: StatefulBuilder(
-                  builder: (context, setStatePopup) {
-                    return Column(
-                      children: [
+               child: StatefulBuilder(
+  builder: (context, setStatePopup) {
+    return SizedBox(
+      height: widget.options.length > 6 ? 300 : null,
+      width: 300,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
                         ...widget.options.map((item) {
                           final isSelected = selected.contains(item);
 
-                          return CheckboxListTile(
-                            value: isSelected,
-                            dense: true,
-                            title: Text(
-                              item,
-                              style: const TextStyle(color: Colors.white),
-                            ),
-                            activeColor: AppColors.kGreen,
-                            onChanged: (_) {
-                              setStatePopup(() {
-                                _toggleItem(item);
-                              });
-                            },
-                          );
+                         return ListTile(
+  dense: true,
+  title: Text(
+    item,
+    style: const TextStyle(color: Colors.white),
+  ),
+  onTap: () {
+    setStatePopup(() {
+      _toggleItem(item);
+    });
+  },
+);
                         }),
 
                         /// 🔥 Others input
@@ -1127,10 +1129,12 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
                             },
                           ),
                         ],
-                      ],
-                    );
-                  },
-                ),
+                                          ],
+                    ),
+                  ),
+                );
+              },
+            ),
               ),
             ];
           },

@@ -49,4 +49,42 @@ class RevampOnboardingRepositoryImpl implements RevampOnboardingRepository {
       @override
 ResultFuture<Map<String, dynamic>> getReferralMetrics() =>
     _onboardingDataSource.getReferralMetrics();
+
+    @override
+ResultFuture<List<Map<String, dynamic>>> getColleges() =>
+    _onboardingDataSource.getColleges();
+
+@override
+ResultFuture<Map<String, dynamic>> registerCollege({
+  required String name,
+}) =>
+    _onboardingDataSource.registerCollege(
+      name: name,
+    );
+
+    @override
+ResultFuture<List<Map<String, dynamic>>> getDegrees() =>
+    _onboardingDataSource.getDegrees();
+
+@override
+ResultFuture<List<Map<String, dynamic>>> getStreams({
+  required String degreeId,
+}) =>
+    _onboardingDataSource.getStreams(
+      degreeId: degreeId,
+    );
+
+    @override
+ResultFuture<Map<String, dynamic>>
+createMasterData({
+  required String type,
+  required String value,
+  String? parent,
+}) =>
+    _onboardingDataSource
+        .createMasterData(
+          type: type,
+          value: value,
+          parent: parent,
+        );
 }

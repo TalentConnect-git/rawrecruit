@@ -7,11 +7,16 @@ import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart'
+    show InterviewViewModel;
 import '../../revamp_onboarding/presentation/index.dart';
 import 'career_insight_page.dart';
 
 class ModernProfilePage extends StatefulWidget {
+
+
   const ModernProfilePage({super.key});
+
 
   @override
   State<ModernProfilePage> createState() => _ModernProfilePageState();
@@ -19,6 +24,7 @@ class ModernProfilePage extends StatefulWidget {
 
 class _ModernProfilePageState extends State<ModernProfilePage> {
   final MyProfileViewModel vm = MyProfileViewModel();
+  final InterviewViewModel interviewVm = InterviewViewModel();
   @override
   void initState() {
     super.initState();
@@ -34,8 +40,10 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
         vm.getCareerInsights(),
         if (appState.isProfessional)
           vm.getReferralMetrics()
-        else
+        else ...[
           vm.getCandidateStats(),
+          interviewVm.getInterviews(),
+        ],
       ]);
 
       if (mounted) {
@@ -280,21 +288,32 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
           const SizedBox(height: 10),
 
           /// Role (you can map from backend later)
-          Text(
-            getIt<AppStateProvider>().isProfessional
-                ? (p?.currentCompany ?? 'Company')
-                : (p?.college ?? '-'),
-            style: TextStyle(color: Colors.grey[400], fontSize: 12),
+          /// Info Section
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                getIt<AppStateProvider>().isProfessional
+                    ? 'Company: ${p?.currentCompany ?? '-'}'
+                    : 'College: ${p?.college ?? '-'}',
+                style: TextStyle(color: Colors.grey[400], fontSize: 12),
+              ),
+
+              if (getIt<AppStateProvider>().isProfessional)
+                const SizedBox(height: 4),
+              if (getIt<AppStateProvider>().isProfessional)
+                Text(
+                  'Role: ${p?.jobRoles?.firstOrNull ?? p?.designation ?? '-'}',
+                  style: TextStyle(color: Colors.grey[500], fontSize: 11),
+                ),
+              const SizedBox(height: 4),
+
+              Text(
+                'Location: ${p?.locations?.join(', ') ?? '-'}',
+                style: TextStyle(color: Colors.grey[500], fontSize: 11),
+              ),
+            ],
           ),
-
-          const SizedBox(height: 2),
-
-          /// Location
-          Text(
-            '${p?.jobRoles?.firstOrNull ?? p?.designation ?? ''}, ${p?.locations?.join(', ') ?? ''}',
-            style: TextStyle(color: Colors.grey[500], fontSize: 11),
-          ),
-
           const SizedBox(height: 12),
 
           /// Skills Chips
@@ -341,8 +360,9 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
             ["${vm.savedJobs}", "Saved Jobs"],
             ["${vm.totalApps}", "Applications"],
             ["${vm.referralApps}", "Referral Apps"],
-            ["${vm.resumeScore}%", "Resume Score"], // ✅ NEW
-            ["${vm.hiringScore}%", "Hiring Score"], // ✅ NEW
+            ["${vm.resumeScore}%", "Resume Score"],
+            ["${vm.hiringScore}%", "Hiring Score"],
+            ["${interviewVm.interviews.length}", "Interviews"],
           ];
 
     return GridView.builder(

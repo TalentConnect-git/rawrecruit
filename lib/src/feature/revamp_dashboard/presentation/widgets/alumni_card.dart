@@ -90,31 +90,28 @@ class AlumniCard extends StatelessWidget {
                 const SizedBox(height: 4),
 
                 /// DESIGNATION + COMPANY
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        first.jobRoles?.firstOrNull ?? 'Designation',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            color: Colors.grey, fontSize: 12),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        first.companyName ?? 'Company',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                            color: Colors.grey, fontSize: 12),
-                      ),
-                    ),
-                  ],
-                ),
-
+               Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    Flexible(
+      child: Text(
+        first.jobRoles?.firstOrNull ?? 'Designation',
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(color: Colors.grey, fontSize: 12),
+      ),
+    ),
+    const SizedBox(width: 4),
+    Flexible(
+      child: Text(
+        candidate?.currentCompany ?? 'Company', // ✅ FIXED
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(color: Colors.grey, fontSize: 12),
+      ),
+    ),
+  ],
+),
                 const SizedBox(height: 8),
 
                 /// 🔹 HIRING STATUS

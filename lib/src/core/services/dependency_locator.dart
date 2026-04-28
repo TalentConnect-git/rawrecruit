@@ -11,6 +11,7 @@ import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashbard
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/data/data_source/revamp_on_boarding_data_source_impl.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/data/index.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
 import 'package:rawrecruit/src/features/auth/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/index.dart';
@@ -133,6 +134,9 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<InterviewRepository>(
       () => InterviewRepositoryImpl(dataSource: getIt<InterviewDataSource>()),
     )
+    ..registerLazySingleton<MyProfileViewModel>(
+  () => MyProfileViewModel(),
+)
     ..registerFactory<InterviewViewModel>(() => InterviewViewModel())
     ..registerLazySingleton<ReferralDataSource>(() => ReferralDataSourceImpl())
     ..registerLazySingleton<ReferralRepository>(

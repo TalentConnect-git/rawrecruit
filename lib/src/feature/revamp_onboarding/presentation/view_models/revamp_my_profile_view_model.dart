@@ -7,7 +7,57 @@ class MyProfileViewModel extends ViewStateProvider {
       getIt<RevampOnboardingRepository>();
   Map<String, dynamic>? careerInsights;
   Map<String, dynamic>? careerRanking;
+List<Map<String, dynamic>> degrees = [];
+List<Map<String, dynamic>> streams = [];
 
+String? selectedDegreeId;
+Future<void> getDegrees() async {
+  final result =
+      await _onboardingRepository.getDegrees();
+
+  result.fold(
+    (_) {},
+    (r) {
+      degrees = r;
+
+      /// fallback if less than 5
+      if (degrees.length < 5) {
+        degrees.addAll([
+          {"_id": "local1", "value": "B.Tech"},
+          {"_id": "local2", "value": "MBA"},
+          {"_id": "local3", "value": "BCA"},
+        ]);
+      }
+
+      notifyListeners();
+    },
+  );
+}
+Future<void> getStreams(String degreeId) async {
+  selectedDegreeId = degreeId;
+
+  final result =
+      await _onboardingRepository.getStreams(
+    degreeId: degreeId,
+  );
+
+  result.fold(
+    (_) {},
+    (r) {
+      streams = r;
+
+      /// fallback
+      if (streams.length < 5) {
+        streams.addAll([
+          {"value": "General"},
+          {"value": "Other"},
+        ]);
+      }
+
+      notifyListeners();
+    },
+  );
+}
   User? _user;
   User? get user => _user;
   set user(User? user) {
@@ -50,7 +100,74 @@ class MyProfileViewModel extends ViewStateProvider {
     notifyListeners();
     return failure;
   }
+Future<void> addDegreeIfNeeded(
+  String value,
+) async {
+  final exists = degrees.any(
+    (e) =>
+        e['value']
+            .toString()
+            .toLowerCase()
+            .trim() ==
+        value.toLowerCase().trim(),
+  );
 
+  if (exists) return;
+
+  final result =
+      await _onboardingRepository
+          .createMasterData(
+            type: "DEGREE",
+
+            value: value,
+          );
+
+  result.fold(
+    (_) {},
+
+    (r) {
+      degrees.add(r);
+
+      notifyListeners();
+    },
+  );
+}
+Future<void> addStreamIfNeeded({
+  required String value,
+
+  required String parentId,
+}) async {
+  final exists = streams.any(
+    (e) =>
+        e['value']
+            .toString()
+            .toLowerCase()
+            .trim() ==
+        value.toLowerCase().trim(),
+  );
+
+  if (exists) return;
+
+  final result =
+      await _onboardingRepository
+          .createMasterData(
+            type: "STREAM",
+
+            value: value,
+
+            parent: parentId,
+          );
+
+  result.fold(
+    (_) {},
+
+    (r) {
+      streams.add(r);
+
+      notifyListeners();
+    },
+  );
+}
   Future<Failure?> getReferralMetrics() async {
     Failure? failure;
 
