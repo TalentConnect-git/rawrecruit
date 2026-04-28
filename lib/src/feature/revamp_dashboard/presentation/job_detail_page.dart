@@ -209,7 +209,13 @@ Consumer<DashboardViewModel>(
       ? job.jobRoles!.first
       : job.jobTitle ?? "-";
 
-  final company = job.companyName ?? "-";
+final company = job.companyName?.isNotEmpty == true
+    ? job.companyName!
+    : job.companyPosted?.companyDetails?.companyName?.isNotEmpty == true
+        ? job.companyPosted!.companyDetails!.companyName!
+        : job.candidatePosted?.currentCompany?.isNotEmpty == true
+            ? job.candidatePosted!.currentCompany!
+            : "-";
 
   final location = job.location?.join(', ') ?? "-";
 

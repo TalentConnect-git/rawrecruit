@@ -13,8 +13,12 @@ _ReferralPostModel _$ReferralPostModelFromJson(
   jobTitle: json['jobTitle'] as String?,
   description: json['description'] as String?,
   approvalStatus: json['approvalStatus'] as String?,
-  employmentType: json['employmentType'] as String?,
-  workMode: json['workMode'] as String?,
+  employmentType: (json['employmentType'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  workMode: (json['workMode'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   broadcastType: json['broadcastType'] as String?,
   jobType: json['jobType'] as String?,
   location: (json['location'] as List<dynamic>?)

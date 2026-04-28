@@ -19,45 +19,24 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
 
   List<String> selected = [];
 
-  final List<String> popular = [
-    "React",
-    "Node.js",
-    "Python",
-    "TypeScript",
-    "AWS",
-    "Product Management",
-    "System Design",
-    "Java",
-    "Go",
-    "Kubernetes",
-    "Machine Learning",
-    "SQL",
-    "Figma",
-    "Data Science",
-    "DevOps",
-    "Rust",
-    "Flutter",
-    "Swift",
-  ];
-
+List<String> popular = [];
   @override
   void initState() {
     super.initState();
-
+fetchSkills();
     /// 🔥 LOAD FROM SHARED DATA
-selected = List.from(widget.data.skills ?? []);  }
+    selected = List.from(widget.data.skills ?? []);
+  }
 
   /// 🔥 SAVE TO SHARED DATA
-void saveData() {
-  final currentUser =
-      context.read<AppStateProvider>().data ?? widget.data;
+  void saveData() {
+    final currentUser = context.read<AppStateProvider>().data ?? widget.data;
 
-  final updatedUser = currentUser.copyWith(
-    skills: selected,
-  );
+    final updatedUser = currentUser.copyWith(skills: selected);
 
-  context.read<AppStateProvider>().data = updatedUser;
-}
+    context.read<AppStateProvider>().data = updatedUser;
+  }
+
   /// 🔥 ADD SKILL
   void addSkill(String skill) {
     if (!selected.contains(skill)) {
@@ -75,7 +54,71 @@ void saveData() {
       saveData();
     });
   }
+Future<void> fetchSkills() async {
+  final request = Request(
+    method: RequestMethod.get,
 
+    endpoint: "api/meta/get-skills",
+
+    isSafeRoute: true,
+  );
+
+  try {
+    final response =
+        await getIt<NetworkService>()
+            .request(request);
+
+    final data =
+        List<Map<String, dynamic>>.from(
+          response.data,
+        );
+
+    setState(() {
+      popular = data
+          .map(
+            (e) =>
+                e['skills']
+                    .toString(),
+          )
+          .toList();
+    });
+  } catch (_) {}
+}
+
+Future<void> addSkillToApi(
+  String skill,
+) async {
+  final exists = popular.any(
+    (e) =>
+        e.toLowerCase().trim() ==
+        skill
+            .toLowerCase()
+            .trim(),
+  );
+
+  if (exists) return;
+
+  final request = Request(
+    method: RequestMethod.post,
+
+    endpoint: "api/meta/add-skill",
+
+    isSafeRoute: true,
+
+    body: {
+      "skills": skill,
+    },
+  );
+
+  try {
+    await getIt<NetworkService>()
+        .request(request);
+
+    setState(() {
+      popular.add(skill);
+    });
+  } catch (_) {}
+}
   @override
   void dispose() {
     searchCtrl.dispose();
@@ -110,12 +153,17 @@ void saveData() {
             TextField(
               controller: searchCtrl,
               style: const TextStyle(color: Colors.white),
-              onSubmitted: (val) {
-                if (val.trim().isNotEmpty) {
-                  addSkill(val.trim());
-                  searchCtrl.clear();
-                }
-              },
+             onSubmitted: (val) async {
+  final skill = val.trim();
+
+  if (skill.isEmpty) return;
+
+  addSkill(skill);
+
+  await addSkillToApi(skill);
+
+  searchCtrl.clear();
+},
               decoration: InputDecoration(
                 hintText: "Search or add a skill...",
                 hintStyle: const TextStyle(color: Colors.grey),

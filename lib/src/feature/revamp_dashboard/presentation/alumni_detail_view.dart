@@ -15,10 +15,12 @@ class AlumniDetailView extends StatelessWidget {
     final name = first.candidatePosted?.name ?? "User";
     final college = first.candidatePosted?.college ?? "";
     final skills = first.candidatePosted?.skills ?? ['Skill 1', 'Skill 2'];
-    final role = first.jobTitle ?? "Professional";
-    final location = first.location?.join(", ") ?? "Location";
+final role = first.candidatePosted?.designation ??
+    first.candidatePosted?.specialization ??
+    first.jobTitle ??
+    "Professional";    final location = first.location?.join(", ") ?? "Location";
     final referrals = first.candidatePosted?.referralJobs ?? [];
-
+final company = first.candidatePosted?.currentCompany ?? "";
     return Scaffold(
       backgroundColor: AppColors.kBg,
       appBar: AppBar(
@@ -79,8 +81,17 @@ class AlumniDetailView extends StatelessWidget {
                   /// Location
                   Text(location, style: const TextStyle(color: Colors.grey)),
 
-                  const SizedBox(height: 6),
-
+                  const SizedBox(height: 2),
+if (company.isNotEmpty)
+  Text(
+    company,
+    style: const TextStyle(
+      color: Colors.grey,
+      fontSize: 13,
+    ),
+  ),
+  
+                  const SizedBox(height: 2),
                   /// College line
                   Text(college, style: TextStyle(color: AppColors.kGreen)),
 
@@ -275,8 +286,11 @@ class AlumniDetailView extends StatelessWidget {
   Widget _jobTile(BuildContext context, Job job) {
     final title = job.jobTitle ?? "Role";
 
-    final company =
-        job.companyName ?? job.candidatePosted?.college ?? "Company";
+final company = job.companyName?.isNotEmpty == true
+    ? job.companyName!
+    : job.candidatePosted?.currentCompany?.isNotEmpty == true
+        ? job.candidatePosted!.currentCompany!
+        : "Company";
 
     final pkg = job.packageDetails;
 

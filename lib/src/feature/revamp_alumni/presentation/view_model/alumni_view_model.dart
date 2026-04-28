@@ -306,37 +306,37 @@ class AlumniViewModel extends ChangeNotifier {
     isLoading = false;
     notifyListeners();
   }
+Future<void> fetchCompanyAlumni() async {
+  isLoading = true;
+  notifyListeners();
 
-  Future<void> fetchCompanyAlumni() async {
-    isLoading = true;
-    notifyListeners();
+  final result = await _repo.getCompanyAlumni();
 
-    final result = await _repo.getCompanyAlumni();
+  result.fold((_) {}, (res) {
 
-    result.fold((_) {}, (res) {
-      final userCompany = getIt<AppStateProvider>().user?.currentCompany;
+    /// 🔥 get all company alumni
+    final allCompanies = res.alumni ?? {};
 
-      final data = res.alumni?[userCompany] ?? [];
-      _all = data;
-      filtered = data;
+    companyAlumni = {};
 
-      /// 🔥 GROUP BY USER ID
-      companyAlumni = {};
-
-      for (var job in data) {
-        final id = job.id ?? "unknown";
+    allCompanies.forEach((companyName, users) {
+      for (var user in users) {
+        final id = user.id ?? "unknown";
 
         if (!companyAlumni.containsKey(id)) {
           companyAlumni[id] = [];
         }
 
-        companyAlumni[id]!.add(Job(candidatePosted: job));
+        companyAlumni[id]!.add(
+          Job(candidatePosted: user),
+        );
       }
     });
+  });
 
-    isLoading = false;
-    notifyListeners();
-  }
+  isLoading = false;
+  notifyListeners();
+}
 
   void search(String query, AlumniType type) {
     if (query.isEmpty) {

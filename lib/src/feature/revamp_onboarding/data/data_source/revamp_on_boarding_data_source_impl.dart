@@ -244,4 +244,128 @@ ResultFuture<Map<String, dynamic>> getReferralMetrics() async {
     return Left(APIException.from(e));
   }
 }
+@override
+ResultFuture<List<Map<String, dynamic>>> getColleges() async {
+  try {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "api/colleges/all",
+      isSafeRoute: true,
+    );
+
+    final result = await _networkService.request(request);
+
+    final data = List<Map<String, dynamic>>.from(result.data);
+
+    return Right(data);
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
+
+@override
+ResultFuture<Map<String, dynamic>> registerCollege({
+  required String name,
+}) async {
+  try {
+    final request = Request(
+      method: RequestMethod.post,
+      endpoint: "api/colleges/register",
+      isSafeRoute: true,
+      body: {
+        "name": name,
+      },
+    );
+
+    final result = await _networkService.request(request);
+
+    return Right(
+      Map<String, dynamic>.from(result.data),
+    );
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
+@override
+ResultFuture<List<Map<String, dynamic>>> getDegrees() async {
+  try {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "api/master-data?type=DEGREE",
+      isSafeRoute: true,
+    );
+
+    final res = await _networkService.request(request);
+
+    return Right(
+      List<Map<String, dynamic>>.from(
+        res.data['data'],
+      ),
+    );
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
+@override
+ResultFuture<Map<String, dynamic>>
+createMasterData({
+  required String type,
+  required String value,
+  String? parent,
+}) async {
+  try {
+    final request = Request(
+      method: RequestMethod.post,
+
+      endpoint: "api/master-data",
+
+      isSafeRoute: true,
+
+      body: {
+        "type": type,
+        "value": value,
+
+        if (parent != null)
+          "parent": parent,
+      },
+    );
+
+    final res =
+        await _networkService
+            .request(request);
+
+    return Right(
+      Map<String, dynamic>.from(
+        res.data['data'],
+      ),
+    );
+  } catch (e) {
+    return Left(
+      APIException.from(e),
+    );
+  }
+}
+@override
+ResultFuture<List<Map<String, dynamic>>> getStreams({
+  required String degreeId,
+}) async {
+  try {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint:
+          "api/master-data?type=STREAM&parent=$degreeId",
+      isSafeRoute: true,
+    );
+
+    final res = await _networkService.request(request);
+
+    return Right(
+      List<Map<String, dynamic>>.from(
+        res.data['data'],
+      ),
+    );
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
 }

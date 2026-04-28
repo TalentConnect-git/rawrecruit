@@ -208,8 +208,9 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 
   Widget _header(Job job) {
     final role = job.jobTitle ?? "Backend Developer";
-    final company = job.companyName ?? "company name";
-
+final company = job.companyName?.isNotEmpty == true
+    ? job.companyName!
+    : (job.candidatePosted?.currentCompany ?? "Company");
     final location = job.location?.join(", ") ?? "Hyderabad";
     final mode = job.workMode?.join(", ") ?? "Hybrid";
     final type = job.jobType ?? "Full-time";
@@ -583,6 +584,8 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
       candidatePosted: User(
         name: r.candidatePosted?.name,
         college: r.candidatePosted?.college,
+          currentCompany: r.candidatePosted?.currentCompany, // ✅ ADD THIS
+
       ),
     );
   }
