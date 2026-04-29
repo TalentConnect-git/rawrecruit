@@ -61,6 +61,7 @@ abstract class ReferralJobModel with _$ReferralJobModel {
 abstract class CandidatePosted with _$CandidatePosted {
   const factory CandidatePosted({
     @JsonKey(name: '_id') String? id,
+String? userId,
 
     // Identity
     String? name,

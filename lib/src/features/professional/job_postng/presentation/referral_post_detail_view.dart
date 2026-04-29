@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
@@ -6,6 +7,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/ent
 import 'package:rawrecruit/src/features/professional/job_postng/data/repository/job_posting_repo.dart';
 
 import 'widgets/applicant_card.dart';
+
 
 class ReferralPostDetailView extends StatefulWidget {
   
@@ -230,6 +232,11 @@ final metrics = job.metrics;
   );
 }
 Future<void> _togglePauseJob() async {
+  if (isPaused) {
+    await _showReactivateDialog();
+    return;
+  }
+
   showDialog(
     context: context,
     barrierDismissible: false,
@@ -238,40 +245,372 @@ Future<void> _togglePauseJob() async {
     ),
   );
 
-  final result = await getIt<ReferralPostRepository>()
+  final result = await getIt<
+          ReferralPostRepository>()
       .toggleReferralJobStatus(
-        jobId: widget.job.id ?? "",
-      );
+    jobId: widget.job.id ?? "",
+  );
 
   if (mounted) Navigator.pop(context);
 
   result.fold(
     (failure) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        const SnackBar(
           content: Text(
-!isPaused                ? "Failed to resume job"
-                : "Failed to pause job",
+            "Failed to pause job",
           ),
         ),
       );
     },
     (_) {
       setState(() {
-  isPaused = !isPaused;
-});
+        isPaused = true;
+      });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        const SnackBar(
           content: Text(
-  isPaused
-      ? "Job paused successfully"
-      : "Job resumed successfully",
-),
+            "Job paused successfully",
+          ),
         ),
       );
     },
   );
+}
+Future<void>
+    _showReactivateDialog() async {
+  DateTime? startDate;
+
+  DateTime? endDate;
+
+  await showDialog(
+    context: context,
+
+    builder: (_) {
+      return StatefulBuilder(
+        builder: (
+          context,
+          setModalState,
+        ) {
+          return AlertDialog(
+            backgroundColor:
+                const Color(
+              0xFF1F2937,
+            ),
+
+            shape:
+                RoundedRectangleBorder(
+              borderRadius:
+                  BorderRadius.circular(
+                16,
+              ),
+            ),
+
+            title: const Text(
+              "Reactivate Job",
+
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+
+            content: Column(
+              mainAxisSize:
+                  MainAxisSize.min,
+
+              children: [
+                GestureDetector(
+                  onTap: () async {
+                    final picked =
+                        await showDatePicker(
+                      context:
+                          context,
+
+                      initialDate:
+                          DateTime.now(),
+
+                      firstDate:
+                          DateTime.now(),
+
+                      lastDate:
+                          DateTime(
+                        2100,
+                      ),
+                    );
+
+                    if (picked !=
+                        null) {
+                      setModalState(() {
+                        startDate =
+                            picked;
+                      });
+                    }
+                  },
+
+                  child: Container(
+                    width:
+                        double.infinity,
+
+                    padding:
+                        const EdgeInsets
+                            .all(
+                      14,
+                    ),
+
+                    decoration:
+                        BoxDecoration(
+                      color:
+                          Colors.black,
+
+                      borderRadius:
+                          BorderRadius
+                              .circular(
+                        12,
+                      ),
+                    ),
+
+                    child: Text(
+                      startDate ==
+                              null
+                          ? "Select Start Date"
+                          : startDate!
+                              .toString()
+                              .split(
+                                " ",
+                              )
+                              .first,
+
+                      style:
+                          const TextStyle(
+                        color:
+                            Colors
+                                .white,
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(
+                  height: 12,
+                ),
+
+                GestureDetector(
+                  onTap: () async {
+                    final picked =
+                        await showDatePicker(
+                      context:
+                          context,
+
+                      initialDate:
+                          DateTime.now(),
+
+                      firstDate:
+                          DateTime.now(),
+
+                      lastDate:
+                          DateTime(
+                        2100,
+                      ),
+                    );
+
+                    if (picked !=
+                        null) {
+                      setModalState(() {
+                        endDate =
+                            picked;
+                      });
+                    }
+                  },
+
+                  child: Container(
+                    width:
+                        double.infinity,
+
+                    padding:
+                        const EdgeInsets
+                            .all(
+                      14,
+                    ),
+
+                    decoration:
+                        BoxDecoration(
+                      color:
+                          Colors.black,
+
+                      borderRadius:
+                          BorderRadius
+                              .circular(
+                        12,
+                      ),
+                    ),
+
+                    child: Text(
+                      endDate ==
+                              null
+                          ? "Select End Date"
+                          : endDate!
+                              .toString()
+                              .split(
+                                " ",
+                              )
+                              .first,
+
+                      style:
+                          const TextStyle(
+                        color:
+                            Colors
+                                .white,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.pop(
+                    context,
+                  );
+                },
+
+                child: const Text(
+                  "Cancel",
+
+                  style: TextStyle(
+                    color:
+                        Colors.grey,
+                  ),
+                ),
+              ),
+
+              ElevatedButton(
+                onPressed: () async {
+                  if (startDate ==
+                          null ||
+                      endDate ==
+                          null) {
+                    return;
+                  }
+
+                  Navigator.pop(
+                    context,
+                  );
+
+                  await _reactivateJob(
+                    startDate!,
+                    endDate!,
+                  );
+                },
+
+                child: const Text(
+                  "Reactivate",
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+}
+Future<void>
+    _reactivateJob(
+  DateTime startDate,
+  DateTime endDate,
+) async {
+  showDialog(
+    context: context,
+
+    barrierDismissible:
+        false,
+
+    builder: (_) =>
+        const Center(
+      child:
+          CircularProgressIndicator(),
+    ),
+  );
+
+  try {
+    final request = Request(
+      method:
+          RequestMethod.patch,
+
+      endpoint:
+          "/company/jobmanagement/reactivate/${widget.job.id}",
+
+      isSafeRoute:
+          true,
+
+      body: {
+        "startDate":
+            startDate
+                .toIso8601String()
+                .split("T")
+                .first,
+
+        "endDate":
+            endDate
+                .toIso8601String()
+                .split("T")
+                .first,
+      },
+    );
+
+    await getIt<NetworkService>()
+        .request(request);
+
+    if (mounted) {
+      Navigator.pop(context);
+
+      setState(() {
+        isPaused = false;
+      });
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Job reactivated successfully",
+          ),
+        ),
+      );
+    }
+    } catch (e) {
+    String message =
+        "Failed to reactivate job";
+
+    if (e is DioException) {
+      message =
+          e.response
+              ?.data['msg']
+              ?.toString() ??
+          message;
+    }
+
+    if (mounted) {
+      Navigator.pop(context);
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(
+        SnackBar(
+          content: Text(
+            message,
+          ),
+        ),
+      );
+    }
+  
+  }
 }
 Future<void> _showDeleteDialog() async {
   showDialog(
