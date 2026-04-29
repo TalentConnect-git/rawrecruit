@@ -8,6 +8,7 @@ part of 'job_posting.dart';
 
 _JobPosting _$JobPostingFromJson(Map<String, dynamic> json) => _JobPosting(
   id: json['_id'] as String?,
+  userId: json['userId'] as String?,
   profileImageUrl: json['profileImageUrl'] as String?,
   backgroundImageUrl: json['backgroundImageUrl'] as String?,
   employerDetails: json['employerDetails'] == null
@@ -21,6 +22,7 @@ _JobPosting _$JobPostingFromJson(Map<String, dynamic> json) => _JobPosting(
 Map<String, dynamic> _$JobPostingToJson(_JobPosting instance) =>
     <String, dynamic>{
       '_id': instance.id,
+      'userId': instance.userId,
       'profileImageUrl': instance.profileImageUrl,
       'backgroundImageUrl': instance.backgroundImageUrl,
       'employerDetails': instance.employerDetails,

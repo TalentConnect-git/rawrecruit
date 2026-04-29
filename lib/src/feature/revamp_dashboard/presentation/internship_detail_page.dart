@@ -31,7 +31,6 @@ class InternshipDetailView extends StatelessWidget {
     final pkg = internship.packageDetails;
     final contact = internship.contactPerson;
     final company = internship.companyPosted?.companyDetails;
-    final employer = internship.companyPosted?.employerDetails;
 
     return Scaffold(
       backgroundColor: AppColors.secBorder,
@@ -95,7 +94,106 @@ class InternshipDetailView extends StatelessWidget {
             _header(),
 
             const SizedBox(height: 20),
+/// 🔥 HIGHLIGHTED COMPANY SECTION
+_containerSection(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
 
+      /// COMPANY
+      if (company != null) ...[
+        const Text(
+          "Company Details",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 14),
+
+        _highlightInfo("Company", company.companyName),
+        _highlightInfo("Industry", company.industryType),
+        _highlightInfo("Company Type", company.companyType),
+
+        _highlightInfo(
+          "Location",
+          "${company.city ?? ''}, ${company.state ?? ''}",
+        ),
+
+        _highlightInfo("Employees", company.numberOfEmployees),
+
+        const SizedBox(height: 20),
+      ],
+
+      /// EMPLOYER
+    /// MESSAGE RECRUITER
+const Text(
+  "Connect",
+  style: TextStyle(
+    color: Colors.white,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  ),
+),
+
+const SizedBox(height: 14),
+
+GestureDetector(
+  onTap: () {
+    final userId = internship.postedByUser;
+
+    if (userId == null || userId.isEmpty) return;
+
+    final user = User(
+      id: userId,
+    );
+
+    context.pushNamed(
+      RouteNames.chatUser,
+      extra: user,
+    );
+  },
+
+  child: Container(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 10,
+    ),
+    decoration: BoxDecoration(
+      color: AppColors.kGreen.withOpacity(.15),
+      borderRadius: BorderRadius.circular(30),
+      border: Border.all(
+        color: AppColors.kGreen.withOpacity(.4),
+      ),
+    ),
+
+    child: const Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(
+          Icons.message,
+          size: 18,
+          color: Colors.green,
+        ),
+
+        SizedBox(width: 8),
+
+        Text(
+          "Message Recruiter",
+          style: TextStyle(
+            color: Colors.green,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+    ],
+  ),
+),
             /// 🔥 ABOUT
             if ((internship.description ?? '').isNotEmpty)
               _sectionText("About the Role", internship.description),
@@ -150,12 +248,6 @@ class InternshipDetailView extends StatelessWidget {
                 _info("City", company.city),
               ]),
 
-            /// 🔥 EMPLOYER
-            if (employer != null)
-              _sectionInfo("Employer", [
-                _info("Name", employer.name),
-                _info("Designation", employer.designation),
-              ]),
 const SizedBox(height: 24),
 
 Row(
@@ -300,7 +392,54 @@ Consumer<DashboardViewModel>(
       ],
     );
   }
+Widget _containerSection({required Widget child}) {
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(16),
+    margin: const EdgeInsets.only(bottom: 20),
+    decoration: BoxDecoration(
+      color: AppColors.kCard,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: AppColors.kGreen.withOpacity(.25),
+      ),
+    ),
+    child: child,
+  );
+}
 
+Widget _highlightInfo(String title, String? value) {
+  final text =
+      (value == null || value.trim().isEmpty) ? "-" : value;
+
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 110,
+          child: Text(
+            title,
+            style: TextStyle(
+              color: AppColors.kGreen,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
   Widget _sectionText(String title, String? content) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

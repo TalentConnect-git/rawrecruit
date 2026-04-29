@@ -8,6 +8,8 @@ part 'job_posting.g.dart';
 abstract class JobPosting with _$JobPosting {
   const factory JobPosting({
     @JsonKey(name: '_id') String? id,
+      @JsonKey(name: 'userId')
+  String? userId,
     String? profileImageUrl,
     String? backgroundImageUrl,
     User? employerDetails,

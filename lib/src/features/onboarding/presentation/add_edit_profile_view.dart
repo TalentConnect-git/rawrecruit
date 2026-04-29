@@ -717,9 +717,9 @@ fetchCompanies();
 
 fetchSkills();
     addEditProfileViewModel.setUserController(widget.user);
-    if (controller.experiences.isEmpty) {
-      controller.experiences.add(ExperienceController());
-    }
+    // if (controller.experiences.isEmpty) {
+    //   controller.experiences.add(ExperienceController());
+    // }
 
     if (controller.skills.isEmpty) {
       controller.skills.add(TextEditingController());
@@ -761,8 +761,8 @@ fetchSkills();
                 style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
               ),
             ),
-            body: Column(
-              children: [
+body: SafeArea(
+  child: Column(              children: [
                 /// 🔥 PROGRESS BAR
                 Padding(
                   padding: const EdgeInsets.all(16),
@@ -1247,7 +1247,12 @@ skillOptionsApi,                              ),
                           padding: const EdgeInsets.all(16),
                           child: ProfileSection(
                             label: 'Experience',
-
+initiallyExpanded: controller.experiences.any(
+  (e) =>
+      e.company.text.trim().isNotEmpty ||
+      e.role.text.trim().isNotEmpty ||
+      e.description.text.trim().isNotEmpty,
+),
                             trailing: _addButton(() {
                               setState(() {
                                 controller.experiences.add(
@@ -1294,9 +1299,12 @@ skillOptionsApi,                              ),
                 ),
 
                 /// 🔥 BOTTOM BUTTONS
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Row(
+           /// 🔥 BOTTOM BUTTONS
+SafeArea(
+  top: false,
+  child: Padding(
+    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+    child: Row(
                     children: [
                       /// SAVE
                       Expanded(
@@ -1393,12 +1401,13 @@ skillOptionsApi,                              ),
                         ),
                       ),
                     ],
-                  ),
-                ),
-              ],
+                     ),
+  ),
+),
+],
             ),
           ),
-
+          ),
           // Loading overlay
           Selector<AddEditProfileViewModel, bool>(
             selector: (_, vm) => vm.isLoading,

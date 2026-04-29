@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
@@ -153,7 +154,101 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                   _header(job),
 
                   const SizedBox(height: 20),
+_containerSection(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
 
+      const Text(
+        "Referral Contact",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+
+      const SizedBox(height: 14),
+
+      _highlightInfo(
+        "Name",
+        job.candidatePosted?.name,
+      ),
+
+      _highlightInfo(
+        "Company",
+        job.candidatePosted?.currentCompany,
+      ),
+
+      _highlightInfo(
+        "Email",
+        job.candidatePosted?.email,
+      ),
+
+      _highlightInfo(
+        "Phone",
+        job.candidatePosted?.phone,
+      ),
+
+      const SizedBox(height: 16),
+
+      GestureDetector(
+       onTap: () {
+  final candidate = referral?.candidatePosted;
+
+  if (candidate == null) return;
+
+  final user = User(
+    id: candidate.userId ?? candidate.id,
+    name: candidate.name ?? "",
+    email: candidate.email ?? "",
+    phone: candidate.phone ?? "",
+  );
+
+  context.pushNamed(
+    RouteNames.chatUser,
+    extra: user,
+  );
+},
+
+        child: Container(
+          padding: const EdgeInsets.symmetric(
+            horizontal: 16,
+            vertical: 10,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.kGreen.withOpacity(.15),
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: AppColors.kGreen.withOpacity(.4),
+            ),
+          ),
+
+          child: const Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                Icons.message,
+                size: 18,
+                color: Colors.green,
+              ),
+
+              SizedBox(width: 8),
+
+              Text(
+                "Message",
+                style: TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    ],
+  ),
+),
                   _sectionText("Description", job.description),
 
                   _sectionInfo("Job Overview", [
@@ -455,7 +550,54 @@ final company = job.companyName?.isNotEmpty == true
       ],
     );
   }
+Widget _containerSection({required Widget child}) {
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(16),
+    margin: const EdgeInsets.only(bottom: 20),
+    decoration: BoxDecoration(
+      color: AppColors.kCard,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: AppColors.kGreen.withOpacity(.25),
+      ),
+    ),
+    child: child,
+  );
+}
 
+Widget _highlightInfo(String title, String? value) {
+  final text =
+      (value == null || value.trim().isEmpty) ? "-" : value;
+
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 12),
+    child: Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 110,
+          child: Text(
+            title,
+            style: TextStyle(
+              color: AppColors.kGreen,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
   /// 🔥 LIST
   Widget _sectionList(String title, List<String>? items) {
     final list = items ?? [];
@@ -579,14 +721,17 @@ final company = job.companyName?.isNotEmpty == true
         totalCTC: r.packageDetails?.totalCTC,
         fixedPay: r.packageDetails?.fixedPay,
         joiningBonus: r.packageDetails?.joiningBonus,
+
         currency: r.packageDetails?.currency,
       ),
-      candidatePosted: User(
-        name: r.candidatePosted?.name,
-        college: r.candidatePosted?.college,
-          currentCompany: r.candidatePosted?.currentCompany, // ✅ ADD THIS
-
-      ),
+     candidatePosted: User(
+  id: r.candidatePosted?.userId,
+  name: r.candidatePosted?.name,
+  college: r.candidatePosted?.college,
+  currentCompany: r.candidatePosted?.currentCompany,
+  email: r.candidatePosted?.email,
+  phone: r.candidatePosted?.phone,
+),
     );
   }
 }

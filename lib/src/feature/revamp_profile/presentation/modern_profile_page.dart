@@ -205,8 +205,128 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: AppColors.kBorder),
       ),
-      child: Column(
+child: Column(
+  children: [
+    Align(
+      alignment: Alignment.topRight,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
+
+          /// GITHUB
+          if ((p?.github ?? '').isNotEmpty)
+            GestureDetector(
+              onTap: () async {
+  final raw = p?.github ?? '';
+
+  if (raw.isEmpty) return;
+
+  final formattedUrl = raw.startsWith('http://') ||
+          raw.startsWith('https://')
+      ? raw
+      : 'https://$raw';
+
+  await launchUrl(
+    Uri.parse(formattedUrl),
+    mode: LaunchMode.externalApplication,
+  );
+},
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Image.asset(
+                  'assets/images/github.png',
+                  height: 20,
+                  width: 20,
+                ),
+              ),
+            ),
+
+          /// LINKEDIN
+          if ((p?.linkedin ?? '').isNotEmpty)
+            GestureDetector(
+             onTap: () async {
+  final raw = p?.linkedin ?? '';
+
+  if (raw.isEmpty) return;
+
+  final formattedUrl = raw.startsWith('http://') ||
+          raw.startsWith('https://')
+      ? raw
+      : 'https://$raw';
+
+  await launchUrl(
+    Uri.parse(formattedUrl),
+    mode: LaunchMode.externalApplication,
+  );
+},
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Image.asset(
+                  'assets/images/linkedin.png',
+                  height: 20,
+                  width: 20,
+                ),
+              ),
+            ),
+
+          /// PORTFOLIO
+          if ((p?.portfolio ?? '').isNotEmpty)
+            GestureDetector(
+             onTap: () async {
+  final raw = p?.portfolio ?? '';
+
+  if (raw.isEmpty) return;
+
+  final formattedUrl = raw.startsWith('http://') ||
+          raw.startsWith('https://')
+      ? raw
+      : 'https://$raw';
+
+  await launchUrl(
+    Uri.parse(formattedUrl),
+    mode: LaunchMode.externalApplication,
+  );
+},
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Image.asset(
+                  'assets/images/portfolio.png',
+                  height: 20,
+                  width: 20,
+                ),
+              ),
+            ),
+
+          /// RESUME
+          if ((p?.resume ?? '').isNotEmpty)
+            GestureDetector(
+             onTap: () async {
+  final raw = p?.resume ?? '';
+
+  if (raw.isEmpty) return;
+
+  final formattedUrl = raw.startsWith('http://') ||
+          raw.startsWith('https://')
+      ? raw
+      : 'https://$raw';
+
+  await launchUrl(
+    Uri.parse(formattedUrl),
+    mode: LaunchMode.externalApplication,
+  );
+},
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Image.asset(
+                  'assets/images/cv.png',
+                  height: 20,
+                  width: 20,
+                ),
+              ),
+            ),
+        ],
+      ),
+    ),
           /// Avatar
           SizedBox(
             height: 64,
@@ -289,31 +409,48 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
 
           /// Role (you can map from backend later)
           /// Info Section
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                getIt<AppStateProvider>().isProfessional
-                    ? 'Company: ${p?.currentCompany ?? '-'}'
-                    : 'College: ${p?.college ?? '-'}',
-                style: TextStyle(color: Colors.grey[400], fontSize: 12),
-              ),
+         Column(
+  crossAxisAlignment: CrossAxisAlignment.center,
+  children: [
 
-              if (getIt<AppStateProvider>().isProfessional)
-                const SizedBox(height: 4),
-              if (getIt<AppStateProvider>().isProfessional)
-                Text(
-                  'Role: ${p?.jobRoles?.firstOrNull ?? p?.designation ?? '-'}',
-                  style: TextStyle(color: Colors.grey[500], fontSize: 11),
-                ),
-              const SizedBox(height: 4),
+    /// ROLE • COMPANY
+    Text(
+      getIt<AppStateProvider>().isProfessional
+          ? '${p?.jobRoles?.firstOrNull ?? p?.designation ?? 'Role'} • ${p?.currentCompany ?? '-'}'
+          : '${p?.degree ?? 'Student'} • ${p?.college ?? '-'}',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Colors.grey[400],
+        fontSize: 12,
+      ),
+    ),
 
-              Text(
-                'Location: ${p?.locations?.join(', ') ?? '-'}',
-                style: TextStyle(color: Colors.grey[500], fontSize: 11),
-              ),
-            ],
-          ),
+    const SizedBox(height: 4),
+
+    /// LOCATION
+    Text(
+      p?.locations?.join(', ') ?? '-',
+      textAlign: TextAlign.center,
+      style: TextStyle(
+        color: Colors.grey[500],
+        fontSize: 11,
+      ),
+    ),
+
+    const SizedBox(height: 4),
+
+    /// COLLEGE
+    if (getIt<AppStateProvider>().isProfessional)
+      Text(
+        'College: ${p?.college ?? '-'}',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.grey[500],
+          fontSize: 11,
+        ),
+      ),
+  ],
+),
           const SizedBox(height: 12),
 
           /// Skills Chips

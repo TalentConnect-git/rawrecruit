@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$JobPosting {
 
-@JsonKey(name: '_id') String? get id; String? get profileImageUrl; String? get backgroundImageUrl; User? get employerDetails; CompanyDetail? get companyDetails;
+@JsonKey(name: '_id') String? get id;@JsonKey(name: 'userId') String? get userId; String? get profileImageUrl; String? get backgroundImageUrl; User? get employerDetails; CompanyDetail? get companyDetails;
 /// Create a copy of JobPosting
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $JobPostingCopyWith<JobPosting> get copyWith => _$JobPostingCopyWithImpl<JobPost
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobPosting&&(identical(other.id, id) || other.id == id)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&(identical(other.backgroundImageUrl, backgroundImageUrl) || other.backgroundImageUrl == backgroundImageUrl)&&(identical(other.employerDetails, employerDetails) || other.employerDetails == employerDetails)&&(identical(other.companyDetails, companyDetails) || other.companyDetails == companyDetails));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is JobPosting&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&(identical(other.backgroundImageUrl, backgroundImageUrl) || other.backgroundImageUrl == backgroundImageUrl)&&(identical(other.employerDetails, employerDetails) || other.employerDetails == employerDetails)&&(identical(other.companyDetails, companyDetails) || other.companyDetails == companyDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,profileImageUrl,backgroundImageUrl,employerDetails,companyDetails);
+int get hashCode => Object.hash(runtimeType,id,userId,profileImageUrl,backgroundImageUrl,employerDetails,companyDetails);
 
 @override
 String toString() {
-  return 'JobPosting(id: $id, profileImageUrl: $profileImageUrl, backgroundImageUrl: $backgroundImageUrl, employerDetails: $employerDetails, companyDetails: $companyDetails)';
+  return 'JobPosting(id: $id, userId: $userId, profileImageUrl: $profileImageUrl, backgroundImageUrl: $backgroundImageUrl, employerDetails: $employerDetails, companyDetails: $companyDetails)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $JobPostingCopyWith<$Res>  {
   factory $JobPostingCopyWith(JobPosting value, $Res Function(JobPosting) _then) = _$JobPostingCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? profileImageUrl, String? backgroundImageUrl, User? employerDetails, CompanyDetail? companyDetails
+@JsonKey(name: '_id') String? id,@JsonKey(name: 'userId') String? userId, String? profileImageUrl, String? backgroundImageUrl, User? employerDetails, CompanyDetail? companyDetails
 });
 
 
@@ -65,9 +65,10 @@ class _$JobPostingCopyWithImpl<$Res>
 
 /// Create a copy of JobPosting
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? profileImageUrl = freezed,Object? backgroundImageUrl = freezed,Object? employerDetails = freezed,Object? companyDetails = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? userId = freezed,Object? profileImageUrl = freezed,Object? backgroundImageUrl = freezed,Object? employerDetails = freezed,Object? companyDetails = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,profileImageUrl: freezed == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,backgroundImageUrl: freezed == backgroundImageUrl ? _self.backgroundImageUrl : backgroundImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,employerDetails: freezed == employerDetails ? _self.employerDetails : employerDetails // ignore: cast_nullable_to_non_nullable
@@ -181,10 +182,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? profileImageUrl,  String? backgroundImageUrl,  User? employerDetails,  CompanyDetail? companyDetails)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @JsonKey(name: 'userId')  String? userId,  String? profileImageUrl,  String? backgroundImageUrl,  User? employerDetails,  CompanyDetail? companyDetails)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _JobPosting() when $default != null:
-return $default(_that.id,_that.profileImageUrl,_that.backgroundImageUrl,_that.employerDetails,_that.companyDetails);case _:
+return $default(_that.id,_that.userId,_that.profileImageUrl,_that.backgroundImageUrl,_that.employerDetails,_that.companyDetails);case _:
   return orElse();
 
 }
@@ -202,10 +203,10 @@ return $default(_that.id,_that.profileImageUrl,_that.backgroundImageUrl,_that.em
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? profileImageUrl,  String? backgroundImageUrl,  User? employerDetails,  CompanyDetail? companyDetails)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @JsonKey(name: 'userId')  String? userId,  String? profileImageUrl,  String? backgroundImageUrl,  User? employerDetails,  CompanyDetail? companyDetails)  $default,) {final _that = this;
 switch (_that) {
 case _JobPosting():
-return $default(_that.id,_that.profileImageUrl,_that.backgroundImageUrl,_that.employerDetails,_that.companyDetails);case _:
+return $default(_that.id,_that.userId,_that.profileImageUrl,_that.backgroundImageUrl,_that.employerDetails,_that.companyDetails);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -222,10 +223,10 @@ return $default(_that.id,_that.profileImageUrl,_that.backgroundImageUrl,_that.em
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? profileImageUrl,  String? backgroundImageUrl,  User? employerDetails,  CompanyDetail? companyDetails)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id, @JsonKey(name: 'userId')  String? userId,  String? profileImageUrl,  String? backgroundImageUrl,  User? employerDetails,  CompanyDetail? companyDetails)?  $default,) {final _that = this;
 switch (_that) {
 case _JobPosting() when $default != null:
-return $default(_that.id,_that.profileImageUrl,_that.backgroundImageUrl,_that.employerDetails,_that.companyDetails);case _:
+return $default(_that.id,_that.userId,_that.profileImageUrl,_that.backgroundImageUrl,_that.employerDetails,_that.companyDetails);case _:
   return null;
 
 }
@@ -237,10 +238,11 @@ return $default(_that.id,_that.profileImageUrl,_that.backgroundImageUrl,_that.em
 @JsonSerializable()
 
 class _JobPosting implements JobPosting {
-  const _JobPosting({@JsonKey(name: '_id') this.id, this.profileImageUrl, this.backgroundImageUrl, this.employerDetails, this.companyDetails});
+  const _JobPosting({@JsonKey(name: '_id') this.id, @JsonKey(name: 'userId') this.userId, this.profileImageUrl, this.backgroundImageUrl, this.employerDetails, this.companyDetails});
   factory _JobPosting.fromJson(Map<String, dynamic> json) => _$JobPostingFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
+@override@JsonKey(name: 'userId') final  String? userId;
 @override final  String? profileImageUrl;
 @override final  String? backgroundImageUrl;
 @override final  User? employerDetails;
@@ -259,16 +261,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobPosting&&(identical(other.id, id) || other.id == id)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&(identical(other.backgroundImageUrl, backgroundImageUrl) || other.backgroundImageUrl == backgroundImageUrl)&&(identical(other.employerDetails, employerDetails) || other.employerDetails == employerDetails)&&(identical(other.companyDetails, companyDetails) || other.companyDetails == companyDetails));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _JobPosting&&(identical(other.id, id) || other.id == id)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.profileImageUrl, profileImageUrl) || other.profileImageUrl == profileImageUrl)&&(identical(other.backgroundImageUrl, backgroundImageUrl) || other.backgroundImageUrl == backgroundImageUrl)&&(identical(other.employerDetails, employerDetails) || other.employerDetails == employerDetails)&&(identical(other.companyDetails, companyDetails) || other.companyDetails == companyDetails));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,profileImageUrl,backgroundImageUrl,employerDetails,companyDetails);
+int get hashCode => Object.hash(runtimeType,id,userId,profileImageUrl,backgroundImageUrl,employerDetails,companyDetails);
 
 @override
 String toString() {
-  return 'JobPosting(id: $id, profileImageUrl: $profileImageUrl, backgroundImageUrl: $backgroundImageUrl, employerDetails: $employerDetails, companyDetails: $companyDetails)';
+  return 'JobPosting(id: $id, userId: $userId, profileImageUrl: $profileImageUrl, backgroundImageUrl: $backgroundImageUrl, employerDetails: $employerDetails, companyDetails: $companyDetails)';
 }
 
 
@@ -279,7 +281,7 @@ abstract mixin class _$JobPostingCopyWith<$Res> implements $JobPostingCopyWith<$
   factory _$JobPostingCopyWith(_JobPosting value, $Res Function(_JobPosting) _then) = __$JobPostingCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? profileImageUrl, String? backgroundImageUrl, User? employerDetails, CompanyDetail? companyDetails
+@JsonKey(name: '_id') String? id,@JsonKey(name: 'userId') String? userId, String? profileImageUrl, String? backgroundImageUrl, User? employerDetails, CompanyDetail? companyDetails
 });
 
 
@@ -296,9 +298,10 @@ class __$JobPostingCopyWithImpl<$Res>
 
 /// Create a copy of JobPosting
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? profileImageUrl = freezed,Object? backgroundImageUrl = freezed,Object? employerDetails = freezed,Object? companyDetails = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? userId = freezed,Object? profileImageUrl = freezed,Object? backgroundImageUrl = freezed,Object? employerDetails = freezed,Object? companyDetails = freezed,}) {
   return _then(_JobPosting(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
+as String?,userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,profileImageUrl: freezed == profileImageUrl ? _self.profileImageUrl : profileImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,backgroundImageUrl: freezed == backgroundImageUrl ? _self.backgroundImageUrl : backgroundImageUrl // ignore: cast_nullable_to_non_nullable
 as String?,employerDetails: freezed == employerDetails ? _self.employerDetails : employerDetails // ignore: cast_nullable_to_non_nullable

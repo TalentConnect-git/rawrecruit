@@ -10,7 +10,7 @@ part 'job.g.dart';
 abstract class Job with _$Job {
   const factory Job({
     @JsonKey(name: '_id') String? id,
-
+String? postedByUser,
     // Basic
     String? jobTitle, // 🔥 REQUIRED
     String? description,
