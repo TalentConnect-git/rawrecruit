@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/common/index.dart';
 
-class CommonAutocomplete
-    extends StatelessWidget {
+class CommonAutocomplete extends StatelessWidget {
   final String label;
 
   final String hint;
@@ -10,30 +10,20 @@ class CommonAutocomplete
 
   final String initialValue;
 
-  final Function(String)
-  onChanged;
+  final Function(String) onChanged;
 
-  final Function(String)?
-  onSubmitted;
+  final Function(String)? onSubmitted;
 
-  final Function(String)?
-  onSelected;
+  final Function(String)? onSelected;
 
   const CommonAutocomplete({
     super.key,
-
     required this.label,
-
     required this.hint,
-
     required this.options,
-
     required this.initialValue,
-
     required this.onChanged,
-
     this.onSubmitted,
-
     this.onSelected,
   });
 
@@ -46,22 +36,10 @@ class CommonAutocomplete
           CrossAxisAlignment.start,
 
       children: [
-        Text(
-          label,
-
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-        ),
-
-        const SizedBox(height: 8),
-
         Autocomplete<String>(
-          initialValue:
-              TextEditingValue(
-                text:
-                    initialValue,
-              ),
+          initialValue: TextEditingValue(
+            text: initialValue,
+          ),
 
           optionsBuilder: (
             textEditingValue,
@@ -106,25 +84,112 @@ class CommonAutocomplete
                   focusNode,
 
               style:
-                  const TextStyle(
-                    color:
-                        Colors.white,
-                  ),
+                  AppTextStyles
+                      .s16W400
+                      .copyWith(
+                        color:
+                            AppColors
+                                .white,
+                      ),
 
               decoration:
                   InputDecoration(
-                    hintText: hint,
+                    labelText:
+                        hint,
 
-                    filled: true,
+                    labelStyle:
+                        AppTextStyles
+                            .s16W500
+                            .copyWith(
+                              color:
+                                  AppColors
+                                      .white,
+                            ),
 
-                    fillColor:
-                        Colors.black,
+                    floatingLabelStyle:
+                        AppTextStyles
+                            .s16W400
+                            .copyWith(
+                              color:
+                                  AppColors
+                                      .white,
+                            ),
+
+                    isDense:
+                        true,
 
                     border:
                         OutlineInputBorder(
+                          borderSide:
+                              BorderSide(
+                                color:
+                                    AppColors
+                                        .border,
+                              ),
+
                           borderRadius:
                               BorderRadius.circular(
-                                12,
+                                8,
+                              ),
+                        ),
+
+                    focusedBorder:
+                        OutlineInputBorder(
+                          borderSide:
+                              BorderSide(
+                                color:
+                                    AppColors
+                                        .kGreen,
+                              ),
+
+                          borderRadius:
+                              BorderRadius.circular(
+                                8,
+                              ),
+                        ),
+
+                    enabledBorder:
+                        OutlineInputBorder(
+                          borderSide:
+                              BorderSide(
+                                color:
+                                    AppColors
+                                        .white,
+                              ),
+
+                          borderRadius:
+                              BorderRadius.circular(
+                                8,
+                              ),
+                        ),
+
+                    errorBorder:
+                        OutlineInputBorder(
+                          borderSide:
+                              BorderSide(
+                                color:
+                                    AppColors
+                                        .errorBorder,
+                              ),
+
+                          borderRadius:
+                              BorderRadius.circular(
+                                8,
+                              ),
+                        ),
+
+                    focusedErrorBorder:
+                        OutlineInputBorder(
+                          borderSide:
+                              BorderSide(
+                                color:
+                                    AppColors
+                                        .kGreen,
+                              ),
+
+                          borderRadius:
+                              BorderRadius.circular(
+                                8,
                               ),
                         ),
                   ),
@@ -144,8 +209,7 @@ class CommonAutocomplete
           ) {
             return Align(
               alignment:
-                  Alignment
-                      .topLeft,
+                  Alignment.topLeft,
 
               child: Material(
                 elevation: 8,
@@ -174,8 +238,9 @@ class CommonAutocomplete
                       decoration:
                           BoxDecoration(
                             color:
-                                Colors
-                                    .black,
+                                const Color(
+                                  0xFF1F2937,
+                                ),
 
                             borderRadius:
                                 BorderRadius.circular(
@@ -185,8 +250,8 @@ class CommonAutocomplete
                             border:
                                 Border.all(
                                   color:
-                                      Colors
-                                          .grey,
+                                      AppColors
+                                          .border,
                                 ),
                           ),
 
@@ -236,9 +301,11 @@ class CommonAutocomplete
                                           option,
 
                                           style:
-                                              const TextStyle(
+                                              TextStyle(
                                                 color:
-                                                    Colors.white,
+                                                    Colors
+                                                        .grey
+                                                        .shade300,
                                               ),
                                         ),
 

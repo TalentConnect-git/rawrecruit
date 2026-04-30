@@ -4,9 +4,9 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
+import 'package:rawrecruit/src/features/onboarding/presentation/edit_profile_sections_page.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart'
     show InterviewViewModel;
 import '../../revamp_onboarding/presentation/index.dart';
@@ -99,6 +99,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                     //     const Icon(Icons.settings, color: Colors.grey),
                     //   ],
                     // ),
+
                     const SizedBox(height: 20),
 
                     /// 🔥 PROFILE CARD
@@ -116,10 +117,16 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                       "Edit Profile",
                       Icons.edit,
                       onTap: () async {
-                        final result = await context.pushNamed(
-                          RouteNames.addEditProfileView,
-                          extra: vm.user,
-                        );
+                        final result = await Navigator.push(
+  context,
+
+  MaterialPageRoute(
+    builder: (_) =>
+        EditProfileSectionsPage(
+          user: vm.user!,
+        ),
+  ),
+);
 
                         if (result == true) {
                           final failure = await vm.getUser();

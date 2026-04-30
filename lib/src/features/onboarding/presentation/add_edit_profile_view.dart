@@ -13,8 +13,8 @@ import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_e
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
 
 class AddEditProfileView extends StatefulWidget {
-  const AddEditProfileView({this.user, super.key});
-
+  const AddEditProfileView({this.user,   this.initialStep,super.key});
+final int? initialStep;
   final User? user;
 
   @override
@@ -38,313 +38,202 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       });
     }
   }
-List<Map<String, dynamic>> colleges = [];
 
-List<Map<String, dynamic>> degrees = [];
+  List<Map<String, dynamic>> colleges = [];
 
-List<Map<String, dynamic>> streams = [];
+  List<Map<String, dynamic>> degrees = [];
 
-List<String> companyOptions = [];
+  List<Map<String, dynamic>> streams = [];
 
-List<String> skillOptionsApi = [];
+  List<String> companyOptions = [];
 
-String? selectedDegreeId;
-Future<void> fetchColleges() async {
-  final response =
-      await getIt<NetworkService>()
-          .request(
-            Request(
-              method:
-                  RequestMethod.get,
+  List<String> skillOptionsApi = [];
 
-              endpoint:
-                  "api/colleges/all",
+  String? selectedDegreeId;
+  Future<void> fetchColleges() async {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
 
-              isSafeRoute:
-                  true,
-            ),
-          );
+        endpoint: "api/colleges/all",
 
-  colleges =
-      List<Map<String, dynamic>>.from(
-        response.data,
-      );
+        isSafeRoute: true,
+      ),
+    );
 
-  setState(() {});
-}
-Future<void> fetchDegrees() async {
-  final response =
-      await getIt<NetworkService>()
-          .request(
-            Request(
-              method:
-                  RequestMethod.get,
+    colleges = List<Map<String, dynamic>>.from(response.data);
 
-              endpoint:
-                  "api/master-data?type=DEGREE",
-
-              isSafeRoute:
-                  true,
-            ),
-          );
-
-  degrees =
-      List<Map<String, dynamic>>.from(
-        response.data['data'],
-      );
-
-  setState(() {});
-}
-Future<void> fetchStreams(
-  String degreeId,
-) async {
-  selectedDegreeId =
-      degreeId;
-
-  final response =
-      await getIt<NetworkService>()
-          .request(
-            Request(
-              method:
-                  RequestMethod.get,
-
-              endpoint:
-                  "api/master-data?type=STREAM&parent=$degreeId",
-
-              isSafeRoute:
-                  true,
-            ),
-          );
-
-  streams =
-      List<Map<String, dynamic>>.from(
-        response.data['data'],
-      );
-
-  setState(() {});
-}
-Future<void> fetchCompanies() async {
-  final response =
-      await getIt<NetworkService>()
-          .request(
-            Request(
-              method:
-                  RequestMethod.get,
-
-              endpoint:
-                  "/dropdown/companiesName",
-
-              isSafeRoute:
-                  true,
-            ),
-          );
-
-  final data =
-      List<Map<String, dynamic>>.from(
-        response.data,
-      );
-
-  companyOptions = data
-      .map(
-        (e) =>
-            e['label']
-                .toString(),
-      )
-      .toList();
-
-  setState(() {});
-}
-Future<void> fetchSkills() async {
-  final response =
-      await getIt<NetworkService>()
-          .request(
-            Request(
-              method:
-                  RequestMethod.get,
-
-              endpoint:
-                  "api/meta/get-skills",
-
-              isSafeRoute:
-                  true,
-            ),
-          );
-
-  final data =
-      List<Map<String, dynamic>>.from(
-        response.data,
-      );
-
- skillOptionsApi = [
-  ...data.map(
-    (e) =>
-        e['skills']
-            .toString(),
-  ),
-
-  "Others",
-];
-
-  setState(() {});
-}
-Future<void> addCollegeIfNeeded(
-  String value,
-) async {
-  final exists = colleges.any(
-    (e) =>
-        e['label']
-            .toString()
-            .toLowerCase()
-            .trim() ==
-        value.toLowerCase().trim(),
-  );
-
-  if (exists) return;
-
-  await getIt<NetworkService>()
-      .request(
-        Request(
-          method:
-              RequestMethod.post,
-
-          endpoint:
-              "/api/colleges/register",
-
-          isSafeRoute:
-              true,
-
-          body: {
-            "name": value,
-          },
-        ),
-      );
-
-  await fetchColleges();
-}
-Future<void> addDegreeIfNeeded(
-  String value,
-) async {
-  final exists = degrees.any(
-    (e) =>
-        e['value']
-            .toString()
-            .toLowerCase()
-            .trim() ==
-        value.toLowerCase().trim(),
-  );
-
-  if (exists) return;
-
-  await getIt<NetworkService>()
-      .request(
-        Request(
-          method:
-              RequestMethod.post,
-
-          endpoint:
-              "/api/master-data",
-
-          isSafeRoute:
-              true,
-
-          body: {
-            "type":
-                "DEGREE",
-
-            "value":
-                value,
-          },
-        ),
-      );
-
-  await fetchDegrees();
-}
-Future<void> addStreamIfNeeded(
-  String value,
-) async {
-  if (selectedDegreeId ==
-      null) {
-    return;
+    setState(() {});
   }
 
-  final exists = streams.any(
-    (e) =>
-        e['value']
-            .toString()
-            .toLowerCase()
-            .trim() ==
-        value.toLowerCase().trim(),
-  );
+  Future<void> fetchDegrees() async {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
 
-  if (exists) return;
+        endpoint: "api/master-data?type=DEGREE",
 
-  await getIt<NetworkService>()
-      .request(
-        Request(
-          method:
-              RequestMethod.post,
+        isSafeRoute: true,
+      ),
+    );
 
-          endpoint:
-              "/api/master-data",
+    degrees = List<Map<String, dynamic>>.from(response.data['data']);
 
-          isSafeRoute:
-              true,
+    setState(() {});
+  }
 
-          body: {
-            "type":
-                "STREAM",
+  Future<void> fetchStreams(String degreeId) async {
+    selectedDegreeId = degreeId;
 
-            "value":
-                value,
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
 
-            "parent":
-                selectedDegreeId,
-          },
-        ),
-      );
+        endpoint: "api/master-data?type=STREAM&parent=$degreeId",
 
-  await fetchStreams(
-    selectedDegreeId!,
-  );
-}
+        isSafeRoute: true,
+      ),
+    );
 
-Future<void> addSkillIfNeeded(
-  String value,
-) async {
-  final exists =
-      skillOptionsApi.any(
-        (e) =>
-            e
-                .toLowerCase()
-                .trim() ==
-            value
-                .toLowerCase()
-                .trim(),
-      );
+    streams = List<Map<String, dynamic>>.from(response.data['data']);
 
-  if (exists) return;
+    setState(() {});
+  }
 
-  await getIt<NetworkService>()
-      .request(
-        Request(
-          method:
-              RequestMethod.post,
+  Future<void> fetchCompanies() async {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
 
-          endpoint:
-              "/api/meta/add-skill",
+        endpoint: "/dropdown/companiesName",
 
-          isSafeRoute:
-              true,
+        isSafeRoute: true,
+      ),
+    );
 
-          body: {
-            "skills":
-                value,
-          },
-        ),
-      );
+    final data = List<Map<String, dynamic>>.from(response.data);
 
-  await fetchSkills();
-}
+    companyOptions = data.map((e) => e['label'].toString()).toList();
+
+    setState(() {});
+  }
+
+  Future<void> fetchSkills() async {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
+
+        endpoint: "api/meta/get-skills",
+
+        isSafeRoute: true,
+      ),
+    );
+
+    final data = List<Map<String, dynamic>>.from(response.data);
+
+    skillOptionsApi = [...data.map((e) => e['skills'].toString()), "Others"];
+
+    setState(() {});
+  }
+
+  Future<void> addCollegeIfNeeded(String value) async {
+    final exists = colleges.any(
+      (e) =>
+          e['label'].toString().toLowerCase().trim() ==
+          value.toLowerCase().trim(),
+    );
+
+    if (exists) return;
+
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+
+        endpoint: "/api/colleges/register",
+
+        isSafeRoute: true,
+
+        body: {"name": value},
+      ),
+    );
+
+    await fetchColleges();
+  }
+
+  Future<void> addDegreeIfNeeded(String value) async {
+    final exists = degrees.any(
+      (e) =>
+          e['value'].toString().toLowerCase().trim() ==
+          value.toLowerCase().trim(),
+    );
+
+    if (exists) return;
+
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+
+        endpoint: "/api/master-data",
+
+        isSafeRoute: true,
+
+        body: {"type": "DEGREE", "value": value},
+      ),
+    );
+
+    await fetchDegrees();
+  }
+
+  Future<void> addStreamIfNeeded(String value) async {
+    if (selectedDegreeId == null) {
+      return;
+    }
+
+    final exists = streams.any(
+      (e) =>
+          e['value'].toString().toLowerCase().trim() ==
+          value.toLowerCase().trim(),
+    );
+
+    if (exists) return;
+
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+
+        endpoint: "/api/master-data",
+
+        isSafeRoute: true,
+
+        body: {"type": "STREAM", "value": value, "parent": selectedDegreeId},
+      ),
+    );
+
+    await fetchStreams(selectedDegreeId!);
+  }
+
+  Future<void> addSkillIfNeeded(String value) async {
+    final exists = skillOptionsApi.any(
+      (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
+    );
+
+    if (exists) return;
+
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+
+        endpoint: "/api/meta/add-skill",
+
+        isSafeRoute: true,
+
+        body: {"skills": value},
+      ),
+    );
+
+    await fetchSkills();
+  }
+
   List<String> degreeOptions = [
     "B.Tech",
     "B.E",
@@ -692,7 +581,7 @@ Future<void> addSkillIfNeeded(
 
   int currentStep = 0;
 
-  final int totalSteps = 10;
+  final int totalSteps = 14;
 
   void nextStep() {
     if (currentStep < totalSteps - 1) {
@@ -707,15 +596,18 @@ Future<void> addSkillIfNeeded(
   @override
   void initState() {
     super.initState();
+currentStep = widget.initialStep ?? 0;
 
-  
-fetchColleges();
+WidgetsBinding.instance.addPostFrameCallback((_) {
+  _pageController.jumpToPage(currentStep);
+});
+    fetchColleges();
 
-fetchDegrees();
+    fetchDegrees();
 
-fetchCompanies();
+    fetchCompanies();
 
-fetchSkills();
+    fetchSkills();
     addEditProfileViewModel.setUserController(widget.user);
     // if (controller.experiences.isEmpty) {
     //   controller.experiences.add(ExperienceController());
@@ -746,667 +638,712 @@ fetchSkills();
         children: [
           Scaffold(
             backgroundColor: AppColors.kBg,
-            appBar: RAppBar(
-              leading: widget.user != null
-                  ? IconButton(
-                      onPressed: () => context.pop(),
-                      icon: Icon(
-                        Icons.keyboard_arrow_left,
-                        color: AppColors.white,
-                      ),
-                    )
-                  : null,
-              title: Text(
-                widget.user != null ? 'Edit Profile' : 'Complete your profile',
-                style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
-              ),
-            ),
-body: SafeArea(
-  child: Column(              children: [
-                /// 🔥 PROGRESS BAR
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: LinearProgressIndicator(
-                    value: (currentStep + 1) / totalSteps,
-                    backgroundColor: Colors.grey.shade800,
-                    color: AppColors.kGreen,
-                    minHeight: 8,
-                    borderRadius: BorderRadius.circular(20),
+            // appBar: RAppBar(
+            //   leading: widget.user != null
+            //       ? IconButton(
+            //           onPressed: () => context.pop(),
+            //           icon: Icon(
+            //             Icons.keyboard_arrow_left,
+            //             color: AppColors.white,
+            //           ),
+            //         )
+            //       : null,
+            //   title: Text(
+            //     widget.user != null ? 'Edit Profile' : 'Complete your profile',
+            //     style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
+            //   ),
+            // ),
+            body: SafeArea(
+              child: Column(
+                children: [
+                  /// 🔥 PROGRESS BAR
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    // child: LinearProgressIndicator(
+                    //   value: (currentStep + 1) / totalSteps,
+                    //   backgroundColor: Colors.grey.shade800,
+                    //   color: AppColors.kGreen,
+                    //   minHeight: 8,
+                    //   borderRadius: BorderRadius.circular(20),
+                    // ),
                   ),
-                ),
 
-                /// 🔥 STEPS
-                Expanded(
-                  child: Form(
-                    key: _formKey,
-                    child: PageView(
-                      controller: _pageController,
-                      physics: const NeverScrollableScrollPhysics(),
+                  /// 🔥 STEPS
+                  Expanded(
+                    child: Form(
+                      key: _formKey,
+                      child: PageView(
+                        controller: _pageController,
+                        physics: const NeverScrollableScrollPhysics(),
 
-                      onPageChanged: (i) {
-                        setState(() {
-                          currentStep = i;
-                        });
-                      },
+                        onPageChanged: (i) {
+                          setState(() {
+                            currentStep = i;
+                          });
+                        },
+                        children: [
+                          /// ───────────────── BASIC ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
 
-                      children: [
-                        /// ───────────────── BASIC ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              AppButton(
-                                backgroundColor: AppColors.kGreen,
-                                onPressed: parseResumeAndFill,
-                                child: const Text('Upload Resume & Autofill'),
-                              ),
+                            child: Column(
+                              children: [
+                                AppButton(
+                                  backgroundColor: AppColors.kGreen,
 
-                              const SizedBox(height: 20),
+                                  onPressed: parseResumeAndFill,
 
-                              ProfileSection(
-                                label: 'Basic',
-                                spacing: 16,
-                                children: [
-                                  ProfileImage(
-                                    imagePath: widget.user?.profileImage ?? '',
-                                    onImageSelected: (image) {
-                                      addEditProfileViewModel.pickedImage =
-                                          image;
+                                  child: const Text('Upload Resume & Autofill'),
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                ProfileSection(
+                                  label: 'Basic',
+
+                                  spacing: 16,
+
+                                  children: [
+                                    ProfileImage(
+                                      imagePath:
+                                          widget.user?.profileImage ?? '',
+
+                                      onImageSelected: (image) {
+                                        addEditProfileViewModel.pickedImage =
+                                            image;
+                                      },
+                                    ),
+
+                                    AppTextFields(
+                                      controller: controller.name,
+
+                                      hint: 'Name',
+
+                                      onChanged: (_) => markChanged(),
+                                    ),
+
+                                    AppTextFields(
+                                      controller: controller.email,
+
+                                      hint: 'Email',
+
+                                      onChanged: (_) => markChanged(),
+                                    ),
+
+                                    AppTextFields(
+                                      controller: controller.phone,
+
+                                      hint: 'Phone',
+
+                                      onChanged: (_) => markChanged(),
+                                    ),
+
+                                    _dropdownField(
+                                      controller.gender,
+                                      'Gender',
+                                      genderOptions,
+                                    ),
+
+                                    _datePickerField(
+                                      controller.dob,
+                                      'Date of Birth',
+                                    ),
+
+                                    _dropdownField(
+                                      controller.ethnicity,
+                                      'Ethnicity',
+                                      ethnicityOptions,
+                                    ),
+
+                                    _dropdownField(
+                                      controller.maritalStatus,
+                                      'Marital Status',
+                                      maritalStatusOptions,
+                                    ),
+
+                                    _dropdownField(
+                                      controller.visaStatus,
+                                      'Visa Status / Work Authorization',
+                                      visaStatusOptions,
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          /// ───────────────── EDUCATION ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'Education',
+
+                              spacing: 16,
+
+                              children: [
+                                CommonAutocomplete(
+                                  label: "College",
+
+                                  hint: "College",
+
+                                  options: colleges
+                                      .map((e) => e['label'].toString())
+                                      .toList(),
+
+                                  initialValue: controller.college.text,
+
+                                  onChanged: (value) {
+                                    controller.college.text = value;
+
+                                    markChanged();
+                                  },
+
+                                  onSubmitted: (value) async {
+                                    await addCollegeIfNeeded(value);
+
+                                    controller.college.text = value;
+
+                                    markChanged();
+                                  },
+                                ),
+
+                                _degreeDropdownField(),
+
+                                _specializationDropdownField(),
+
+                                if (!isProfessional && !isFresher)
+                                  _dropdownField(
+                                    controller.semester,
+                                    'Semester',
+                                    semesterOptions,
+                                  ),
+
+                                _dropdownField(
+                                  controller.yearOfGraduation,
+                                  'Graduation Year',
+                                  graduationYears,
+                                ),
+
+                                if (!isProfessional)
+                                  AppTextFields(
+                                    controller: controller.cgpa,
+
+                                    hint: 'CGPA',
+
+                                    onChanged: (_) => markChanged(),
+                                  ),
+                              ],
+                            ),
+                          ),
+
+                          /// ───────────────── LINKS ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'Links',
+
+                              spacing: 16,
+
+                              children: [
+                                AppTextFields(
+                                  controller: controller.github,
+
+                                  hint: 'Github',
+
+                                  onChanged: (_) => markChanged(),
+                                ),
+
+                                AppTextFields(
+                                  controller: controller.linkedin,
+
+                                  hint: 'LinkedIn',
+
+                                  onChanged: (_) => markChanged(),
+                                ),
+
+                                AppTextFields(
+                                  controller: controller.portfolio,
+
+                                  hint: 'Portfolio',
+
+                                  onChanged: (_) => markChanged(),
+                                ),
+
+                                AppTextFields(
+                                  controller: controller.resume,
+
+                                  hint: 'Resume URL',
+
+                                  onChanged: (_) => markChanged(),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          /// ───────────────── CAREER ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'Career',
+
+                              spacing: 16,
+
+                              children: [
+                                if (isProfessional) ...[
+                                  CommonAutocomplete(
+                                    label: "Current Company",
+
+                                    hint: "Current Company",
+
+                                    options: companyOptions,
+
+                                    initialValue:
+                                        controller.currentCompany.text,
+
+                                    onChanged: (value) {
+                                      controller.currentCompany.text = value;
+
+                                      markChanged();
+                                    },
+
+                                    onSelected: (value) {
+                                      controller.currentCompany.text = value;
+
+                                      markChanged();
                                     },
                                   ),
 
                                   AppTextFields(
-                                    controller: controller.name,
-                                    hint: 'Name',
+                                    controller: controller.noticePeriod,
+
+                                    hint: 'Notice Period (days)',
+
                                     onChanged: (_) => markChanged(),
                                   ),
 
-                                  AppTextFields(
-                                    controller: controller.email,
-                                    hint: 'Email',
-                                    onChanged: (_) => markChanged(),
-                                  ),
-
-                                  AppTextFields(
-                                    controller: controller.phone,
-                                    hint: 'Phone',
-                                    onChanged: (_) => markChanged(),
-                                  ),
-
-                                  _dropdownField(
-                                    controller.gender,
-                                    'Gender',
-                                    genderOptions,
-                                  ),
-
-                                  _datePickerField(
-                                    controller.dob,
-                                    'Date of Birth',
-                                  ),
-
-                                  _dropdownField(
-                                    controller.ethnicity,
-                                    'Ethnicity',
-                                    ethnicityOptions,
-                                  ),
-
-                                  _dropdownField(
-                                    controller.maritalStatus,
-                                    'Marital Status',
-                                    maritalStatusOptions,
-                                  ),
-
-                                  _dropdownField(
-                                    controller.visaStatus,
-                                    'Visa Status / Work Authorization',
-                                    visaStatusOptions,
-                                  ),
+                                  const SizedBox(height: 12),
                                 ],
-                              ),
-                            ],
-                          ),
-                        ),
 
-                        /// ───────────────── EDUCATION ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: ProfileSection(
-                            label: 'Education',
-                            spacing: 16,
-                            children: [
-                            CommonAutocomplete(
-  label: "College",
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: AppTextFields(
+                                        controller:
+                                            controller.currentSalaryAmount,
 
-  hint: "College",
+                                        hint: 'Current Salary',
 
-  options: colleges
-      .map(
-        (e) =>
-            e['label']
-                .toString(),
-      )
-      .toList(),
+                                        onChanged: (_) => markChanged(),
+                                      ),
+                                    ),
 
-  initialValue:
-      controller.college.text,
+                                    const SizedBox(width: 12),
 
-  onChanged: (value) {
-    controller.college.text =
-        value;
+                                    SizedBox(
+                                      width: 110,
 
-    markChanged();
-  },
-  onSubmitted: (
-  value,
-) async {
-  await addDegreeIfNeeded(
-    value,
-  );
-
-  final selected =
-      degrees.firstWhere(
-        (e) =>
-            e['value']
-                .toString()
-                .toLowerCase() ==
-            value
-                .toLowerCase(),
-
-        orElse: () => {},
-      );
-
-  if (selected.isNotEmpty) {
-    selectedDegreeId =
-        selected['_id'];
-
-    await fetchStreams(
-      selectedDegreeId!,
-    );
-  }
-},
-  onSelected: (value) {
-    controller.college.text =
-        value;
-
-    markChanged();
-  },
+                                     child: _dropdownField(
+  controller.currentSalaryCurrency,
+  'Cur',
+  ['USD', 'INR', 'EUR', 'GBP'],
 ),
-                              _degreeDropdownField(),
-
-                              _specializationDropdownField(),
-
-                              if (!isProfessional && !isFresher)
-                                _dropdownField(
-                                  controller.semester,
-                                  'Semester',
-                                  semesterOptions,
+                                    ),
+                                  ],
                                 ),
-
-                              _dropdownField(
-                                controller.yearOfGraduation,
-                                'Graduation Year',
-                                graduationYears,
-                              ),
-
-                              if (!isProfessional)
-                                AppTextFields(
-                                  controller: controller.cgpa,
-                                  hint: 'CGPA',
-                                  onChanged: (_) => markChanged(),
-                                ),
-                            ],
-                          ),
-                        ),
-
-                        /// ───────────────── LINKS ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: ProfileSection(
-                            label: 'Links',
-                            spacing: 16,
-                            children: [
-                              AppTextFields(
-                                controller: controller.github,
-                                hint: 'Github',
-                                onChanged: (_) => markChanged(),
-                              ),
-
-                              AppTextFields(
-                                controller: controller.linkedin,
-                                hint: 'LinkedIn',
-                                onChanged: (_) => markChanged(),
-                              ),
-
-                              AppTextFields(
-                                controller: controller.portfolio,
-                                hint: 'Portfolio',
-                                onChanged: (_) => markChanged(),
-                              ),
-
-                              AppTextFields(
-                                controller: controller.resume,
-                                hint: 'Resume URL',
-                                onChanged: (_) => markChanged(),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        /// ───────────────── CAREER ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: ProfileSection(
-                            label: 'Career',
-                            spacing: 16,
-                            children: [
-                              if (isProfessional) ...[
-                               CommonAutocomplete(
-  label:
-      "Current Company",
-
-  hint:
-      "Current Company",
-
-  options:
-      companyOptions,
-
-  initialValue:
-      controller
-          .currentCompany
-          .text,
-
-  onChanged: (value) {
-    controller
-        .currentCompany
-        .text = value;
-
-    markChanged();
-  },
-
-  onSelected: (value) {
-    controller
-        .currentCompany
-        .text = value;
-
-    markChanged();
-  },
-),
-
-                                AppTextFields(
-                                  controller: controller.noticePeriod,
-                                  hint: 'Notice Period (days)',
-                                  onChanged: (_) => markChanged(),
-                                ),
-
-                                const SizedBox(height: 12),
                               ],
-                              _dropdownField(
-                                controller.openToShift,
-                                'Open To Shift',
-                                shiftOptions,
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: AppTextFields(
-                                      controller:
-                                          controller.currentSalaryAmount,
-                                      hint: 'Current Salary',
-                                      onChanged: (_) => markChanged(),
+                            ),
+                          ),
+
+                          /// ───────────────── EMPLOYEE PREFERENCES ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: AppTextFields(
+                                        controller:
+                                            controller.expectedSalaryAmount,
+
+                                        hint: 'Expected Salary',
+
+                                        onChanged: (_) => markChanged(),
+                                      ),
                                     ),
-                                  ),
 
-                                  const SizedBox(width: 12),
+                                    const SizedBox(width: 12),
 
-                                  SizedBox(
-                                    width: 110,
-                                    child: _dropdownField(
-                                      controller.currentSalaryCurrency,
-                                      'Cur',
-                                      ['USD', 'INR', 'EUR', 'GBP'],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                    SizedBox(
+                                      width: 110,
 
-                              const SizedBox(height: 16),
-
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: AppTextFields(
-                                      controller:
-                                          controller.expectedSalaryAmount,
-                                      hint: 'Expected Salary',
-                                      onChanged: (_) => markChanged(),
-                                    ),
-                                  ),
-
-                                  const SizedBox(width: 12),
-
-                                  SizedBox(
-                                    width: 110,
-                                    child: _dropdownField(
-                                      controller.expectedSalaryCurrency,
-                                      'Cur',
-                                      ['USD', 'INR', 'EUR', 'GBP'],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        /// ───────────────── ABOUT ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: ProfileSection(
-                            label: 'About',
-                            spacing: 16,
-                            children: [
-                              AppTextFields(
-                                controller: controller.about,
-                                hint: 'About',
-                                onChanged: (_) => markChanged(),
-                              ),
-
-                              AppTextFields(
-                                controller: controller.certifications,
-                                hint: 'Certifications',
-                                onChanged: (_) => markChanged(),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        /// ───────────────── SKILLS ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              _chipMultiSelectField(
-                                'Skills',
-                                controller.skills.first,
-skillOptionsApi,                              ),
-
-                              const SizedBox(height: 20),
-
-                              _chipMultiSelectField(
-                                'Domain Knowledge',
-                                controller.domainKnowledge.first,
-                                domainKnowledgeOptions,
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              _chipMultiSelectField(
-                                'Employment Type',
-                                controller.employmentType.first,
-                                employmentOptions,
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              _chipMultiSelectField(
-                                'Industry',
-                                controller.industry.first,
-                                industryOptions,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        /// ───────────────── MORE DETAILS ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              _chipMultiSelectField(
-                                'Job Roles',
-                                controller.jobRoles.first,
-                                jobRoleOptions,
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              _chipMultiSelectField(
-                                'Languages Known',
-                                controller.languagesKnown.first,
-                                languageOptions,
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              _profileListSection(
-                                'Locations',
-                                controller.locations,
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              _dropdownField(
-                                controller.lookingFor.first,
-                                'Looking For',
-                                lookingForOptions,
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              _chipMultiSelectField(
-                                'Tools & Platforms',
-                                controller.toolsAndPlatforms.first,
-                                toolsOptions,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        /// ───────────────── ACHIEVEMENTS & AWARDS ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: Column(
-                            children: [
-                              ProfileSection(
-                                label: 'Achievements',
-
-                                trailing: _addButton(() {
-                                  setState(() {
-                                    controller.achievements.add(
-                                      AchievementController(),
-                                    );
-                                  });
-                                }),
-
-                                children: controller.achievements
-                                    .map(_achievementForm)
-                                    .toList(),
-                              ),
-
-                              const SizedBox(height: 20),
-
-                              ProfileSection(
-                                label: 'Awards',
-
-                                trailing: _addButton(() {
-                                  setState(() {
-                                    controller.awards.add(AwardController());
-                                  });
-                                }),
-
-                                children: controller.awards
-                                    .map(_awardForm)
-                                    .toList(),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        /// ───────────────── EXPERIENCE ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: ProfileSection(
-                            label: 'Experience',
-initiallyExpanded: controller.experiences.any(
-  (e) =>
-      e.company.text.trim().isNotEmpty ||
-      e.role.text.trim().isNotEmpty ||
-      e.description.text.trim().isNotEmpty,
+                                     child: _dropdownField(
+  controller.expectedSalaryCurrency,
+  'Cur',
+  ['USD', 'INR', 'EUR', 'GBP'],
 ),
-                            trailing: _addButton(() {
-                              setState(() {
-                                controller.experiences.add(
-                                  ExperienceController(),
-                                );
-                              });
-                            }),
+                                    ),
+                                  ],
+                                ),
 
-                            children: controller.experiences
-                                .asMap()
-                                .entries
-                                .map((entry) {
-                                  final index = entry.key;
-                                  final e = entry.value;
+                                const SizedBox(height: 20),
 
-                                  return _experienceCard(e, index);
-                                })
-                                .toList(),
-                          ),
-                        ),
+                                _dropdownField(
+                                  controller.openToShift,
+                                  'Open To Shift',
+                                  shiftOptions,
+                                ),
 
-                        /// ───────────────── PUBLICATIONS ─────────────────
-                        SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: ProfileSection(
-                            label: 'Publications',
+                                const SizedBox(height: 20),
 
-                            trailing: _addButton(() {
-                              setState(() {
-                                controller.publications.add(
-                                  PublicationController(),
-                                );
-                              });
-                            }),
 
-                            children: controller.publications
-                                .map(_publicationForm)
-                                .toList(),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
+_dropdownField(
+  controller.employmentType.first,
+  'Employment Type',
+  [
+    'Full-time',
+    'Part-time',
+    'Contract',
+    'Internship',
+  ],
+),
 
-                /// 🔥 BOTTOM BUTTONS
-           /// 🔥 BOTTOM BUTTONS
-SafeArea(
-  top: false,
-  child: Padding(
-    padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
-    child: Row(
-                    children: [
-                      /// SAVE
-                      Expanded(
-                        child: SizedBox(
-                          height: 56,
+// const SizedBox(height: 20),
 
-                          child: OutlinedButton(
-                            style: OutlinedButton.styleFrom(
-                              side: BorderSide(color: AppColors.kGreen),
+// ProfileSection(
+//   label: 'Employment Type',
 
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
+//   children: [
+//     _chipMultiSelectField(
+//       'Employment',
+//       controller.employmentType.first,
+//       employmentOptions,
+//     ),
+//   ],
+// ),
 
-                            onPressed: () async {
-                              if (!_formKey.currentState!.validate()) {
-                                return;
-                              }
+                                const SizedBox(height: 20),
 
-                              final failure = await addEditProfileViewModel
-                                  .saveProfile();
+                                _dropdownField(
+                                  controller.lookingFor.first,
 
-                              if (failure == null) {
-                                hasChanges = false;
+                                  'Looking For',
 
-                                if (mounted) {
-                                  context.pop(true);
-                                }
-                              }
-                            },
-                            child: const Text(
-                              "Save",
+                                  lookingForOptions,
+                                ),
 
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
+                                const SizedBox(height: 20),
+
+                                _profileListSection(
+                                  'Locations',
+                                  controller.locations,
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                // _chipMultiSelectField(
+                                //   'Job Roles',
+
+                                //   controller.jobRoles.first,
+
+                                //   jobRoleOptions,
+                                // ),
+
+                                // const SizedBox(height: 20),
+
+                                // _chipMultiSelectField(
+                                //   'Employment Type',
+
+                                //   controller.employmentType.first,
+
+                                //   employmentOptions,
+                                // ),
+                              ],
                             ),
                           ),
-                        ),
-                      ),
+/// ───────────────── LANGUAGES KNOWN ─────────────────
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
 
-                      const SizedBox(width: 12),
-
-                      /// NEXT
-                      Expanded(
-                        child: SizedBox(
-                          height: 56,
-
-                          child: ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AppColors.kGreen,
-
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-
-                            onPressed: () async {
-                              if (!_formKey.currentState!.validate()) {
-                                return;
-                              }
-
-                              final failure = await addEditProfileViewModel
-                                  .saveProfile();
-
-                              if (failure == null) {
-                                hasChanges = false;
-
-                                if (currentStep == totalSteps - 1) {
-                                  if (mounted) {
-                                    context.pop(true);
-                                  }
-                                } else {
-                                  nextStep();
-                                }
-                              }
-                            },
-
-                            child: Text(
-                              currentStep == totalSteps - 1
-                                  ? "Save Profile"
-                                  : "save and Next",
-
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                     ),
+  child: _chipMultiSelectField(
+    'Languages Known',
+    controller.languagesKnown.first,
+    languageOptions,
   ),
 ),
-],
+
+/// ───────────────── JOB ROLES ─────────────────
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
+
+  child: _chipMultiSelectField(
+    'Job Roles',
+    controller.jobRoles.first,
+    jobRoleOptions,
+  ),
+),
+                          /// ───────────────── SKILLS ─────────────────
+                         /// ───────────────── SKILLS ─────────────────
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
+
+  child: _chipMultiSelectField(
+    'Skills',
+    controller.skills.first,
+    skillOptionsApi,
+  ),
+),
+
+/// ───────────────── DOMAIN KNOWLEDGE ─────────────────
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
+
+  child: _chipMultiSelectField(
+    'Domain Knowledge',
+    controller.domainKnowledge.first,
+    domainKnowledgeOptions,
+  ),
+),
+
+/// ───────────────── INDUSTRY ─────────────────
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
+
+  child: _chipMultiSelectField(
+    'Industry',
+    controller.industry.first,
+    industryOptions,
+  ),
+),
+
+                          /// ───────────────── TOOLS & PLATFORMS ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: _chipMultiSelectField(
+                              'Tools & Platforms',
+
+                              controller.toolsAndPlatforms.first,
+
+                              toolsOptions,
+                            ),
+                          ),
+
+                          /// ───────────────── PUBLICATIONS ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'Publications',
+
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.publications.add(
+                                    PublicationController(),
+                                  );
+                                });
+                              }),
+
+                              children: controller.publications
+                                  .map(_publicationForm)
+                                  .toList(),
+                            ),
+                          ),
+
+                          /// ───────────────── ACHIEVEMENTS ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: Column(
+                              children: [
+                                ProfileSection(
+                                  label: 'Achievements',
+
+                                  trailing: _addButton(() {
+                                    setState(() {
+                                      controller.achievements.add(
+                                        AchievementController(),
+                                      );
+                                    });
+                                  }),
+
+                                  children: controller.achievements
+                                      .map(_achievementForm)
+                                      .toList(),
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                ProfileSection(
+                                  label: 'Awards',
+
+                                  trailing: _addButton(() {
+                                    setState(() {
+                                      controller.awards.add(AwardController());
+                                    });
+                                  }),
+
+                                  children: controller.awards
+                                      .map(_awardForm)
+                                      .toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          /// ───────────────── EXPERIENCE ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'Experience',
+
+                              initiallyExpanded: controller.experiences.any(
+                                (e) =>
+                                    e.company.text.trim().isNotEmpty ||
+                                    e.role.text.trim().isNotEmpty ||
+                                    e.description.text.trim().isNotEmpty,
+                              ),
+
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.experiences.add(
+                                    ExperienceController(),
+                                  );
+                                });
+                              }),
+
+                              children: controller.experiences
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                    final index = entry.key;
+
+                                    final e = entry.value;
+
+                                    return _experienceCard(e, index);
+                                  })
+                                  .toList(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+
+                  /// 🔥 BOTTOM BUTTONS
+                  /// 🔥 BOTTOM BUTTONS
+                  SafeArea(
+                    top: false,
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(16, 16, 16, 24),
+                      child: Row(
+                        children: [
+                          /// SAVE
+                          Expanded(
+                            child: SizedBox(
+                              height: 56,
+
+                              child: OutlinedButton(
+                                style: OutlinedButton.styleFrom(
+                                  side: BorderSide(color: AppColors.kGreen),
+
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                ),
+
+                                onPressed: () async {
+                                  if (!_formKey.currentState!.validate()) {
+                                    return;
+                                  }
+
+                                  final failure = await addEditProfileViewModel
+                                      .saveProfile();
+
+                                  if (failure == null) {
+                                    hasChanges = false;
+
+                                    if (mounted) {
+                                      context.pop(true);
+                                    }
+                                  }
+                                },
+                                child: const Text(
+                                  "Save",
+
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // const SizedBox(width: 12),
+
+                          // /// NEXT
+                          // Expanded(
+                          //   child: SizedBox(
+                          //     height: 56,
+
+                          //     child: ElevatedButton(
+                          //       style: ElevatedButton.styleFrom(
+                          //         backgroundColor: AppColors.kGreen,
+
+                          //         shape: RoundedRectangleBorder(
+                          //           borderRadius: BorderRadius.circular(12),
+                          //         ),
+                          //       ),
+
+                          //       onPressed: () async {
+                          //         if (!_formKey.currentState!.validate()) {
+                          //           return;
+                          //         }
+
+                          //         final failure = await addEditProfileViewModel
+                          //             .saveProfile();
+
+                          //         if (failure == null) {
+                          //           hasChanges = false;
+
+                          //           if (currentStep == totalSteps - 1) {
+                          //             if (mounted) {
+                          //               context.pop(true);
+                          //             }
+                          //           } else {
+                          //             nextStep();
+                          //           }
+                          //         }
+                          //       },
+
+                          //       child: Text(
+                          //         currentStep == totalSteps - 1
+                          //             ? "Save Profile"
+                          //             : "save and Next",
+
+                          //         style: const TextStyle(
+                          //           color: Colors.white,
+                          //           fontWeight: FontWeight.bold,
+                          //           fontSize: 16,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
           ),
           // Loading overlay
           Selector<AddEditProfileViewModel, bool>(
@@ -1429,97 +1366,64 @@ SafeArea(
       ),
     );
   }
-Widget _degreeDropdownField() {
-  return CommonAutocomplete(
-    label: "Degree",
-    hint: "Degree",
 
-    onSubmitted: (
-      value,
-    ) async {
-      await addDegreeIfNeeded(
-        value,
-      );
+  Widget _degreeDropdownField() {
+    return CommonAutocomplete(
+      label: "Degree",
+      hint: "Degree",
 
-      await fetchDegrees();
+      onSubmitted: (value) async {
+        await addDegreeIfNeeded(value);
 
-      final selected =
-          degrees.firstWhere(
-            (e) =>
-                e['value']
-                    .toString()
-                    .toLowerCase() ==
-                value
-                    .toLowerCase(),
+        await fetchDegrees();
 
-            orElse: () => {},
-          );
+        final selected = degrees.firstWhere(
+          (e) => e['value'].toString().toLowerCase() == value.toLowerCase(),
 
-      if (selected.isNotEmpty) {
-        selectedDegreeId =
-            selected['_id'];
-
-        await fetchStreams(
-          selectedDegreeId!,
+          orElse: () => {},
         );
-      }
-    },
 
-    options: degrees
-        .map(
-          (e) =>
-              e['value']
-                  .toString(),
-        )
-        .toList(),
+        if (selected.isNotEmpty) {
+          selectedDegreeId = selected['_id'];
 
-    initialValue:
-        controller.degree.text,
+          await fetchStreams(selectedDegreeId!);
+        }
+      },
 
-    onChanged: (value) {
-      controller.degree.text =
-          value;
+      options: degrees.map((e) => e['value'].toString()).toList(),
 
-      markChanged();
-    },
+      initialValue: controller.degree.text,
 
-    onSelected: (
-      value,
-    ) async {
-      controller.degree.text =
-          value;
+      onChanged: (value) {
+        controller.degree.text = value;
 
-      controller
-          .specialization
-          .text = '';
+        markChanged();
+      },
 
-      final selected =
-          degrees.firstWhere(
-            (e) =>
-                e['value']
-                    .toString()
-                    .toLowerCase() ==
-                value
-                    .toLowerCase(),
+      onSelected: (value) async {
+        controller.degree.text = value;
 
-            orElse: () => {},
-          );
+        controller.specialization.text = '';
 
-      if (selected.isNotEmpty) {
-        selectedDegreeId =
-            selected['_id'];
+        final selected = degrees.firstWhere(
+          (e) => e['value'].toString().toLowerCase() == value.toLowerCase(),
 
-        await fetchStreams(
-          selectedDegreeId!,
+          orElse: () => {},
         );
-      }
 
-      setState(() {});
+        if (selected.isNotEmpty) {
+          selectedDegreeId = selected['_id'];
 
-      markChanged();
-    },
-  );
-}
+          await fetchStreams(selectedDegreeId!);
+        }
+
+        setState(() {});
+
+        markChanged();
+      },
+    );
+  }
+
   Widget _experienceCard(ExperienceController e, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
@@ -1577,39 +1481,30 @@ Widget _degreeDropdownField() {
       ],
     );
   }
-Widget _companyField(
-  ExperienceController e,
-) {
-  return CommonAutocomplete(
-    label: "Company",
 
-    hint: "Company",
+  Widget _companyField(ExperienceController e) {
+    return CommonAutocomplete(
+      label: "Company",
 
-    options:
-        companyOptions,
+      hint: "Company",
 
-    initialValue:
-        e.company.text,
+      options: companyOptions,
 
-    onChanged: (
-      value,
-    ) {
-      e.company.text =
-          value;
+      initialValue: e.company.text,
 
-      markChanged();
-    },
+      onChanged: (value) {
+        e.company.text = value;
 
-    onSelected: (
-      value,
-    ) {
-      e.company.text =
-          value;
+        markChanged();
+      },
 
-      markChanged();
-    },
-  );
-}
+      onSelected: (value) {
+        e.company.text = value;
+
+        markChanged();
+      },
+    );
+  }
 
   Widget _roleField(ExperienceController e) {
     return _input(
@@ -1715,70 +1610,41 @@ Widget _companyField(
   }
 
   /// Specialization dropdown — options are driven by the selected degree.
-Widget _specializationDropdownField() {
-  return CommonAutocomplete(
-    label: "Specialization",
+  Widget _specializationDropdownField() {
+    return CommonAutocomplete(
+      label: "Specialization",
 
-    hint: "Specialization",
+      hint: "Specialization",
 
-    onSubmitted: (
-      value,
-    ) async {
-      await addStreamIfNeeded(
-        value,
-      );
-    },
+      onSubmitted: (value) async {
+        await addStreamIfNeeded(value);
+      },
 
-    options: streams
-        .map(
-          (e) =>
-              e['value']
-                  .toString(),
-        )
-        .toList(),
+      options: streams.map((e) => e['value'].toString()).toList(),
 
-    initialValue:
-        controller
-            .specialization
-            .text,
+      initialValue: controller.specialization.text,
 
-    onChanged: (
-      value,
-    ) async {
-      controller
-          .specialization
-          .text = value;
+      onChanged: (value) async {
+        controller.specialization.text = value;
 
-      markChanged();
+        markChanged();
 
-      final exists = streams.any(
-        (e) =>
-            e['value']
-                .toString()
-                .toLowerCase() ==
-            value
-                .toLowerCase(),
-      );
-
-      if (!exists &&
-          value.trim().isNotEmpty) {
-        await addStreamIfNeeded(
-          value,
+        final exists = streams.any(
+          (e) => e['value'].toString().toLowerCase() == value.toLowerCase(),
         );
-      }
-    },
 
-    onSelected: (
-      value,
-    ) {
-      controller
-          .specialization
-          .text = value;
+        if (!exists && value.trim().isNotEmpty) {
+          await addStreamIfNeeded(value);
+        }
+      },
 
-      markChanged();
-    },
-  );
-}
+      onSelected: (value) {
+        controller.specialization.text = value;
+
+        markChanged();
+      },
+    );
+  }
 
   // ── Sub-form builders ────────────────────────────────────────────────────────
   Widget _achievementForm(AchievementController a) => Column(
@@ -1802,7 +1668,6 @@ Widget _specializationDropdownField() {
         onChanged: (_) => markChanged(),
       ),
 
-    
       _datePickerField(a.date, 'Date'),
 
       const AppDivider(),
@@ -1900,38 +1765,65 @@ Widget _specializationDropdownField() {
     List<String> options,
   ) {
     final selectedValue = options.contains(ctrl.text) ? ctrl.text : null;
+
     return DropdownButtonFormField<String>(
       value: selectedValue,
+
+      dropdownColor: const Color(0xFF1F2937), // 🔥 dark grey dropdown bg
+
+      style: AppTextStyles.s16W400.copyWith(color: AppColors.white),
+
       decoration: InputDecoration(
         border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white), // ✅
+          borderSide: BorderSide(color: AppColors.border),
+          borderRadius: BorderRadius.circular(8),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white), // ✅
-        ),
+
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white), // ✅
+          borderSide: BorderSide(color: AppColors.kGreen),
+          borderRadius: BorderRadius.circular(8),
         ),
+
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.white),
+          borderRadius: BorderRadius.circular(8),
+        ),
+
+        errorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.errorBorder),
+          borderRadius: BorderRadius.circular(8),
+        ),
+
+        focusedErrorBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.kGreen),
+          borderRadius: BorderRadius.circular(8),
+        ),
+
+        labelText: hint,
+
+        labelStyle: AppTextStyles.s16W500.copyWith(color: AppColors.white),
 
         floatingLabelStyle: AppTextStyles.s16W400.copyWith(
           color: AppColors.white,
         ),
+
+        isDense: true,
       ),
-      hint: Text(
-        hint,
-        style: TextStyle(color: Colors.white), // ✅
-      ),
-      items: options
-          .map(
-            (e) => DropdownMenuItem(
-              value: e,
-              child: Text(
-                e,
-                style: TextStyle(color: Colors.white), // optional but better
-              ),
+
+      iconEnabledColor: AppColors.white,
+
+      items: options.map((e) {
+        return DropdownMenuItem<String>(
+          value: e,
+          child: Text(
+            e,
+            style: TextStyle(
+              color: Colors.grey.shade300, // 🔥 option text color
             ),
-          )
-          .toList(),
+          ),
+        );
+      }).toList(),
+
       onChanged: (val) {
         setState(() {
           ctrl.text = val ?? '';
@@ -1941,72 +1833,70 @@ Widget _specializationDropdownField() {
       },
     );
   }
-Widget _datePickerField(TextEditingController ctrl, String hint) {
-  return TextFormField(
-    controller: ctrl,
-    readOnly: true,
 
-    style: const TextStyle(
-      color: Colors.white,
-    ),
+  Widget _datePickerField(TextEditingController ctrl, String hint) {
+    return TextFormField(
+      controller: ctrl,
+      readOnly: true,
 
-    decoration: InputDecoration(
-      hintText: hint,
+      style: const TextStyle(color: Colors.white),
 
-      hintStyle: const TextStyle(
-        color: Colors.white70,
+      decoration: InputDecoration(
+        hintText: hint,
+
+        hintStyle: const TextStyle(color: Colors.white70),
+
+        border: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+
+        enabledBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+
+        focusedBorder: const OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.white),
+        ),
+
+        suffixIcon: const Icon(
+          Icons.calendar_today_outlined,
+          size: 20,
+          color: Colors.white,
+        ),
       ),
 
-      border: const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-      ),
+      onTap: () async {
+        final now = DateTime.now();
 
-      enabledBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-      ),
+        DateTime initial;
 
-      focusedBorder: const OutlineInputBorder(
-        borderSide: BorderSide(color: Colors.white),
-      ),
+        try {
+          initial = ctrl.text.isNotEmpty
+              ? DateTime.parse(ctrl.text)
+              : DateTime(now.year - 20);
+        } catch (_) {
+          initial = DateTime(now.year - 20);
+        }
 
-      suffixIcon: const Icon(
-        Icons.calendar_today_outlined,
-        size: 20,
-        color: Colors.white,
-      ),
-    ),
+        final picked = await showDatePicker(
+          context: context,
+          initialDate: initial,
+          firstDate: DateTime(1940),
+          lastDate: now,
+        );
 
-    onTap: () async {
-      final now = DateTime.now();
+        if (picked != null) {
+          setState(() {
+            ctrl.text =
+                "${picked.year.toString().padLeft(4, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
 
-      DateTime initial;
+            markChanged();
+          });
+        }
+      },
+    );
+  }
 
-      try {
-        initial = ctrl.text.isNotEmpty
-            ? DateTime.parse(ctrl.text)
-            : DateTime(now.year - 20);
-      } catch (_) {
-        initial = DateTime(now.year - 20);
-      }
-
-      final picked = await showDatePicker(
-        context: context,
-        initialDate: initial,
-        firstDate: DateTime(1940),
-        lastDate: now,
-      );
-
-      if (picked != null) {
-        setState(() {
-          ctrl.text =
-              "${picked.year.toString().padLeft(4, '0')}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-
-          markChanged();
-        });
-      }
-    },
-  );
-}
   Widget _chipMultiSelectField(
     String label,
     TextEditingController controller,
@@ -2171,15 +2061,23 @@ class _ChipMultiSelectField extends StatefulWidget {
   @override
   State<_ChipMultiSelectField> createState() => _ChipMultiSelectFieldState();
 }
+class _ChipMultiSelectFieldState
+    extends State<_ChipMultiSelectField> {
 
-class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
-  final TextEditingController _textController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+  final TextEditingController
+      _textController =
+      TextEditingController();
+
+  final FocusNode _focusNode =
+      FocusNode();
 
   bool _showFreeText = false;
 
   List<String> get _selectedItems {
-    if (widget.controller.text.isEmpty) return [];
+    if (widget.controller.text.isEmpty) {
+      return [];
+    }
+
     return widget.controller.text
         .split(',')
         .map((e) => e.trim())
@@ -2188,180 +2086,327 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
   }
 
   void _sync(List<String> items) {
-    widget.controller.text = items.join(', ');
+    widget.controller.text =
+        items.join(', ');
+
     widget.onChanged?.call();
   }
 
   void _addItem(String value) {
-    final trimmed = value.trim();
-    if (trimmed.isEmpty) return;
+    final trimmed =
+        value.trim();
 
-    final current = _selectedItems;
+    if (trimmed.isEmpty) {
+      return;
+    }
+
+    final current =
+        _selectedItems;
+
     if (!current.contains(trimmed)) {
       current.add(trimmed);
+
       _sync(current);
     }
+
     _textController.clear();
+
     _focusNode.requestFocus();
+
     setState(() {});
   }
 
   void _removeItem(String value) {
-    final current = _selectedItems..remove(value);
+    final current =
+        _selectedItems
+          ..remove(value);
+
     _sync(current);
-    if (value == 'Others') setState(() => _showFreeText = false);
+
+    if (value == 'Others') {
+      setState(() {
+        _showFreeText =
+            false;
+      });
+    }
+
     setState(() {});
   }
 
-  void _toggleEnumChip(String value) {
-    final current = _selectedItems;
+  void _toggleEnumChip(
+    String value,
+  ) {
+    final current =
+        _selectedItems;
+
     if (current.contains(value)) {
       current.remove(value);
+
       _sync(current);
-      if (value == 'Others') _showFreeText = false;
+
+      if (value == 'Others') {
+        _showFreeText =
+            false;
+      }
     } else {
       current.add(value);
+
       _sync(current);
-      if (value == 'Others') _showFreeText = true;
+
+      if (value == 'Others') {
+        _showFreeText =
+            true;
+      }
     }
+
     setState(() {});
   }
 
   @override
   void dispose() {
     _textController.dispose();
+
     _focusNode.dispose();
+
     super.dispose();
   }
 
   @override
-  Widget build(BuildContext context) {
-    final selected = _selectedItems;
-    final hasEnums = widget.options.isNotEmpty;
-    final customItems = selected
-        .where((s) => !widget.options.contains(s))
-        .toList();
+  Widget build(
+    BuildContext context,
+  ) {
+    final selected =
+        _selectedItems;
+
+   final hasEnums =
+    widget.options.isNotEmpty;
+
+final isSimpleSelection =
+    widget.label ==
+        'Employment Type';
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
+
       children: [
-        Text(widget.label, style: AppTextStyles.s14W600),
-        const SizedBox(height: 8),
 
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(10),
-          decoration: BoxDecoration(
-            border: Border.all(color: Colors.grey),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              if (hasEnums) ...[
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
-                  children: widget.options.map((option) {
-                    final isSelected = selected.contains(option);
-                    return FilterChip(
-                      label: Text(option),
-                      selected: isSelected,
-                      onSelected: (_) => _toggleEnumChip(option),
-                      selectedColor: AppColors.primary.withOpacity(0.15),
-                      checkmarkColor: AppColors.primary,
-                      labelStyle: TextStyle(
-                        color: isSelected ? AppColors.primary : null,
-                        fontWeight: isSelected
-                            ? FontWeight.w600
-                            : FontWeight.normal,
-                      ),
-                    );
-                  }).toList(),
-                ),
-                const Divider(height: 16),
-              ],
+        /// SEARCH FIELD
+     if (!isSimpleSelection) ...[
 
-              if (customItems.isNotEmpty) ...[
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
-                  children: customItems
-                      .map(
-                        (item) => Chip(
-                          label: Text(item),
-                          onDeleted: () => _removeItem(item),
-                        ),
-                      )
-                      .toList(),
-                ),
-                const SizedBox(height: 6),
-              ],
+  /// SEARCH FIELD
+  TextField(
+    controller:
+        _textController,
 
-              if (!hasEnums || _showFreeText) ...[
-                if (hasEnums)
-                  const Text(
-                    'Add custom entries:',
-                    style: TextStyle(fontSize: 12, color: Colors.grey),
-                  ),
-                const SizedBox(height: 4),
-                Autocomplete<String>(
-                  optionsBuilder: (textEditingValue) {
-                    if (textEditingValue.text.isEmpty) return const [];
-                    return widget.options
-                        .where(
-                          (item) =>
-                              item != 'Others' &&
-                              item.toLowerCase().contains(
-                                textEditingValue.text.toLowerCase(),
-                              ),
-                        )
-                        .toList();
-                  },
-                  onSelected: _addItem,
-                  fieldViewBuilder:
-                      (context, textController, textFocusNode, onSubmit) {
-                        return TextField(
-                          controller: _textController,
-                          focusNode: _focusNode,
-                          decoration: const InputDecoration(
-                            hintText: 'Type and press Enter to add',
-                            border: InputBorder.none,
-                            isDense: true,
-                          ),
-                     onSubmitted: (
-  value,
-) async {
-  _addItem(value);
+    focusNode:
+        _focusNode,
 
-  await context
-      .findAncestorStateOfType<
-          _AddEditProfileViewState>()
-      ?.addSkillIfNeeded(
-        value,
-      );
-},
-                        );
-                      },
-                ),
-              ],
-
-              if (!hasEnums && selected.isNotEmpty)
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 6,
-                  children: selected
-                      .map(
-                        (item) => Chip(
-                          label: Text(item),
-                          onDeleted: () => _removeItem(item),
-                        ),
-                      )
-                      .toList(),
-                ),
-            ],
-          ),
+    style:
+        const TextStyle(
+          color:
+              Colors.white,
         ),
+
+    onSubmitted: (
+      value,
+    ) async {
+      final trimmed =
+          value.trim();
+
+      if (trimmed.isEmpty) {
+        return;
+      }
+
+      _addItem(trimmed);
+
+      await context
+          .findAncestorStateOfType<
+            _AddEditProfileViewState
+          >()
+          ?.addSkillIfNeeded(
+            trimmed,
+          );
+
+      _textController.clear();
+    },
+
+    decoration:
+        InputDecoration(
+          hintText:
+              "Search or add ${widget.label}",
+
+          hintStyle:
+              const TextStyle(
+                color:
+                    Colors.grey,
+              ),
+
+          filled: true,
+
+          fillColor:
+              AppColors.kCard,
+
+          prefixIcon:
+              const Icon(
+                Icons.search,
+                color:
+                    Colors.grey,
+              ),
+
+          border:
+              OutlineInputBorder(
+                borderRadius:
+                    BorderRadius.circular(
+                      14,
+                    ),
+
+                borderSide:
+                    BorderSide.none,
+              ),
+        ),
+  ),
+
+  const SizedBox(
+    height: 16,
+  ),
+],
+
+        /// SELECTED ITEMS
+        if (selected
+            .isNotEmpty) ...[
+
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+
+            children:
+                selected.map((
+              item,
+            ) {
+              return Chip(
+                label:
+                    Text(item),
+
+                backgroundColor:
+                    const Color(
+                      0xFF22C55E,
+                    ),
+
+                labelStyle:
+                    const TextStyle(
+                      color:
+                          Colors
+                              .black,
+                    ),
+
+                deleteIcon:
+                    const Icon(
+                      Icons.close,
+                      size: 18,
+                    ),
+
+                onDeleted:
+                    () =>
+                        _removeItem(
+                          item,
+                        ),
+              );
+            }).toList(),
+          ),
+
+          const SizedBox(
+            height: 20,
+          ),
+        ],
+
+        /// POPULAR TITLE
+        Text(
+          "POPULAR ${widget.label.toUpperCase()}",
+
+          style:
+              const TextStyle(
+                color:
+                    Colors.grey,
+              ),
+        ),
+
+        const SizedBox(
+          height: 10,
+        ),
+
+        /// OPTIONS
+        if (hasEnums)
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+
+            children:
+                widget.options.map((
+              option,
+            ) {
+              final isSelected =
+                  selected.contains(
+                    option,
+                  );
+
+              return GestureDetector(
+                onTap: () {
+                  if (isSelected) {
+                    _removeItem(
+                      option,
+                    );
+                  } else {
+                    _addItem(
+                      option,
+                    );
+                  }
+                },
+
+                child:
+                    Container(
+                      padding:
+                          const EdgeInsets.symmetric(
+                            horizontal:
+                                12,
+                            vertical:
+                                8,
+                          ),
+
+                      decoration:
+                          BoxDecoration(
+                            color:
+                                isSelected
+                                ? const Color(
+                                    0xFF22C55E,
+                                  )
+                                : AppColors
+                                      .kCard,
+
+                            borderRadius:
+                                BorderRadius.circular(
+                                  20,
+                                ),
+                          ),
+
+                      child:
+                          Text(
+                            option,
+
+                            style:
+                                TextStyle(
+                                  color:
+                                      isSelected
+                                      ? Colors
+                                            .black
+                                      : Colors
+                                            .white,
+                                ),
+                          ),
+                    ),
+              );
+            }).toList(),
+          ),
       ],
     );
   }
