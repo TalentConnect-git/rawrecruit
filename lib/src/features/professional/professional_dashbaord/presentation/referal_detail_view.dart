@@ -14,8 +14,8 @@ import 'view_model/prof_dashboard_view_model.dart';
 
 class ReferralDetailView extends StatefulWidget {
   final String jobId;
-
-  const ReferralDetailView({super.key, required this.jobId});
+final String? companyName;
+  const ReferralDetailView({super.key, required this.jobId,  this.companyName});
 
   @override
   State<ReferralDetailView> createState() => _ReferralDetailViewState();
@@ -51,6 +51,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
           }
 
           final referral = vm.selectedReferralJob;
+          
           final job = referral != null ? mapReferralToJob(referral) : null;
 
           if (job == null) {
@@ -151,9 +152,52 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _header(job),
+                _header(job, referral),
 
                   const SizedBox(height: 20),
+                  
+                
+                
+                  _sectionText("Description", job.description),
+
+                  _sectionInfo("Job Overview", [
+                    _info("Job Title", job.jobTitle),
+                    // _info("Job Type", job.jobType),
+                    _info("Status", job.jobStatus),
+                    _info("Approval", job.approvalStatus),
+                  ]),
+
+                  _sectionInfo("Basic Info", [
+                    _info("Experience", job.yearsOfExperience),
+                    _info("Education", job.minEducation),
+                    _info("Openings", job.numberOfOpenings),
+                    _info("CGPA", job.cgpa),
+                  ]),
+
+                  _sectionInfo("Location & Work", [
+                    _info("Location", job.location),
+                    _info("Work Mode", job.workMode),
+                    _info("Employment Type", job.employmentType),
+                  ]),
+
+                  _sectionInfo("Package", [
+                    _info("Currency", job.packageDetails?.currency),
+                    _info("CTC", job.packageDetails?.totalCTC),
+                    _info("Fixed Pay", job.packageDetails?.fixedPay),
+                    _info("Joining Bonus", job.packageDetails?.joiningBonus),
+                  ]),
+
+                  _sectionList("Skills", job.skills),
+                  _sectionList("Tools", job.toolsAndPlatforms),
+                  _sectionList("Certifications", job.certifications),
+                  _sectionList("Benefits", job.benefits),
+                  _sectionList("Selection Process", job.selectionProcess),
+
+                  _sectionInfo("Other", [
+                    _info("Views", job.views),
+                    _info("Status", job.status),
+                  ]),
+                  
 _containerSection(
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,7 +221,7 @@ _containerSection(
 
       _highlightInfo(
         "Company",
-        job.candidatePosted?.currentCompany,
+        widget.companyName ?? "Company",
       ),
 
       _highlightInfo(
@@ -249,45 +293,6 @@ _containerSection(
     ],
   ),
 ),
-                  _sectionText("Description", job.description),
-
-                  _sectionInfo("Job Overview", [
-                    _info("Job Title", job.jobTitle),
-                    // _info("Job Type", job.jobType),
-                    _info("Status", job.jobStatus),
-                    _info("Approval", job.approvalStatus),
-                  ]),
-
-                  _sectionInfo("Basic Info", [
-                    _info("Experience", job.yearsOfExperience),
-                    _info("Education", job.minEducation),
-                    _info("Openings", job.numberOfOpenings),
-                    _info("CGPA", job.cgpa),
-                  ]),
-
-                  _sectionInfo("Location & Work", [
-                    _info("Location", job.location),
-                    _info("Work Mode", job.workMode),
-                    _info("Employment Type", job.employmentType),
-                  ]),
-
-                  _sectionInfo("Package", [
-                    _info("Currency", job.packageDetails?.currency),
-                    _info("CTC", job.packageDetails?.totalCTC),
-                    _info("Fixed Pay", job.packageDetails?.fixedPay),
-                    _info("Joining Bonus", job.packageDetails?.joiningBonus),
-                  ]),
-
-                  _sectionList("Skills", job.skills),
-                  _sectionList("Tools", job.toolsAndPlatforms),
-                  _sectionList("Certifications", job.certifications),
-                  _sectionList("Benefits", job.benefits),
-                  _sectionList("Selection Process", job.selectionProcess),
-
-                  _sectionInfo("Other", [
-                    _info("Views", job.views),
-                    _info("Status", job.status),
-                  ]),
                   const SizedBox(height: 24),
 
                   _alumniSection(),
@@ -301,11 +306,11 @@ _containerSection(
     );
   }
 
-  Widget _header(Job job) {
+ Widget _header(Job job, dynamic referral) {
     final role = job.jobTitle ?? "Backend Developer";
-final company = job.companyName?.isNotEmpty == true
-    ? job.companyName!
-    : (job.candidatePosted?.currentCompany ?? "Company");
+    print(referral);
+print(referral?.toJson());
+final company = widget.companyName ?? "Company";
     final location = job.location?.join(", ") ?? "Hyderabad";
     final mode = job.workMode?.join(", ") ?? "Hybrid";
     final type = job.jobType ?? "Full-time";

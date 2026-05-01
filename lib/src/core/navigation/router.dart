@@ -76,22 +76,42 @@ class AppRouter {
         name: RouteNames.referralDetail,
         path: '/referralDetail',
         builder: (context, state) {
-          final jobId = state.extra as String;
+        String jobId = "";
+String? companyName;
 
-          return MultiProvider(
-            providers: [
-              ChangeNotifierProvider(
-                create: (_) =>
-                    DashboardViewModel()..getAlumniData(), // ✅ REQUIRED
-              ),
-              ChangeNotifierProvider(
-                create: (_) => ApplicationViewModel()..fetchApplications(),
-              ),
-              ChangeNotifierProvider(
-                create: (_) => ShortlistViewModel()..fetchSaved(),
-              ),
-            ],
-            child: ReferralDetailView(jobId: jobId),
+final extra = state.extra;
+
+if (extra is String) {
+  if (extra.contains("|||")) {
+    final data = extra.split("|||");
+    jobId = data[0];
+    companyName = data.length > 1 ? data[1] : null;
+  } else {
+    jobId = extra;
+  }
+} else if (extra is Map<String, dynamic>) {
+  jobId = extra["id"] ?? "";
+  companyName = extra["companyName"];
+}
+
+return MultiProvider(
+  providers: [
+    ChangeNotifierProvider(
+      create: (_) =>
+          DashboardViewModel()..getAlumniData(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => ApplicationViewModel()..fetchApplications(),
+    ),
+    ChangeNotifierProvider(
+      create: (_) => ShortlistViewModel()..fetchSaved(),
+    ),
+  ],
+  child: ReferralDetailView(
+    jobId: jobId,
+    companyName: companyName,
+  ),
+
           );
         },
       ),

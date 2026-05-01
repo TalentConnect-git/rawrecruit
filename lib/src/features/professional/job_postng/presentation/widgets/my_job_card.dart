@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
-
 import '../../../../../common/index.dart';
-import '../../../../../core/index.dart';
 class MyJobCard extends StatelessWidget {
   final ReferralPostModel job;
   final VoidCallback? onTap;
@@ -52,7 +49,7 @@ class MyJobCard extends StatelessWidget {
 
             /// 🔹 COMPANY + LOCATION + MODE
             Text(
-              "Google • $location • $workMode",
+              " $location • $workMode",
               style: AppTextStyles.s12W400.copyWith(
                 color: AppColors.white.withOpacity(0.6),
               ),
