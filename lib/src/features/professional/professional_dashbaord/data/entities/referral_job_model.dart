@@ -12,6 +12,7 @@ abstract class ReferralJobModel with _$ReferralJobModel {
     String? jobTitle,
     String? description,
     String? jobStatus,
+    final String? companyName,
     String? approvalStatus,
     String? jobType,
     String? visibleTo,

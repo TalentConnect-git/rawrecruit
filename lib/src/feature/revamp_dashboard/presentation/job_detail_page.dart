@@ -95,7 +95,74 @@ class JobDetailView extends StatelessWidget {
 
             const SizedBox(height: 20),
 /// 🔥 HIGHLIGHTED COMPANY + POSTED BY SECTION
-_containerSection(
+
+
+            /// 🔥 ABOUT
+            if ((job.description ?? '').isNotEmpty)
+              _sectionText("About the Role", job.description),
+
+            /// 🔥 RESPONSIBILITIES
+            if ((job.workAchievements ?? []).isNotEmpty)
+              _sectionList("Responsibilities", job.workAchievements),
+
+            /// 🔥 REQUIREMENTS
+            if ((job.skills ?? []).isNotEmpty)
+              _sectionList("Requirements", job.skills),
+
+            /// 🔥 PREFERRED
+            if ((job.certifications ?? []).isNotEmpty)
+              _sectionList("Preferred", job.certifications),
+
+            /// 🔥 IMPORTANT DATES
+            _sectionInfo("Important Dates", [
+              _info("Start Date", _fmt(job.startDate)),
+              _info("End Date", _fmt(job.endDate)),
+              _info("Test Date", _fmt(job.onlineTestDate)),
+              _info("Offer Date", _fmt(job.offerRolloutDate)),
+              _info("Expires", _fmt(job.expireAt)),
+            ]),
+
+            /// 🔥 PACKAGE
+            _sectionInfo("Package Details", [
+              _info("CTC", pkg?.totalCTC?.toString()),
+              _info("Fixed Pay", pkg?.fixedPay?.toString()),
+              _info("Bonus", pkg?.joiningBonus?.toString()),
+            ]),
+
+            /// 🔥 SELECTION PROCESS
+            if ((job.selectionProcess ?? []).isNotEmpty)
+              _sectionList("Selection Process", job.selectionProcess),
+
+            /// 🔥 TOOLS
+            if ((job.toolsAndPlatforms ?? []).isNotEmpty)
+              _sectionList("Tools & Platforms", job.toolsAndPlatforms),
+
+            /// 🔥 BENEFITS
+            _sectionList("Benefits", job.benefits),
+
+            /// 🔥 CONTACT
+            if (contact != null)
+              _sectionInfo("Contact Person", [
+                _info("Name", contact.name),
+                _info("Email", contact.email),
+                _info("Mobile", contact.mobile),
+              ]),
+
+            /// 🔥 COMPANY
+            if (company != null)
+              _sectionInfo("Company Details", [
+                _info("Name", company.companyName),
+                _info("Industry", company.industryType),
+                _info("City", company.city),
+              ]),
+
+            /// 🔥 EMPLOYER
+            if (employer != null)
+              _sectionInfo("Employer", [
+                _info("Name", employer.name),
+                _info("Designation", employer.designation),
+              ]),
+              _containerSection(
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -206,72 +273,6 @@ GestureDetector(
     ],
   ),
 ),
-
-            /// 🔥 ABOUT
-            if ((job.description ?? '').isNotEmpty)
-              _sectionText("About the Role", job.description),
-
-            /// 🔥 RESPONSIBILITIES
-            if ((job.workAchievements ?? []).isNotEmpty)
-              _sectionList("Responsibilities", job.workAchievements),
-
-            /// 🔥 REQUIREMENTS
-            if ((job.skills ?? []).isNotEmpty)
-              _sectionList("Requirements", job.skills),
-
-            /// 🔥 PREFERRED
-            if ((job.certifications ?? []).isNotEmpty)
-              _sectionList("Preferred", job.certifications),
-
-            /// 🔥 IMPORTANT DATES
-            _sectionInfo("Important Dates", [
-              _info("Start Date", _fmt(job.startDate)),
-              _info("End Date", _fmt(job.endDate)),
-              _info("Test Date", _fmt(job.onlineTestDate)),
-              _info("Offer Date", _fmt(job.offerRolloutDate)),
-              _info("Expires", _fmt(job.expireAt)),
-            ]),
-
-            /// 🔥 PACKAGE
-            _sectionInfo("Package Details", [
-              _info("CTC", pkg?.totalCTC?.toString()),
-              _info("Fixed Pay", pkg?.fixedPay?.toString()),
-              _info("Bonus", pkg?.joiningBonus?.toString()),
-            ]),
-
-            /// 🔥 SELECTION PROCESS
-            if ((job.selectionProcess ?? []).isNotEmpty)
-              _sectionList("Selection Process", job.selectionProcess),
-
-            /// 🔥 TOOLS
-            if ((job.toolsAndPlatforms ?? []).isNotEmpty)
-              _sectionList("Tools & Platforms", job.toolsAndPlatforms),
-
-            /// 🔥 BENEFITS
-            _sectionList("Benefits", job.benefits),
-
-            /// 🔥 CONTACT
-            if (contact != null)
-              _sectionInfo("Contact Person", [
-                _info("Name", contact.name),
-                _info("Email", contact.email),
-                _info("Mobile", contact.mobile),
-              ]),
-
-            /// 🔥 COMPANY
-            if (company != null)
-              _sectionInfo("Company Details", [
-                _info("Name", company.companyName),
-                _info("Industry", company.industryType),
-                _info("City", company.city),
-              ]),
-
-            /// 🔥 EMPLOYER
-            if (employer != null)
-              _sectionInfo("Employer", [
-                _info("Name", employer.name),
-                _info("Designation", employer.designation),
-              ]),
 const SizedBox(height: 24),
 
 Text(

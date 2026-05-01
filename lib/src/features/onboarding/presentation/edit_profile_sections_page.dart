@@ -14,22 +14,22 @@ class EditProfileSectionsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-   final sections = [
-  'Basic',
-  'Education',
-  'Links',
-  'Career',
-  'Employee Preferences',
-  'Languages Known',
-  'Job Roles',
-  'Skills',
-  'Domain Knowledge',
-  'Industry',
-  'Tools & Platforms',
-  'Publications',
-  'Achievements',
-  'Experience',
-];
+    final sections = [
+      'Basic',
+      'Education',
+      'Links',
+      'Career',
+      'Employee Preferences',
+      'Languages Known',
+      'Job Roles',
+      'Skills',
+      'Domain Knowledge',
+      'Industry',
+      'Tools & Platforms',
+      'Publications',
+      'Achievements',
+      'Experience',
+    ];
 
     return Scaffold(
       backgroundColor: AppColors.kBg,
@@ -37,7 +37,6 @@ class EditProfileSectionsPage extends StatelessWidget {
       appBar: RAppBar(
         title: Text(
           'Edit Profile',
-
           style: AppTextStyles.s16W600.copyWith(
             color: AppColors.white,
           ),
@@ -46,7 +45,6 @@ class EditProfileSectionsPage extends StatelessWidget {
 
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-
         itemCount: sections.length,
 
         itemBuilder: (_, index) {
@@ -54,85 +52,52 @@ class EditProfileSectionsPage extends StatelessWidget {
             onTap: () async {
               await Navigator.push(
                 context,
-
                 MaterialPageRoute(
-                  builder: (_) =>
-                      AddEditProfileView(
-                        user: user,
-                        initialStep: index,
-                      ),
+                  builder: (_) => AddEditProfileView(
+                    user: user,
+                    initialStep: index,
+                  ),
                 ),
               );
             },
 
             child: Container(
-              margin: const EdgeInsets.only(
-                bottom: 14,
-              ),
-
-              padding: const EdgeInsets.all(18),
+              margin: const EdgeInsets.only(bottom: 10),
+              padding: const EdgeInsets.all(16),
 
               decoration: BoxDecoration(
-                color: const Color(0xFF111827),
-
-                borderRadius:
-                    BorderRadius.circular(18),
-
+                color: AppColors.kCard,
+                borderRadius: BorderRadius.circular(14),
                 border: Border.all(
-                  color: Colors.white.withOpacity(
-                    0.06,
-                  ),
+                  color: AppColors.kBorder,
                 ),
               ),
 
               child: Row(
                 children: [
 
-                  Container(
-                    width: 42,
-                    height: 42,
-
-                    decoration: BoxDecoration(
-                      color: AppColors.kGreen,
-
-                      borderRadius:
-                          BorderRadius.circular(
-                            12,
-                          ),
-                    ),
-
-                    child: Center(
-                      child: Text(
-                        '${index + 1}',
-
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight:
-                              FontWeight.bold,
-                        ),
-                      ),
-                    ),
+                  Icon(
+                    Icons.edit_outlined,
+                    color: AppColors.kGreen,
                   ),
 
-                  const SizedBox(width: 16),
+                  const SizedBox(width: 12),
 
                   Expanded(
                     child: Text(
                       sections[index],
-
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 16,
-                        fontWeight:
-                            FontWeight.w600,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 15,
                       ),
                     ),
                   ),
 
                   const Icon(
                     Icons.arrow_forward_ios,
+                    size: 14,
                     color: Colors.grey,
-                    size: 16,
                   ),
                 ],
               ),

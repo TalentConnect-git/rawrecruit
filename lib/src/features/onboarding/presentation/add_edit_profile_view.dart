@@ -2193,79 +2193,99 @@ final isSimpleSelection =
 
         /// SEARCH FIELD
      if (!isSimpleSelection) ...[
+Column(
+  children: [
 
-  /// SEARCH FIELD
-  TextField(
-    controller:
-        _textController,
+    TextField(
+      controller: _textController,
 
-    focusNode:
-        _focusNode,
+      focusNode: _focusNode,
 
-    style:
-        const TextStyle(
-          color:
-              Colors.white,
+      style: const TextStyle(
+        color: Colors.white,
+      ),
+
+      onChanged: (_) {
+        setState(() {});
+      },
+
+      decoration: InputDecoration(
+        hintText:
+            "Search or add ${widget.label}",
+
+        hintStyle: const TextStyle(
+          color: Colors.grey,
         ),
 
-    onSubmitted: (
-      value,
-    ) async {
-      final trimmed =
-          value.trim();
+        filled: true,
 
-      if (trimmed.isEmpty) {
-        return;
-      }
+        fillColor: AppColors.kCard,
 
-      _addItem(trimmed);
-
-      await context
-          .findAncestorStateOfType<
-            _AddEditProfileViewState
-          >()
-          ?.addSkillIfNeeded(
-            trimmed,
-          );
-
-      _textController.clear();
-    },
-
-    decoration:
-        InputDecoration(
-          hintText:
-              "Search or add ${widget.label}",
-
-          hintStyle:
-              const TextStyle(
-                color:
-                    Colors.grey,
-              ),
-
-          filled: true,
-
-          fillColor:
-              AppColors.kCard,
-
-          prefixIcon:
-              const Icon(
-                Icons.search,
-                color:
-                    Colors.grey,
-              ),
-
-          border:
-              OutlineInputBorder(
-                borderRadius:
-                    BorderRadius.circular(
-                      14,
-                    ),
-
-                borderSide:
-                    BorderSide.none,
-              ),
+        prefixIcon: const Icon(
+          Icons.search,
+          color: Colors.grey,
         ),
-  ),
+
+        border: OutlineInputBorder(
+          borderRadius:
+              BorderRadius.circular(14),
+
+          borderSide: BorderSide.none,
+        ),
+      ),
+    ),
+
+    if (_textController.text.trim().isNotEmpty &&
+        !widget.options.any(
+          (e) =>
+              e.toLowerCase().trim() ==
+              _textController.text
+                  .toLowerCase()
+                  .trim(),
+        ))
+      Container(
+        margin: const EdgeInsets.only(top: 8),
+
+        decoration: BoxDecoration(
+          color: AppColors.kCard,
+          borderRadius:
+              BorderRadius.circular(12),
+        ),
+
+        child: ListTile(
+          leading: const Icon(
+            Icons.add,
+            color: Color(0xFF22C55E),
+          ),
+
+          title: Text(
+            'Create "${_textController.text.trim()}"',
+
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+
+          onTap: () async {
+            final value =
+                _textController.text.trim();
+
+            _addItem(value);
+
+            await context
+                .findAncestorStateOfType<
+                  _AddEditProfileViewState
+                >()
+                ?.addSkillIfNeeded(value);
+
+            _textController.clear();
+
+            setState(() {});
+          },
+        ),
+      ),
+  ],
+),
 
   const SizedBox(
     height: 16,

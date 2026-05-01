@@ -357,10 +357,11 @@ const SizedBox(height: 12),
                               );
                             },
                             onTap: () {
-                              context.pushNamed(
-                                RouteNames.referralDetail,
-                                extra: job.id, // ✅ ONLY ID
-                              );
+         context.pushNamed(
+  RouteNames.referralDetail,
+  extra:
+      "${job.id}|||${(job.companyName ?? job.companyPosted?.companyDetails?.companyName ?? "Company")}",
+);
                             },
                           );
                         },

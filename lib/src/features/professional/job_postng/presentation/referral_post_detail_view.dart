@@ -124,35 +124,59 @@ final metrics = job.metrics;
                 ),
               ),
               const SizedBox(width: 12),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title,
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold)),
-                  Text("$company • $location",
-                      style: const TextStyle(color: Colors.grey)),
-                ],
+           Expanded(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Expanded(
+            child: Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
               ),
-            ],
+              overflow: TextOverflow.ellipsis,
+            ),
           ),
 
-          const SizedBox(height: 10),
+          const SizedBox(width: 8),
 
-          /// LIVE
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 8,
+              vertical: 3,
+            ),
             decoration: BoxDecoration(
               color: Colors.green.withOpacity(0.2),
               borderRadius: BorderRadius.circular(20),
             ),
-            child: const Text("live",
-                style: TextStyle(color: Colors.green, fontSize: 12)),
+            child: const Text(
+              "LIVE",
+              style: TextStyle(
+                color: Colors.green,
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 6),
+
+      Text(
+        "$company • $location",
+        style: const TextStyle(color: Colors.grey),
+      ),
+    ],
+  ),
+),
+            ],
           ),
 
-          const SizedBox(height: 16),
-
+         SizedBox(height: 20,),
           /// STATS
         Row(
   children: [

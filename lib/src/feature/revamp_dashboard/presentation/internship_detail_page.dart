@@ -95,6 +95,60 @@ class InternshipDetailView extends StatelessWidget {
 
             const SizedBox(height: 20),
 /// 🔥 HIGHLIGHTED COMPANY SECTION
+
+            /// 🔥 ABOUT
+            if ((internship.description ?? '').isNotEmpty)
+              _sectionText("About the Role", internship.description),
+
+            /// 🔥 RESPONSIBILITIES
+            if ((internship.workAchievements ?? []).isNotEmpty)
+              _sectionList("Responsibilities", internship.workAchievements),
+
+            /// 🔥 REQUIREMENTS
+            if ((internship.skills ?? []).isNotEmpty)
+              _sectionList("Requirements", internship.skills),
+
+            /// 🔥 IMPORTANT DATES
+            _sectionInfo("Important Dates", [
+              _info("Start Date", _fmt(internship.startDate)),
+              _info("End Date", _fmt(internship.endDate)),
+              _info("Posted", _fmt(internship.createdAt)),
+            ]),
+
+            /// 🔥 STIPEND
+            _sectionInfo("Stipend", [
+              _info("CTC", pkg?.totalCTC?.toString()),
+              _info("Fixed Pay", pkg?.fixedPay?.toString()),
+              _info("Bonus", pkg?.joiningBonus?.toString()),
+            ]),
+
+            /// 🔥 SELECTION PROCESS
+            if ((internship.selectionProcess ?? []).isNotEmpty)
+              _sectionList("Selection Process", internship.selectionProcess),
+
+            /// 🔥 TOOLS
+            if ((internship.toolsAndPlatforms ?? []).isNotEmpty)
+              _sectionList("Tools & Platforms", internship.toolsAndPlatforms),
+
+            /// 🔥 BENEFITS
+            if ((internship.benefits ?? []).isNotEmpty)
+              _sectionList("Benefits", internship.benefits),
+
+            /// 🔥 CONTACT
+            if (contact != null)
+              _sectionInfo("Contact Person", [
+                _info("Name", contact.name),
+                _info("Email", contact.email),
+                _info("Mobile", contact.mobile),
+              ]),
+
+            /// 🔥 COMPANY
+            if (company != null)
+              _sectionInfo("Company Details", [
+                _info("Name", company.companyName),
+                _info("Industry", company.industryType),
+                _info("City", company.city),
+              ]),
 _containerSection(
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -194,60 +248,6 @@ GestureDetector(
     ],
   ),
 ),
-            /// 🔥 ABOUT
-            if ((internship.description ?? '').isNotEmpty)
-              _sectionText("About the Role", internship.description),
-
-            /// 🔥 RESPONSIBILITIES
-            if ((internship.workAchievements ?? []).isNotEmpty)
-              _sectionList("Responsibilities", internship.workAchievements),
-
-            /// 🔥 REQUIREMENTS
-            if ((internship.skills ?? []).isNotEmpty)
-              _sectionList("Requirements", internship.skills),
-
-            /// 🔥 IMPORTANT DATES
-            _sectionInfo("Important Dates", [
-              _info("Start Date", _fmt(internship.startDate)),
-              _info("End Date", _fmt(internship.endDate)),
-              _info("Posted", _fmt(internship.createdAt)),
-            ]),
-
-            /// 🔥 STIPEND
-            _sectionInfo("Stipend", [
-              _info("CTC", pkg?.totalCTC?.toString()),
-              _info("Fixed Pay", pkg?.fixedPay?.toString()),
-              _info("Bonus", pkg?.joiningBonus?.toString()),
-            ]),
-
-            /// 🔥 SELECTION PROCESS
-            if ((internship.selectionProcess ?? []).isNotEmpty)
-              _sectionList("Selection Process", internship.selectionProcess),
-
-            /// 🔥 TOOLS
-            if ((internship.toolsAndPlatforms ?? []).isNotEmpty)
-              _sectionList("Tools & Platforms", internship.toolsAndPlatforms),
-
-            /// 🔥 BENEFITS
-            if ((internship.benefits ?? []).isNotEmpty)
-              _sectionList("Benefits", internship.benefits),
-
-            /// 🔥 CONTACT
-            if (contact != null)
-              _sectionInfo("Contact Person", [
-                _info("Name", contact.name),
-                _info("Email", contact.email),
-                _info("Mobile", contact.mobile),
-              ]),
-
-            /// 🔥 COMPANY
-            if (company != null)
-              _sectionInfo("Company Details", [
-                _info("Name", company.companyName),
-                _info("Industry", company.industryType),
-                _info("City", company.city),
-              ]),
-
 const SizedBox(height: 24),
 
 Row(
