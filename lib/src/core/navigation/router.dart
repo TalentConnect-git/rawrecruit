@@ -65,6 +65,11 @@ class AppRouter {
         builder: (_, _) => RevampRegisterView(),
       ),
       GoRoute(
+        name: RouteNames.forgotPassword,
+        path: '/forgot-password',
+        builder: (_, _) => ForgotPasswordView(),
+      ),
+      GoRoute(
         name: RouteNames.referralPostDetail,
         path: '/referral-post-detail',
         builder: (context, state) {
@@ -76,42 +81,37 @@ class AppRouter {
         name: RouteNames.referralDetail,
         path: '/referralDetail',
         builder: (context, state) {
-        String jobId = "";
-String? companyName;
+          String jobId = "";
+          String? companyName;
 
-final extra = state.extra;
+          final extra = state.extra;
 
-if (extra is String) {
-  if (extra.contains("|||")) {
-    final data = extra.split("|||");
-    jobId = data[0];
-    companyName = data.length > 1 ? data[1] : null;
-  } else {
-    jobId = extra;
-  }
-} else if (extra is Map<String, dynamic>) {
-  jobId = extra["id"] ?? "";
-  companyName = extra["companyName"];
-}
+          if (extra is String) {
+            if (extra.contains("|||")) {
+              final data = extra.split("|||");
+              jobId = data[0];
+              companyName = data.length > 1 ? data[1] : null;
+            } else {
+              jobId = extra;
+            }
+          } else if (extra is Map<String, dynamic>) {
+            jobId = extra["id"] ?? "";
+            companyName = extra["companyName"];
+          }
 
-return MultiProvider(
-  providers: [
-    ChangeNotifierProvider(
-      create: (_) =>
-          DashboardViewModel()..getAlumniData(),
-    ),
-    ChangeNotifierProvider(
-      create: (_) => ApplicationViewModel()..fetchApplications(),
-    ),
-    ChangeNotifierProvider(
-      create: (_) => ShortlistViewModel()..fetchSaved(),
-    ),
-  ],
-  child: ReferralDetailView(
-    jobId: jobId,
-    companyName: companyName,
-  ),
-
+          return MultiProvider(
+            providers: [
+              ChangeNotifierProvider(
+                create: (_) => DashboardViewModel()..getAlumniData(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => ApplicationViewModel()..fetchApplications(),
+              ),
+              ChangeNotifierProvider(
+                create: (_) => ShortlistViewModel()..fetchSaved(),
+              ),
+            ],
+            child: ReferralDetailView(jobId: jobId, companyName: companyName),
           );
         },
       ),

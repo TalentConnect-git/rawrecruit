@@ -1,6 +1,7 @@
 class RouteNames {
   static final login = 'login';
   static final register = 'register';
+  static final forgotPassword = 'forgot-password';
   static final splash = 'splash';
   static final dashboard = 'dashboard';
   static final shortlist = 'shortlist';

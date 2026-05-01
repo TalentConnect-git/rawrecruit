@@ -16,5 +16,10 @@ abstract class RevampAuthDataSource {
 
   ResultFuture<String?> logout();
 
-  ResultFuture<Auth?> googleLogin({required String token});
+  ResultFuture<Auth?> googleLogin({
+    required String token,
+    required UserType userType,
+  });
+
+  ResultFuture<String?> forgotPassword({required String email});
 }

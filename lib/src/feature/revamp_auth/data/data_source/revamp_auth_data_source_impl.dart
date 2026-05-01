@@ -17,7 +17,7 @@ class RevampAuthDataSourceImpl implements RevampAuthDataSource {
     final Request request = Request(
       method: RequestMethod.post,
       endpoint: Endpoints.apiAuthLogin,
-      body: {'email': email, 'password': password, 'deviceToken':deviceToken},
+      body: {'email': email, 'password': password, 'deviceToken': deviceToken},
     );
 
     try {
@@ -58,7 +58,7 @@ class RevampAuthDataSourceImpl implements RevampAuthDataSource {
         'password': password,
         'userType': userType.apiLabel,
         'otp': otp,
-          'deviceToken': deviceToken,
+        'deviceToken': deviceToken,
       },
     );
 
@@ -152,7 +152,33 @@ class RevampAuthDataSourceImpl implements RevampAuthDataSource {
   }
 
   @override
-  ResultFuture<Auth?> googleLogin({required String token}) async {
+  ResultFuture<Auth?> googleLogin({
+    required String token,
+    required UserType userType,
+  }) async {
+    return Right(null);
+  }
+
+  @override
+  ResultFuture<String?> forgotPassword({required String email}) async {
+    final Request request = Request(
+      method: RequestMethod.post,
+      endpoint: Endpoints.apiAuthForgotPassword,
+      body: {'email': email},
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        return Right(response['message']);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
     return Right(null);
   }
 }

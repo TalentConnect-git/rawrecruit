@@ -44,7 +44,7 @@ class _LoginViewState extends State<RevampLoginView> {
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 36),
                     child: Image.network(
-                      'https://rawrecruit.in/assets/RR-Tagline-CmOUAebu.png',
+                      'https://rawrecruit.in/assets/rawrecruit_transparent-D7ZCwQ3O.png',
                     ),
                   ),
 
@@ -83,7 +83,24 @@ class _LoginViewState extends State<RevampLoginView> {
                     hint: 'Password',
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 10),
+
+                  Align(
+                    alignment: AlignmentGeometry.centerRight,
+                    child: InkWell(
+                      onTap: () {
+                        context.pushNamed(RouteNames.forgotPassword);
+                      },
+                      child: Text(
+                        'Forgot Password?',
+                        style: AppTextStyles.s14W600.copyWith(
+                          color: AppColors.kGreen,
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
 
                   /// 🔹 LOGIN BUTTON
                   AppButton(
@@ -148,7 +165,9 @@ class _LoginViewState extends State<RevampLoginView> {
                         ),
                         text: "Continue with Google",
                         onTap: () async {
-                          final failure = await loginViewModel.google();
+                          final failure = await loginViewModel.google(
+                            userType: UserType.student,
+                          );
                           failure?.showError(context);
                         },
                       ),

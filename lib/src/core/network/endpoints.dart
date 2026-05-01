@@ -5,6 +5,8 @@ class Endpoints {
   static String apiAuthLogout = 'api/auth/logout';
   static String apiAuthSignup = 'api/auth/signup';
   static String apiAuthSendOtp = 'api/auth/send-otp';
+  static String apiAuthForgotPassword = 'api/auth/forgot-password';
+  static String apiAuthGoogle = 'api/auth/google';
 
   static String apiOffCampusJobs = 'api/student-dashboard/off-campus';
   static String apiInternshipPostings =

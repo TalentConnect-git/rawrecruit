@@ -31,7 +31,7 @@ class AppButton extends StatelessWidget {
   final Widget? child;
   final String? label;
   final Widget? icon;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   final EdgeInsets? padding;
   final Color? foregroundColor;
