@@ -99,25 +99,25 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
     setState(() {});
   }
+Future<void> fetchCompanies() async {
+  final response = await getIt<NetworkService>().request(
+    Request(
+      method: RequestMethod.get,
+      endpoint: "api/company",
+      isSafeRoute: true,
+    ),
+  );
 
-  Future<void> fetchCompanies() async {
-    final response = await getIt<NetworkService>().request(
-      Request(
-        method: RequestMethod.get,
+  final data = List<Map<String, dynamic>>.from(
+    response.data['data'] ?? [],
+  );
 
-        endpoint: "/dropdown/companiesName",
+  companyOptions = data
+      .map((e) => e['name'].toString())
+      .toList();
 
-        isSafeRoute: true,
-      ),
-    );
-
-    final data = List<Map<String, dynamic>>.from(response.data);
-
-    companyOptions = data.map((e) => e['label'].toString()).toList();
-
-    setState(() {});
-  }
-
+  setState(() {});
+}
   Future<void> fetchSkills() async {
     final response = await getIt<NetworkService>().request(
       Request(
@@ -211,7 +211,50 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
     await fetchStreams(selectedDegreeId!);
   }
+  Future<void> addJobRoleIfNeeded(String value) async {
+  final exists = jobRoleOptions.any(
+    (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
+  );
 
+  if (exists) return;
+
+  await getIt<NetworkService>().request(
+    Request(
+      method: RequestMethod.post,
+      endpoint: "/api/company-master-data",
+      isSafeRoute: true,
+      body: {
+        "type": "JOB_ROLE",
+        "value": value,
+        "parent": null,
+      },
+    ),
+  );
+
+  setState(() {
+    jobRoleOptions.add(value);
+  });
+}
+Future<void> addCompanyIfNeeded(String value) async {
+  final exists = companyOptions.any(
+    (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
+  );
+
+  if (exists) return;
+
+  await getIt<NetworkService>().request(
+    Request(
+      method: RequestMethod.post,
+      endpoint: "api/company",
+      isSafeRoute: true,
+      body: {
+        "name": value,
+      },
+    ),
+  );
+
+  await fetchCompanies();
+}
   Future<void> addSkillIfNeeded(String value) async {
     final exists = skillOptionsApi.any(
       (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
@@ -893,28 +936,38 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
                               children: [
                                 if (isProfessional) ...[
-                                  CommonAutocomplete(
-                                    label: "Current Company",
+                                CommonAutocomplete(
+  label: "Current Company",
 
-                                    hint: "Current Company",
+  hint: "Current Company",
 
-                                    options: companyOptions,
+  options: companyOptions,
 
-                                    initialValue:
-                                        controller.currentCompany.text,
+  initialValue:
+      controller.currentCompany.text,
 
-                                    onChanged: (value) {
-                                      controller.currentCompany.text = value;
+  onChanged: (value) {
+    controller.currentCompany.text = value;
 
-                                      markChanged();
-                                    },
+    markChanged();
+  },
 
-                                    onSelected: (value) {
-                                      controller.currentCompany.text = value;
+  onSubmitted: (value) async {
+    await addCompanyIfNeeded(value);
 
-                                      markChanged();
-                                    },
-                                  ),
+    controller.currentCompany.text = value;
+
+    markChanged();
+  },
+
+  onSelected: (value) async {
+    await addCompanyIfNeeded(value);
+
+    controller.currentCompany.text = value;
+
+    markChanged();
+  },
+),
 
                                   AppTextFields(
                                     controller: controller.noticePeriod,
@@ -1483,27 +1536,37 @@ SingleChildScrollView(
   }
 
   Widget _companyField(ExperienceController e) {
-    return CommonAutocomplete(
-      label: "Company",
+  return CommonAutocomplete(
+  label: "Company",
 
-      hint: "Company",
+  hint: "Company",
 
-      options: companyOptions,
+  options: companyOptions,
 
-      initialValue: e.company.text,
+  initialValue: e.company.text,
 
-      onChanged: (value) {
-        e.company.text = value;
+  onChanged: (value) {
+    e.company.text = value;
 
-        markChanged();
-      },
+    markChanged();
+  },
 
-      onSelected: (value) {
-        e.company.text = value;
+  onSubmitted: (value) async {
+    await addCompanyIfNeeded(value);
 
-        markChanged();
-      },
-    );
+    e.company.text = value;
+
+    markChanged();
+  },
+
+  onSelected: (value) async {
+    await addCompanyIfNeeded(value);
+
+    e.company.text = value;
+
+    markChanged();
+  },
+);
   }
 
   Widget _roleField(ExperienceController e) {
@@ -2272,11 +2335,18 @@ Column(
 
             _addItem(value);
 
-            await context
-                .findAncestorStateOfType<
-                  _AddEditProfileViewState
-                >()
-                ?.addSkillIfNeeded(value);
+          final parentState = context
+    .findAncestorStateOfType<
+      _AddEditProfileViewState
+    >();
+
+if (widget.label == 'Skills') {
+  await parentState?.addSkillIfNeeded(value);
+}
+
+if (widget.label == 'Job Roles') {
+  await parentState?.addJobRoleIfNeeded(value);
+}
 
             _textController.clear();
 
