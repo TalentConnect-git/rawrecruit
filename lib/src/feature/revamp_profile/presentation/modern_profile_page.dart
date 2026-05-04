@@ -11,6 +11,7 @@ import '../../../features/scheduled_interviews/presentation/view_model/scheduled
     show InterviewViewModel;
 import '../../revamp_onboarding/presentation/index.dart';
 import 'career_insight_page.dart';
+import 'resume_view_page.dart';
 
 class ModernProfilePage extends StatefulWidget {
 
@@ -376,15 +377,16 @@ child: Column(
           /// 🔥 Resume Button
           if ((p?.resume ?? '').isNotEmpty)
             GestureDetector(
-              onTap: () async {
-                final url = p!.resume!;
+             onTap: () {
+  final url = p!.resume!;
 
-                // open in browser
-                await launchUrl(
-                  Uri.parse(url),
-                  mode: LaunchMode.externalApplication,
-                );
-              },
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (_) => ResumeViewerPage(url: url),
+    ),
+  );
+},
               child: Container(
                 padding: const EdgeInsets.symmetric(
                   horizontal: 16,
