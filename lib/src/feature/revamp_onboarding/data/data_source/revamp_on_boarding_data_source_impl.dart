@@ -21,7 +21,6 @@ import 'revamp_on_boarding_data_source.dart';
 class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   final NetworkService _networkService = NetworkService();
 
-  /// 🔥 COMMON FORM BUILDER (reusable)
   Future<FormData> _buildFormData({
     required Map<String, dynamic> body,
     File? resume,
@@ -29,65 +28,48 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   }) async {
     final Map<String, dynamic> formMap = {};
 
-    /// ✅ Handle all fields
-  body.forEach((key, value) {
- if (value is List) {
+    body.forEach((key, value) {
+      if (value is List) {
+        if (value.isEmpty) return;
 
-  if (value.isEmpty) return;
+        /// ✅ Nested objects (List<Map>)
+        if (value.first is Map) {
+          final cleanedList = value
+              .map((e) {
+                final map = Map<String, dynamic>.from(e);
 
-  /// nested objects
-  if (value.first is Map) {
+                map.removeWhere(
+                  (k, v) => v == null || v.toString().trim().isEmpty,
+                );
 
-    final cleanedList = value.map((e) {
+                return map;
+              })
+              .where((e) => e.isNotEmpty)
+              .toList();
 
-      final map =
-          Map<String, dynamic>.from(e);
+          if (cleanedList.isNotEmpty) {
+            formMap[key] = jsonEncode(cleanedList);
+          }
+        }
+        /// ✅ Simple list (List<String>)
+        else {
+          final cleanedList = value
+              .map((e) => e.toString().trim())
+              .where((e) => e.isNotEmpty)
+              .toList();
 
-      map.removeWhere(
-        (k, v) =>
-            v == null ||
-            v.toString()
-                .trim()
-                .isEmpty,
-      );
-
-      return map;
-
-    }).where((e) => e.isNotEmpty)
-      .toList();
-
-    if (cleanedList.isNotEmpty) {
-      formMap[key] =
-          jsonEncode(cleanedList);
-    }
-
-  }
-
-  /// simple string lists
-  else {
-
-    for (int i = 0;
-        i < value.length;
-        i++) {
-
-      final item =
-          value[i]
-              .toString()
-              .trim();
-
-      if (item.isNotEmpty) {
-        formMap['$key[$i]'] =
-            item;
+          if (cleanedList.isNotEmpty) {
+            formMap[key] = jsonEncode(cleanedList); // 🔥 FIX
+          }
+        }
       }
-    }
-  }
-} else if (value != null &&
-      value.toString().isNotEmpty) {
-    formMap[key] = value.toString();
-  }
-});
+      /// ✅ Normal fields
+      else if (value != null && value.toString().isNotEmpty) {
+        formMap[key] = value.toString();
+      }
+    });
 
-    /// ✅ Attach files
+    /// ✅ Files
     if (resume != null) {
       formMap['resume'] = await MultipartFile.fromFile(
         resume.path,
@@ -196,8 +178,8 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
 
     return Right(null);
   }
-  
-    @override
+
+  @override
   ResultFuture<Map<String, dynamic>> getCareerInsights() async {
     final request = Request(
       method: RequestMethod.get,
@@ -230,142 +212,123 @@ class RevampOnboardingDataSourceImpl implements RevampOnboardingDataSource {
   }
 
   @override
-ResultFuture<Map<String, dynamic>> getReferralMetrics() async {
-  final request = Request(
-    method: RequestMethod.get,
-    endpoint: "/application/professional/referral-metrics",
-    isSafeRoute: true,
-  );
-
-  try {
-    final result = await _networkService.request(request);
-    return Right(result.data['data']);
-  } catch (e) {
-    return Left(APIException.from(e));
-  }
-}
-@override
-ResultFuture<List<Map<String, dynamic>>> getColleges() async {
-  try {
+  ResultFuture<Map<String, dynamic>> getReferralMetrics() async {
     final request = Request(
       method: RequestMethod.get,
-      endpoint: "api/colleges/all",
+      endpoint: "/application/professional/referral-metrics",
       isSafeRoute: true,
     );
 
-    final result = await _networkService.request(request);
-
-    final data = List<Map<String, dynamic>>.from(result.data);
-
-    return Right(data);
-  } catch (e) {
-    return Left(APIException.from(e));
+    try {
+      final result = await _networkService.request(request);
+      return Right(result.data['data']);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
 
-@override
-ResultFuture<Map<String, dynamic>> registerCollege({
-  required String name,
-}) async {
-  try {
-    final request = Request(
-      method: RequestMethod.post,
-      endpoint: "api/colleges/register",
-      isSafeRoute: true,
-      body: {
-        "name": name,
-      },
-    );
+  @override
+  ResultFuture<List<Map<String, dynamic>>> getColleges() async {
+    try {
+      final request = Request(
+        method: RequestMethod.get,
+        endpoint: "api/colleges/all",
+        isSafeRoute: true,
+      );
 
-    final result = await _networkService.request(request);
+      final result = await _networkService.request(request);
 
-    return Right(
-      Map<String, dynamic>.from(result.data),
-    );
-  } catch (e) {
-    return Left(APIException.from(e));
+      final data = List<Map<String, dynamic>>.from(result.data);
+
+      return Right(data);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
-@override
-ResultFuture<List<Map<String, dynamic>>> getDegrees() async {
-  try {
-    final request = Request(
-      method: RequestMethod.get,
-      endpoint: "api/master-data?type=DEGREE",
-      isSafeRoute: true,
-    );
 
-    final res = await _networkService.request(request);
+  @override
+  ResultFuture<Map<String, dynamic>> registerCollege({
+    required String name,
+  }) async {
+    try {
+      final request = Request(
+        method: RequestMethod.post,
+        endpoint: "api/colleges/register",
+        isSafeRoute: true,
+        body: {"name": name},
+      );
 
-    return Right(
-      List<Map<String, dynamic>>.from(
-        res.data['data'],
-      ),
-    );
-  } catch (e) {
-    return Left(APIException.from(e));
+      final result = await _networkService.request(request);
+
+      return Right(Map<String, dynamic>.from(result.data));
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
-@override
-ResultFuture<Map<String, dynamic>>
-createMasterData({
-  required String type,
-  required String value,
-  String? parent,
-}) async {
-  try {
-    final request = Request(
-      method: RequestMethod.post,
 
-      endpoint: "api/master-data",
+  @override
+  ResultFuture<List<Map<String, dynamic>>> getDegrees() async {
+    try {
+      final request = Request(
+        method: RequestMethod.get,
+        endpoint: "api/master-data?type=DEGREE",
+        isSafeRoute: true,
+      );
 
-      isSafeRoute: true,
+      final res = await _networkService.request(request);
 
-      body: {
-        "type": type,
-        "value": value,
-
-        if (parent != null)
-          "parent": parent,
-      },
-    );
-
-    final res =
-        await _networkService
-            .request(request);
-
-    return Right(
-      Map<String, dynamic>.from(
-        res.data['data'],
-      ),
-    );
-  } catch (e) {
-    return Left(
-      APIException.from(e),
-    );
+      return Right(List<Map<String, dynamic>>.from(res.data['data']));
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
-@override
-ResultFuture<List<Map<String, dynamic>>> getStreams({
-  required String degreeId,
-}) async {
-  try {
-    final request = Request(
-      method: RequestMethod.get,
-      endpoint:
-          "api/master-data?type=STREAM&parent=$degreeId",
-      isSafeRoute: true,
-    );
 
-    final res = await _networkService.request(request);
+  @override
+  ResultFuture<Map<String, dynamic>> createMasterData({
+    required String type,
+    required String value,
+    String? parent,
+  }) async {
+    try {
+      final request = Request(
+        method: RequestMethod.post,
 
-    return Right(
-      List<Map<String, dynamic>>.from(
-        res.data['data'],
-      ),
-    );
-  } catch (e) {
-    return Left(APIException.from(e));
+        endpoint: "api/master-data",
+
+        isSafeRoute: true,
+
+        body: {
+          "type": type,
+          "value": value,
+
+          if (parent != null) "parent": parent,
+        },
+      );
+
+      final res = await _networkService.request(request);
+
+      return Right(Map<String, dynamic>.from(res.data['data']));
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
+
+  @override
+  ResultFuture<List<Map<String, dynamic>>> getStreams({
+    required String degreeId,
+  }) async {
+    try {
+      final request = Request(
+        method: RequestMethod.get,
+        endpoint: "api/master-data?type=STREAM&parent=$degreeId",
+        isSafeRoute: true,
+      );
+
+      final res = await _networkService.request(request);
+
+      return Right(List<Map<String, dynamic>>.from(res.data['data']));
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
 }
