@@ -10,7 +10,9 @@ _ReferralPostModel _$ReferralPostModelFromJson(
   Map<String, dynamic> json,
 ) => _ReferralPostModel(
   id: json['_id'] as String?,
-  jobTitle: json['jobTitle'] as String?,
+  jobTitle: (json['jobTitle'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   description: json['description'] as String?,
   approvalStatus: json['approvalStatus'] as String?,
   employmentType: (json['employmentType'] as List<dynamic>?)

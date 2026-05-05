@@ -150,32 +150,129 @@ Future<void> addSkillToApi(
             const SizedBox(height: 16),
 
             /// 🔍 SEARCH FIELD
-            TextField(
-              controller: searchCtrl,
-              style: const TextStyle(color: Colors.white),
-             onSubmitted: (val) async {
-  final skill = val.trim();
+         Autocomplete<String>(
+  optionsBuilder: (textEditingValue) {
+    final input = textEditingValue.text.trim().toLowerCase();
 
-  if (skill.isEmpty) return;
+    if (input.isEmpty) return popular;
 
-  addSkill(skill);
+    final filtered = popular.where(
+      (skill) => skill.toLowerCase().contains(input),
+    ).toList();
 
-  await addSkillToApi(skill);
+    if (filtered.isEmpty) {
+      return ['__create__']; // 🔥 force dropdown
+    }
 
-  searchCtrl.clear();
-},
-              decoration: InputDecoration(
-                hintText: "Search or add a skill...",
-                hintStyle: const TextStyle(color: Colors.grey),
-                filled: true,
-                fillColor: AppColors.kCard,
-                prefixIcon: const Icon(Icons.search, color: Colors.grey),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(14),
-                  borderSide: BorderSide.none,
+    return filtered;
+  },
+
+  onSelected: (value) {
+    if (value == '__create__') return;
+
+    addSkill(value);
+  },
+
+  fieldViewBuilder: (context, controller, focusNode, _) {
+    return TextField(
+      controller: controller,
+      focusNode: focusNode,
+      style: const TextStyle(color: Colors.white),
+
+      decoration: InputDecoration(
+        hintText: "Search or add a skill...",
+        hintStyle: const TextStyle(color: Colors.grey),
+        filled: true,
+        fillColor: AppColors.kCard,
+        prefixIcon: const Icon(Icons.search, color: Colors.grey),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(14),
+          borderSide: BorderSide.none,
+        ),
+      ),
+
+      onChanged: (value) {
+        searchCtrl.text = value;
+      },
+
+      onSubmitted: (val) async {
+        final skill = val.trim();
+        if (skill.isEmpty) return;
+
+        addSkill(skill);
+        await addSkillToApi(skill);
+
+        controller.clear();
+      },
+    );
+  },
+
+  optionsViewBuilder: (context, onSelected, options) {
+    final value = searchCtrl.text.trim();
+
+    final exists = popular.any(
+      (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
+    );
+
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Material(
+        elevation: 8,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: MediaQuery.of(context).size.width - 32,
+          constraints: const BoxConstraints(maxHeight: 220),
+          decoration: BoxDecoration(
+            color: AppColors.kCard,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            children: [
+              /// 🔹 OPTIONS
+              ...options.map((option) {
+                if (option == '__create__') return const SizedBox();
+
+                return ListTile(
+                  dense: true,
+                  title: Text(option,
+                      style: const TextStyle(color: Colors.white)),
+                  onTap: () {
+                    onSelected(option);
+                  },
+                );
+              }),
+
+              /// 🔥 CREATE OPTION
+              if (value.isNotEmpty && !exists)
+                Column(
+                  children: [
+                    Divider(height: 1, color: Colors.grey.shade800),
+                    ListTile(
+                      leading: const Icon(Icons.add, color: Colors.green),
+                      title: Text(
+                        'Create "$value"',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      onTap: () async {
+                        addSkill(value);
+                        await addSkillToApi(value);
+
+                        searchCtrl.clear();
+                        FocusScope.of(context).unfocus();
+                        setState(() {});
+                      },
+                    ),
+                  ],
                 ),
-              ),
-            ),
+            ],
+          ),
+        ),
+      ),
+    );
+  },
+),
 
             const SizedBox(height: 12),
 

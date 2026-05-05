@@ -34,7 +34,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   final joiningBonusController = TextEditingController();
 
   // Dropdowns
-  String selectedJobTitle = "Software Developer";
+  // String selectedJobTitle = "Software Developer";
   String employmentType = "Full-time";
   String workMode = "On-site";
   String broadcastType = "Everyone";
@@ -384,7 +384,6 @@ Future<void> fetchCities(String state) async {
     "Fresher preferred",
     "Remote-friendly",
     "Work from Home",
-    "Internship-eligible",
   ];
 
   final List<String> indiaCities = [
@@ -504,18 +503,12 @@ Future<void> fetchCities(String state) async {
                 child: _card(
                   title: "Job Info",
                   children: [
-                    _dropdownDark(
-                      "Job Title",
-                      selectedJobTitle,
-                      jobTitleOptions,
-                      (val) => setState(() => selectedJobTitle = val!),
-                    ),
-
-                    if (selectedJobTitle == "Others")
-                      _fieldDark(
-                        "Enter Custom Job Title",
-                        controller: titleController,
-                      ),
+                   MultiSelectDropdownChips(
+  key: const ValueKey('jobTitle'),
+  label: "Job Title",
+  controller: titleController,
+  options: jobTitleOptions,
+),
 
                     _fieldDark(
                       "Description",
@@ -572,7 +565,7 @@ Future<void> fetchCities(String state) async {
                     _dropdownDark(
                       "Employment Type",
                       employmentType,
-                      ["Full-time", "Part-time"],
+                      ["Full-time", "Part-time","Contract"],
                       (val) =>
                           setState(() => employmentType = val!),
                     ),
@@ -760,10 +753,7 @@ Future<void> fetchCities(String state) async {
             onPressed: currentStep == totalSteps - 1
                 ? () async {
                         final model = ReferralPostModel(
-                          jobTitle:
-                              selectedJobTitle == "Others"
-                                  ? titleController.text.trim()
-                                  : selectedJobTitle,
+                         jobTitle: _splitController(titleController),
                                   inactive: false,
                           description:
                               descriptionController.text.trim(),
@@ -1078,8 +1068,28 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.label, style: const TextStyle(color: Colors.white)),
-        const SizedBox(height: 8),
 
+        const SizedBox(height: 8),
+/// 🔥 Chips moved ABOVE
+if (selected.isNotEmpty)
+  Wrap(
+    spacing: 8,
+    runSpacing: 6,
+    children: selected.map((item) {
+      return Chip(
+        label: Text(item),
+        onDeleted: () {
+          setState(() {
+            selected.remove(item);
+            _updateController();
+          });
+        },
+      );
+    }).toList(),
+  ),
+
+if (selected.isNotEmpty)
+  const SizedBox(height: 10),
         /// 🔥 Dropdown-like UI
         PopupMenuButton(
           color: AppColors.kCard,
@@ -1160,25 +1170,8 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
             ),
           ),
         ),
+        
 
-        const SizedBox(height: 10),
-
-        /// 🔥 Chips
-        Wrap(
-          spacing: 8,
-          runSpacing: 6,
-          children: selected.map((item) {
-            return Chip(
-              label: Text(item),
-              onDeleted: () {
-                setState(() {
-                  selected.remove(item);
-                  _updateController();
-                });
-              },
-            );
-          }).toList(),
-        ),
       ],
     );
   }

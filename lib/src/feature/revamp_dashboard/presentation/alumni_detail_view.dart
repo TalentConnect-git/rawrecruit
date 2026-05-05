@@ -10,17 +10,26 @@ class AlumniDetailView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (jobs.isEmpty) {
+      return const Center(
+        child: Text("No data", style: TextStyle(color: Colors.white)),
+      );
+    }
+
     final first = jobs.first;
 
     final name = first.candidatePosted?.name ?? "User";
     final college = first.candidatePosted?.college ?? "";
     final skills = first.candidatePosted?.skills ?? ['Skill 1', 'Skill 2'];
-final role = first.candidatePosted?.designation ??
-    first.candidatePosted?.specialization ??
-    first.jobTitle ??
-    "Professional";    final location = first.location?.join(", ") ?? "Location";
+    final role =
+        first.candidatePosted?.designation ??
+        first.candidatePosted?.specialization ??
+        first.jobTitle ??
+        "Professional";
+    final location = first.location?.join(", ") ?? "Location";
     final referrals = first.candidatePosted?.referralJobs ?? [];
-final company = first.candidatePosted?.currentCompany ?? "";
+    final isHiring = referrals.isNotEmpty;
+    final company = first.candidatePosted?.currentCompany ?? "";
     return Scaffold(
       backgroundColor: AppColors.kBg,
       appBar: AppBar(
@@ -82,20 +91,18 @@ final company = first.candidatePosted?.currentCompany ?? "";
                   Text(location, style: const TextStyle(color: Colors.grey)),
 
                   const SizedBox(height: 2),
-if (company.isNotEmpty)
-  Text(
-    company,
-    style: const TextStyle(
-      color: Colors.grey,
-      fontSize: 13,
-    ),
-  ),
-  
-                  const SizedBox(height: 2),
-                  /// College line
-                  Text(college, style: TextStyle(color: AppColors.kGreen)),
+                  if (company.isNotEmpty)
+                    Text(
+                      company,
+                      style: const TextStyle(color: Colors.grey, fontSize: 13),
+                    ),
 
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 2),
+
+                  /// College line
+                  // Text(college, style: TextStyle(color: AppColors.kGreen)),
+
+                  // const SizedBox(height: 6),
 
                   /// College line
                   _skillChip(
@@ -109,9 +116,9 @@ if (company.isNotEmpty)
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       _statBox("0", "Response"),
-                      _statBox("${jobs.length}", "Open Jobs"),
-                      _statBox("●", "Hiring", isDot: true),
-                    ],
+
+                      _statBox("${referrals.length}", "Open Jobs"),
+_statBox("●", isHiring ? "Hiring" : "Not Hiring", isDot: true, isHiring: isHiring),                    ],
                   ),
                 ],
               ),
@@ -234,8 +241,12 @@ if (company.isNotEmpty)
   }
 
   /// 🔥 STAT BOX
-  Widget _statBox(String value, String label, {bool isDot = false}) {
-    return Container(
+Widget _statBox(
+  String value,
+  String label, {
+  bool isDot = false,
+  bool isHiring = true,
+}) {    return Container(
       width: 90,
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
@@ -248,16 +259,14 @@ if (company.isNotEmpty)
               ? Container(
                   width: 10,
                   height: 10,
-                  decoration: const BoxDecoration(
-                    color: Colors.green,
-                    shape: BoxShape.circle,
+                  decoration:  BoxDecoration(
+color: isHiring ? Colors.green : Colors.red,                    shape: BoxShape.circle,
                   ),
                 )
               : Text(
                   value,
                   style: TextStyle(
-                    color: isDot ? Colors.green : Colors.green,
-                    fontWeight: FontWeight.bold,
+color: isHiring ? Colors.green : Colors.red,                    fontWeight: FontWeight.bold,
                     fontSize: 16,
                   ),
                 ),
@@ -286,9 +295,9 @@ if (company.isNotEmpty)
   Widget _jobTile(BuildContext context, Job job) {
     final title = job.jobTitle ?? "Role";
 
-final company = job.companyName?.isNotEmpty == true
-    ? job.companyName!
-    : job.candidatePosted?.currentCompany?.isNotEmpty == true
+    final company = job.companyName?.isNotEmpty == true
+        ? job.companyName!
+        : job.candidatePosted?.currentCompany?.isNotEmpty == true
         ? job.candidatePosted!.currentCompany!
         : "Company";
 

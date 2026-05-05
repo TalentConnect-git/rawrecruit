@@ -348,18 +348,18 @@ if (selectedState.isNotEmpty)
           ],
         ),
 
-        const SizedBox(height: 10),
+        // const SizedBox(height: 10),
 
-        /// LANGUAGES
-        AppMultiSelectChips(
-          label: "Languages Known",
-          options: WorkPrefPage.languageOptions,
-          initialValues: languages,
-          onChanged: (val) {
-            languages = val;
-            saveData();
-          },
-        ),
+        // /// LANGUAGES
+        // AppMultiSelectChips(
+        //   label: "Languages Known",
+        //   options: WorkPrefPage.languageOptions,
+        //   initialValues: languages,
+        //   onChanged: (val) {
+        //     languages = val;
+        //     saveData();
+        //   },
+        // ),
 
         const SizedBox(height: 20),
       ],

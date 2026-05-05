@@ -133,59 +133,59 @@ void saveData() {
 
         const SizedBox(height: 8),
 
-        AppDropdown(
-          hint: "Gender",
-          value: gender,
-          options: BasicPage.genderOptions,
-          onChanged: (val) {
-            setState(() {
-              gender = val;
-              saveData();
-            });
-          },
-        ),
+        // AppDropdown(
+        //   hint: "Gender",
+        //   value: gender,
+        //   options: BasicPage.genderOptions,
+        //   onChanged: (val) {
+        //     setState(() {
+        //       gender = val;
+        //       saveData();
+        //     });
+        //   },
+        // ),
 
-        AppInput(
-          "Date of Birth",
-          controller: dobCtrl,
-          onChanged: (_) => saveData(),
-        ),
+        // AppInput(
+        //   "Date of Birth",
+        //   controller: dobCtrl,
+        //   onChanged: (_) => saveData(),
+        // ),
 
-        AppDropdown(
-          hint: "Ethnicity",
-          value: ethnicity,
-          options: BasicPage.ethnicityOptions,
-          onChanged: (val) {
-            setState(() {
-              ethnicity = val;
-              saveData();
-            });
-          },
-        ),
+        // AppDropdown(
+        //   hint: "Ethnicity",
+        //   value: ethnicity,
+        //   options: BasicPage.ethnicityOptions,
+        //   onChanged: (val) {
+        //     setState(() {
+        //       ethnicity = val;
+        //       saveData();
+        //     });
+        //   },
+        // ),
 
-        AppDropdown(
-          hint: "Marital Status",
-          value: maritalStatus,
-          options: BasicPage.maritalStatusOptions,
-          onChanged: (val) {
-            setState(() {
-              maritalStatus = val;
-              saveData();
-            });
-          },
-        ),
+        // AppDropdown(
+        //   hint: "Marital Status",
+        //   value: maritalStatus,
+        //   options: BasicPage.maritalStatusOptions,
+        //   onChanged: (val) {
+        //     setState(() {
+        //       maritalStatus = val;
+        //       saveData();
+        //     });
+        //   },
+        // ),
 
-        AppDropdown(
-          hint: "Visa Status / Work Authorization",
-          value: visaStatus,
-          options: BasicPage.visaStatusOptions,
-          onChanged: (val) {
-            setState(() {
-              visaStatus = val;
-              saveData();
-            });
-          },
-        ),
+        // AppDropdown(
+        //   hint: "Visa Status / Work Authorization",
+        //   value: visaStatus,
+        //   options: BasicPage.visaStatusOptions,
+        //   onChanged: (val) {
+        //     setState(() {
+        //       visaStatus = val;
+        //       saveData();
+        //     });
+        //   },
+        // ),
 
         const SizedBox(height: 20),
       ],

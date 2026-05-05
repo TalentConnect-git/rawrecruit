@@ -8,8 +8,7 @@ part 'referral_post_model.g.dart';
 abstract class ReferralPostModel with _$ReferralPostModel {
   const factory ReferralPostModel({
     @JsonKey(name: '_id') String? id,
-    String? jobTitle,
-    String? description,
+List<String>? jobTitle,   String? description,
     String? approvalStatus,
 List<String>? employmentType,
 List<String>? workMode,

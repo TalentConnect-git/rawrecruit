@@ -10,9 +10,9 @@ class AlumniHiringCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final job = jobs.first;
-    final candidate = job.candidatePosted;
-
+   final candidate = jobs.first.candidatePosted;
+final referralJobs = candidate?.referralJobs ?? [];
+final isHiring = referralJobs.isNotEmpty;
     final name = candidate?.name ?? "User";
 
     final college = candidate?.college ?? "Your College";
@@ -20,7 +20,7 @@ class AlumniHiringCard extends StatelessWidget {
     final designation = candidate?.jobRoles?.join(", ") ?? "role";
     final company = candidate?.currentCompany ?? "company";
 
-    final location = job.location;
+    // final location = job.location;
 
     final initials = name.isNotEmpty
         ? name.split(" ").map((e) => e[0]).take(2).join()
@@ -76,7 +76,10 @@ class AlumniHiringCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      _chip("Hiring", Colors.green),
+                    _chip(
+  isHiring ? "Hiring" : "Not Hiring",
+  isHiring ? Colors.green : Colors.red,
+),
                       const SizedBox(width: 6),
                       _chip("Refer", Colors.blue),
                     ],
@@ -103,28 +106,30 @@ class AlumniHiringCard extends StatelessWidget {
                   Row(
                     children: [
                       /// Location
-                      Expanded(
-                        child: Text(
-                          location?.join(", ") ?? "",
-                          overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 13,
-                          ),
-                        ),
-                      ),
+                      // Expanded(
+                      //   child: Text(
+                      //     location?.join(", ") ?? "",
+                      //     overflow: TextOverflow.ellipsis,
+                      //     style: const TextStyle(
+                      //       color: Colors.grey,
+                      //       fontSize: 13,
+                      //     ),
+                      //   ),
+                      // ),
 
-                      const SizedBox(width: 10),
+                      // const SizedBox(width: 10),
 
                       /// Jobs
-                      Text(
-                        "${jobs.length} open jobs available",
-                        style: const TextStyle(
-                          color: Colors.green,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
+                   Text(
+  isHiring
+      ? "${referralJobs.length} open jobs available"
+      : "No jobs available",
+  style: TextStyle(
+    color: isHiring ? Colors.green : Colors.red,
+    fontSize: 10,
+    fontWeight: FontWeight.w600,
+  ),
+),
 
                       const SizedBox(width: 12),
 

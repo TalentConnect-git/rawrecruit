@@ -13,8 +13,8 @@ import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_e
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
 
 class AddEditProfileView extends StatefulWidget {
-  const AddEditProfileView({this.user,   this.initialStep,super.key});
-final int? initialStep;
+  const AddEditProfileView({this.user, this.initialStep, super.key});
+  final int? initialStep;
   final User? user;
 
   @override
@@ -28,7 +28,13 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   final _formKey = GlobalKey<FormState>();
   bool _isParsingResume = false;
   File? _pickedResumeFile;
-
+bool isExperienceExpanded = false;
+Map<String, String> currencySymbols = {
+  "INR": "₹",
+  "USD": "\$",
+  "EUR": "€",
+  "GBP": "£",
+};
   // ── Enum lists ──────────────────────────────────────────────────────────────
   bool hasChanges = false;
   void markChanged() {
@@ -99,25 +105,23 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
     setState(() {});
   }
-Future<void> fetchCompanies() async {
-  final response = await getIt<NetworkService>().request(
-    Request(
-      method: RequestMethod.get,
-      endpoint: "api/company",
-      isSafeRoute: true,
-    ),
-  );
 
-  final data = List<Map<String, dynamic>>.from(
-    response.data['data'] ?? [],
-  );
+  Future<void> fetchCompanies() async {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
+        endpoint: "api/company",
+        isSafeRoute: true,
+      ),
+    );
 
-  companyOptions = data
-      .map((e) => e['name'].toString())
-      .toList();
+    final data = List<Map<String, dynamic>>.from(response.data['data'] ?? []);
 
-  setState(() {});
-}
+    companyOptions = data.map((e) => e['name'].toString()).toList();
+
+    setState(() {});
+  }
+
   Future<void> fetchSkills() async {
     final response = await getIt<NetworkService>().request(
       Request(
@@ -211,50 +215,47 @@ Future<void> fetchCompanies() async {
 
     await fetchStreams(selectedDegreeId!);
   }
+
   Future<void> addJobRoleIfNeeded(String value) async {
-  final exists = jobRoleOptions.any(
-    (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
-  );
+    final exists = jobRoleOptions.any(
+      (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
+    );
 
-  if (exists) return;
+    if (exists) return;
 
-  await getIt<NetworkService>().request(
-    Request(
-      method: RequestMethod.post,
-      endpoint: "/api/company-master-data",
-      isSafeRoute: true,
-      body: {
-        "type": "JOB_ROLE",
-        "value": value,
-        "parent": null,
-      },
-    ),
-  );
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+        endpoint: "/api/company-master-data",
+        isSafeRoute: true,
+        body: {"type": "JOB_ROLE", "value": value, "parent": null},
+      ),
+    );
 
-  setState(() {
-    jobRoleOptions.add(value);
-  });
-}
-Future<void> addCompanyIfNeeded(String value) async {
-  final exists = companyOptions.any(
-    (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
-  );
+    setState(() {
+      jobRoleOptions.add(value);
+    });
+  }
 
-  if (exists) return;
+  Future<void> addCompanyIfNeeded(String value) async {
+    final exists = companyOptions.any(
+      (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
+    );
 
-  await getIt<NetworkService>().request(
-    Request(
-      method: RequestMethod.post,
-      endpoint: "api/company",
-      isSafeRoute: true,
-      body: {
-        "name": value,
-      },
-    ),
-  );
+    if (exists) return;
 
-  await fetchCompanies();
-}
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+        endpoint: "api/company",
+        isSafeRoute: true,
+        body: {"name": value},
+      ),
+    );
+
+    await fetchCompanies();
+  }
+
   Future<void> addSkillIfNeeded(String value) async {
     final exists = skillOptionsApi.any(
       (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
@@ -639,11 +640,11 @@ Future<void> addCompanyIfNeeded(String value) async {
   @override
   void initState() {
     super.initState();
-currentStep = widget.initialStep ?? 0;
+    currentStep = widget.initialStep ?? 0;
 
-WidgetsBinding.instance.addPostFrameCallback((_) {
-  _pageController.jumpToPage(currentStep);
-});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _pageController.jumpToPage(currentStep);
+    });
     fetchColleges();
 
     fetchDegrees();
@@ -681,6 +682,15 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
         children: [
           Scaffold(
             backgroundColor: AppColors.kBg,
+            appBar: AppBar(
+              backgroundColor: AppColors.kBg,
+              elevation: 0,
+
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                onPressed: () => context.pop(), // 🔥 simple back
+              ),
+            ),
             // appBar: RAppBar(
             //   leading: widget.user != null
             //       ? IconButton(
@@ -825,32 +835,43 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                               spacing: 16,
 
                               children: [
-                                CommonAutocomplete(
-                                  label: "College",
+                             CommonAutocomplete(
+  label: "College",
+  hint: "College",
 
-                                  hint: "College",
+  options: colleges
+      .map((e) => e['label'].toString())
+      .toList(),
 
-                                  options: colleges
-                                      .map((e) => e['label'].toString())
-                                      .toList(),
+  initialValue: controller.college.text,
 
-                                  initialValue: controller.college.text,
+  onChanged: (value) {
+    controller.college.text = value;
+    markChanged();
+  },
 
-                                  onChanged: (value) {
-                                    controller.college.text = value;
+  onSelected: (value) async {
+    await addCollegeIfNeeded(value);
+    controller.college.text = value;
+    markChanged();
+  },
 
-                                    markChanged();
-                                  },
+  onSubmitted: (value) async {
+    await addCollegeIfNeeded(value);
+    controller.college.text = value;
+    markChanged();
+  },
 
-                                  onSubmitted: (value) async {
-                                    await addCollegeIfNeeded(value);
+  /// 🔥 NEW (IMPORTANT)
+  /// 
+  showCreateOption: true,
 
-                                    controller.college.text = value;
-
-                                    markChanged();
-                                  },
-                                ),
-
+  onCreate: (value) async {
+    await addCollegeIfNeeded(value);
+    controller.college.text = value;
+    markChanged();
+  },
+),
                                 _degreeDropdownField(),
 
                                 _specializationDropdownField(),
@@ -936,38 +957,38 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
                               children: [
                                 if (isProfessional) ...[
-                                CommonAutocomplete(
-  label: "Current Company",
+                                  CommonAutocomplete(
+                                    label: "Current Company",
 
-  hint: "Current Company",
+                                    hint: "Current Company",
 
-  options: companyOptions,
+                                    options: companyOptions,
 
-  initialValue:
-      controller.currentCompany.text,
+                                    initialValue:
+                                        controller.currentCompany.text,
 
-  onChanged: (value) {
-    controller.currentCompany.text = value;
+                                    onChanged: (value) {
+                                      controller.currentCompany.text = value;
 
-    markChanged();
-  },
+                                      markChanged();
+                                    },
 
-  onSubmitted: (value) async {
-    await addCompanyIfNeeded(value);
+                                    onSubmitted: (value) async {
+                                      await addCompanyIfNeeded(value);
 
-    controller.currentCompany.text = value;
+                                      controller.currentCompany.text = value;
 
-    markChanged();
-  },
+                                      markChanged();
+                                    },
 
-  onSelected: (value) async {
-    await addCompanyIfNeeded(value);
+                                    onSelected: (value) async {
+                                      await addCompanyIfNeeded(value);
 
-    controller.currentCompany.text = value;
+                                      controller.currentCompany.text = value;
 
-    markChanged();
-  },
-),
+                                      markChanged();
+                                    },
+                                  ),
 
                                   AppTextFields(
                                     controller: controller.noticePeriod,
@@ -982,6 +1003,17 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
                                 Row(
                                   children: [
+                                      SizedBox(
+                                      width: 80,
+
+                                      child: _dropdownField(
+                                        controller.currentSalaryCurrency,
+                                        'Cur',
+                                        ['\$', '₹', '€', '£'],
+                                      ),
+                                    ),
+                                                                        const SizedBox(width: 12),
+
                                     Expanded(
                                       child: AppTextFields(
                                         controller:
@@ -993,17 +1025,8 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                                       ),
                                     ),
 
-                                    const SizedBox(width: 12),
 
-                                    SizedBox(
-                                      width: 110,
-
-                                     child: _dropdownField(
-  controller.currentSalaryCurrency,
-  'Cur',
-  ['USD', 'INR', 'EUR', 'GBP'],
-),
-                                    ),
+                                  
                                   ],
                                 ),
                               ],
@@ -1018,6 +1041,18 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                               children: [
                                 Row(
                                   children: [
+                                    
+                                    SizedBox(
+                                      width: 80,
+
+                                      child: _dropdownField(
+                                        controller.expectedSalaryCurrency,
+                                        'Cur',
+                                        ['\$', '₹', '€', '£'],
+                                      ),
+                                    ),
+                                                                        const SizedBox(width: 12),
+
                                     Expanded(
                                       child: AppTextFields(
                                         controller:
@@ -1029,17 +1064,7 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
                                       ),
                                     ),
 
-                                    const SizedBox(width: 12),
 
-                                    SizedBox(
-                                      width: 110,
-
-                                     child: _dropdownField(
-  controller.expectedSalaryCurrency,
-  'Cur',
-  ['USD', 'INR', 'EUR', 'GBP'],
-),
-                                    ),
                                   ],
                                 ),
 
@@ -1053,32 +1078,30 @@ WidgetsBinding.instance.addPostFrameCallback((_) {
 
                                 const SizedBox(height: 20),
 
+                                _dropdownField(
+                                  controller.employmentType.first,
+                                  'Employment Type',
+                                  [
+                                    'Full-time',
+                                    'Part-time',
+                                    'Contract',
+                                    'Internship',
+                                  ],
+                                ),
 
-_dropdownField(
-  controller.employmentType.first,
-  'Employment Type',
-  [
-    'Full-time',
-    'Part-time',
-    'Contract',
-    'Internship',
-  ],
-),
+                                // const SizedBox(height: 20),
 
-// const SizedBox(height: 20),
+                                // ProfileSection(
+                                //   label: 'Employment Type',
 
-// ProfileSection(
-//   label: 'Employment Type',
-
-//   children: [
-//     _chipMultiSelectField(
-//       'Employment',
-//       controller.employmentType.first,
-//       employmentOptions,
-//     ),
-//   ],
-// ),
-
+                                //   children: [
+                                //     _chipMultiSelectField(
+                                //       'Employment',
+                                //       controller.employmentType.first,
+                                //       employmentOptions,
+                                //     ),
+                                //   ],
+                                // ),
                                 const SizedBox(height: 20),
 
                                 _dropdownField(
@@ -1118,60 +1141,62 @@ _dropdownField(
                               ],
                             ),
                           ),
-/// ───────────────── LANGUAGES KNOWN ─────────────────
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
 
-  child: _chipMultiSelectField(
-    'Languages Known',
-    controller.languagesKnown.first,
-    languageOptions,
-  ),
-),
+                          /// ───────────────── LANGUAGES KNOWN ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
 
-/// ───────────────── JOB ROLES ─────────────────
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
+                            child: _chipMultiSelectField(
+                              'Languages Known',
+                              controller.languagesKnown.first,
+                              languageOptions,
+                            ),
+                          ),
 
-  child: _chipMultiSelectField(
-    'Job Roles',
-    controller.jobRoles.first,
-    jobRoleOptions,
-  ),
-),
+                          /// ───────────────── JOB ROLES ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: _chipMultiSelectField(
+                              'Job Roles',
+                              controller.jobRoles.first,
+                              jobRoleOptions,
+                            ),
+                          ),
+
                           /// ───────────────── SKILLS ─────────────────
-                         /// ───────────────── SKILLS ─────────────────
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
+                          /// ───────────────── SKILLS ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
 
-  child: _chipMultiSelectField(
-    'Skills',
-    controller.skills.first,
-    skillOptionsApi,
-  ),
-),
+                            child: _chipMultiSelectField(
+                              'Skills',
+                              controller.skills.first,
+                              skillOptionsApi,
+                            ),
+                          ),
 
-/// ───────────────── DOMAIN KNOWLEDGE ─────────────────
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
+                          /// ───────────────── DOMAIN KNOWLEDGE ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
 
-  child: _chipMultiSelectField(
-    'Domain Knowledge',
-    controller.domainKnowledge.first,
-    domainKnowledgeOptions,
-  ),
-),
+                            child: _chipMultiSelectField(
+                              'Domain Knowledge',
+                              controller.domainKnowledge.first,
+                              domainKnowledgeOptions,
+                            ),
+                          ),
 
-/// ───────────────── INDUSTRY ─────────────────
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
+                          /// ───────────────── INDUSTRY ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
 
-  child: _chipMultiSelectField(
-    'Industry',
-    controller.industry.first,
-    industryOptions,
-  ),
-),
+                            child: _chipMultiSelectField(
+                              'Industry',
+                              controller.industry.first,
+                              industryOptions,
+                            ),
+                          ),
 
                           /// ───────────────── TOOLS & PLATFORMS ─────────────────
                           SingleChildScrollView(
@@ -1252,23 +1277,22 @@ SingleChildScrollView(
                           SingleChildScrollView(
                             padding: const EdgeInsets.all(16),
 
-                            child: ProfileSection(
-                              label: 'Experience',
-
-                              initiallyExpanded: controller.experiences.any(
-                                (e) =>
-                                    e.company.text.trim().isNotEmpty ||
-                                    e.role.text.trim().isNotEmpty ||
-                                    e.description.text.trim().isNotEmpty,
-                              ),
-
-                              trailing: _addButton(() {
-                                setState(() {
-                                  controller.experiences.add(
-                                    ExperienceController(),
-                                  );
-                                });
-                              }),
+                            child:ProfileSection(
+  key: ValueKey(isExperienceExpanded), // 🔥 IMPORTANT
+  label: 'Experience',
+initiallyExpanded: isExperienceExpanded ||
+    controller.experiences.any(
+      (e) =>
+          e.company.text.trim().isNotEmpty ||
+          e.role.text.trim().isNotEmpty ||
+          e.description.text.trim().isNotEmpty,
+    ),
+                         trailing: _addButton(() {
+  setState(() {
+    controller.experiences.add(ExperienceController());
+    isExperienceExpanded = true; // 🔥 OPEN IT
+  });
+}),
 
                               children: controller.experiences
                                   .asMap()
@@ -1536,37 +1560,37 @@ SingleChildScrollView(
   }
 
   Widget _companyField(ExperienceController e) {
-  return CommonAutocomplete(
-  label: "Company",
+    return CommonAutocomplete(
+      label: "Company",
 
-  hint: "Company",
+      hint: "Company",
 
-  options: companyOptions,
+      options: companyOptions,
 
-  initialValue: e.company.text,
+      initialValue: e.company.text,
 
-  onChanged: (value) {
-    e.company.text = value;
+      onChanged: (value) {
+        e.company.text = value;
 
-    markChanged();
-  },
+        markChanged();
+      },
 
-  onSubmitted: (value) async {
-    await addCompanyIfNeeded(value);
+      onSubmitted: (value) async {
+        await addCompanyIfNeeded(value);
 
-    e.company.text = value;
+        e.company.text = value;
 
-    markChanged();
-  },
+        markChanged();
+      },
 
-  onSelected: (value) async {
-    await addCompanyIfNeeded(value);
+      onSelected: (value) async {
+        await addCompanyIfNeeded(value);
 
-    e.company.text = value;
+        e.company.text = value;
 
-    markChanged();
-  },
-);
+        markChanged();
+      },
+    );
   }
 
   Widget _roleField(ExperienceController e) {
@@ -2124,15 +2148,11 @@ class _ChipMultiSelectField extends StatefulWidget {
   @override
   State<_ChipMultiSelectField> createState() => _ChipMultiSelectFieldState();
 }
-class _ChipMultiSelectFieldState
-    extends State<_ChipMultiSelectField> {
 
-  final TextEditingController
-      _textController =
-      TextEditingController();
+class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
+  final TextEditingController _textController = TextEditingController();
 
-  final FocusNode _focusNode =
-      FocusNode();
+  final FocusNode _focusNode = FocusNode();
 
   bool _showFreeText = false;
 
@@ -2149,22 +2169,19 @@ class _ChipMultiSelectFieldState
   }
 
   void _sync(List<String> items) {
-    widget.controller.text =
-        items.join(', ');
+    widget.controller.text = items.join(', ');
 
     widget.onChanged?.call();
   }
 
   void _addItem(String value) {
-    final trimmed =
-        value.trim();
+    final trimmed = value.trim();
 
     if (trimmed.isEmpty) {
       return;
     }
 
-    final current =
-        _selectedItems;
+    final current = _selectedItems;
 
     if (!current.contains(trimmed)) {
       current.add(trimmed);
@@ -2180,27 +2197,21 @@ class _ChipMultiSelectFieldState
   }
 
   void _removeItem(String value) {
-    final current =
-        _selectedItems
-          ..remove(value);
+    final current = _selectedItems..remove(value);
 
     _sync(current);
 
     if (value == 'Others') {
       setState(() {
-        _showFreeText =
-            false;
+        _showFreeText = false;
       });
     }
 
     setState(() {});
   }
 
-  void _toggleEnumChip(
-    String value,
-  ) {
-    final current =
-        _selectedItems;
+  void _toggleEnumChip(String value) {
+    final current = _selectedItems;
 
     if (current.contains(value)) {
       current.remove(value);
@@ -2208,8 +2219,7 @@ class _ChipMultiSelectFieldState
       _sync(current);
 
       if (value == 'Others') {
-        _showFreeText =
-            false;
+        _showFreeText = false;
       }
     } else {
       current.add(value);
@@ -2217,8 +2227,7 @@ class _ChipMultiSelectFieldState
       _sync(current);
 
       if (value == 'Others') {
-        _showFreeText =
-            true;
+        _showFreeText = true;
       }
     }
 
@@ -2235,195 +2244,134 @@ class _ChipMultiSelectFieldState
   }
 
   @override
-  Widget build(
-    BuildContext context,
-  ) {
-    final selected =
-        _selectedItems;
+  Widget build(BuildContext context) {
+    final selected = _selectedItems;
 
-   final hasEnums =
-    widget.options.isNotEmpty;
+    final hasEnums = widget.options.isNotEmpty;
 
-final isSimpleSelection =
-    widget.label ==
-        'Employment Type';
+    final isSimpleSelection = widget.label == 'Employment Type';
 
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-
         /// SEARCH FIELD
-     if (!isSimpleSelection) ...[
-Column(
-  children: [
+        if (!isSimpleSelection) ...[
+          Column(
+            children: [
+              TextField(
+                controller: _textController,
 
-    TextField(
-      controller: _textController,
+                focusNode: _focusNode,
 
-      focusNode: _focusNode,
+                style: const TextStyle(color: Colors.white),
 
-      style: const TextStyle(
-        color: Colors.white,
-      ),
+                onChanged: (_) {
+                  setState(() {});
+                },
 
-      onChanged: (_) {
-        setState(() {});
-      },
+                decoration: InputDecoration(
+                  hintText: "Search or add ${widget.label}",
 
-      decoration: InputDecoration(
-        hintText:
-            "Search or add ${widget.label}",
+                  hintStyle: const TextStyle(color: Colors.grey),
 
-        hintStyle: const TextStyle(
-          color: Colors.grey,
-        ),
+                  filled: true,
 
-        filled: true,
+                  fillColor: AppColors.kCard,
 
-        fillColor: AppColors.kCard,
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
 
-        prefixIcon: const Icon(
-          Icons.search,
-          color: Colors.grey,
-        ),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
 
-        border: OutlineInputBorder(
-          borderRadius:
-              BorderRadius.circular(14),
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
 
-          borderSide: BorderSide.none,
-        ),
-      ),
-    ),
+              if (_textController.text.trim().isNotEmpty &&
+                  !widget.options.any(
+                    (e) =>
+                        e.toLowerCase().trim() ==
+                        _textController.text.toLowerCase().trim(),
+                  ))
+                Container(
+                  margin: const EdgeInsets.only(top: 8),
 
-    if (_textController.text.trim().isNotEmpty &&
-        !widget.options.any(
-          (e) =>
-              e.toLowerCase().trim() ==
-              _textController.text
-                  .toLowerCase()
-                  .trim(),
-        ))
-      Container(
-        margin: const EdgeInsets.only(top: 8),
+                  decoration: BoxDecoration(
+                    color: AppColors.kCard,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
 
-        decoration: BoxDecoration(
-          color: AppColors.kCard,
-          borderRadius:
-              BorderRadius.circular(12),
-        ),
+                  child: ListTile(
+                    leading: const Icon(Icons.add, color: Color(0xFF22C55E)),
 
-        child: ListTile(
-          leading: const Icon(
-            Icons.add,
-            color: Color(0xFF22C55E),
+                    title: Text(
+                      'Create "${_textController.text.trim()}"',
+
+                      style: const TextStyle(color: Colors.white),
+                    ),
+
+                    onTap: () async {
+                      final value = _textController.text.trim();
+
+                      _addItem(value);
+
+                      final parentState = context
+                          .findAncestorStateOfType<_AddEditProfileViewState>();
+
+                      if (widget.label == 'Skills') {
+                        await parentState?.addSkillIfNeeded(value);
+                      }
+
+                      if (widget.label == 'Job Roles') {
+                        await parentState?.addJobRoleIfNeeded(value);
+                      }
+
+                      _textController.clear();
+
+                      setState(() {});
+                    },
+                  ),
+                ),
+            ],
           ),
 
-          title: Text(
-            'Create "${_textController.text.trim()}"',
-
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-
-          onTap: () async {
-            final value =
-                _textController.text.trim();
-
-            _addItem(value);
-
-          final parentState = context
-    .findAncestorStateOfType<
-      _AddEditProfileViewState
-    >();
-
-if (widget.label == 'Skills') {
-  await parentState?.addSkillIfNeeded(value);
-}
-
-if (widget.label == 'Job Roles') {
-  await parentState?.addJobRoleIfNeeded(value);
-}
-
-            _textController.clear();
-
-            setState(() {});
-          },
-        ),
-      ),
-  ],
-),
-
-  const SizedBox(
-    height: 16,
-  ),
-],
+          const SizedBox(height: 16),
+        ],
 
         /// SELECTED ITEMS
-        if (selected
-            .isNotEmpty) ...[
-
+        if (selected.isNotEmpty) ...[
           Wrap(
             spacing: 8,
             runSpacing: 8,
 
-            children:
-                selected.map((
-              item,
-            ) {
+            children: selected.map((item) {
               return Chip(
-                label:
-                    Text(item),
+                label: Text(item),
 
-                backgroundColor:
-                    const Color(
-                      0xFF22C55E,
-                    ),
+                backgroundColor: const Color(0xFF22C55E),
 
-                labelStyle:
-                    const TextStyle(
-                      color:
-                          Colors
-                              .black,
-                    ),
+                labelStyle: const TextStyle(color: Colors.black),
 
-                deleteIcon:
-                    const Icon(
-                      Icons.close,
-                      size: 18,
-                    ),
+                deleteIcon: const Icon(Icons.close, size: 18),
 
-                onDeleted:
-                    () =>
-                        _removeItem(
-                          item,
-                        ),
+                onDeleted: () => _removeItem(item),
               );
             }).toList(),
           ),
 
-          const SizedBox(
-            height: 20,
-          ),
+          const SizedBox(height: 20),
         ],
 
         /// POPULAR TITLE
         Text(
           "POPULAR ${widget.label.toUpperCase()}",
 
-          style:
-              const TextStyle(
-                color:
-                    Colors.grey,
-              ),
+          style: const TextStyle(color: Colors.grey),
         ),
 
-        const SizedBox(
-          height: 10,
-        ),
+        const SizedBox(height: 10),
 
         /// OPTIONS
         if (hasEnums)
@@ -2431,69 +2379,40 @@ if (widget.label == 'Job Roles') {
             spacing: 8,
             runSpacing: 8,
 
-            children:
-                widget.options.map((
-              option,
-            ) {
-              final isSelected =
-                  selected.contains(
-                    option,
-                  );
+            children: widget.options.map((option) {
+              final isSelected = selected.contains(option);
 
               return GestureDetector(
                 onTap: () {
                   if (isSelected) {
-                    _removeItem(
-                      option,
-                    );
+                    _removeItem(option);
                   } else {
-                    _addItem(
-                      option,
-                    );
+                    _addItem(option);
                   }
                 },
 
-                child:
-                    Container(
-                      padding:
-                          const EdgeInsets.symmetric(
-                            horizontal:
-                                12,
-                            vertical:
-                                8,
-                          ),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
 
-                      decoration:
-                          BoxDecoration(
-                            color:
-                                isSelected
-                                ? const Color(
-                                    0xFF22C55E,
-                                  )
-                                : AppColors
-                                      .kCard,
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? const Color(0xFF22C55E)
+                        : AppColors.kCard,
 
-                            borderRadius:
-                                BorderRadius.circular(
-                                  20,
-                                ),
-                          ),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
 
-                      child:
-                          Text(
-                            option,
+                  child: Text(
+                    option,
 
-                            style:
-                                TextStyle(
-                                  color:
-                                      isSelected
-                                      ? Colors
-                                            .black
-                                      : Colors
-                                            .white,
-                                ),
-                          ),
+                    style: TextStyle(
+                      color: isSelected ? Colors.black : Colors.white,
                     ),
+                  ),
+                ),
               );
             }).toList(),
           ),

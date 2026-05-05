@@ -215,126 +215,126 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
       ),
 child: Column(
   children: [
-    Align(
-      alignment: Alignment.topRight,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
+//     Align(
+//       alignment: Alignment.topRight,
+//       child: Row(
+//         mainAxisSize: MainAxisSize.min,
+//         children: [
 
-          /// GITHUB
-          if ((p?.github ?? '').isNotEmpty)
-            GestureDetector(
-              onTap: () async {
-  final raw = p?.github ?? '';
+//           /// GITHUB
+//           if ((p?.github ?? '').isNotEmpty)
+//             GestureDetector(
+//               onTap: () async {
+//   final raw = p?.github ?? '';
 
-  if (raw.isEmpty) return;
+//   if (raw.isEmpty) return;
 
-  final formattedUrl = raw.startsWith('http://') ||
-          raw.startsWith('https://')
-      ? raw
-      : 'https://$raw';
+//   final formattedUrl = raw.startsWith('http://') ||
+//           raw.startsWith('https://')
+//       ? raw
+//       : 'https://$raw';
 
-  await launchUrl(
-    Uri.parse(formattedUrl),
-    mode: LaunchMode.externalApplication,
-  );
-},
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Image.asset(
-                  'assets/images/github.png',
-                  height: 20,
-                  width: 20,
-                ),
-              ),
-            ),
+//   await launchUrl(
+//     Uri.parse(formattedUrl),
+//     mode: LaunchMode.externalApplication,
+//   );
+// },
+//               child: Padding(
+//                 padding: const EdgeInsets.only(left: 8),
+//                 child: Image.asset(
+//                   'assets/images/github.png',
+//                   height: 20,
+//                   width: 20,
+//                 ),
+//               ),
+//             ),
 
-          /// LINKEDIN
-          if ((p?.linkedin ?? '').isNotEmpty)
-            GestureDetector(
-             onTap: () async {
-  final raw = p?.linkedin ?? '';
+//           /// LINKEDIN
+//           if ((p?.linkedin ?? '').isNotEmpty)
+//             GestureDetector(
+//              onTap: () async {
+//   final raw = p?.linkedin ?? '';
 
-  if (raw.isEmpty) return;
+//   if (raw.isEmpty) return;
 
-  final formattedUrl = raw.startsWith('http://') ||
-          raw.startsWith('https://')
-      ? raw
-      : 'https://$raw';
+//   final formattedUrl = raw.startsWith('http://') ||
+//           raw.startsWith('https://')
+//       ? raw
+//       : 'https://$raw';
 
-  await launchUrl(
-    Uri.parse(formattedUrl),
-    mode: LaunchMode.externalApplication,
-  );
-},
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Image.asset(
-                  'assets/images/linkedin.png',
-                  height: 20,
-                  width: 20,
-                ),
-              ),
-            ),
+//   await launchUrl(
+//     Uri.parse(formattedUrl),
+//     mode: LaunchMode.externalApplication,
+//   );
+// },
+//               child: Padding(
+//                 padding: const EdgeInsets.only(left: 8),
+//                 child: Image.asset(
+//                   'assets/images/linkedin.png',
+//                   height: 20,
+//                   width: 20,
+//                 ),
+//               ),
+//             ),
 
-          /// PORTFOLIO
-          if ((p?.portfolio ?? '').isNotEmpty)
-            GestureDetector(
-             onTap: () async {
-  final raw = p?.portfolio ?? '';
+//           /// PORTFOLIO
+//           if ((p?.portfolio ?? '').isNotEmpty)
+//             GestureDetector(
+//              onTap: () async {
+//   final raw = p?.portfolio ?? '';
 
-  if (raw.isEmpty) return;
+//   if (raw.isEmpty) return;
 
-  final formattedUrl = raw.startsWith('http://') ||
-          raw.startsWith('https://')
-      ? raw
-      : 'https://$raw';
+//   final formattedUrl = raw.startsWith('http://') ||
+//           raw.startsWith('https://')
+//       ? raw
+//       : 'https://$raw';
 
-  await launchUrl(
-    Uri.parse(formattedUrl),
-    mode: LaunchMode.externalApplication,
-  );
-},
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Image.asset(
-                  'assets/images/portfolio.png',
-                  height: 20,
-                  width: 20,
-                ),
-              ),
-            ),
+//   await launchUrl(
+//     Uri.parse(formattedUrl),
+//     mode: LaunchMode.externalApplication,
+//   );
+// },
+//               child: Padding(
+//                 padding: const EdgeInsets.only(left: 8),
+//                 child: Image.asset(
+//                   'assets/images/portfolio.png',
+//                   height: 20,
+//                   width: 20,
+//                 ),
+//               ),
+//             ),
 
-          /// RESUME
-          if ((p?.resume ?? '').isNotEmpty)
-            GestureDetector(
-             onTap: () async {
-  final raw = p?.resume ?? '';
+//           /// RESUME
+//           if ((p?.resume ?? '').isNotEmpty)
+//             GestureDetector(
+//              onTap: () async {
+//   final raw = p?.resume ?? '';
 
-  if (raw.isEmpty) return;
+//   if (raw.isEmpty) return;
 
-  final formattedUrl = raw.startsWith('http://') ||
-          raw.startsWith('https://')
-      ? raw
-      : 'https://$raw';
+//   final formattedUrl = raw.startsWith('http://') ||
+//           raw.startsWith('https://')
+//       ? raw
+//       : 'https://$raw';
 
-  await launchUrl(
-    Uri.parse(formattedUrl),
-    mode: LaunchMode.externalApplication,
-  );
-},
-              child: Padding(
-                padding: const EdgeInsets.only(left: 8),
-                child: Image.asset(
-                  'assets/images/cv.png',
-                  height: 20,
-                  width: 20,
-                ),
-              ),
-            ),
-        ],
-      ),
-    ),
+//   await launchUrl(
+//     Uri.parse(formattedUrl),
+//     mode: LaunchMode.externalApplication,
+//   );
+// },
+//               child: Padding(
+//                 padding: const EdgeInsets.only(left: 8),
+//                 child: Image.asset(
+//                   'assets/images/cv.png',
+//                   height: 20,
+//                   width: 20,
+//                 ),
+//               ),
+//             ),
+//         ],
+//       ),
+//     ),
           /// Avatar
           SizedBox(
             height: 64,
@@ -446,8 +446,111 @@ child: Column(
       ),
     ),
 
-    const SizedBox(height: 4),
+    const SizedBox(height: 10),
 
+/// 🔥 SOCIAL ICONS CENTERED BELOW LOCATION
+Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+
+    /// GITHUB
+    if ((p?.github ?? '').isNotEmpty)
+      GestureDetector(
+        onTap: () async {
+          final raw = p?.github ?? '';
+          final formattedUrl = raw.startsWith('http')
+              ? raw
+              : 'https://$raw';
+
+          await launchUrl(
+            Uri.parse(formattedUrl),
+            mode: LaunchMode.externalApplication,
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: Image.asset(
+            'assets/images/github.png',
+            height: 22,
+            width: 22,
+          ),
+        ),
+      ),
+
+    /// LINKEDIN
+    if ((p?.linkedin ?? '').isNotEmpty)
+      GestureDetector(
+        onTap: () async {
+          final raw = p?.linkedin ?? '';
+          final formattedUrl = raw.startsWith('http')
+              ? raw
+              : 'https://$raw';
+
+          await launchUrl(
+            Uri.parse(formattedUrl),
+            mode: LaunchMode.externalApplication,
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: Image.asset(
+            'assets/images/linkedin.png',
+            height: 22,
+            width: 22,
+          ),
+        ),
+      ),
+
+    /// PORTFOLIO
+    if ((p?.portfolio ?? '').isNotEmpty)
+      GestureDetector(
+        onTap: () async {
+          final raw = p?.portfolio ?? '';
+          final formattedUrl = raw.startsWith('http')
+              ? raw
+              : 'https://$raw';
+
+          await launchUrl(
+            Uri.parse(formattedUrl),
+            mode: LaunchMode.externalApplication,
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: Image.asset(
+            'assets/images/portfolio.png',
+            height: 22,
+            width: 22,
+          ),
+        ),
+      ),
+
+    /// RESUME
+    if ((p?.resume ?? '').isNotEmpty)
+      GestureDetector(
+        onTap: () async {
+          final raw = p?.resume ?? '';
+          final formattedUrl = raw.startsWith('http')
+              ? raw
+              : 'https://$raw';
+
+          await launchUrl(
+            Uri.parse(formattedUrl),
+            mode: LaunchMode.externalApplication,
+          );
+        },
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 6),
+          child: Image.asset(
+            'assets/images/cv.png',
+            height: 22,
+            width: 22,
+          ),
+        ),
+      ),
+  ],
+),
+SizedBox(height :5),
     /// COLLEGE
     if (getIt<AppStateProvider>().isProfessional)
       Text(
