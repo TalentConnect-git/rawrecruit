@@ -20,8 +20,9 @@ class ApplicantCard extends StatelessWidget {
     final match = application.matchScore ?? 0;
 
     /// ✅ COLLEGE
-    final jobTitle = application.job?.jobTitle ?? "-";
-    return InkWell(
+final jobTitle = application.job?.jobTitle is List
+    ? (application.job!.jobTitle as List).join(", ")
+    : application.job?.jobTitle?.toString() ?? "-";    return InkWell(
       borderRadius: BorderRadius.circular(12),
 
       /// 🔥 NAVIGATION TO DETAIL PAGE

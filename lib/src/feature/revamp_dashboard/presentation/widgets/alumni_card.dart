@@ -10,8 +10,11 @@ class AlumniCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final first = jobs.first;
-    final candidate = first.candidatePosted;
+if (jobs.isEmpty) {
+  return const SizedBox(); // or empty container
+}
+
+final first = jobs.first;    final candidate = first.candidatePosted;
 
     final name = candidate?.name ?? "User";
     final role = first.jobTitle ?? "Professional";
@@ -20,7 +23,9 @@ class AlumniCard extends StatelessWidget {
         ? name.split(" ").map((e) => e[0]).take(2).join()
         : "U";
 
-    final jobCount = jobs.length;
+final referralJobs = candidate?.referralJobs ?? [];
+final jobCount = referralJobs.length;
+                                     final isHiring = jobCount > 0;
 
     return InkWell(
       borderRadius: BorderRadius.circular(18),
@@ -116,25 +121,31 @@ class AlumniCard extends StatelessWidget {
 
                 /// 🔹 HIRING STATUS
                 Row(
+
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Container(
-                      width: 8,
-                      height: 8,
-                      decoration: const BoxDecoration(
-                        color: Colors.green,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      "Hiring • $jobCount jobs",
-                      style: const TextStyle(
-                        color: Colors.green,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
+
+Container(
+  width: 8,
+  height: 8,
+  decoration: BoxDecoration(
+    color: isHiring ? Colors.green : Colors.red,
+    shape: BoxShape.circle,
+  ),
+),
+
+const SizedBox(width: 6),
+
+Text(
+  isHiring
+      ? "Hiring • $jobCount jobs"
+      : "Not Hiring",
+  style: TextStyle(
+    color: isHiring ? Colors.green : Colors.red,
+    fontSize: 12,
+    fontWeight: FontWeight.w500,
+  ),
+),
                   ],
                 ),
               ],

@@ -89,8 +89,9 @@ bool isPaused = false;  List<ReferralApplication> applications = [];
   Widget _header() {
     final job = widget.job;
 
-    final title = job.jobTitle ?? "Frontend Engineer";
-    final company =  job.jobType ?? "";
+final title = job.jobTitle is List
+    ? (job.jobTitle as List).join(", ")
+    : job.jobTitle?.toString() ?? "Frontend Engineer";    final company =  job.jobType ?? "";
     final location = job.location?.first ?? "Bangalore";
 final metrics = job.metrics;
 

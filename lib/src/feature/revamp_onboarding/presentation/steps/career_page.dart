@@ -230,41 +230,30 @@ class _CareerPageState extends State<CareerPage> {
 
         const SizedBox(height: 16),
 
-        /// SHIFT
-        AppDropdown(
-          hint: "Open To Shift",
-          options: CareerPage.shiftOptions,
-          value: shift,
-          onChanged: (val) {
-            setState(() {
-              shift = val;
-              saveData();
-            });
-          },
-        ),
+        // /// SHIFT
+        // AppDropdown(
+        //   hint: "Open To Shift",
+        //   options: CareerPage.shiftOptions,
+        //   value: shift,
+        //   onChanged: (val) {
+        //     setState(() {
+        //       shift = val;
+        //       saveData();
+        //     });
+        //   },
+        // ),
 
         /// CURRENT SALARY
         Row(
           children: [
-            Expanded(
-              flex: 4,
-              child: AppInput(
-                "Current Salary",
-                controller: currentSalaryCtrl,
-                onChanged: (_) => saveData(),
-              ),
-            ),
-
-            const SizedBox(width: 10),
-
-            Expanded(
+                Expanded(
               flex: 2,
               child: AppDropdown(
                 hint: "Curr",
                 value: currentCurrencyCtrl.text.isEmpty
                     ? null
                     : currentCurrencyCtrl.text,
-                options: const ["INR", "USD", "EUR", "GBP"],
+                options: const  ['\$', '₹', '€', '£'],
                 onChanged: (val) {
                   currentCurrencyCtrl.text = val ?? "";
 
@@ -274,6 +263,19 @@ class _CareerPageState extends State<CareerPage> {
                 },
               ),
             ),
+                        const SizedBox(width: 10),
+
+            Expanded(
+              flex: 4,
+              child: AppInput(
+                "Current Salary",
+                controller: currentSalaryCtrl,
+                onChanged: (_) => saveData(),
+              ),
+            ),
+
+
+        
           ],
         ),
 
@@ -283,24 +285,13 @@ class _CareerPageState extends State<CareerPage> {
         Row(
           children: [
             Expanded(
-              flex: 4,
-              child: AppInput(
-                "Expected Salary",
-                controller: expectedSalaryCtrl,
-                onChanged: (_) => saveData(),
-              ),
-            ),
-
-            const SizedBox(width: 10),
-
-            Expanded(
               flex: 2,
               child: AppDropdown(
                 hint: "Curr",
                 value: expectedCurrencyCtrl.text.isEmpty
                     ? null
                     : expectedCurrencyCtrl.text,
-                options: const ["INR", "USD", "EUR", "GBP"],
+                options: const  ['\$', '₹', '€', '£'],
                 onChanged: (val) {
                   expectedCurrencyCtrl.text = val ?? "";
 
@@ -310,6 +301,19 @@ class _CareerPageState extends State<CareerPage> {
                 },
               ),
             ),
+                        const SizedBox(width: 10),
+
+            Expanded(
+              flex: 4,
+              child: AppInput(
+                "Expected Salary",
+                controller: expectedSalaryCtrl,
+                onChanged: (_) => saveData(),
+              ),
+            ),
+
+
+            
           ],
         ),
 

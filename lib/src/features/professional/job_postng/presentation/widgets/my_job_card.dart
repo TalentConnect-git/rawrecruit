@@ -9,8 +9,9 @@ class MyJobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = job.jobTitle ?? "Opportunity";
-    final location = job.location?.firstOrNull ?? "India";
+final title = job.jobTitle is List
+    ? (job.jobTitle as List).join(", ")
+    : job.jobTitle?.toString() ?? "Frontend Engineer";    final location = job.location?.firstOrNull ?? "India";
     final workMode = job.workMode ?? "Remote";
 
     final salary = _formatSalary(job.packageDetails?.totalCTC);

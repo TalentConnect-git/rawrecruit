@@ -48,6 +48,7 @@ abstract class ReferralJobModel with _$ReferralJobModel {
     List<String>? numberOfStudent,
 
     PackageDetails? packageDetails,
+DateTime? endDate, // ✅ ADD THIS
 
     DateTime? expireAt,
     DateTime? createdAt,

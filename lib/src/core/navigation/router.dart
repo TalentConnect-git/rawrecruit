@@ -311,7 +311,7 @@ class AppRouter {
               type ??= UserType.student; // or fetch from AppStateProvider
 
               if (type == UserType.professional) {
-                return ReferralHome();
+                return OnboardingFlow();
               } else {
                 return DashboardView();
               }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
@@ -323,9 +324,9 @@ final company = widget.companyName ?? "Company";
         ? "${job.yearsOfExperience} years"
         : "0-1 years";
 
-    final deadline = job.expireAt != null
-        ? "${job.expireAt!.day} Jan ${job.expireAt!.year}"
-        : "20 Jan 2025";
+final deadline = job.endDate != null
+    ? DateFormat("dd MMM yyyy").format(job.endDate!)
+    : "Not mentioned";
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -704,6 +705,7 @@ Widget _highlightInfo(String title, String? value) {
     return Job(
       id: r.id,
       jobTitle: r.jobTitle,
+        endDate: r.endDate,
       description: r.description,
       jobType: r.jobType,
       jobStatus: r.jobStatus,
