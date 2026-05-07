@@ -8,7 +8,11 @@ class BasicPage extends StatefulWidget {
   final VoidCallback onBack;
   final User data;
 
-  const BasicPage({super.key, required this.onBack, required this.data});
+  const BasicPage({
+    super.key,
+    required this.onBack,
+    required this.data,
+  });
 
   /// ✅ OPTIONS HERE
   static const genderOptions = [
@@ -60,37 +64,60 @@ class _BasicPageState extends State<BasicPage> {
   String? maritalStatus;
   String? visaStatus;
 
+  bool isInitialized = false;
+
   @override
   void initState() {
     super.initState();
 
-final d = widget.data;  nameCtrl = TextEditingController(text: d.name);
-    emailCtrl = TextEditingController(text: d.email);
-    phoneCtrl = TextEditingController(text: d.phone);
-    dobCtrl = TextEditingController(text: d.dob);
+    /// 🔥 EMPTY CONTROLLERS
+    nameCtrl = TextEditingController();
+    emailCtrl = TextEditingController();
+    phoneCtrl = TextEditingController();
+    dobCtrl = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    /// 🔥 PREVENT RESET ON EVERY REBUILD
+    if (isInitialized) return;
+
+    final d =
+        context.read<AppStateProvider>().data ?? widget.data;
+
+    nameCtrl.text = d.name ?? '';
+    emailCtrl.text = d.email ?? '';
+    phoneCtrl.text = d.phone ?? '';
+    dobCtrl.text = d.dob ?? '';
 
     gender = d.gender;
     ethnicity = d.ethnicity;
     maritalStatus = d.maritalStatus;
     visaStatus = d.visaStatus;
-  }
-void saveData() {
- final currentUser =
-      context.read<AppStateProvider>().data ?? widget.data;
-  final updatedUser = currentUser.copyWith(
-    name: nameCtrl.text,
-    email: emailCtrl.text,
-    phone: phoneCtrl.text,
-    dob: dobCtrl.text,
-    gender: gender,
-    ethnicity: ethnicity,
-    maritalStatus: maritalStatus,
-    visaStatus: visaStatus,
-  );
 
-  // ✅ store updated user in global state
-  context.read<AppStateProvider>().data = updatedUser;
-}
+    isInitialized = true;
+  }
+
+  void saveData() {
+    final currentUser =
+        context.read<AppStateProvider>().data ?? widget.data;
+
+    final updatedUser = currentUser.copyWith(
+      name: nameCtrl.text,
+      email: emailCtrl.text,
+      phone: phoneCtrl.text,
+      dob: dobCtrl.text,
+      gender: gender,
+      ethnicity: ethnicity,
+      maritalStatus: maritalStatus,
+      visaStatus: visaStatus,
+    );
+
+    /// ✅ STORE UPDATED USER
+    context.read<AppStateProvider>().data = updatedUser;
+  }
 
   @override
   void dispose() {
@@ -127,9 +154,17 @@ void saveData() {
           onChanged: (_) => saveData(),
         ),
 
-        AppInput("Email", controller: emailCtrl, onChanged: (_) => saveData()),
+        AppInput(
+          "Email",
+          controller: emailCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
-        AppInput("Phone", controller: phoneCtrl, onChanged: (_) => saveData()),
+        AppInput(
+          "Phone",
+          controller: phoneCtrl,
+          onChanged: (_) => saveData(),
+        ),
 
         const SizedBox(height: 8),
 

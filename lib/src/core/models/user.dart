@@ -2,6 +2,9 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/core/models/experience.dart';
 
+import 'international_experience.dart';
+import 'leadership_experience.dart';
+
 part 'user.freezed.dart';
 part 'user.g.dart';
 
@@ -28,10 +31,11 @@ abstract class User with _$User {
     List<String>? employmentType,
     List<Experience>? experiences,
     List<String>? industry,
-    List<String>? internationalExperience,
+    List<LeadershipExperience>? leadershipExperiences,
+
+    List<InternationalExperience>? internationalExperiences,
     List<String>? jobRoles,
     List<String>? languagesKnown,
-    List<String>? leadership,
     List<String>? locations,
     List<String>? lookingFor,
 

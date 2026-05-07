@@ -21,7 +21,7 @@ class CareerPage extends StatefulWidget {
 
 class _CareerPageState extends State<CareerPage> {
   String? shift;
-
+  bool isInitialized = false;
   late TextEditingController currentSalaryCtrl;
   late TextEditingController currentCurrencyCtrl;
 
@@ -29,7 +29,7 @@ class _CareerPageState extends State<CareerPage> {
   late TextEditingController expectedCurrencyCtrl;
 
   late TextEditingController aboutCtrl;
-  String currentCompanySearch = "";
+  // String currentCompanySearch = "";
 
   final Map<int, String> expCompanySearch = {};
   late TextEditingController currentCompanyCtrl;
@@ -44,47 +44,90 @@ class _CareerPageState extends State<CareerPage> {
   final List<TextEditingController> startCtrls = [];
   final List<TextEditingController> endCtrls = [];
   final List<TextEditingController> descCtrls = [];
-
   @override
   void initState() {
     super.initState();
 
     fetchCompanies();
-    final d = widget.data;
+
+    /// 🔥 EMPTY CONTROLLERS
+    currentSalaryCtrl = TextEditingController();
+
+    currentCurrencyCtrl = TextEditingController();
+
+    expectedSalaryCtrl = TextEditingController();
+
+    expectedCurrencyCtrl = TextEditingController();
+
+    aboutCtrl = TextEditingController();
+
+    currentCompanyCtrl = TextEditingController();
+
+    noticePeriodCtrl = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    /// 🔥 PREVENT RESET
+    if (isInitialized) return;
+
+    final d = context.read<AppStateProvider>().data ?? widget.data;
 
     shift = d.openToShift;
 
-    currentSalaryCtrl = TextEditingController(text: d.currentSalaryAmount);
+    currentSalaryCtrl.text = d.currentSalaryAmount ?? '';
 
-    currentCurrencyCtrl = TextEditingController(text: d.currentSalaryCurrency);
+    currentCurrencyCtrl.text = d.currentSalaryCurrency ?? '';
 
-    expectedSalaryCtrl = TextEditingController(text: d.expectedSalaryAmount);
+    expectedSalaryCtrl.text = d.expectedSalaryAmount ?? '';
 
-    expectedCurrencyCtrl = TextEditingController(
-      text: d.expectedSalaryCurrency,
-    );
+    expectedCurrencyCtrl.text = d.expectedSalaryCurrency ?? '';
 
-    aboutCtrl = TextEditingController(text: d.about);
+    aboutCtrl.text = d.about ?? '';
 
-    currentCompanyCtrl = TextEditingController(text: d.currentCompany);
+    currentCompanyCtrl.text = d.currentCompany ?? '';
 
-    noticePeriodCtrl = TextEditingController(text: d.noticePeriod);
+    noticePeriodCtrl.text = d.noticePeriod ?? '';
 
     certifications = d.certifications;
 
+    /// 🔥 EXPERIENCE AUTOFILL
     experiences = List.from(d.experiences ?? []);
 
+    companyCtrls.clear();
+    roleCtrls.clear();
+    startCtrls.clear();
+    endCtrls.clear();
+    descCtrls.clear();
+
     for (final exp in experiences) {
-      companyCtrls.add(TextEditingController(text: exp.company));
+      companyCtrls.add(TextEditingController(text: exp.company ?? ''));
 
-      roleCtrls.add(TextEditingController(text: exp.role));
+      roleCtrls.add(TextEditingController(text: exp.role ?? ''));
 
-      startCtrls.add(TextEditingController(text: exp.startDate));
+      startCtrls.add(TextEditingController(text: exp.startDate ?? ''));
 
-      endCtrls.add(TextEditingController(text: exp.endDate));
+      endCtrls.add(TextEditingController(text: exp.endDate ?? ''));
 
-      descCtrls.add(TextEditingController(text: exp.description));
+      descCtrls.add(TextEditingController(text: exp.description ?? ''));
     }
+
+    /// 🔥 AUTO REGISTER COMPANIES
+    Future.microtask(() async {
+      for (final exp in experiences) {
+        if (exp.company != null && exp.company!.trim().isNotEmpty) {
+          await addCompanyIfNeeded(exp.company!);
+        }
+      }
+
+      if (currentCompanyCtrl.text.trim().isNotEmpty) {
+        await addCompanyIfNeeded(currentCompanyCtrl.text);
+      }
+    });
+
+    isInitialized = true;
   }
 
   void saveData() {
@@ -94,6 +137,15 @@ class _CareerPageState extends State<CareerPage> {
       return (e.company?.trim().isNotEmpty ?? false) &&
           (e.role?.trim().isNotEmpty ?? false);
     }).toList();
+    final currentExp = experiences.firstWhere(
+      (e) => e.isCurrent == true,
+      orElse: () => const Experience(),
+    );
+
+    final derivedCurrentCompany = currentExp.isCurrent == true
+        ? (currentExp.company ?? '')
+        : '';
+    currentCompanyCtrl.text = derivedCurrentCompany;
 
     final updatedUser = currentUser.copyWith(
       openToShift: shift,
@@ -110,8 +162,7 @@ class _CareerPageState extends State<CareerPage> {
 
       certifications: certifications,
 
-      currentCompany: currentCompanyCtrl.text,
-
+      currentCompany: derivedCurrentCompany,
       noticePeriod: noticePeriodCtrl.text,
 
       experiences: filteredExperiences,
@@ -204,9 +255,9 @@ class _CareerPageState extends State<CareerPage> {
 
   @override
   Widget build(BuildContext context) {
-    final selectedList = certifications != null && certifications!.isNotEmpty
-        ? certifications!.split(",")
-        : <String>[];
+    // final selectedList = certifications != null && certifications!.isNotEmpty
+    //     ? certifications!.split(",")
+    //     : <String>[];
 
     final appState = context.watch<AppStateProvider>();
     final isProfessional =
@@ -246,14 +297,14 @@ class _CareerPageState extends State<CareerPage> {
         /// CURRENT SALARY
         Row(
           children: [
-                Expanded(
+            Expanded(
               flex: 2,
               child: AppDropdown(
                 hint: "Curr",
                 value: currentCurrencyCtrl.text.isEmpty
                     ? null
                     : currentCurrencyCtrl.text,
-                options: const  ['\$', '₹', '€', '£'],
+                options: const ['\$', '₹', '€', '£'],
                 onChanged: (val) {
                   currentCurrencyCtrl.text = val ?? "";
 
@@ -263,7 +314,7 @@ class _CareerPageState extends State<CareerPage> {
                 },
               ),
             ),
-                        const SizedBox(width: 10),
+            const SizedBox(width: 10),
 
             Expanded(
               flex: 4,
@@ -273,9 +324,6 @@ class _CareerPageState extends State<CareerPage> {
                 onChanged: (_) => saveData(),
               ),
             ),
-
-
-        
           ],
         ),
 
@@ -291,7 +339,7 @@ class _CareerPageState extends State<CareerPage> {
                 value: expectedCurrencyCtrl.text.isEmpty
                     ? null
                     : expectedCurrencyCtrl.text,
-                options: const  ['\$', '₹', '€', '£'],
+                options: const ['\$', '₹', '€', '£'],
                 onChanged: (val) {
                   expectedCurrencyCtrl.text = val ?? "";
 
@@ -301,7 +349,7 @@ class _CareerPageState extends State<CareerPage> {
                 },
               ),
             ),
-                        const SizedBox(width: 10),
+            const SizedBox(width: 10),
 
             Expanded(
               flex: 4,
@@ -311,9 +359,6 @@ class _CareerPageState extends State<CareerPage> {
                 onChanged: (_) => saveData(),
               ),
             ),
-
-
-            
           ],
         ),
 
@@ -332,119 +377,138 @@ class _CareerPageState extends State<CareerPage> {
               ),
 
               const SizedBox(height: 8),
-
-              Autocomplete<String>(
-                initialValue: TextEditingValue(text: currentCompanyCtrl.text),
-
-                optionsBuilder: (textEditingValue) {
-                  final query = textEditingValue.text;
-
-                  final filtered = companyOptions.where(
-                    (option) =>
-                        option.toLowerCase().contains(query.toLowerCase()),
-                  );
-
-                  final exists = companyOptions.any(
-                    (e) => e.toLowerCase().trim() == query.toLowerCase().trim(),
-                  );
-
-                  if (query.trim().isNotEmpty && !exists) {
-                    return [...filtered, 'Create "$query"'];
-                  }
-
-                  return filtered;
-                },
-
-                onSelected: (value) async {
-                  final actualValue = value.startsWith('Create "')
-                      ? value.replaceAll('Create "', '').replaceAll('"', '')
-                      : value;
-
-                  await addCompanyIfNeeded(actualValue);
-
-                  currentCompanyCtrl.text = actualValue;
-
-                  saveData();
-
-                  setState(() {});
-                },
-
-                fieldViewBuilder:
-                    (context, controller, focusNode, onFieldSubmitted) {
-                      controller.text = currentCompanyCtrl.text;
-
-                      return TextField(
-                        controller: controller,
-
-                        focusNode: focusNode,
-
-                        style: const TextStyle(color: Colors.white),
-
-                        decoration: InputDecoration(
-                          hintText: "Current Company",
-
-                          filled: true,
-
-                          fillColor: AppColors.kCard,
-
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onChanged: (value) {
-                          currentCompanySearch = value;
-
-                          currentCompanyCtrl.text = value;
-
-                          saveData();
-
-                          setState(() {});
-                        },
-                      );
-                    },
-
-                optionsViewBuilder: (context, onSelected, options) {
-                  return Material(
-                    color: Colors.black,
-
-                    child: Container(
-                      width: MediaQuery.of(context).size.width - 32,
-
-                      constraints: const BoxConstraints(maxHeight: 220),
-
-                      child: ListView.builder(
-                        shrinkWrap: true,
-
-                        itemCount: options.length,
-
-                        itemBuilder: (context, index) {
-                          final option = options.elementAt(index);
-
-                          return ListTile(
-                            title: Text(
-                              option,
-
-                              style: const TextStyle(color: Colors.white),
-                            ),
-
-                            onTap: () {
-                              onSelected(option);
-                            },
-                          );
-                        },
-                      ),
-                    ),
-                  );
-                },
+              AbsorbPointer(
+                child: AppInput(
+                  "Current Company",
+                  controller: currentCompanyCtrl,
+                ),
               ),
+              //               Autocomplete<String>(
+              //                 // initialValue: TextEditingValue(text: currentCompanyCtrl.text),
+
+              //                 optionsBuilder: (textEditingValue) {
+              //                   final query = textEditingValue.text;
+
+              //                   final filtered = companyOptions.where(
+              //                     (option) =>
+              //                         option.toLowerCase().contains(query.toLowerCase()),
+              //                   );
+
+              //                   final exists = companyOptions.any(
+              //                     (e) => e.toLowerCase().trim() == query.toLowerCase().trim(),
+              //                   );
+
+              //                   if (query.trim().isNotEmpty && !exists) {
+              //                     return [...filtered, 'Create "$query"'];
+              //                   }
+
+              //                   return filtered;
+              //                 },
+
+              //                 onSelected: (value) async {
+              //                   final actualValue = value.startsWith('Create "')
+              //                       ? value.replaceAll('Create "', '').replaceAll('"', '')
+              //                       : value;
+
+              //                   await addCompanyIfNeeded(actualValue);
+
+              //                 currentCompanyCtrl.text = actualValue;
+              // FocusScope.of(context).unfocus();
+
+              //                   saveData();
+
+              //                   setState(() {});
+              //                 },
+
+              //                 fieldViewBuilder:
+              //                     (context, controller, focusNode, onFieldSubmitted) {
+              //                       // controller.text = currentCompanyCtrl.text;
+              // if (controller.text !=
+              //     currentCompanyCtrl.text) {
+
+              //   controller.text =
+              //       currentCompanyCtrl.text;
+
+              //   controller.selection =
+              //       TextSelection.fromPosition(
+              //     TextPosition(
+              //       offset: controller.text.length,
+              //     ),
+              //   );
+              // }
+              //                       return TextField(
+              //                         controller: controller,
+
+              //                         focusNode: focusNode,
+
+              //                         style: const TextStyle(color: Colors.white),
+
+              //                         decoration: InputDecoration(
+              //                           hintText: "Current Company",
+
+              //                           filled: true,
+
+              //                           fillColor: AppColors.kCard,
+
+              //                           border: OutlineInputBorder(
+              //                             borderRadius: BorderRadius.circular(12),
+              //                           ),
+              //                         ),
+              //                         onChanged: (value) {
+              //                           currentCompanySearch = value;
+
+              //                           currentCompanyCtrl.text = value;
+
+              //                           saveData();
+
+              //                           setState(() {});
+              //                         },
+              //                       );
+              //                     },
+
+              //                 optionsViewBuilder: (context, onSelected, options) {
+              //                   return Material(
+              //                     color: Colors.black,
+
+              //                     child: Container(
+              //                       width: MediaQuery.of(context).size.width - 32,
+
+              //                       constraints: const BoxConstraints(maxHeight: 220),
+
+              //                       child: ListView.builder(
+              //                         shrinkWrap: true,
+
+              //                         itemCount: options.length,
+
+              //                         itemBuilder: (context, index) {
+              //                           final option = options.elementAt(index);
+
+              //                           return ListTile(
+              //                             title: Text(
+              //                               option,
+
+              //                               style: const TextStyle(color: Colors.white),
+              //                             ),
+
+              //                             onTap: () {
+              //                               onSelected(option);
+              //                             },
+              //                           );
+              //                         },
+              //                       ),
+              //                     ),
+              //                   );
+              //                 },
+              //               ),
             ],
           ),
-          AppInput(
-            "Notice Period (Days)",
-            controller: noticePeriodCtrl,
-            keyboardType: TextInputType.number,
-            onChanged: (_) => saveData(),
-          ),
+          if (experiences.any((e) => e.isCurrent == true))
+            AppInput(
+              "Notice Period (Days)",
+              controller: noticePeriodCtrl,
+              keyboardType: TextInputType.number,
+              onChanged: (_) => saveData(),
+            ),
 
           const SizedBox(height: 20),
 
@@ -464,10 +528,6 @@ class _CareerPageState extends State<CareerPage> {
                     const SizedBox(height: 12),
 
                     Autocomplete<String>(
-                      initialValue: TextEditingValue(
-                        text: companyCtrls[i].text,
-                      ),
-
                       optionsBuilder: (textEditingValue) {
                         final query = textEditingValue.text;
 
@@ -500,11 +560,12 @@ class _CareerPageState extends State<CareerPage> {
                         await addCompanyIfNeeded(actualValue);
 
                         companyCtrls[i].text = actualValue;
+                        FocusScope.of(context).unfocus();
 
                         experiences[i] = experiences[i].copyWith(
                           company: actualValue,
 
-                          isCurrent: experiences[i].isCurrent ?? false,
+                          // isCurrent: experiences[i].isCurrent ?? false,
                         );
 
                         saveData();
@@ -514,8 +575,14 @@ class _CareerPageState extends State<CareerPage> {
 
                       fieldViewBuilder:
                           (context, controller, focusNode, onFieldSubmitted) {
-                            controller.text = companyCtrls[i].text;
+                            // controller.text = companyCtrls[i].text;
+                            if (controller.text != companyCtrls[i].text) {
+                              controller.text = companyCtrls[i].text;
 
+                              controller.selection = TextSelection.fromPosition(
+                                TextPosition(offset: controller.text.length),
+                              );
+                            }
                             return TextField(
                               controller: controller,
 
@@ -543,7 +610,7 @@ class _CareerPageState extends State<CareerPage> {
                                 experiences[i] = experiences[i].copyWith(
                                   company: value,
 
-                                  isCurrent: experiences[i].isCurrent ?? false,
+                                  // isCurrent: experiences[i].isCurrent ?? false,
                                 );
 
                                 saveData();
@@ -596,7 +663,7 @@ class _CareerPageState extends State<CareerPage> {
                   onChanged: (v) {
                     experiences[i] = experiences[i].copyWith(
                       role: v,
-                      isCurrent: experiences[i].isCurrent ?? false,
+                      // isCurrent: experiences[i].isCurrent ?? false,
                     );
 
                     saveData();
@@ -620,7 +687,7 @@ class _CareerPageState extends State<CareerPage> {
 
                       experiences[i] = experiences[i].copyWith(
                         startDate: formatted,
-                        isCurrent: experiences[i].isCurrent ?? false,
+                        // isCurrent: experiences[i].isCurrent ?? false,
                       );
 
                       saveData();
@@ -631,35 +698,92 @@ class _CareerPageState extends State<CareerPage> {
                     child: AppInput("Start Date", controller: startCtrls[i]),
                   ),
                 ),
-                GestureDetector(
-                  onTap: () async {
-                    final pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime(1980),
-                      lastDate: DateTime(2100),
-                    );
+                                        SizedBox(height: 10,),
 
-                    if (pickedDate != null) {
-                      final formatted =
-                          "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                (experiences[i].isCurrent ?? false)
+                    ? Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: AppColors.kCard,
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Text(
+                          "Present",
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontStyle: FontStyle.italic,
+                          ),
+                        ),
+                      )
+                    : GestureDetector(
+                        onTap: () async {
+                          final pickedDate = await showDatePicker(
+                            context: context,
+                            initialDate: DateTime.now(),
+                            firstDate: DateTime(1980),
+                            lastDate: DateTime(2100),
+                          );
 
-                      endCtrls[i].text = formatted;
+                          if (pickedDate != null) {
+                            final formatted =
+                                "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
 
+                            endCtrls[i].text = formatted;
+
+                            experiences[i] = experiences[i].copyWith(
+                              endDate: formatted,
+                            );
+
+                            saveData();
+
+                            setState(() {});
+                          }
+                        },
+
+                        child: AbsorbPointer(
+                          child: AppInput("End Date", controller: endCtrls[i]),
+                        ),
+                      ),
+                CheckboxListTile(
+                  value: experiences[i].isCurrent ?? false,
+
+                  activeColor: Colors.green,
+
+                  contentPadding: EdgeInsets.zero,
+
+                  title: const Text(
+                    "Currently working here",
+                    style: TextStyle(color: Colors.white),
+                  ),
+
+                  onChanged: (value) {
+                    if (value == null) return;
+
+                    setState(() {
+                      /// 🔥 ONLY ONE CURRENT
+                      for (int j = 0; j < experiences.length; j++) {
+                        experiences[j] = experiences[j].copyWith(
+                          isCurrent: false,
+                        );
+                      }
+
+                      /// 🔥 CURRENT EXPERIENCE
                       experiences[i] = experiences[i].copyWith(
-                        endDate: formatted,
-                        isCurrent: experiences[i].isCurrent ?? false,
+                        isCurrent: value,
+                        endDate: value ? "" : endCtrls[i].text,
                       );
 
+                      /// 🔥 CLEAR END DATE
+                      if (value) {
+                        endCtrls[i].clear();
+                      } else {
+                        noticePeriodCtrl.clear();
+                      }
                       saveData();
-                      setState(() {});
-                    }
+                    });
                   },
-                  child: AbsorbPointer(
-                    child: AppInput("End Date", controller: endCtrls[i]),
-                  ),
                 ),
-
                 AppInput(
                   "Description",
                   controller: descCtrls[i],
@@ -667,7 +791,7 @@ class _CareerPageState extends State<CareerPage> {
                   onChanged: (v) {
                     experiences[i] = experiences[i].copyWith(
                       description: v,
-                      isCurrent: experiences[i].isCurrent ?? false,
+                      // isCurrent: experiences[i].isCurrent ?? false,
                     );
 
                     saveData();
@@ -727,44 +851,43 @@ class _CareerPageState extends State<CareerPage> {
 
         const SizedBox(height: 20),
 
-        const Text(
-          "Certifications and more",
-          style: TextStyle(color: Colors.grey),
-        ),
+        // const Text(
+        //   "Certifications and more",
+        //   style: TextStyle(color: Colors.grey),
+        // ),
 
-        const SizedBox(height: 10),
+        // const SizedBox(height: 10),
 
-        /// ABOUT
-        AppInput(
-          "About",
-          controller: aboutCtrl,
-          maxLines: 4,
-          onChanged: (_) => saveData(),
-        ),
+        // /// ABOUT
+        // AppInput(
+        //   "About",
+        //   controller: aboutCtrl,
+        //   maxLines: 4,
+        //   onChanged: (_) => saveData(),
+        // ),
 
-        const SizedBox(height: 8),
+        // const SizedBox(height: 8),
 
-        /// CERTIFICATIONS
-        AppMultiSelectChips(
-          label: "Certifications",
-          options: [
-            "AWS Certified",
-            "Google Cloud",
-            "Azure",
-            "PMP",
-            "Scrum Master",
-            "Oracle",
-            "Cisco",
-            "Others",
-          ],
-          initialValues: selectedList,
-          onChanged: (val) {
-            certifications = val.join(",");
+        // /// CERTIFICATIONS
+        // AppMultiSelectChips(
+        //   label: "Certifications",
+        //   options: [
+        //     "AWS Certified",
+        //     "Google Cloud",
+        //     "Azure",
+        //     "PMP",
+        //     "Scrum Master",
+        //     "Oracle",
+        //     "Cisco",
+        //     "Others",
+        //   ],
+        //   initialValues: selectedList,
+        //   onChanged: (val) {
+        //     certifications = val.join(",");
 
-            saveData();
-          },
-        ),
-
+        //     saveData();
+        //   },
+        // ),
         const SizedBox(height: 20),
       ],
     );

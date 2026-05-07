@@ -509,7 +509,7 @@ Future<void> fetchCities(String state) async {
   controller: titleController,
   options: jobTitleOptions,
 ),
-
+SizedBox(height: 10),
                     _fieldDark(
                       "Description",
                       controller: descriptionController,

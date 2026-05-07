@@ -36,16 +36,16 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   industry: (json['industry'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  internationalExperience: (json['internationalExperience'] as List<dynamic>?)
-      ?.map((e) => e as String)
+  leadershipExperiences: (json['leadershipExperiences'] as List<dynamic>?)
+      ?.map((e) => LeadershipExperience.fromJson(e as Map<String, dynamic>))
+      .toList(),
+  internationalExperiences: (json['internationalExperiences'] as List<dynamic>?)
+      ?.map((e) => InternationalExperience.fromJson(e as Map<String, dynamic>))
       .toList(),
   jobRoles: (json['jobRoles'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
   languagesKnown: (json['languagesKnown'] as List<dynamic>?)
-      ?.map((e) => e as String)
-      .toList(),
-  leadership: (json['leadership'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
   locations: (json['locations'] as List<dynamic>?)
@@ -111,10 +111,14 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'employmentType': instance.employmentType,
   'experiences': instance.experiences?.map((e) => e.toJson()).toList(),
   'industry': instance.industry,
-  'internationalExperience': instance.internationalExperience,
+  'leadershipExperiences': instance.leadershipExperiences
+      ?.map((e) => e.toJson())
+      .toList(),
+  'internationalExperiences': instance.internationalExperiences
+      ?.map((e) => e.toJson())
+      .toList(),
   'jobRoles': instance.jobRoles,
   'languagesKnown': instance.languagesKnown,
-  'leadership': instance.leadership,
   'locations': instance.locations,
   'lookingFor': instance.lookingFor,
   'resume': instance.resume,
