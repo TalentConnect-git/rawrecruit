@@ -28,8 +28,9 @@ class EditProfileSectionsPage extends StatelessWidget {
       'Tools & Platforms',
       'Publications',
       'Achievements',
-      'Experience',
-    ];
+'Experience',
+'Leadership Experience',
+'International Experience',    ];
 
     return Scaffold(
       backgroundColor: AppColors.kBg,

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
 import '../../../../core/index.dart';
+import '../../../../core/models/experience.dart';
 import '../widgets/input_widgets.dart';
 
 class ResumeUploadPage extends StatelessWidget {
@@ -126,21 +127,66 @@ Future<void> _handleUpload(BuildContext context) async {
     /// 🔥 UPDATE GLOBAL STATE
     final currentUser =
         context.read<AppStateProvider>().data ?? User();
+final education = parsedData['education'] as List?;
 
-    context.read<AppStateProvider>().data = currentUser.copyWith(
-      name: parsedData['name'],
-      email: parsedData['email'],
-      phone: parsedData['phone'],
-      gender: parsedData['gender'],
-      about: parsedData['about'],
-      linkedin: parsedData['linkedin_url'],
-      github: parsedData['github_url'],
-      portfolio: parsedData['portfolio_url'],
-      skills: (parsedData['skills'] as List?)
-          ?.map((e) => e.toString())
-          .toList(),
-    );
+final firstEducation =
+    education != null && education.isNotEmpty
+        ? education.first
+        : null;
 
+context.read<AppStateProvider>().data =
+    currentUser.copyWith(
+  name: parsedData['name'],
+  email: parsedData['email'],
+  phone: parsedData['phone'],
+  gender: parsedData['gender'],
+  about: parsedData['about'],
+
+  linkedin: parsedData['linkedin_url'],
+  github: parsedData['github_url'],
+  portfolio: parsedData['portfolio_url'],
+
+  skills: (parsedData['skills'] as List?)
+      ?.map((e) => e.toString())
+      .toList(),
+
+  /// 🔥 EDUCATION
+  college: firstEducation?['institution'],
+  degree: firstEducation?['degree'],
+  specialization:
+      firstEducation?['field_of_study'],
+  cgpa: firstEducation?['cgpa'],
+  yearOfGraduation:
+      firstEducation?['year'],
+      experiences: (parsedData['work_experience'] as List?)
+    ?.map(
+      (e) => Experience(
+        company: e['organization'],
+        role: e['title'],
+        startDate: e['start_date'],
+        endDate: e['end_date'],
+        description:
+            (e['description'] as List?)
+                ?.join('\n'),
+        isCurrent:
+            e['end_date']
+                    ?.toString()
+                    .toLowerCase() ==
+                'present',
+      ),
+    )
+    .toList(),
+    currentCompany:
+    (parsedData['work_experience'] as List?)
+            ?.isNotEmpty ==
+        true
+    ? parsedData['work_experience'][0]['organization']
+    : null,
+    
+);
+await Future.delayed(
+  const Duration(milliseconds: 200),
+);
     /// 🚀 GO NEXT PAGE
     onNext();
 

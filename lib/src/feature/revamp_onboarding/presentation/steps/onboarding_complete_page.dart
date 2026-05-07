@@ -98,7 +98,7 @@ class _OnboardingCompletePageState
         _infoCard(
           icon: Icons.people_outline,
           iconColor: Colors.green,
-          title: "3 people can refer you",
+          title: "see who can refer you",
           subtitle: "Based on your skills & role",
         ),
 
@@ -108,7 +108,7 @@ class _OnboardingCompletePageState
         _infoCard(
           icon: Icons.work_outline,
           iconColor: Colors.deepPurple,
-          title: "2 candidates match your profile",
+          title: "explore to see candidates who match your profile",
           subtitle: "Start referring today",
         ),
 

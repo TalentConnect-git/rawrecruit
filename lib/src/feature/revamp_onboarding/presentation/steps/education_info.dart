@@ -17,11 +17,14 @@ class EducationPage extends StatefulWidget {
 }
 
 class _EducationPageState extends State<EducationPage> {
+  final collegeFieldCtrl = TextEditingController();
+  final degreeFieldCtrl = TextEditingController();
+  final specializationFieldCtrl = TextEditingController();
   late TextEditingController collegeCtrl;
   late TextEditingController cgpaCtrl;
   String currentCollegeInput = "";
-String currentDegreeInput = "";
-String currentSpecializationInput = "";
+  String currentDegreeInput = "";
+  String currentSpecializationInput = "";
   List<Map<String, dynamic>> colleges = [];
   bool loadingColleges = true;
   String? selectedDegree;
@@ -58,32 +61,102 @@ String currentSpecializationInput = "";
     });
   }
 
+  bool isInitialized = false;
+
   @override
   void initState() {
     super.initState();
 
     fetchColleges();
 
-  Future.microtask(() async {
-  await getIt<MyProfileViewModel>()
-      .getDegrees();
+    Future.microtask(() async {
+      await getIt<MyProfileViewModel>().getDegrees();
+
+      if (mounted) {
+        setState(() {});
+      }
+    });
+
+    /// 🔥 EMPTY CONTROLLERS
+    collegeCtrl = TextEditingController();
+    cgpaCtrl = TextEditingController();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    /// 🔥 PREVENT RESET
+    if (isInitialized) return;
+
+    final d = context.read<AppStateProvider>().data ?? widget.data;
+
+    /// 🔥 AUTOFILL
+    collegeCtrl.text = d.college ?? '';
+    cgpaCtrl.text = d.cgpa ?? '';
+    collegeFieldCtrl.text = d.college ?? '';
+
+    degreeFieldCtrl.text = d.degree ?? '';
+
+    specializationFieldCtrl.text = d.specialization ?? '';
+    selectedDegree = d.degree;
+    selectedSpecialization = d.specialization;
+    selectedSemester = d.semester;
+    selectedYear = d.yearOfGraduation;
+
+    currentCollegeInput = d.college ?? '';
+    currentDegreeInput = d.degree ?? '';
+    currentSpecializationInput = d.specialization ?? '';
+
+    isInitialized = true;
+Future.microtask(() async {
+  final d =
+      context.read<AppStateProvider>().data ??
+      widget.data;
+
+  if (d.college != null &&
+      d.college!.trim().isNotEmpty) {
+    await registerCollegeIfNeeded(d.college!);
+  }
+});
+    /// 🔥 LOAD STREAMS FOR SPECIALIZATION
+    Future.microtask(() async {
+      if (selectedDegree != null) {
+        final vm = getIt<MyProfileViewModel>();
+
+if (d.degree != null &&
+    d.degree!.trim().isNotEmpty) {
+
+  await vm.addDegreeIfNeeded(d.degree!);
+
+  await vm.getDegrees();
+}
+        final selected = vm.degrees.firstWhere(
+          (e) => e['value'] == selectedDegree,
+          orElse: () => {},
+        );
+
+if (selected.isNotEmpty) {
+  await vm.getStreams(selected['_id']);
+
+  /// 🔥 AUTO REGISTER SPECIALIZATION
+  if (d.specialization != null &&
+      d.specialization!.trim().isNotEmpty) {
+
+    await vm.addStreamIfNeeded(
+      value: d.specialization!,
+      parentId: selected['_id'],
+    );
+
+    await vm.getStreams(selected['_id']);
+  }
 
   if (mounted) {
     setState(() {});
   }
-});
-    final d = widget.data;
-
-    collegeCtrl = TextEditingController(text: d.college);
-
-    cgpaCtrl = TextEditingController(text: d.cgpa);
-
-    selectedDegree = d.degree;
-    selectedSpecialization = d.specialization;
-
-    selectedSemester = d.semester;
-
-    selectedYear = d.yearOfGraduation;
+}
+      }
+    });
   }
 
   /// 🔥 DEGREE OPTIONS
@@ -224,461 +297,529 @@ String currentSpecializationInput = "";
     if (selectedDegree == null) return ["Select degree first"];
     return specializationMap[selectedDegree!] ?? ["Other"];
   }
-@override
-Widget build(BuildContext context) {
-  final isProfessional =
-      getIt<AppStateProvider>().userType == UserType.professional;
-  final isFresher =
-      getIt<AppStateProvider>().userType == UserType.fresher;
 
-  return Wrapper(
-    title: "Education",
-    children: [
-      AppHeader(
-        title: "Your Educational",
-        highlight: "details",
-        onBack: widget.onBack,
-      ),
+  @override
+  Widget build(BuildContext context) {
+    final isProfessional =
+        getIt<AppStateProvider>().userType == UserType.professional;
 
-      const SizedBox(height: 10),
+    final isFresher = getIt<AppStateProvider>().userType == UserType.fresher;
 
-      const Text(
-        "What's your qualifications?",
-        style: TextStyle(color: Colors.grey),
-      ),
+    return Wrapper(
+      title: "Education",
+      children: [
+        AppHeader(
+          title: "Your Educational",
+          highlight: "details",
+          onBack: widget.onBack,
+        ),
 
-      const SizedBox(height: 16),
+        const SizedBox(height: 10),
 
-      /// 🔥 COLLEGE
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("College", style: TextStyle(color: Colors.white)),
-          const SizedBox(height: 8),
+        const Text(
+          "What's your qualifications?",
+          style: TextStyle(color: Colors.grey),
+        ),
 
-          Autocomplete<String>(
-            initialValue: TextEditingValue(text: collegeCtrl.text),
+        const SizedBox(height: 16),
 
-            optionsBuilder: (textEditingValue) {
-              currentCollegeInput = textEditingValue.text;
+        /// 🔥 COLLEGE
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("College", style: TextStyle(color: Colors.white)),
 
-              final input = textEditingValue.text.trim().toLowerCase();
+            const SizedBox(height: 8),
 
-              final options =
-                  colleges.map((e) => e['label'].toString()).toList();
+            Autocomplete<String>(
+              // initialValue: TextEditingValue(
+              //   text: currentCollegeInput.isNotEmpty
+              //       ? currentCollegeInput
+              //       : collegeCtrl.text,
+              // ),
+              optionsBuilder: (textEditingValue) {
+                currentCollegeInput = textEditingValue.text;
 
-              if (input.isEmpty) return options;
+                final input = textEditingValue.text.trim().toLowerCase();
 
-              final filtered = options.where(
-                (option) => option.toLowerCase().contains(input),
-              ).toList();
+                final options = colleges
+                    .map((e) => e['label'].toString())
+                    .toList();
 
-              if (filtered.isEmpty) return ['__create__'];
+                if (input.isEmpty) return options;
 
-              return filtered;
-            },
+                final filtered = options
+                    .where((option) => option.toLowerCase().contains(input))
+                    .toList();
 
-            onSelected: (value) {
-              currentCollegeInput = value;
-              collegeCtrl.text = value;
-              saveData();
-            },
+                if (filtered.isEmpty) return ['__create__'];
 
-            fieldViewBuilder: (context, controller, focusNode, _) {
-              if (controller.text.isEmpty) {
-                controller.text = collegeCtrl.text;
-              }
+                return filtered;
+              },
 
-              return TextField(
-                controller: controller,
-                focusNode: focusNode,
-                style: const TextStyle(color: Colors.white),
+              onSelected: (value) {
+                currentCollegeInput = value;
+                collegeCtrl.text = value;
+                collegeFieldCtrl.text = value;
 
-                decoration: InputDecoration(
-                  hintText: "Enter college",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  filled: true,
-                  fillColor: Colors.black,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                saveData();
+              },
+
+              fieldViewBuilder: (context, controller, focusNode, _) {
+                if (controller.text != collegeFieldCtrl.text) {
+                  controller.text = collegeFieldCtrl.text;
+
+                  controller.selection = TextSelection.fromPosition(
+                    TextPosition(offset: controller.text.length),
+                  );
+                }
+
+                return TextField(
+                  controller: controller,
+                  focusNode: focusNode,
+                  style: const TextStyle(color: Colors.white),
+
+                  decoration: InputDecoration(
+                    hintText: "Enter college",
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    filled: true,
+                    fillColor: Colors.black,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                ),
 
-                onChanged: (value) {
-                  currentCollegeInput = value;
-                  collegeCtrl.text = value;
-                  saveData();
-                },
+               onChanged: (value) {
+  collegeFieldCtrl.text = value;
 
-                onSubmitted: (value) async {
-                  await registerCollegeIfNeeded(value);
-                },
-              );
-            },
+  currentCollegeInput = value;
+  collegeCtrl.text = value;
 
-            optionsViewBuilder: (context, onSelected, options) {
-              final value = currentCollegeInput.trim();
+  saveData();
+},
+                  onSubmitted: (value) async {
+                    await registerCollegeIfNeeded(value);
+                  },
+                );
+              },
 
-              return _buildDropdown(
-                context: context,
-                options: options,
-                value: value,
-                onSelect: (option) => onSelected(option),
-                onCreate: () async {
-                  await registerCollegeIfNeeded(value);
-                  collegeCtrl.text = value;
-                  saveData();
-                  setState(() {});
-                },
-                exists: colleges.any(
-                  (e) =>
-                      e['label'].toString().toLowerCase().trim() ==
-                      value.toLowerCase().trim(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+              optionsViewBuilder: (context, onSelected, options) {
+                final value = currentCollegeInput.trim();
 
-      const SizedBox(height: 16),
+                return _buildDropdown(
+                  context: context,
+                  options: options,
+                  value: value,
+                  onSelect: (option) => onSelected(option),
+                  onCreate: () async {
+                    await registerCollegeIfNeeded(value);
 
-      /// 🔥 DEGREE
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Degree", style: TextStyle(color: Colors.white)),
-          const SizedBox(height: 8),
+                    collegeCtrl.text = value;
 
-          Autocomplete<String>(
-            initialValue: TextEditingValue(text: selectedDegree ?? ''),
+                    saveData();
 
-            optionsBuilder: (textEditingValue) {
-              currentDegreeInput = textEditingValue.text;
-
-              final input = textEditingValue.text.trim().toLowerCase();
-
-              final options = getIt<MyProfileViewModel>()
-                  .degrees
-                  .map((e) => e['value'].toString())
-                  .toList();
-
-              if (input.isEmpty) return options;
-
-              final filtered = options.where(
-                (option) => option.toLowerCase().contains(input),
-              ).toList();
-
-              if (filtered.isEmpty) return ['__create__'];
-
-              return filtered;
-            },
-
-            onSelected: (value) async {
-              final vm = getIt<MyProfileViewModel>();
-
-              final selected = vm.degrees.firstWhere(
-                (e) => e['value'] == value,
-                orElse: () => {},
-              );
-
-              setState(() {
-                currentDegreeInput = value;
-                selectedDegree = value;
-                selectedSpecialization = null;
-              });
-
-              if (selected.isNotEmpty) {
-                await vm.getStreams(selected['_id']);
-              }
-
-              saveData();
-            },
-
-            fieldViewBuilder: (context, controller, focusNode, _) {
-              if (controller.text.isEmpty) {
-                controller.text = selectedDegree ?? '';
-              }
-
-              return TextField(
-                controller: controller,
-                focusNode: focusNode,
-                style: const TextStyle(color: Colors.white),
-
-                decoration: InputDecoration(
-                  hintText: "Select degree",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  filled: true,
-                  fillColor: Colors.black,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                    setState(() {});
+                  },
+                  exists: colleges.any(
+                    (e) =>
+                        e['label'].toString().toLowerCase().trim() ==
+                        value.toLowerCase().trim(),
                   ),
-                ),
+                );
+              },
+            ),
+          ],
+        ),
 
-                onChanged: (value) {
-                  currentDegreeInput = value;
-                  selectedDegree = value;
-                  saveData();
-                },
+        const SizedBox(height: 16),
 
-                onSubmitted: (value) async {
-                  final vm = getIt<MyProfileViewModel>();
-                  await vm.addDegreeIfNeeded(value);
-                  setState(() => selectedDegree = value);
-                  saveData();
-                },
-              );
-            },
+        /// 🔥 DEGREE
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Degree", style: TextStyle(color: Colors.white)),
 
-            optionsViewBuilder: (context, onSelected, options) {
-              final value = currentDegreeInput.trim();
+            const SizedBox(height: 8),
 
-              final vm = getIt<MyProfileViewModel>();
+            Autocomplete<String>(
+              // initialValue: TextEditingValue(
+              //   text: currentDegreeInput.isNotEmpty
+              //       ? currentDegreeInput
+              //       : (selectedDegree ?? ''),
+              // ),
+              optionsBuilder: (textEditingValue) {
+                currentDegreeInput = textEditingValue.text;
 
-              return _buildDropdown(
-                context: context,
-                options: options,
-                value: value,
-                onSelect: (option) => onSelected(option),
-                onCreate: () async {
-                  await vm.addDegreeIfNeeded(value);
-                  setState(() => selectedDegree = value);
-                  saveData();
-                },
-                exists: vm.degrees.any(
-                  (e) =>
-                      e['value'].toString().toLowerCase().trim() ==
-                      value.toLowerCase().trim(),
-                ),
-              );
-            },
-          ),
-        ],
-      ),
+                final input = textEditingValue.text.trim().toLowerCase();
 
-      const SizedBox(height: 16),
+                final options = getIt<MyProfileViewModel>().degrees
+                    .map((e) => e['value'].toString())
+                    .toList();
 
-      /// 🔥 SPECIALIZATION
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text("Specialization",
-              style: TextStyle(color: Colors.white)),
-          const SizedBox(height: 8),
+                if (input.isEmpty) return options;
 
-          Autocomplete<String>(
-            initialValue:
-                TextEditingValue(text: selectedSpecialization ?? ''),
+                final filtered = options
+                    .where((option) => option.toLowerCase().contains(input))
+                    .toList();
 
-            optionsBuilder: (textEditingValue) {
-              currentSpecializationInput = textEditingValue.text;
+                if (filtered.isEmpty) return ['__create__'];
 
-              final input = textEditingValue.text.trim().toLowerCase();
+                return filtered;
+              },
 
-              final vm = getIt<MyProfileViewModel>();
+              onSelected: (value) async {
+                final vm = getIt<MyProfileViewModel>();
+                degreeFieldCtrl.text = value;
+                final selected = vm.degrees.firstWhere(
+                  (e) => e['value'] == value,
+                  orElse: () => {},
+                );
 
-              final options =
-                  vm.streams.map((e) => e['value'].toString()).toList();
+             setState(() {
+  currentDegreeInput = value;
+  selectedDegree = value;
+});
+                if (selected.isNotEmpty) {
+                  await vm.getStreams(selected['_id']);
+                }
 
-              if (input.isEmpty) return options;
+                saveData();
+              },
 
-              final filtered = options.where(
-                (option) => option.toLowerCase().contains(input),
-              ).toList();
+              fieldViewBuilder: (context, controller, focusNode, _) {
+               if (controller.text != degreeFieldCtrl.text) {
+  controller.text = degreeFieldCtrl.text;
 
-              if (filtered.isEmpty) return ['__create__'];
+  controller.selection =
+      TextSelection.fromPosition(
+    TextPosition(offset: controller.text.length),
+  );
+}
 
-              return filtered;
-            },
+return TextField(
+  controller: controller,
+                  focusNode: focusNode,
+                  style: const TextStyle(color: Colors.white),
 
-            onSelected: (value) {
-              setState(() {
-                currentSpecializationInput = value;
-                selectedSpecialization = value;
-              });
-              saveData();
-            },
-
-            fieldViewBuilder: (context, controller, focusNode, _) {
-              if (controller.text.isEmpty) {
-                controller.text = selectedSpecialization ?? '';
-              }
-
-              return TextField(
-                controller: controller,
-                focusNode: focusNode,
-                style: const TextStyle(color: Colors.white),
-
-                decoration: InputDecoration(
-                  hintText: "Select specialization",
-                  hintStyle: const TextStyle(color: Colors.grey),
-                  filled: true,
-                  fillColor: Colors.black,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(12),
+                  decoration: InputDecoration(
+                    hintText: "Select degree",
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    filled: true,
+                    fillColor: Colors.black,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
-                ),
+onChanged: (value) {
+  degreeFieldCtrl.text = value;
 
-                onChanged: (value) {
+  currentDegreeInput = value;
+  selectedDegree = value;
+
+  saveData();
+},
+
+                  onSubmitted: (value) async {
+                    final vm = getIt<MyProfileViewModel>();
+
+                    await vm.addDegreeIfNeeded(value);
+
+                    setState(() {
+                      selectedDegree = value;
+                    });
+
+                    saveData();
+                  },
+                );
+              },
+
+              optionsViewBuilder: (context, onSelected, options) {
+                final value = currentDegreeInput.trim();
+
+                final vm = getIt<MyProfileViewModel>();
+
+                return _buildDropdown(
+                  context: context,
+                  options: options,
+                  value: value,
+                  onSelect: (option) => onSelected(option),
+                  onCreate: () async {
+                    await vm.addDegreeIfNeeded(value);
+
+                    setState(() {
+                      selectedDegree = value;
+                    });
+
+                    saveData();
+                  },
+                  exists: vm.degrees.any(
+                    (e) =>
+                        e['value'].toString().toLowerCase().trim() ==
+                        value.toLowerCase().trim(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        /// 🔥 SPECIALIZATION
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text("Specialization", style: TextStyle(color: Colors.white)),
+
+            const SizedBox(height: 8),
+
+            Autocomplete<String>(
+              // initialValue: TextEditingValue(
+              //   text:
+              //       currentSpecializationInput.isNotEmpty
+              //           ? currentSpecializationInput
+              //           : (selectedSpecialization ?? ''),
+              // ),
+              optionsBuilder: (textEditingValue) {
+                currentSpecializationInput = textEditingValue.text;
+
+                final input = textEditingValue.text.trim().toLowerCase();
+
+                final vm = getIt<MyProfileViewModel>();
+
+                final options = vm.streams
+                    .map((e) => e['value'].toString())
+                    .toList();
+
+                if (input.isEmpty) return options;
+
+                final filtered = options
+                    .where((option) => option.toLowerCase().contains(input))
+                    .toList();
+
+                if (filtered.isEmpty) return ['__create__'];
+
+                return filtered;
+              },
+
+              onSelected: (value) {
+                specializationFieldCtrl.text = value;
+                setState(() {
                   currentSpecializationInput = value;
                   selectedSpecialization = value;
-                  saveData();
-                },
+                });
 
-                onSubmitted: (value) async {
-                  final vm = getIt<MyProfileViewModel>();
-                  if (vm.selectedDegreeId == null) return;
+                saveData();
+              },
 
-                  await vm.addStreamIfNeeded(
-                    value: value,
-                    parentId: vm.selectedDegreeId!,
-                  );
+              fieldViewBuilder: (context, controller, focusNode, _) {
+              if (controller.text !=
+    specializationFieldCtrl.text) {
 
-                  setState(() => selectedSpecialization = value);
-                  saveData();
-                },
-              );
-            },
+  controller.text =
+      specializationFieldCtrl.text;
 
-            optionsViewBuilder: (context, onSelected, options) {
-              final value = currentSpecializationInput.trim();
+  controller.selection =
+      TextSelection.fromPosition(
+    TextPosition(offset: controller.text.length),
+  );
+}
 
-              final vm = getIt<MyProfileViewModel>();
+return TextField(
+  controller: controller,
+                  focusNode: focusNode,
+                  style: const TextStyle(color: Colors.white),
 
-              return _buildDropdown(
-                context: context,
-                options: options,
-                value: value,
-                onSelect: (option) => onSelected(option),
-                onCreate: () async {
-                  if (vm.selectedDegreeId == null) return;
+                  decoration: InputDecoration(
+                    hintText: "Select specialization",
+                    hintStyle: const TextStyle(color: Colors.grey),
+                    filled: true,
+                    fillColor: Colors.black,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
 
-                  await vm.addStreamIfNeeded(
-                    value: value,
-                    parentId: vm.selectedDegreeId!,
-                  );
+                onChanged: (value) {
+  specializationFieldCtrl.text = value;
 
-                  setState(() => selectedSpecialization = value);
-                  saveData();
-                },
-                exists: vm.streams.any(
-                  (e) =>
-                      e['value'].toString().toLowerCase().trim() ==
-                      value.toLowerCase().trim(),
-                ),
-              );
+  currentSpecializationInput = value;
+  selectedSpecialization = value;
+
+  saveData();
+},
+
+                  onSubmitted: (value) async {
+                    final vm = getIt<MyProfileViewModel>();
+
+                    if (vm.selectedDegreeId == null) {
+                      return;
+                    }
+
+                    await vm.addStreamIfNeeded(
+                      value: value,
+                      parentId: vm.selectedDegreeId!,
+                    );
+
+                    setState(() {
+                      selectedSpecialization = value;
+                    });
+
+                    saveData();
+                  },
+                );
+              },
+
+              optionsViewBuilder: (context, onSelected, options) {
+                final value = currentSpecializationInput.trim();
+
+                final vm = getIt<MyProfileViewModel>();
+
+                return _buildDropdown(
+                  context: context,
+                  options: options,
+                  value: value,
+                  onSelect: (option) => onSelected(option),
+                  onCreate: () async {
+                    if (vm.selectedDegreeId == null) {
+                      return;
+                    }
+
+                    await vm.addStreamIfNeeded(
+                      value: value,
+                      parentId: vm.selectedDegreeId!,
+                    );
+
+                    setState(() {
+                      selectedSpecialization = value;
+                    });
+
+                    saveData();
+                  },
+                  exists: vm.streams.any(
+                    (e) =>
+                        e['value'].toString().toLowerCase().trim() ==
+                        value.toLowerCase().trim(),
+                  ),
+                );
+              },
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        if (!isProfessional && !isFresher)
+          AppDropdown(
+            hint: "Semester",
+            options: semesterOptions,
+            value: selectedSemester,
+            onChanged: (val) {
+              setState(() {
+                selectedSemester = val;
+
+                saveData();
+              });
             },
           ),
-        ],
-      ),
 
-      const SizedBox(height: 16),
-
-      if (!isProfessional && !isFresher)
         AppDropdown(
-          hint: "Semester",
-          options: semesterOptions,
-          value: selectedSemester,
+          hint: "Graduation Year",
+          options: graduationYears,
+          value: selectedYear,
           onChanged: (val) {
             setState(() {
-              selectedSemester = val;
+              selectedYear = val;
+
               saveData();
             });
           },
         ),
 
-      AppDropdown(
-        hint: "Graduation Year",
-        options: graduationYears,
-        value: selectedYear,
-        onChanged: (val) {
-          setState(() {
-            selectedYear = val;
-            saveData();
-          });
-        },
-      ),
+        if (!isProfessional)
+          AppInput("CGPA", controller: cgpaCtrl, onChanged: (_) => saveData()),
 
-      if (!isProfessional)
-        AppInput("CGPA", controller: cgpaCtrl, onChanged: (_) => saveData()),
-
-      const SizedBox(height: 20),
-    ],
-  );
-}
-Widget _buildDropdown({
-  required BuildContext context,
-  required Iterable<String> options,
-  required String value,
-  required Function(String) onSelect,
-  required Future<void> Function() onCreate,
-  required bool exists,
-}) {
-  return Align(
-    alignment: Alignment.topLeft,
-    child: Material(
-      elevation: 8,
-      borderRadius: BorderRadius.circular(12),
-      child: Container(
-        width: MediaQuery.of(context).size.width - 32,
-        constraints: const BoxConstraints(maxHeight: 220),
-        decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.grey),
-        ),
-        child: ListView(
-          padding: EdgeInsets.zero,
-          shrinkWrap: true,
-          children: [
-            /// 🔹 EXISTING OPTIONS
-            ...options.map((option) {
-              if (option == '__create__') {
-                return const SizedBox(); // skip dummy
-              }
-
-              return ListTile(
-                dense: true,
-                title: Text(
-                  option,
-                  style: const TextStyle(color: Colors.white),
-                ),
-                onTap: () {
-                  onSelect(option);
-                },
-              );
-            }),
-
-            /// 🔥 CREATE OPTION
-            if (value.isNotEmpty && !exists)
-              Column(
-                children: [
-                  Divider(height: 1, color: Colors.grey.shade800),
-                  ListTile(
-                    leading: const Icon(
-                      Icons.add,
-                      color: Colors.green,
-                    ),
-                    title: Text(
-                      'Create "$value"',
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                    onTap: () async {
-                      await onCreate();
-                    },
-                  ),
-                ],
-              ),
-          ],
-        ),
-      ),
-    ),
-  );
-}
-  @override
-  void dispose() {
-    collegeCtrl.dispose();
-    cgpaCtrl.dispose();
-    super.dispose();
+        const SizedBox(height: 20),
+      ],
+    );
   }
+
+  Widget _buildDropdown({
+    required BuildContext context,
+    required Iterable<String> options,
+    required String value,
+    required Function(String) onSelect,
+    required Future<void> Function() onCreate,
+    required bool exists,
+  }) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Material(
+        elevation: 8,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: MediaQuery.of(context).size.width - 32,
+          constraints: const BoxConstraints(maxHeight: 220),
+          decoration: BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey),
+          ),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            children: [
+              /// 🔹 EXISTING OPTIONS
+              ...options.map((option) {
+                if (option == '__create__') {
+                  return const SizedBox(); // skip dummy
+                }
+
+                return ListTile(
+                  dense: true,
+                  title: Text(
+                    option,
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  onTap: () {
+                    onSelect(option);
+                  },
+                );
+              }),
+
+              /// 🔥 CREATE OPTION
+              if (value.isNotEmpty && !exists)
+                Column(
+                  children: [
+                    Divider(height: 1, color: Colors.grey.shade800),
+                    ListTile(
+                      leading: const Icon(Icons.add, color: Colors.green),
+                      title: Text(
+                        'Create "$value"',
+                        style: const TextStyle(color: Colors.white),
+                      ),
+                      onTap: () async {
+                        await onCreate();
+                      },
+                    ),
+                  ],
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+@override
+void dispose() {
+  collegeCtrl.dispose();
+  cgpaCtrl.dispose();
+
+  collegeFieldCtrl.dispose();
+  degreeFieldCtrl.dispose();
+  specializationFieldCtrl.dispose();
+
+  super.dispose();
+}
 }

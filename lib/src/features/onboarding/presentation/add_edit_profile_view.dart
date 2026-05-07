@@ -8,9 +8,12 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_profile/presentation/widgets/auto_complete_field.dart';
+import 'package:rawrecruit/src/features/onboarding/data/entities/leadership_controller.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_edit_profile_view_model.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
+
+import '../data/entities/international.dart';
 
 class AddEditProfileView extends StatefulWidget {
   const AddEditProfileView({this.user, this.initialStep, super.key});
@@ -28,13 +31,13 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   final _formKey = GlobalKey<FormState>();
   bool _isParsingResume = false;
   File? _pickedResumeFile;
-bool isExperienceExpanded = false;
-Map<String, String> currencySymbols = {
-  "INR": "₹",
-  "USD": "\$",
-  "EUR": "€",
-  "GBP": "£",
-};
+  bool isExperienceExpanded = false;
+  Map<String, String> currencySymbols = {
+    "INR": "₹",
+    "USD": "\$",
+    "EUR": "€",
+    "GBP": "£",
+  };
   // ── Enum lists ──────────────────────────────────────────────────────────────
   bool hasChanges = false;
   void markChanged() {
@@ -625,7 +628,7 @@ Map<String, String> currencySymbols = {
 
   int currentStep = 0;
 
-  final int totalSteps = 14;
+  final int totalSteps = 16;
 
   void nextStep() {
     if (currentStep < totalSteps - 1) {
@@ -835,43 +838,43 @@ Map<String, String> currencySymbols = {
                               spacing: 16,
 
                               children: [
-                             CommonAutocomplete(
-  label: "College",
-  hint: "College",
+                                CommonAutocomplete(
+                                  label: "College",
+                                  hint: "College",
 
-  options: colleges
-      .map((e) => e['label'].toString())
-      .toList(),
+                                  options: colleges
+                                      .map((e) => e['label'].toString())
+                                      .toList(),
 
-  initialValue: controller.college.text,
+                                  initialValue: controller.college.text,
 
-  onChanged: (value) {
-    controller.college.text = value;
-    markChanged();
-  },
+                                  onChanged: (value) {
+                                    controller.college.text = value;
+                                    markChanged();
+                                  },
 
-  onSelected: (value) async {
-    await addCollegeIfNeeded(value);
-    controller.college.text = value;
-    markChanged();
-  },
+                                  onSelected: (value) async {
+                                    await addCollegeIfNeeded(value);
+                                    controller.college.text = value;
+                                    markChanged();
+                                  },
 
-  onSubmitted: (value) async {
-    await addCollegeIfNeeded(value);
-    controller.college.text = value;
-    markChanged();
-  },
+                                  onSubmitted: (value) async {
+                                    await addCollegeIfNeeded(value);
+                                    controller.college.text = value;
+                                    markChanged();
+                                  },
 
-  /// 🔥 NEW (IMPORTANT)
-  /// 
-  showCreateOption: true,
+                                  /// 🔥 NEW (IMPORTANT)
+                                  ///
+                                  showCreateOption: true,
 
-  onCreate: (value) async {
-    await addCollegeIfNeeded(value);
-    controller.college.text = value;
-    markChanged();
-  },
-),
+                                  onCreate: (value) async {
+                                    await addCollegeIfNeeded(value);
+                                    controller.college.text = value;
+                                    markChanged();
+                                  },
+                                ),
                                 _degreeDropdownField(),
 
                                 _specializationDropdownField(),
@@ -1003,7 +1006,7 @@ Map<String, String> currencySymbols = {
 
                                 Row(
                                   children: [
-                                      SizedBox(
+                                    SizedBox(
                                       width: 80,
 
                                       child: _dropdownField(
@@ -1012,7 +1015,7 @@ Map<String, String> currencySymbols = {
                                         ['\$', '₹', '€', '£'],
                                       ),
                                     ),
-                                                                        const SizedBox(width: 12),
+                                    const SizedBox(width: 12),
 
                                     Expanded(
                                       child: AppTextFields(
@@ -1024,9 +1027,6 @@ Map<String, String> currencySymbols = {
                                         onChanged: (_) => markChanged(),
                                       ),
                                     ),
-
-
-                                  
                                   ],
                                 ),
                               ],
@@ -1041,7 +1041,6 @@ Map<String, String> currencySymbols = {
                               children: [
                                 Row(
                                   children: [
-                                    
                                     SizedBox(
                                       width: 80,
 
@@ -1051,7 +1050,7 @@ Map<String, String> currencySymbols = {
                                         ['\$', '₹', '€', '£'],
                                       ),
                                     ),
-                                                                        const SizedBox(width: 12),
+                                    const SizedBox(width: 12),
 
                                     Expanded(
                                       child: AppTextFields(
@@ -1063,8 +1062,6 @@ Map<String, String> currencySymbols = {
                                         onChanged: (_) => markChanged(),
                                       ),
                                     ),
-
-
                                   ],
                                 ),
 
@@ -1277,22 +1274,27 @@ Map<String, String> currencySymbols = {
                           SingleChildScrollView(
                             padding: const EdgeInsets.all(16),
 
-                            child:ProfileSection(
-  key: ValueKey(isExperienceExpanded), // 🔥 IMPORTANT
-  label: 'Experience',
-initiallyExpanded: isExperienceExpanded ||
-    controller.experiences.any(
-      (e) =>
-          e.company.text.trim().isNotEmpty ||
-          e.role.text.trim().isNotEmpty ||
-          e.description.text.trim().isNotEmpty,
-    ),
-                         trailing: _addButton(() {
-  setState(() {
-    controller.experiences.add(ExperienceController());
-    isExperienceExpanded = true; // 🔥 OPEN IT
-  });
-}),
+                            child: ProfileSection(
+                              key: ValueKey(
+                                isExperienceExpanded,
+                              ), // 🔥 IMPORTANT
+                              label: 'Experience',
+                              initiallyExpanded:
+                                  isExperienceExpanded ||
+                                  controller.experiences.any(
+                                    (e) =>
+                                        e.company.text.trim().isNotEmpty ||
+                                        e.role.text.trim().isNotEmpty ||
+                                        e.description.text.trim().isNotEmpty,
+                                  ),
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.experiences.add(
+                                    ExperienceController(),
+                                  );
+                                  isExperienceExpanded = true; // 🔥 OPEN IT
+                                });
+                              }),
 
                               children: controller.experiences
                                   .asMap()
@@ -1307,6 +1309,59 @@ initiallyExpanded: isExperienceExpanded ||
                                   .toList(),
                             ),
                           ),
+
+   SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
+
+  child: ProfileSection(
+    label: 'Leadership Experience',
+
+    trailing: _addButton(() {
+      setState(() {
+        controller.leadershipExperiences.add(
+          LeadershipExperienceController(),
+        );
+      });
+    }),
+
+    children: controller.leadershipExperiences
+        .asMap()
+        .entries
+        .map((entry) {
+          final index = entry.key;
+          final e = entry.value;
+
+          return _leadershipCard(e, index);
+        })
+        .toList(),
+  ),
+),
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
+
+  child: ProfileSection(
+    label: 'International Experience',
+
+    trailing: _addButton(() {
+      setState(() {
+        controller.internationalExperiences.add(
+          InternationalExperienceController(),
+        );
+      });
+    }),
+
+    children: controller.internationalExperiences
+        .asMap()
+        .entries
+        .map((entry) {
+          final index = entry.key;
+          final e = entry.value;
+
+          return _internationalCard(e, index);
+        })
+        .toList(),
+  ),
+),
                         ],
                       ),
                     ),
@@ -1500,8 +1555,11 @@ initiallyExpanded: isExperienceExpanded ||
       },
     );
   }
-
-  Widget _experienceCard(ExperienceController e, int index) {
+Widget _experienceCard(
+  ExperienceController e,
+  int index, {
+  String title = "Experience",
+}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -1513,7 +1571,7 @@ initiallyExpanded: isExperienceExpanded ||
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(index),
+        _header(index, title),
           const SizedBox(height: 12),
 
           _companyField(e),
@@ -1535,13 +1593,68 @@ initiallyExpanded: isExperienceExpanded ||
       ),
     );
   }
+  Widget _leadershipCard(
+  LeadershipExperienceController e,
+  int index,
+) {
+  return Container(
+    margin: const EdgeInsets.only(bottom: 16),
+    padding: const EdgeInsets.all(16),
 
-  Widget _header(int index) {
+    decoration: BoxDecoration(
+      color: const Color(0xFF111827),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: Colors.white.withOpacity(0.06),
+      ),
+    ),
+
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _header(index, "Leadership"),
+
+        const SizedBox(height: 12),
+
+        _input(
+          controller: e.organization,
+          hint: "Organization",
+        ),
+
+        const SizedBox(height: 12),
+
+        _input(
+          controller: e.role,
+          hint: "Role",
+        ),
+
+        const SizedBox(height: 12),
+
+        _dateRowOnly(
+          e.startDate,
+          e.endDate,
+        ),
+
+        const SizedBox(height: 12),
+
+        _input(
+          controller: e.description,
+          hint: "Description",
+          maxLines: 3,
+        ),
+      ],
+    ),
+  );
+}
+Widget _header(
+  int index,
+  String title,
+){
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          "Experience ${index + 1}",
+"$title ${index + 1}",
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -1816,7 +1929,83 @@ initiallyExpanded: isExperienceExpanded ||
       const AppDivider(),
     ],
   );
+Widget _internationalCard(
+  InternationalExperienceController e,
+  int index,
+) {
+  return Container(
+    margin: const EdgeInsets.only(bottom: 16),
+    padding: const EdgeInsets.all(16),
 
+    decoration: BoxDecoration(
+      color: const Color(0xFF111827),
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: Colors.white.withOpacity(0.06),
+      ),
+    ),
+
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _header(index, "International"),
+
+        const SizedBox(height: 12),
+
+        _input(
+          controller: e.country,
+          hint: "Country",
+        ),
+
+        const SizedBox(height: 12),
+
+        _input(
+          controller: e.role,
+          hint: "Role",
+        ),
+
+        const SizedBox(height: 12),
+
+        _dateRowOnly(
+          e.startDate,
+          e.endDate,
+        ),
+
+        const SizedBox(height: 12),
+
+        _input(
+          controller: e.description,
+          hint: "Description",
+          maxLines: 3,
+        ),
+      ],
+    ),
+  );
+}
+Widget _dateRowOnly(
+  TextEditingController start,
+  TextEditingController end,
+) {
+  return Row(
+    children: [
+      Expanded(
+        child: _dateField(
+          start,
+          "Start Date",
+        ),
+      ),
+
+      const SizedBox(width: 10),
+
+      Expanded(
+        child: _dateField(
+          end,
+          "End Date",
+        ),
+      ),
+    ],
+  );
+}
   // ── Reusable field helpers ───────────────────────────────────────────────────
 
   Widget _profileListSection(String label, List<TextEditingController> list) {

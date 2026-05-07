@@ -144,24 +144,24 @@ final metrics = job.metrics;
 
           const SizedBox(width: 8),
 
-          Container(
-            padding: const EdgeInsets.symmetric(
-              horizontal: 8,
-              vertical: 3,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.2),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text(
-              "LIVE",
-              style: TextStyle(
-                color: Colors.green,
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+          // Container(
+          //   padding: const EdgeInsets.symmetric(
+          //     horizontal: 8,
+          //     vertical: 3,
+          //   ),
+          //   decoration: BoxDecoration(
+          //     color: Colors.green.withOpacity(0.2),
+          //     borderRadius: BorderRadius.circular(20),
+          //   ),
+          //   child: const Text(
+          //     "LIVE",
+          //     style: TextStyle(
+          //       color: Colors.green,
+          //       fontSize: 10,
+          //       fontWeight: FontWeight.w600,
+          //     ),
+          //   ),
+          // ),
         ],
       ),
 

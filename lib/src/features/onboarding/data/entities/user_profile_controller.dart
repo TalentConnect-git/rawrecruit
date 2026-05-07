@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'achievement_controller.dart';
 import 'award_controller.dart';
+import 'international.dart';
+import 'leadership_controller.dart';
 import 'publication_controller.dart';
 
 class ExperienceController {
@@ -66,15 +68,17 @@ noticePeriod = TextEditingController();
   List<TextEditingController> employmentType = [];
   List<ExperienceController> experiences = [];
   List<TextEditingController> industry = [];
-  List<TextEditingController> internationalExperience = [];
   List<TextEditingController> jobRoles = [];
   List<TextEditingController> languagesKnown = [];
-  List<TextEditingController> leadership = [];
   List<TextEditingController> locations = [];
   List<TextEditingController> lookingFor = [];
   List<TextEditingController> skills = [];
   List<TextEditingController> toolsAndPlatforms = [];
+List<LeadershipExperienceController>
+    leadershipExperiences = [];
 
+List<InternationalExperienceController>
+    internationalExperiences = [];
   /// Nested Controllers
   List<AchievementController> achievements = [];
   List<AwardController> awards = [];
@@ -192,18 +196,83 @@ TextEditingController noticePeriod;
             (e) => cleanMap({
               'company': clean(e.company.text),
               'role': clean(e.role.text),
-              'isCurrent': e.isCurrent ? 'true' : 'false',
-              'startDate': clean(e.startDate.text),
+'isCurrent': e.isCurrent,              'startDate': clean(e.startDate.text),
               'endDate': clean(e.endDate.text),
               'description': clean(e.description.text),
             }),
           )
           .toList(),
       'industry': cleanList(industry),
-      'internationalExperience': cleanList(internationalExperience),
       'jobRoles': cleanList(jobRoles),
       'languagesKnown': cleanList(languagesKnown),
-      'leadership': cleanList(leadership),
+   'leadership':
+    leadershipExperiences
+        .where(
+          (e) =>
+              e.organization.text
+                  .isNotEmpty ||
+              e.role.text.isNotEmpty ||
+              e.startDate.text
+                  .isNotEmpty ||
+              e.endDate.text
+                  .isNotEmpty ||
+              e.description.text
+                  .isNotEmpty,
+        )
+        .map(
+          (e) => cleanMap({
+            'organization': clean(
+              e.organization.text,
+            ),
+            'role': clean(
+              e.role.text,
+            ),
+            'startDate': clean(
+              e.startDate.text,
+            ),
+            'endDate': clean(
+              e.endDate.text,
+            ),
+            'description': clean(
+              e.description.text ,
+            ),
+          }),
+        )
+        .toList(),
+'internationalExperience':
+    internationalExperiences
+        .where(
+          (e) =>
+              e.country.text
+                  .isNotEmpty ||
+              e.role.text.isNotEmpty ||
+              e.startDate.text
+                  .isNotEmpty ||
+              e.endDate.text
+                  .isNotEmpty ||
+              e.description.text
+                  .isNotEmpty,
+        )
+        .map(
+          (e) => cleanMap({
+            'country': clean(
+              e.country.text,
+            ),
+            'role': clean(
+              e.role.text,
+            ),
+            'startDate': clean(
+              e.startDate.text,
+            ),
+            'endDate': clean(
+              e.endDate.text,
+            ),
+            'description': clean(
+              e.description.text,
+            ),
+          }),
+        )
+        .toList(),
       'locations': cleanList(locations),
       'lookingFor': cleanList(lookingFor),
       'toolsAndPlatforms': cleanList(toolsAndPlatforms),
@@ -318,18 +387,39 @@ noticePeriod.dispose();
     for (final controller in industry) {
       controller.dispose();
     }
-    for (final controller in internationalExperience) {
-      controller.dispose();
-    }
+ for (final e
+    in leadershipExperiences) {
+
+  e.organization.dispose();
+
+  e.role.dispose();
+
+  e.startDate.dispose();
+
+  e.endDate.dispose();
+
+  e.description.dispose();
+}
+for (final e
+    in internationalExperiences) {
+
+  e.country.dispose();
+
+  e.role.dispose();
+
+  e.startDate.dispose();
+
+  e.endDate.dispose();
+
+  e.description.dispose();
+}
     for (final controller in jobRoles) {
       controller.dispose();
     }
     for (final controller in languagesKnown) {
       controller.dispose();
     }
-    for (final controller in leadership) {
-      controller.dispose();
-    }
+    
     for (final controller in locations) {
       controller.dispose();
     }

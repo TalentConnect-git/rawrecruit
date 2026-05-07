@@ -16,17 +16,44 @@ class SkillsDomainPage extends StatefulWidget {
 
 class _SkillsDomainPageState extends State<SkillsDomainPage> {
   final TextEditingController searchCtrl = TextEditingController();
-
+bool isInitialized = false;
   List<String> selected = [];
 
 List<String> popular = [];
-  @override
-  void initState() {
-    super.initState();
-fetchSkills();
-    /// 🔥 LOAD FROM SHARED DATA
-    selected = List.from(widget.data.skills ?? []);
-  }
+@override
+void initState() {
+  super.initState();
+
+  fetchSkills();
+}
+@override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+
+  if (isInitialized) return;
+
+  final d =
+      context.read<AppStateProvider>().data ??
+      widget.data;
+
+  selected = List.from(d.skills ?? []);
+
+  Future.microtask(() async {
+    for (final skill in selected) {
+      if (skill.trim().isNotEmpty) {
+        await addSkillToApi(skill);
+      }
+    }
+
+    await fetchSkills();
+
+    if (mounted) {
+      setState(() {});
+    }
+  });
+
+  isInitialized = true;
+}
 
   /// 🔥 SAVE TO SHARED DATA
   void saveData() {
@@ -170,10 +197,26 @@ Future<void> addSkillToApi(
   onSelected: (value) {
     if (value == '__create__') return;
 
-    addSkill(value);
-  },
+addSkill(value);
+
+searchCtrl.clear();
+
+FocusScope.of(context).unfocus();
+searchCtrl.clear();
+
+FocusScope.of(context).unfocus();  },
 
   fieldViewBuilder: (context, controller, focusNode, _) {
+    if (controller.text != searchCtrl.text) {
+  controller.text = searchCtrl.text;
+
+  controller.selection =
+      TextSelection.fromPosition(
+    TextPosition(
+      offset: controller.text.length,
+    ),
+  );
+}
     return TextField(
       controller: controller,
       focusNode: focusNode,

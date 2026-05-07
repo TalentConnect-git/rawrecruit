@@ -8,7 +8,11 @@ class LinksPage extends StatefulWidget {
   final VoidCallback onBack;
   final User data;
 
-  const LinksPage({super.key, required this.onBack, required this.data});
+  const LinksPage({
+    super.key,
+    required this.onBack,
+    required this.data,
+  });
 
   @override
   State<LinksPage> createState() => _LinksPageState();
@@ -20,33 +24,62 @@ class _LinksPageState extends State<LinksPage> {
   late TextEditingController portfolioCtrl;
   late TextEditingController resumeCtrl;
 
+  bool isInitialized = false;
+
   @override
   void initState() {
     super.initState();
 
-final d = widget.data; githubCtrl = TextEditingController(text: d.github);
-    linkedinCtrl = TextEditingController(text: d.linkedin);
-    portfolioCtrl = TextEditingController(text: d.portfolio);
-resumeCtrl = TextEditingController(text: d.resume);  }
-void saveData() {
-  final currentUser =
-      context.read<AppStateProvider>().data ?? widget.data;
+    /// 🔥 EMPTY CONTROLLERS
+    githubCtrl = TextEditingController();
+    linkedinCtrl = TextEditingController();
+    portfolioCtrl = TextEditingController();
+    resumeCtrl = TextEditingController();
+  }
 
-  final updatedUser = currentUser.copyWith(
-    github: githubCtrl.text,
-    linkedin: linkedinCtrl.text,
-    portfolio: portfolioCtrl.text,
-    resume: resumeCtrl.text, // ✅ FIXED (also name correction)
-  );
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
-  context.read<AppStateProvider>().data = updatedUser;
-}
+    /// 🔥 PREVENT RESET
+    if (isInitialized) return;
+
+    final d =
+        context.read<AppStateProvider>().data ??
+        widget.data;
+
+    /// 🔥 AUTOFILL
+    githubCtrl.text = d.github ?? '';
+    linkedinCtrl.text = d.linkedin ?? '';
+    portfolioCtrl.text = d.portfolio ?? '';
+    resumeCtrl.text = d.resume ?? '';
+
+    isInitialized = true;
+  }
+
+  void saveData() {
+    final currentUser =
+        context.read<AppStateProvider>().data ??
+        widget.data;
+
+    final updatedUser = currentUser.copyWith(
+      github: githubCtrl.text,
+      linkedin: linkedinCtrl.text,
+      portfolio: portfolioCtrl.text,
+      resume: resumeCtrl.text,
+    );
+
+    context.read<AppStateProvider>().data =
+        updatedUser;
+  }
+
   @override
   void dispose() {
     githubCtrl.dispose();
     linkedinCtrl.dispose();
     portfolioCtrl.dispose();
     resumeCtrl.dispose();
+
     super.dispose();
   }
 
