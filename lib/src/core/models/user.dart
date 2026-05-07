@@ -31,9 +31,11 @@ abstract class User with _$User {
     List<String>? employmentType,
     List<Experience>? experiences,
     List<String>? industry,
-    List<LeadershipExperience>? leadershipExperiences,
+   @JsonKey(name: 'leadership')
+List<LeadershipExperience>? leadershipExperiences,
 
-    List<InternationalExperience>? internationalExperiences,
+@JsonKey(name: 'internationalExperience')
+List<InternationalExperience>? internationalExperiences,
     List<String>? jobRoles,
     List<String>? languagesKnown,
     List<String>? locations,

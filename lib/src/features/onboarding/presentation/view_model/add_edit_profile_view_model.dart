@@ -243,10 +243,11 @@ for (final e
   c.leadershipExperiences.add(ec);
 }
 
-c.leadershipExperiences.add(
-  LeadershipExperienceController(),
-);
-
+if (c.leadershipExperiences.isEmpty) {
+  c.leadershipExperiences.add(
+    LeadershipExperienceController(),
+  );
+}
 
 /// -------- INTERNATIONAL EXPERIENCES --------
 /// -------- INTERNATIONAL EXPERIENCES --------
@@ -275,9 +276,11 @@ for (final e
   c.internationalExperiences.add(ec);
 }
 
-c.internationalExperiences.add(
-  InternationalExperienceController(),
-);
+if (c.internationalExperiences.isEmpty) {
+  c.internationalExperiences.add(
+    InternationalExperienceController(),
+  );
+}
 
 
     /// -------- ACHIEVEMENTS --------

@@ -36,10 +36,10 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   industry: (json['industry'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
-  leadershipExperiences: (json['leadershipExperiences'] as List<dynamic>?)
+  leadershipExperiences: (json['leadership'] as List<dynamic>?)
       ?.map((e) => LeadershipExperience.fromJson(e as Map<String, dynamic>))
       .toList(),
-  internationalExperiences: (json['internationalExperiences'] as List<dynamic>?)
+  internationalExperiences: (json['internationalExperience'] as List<dynamic>?)
       ?.map((e) => InternationalExperience.fromJson(e as Map<String, dynamic>))
       .toList(),
   jobRoles: (json['jobRoles'] as List<dynamic>?)
@@ -111,10 +111,8 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'employmentType': instance.employmentType,
   'experiences': instance.experiences?.map((e) => e.toJson()).toList(),
   'industry': instance.industry,
-  'leadershipExperiences': instance.leadershipExperiences
-      ?.map((e) => e.toJson())
-      .toList(),
-  'internationalExperiences': instance.internationalExperiences
+  'leadership': instance.leadershipExperiences?.map((e) => e.toJson()).toList(),
+  'internationalExperience': instance.internationalExperiences
       ?.map((e) => e.toJson())
       .toList(),
   'jobRoles': instance.jobRoles,

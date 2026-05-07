@@ -205,7 +205,7 @@ TextEditingController noticePeriod;
       'industry': cleanList(industry),
       'jobRoles': cleanList(jobRoles),
       'languagesKnown': cleanList(languagesKnown),
-   'leadershipExperiences':
+   'leadership':
     leadershipExperiences
         .where(
           (e) =>
@@ -239,7 +239,7 @@ TextEditingController noticePeriod;
           }),
         )
         .toList(),
-'internationalExperiences':
+'internationalExperience':
     internationalExperiences
         .where(
           (e) =>
