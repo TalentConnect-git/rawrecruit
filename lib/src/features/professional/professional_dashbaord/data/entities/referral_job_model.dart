@@ -9,7 +9,8 @@ abstract class ReferralJobModel with _$ReferralJobModel {
     @JsonKey(name: '_id') String? id,
     @JsonKey(name: 'candidatePosted') CandidatePosted? candidatePosted,
 
-    String? jobTitle,
+  @JsonKey(fromJson: _jobTitleFromJson)
+String? jobTitle,
     String? description,
     String? jobStatus,
     final String? companyName,
@@ -58,7 +59,13 @@ DateTime? endDate, // ✅ ADD THIS
   factory ReferralJobModel.fromJson(Map<String, dynamic> json) =>
       _$ReferralJobModelFromJson(json);
 }
+String? _jobTitleFromJson(dynamic value) {
+  if (value is List) {
+    return value.join(', ');
+  }
 
+  return value?.toString();
+}
 @freezed
 abstract class CandidatePosted with _$CandidatePosted {
   const factory CandidatePosted({

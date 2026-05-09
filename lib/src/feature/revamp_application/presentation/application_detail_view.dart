@@ -6,26 +6,28 @@ import 'package:rawrecruit/src/core/models/job.dart';
 class ApplicationDetailView extends StatelessWidget {
   final Job? model;
 
-  const ApplicationDetailView({super.key, required this.model});
+  const ApplicationDetailView({
+    super.key,
+    required this.model,
+  });
 
   @override
   Widget build(BuildContext context) {
     final job = model;
 
-
     /// 🔥 RAW + NORMALIZED STATUS
     final rawStatus = job?.status ?? "";
     final status = _normalizeStatus(rawStatus);
 
-   final jobTitle = (job?.jobRoles?.isNotEmpty == true)
-    ? job!.jobRoles!.first
-    : (job?.jobTitle ?? "-");
+    final jobTitle = (job?.jobRoles?.isNotEmpty == true)
+        ? job!.jobRoles!.first
+        : (job?.jobTitle ?? "-");
 
-final companyName = (job?.companyName?.isNotEmpty == true)
-    ? job!.companyName!
-    : (job?.jobType == "Referral"
-        ? "Referral"
-        : "-");
+    final companyName = (job?.companyName?.isNotEmpty == true)
+        ? job!.companyName!
+        : (job?.jobType == "Referral"
+            ? "Referral"
+            : "-");
 
     final location = (job?.location ?? []).isNotEmpty
         ? job?.location?.firstOrNull
@@ -63,15 +65,19 @@ final companyName = (job?.companyName?.isNotEmpty == true)
                 children: [
                   /// TITLE + STATUS BADGE
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
                     children: [
                       Expanded(
                         child: Text(
                           jobTitle ?? "-",
                           style: AppTextStyles.s22W600
-                              .copyWith(color: AppColors.white),
+                              .copyWith(
+                            color: AppColors.white,
+                          ),
                         ),
                       ),
+
                       _statusBadge(rawStatus),
                     ],
                   ),
@@ -81,12 +87,19 @@ final companyName = (job?.companyName?.isNotEmpty == true)
                   /// LOCATION
                   Row(
                     children: [
-                      const Icon(Icons.location_on,
-                          size: 16, color: Colors.green),
+                      const Icon(
+                        Icons.location_on,
+                        size: 16,
+                        color: Colors.green,
+                      ),
+
                       const SizedBox(width: 4),
+
                       Text(
                         location ?? "-",
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
@@ -96,17 +109,21 @@ final companyName = (job?.companyName?.isNotEmpty == true)
                   /// APPLIED DATE
                   Text(
                     "Applied on $appliedDate",
-                    style:
-                        const TextStyle(color: Colors.grey, fontSize: 12),
+                    style: const TextStyle(
+                      color: Colors.grey,
+                      fontSize: 12,
+                    ),
                   ),
 
                   const SizedBox(height: 4),
 
-                  /// REFERRER (not available)
+                  /// REFERRER
                   const Text(
                     "Referrer: -",
-                    style:
-                        TextStyle(color: Colors.green, fontSize: 12),
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
@@ -114,7 +131,7 @@ final companyName = (job?.companyName?.isNotEmpty == true)
 
             const SizedBox(height: 30),
 
-            /// 🔥 TIMELINE
+            /// 🔥 TIMELINE TITLE
             const Text(
               "Progress Timeline",
               style: TextStyle(
@@ -122,21 +139,53 @@ final companyName = (job?.companyName?.isNotEmpty == true)
                 fontWeight: FontWeight.w600,
               ),
             ),
+
             const SizedBox(height: 16),
 
+            /// 🔥 TIMELINE
             _timelineItem("Pending", true),
 
-          
-            // _timelineItem(
-            //   "Shortlisted",
-            //   status == "shortlisted" ||
-            //       status == "accepted" ||
-            //       status == "rejected",
-            // ),
-  _timelineItem(
-              "Referred",
+            _timelineItem(
+              "Application Sent",
+              status == "application_sent" ||
+                  status == "referred" ||
+                  status == "shortlisted" ||
+                  status == "interview" ||
+                  status == "offer" ||
+                  status == "accepted" ||
+                  status == "rejected",
+            ),
+
+            _timelineItem(
+              "Referred To Company",
               status == "referred" ||
                   status == "shortlisted" ||
+                  status == "interview" ||
+                  status == "offer" ||
+                  status == "accepted" ||
+                  status == "rejected",
+            ),
+
+            _timelineItem(
+              "Shortlisted",
+              status == "shortlisted" ||
+                  status == "interview" ||
+                  status == "offer" ||
+                  status == "accepted" ||
+                  status == "rejected",
+            ),
+
+            _timelineItem(
+              "Interview Scheduled",
+              status == "interview" ||
+                  status == "offer" ||
+                  status == "accepted" ||
+                  status == "rejected",
+            ),
+
+            _timelineItem(
+              "Offer Extended",
+              status == "offer" ||
                   status == "accepted" ||
                   status == "rejected",
             ),
@@ -155,7 +204,10 @@ final companyName = (job?.companyName?.isNotEmpty == true)
 
             /// 🔥 BUTTON
             OutlinedButton(
-              onPressed: status == "accepted" ? null : () {},
+              onPressed:
+                  status == "accepted"
+                      ? null
+                      : () {},
               style: OutlinedButton.styleFrom(
                 side: BorderSide(
                   color: status == "accepted"
@@ -163,7 +215,8 @@ final companyName = (job?.companyName?.isNotEmpty == true)
                       : Colors.red,
                 ),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius:
+                      BorderRadius.circular(12),
                 ),
               ),
               child: Text(
@@ -184,15 +237,41 @@ final companyName = (job?.companyName?.isNotEmpty == true)
     );
   }
 
-  /// 🔥 NORMALIZE STATUS (IMPORTANT FIX)
+  /// 🔥 NORMALIZE STATUS
   String _normalizeStatus(String status) {
     final s = status.toLowerCase();
 
-    if (s.contains("pending")) return "pending";
-    if (s.contains("referred")) return "referred";
-    if (s.contains("shortlist")) return "shortlisted";
-    if (s.contains("accept")) return "accepted";
-    if (s.contains("reject")) return "rejected";
+    if (s.contains("pending")) {
+      return "pending";
+    }
+
+    if (s.contains("application sent")) {
+      return "application_sent";
+    }
+
+    if (s.contains("referred")) {
+      return "referred";
+    }
+
+    if (s.contains("shortlist")) {
+      return "shortlisted";
+    }
+
+    if (s.contains("interview")) {
+      return "interview";
+    }
+
+    if (s.contains("offer")) {
+      return "offer";
+    }
+
+    if (s.contains("accept")) {
+      return "accepted";
+    }
+
+    if (s.contains("reject")) {
+      return "rejected";
+    }
 
     return "pending";
   }
@@ -207,28 +286,49 @@ final companyName = (job?.companyName?.isNotEmpty == true)
       case "pending":
         textColor = Colors.grey;
         break;
+
+      case "application_sent":
+        textColor = Colors.orange;
+        break;
+
       case "referred":
         textColor = Colors.deepOrange;
         break;
+
       case "shortlisted":
-        textColor = Colors.orange;
+        textColor = Colors.amber;
         break;
+
+      case "interview":
+        textColor = Colors.blue;
+        break;
+
+      case "offer":
+        textColor = Colors.purple;
+        break;
+
       case "accepted":
         textColor = Colors.green;
         break;
+
       case "rejected":
         textColor = Colors.red;
         break;
     }
 
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 4,
+      ),
       decoration: BoxDecoration(
         color: textColor.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        rawStatus.isEmpty ? "Pending" : rawStatus,
+        rawStatus.isEmpty
+            ? "Pending"
+            : rawStatus,
         style: TextStyle(
           color: textColor,
           fontSize: 12,
@@ -239,9 +339,13 @@ final companyName = (job?.companyName?.isNotEmpty == true)
   }
 
   /// 🔥 TIMELINE ITEM
-  Widget _timelineItem(String title, bool isDone) {
+  Widget _timelineItem(
+    String title,
+    bool isDone,
+  ) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
       children: [
         Column(
           children: [
@@ -249,9 +353,12 @@ final companyName = (job?.companyName?.isNotEmpty == true)
               isDone
                   ? Icons.check_circle
                   : Icons.radio_button_unchecked,
-              color: isDone ? Colors.green : Colors.grey,
+              color: isDone
+                  ? Colors.green
+                  : Colors.grey,
               size: 20,
             ),
+
             Container(
               width: 2,
               height: 30,
@@ -259,13 +366,17 @@ final companyName = (job?.companyName?.isNotEmpty == true)
             ),
           ],
         ),
+
         const SizedBox(width: 10),
+
         Padding(
           padding: const EdgeInsets.only(top: 2),
           child: Text(
             title,
             style: TextStyle(
-              color: isDone ? Colors.white : Colors.grey,
+              color: isDone
+                  ? Colors.white
+                  : Colors.grey,
               fontWeight: FontWeight.w500,
             ),
           ),

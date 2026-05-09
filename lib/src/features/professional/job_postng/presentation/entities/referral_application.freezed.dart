@@ -11,19 +11,16 @@ part of 'referral_application.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$ReferralApplication {
 
-@JsonKey(name: '_id') String? get id; User? get applicant; String? get applicantType; String? get adminApprovalStatus; ReferralPostModel? get job; String? get statusText;@ApplicationStatusConvertor() ApplicationStatus? get currentStatus; DateTime? get createdAt; int? get matchScore; String? get jobTitle; List<String>? get skills;
+ String? get id; User? get applicant; String? get applicantType; String? get adminApprovalStatus; ReferralPostModel? get job; String? get statusText; String? get currentStatus; DateTime? get createdAt; int? get matchScore; String? get jobTitle; List<String>? get skills;
 /// Create a copy of ReferralApplication
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 $ReferralApplicationCopyWith<ReferralApplication> get copyWith => _$ReferralApplicationCopyWithImpl<ReferralApplication>(this as ReferralApplication, _$identity);
 
-  /// Serializes this ReferralApplication to a JSON map.
-  Map<String, dynamic> toJson();
 
 
 @override
@@ -31,7 +28,7 @@ bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferralApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.job, job) || other.job == job)&&(identical(other.statusText, statusText) || other.statusText == statusText)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&const DeepCollectionEquality().equals(other.skills, skills));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,applicant,applicantType,adminApprovalStatus,job,statusText,currentStatus,createdAt,matchScore,jobTitle,const DeepCollectionEquality().hash(skills));
 
@@ -48,7 +45,7 @@ abstract mixin class $ReferralApplicationCopyWith<$Res>  {
   factory $ReferralApplicationCopyWith(ReferralApplication value, $Res Function(ReferralApplication) _then) = _$ReferralApplicationCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job, String? statusText,@ApplicationStatusConvertor() ApplicationStatus? currentStatus, DateTime? createdAt, int? matchScore, String? jobTitle, List<String>? skills
+ String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job, String? statusText, String? currentStatus, DateTime? createdAt, int? matchScore, String? jobTitle, List<String>? skills
 });
 
 
@@ -74,7 +71,7 @@ as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminAppr
 as String?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
 as ReferralPostModel?,statusText: freezed == statusText ? _self.statusText : statusText // ignore: cast_nullable_to_non_nullable
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
-as ApplicationStatus?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,matchScore: freezed == matchScore ? _self.matchScore : matchScore // ignore: cast_nullable_to_non_nullable
 as int?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
 as String?,skills: freezed == skills ? _self.skills : skills // ignore: cast_nullable_to_non_nullable
@@ -187,7 +184,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText, @ApplicationStatusConvertor()  ApplicationStatus? currentStatus,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText,  String? currentStatus,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReferralApplication() when $default != null:
 return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.statusText,_that.currentStatus,_that.createdAt,_that.matchScore,_that.jobTitle,_that.skills);case _:
@@ -208,7 +205,7 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApproval
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText, @ApplicationStatusConvertor()  ApplicationStatus? currentStatus,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText,  String? currentStatus,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)  $default,) {final _that = this;
 switch (_that) {
 case _ReferralApplication():
 return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.statusText,_that.currentStatus,_that.createdAt,_that.matchScore,_that.jobTitle,_that.skills);case _:
@@ -228,7 +225,7 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApproval
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText, @ApplicationStatusConvertor()  ApplicationStatus? currentStatus,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText,  String? currentStatus,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)?  $default,) {final _that = this;
 switch (_that) {
 case _ReferralApplication() when $default != null:
 return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.statusText,_that.currentStatus,_that.createdAt,_that.matchScore,_that.jobTitle,_that.skills);case _:
@@ -240,19 +237,19 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApproval
 }
 
 /// @nodoc
-@JsonSerializable()
+
 
 class _ReferralApplication implements ReferralApplication {
-  const _ReferralApplication({@JsonKey(name: '_id') this.id, this.applicant, this.applicantType, this.adminApprovalStatus, this.job, this.statusText, @ApplicationStatusConvertor() this.currentStatus, this.createdAt, this.matchScore, this.jobTitle, final  List<String>? skills}): _skills = skills;
-  factory _ReferralApplication.fromJson(Map<String, dynamic> json) => _$ReferralApplicationFromJson(json);
+  const _ReferralApplication({this.id, this.applicant, this.applicantType, this.adminApprovalStatus, this.job, this.statusText, this.currentStatus, this.createdAt, this.matchScore, this.jobTitle, final  List<String>? skills}): _skills = skills;
+  
 
-@override@JsonKey(name: '_id') final  String? id;
+@override final  String? id;
 @override final  User? applicant;
 @override final  String? applicantType;
 @override final  String? adminApprovalStatus;
 @override final  ReferralPostModel? job;
 @override final  String? statusText;
-@override@ApplicationStatusConvertor() final  ApplicationStatus? currentStatus;
+@override final  String? currentStatus;
 @override final  DateTime? createdAt;
 @override final  int? matchScore;
 @override final  String? jobTitle;
@@ -272,17 +269,14 @@ class _ReferralApplication implements ReferralApplication {
 @pragma('vm:prefer-inline')
 _$ReferralApplicationCopyWith<_ReferralApplication> get copyWith => __$ReferralApplicationCopyWithImpl<_ReferralApplication>(this, _$identity);
 
-@override
-Map<String, dynamic> toJson() {
-  return _$ReferralApplicationToJson(this, );
-}
+
 
 @override
 bool operator ==(Object other) {
   return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferralApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.job, job) || other.job == job)&&(identical(other.statusText, statusText) || other.statusText == statusText)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&const DeepCollectionEquality().equals(other._skills, _skills));
 }
 
-@JsonKey(includeFromJson: false, includeToJson: false)
+
 @override
 int get hashCode => Object.hash(runtimeType,id,applicant,applicantType,adminApprovalStatus,job,statusText,currentStatus,createdAt,matchScore,jobTitle,const DeepCollectionEquality().hash(_skills));
 
@@ -299,7 +293,7 @@ abstract mixin class _$ReferralApplicationCopyWith<$Res> implements $ReferralApp
   factory _$ReferralApplicationCopyWith(_ReferralApplication value, $Res Function(_ReferralApplication) _then) = __$ReferralApplicationCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job, String? statusText,@ApplicationStatusConvertor() ApplicationStatus? currentStatus, DateTime? createdAt, int? matchScore, String? jobTitle, List<String>? skills
+ String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job, String? statusText, String? currentStatus, DateTime? createdAt, int? matchScore, String? jobTitle, List<String>? skills
 });
 
 
@@ -325,7 +319,7 @@ as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminAppr
 as String?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
 as ReferralPostModel?,statusText: freezed == statusText ? _self.statusText : statusText // ignore: cast_nullable_to_non_nullable
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
-as ApplicationStatus?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,matchScore: freezed == matchScore ? _self.matchScore : matchScore // ignore: cast_nullable_to_non_nullable
 as int?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
 as String?,skills: freezed == skills ? _self._skills : skills // ignore: cast_nullable_to_non_nullable

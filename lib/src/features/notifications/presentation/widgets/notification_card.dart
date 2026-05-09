@@ -5,40 +5,132 @@ import 'package:rawrecruit/src/features/notifications/index.dart'
     show Notification;
 
 class NotificationCard extends StatelessWidget {
-  const NotificationCard({required this.notification, super.key});
+  const NotificationCard({
+    required this.notification,
+    super.key,
+  });
 
   final Notification notification;
 
   @override
   Widget build(BuildContext context) {
+    final isRead = notification.read ?? false;
+
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: const EdgeInsets.all(16),
+
       decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(bottom: BorderSide(width: 0.5, color: AppColors.shadow)),
+        color: AppColors.kTile,
+
+        borderRadius: BorderRadius.circular(18),
+
+        border: Border.all(
+          color: isRead
+              ? AppColors.kBorder
+              : AppColors.kGreen.withOpacity(.35),
+        ),
       ),
+
       child: Row(
-        spacing: 16,
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+
         children: [
+          /// 🔥 ICON
           Container(
-            padding: EdgeInsets.all(12),
-            color: notification.type?.backgroundColor,
-            child: Icon(notification.type?.icon),
-          ),
-          Expanded(
-            child: Text(
-              notification.message ?? '',
-              style: (notification.read ?? false)
-                  ? AppTextStyles.s16W400
-                  : AppTextStyles.s16W600,
+            padding: const EdgeInsets.all(12),
+
+            decoration: BoxDecoration(
+              color:
+                  notification.type?.backgroundColor ??
+                  AppColors.kCard,
+
+              borderRadius:
+                  BorderRadius.circular(14),
+            ),
+
+            child: Icon(
+              notification.type?.icon ??
+                  Icons.notifications_none,
+
+              color:
+                  notification.type?.textColor ??
+                  AppColors.kGreen,
+
+              size: 22,
             ),
           ),
-          Text(
-            notification.createdAt?.toRelativeTime() ?? '-',
-            style: (notification.read ?? false)
-                ? AppTextStyles.s12W400
-                : AppTextStyles.s12W600,
+
+          const SizedBox(width: 14),
+
+          /// 🔥 CONTENT
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+
+              children: [
+                /// TYPE
+                Text(
+                  notification.type?.label ??
+                      "Notification",
+
+                  style:
+                      AppTextStyles.s14W600.copyWith(
+                    color:
+                        notification.type
+                            ?.textColor ??
+                        AppColors.kGreen,
+                  ),
+                ),
+
+                const SizedBox(height: 6),
+
+                /// MESSAGE
+                Text(
+                  notification.message ?? '',
+
+                  style:
+                      (isRead
+                              ? AppTextStyles.s14W400
+                              : AppTextStyles.s14W600)
+                          .copyWith(
+                    color: AppColors.white,
+                    height: 1.4,
+                  ),
+                ),
+
+                const SizedBox(height: 10),
+
+                /// TIME
+                Text(
+                  notification.createdAt
+                          ?.toRelativeTime() ??
+                      '-',
+
+                  style:
+                      AppTextStyles.s12W400.copyWith(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
           ),
+
+          /// 🔥 UNREAD DOT
+          if (!isRead)
+            Container(
+              width: 10,
+              height: 10,
+
+              margin:
+                  const EdgeInsets.only(left: 10),
+
+              decoration: BoxDecoration(
+                color: AppColors.kGreen,
+                shape: BoxShape.circle,
+              ),
+            ),
         ],
       ),
     );

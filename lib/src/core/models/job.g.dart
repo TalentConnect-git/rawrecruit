@@ -9,7 +9,7 @@ part of 'job.dart';
 _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   id: json['_id'] as String?,
   postedByUser: json['postedByUser'] as String?,
-  jobTitle: json['jobTitle'] as String?,
+  jobTitle: _jobTitleFromJson(json['jobTitle']),
   description: json['description'] as String?,
   jobStatus: json['jobStatus'] as String?,
   approvalStatus: json['approvalStatus'] as String?,

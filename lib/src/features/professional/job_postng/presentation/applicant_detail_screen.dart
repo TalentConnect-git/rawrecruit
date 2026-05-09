@@ -100,8 +100,7 @@ class ApplicationDetailsView extends StatelessWidget {
 
             /// Current Status
             Text(
-              "Current Status: ${application.currentStatus?.name}",
-              style: const TextStyle(
+"Current Status: ${application.currentStatus ?? '-'}",              style: const TextStyle(
                   fontSize: 16, fontWeight: FontWeight.bold),
             ),
 

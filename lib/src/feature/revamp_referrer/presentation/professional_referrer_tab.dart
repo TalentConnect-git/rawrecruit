@@ -216,7 +216,10 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
           itemCount: vm.referredByMe.length,
           itemBuilder: (context, index) {
             final app = vm.referredByMe[index];
-            return ReferredApplicantCard(application: app);
+     return ReferredApplicantCard(
+  application: app,
+  showStatusActions: true,
+);
           },
         );
       },

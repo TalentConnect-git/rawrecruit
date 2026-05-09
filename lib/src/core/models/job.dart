@@ -12,8 +12,8 @@ abstract class Job with _$Job {
     @JsonKey(name: '_id') String? id,
 String? postedByUser,
     // Basic
-    String? jobTitle, // 🔥 REQUIRED
-    String? description,
+@JsonKey(fromJson: _jobTitleFromJson)
+String? jobTitle,    String? description,
     String? jobStatus,
     String? approvalStatus,
     String? visibleTo,
@@ -91,8 +91,15 @@ String? postedByUser,
     DateTime? updatedAt,
   }) = _Job;
   factory Job.fromJson(Map<String, dynamic> json) => _$JobFromJson(json);
+  
 }
+ String? _jobTitleFromJson(dynamic value) {
+  if (value is List) {
+    return value.join(', ');
+  }
 
+  return value?.toString();
+}
 List<String>? _safeList(dynamic value) {
   if (value is List) {
     return value.map((e) => e.toString()).toList();
