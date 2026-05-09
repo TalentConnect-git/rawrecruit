@@ -17,5 +17,9 @@ ResultFuture<void> applyInternship(String jobId);
         ResultFuture<List<ReferralApplication>> fetchReferredByMe();
          ResultFuture<List<Job>> fetchReferralAppliedJobs();
   ResultFuture<List<Job>> fetchInternshipAppliedJobs();
-
+ResultFuture<void> updateReferralStatus({
+  required String applicationId,
+  required String status,
+  required String jobRole,
+});
 }

@@ -15,7 +15,7 @@ _ReferralJobModel _$ReferralJobModelFromJson(
       : CandidatePosted.fromJson(
           json['candidatePosted'] as Map<String, dynamic>,
         ),
-  jobTitle: json['jobTitle'] as String?,
+  jobTitle: _jobTitleFromJson(json['jobTitle']),
   description: json['description'] as String?,
   jobStatus: json['jobStatus'] as String?,
   companyName: json['companyName'] as String?,

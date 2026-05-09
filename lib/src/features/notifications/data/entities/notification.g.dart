@@ -59,6 +59,10 @@ const _$NotificationTypeEnumMap = {
   NotificationType.serviceRequestUpdate: 'SERVICE_REQUEST_UPDATE',
   NotificationType.applicationShortlisted: 'APPLICATION_SHORTLISTED',
   NotificationType.applicationAccepted: 'APPLICATION_ACCEPTED',
+  NotificationType.applicationInterviewScheduled:
+      'APPLICATION_INTERVIEW_SCHEDULED',
+  NotificationType.applicationOfferExtended: 'APPLICATION_OFFER_EXTENDED',
+  NotificationType.referralApplicationApproved: 'REFERRAL_APPLICATION_APPROVED',
   NotificationType.applicationRejected: 'APPLICATION_REJECTED',
   NotificationType.collegeApplicationShortlisted:
       'COLLEGE_APPLICATION_SHORTLISTED',
@@ -72,4 +76,5 @@ const _$JobTypeEnumMap = {
   JobType.onCampus: 'On-campus',
   JobType.offCampus: 'Off-campus',
   JobType.poolCampus: 'Pool-campus',
+  JobType.referral: 'Referral',
 };

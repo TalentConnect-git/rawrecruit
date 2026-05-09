@@ -61,23 +61,24 @@ class ApplicationListItem extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 /// Status Badge
-                if (status != null)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 10,
-                    ),
-                    decoration: BoxDecoration(
-                      color: status.labelBGColor,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Text(
-                      status.apiLabel,
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: status.labelColor,
-                      ),
-                    ),
+       if (status != null)
+  Container(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 16,
+      vertical: 10,
+    ),
+    decoration: BoxDecoration(
+      color: Colors.green.withOpacity(.12),
+      borderRadius: BorderRadius.circular(12),
+    ),
+    child: Text(
+      status,
+      style: const TextStyle(
+        fontWeight: FontWeight.w600,
+        color: Colors.green,
+      ),
+    ),
+  
                   ),
 
                 InkWell(

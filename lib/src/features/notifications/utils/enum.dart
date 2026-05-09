@@ -65,7 +65,27 @@ enum NotificationType {
     backgroundColor: Color(0xFFDCFCE7),
     icon: Icons.verified,
   ),
-
+@JsonValue('APPLICATION_INTERVIEW_SCHEDULED')
+applicationInterviewScheduled(
+  label: 'Interview Scheduled',
+  textColor: Color(0xFF2563EB),
+  backgroundColor: Color(0xFFDBEAFE),
+  icon: Icons.video_call_outlined,
+),
+@JsonValue('APPLICATION_OFFER_EXTENDED')
+applicationOfferExtended(
+  label: 'Offer Extended',
+  textColor: Color(0xFF7C3AED),
+  backgroundColor: Color(0xFFEDE9FE),
+  icon: Icons.workspace_premium_outlined,
+),
+@JsonValue('REFERRAL_APPLICATION_APPROVED')
+referralApplicationApproved(
+  label: 'Referral Approved',
+  textColor: Color(0xFF059669),
+  backgroundColor: Color(0xFFD1FAE5),
+  icon: Icons.verified_outlined,
+),
   @JsonValue('APPLICATION_REJECTED')
   applicationRejected(
     label: 'Application Rejected',
@@ -135,7 +155,10 @@ enum JobType {
   offCampus('Off Campus'),
 
   @JsonValue('Pool-campus')
-  poolCampus('Pool Campus');
+  poolCampus('Pool Campus'),
+
+ @JsonValue('Referral')
+  referral('Referral');
 
   final String label;
 

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
@@ -7,25 +6,53 @@ import 'package:rawrecruit/src/core/index.dart';
 class ApplicationCard extends StatelessWidget {
   final Job model;
 
-  const ApplicationCard({super.key, required this.model});
+  const ApplicationCard({
+    super.key,
+    required this.model,
+  });
 
-  /// 🔥 STEP MAPPING (UPDATED - NO SHORTLISTED)
+  /// 🔥 TOTAL STEPS
+  static const int totalSteps = 7;
+
+  /// 🔥 STEP MAPPING
   int _getStep(String status) {
-    switch (status.toLowerCase()) {
-      case "referred to company":
-        return 1;
-      case "accepted":
-      case "rejected":
-        return 2;
-      case "pending":
-      default:
-        return 0;
+    final s = status.toLowerCase();
+
+    if (s.contains("pending")) {
+      return 0;
     }
+
+    if (s.contains("application sent")) {
+      return 1;
+    }
+
+    if (s.contains("referred")) {
+      return 2;
+    }
+
+    if (s.contains("shortlist")) {
+      return 3;
+    }
+
+    if (s.contains("interview")) {
+      return 4;
+    }
+
+    if (s.contains("offer")) {
+      return 5;
+    }
+
+    if (s.contains("accepted") ||
+        s.contains("rejected")) {
+      return 6;
+    }
+
+    return 0;
   }
 
-  /// 🔥 PROGRESS (3 STEPS NOW)
+  /// 🔥 PROGRESS
   double _getProgress(String status) {
-    return (_getStep(status) + 1) / 3;
+    return (_getStep(status) + 1) / totalSteps;
   }
 
   int _getPercentage(String status) {
@@ -40,19 +67,23 @@ class ApplicationCard extends StatelessWidget {
             ? model.jobTitle!
             : "-");
 
-    final company = (model.companyName?.isNotEmpty == true)
-        ? model.companyName!
-        : (model.jobType == "Referral"
-            ? "Referral"
-            : "-");
+    final company =
+        (model.companyName?.isNotEmpty == true)
+            ? model.companyName!
+            : (model.jobType == "Referral"
+                ? "Referral"
+                : "-");
 
     final status = model.status ?? "pending";
 
     final step = _getStep(status);
+
     final progress = _getProgress(status);
+
     final percent = _getPercentage(status);
 
-    final isRejected = status.toLowerCase() == "rejected";
+    final isRejected =
+        status.toLowerCase().contains("rejected");
 
     return InkWell(
       borderRadius: BorderRadius.circular(18),
@@ -68,15 +99,18 @@ class ApplicationCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.kTile,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.kBorder),
+          border: Border.all(
+            color: AppColors.kBorder,
+          ),
         ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
           children: [
-
             /// 🔹 HEADER
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              mainAxisAlignment:
+                  MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
@@ -88,6 +122,7 @@ class ApplicationCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),
+
                 Text(
                   "$percent%",
                   style: const TextStyle(
@@ -110,80 +145,53 @@ class ApplicationCard extends StatelessWidget {
 
             const SizedBox(height: 16),
 
-            /// 🔥 PROGRESS BAR
-            LinearProgressIndicator(
-              value: progress,
-              backgroundColor: Colors.white.withOpacity(0.1),
-              valueColor: AlwaysStoppedAnimation(
-                isRejected ? Colors.red : AppColors.kGreen,
+   
+            /// 🔥 STEP LABEL
+            Text(
+              status,
+              style: TextStyle(
+                color: isRejected
+                    ? Colors.red
+                    : AppColors.kGreen,
+                fontWeight: FontWeight.w600,
               ),
             ),
 
-            const SizedBox(height: 16),
+            const SizedBox(height: 14),
 
-            /// 🔥 STEPPER (UPDATED)
+            /// 🔥 MINI STEPPER
             Row(
-              children: [
-                _step("Pending", 0, step, isRejected),
-                _line(),
-                _step("Referred", 1, step, isRejected),
-                _line(),
-                _step(
-                  isRejected ? "Rejected" : "Final",
-                  2,
-                  step,
-                  isRejected,
-                ),
-              ],
+              children: List.generate(
+                totalSteps,
+                (index) {
+                  final isActive = index <= step;
+
+                  final color = isActive
+                      ? (isRejected &&
+                              index == step
+                          ? Colors.red
+                          : AppColors.kGreen)
+                      : Colors.grey.shade700;
+
+                  return Expanded(
+                    child: Container(
+                      margin:
+                          const EdgeInsets.symmetric(
+                        horizontal: 2,
+                      ),
+                      height: 6,
+                      decoration: BoxDecoration(
+                        color: color,
+                        borderRadius:
+                            BorderRadius.circular(20),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  /// 🔥 STEP CIRCLE
-  Widget _step(String label, int index, int currentStep, bool isRejected) {
-    final isActive = index <= currentStep;
-
-    final color = isActive
-        ? (isRejected && index == currentStep
-            ? Colors.red
-            : AppColors.kGreen)
-        : Colors.grey.shade700;
-
-    return Column(
-      children: [
-        Container(
-          width: 16,
-          height: 16,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: color,
-          ),
-        ),
-        const SizedBox(height: 6),
-        SizedBox(
-          width: 70,
-          child: Text(
-            label,
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 10,
-              color: isActive ? Colors.white : Colors.grey,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// 🔥 CONNECTING LINE
-  Widget _line() {
-    return Expanded(
-      child: Container(
-        height: 2,
-        color: Colors.grey.shade700,
       ),
     );
   }

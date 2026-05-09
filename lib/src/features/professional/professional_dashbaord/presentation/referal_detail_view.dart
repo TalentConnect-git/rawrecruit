@@ -15,8 +15,8 @@ import 'view_model/prof_dashboard_view_model.dart';
 
 class ReferralDetailView extends StatefulWidget {
   final String jobId;
-final String? companyName;
-  const ReferralDetailView({super.key, required this.jobId,  this.companyName});
+  final String? companyName;
+  const ReferralDetailView({super.key, required this.jobId, this.companyName});
 
   @override
   State<ReferralDetailView> createState() => _ReferralDetailViewState();
@@ -52,7 +52,6 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
           }
 
           final referral = vm.selectedReferralJob;
-          
           final job = referral != null ? mapReferralToJob(referral) : null;
 
           if (job == null) {
@@ -107,40 +106,74 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
               ],
             ),
 
-            /// 🔥 APPLY BAR
-            bottomNavigationBar: Padding(
+            /// 🔥 BOTTOM SAVE + APPLY BAR (logic preserved, only styling refreshed)
+            bottomNavigationBar: Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+              decoration: BoxDecoration(
+                color: AppColors.kCard,
+                border: Border(
+                  top: BorderSide(color: Colors.white.withOpacity(0.06)),
+                ),
+              ),
               child: Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton(
+                    child: OutlinedButton.icon(
                       onPressed: () => shortlistVM.toggleSave(
                         jobId: jobId,
                         jobType: "Referral",
                         isSaved: isSaved,
                       ),
-                      child: Text(
+                      icon: Icon(
+                        isSaved ? Icons.bookmark : Icons.bookmark_border,
+                        color: AppColors.kGreen,
+                        size: 18,
+                      ),
+                      label: Text(
                         isSaved ? "Saved" : "Save",
-                        style: TextStyle(color: AppColors.kGreen),
+                        style: TextStyle(
+                          color: AppColors.kGreen,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      style: OutlinedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        side: BorderSide(
+                          color: AppColors.kGreen.withOpacity(.5),
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
                       ),
                     ),
                   ),
                   const SizedBox(width: 12),
                   Expanded(
                     flex: 2,
-                    child: ElevatedButton(
+                    child: ElevatedButton.icon(
                       onPressed: isApplied
                           ? null
                           : () => applicationVM.apply(
-                              jobId: jobId,
-                              jobType: "Referral",
-                            ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isApplied
-                            ? Colors.grey
-                            : AppColors.kGreen,
+                                jobId: jobId,
+                                jobType: "Referral",
+                              ),
+                      icon: Icon(
+                        isApplied ? Icons.check_circle : Icons.send_rounded,
+                        size: 18,
                       ),
-                      child: Text(isApplied ? "Applied" : "Apply Now"),
+                      label: Text(
+                        isApplied ? "Applied" : "Apply Now",
+                        style: const TextStyle(fontWeight: FontWeight.w600),
+                      ),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor:
+                            isApplied ? Colors.grey : AppColors.kGreen,
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(vertical: 14),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -153,149 +186,32 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                _header(job, referral),
+                  _header(job, referral),
+                  const SizedBox(height: 16),
 
-                  const SizedBox(height: 20),
-                  
-                
-                
-                  _sectionText("Description", job.description),
+                  _postedBySection(job, referral),
+                  const SizedBox(height: 16),
 
-                  _sectionInfo("Job Overview", [
-                    _info("Job Title", job.jobTitle),
-                    // _info("Job Type", job.jobType),
-                    _info("Status", job.jobStatus),
-                    _info("Approval", job.approvalStatus),
-                  ]),
+                  _matchInsightsSection(job),
+                  const SizedBox(height: 16),
 
-                  _sectionInfo("Basic Info", [
-                    _info("Experience", job.yearsOfExperience),
-                    _info("Education", job.minEducation),
-                    _info("Openings", job.numberOfOpenings),
-                    _info("CGPA", job.cgpa),
-                  ]),
+                  _roleOverviewSection(job),
+                  const SizedBox(height: 16),
 
-                  _sectionInfo("Location & Work", [
-                    _info("Location", job.location),
-                    _info("Work Mode", job.workMode),
-                    _info("Employment Type", job.employmentType),
-                  ]),
+                  _jobDetailsSection(job),
+                  const SizedBox(height: 16),
 
-                  _sectionInfo("Package", [
-                    _info("Currency", job.packageDetails?.currency),
-                    _info("CTC", job.packageDetails?.totalCTC),
-                    _info("Fixed Pay", job.packageDetails?.fixedPay),
-                    _info("Joining Bonus", job.packageDetails?.joiningBonus),
-                  ]),
+                  _skillsSection(job),
+                  const SizedBox(height: 16),
 
-                  _sectionList("Skills", job.skills),
-                  _sectionList("Tools", job.toolsAndPlatforms),
-                  _sectionList("Certifications", job.certifications),
-                  _sectionList("Benefits", job.benefits),
-                  _sectionList("Selection Process", job.selectionProcess),
+                  _eligibilitySection(job),
+                  const SizedBox(height: 16),
 
-                  _sectionInfo("Other", [
-                    _info("Views", job.views),
-                    _info("Status", job.status),
-                  ]),
-                  
-_containerSection(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
-
-      const Text(
-        "Referral Contact",
-        style: TextStyle(
-          color: Colors.white,
-          fontSize: 16,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-
-      const SizedBox(height: 14),
-
-      _highlightInfo(
-        "Name",
-        job.candidatePosted?.name,
-      ),
-
-      _highlightInfo(
-        "Company",
-        widget.companyName ?? "Company",
-      ),
-
-      _highlightInfo(
-        "Email",
-        job.candidatePosted?.email,
-      ),
-
-      _highlightInfo(
-        "Phone",
-        job.candidatePosted?.phone,
-      ),
-
-      const SizedBox(height: 16),
-
-      GestureDetector(
-       onTap: () {
-  final candidate = referral?.candidatePosted;
-
-  if (candidate == null) return;
-
-  final user = User(
-    id: candidate.userId ?? candidate.id,
-    name: candidate.name ?? "",
-    email: candidate.email ?? "",
-    phone: candidate.phone ?? "",
-  );
-
-  context.pushNamed(
-    RouteNames.chatUser,
-    extra: user,
-  );
-},
-
-        child: Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 16,
-            vertical: 10,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.kGreen.withOpacity(.15),
-            borderRadius: BorderRadius.circular(30),
-            border: Border.all(
-              color: AppColors.kGreen.withOpacity(.4),
-            ),
-          ),
-
-          child: const Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(
-                Icons.message,
-                size: 18,
-                color: Colors.green,
-              ),
-
-              SizedBox(width: 8),
-
-              Text(
-                "Message",
-                style: TextStyle(
-                  color: Colors.green,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    ],
-  ),
-),
+                  _aboutCompanySection(job),
                   const SizedBox(height: 24),
 
+                  _alumniHeader(),
+                  const SizedBox(height: 12),
                   _alumniSection(),
                   const SizedBox(height: 40),
                 ],
@@ -307,159 +223,445 @@ _containerSection(
     );
   }
 
- Widget _header(Job job, dynamic referral) {
-    final role = job.jobTitle ?? "Backend Developer";
-    print(referral);
-print(referral?.toJson());
-final company = widget.companyName ?? "Company";
-    final location = job.location?.join(", ") ?? "Hyderabad";
-    final mode = job.workMode?.join(", ") ?? "Hybrid";
-    final type = job.jobType ?? "Full-time";
+  // ============================================================
+  // HEADER (logo, title, chips, salary + experience)
+  // ============================================================
+// ============================================================
+// HEADER (compact - tight spacing, inline info row with dividers)
+// ============================================================
+Widget _header(Job job, dynamic referral) {
+  final role = job.jobTitle ?? "Software Developer";
+  final company = widget.companyName ?? "Company";
+  final location = (job.location?.isNotEmpty ?? false)
+      ? job.location!.join(", ")
+      : "—";
+  final mode = (job.workMode?.isNotEmpty ?? false)
+      ? job.workMode!.join(", ")
+      : "—";
 
-    final salary = job.packageDetails?.totalCTC != null
-        ? "₹${job.packageDetails!.totalCTC} LPA"
-        : "₹15-22 LPA";
+  final salary = job.packageDetails?.totalCTC != null
+      ? "₹${job.packageDetails!.totalCTC}"
+      : "—";
+  final experience = job.yearsOfExperience != null
+      ? "${job.yearsOfExperience} Years"
+      : "—";
 
-    final experience = job.yearsOfExperience != null
-        ? "${job.yearsOfExperience} years"
-        : "0-1 years";
+  final deadline = job.endDate != null
+      ? DateFormat("dd MMM yyyy").format(job.endDate!)
+      : "Not mentioned";
 
-final deadline = job.endDate != null
-    ? DateFormat("dd MMM yyyy").format(job.endDate!)
-    : "Not mentioned";
-
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: const Color(0xFF0B0F14),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          /// 🔥 TOP ROW (LOGO + TEXT)
-          Row(
-            children: [
-              /// LOGO BOX
-              Container(
-                height: 52,
-                width: 52,
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Center(
-                  child: Text(
-                    company.isNotEmpty ? company[0] : "M",
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 20,
-                    ),
+  return Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: AppColors.kCard,
+      borderRadius: BorderRadius.circular(14),
+      border: Border.all(color: Colors.white.withOpacity(0.06)),
+    ),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        /// Top row: logo + title + company (compact)
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Container(
+              height: 44,
+              width: 44,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Center(
+                child: Text(
+                  company.isNotEmpty ? company[0].toUpperCase() : "C",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 20,
                   ),
                 ),
               ),
-
-              const SizedBox(width: 12),
-
-              /// TITLE + COMPANY
-              Column(
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     role,
                     style: const TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
-                      fontWeight: FontWeight.w600,
+                      fontSize: 17,
+                      fontWeight: FontWeight.w700,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  const SizedBox(height: 2),
+                  Row(
+                    children: [
+                      Flexible(
+                        child: Text(
+                          company,
+                          style: const TextStyle(
+                            color: Colors.grey,
+                            fontSize: 13,
+                          ),
+                          maxLines: 2,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(Icons.verified, size: 12, color: AppColors.kGreen),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+
+        /// Inline info row with vertical dividers
+        Row(
+          children: [
+            const Icon(Icons.location_on_outlined,
+                size: 13, color: Colors.grey),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                location,
+                style: const TextStyle(color: Colors.grey, fontSize: 11),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            _vDivider(),
+            const Icon(Icons.business_center_outlined,
+                size: 13, color: Colors.grey),
+            const SizedBox(width: 4),
+            Flexible(
+              child: Text(
+                mode,
+                style: const TextStyle(color: Colors.grey, fontSize: 11),
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            _vDivider(),
+            const Icon(Icons.calendar_today_outlined,
+                size: 12, color: Colors.grey),
+            const SizedBox(width: 4),
+            Flexible(
+              child: RichText(
+                maxLines: 2,
+                
+                text: TextSpan(
+                  children: [
+                    const TextSpan(
+                      text: "Deadline: ",
+                      style: TextStyle(color: Colors.grey, fontSize: 11),
+                    ),
+                    TextSpan(
+                      text: deadline,
+                      style: TextStyle(
+                        color: AppColors.kGreen,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 10),
+
+        /// Salary + experience bar (compact)
+        Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: Colors.white.withOpacity(0.03),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.white.withOpacity(0.05)),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      salary,
+                      style: TextStyle(
+                        color: AppColors.kGreen,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      "EST. ANNUAL SALARY",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 10,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Container(
+                height: 30,
+                width: 1,
+                color: Colors.white.withOpacity(0.08),
+              ),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      experience,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    const Text(
+                      "EXPERIENCE REQUIRED",
+                      style: TextStyle(
+                        color: Colors.grey,
+                        fontSize: 10,
+                        letterSpacing: 0.5,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+/// Tiny vertical divider used between inline info chunks
+Widget _vDivider() {
+  return Container(
+    height: 12,
+    width: 1,
+    margin: const EdgeInsets.symmetric(horizontal: 8),
+    color: Colors.white.withOpacity(0.15),
+  );
+}
+
+  Widget _headerChip(IconData icon, String text, {Color? valueColor}) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 14, color: Colors.grey),
+          const SizedBox(width: 6),
+          Text(
+            text,
+            style: TextStyle(
+              color: valueColor ?? Colors.grey[300],
+              fontSize: 12,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============================================================
+  // POSTED BY (REFERRER) - profile + single Message button
+  // ============================================================
+  Widget _postedBySection(Job job, dynamic referral) {
+    final candidate = referral?.candidatePosted;
+    final name =
+        candidate?.name ?? job.candidatePosted?.name ?? "Referrer";
+    final company =
+        widget.companyName ?? candidate?.currentCompany ?? "Company";
+    final college = candidate?.college ?? "—";
+
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                "Posted by (Referrer)",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              Row(
+                children: [
+                  Container(
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      color: AppColors.kGreen,
+                      shape: BoxShape.circle,
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(width: 6),
                   Text(
-                    company,
-                    style: const TextStyle(color: Colors.grey, fontSize: 14),
+                    "Active Referrer",
+                    style: TextStyle(
+                      color: AppColors.kGreen,
+                      fontSize: 12,
+                    ),
                   ),
                 ],
               ),
             ],
           ),
-
           const SizedBox(height: 14),
-
-          /// 🔥 TAG CHIPS
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
+          Row(
             children: [
-              _tag("📍 $location"),
-              _tag("👜 $mode"),
-              // _tag("⏱ $type"),
-              _tag("📅 Deadline: $deadline"),
+              Stack(
+                children: [
+                  CircleAvatar(
+                    radius: 28,
+                    backgroundColor: Colors.white.withOpacity(0.08),
+                    child: Text(
+                      name.isNotEmpty ? name[0].toUpperCase() : "R",
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Container(
+                      padding: const EdgeInsets.all(2),
+                      decoration: BoxDecoration(
+                        color: AppColors.kCard,
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(
+                        Icons.check_circle,
+                        size: 14,
+                        color: AppColors.kGreen,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      "Software Engineer @ $company",
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 12,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      college,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 11,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                    // Container(
+                    //   padding: const EdgeInsets.symmetric(
+                    //     horizontal: 8,
+                    //     vertical: 4,
+                    //   ),
+                    //   decoration: BoxDecoration(
+                    //     color: AppColors.kGreen.withOpacity(0.12),
+                    //     borderRadius: BorderRadius.circular(6),
+                    //   ),
+                    //   child: Row(
+                    //     mainAxisSize: MainAxisSize.min,
+                    //     children: [
+                    //       Icon(
+                    //         Icons.people_outline,
+                    //         size: 12,
+                    //         color: AppColors.kGreen,
+                    //       ),
+                    //       const SizedBox(width: 4),
+                    //       Text(
+                    //         "2nd Degree Connection",
+                    //         style: TextStyle(
+                    //           color: AppColors.kGreen,
+                    //           fontSize: 10,
+                    //           fontWeight: FontWeight.w600,
+                    //         ),
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+                  ],
+                ),
+              ),
             ],
           ),
-
           const SizedBox(height: 16),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () {
+                final c = referral?.candidatePosted;
+                if (c == null) return;
 
-          /// 🔥 SALARY + EXPERIENCE BAR
-          Container(
-            padding: const EdgeInsets.symmetric(vertical: 14),
-            decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.04),
-              borderRadius: BorderRadius.circular(16),
-              border: Border.all(color: Colors.white.withOpacity(0.05)),
-            ),
-            child: Row(
-              children: [
-                /// SALARY
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        salary,
-                        style: const TextStyle(
-                          color: Colors.green,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        "Salary",
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
+                final user = User(
+                  id: c.userId ?? c.id,
+                  name: c.name ?? "",
+                  email: c.email ?? "",
+                  phone: c.phone ?? "",
+                );
 
-                /// DIVIDER
-                Container(
-                  height: 32,
-                  width: 1,
-                  color: Colors.white.withOpacity(0.08),
+                context.pushNamed(
+                  RouteNames.chatUser,
+                  extra: user,
+                );
+              },
+              icon: const Icon(Icons.message_outlined, size: 18),
+              label: const Text(
+                "Message",
+                style: TextStyle(fontWeight: FontWeight.w600),
+              ),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.kGreen,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
                 ),
-
-                /// EXPERIENCE
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        experience,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      const Text(
-                        "Experience",
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ],
@@ -467,39 +669,475 @@ final deadline = job.endDate != null
     );
   }
 
-  Widget _tag(String text) {
+  // ============================================================
+  // MATCH INSIGHTS (no "Why you're a good fit", keep score + improve)
+  // ============================================================
+ // ============================================================
+// MATCH INSIGHTS — score circle + real job stats on the left
+// ============================================================
+Widget _matchInsightsSection(Job job) {
+  final openings = job.numberOfOpenings?.toString() ?? "—";
+  final rounds = (job.selectionProcess?.length ?? 0).toString();
+  final views = job.views?.toString() ?? "0";
+
+  return _cardContainer(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: const [
+            Icon(Icons.track_changes, size: 18, color: Colors.purpleAccent),
+            SizedBox(width: 8),
+            Text(
+              "Match & Referral Insights",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            // Stats list (replaces the "what you can improve" text)
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _insightRow(Icons.work_outline, "Openings", openings),
+                  const SizedBox(height: 10),
+                  _insightRow(
+                      Icons.checklist_rounded, "Selection Rounds", rounds),
+                  const SizedBox(height: 10),
+                  _insightRow(
+                      Icons.visibility_outlined, "Views", views),
+                ],
+              ),
+            ),
+            const SizedBox(width: 16),
+            // Match Score circle (kept)
+            SizedBox(
+              width: 80,
+              height: 80,
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: CircularProgressIndicator(
+                      value: 0.85,
+                      strokeWidth: 6,
+                      backgroundColor: Colors.white.withOpacity(0.08),
+                      valueColor:
+                          AlwaysStoppedAnimation(AppColors.kGreen),
+                    ),
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Text(
+                        "85%",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        "Match Score",
+                        style: TextStyle(
+                          color: AppColors.kGreen,
+                          fontSize: 9,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _insightRow(IconData icon, String label, String value) {
+  return Row(
+    children: [
+      Icon(icon, size: 14, color: AppColors.kGreen),
+      const SizedBox(width: 8),
+      Text(
+        "$label: ",
+        style: const TextStyle(color: Colors.grey, fontSize: 12),
+      ),
+      Flexible(
+        child: Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ),
+    ],
+  );
+}
+
+  // ============================================================
+  // ROLE OVERVIEW (description as bullet points)
+  // ============================================================
+  Widget _roleOverviewSection(Job job) {
+    final raw = job.description ?? "";
+    List<String> bullets = [];
+    if (raw.isNotEmpty) {
+      bullets = raw
+          .split(RegExp(r'[\n•]'))
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
+    }
+    if (bullets.isEmpty) bullets = ["—"];
+
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.description_outlined,
+                  size: 18, color: Colors.lightBlueAccent),
+              SizedBox(width: 8),
+              Text(
+                "Role Overview",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...bullets.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 6, right: 8),
+                    child:
+                        Icon(Icons.circle, size: 5, color: Colors.grey),
+                  ),
+                  Expanded(
+                    child: Text(
+                      e,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13,
+                        height: 1.4,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============================================================
+  // JOB DETAILS - 2 column grid
+  // ============================================================
+  Widget _jobDetailsSection(Job job) {
+    final exp = job.yearsOfExperience != null
+        ? "${job.yearsOfExperience}"
+        : "—";
+    final education = job.minEducation ?? "—";
+    final openings = job.numberOfOpenings?.toString() ?? "—";
+final String jobType = job.jobType ??
+    ((job.employmentType?.isNotEmpty ?? false)
+        ? job.employmentType!.join(", ")
+        : "—");    final workMode =
+        (job.workMode?.isNotEmpty ?? false) ? job.workMode!.join(", ") : "—";
+    final location =
+        (job.location?.isNotEmpty ?? false) ? job.location!.join(", ") : "—";
+
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.business_center_outlined,
+                  size: 18, color: Colors.blueAccent),
+              SizedBox(width: 8),
+              Text(
+                "Job Details",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(child: _detailRow("Experience", exp)),
+               Expanded(child: _detailRow("Job Type", jobType)),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(child: _detailRow("Education", education)),
+              Expanded(child: _detailRow("Work Mode", workMode)),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Row(
+            children: [
+              Expanded(child: _detailRow("Openings", openings)),
+              Expanded(
+                child: _detailRow(
+                  "Location",
+                  location,
+                  valueColor: AppColors.kGreen,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _detailRow(String label, String value, {Color? valueColor}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(color: Colors.grey, fontSize: 11),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: TextStyle(
+            color: valueColor ?? Colors.white,
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ],
+    );
+  }
+
+  // ============================================================
+  // SKILLS REQUIRED - chip tags
+  // ============================================================
+  Widget _skillsSection(Job job) {
+    final skills = job.skills ?? [];
+    final visible = skills.take(6).toList();
+    final extra = skills.length - visible.length;
+
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.code, size: 18, color: Colors.greenAccent),
+              SizedBox(width: 8),
+              Text(
+                "Skills Required",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          if (visible.isEmpty)
+            const Text("—", style: TextStyle(color: Colors.grey))
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                ...visible.map((s) => _skillChip(s)),
+                if (extra > 0)
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6),
+                    child: Text(
+                      "+$extra more",
+                      style: TextStyle(
+                        color: AppColors.kGreen,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _skillChip(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.08),
+        color: Colors.white.withOpacity(0.06),
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: Colors.white.withOpacity(0.05)),
       ),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.grey, fontSize: 11),
+        style: const TextStyle(color: Colors.white, fontSize: 12),
       ),
     );
   }
 
-  Widget _infoBox(String value, String label) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12),
-      ),
+  // ============================================================
+  // ELIGIBILITY - check items
+  // ============================================================
+  Widget _eligibilitySection(Job job) {
+    final List<String> items = [];
+
+    if (job.cgpa != null) {
+      items.add("CGPA > ${job.cgpa} or Above");
+    }
+    if (job.eligibilityCriteria != null) {
+      if (job.eligibilityCriteria is List) {
+        items.addAll(
+          (job.eligibilityCriteria as List).map((e) => e.toString()),
+        );
+      } else {
+        final s = job.eligibilityCriteria.toString();
+        if (s.isNotEmpty) items.add(s);
+      }
+    }
+    if (items.isEmpty) items.add("—");
+
+    return _cardContainer(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.green,
-              fontWeight: FontWeight.bold,
+          Row(
+            children: [
+              Icon(Icons.verified_outlined,
+                  size: 18, color: AppColors.kGreen),
+              const SizedBox(width: 8),
+              const Text(
+                "Eligibility",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          ...items.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(top: 2),
+                    child: Icon(
+                      Icons.check_circle,
+                      size: 14,
+                      color: AppColors.kGreen,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      e,
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(label, style: const TextStyle(color: Colors.grey)),
         ],
+      ),
+    );
+  }
+
+  // ============================================================
+  // ABOUT COMPANY
+  // ============================================================
+  Widget _aboutCompanySection(Job job) {
+    final company = widget.companyName ?? "Company";
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.apartment_rounded,
+                  size: 18, color: Colors.blueAccent),
+              SizedBox(width: 8),
+              Text(
+                "About Company",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 10),
+          Text(
+            "$company is a leading organization focused on innovation, growth and excellence. Join the team to work on impactful, cutting-edge projects.",
+            style: const TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
+              height: 1.5,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  // ============================================================
+  // ALUMNI SECTION (logic preserved)
+  // ============================================================
+  Widget _alumniHeader() {
+    return const Padding(
+      padding: EdgeInsets.only(left: 4),
+      child: Text(
+        "Alumni Who Can Help",
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 16,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }
@@ -508,9 +1146,12 @@ final deadline = job.endDate != null
     return Consumer<DashboardViewModel>(
       builder: (context, vm, _) {
         if (vm.groupedAlumni.isEmpty) {
-          return const Text(
-            "No alumni available",
-            style: TextStyle(color: Colors.grey),
+          return const Padding(
+            padding: EdgeInsets.symmetric(vertical: 12),
+            child: Text(
+              "No alumni available",
+              style: TextStyle(color: Colors.grey),
+            ),
           );
         }
 
@@ -519,15 +1160,6 @@ final deadline = job.endDate != null
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              "Alumni Who Can Help",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            const SizedBox(height: 12),
-
             ...list.take(3).map((e) => AlumniHiringCard(jobs: e)),
           ],
         );
@@ -535,177 +1167,30 @@ final deadline = job.endDate != null
     );
   }
 
-  /// 🔥 TEXT
-  Widget _sectionText(String title, String? content) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10),
-        Text(
-          content?.isNotEmpty == true ? content! : "-",
-          style: const TextStyle(color: Colors.grey),
-        ),
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-Widget _containerSection({required Widget child}) {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(16),
-    margin: const EdgeInsets.only(bottom: 20),
-    decoration: BoxDecoration(
-      color: AppColors.kCard,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: AppColors.kGreen.withOpacity(.25),
+  // ============================================================
+  // SHARED CARD CONTAINER
+  // ============================================================
+  Widget _cardContainer({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.06)),
       ),
-    ),
-    child: child,
-  );
-}
-
-Widget _highlightInfo(String title, String? value) {
-  final text =
-      (value == null || value.trim().isEmpty) ? "-" : value;
-
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 110,
-          child: Text(
-            title,
-            style: TextStyle(
-              color: AppColors.kGreen,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-  /// 🔥 LIST
-  Widget _sectionList(String title, List<String>? items) {
-    final list = items ?? [];
-
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10),
-        list.isEmpty
-            ? const Text("-", style: TextStyle(color: Colors.grey))
-            : Column(
-                children: list
-                    .map(
-                      (e) => Row(
-                        children: [
-                          const Text(
-                            "• ",
-                            style: TextStyle(color: Colors.green),
-                          ),
-                          Expanded(
-                            child: Text(
-                              e,
-                              style: const TextStyle(color: Colors.grey),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList(),
-              ),
-        const SizedBox(height: 20),
-      ],
+      child: child,
     );
   }
 
-  /// 🔥 INFO
-  Widget _sectionInfo(String title, List<Widget> children) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 10),
-        ...children,
-        const SizedBox(height: 20),
-      ],
-    );
-  }
-
-  Widget _info(String title, dynamic value) {
-    String display;
-
-    if (value == null) {
-      display = "-";
-    } else if (value is List) {
-      display = value.isEmpty ? "-" : value.join(", ");
-    } else if (value.toString().isEmpty) {
-      display = "-";
-    } else {
-      display = value.toString();
-    }
-
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Row(
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(title, style: const TextStyle(color: Colors.grey)),
-          ),
-          Expanded(
-            flex: 3,
-            child: Text(
-              display,
-              style: TextStyle(
-                color: display == "-" ? Colors.grey : Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// 🔥 MODEL CONVERTER
+  // ============================================================
+  // MODEL CONVERTER (UNCHANGED LOGIC)
+  // ============================================================
   Job mapReferralToJob(ReferralJobModel r) {
     return Job(
       id: r.id,
       jobTitle: r.jobTitle,
-        endDate: r.endDate,
+      endDate: r.endDate,
       description: r.description,
       jobType: r.jobType,
       jobStatus: r.jobStatus,
@@ -728,17 +1213,16 @@ Widget _highlightInfo(String title, String? value) {
         totalCTC: r.packageDetails?.totalCTC,
         fixedPay: r.packageDetails?.fixedPay,
         joiningBonus: r.packageDetails?.joiningBonus,
-
         currency: r.packageDetails?.currency,
       ),
-     candidatePosted: User(
-  id: r.candidatePosted?.userId,
-  name: r.candidatePosted?.name,
-  college: r.candidatePosted?.college,
-  currentCompany: r.candidatePosted?.currentCompany,
-  email: r.candidatePosted?.email,
-  phone: r.candidatePosted?.phone,
-),
+      candidatePosted: User(
+        id: r.candidatePosted?.userId,
+        name: r.candidatePosted?.name,
+        college: r.candidatePosted?.college,
+        currentCompany: r.candidatePosted?.currentCompany,
+        email: r.candidatePosted?.email,
+        phone: r.candidatePosted?.phone,
+      ),
     );
   }
 }

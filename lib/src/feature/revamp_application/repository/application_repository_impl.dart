@@ -54,4 +54,16 @@ ResultFuture<List<ReferralApplication>> fetchReferralApplications() {
   ResultFuture<List<Job>> fetchInternshipAppliedJobs() {
     return _dataSource.fetchInternshipAppliedJobs();
   }
+  @override
+ResultFuture<void> updateReferralStatus({
+  required String applicationId,
+  required String status,
+  required String jobRole,
+}) {
+  return _dataSource.updateReferralStatus(
+    applicationId: applicationId,
+    status: status,
+    jobRole: jobRole,
+  );
+}
 }

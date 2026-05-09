@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
@@ -56,7 +57,35 @@ Either<APIException, void> result;
 
   notifyListeners();
 }
+Future<void> updateReferralStatus({
+  required BuildContext context,
+  required String applicationId,
+  required String status,
+  required String jobRole,
+}) async {
+  final result = await _repository.updateReferralStatus(
+    applicationId: applicationId,
+    status: status,
+    jobRole: jobRole,
+  );
 
+  result.fold(
+    (failure) {
+      Toasts.showErrorToast(
+        context,
+        message: failure.message,
+      );
+    },
+    (_) async {
+      Toasts.showSuccessToast(
+        context,
+        message: "Status updated successfully",
+      );
+
+      await fetchReferredByMe();
+    },
+  );
+}
   /// 🔹 FETCH APPLIED LIST
  Future<void> fetchApplications() async {
     setViewState(ViewState.busy);
