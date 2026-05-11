@@ -37,4 +37,12 @@ class DashboardRepositoryImpl implements DashboardRepository {
   @override
   ResultFuture<CompanyAlumniResponse> getCompanyAlumni() =>
       _dataSource.getCompanyAlumni();
+
+  @override
+  ResultFuture<List<User>> getAlumniByCompany({required String companyName}) =>
+      _dataSource.getAlumniByCompany(companyName: companyName);
+
+  @override
+  ResultFuture<List<User>> getHiringAlumni({required bool onlyPostedJob}) =>
+      _dataSource.getHiringAlumni(onlyPostedJob: onlyPostedJob);
 }

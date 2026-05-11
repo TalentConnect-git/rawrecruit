@@ -44,4 +44,13 @@ class Endpoints {
   static const String careerRanking = '/api/career-insights/ranking';
   static const String professionalMatrics =
       '/application/professional/referral-metrics';
+
+  //Alumni APIS
+  static const String apiCandidateAlumni = 'api/candidate/alumni';
+  static const String apiCandidateCollegeAlumni =
+      'api/candidate/college-alumni';
+  static const String apiCandidateCompanyAlumni =
+      'api/candidate/company-alumni';
+  static const String apiCandidateHiringNetwork =
+      'api/candidate/hiring-network';
 }

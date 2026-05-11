@@ -9,6 +9,9 @@ abstract class DashboardRepository {
   ResultFuture<List<Job>> getReferralJobs();
   ResultFuture<Job> getReferralJobDetails(String id);
   ResultFuture<void> applyReferral(String referralId);
+
   ResultFuture<List<User>> getCollegeAlumni();
   ResultFuture<CompanyAlumniResponse> getCompanyAlumni();
+  ResultFuture<List<User>> getHiringAlumni({required bool onlyPostedJob});
+  ResultFuture<List<User>> getAlumniByCompany({required String companyName});
 }

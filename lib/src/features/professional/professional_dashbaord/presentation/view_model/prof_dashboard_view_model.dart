@@ -1,5 +1,8 @@
+import 'dart:developer';
+
 import 'package:get_it/get_it.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/professional_metrics_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 
@@ -10,9 +13,19 @@ class ProfessionalViewModel extends ViewStateProvider {
 
   ProfessionalMetricsModel? metrics;
 
+  final List<User> _companySource = [];
+  Map<String, List<Job>> companyAlumni = {};
+
   List<ReferralJobModel> referralJobs = [];
   ReferralJobModel? selectedReferralJob;
   Set<String> appliedReferralIds = {};
+
+  bool _isFetchingAlumni = false;
+  bool get isFetchingAlumni => _isFetchingAlumni;
+  set isFetchingAlumni(bool value) {
+    _isFetchingAlumni = value;
+    notifyListeners();
+  }
 
   bool isReferralApplied(String id) => appliedReferralIds.contains(id);
 
@@ -46,11 +59,46 @@ class ProfessionalViewModel extends ViewStateProvider {
 
     final result = await _repository.getReferralJobDetails(id);
 
-    result.fold((_) {}, (data) {
+    result.fold((_) {}, (data) async {
       selectedReferralJob = data;
+      if (data.companyName != null) {
+        log('Company Name: ${data.companyName}');
+        await fetchCompanyAlumni(data.companyName!);
+      } else {
+        log('Company Name: Not Found');
+      }
     });
 
     setViewState(ViewState.complete);
     notifyListeners();
+  }
+
+  Future<void> fetchCompanyAlumni(String companyName) async {
+    isFetchingAlumni = true;
+
+    final result = await getIt<DashboardRepository>().getAlumniByCompany(
+      companyName: companyName,
+    );
+
+    result.fold(
+      (failure) {
+        log("Company alumni error: $failure");
+      },
+      (res) {
+        _companySource
+          ..clear()
+          ..addAll(res);
+
+        for (final user in _companySource) {
+          final id = user.id ?? "unknown";
+
+          companyAlumni.putIfAbsent(id, () => []);
+
+          companyAlumni[id]!.add(Job(candidatePosted: user));
+        }
+      },
+    );
+
+    isFetchingAlumni = false;
   }
 }

@@ -27,12 +27,14 @@ class ReferralHomeHeader extends StatelessWidget {
         /// Name + emoji
         Row(
           children: [
-            Text(
-              'Hey, ${vm.user?.name ?? "User"}',
-              style: AppTextStyles.s22W600.copyWith(color: AppColors.white),
+            Expanded(
+              child: Text(
+                'Hey, ${vm.user?.name ?? "User"}  👋',
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                style: AppTextStyles.s22W600.copyWith(color: AppColors.white),
+              ),
             ),
-            const SizedBox(width: 6),
-            const Text('👋', style: TextStyle(fontSize: 20)),
           ],
         ),
 

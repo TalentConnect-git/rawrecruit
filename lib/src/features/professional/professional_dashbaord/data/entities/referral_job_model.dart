@@ -5,15 +5,17 @@ part 'referral_job_model.g.dart';
 
 @freezed
 abstract class ReferralJobModel with _$ReferralJobModel {
+  const ReferralJobModel._();
+
   const factory ReferralJobModel({
     @JsonKey(name: '_id') String? id,
     @JsonKey(name: 'candidatePosted') CandidatePosted? candidatePosted,
 
-  @JsonKey(fromJson: _jobTitleFromJson)
-String? jobTitle,
+    @JsonKey(fromJson: _jobTitleFromJson) String? jobTitle,
     String? description,
     String? jobStatus,
-    final String? companyName,
+    final String? company,
+    final String? currentCompany,
     String? approvalStatus,
     String? jobType,
     String? visibleTo,
@@ -49,7 +51,7 @@ String? jobTitle,
     List<String>? numberOfStudent,
 
     PackageDetails? packageDetails,
-DateTime? endDate, // ✅ ADD THIS
+    DateTime? endDate, // ✅ ADD THIS
 
     DateTime? expireAt,
     DateTime? createdAt,
@@ -58,7 +60,10 @@ DateTime? endDate, // ✅ ADD THIS
 
   factory ReferralJobModel.fromJson(Map<String, dynamic> json) =>
       _$ReferralJobModelFromJson(json);
+
+  String get companyName => company ?? currentCompany ?? '-';
 }
+
 String? _jobTitleFromJson(dynamic value) {
   if (value is List) {
     return value.join(', ');
@@ -66,11 +71,12 @@ String? _jobTitleFromJson(dynamic value) {
 
   return value?.toString();
 }
+
 @freezed
 abstract class CandidatePosted with _$CandidatePosted {
   const factory CandidatePosted({
     @JsonKey(name: '_id') String? id,
-String? userId,
+    String? userId,
 
     // Identity
     String? name,

@@ -124,7 +124,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   ResultFuture<List<User>> getCollegeAlumni() async {
     final request = Request(
       method: RequestMethod.get,
-      endpoint: "/api/candidate/college-alumni",
+      endpoint: Endpoints.apiCandidateCollegeAlumni,
       isSafeRoute: true,
     );
 
@@ -146,7 +146,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   ResultFuture<CompanyAlumniResponse> getCompanyAlumni() async {
     final request = Request(
       method: RequestMethod.get,
-      endpoint: "/api/candidate/company-alumni",
+      endpoint: Endpoints.apiCandidateCompanyAlumni,
       isSafeRoute: true,
     );
 
@@ -159,6 +159,57 @@ class DashboardDataSourceImpl implements DashboardDataSource {
 
       return Right(alumni);
     } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  ResultFuture<List<User>> getAlumniByCompany({
+    required String companyName,
+  }) async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "${Endpoints.apiCandidateAlumni}/$companyName",
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+
+      final List list = result.data['alumni'] ?? []; // ✅ IMPORTANT
+
+      final alumniList = list.map((e) => User.fromJson(e)).toList();
+
+      return Right(alumniList);
+    } catch (e, s) {
+      log('$e\n\n$s');
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  ResultFuture<List<User>> getHiringAlumni({
+    required bool onlyPostedJob,
+  }) async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.apiCandidateHiringNetwork,
+      queryParams: {
+        if (onlyPostedJob) 'jobPostedOnly': onlyPostedJob.toString(),
+      },
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+
+      final List list = result.data['alumni'] ?? []; // ✅ IMPORTANT
+
+      final alumniList = list.map((e) => User.fromJson(e)).toList();
+
+      return Right(alumniList);
+    } catch (e, s) {
+      log('$e\n\n$s');
       return Left(APIException.from(e));
     }
   }

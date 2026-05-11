@@ -29,6 +29,7 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
       Future.wait([
         alumniViewModel.fetchCollegeAlumni(),
         alumniViewModel.fetchCompanyAlumni(),
+        alumniViewModel.fetchHiringAlumni(),
       ], eagerError: true);
     });
   }

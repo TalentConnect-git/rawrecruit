@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
 
 class DashboardCard extends StatelessWidget {
@@ -26,12 +25,14 @@ class DashboardCard extends StatelessWidget {
         /// Name + emoji
         Row(
           children: [
-            Text(
-              'Hey, ${vm.user?.name ?? "User"}',
-              style: AppTextStyles.s22W600.copyWith(color: AppColors.white),
+            Expanded(
+              child: Text(
+                'Hey, ${vm.user?.name ?? "User"}  👋',
+                overflow: TextOverflow.ellipsis,
+                maxLines: 2,
+                style: AppTextStyles.s22W600.copyWith(color: AppColors.white),
+              ),
             ),
-            const SizedBox(width: 6),
-            const Text('👋', style: TextStyle(fontSize: 20)),
           ],
         ),
 
