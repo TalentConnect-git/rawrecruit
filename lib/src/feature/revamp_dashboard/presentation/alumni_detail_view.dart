@@ -168,15 +168,16 @@ class AlumniDetailView extends StatelessWidget {
                             const SizedBox(
                                 height: 4),
 
-                            Text(
-                              role,
-                              style:
-                                  const TextStyle(
-                                color:
-                                    Colors.grey,
-                                fontSize: 13,
-                              ),
-                            ),
+                     Text(
+  college.isNotEmpty
+      ? college
+      : role,
+
+  style: const TextStyle(
+    color: Colors.grey,
+    fontSize: 13,
+  ),
+),
 
                             const SizedBox(
                                 height: 10),
@@ -250,74 +251,74 @@ class AlumniDetailView extends StatelessWidget {
                       const SizedBox(
                           width: 12),
 
-                      /// MATCH
-                      SizedBox(
-                        width: 74,
-                        height: 74,
-                        child: Stack(
-                          alignment:
-                              Alignment
-                                  .center,
-                          children: [
+                      // /// MATCH
+                      // SizedBox(
+                      //   width: 74,
+                      //   height: 74,
+                      //   child: Stack(
+                      //     alignment:
+                      //         Alignment
+                      //             .center,
+                      //     children: [
 
-                            SizedBox(
-                              width: 74,
-                              height: 74,
-                              child:
-                                  CircularProgressIndicator(
-                                value:
-                                    0.85,
-                                strokeWidth:
-                                    6,
-                                backgroundColor:
-                                    Colors
-                                        .white
-                                        .withOpacity(
-                                            .08),
-                                valueColor:
-                                    AlwaysStoppedAnimation(
-                                  AppColors
-                                      .kGreen,
-                                ),
-                              ),
-                            ),
+                      //       SizedBox(
+                      //         width: 74,
+                      //         height: 74,
+                      //         child:
+                      //             CircularProgressIndicator(
+                      //           value:
+                      //               0.85,
+                      //           strokeWidth:
+                      //               6,
+                      //           backgroundColor:
+                      //               Colors
+                      //                   .white
+                      //                   .withOpacity(
+                      //                       .08),
+                      //           valueColor:
+                      //               AlwaysStoppedAnimation(
+                      //             AppColors
+                      //                 .kGreen,
+                      //           ),
+                      //         ),
+                      //       ),
 
-                            Column(
-                              mainAxisSize:
-                                  MainAxisSize
-                                      .min,
-                              children: [
+                      //       Column(
+                      //         mainAxisSize:
+                      //             MainAxisSize
+                      //                 .min,
+                      //         children: [
 
-                                const Text(
-                                  "85%",
-                                  style:
-                                      TextStyle(
-                                    color: Colors
-                                        .white,
-                                    fontSize:
-                                        15,
-                                    fontWeight:
-                                        FontWeight
-                                            .bold,
-                                  ),
-                                ),
+                      //           const Text(
+                      //             "85%",
+                      //             style:
+                      //                 TextStyle(
+                      //               color: Colors
+                      //                   .white,
+                      //               fontSize:
+                      //                   15,
+                      //               fontWeight:
+                      //                   FontWeight
+                      //                       .bold,
+                      //             ),
+                      //           ),
 
-                                Text(
-                                  "Match",
-                                  style:
-                                      TextStyle(
-                                    color:
-                                        AppColors
-                                            .kGreen,
-                                    fontSize:
-                                        9,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
+                      //           Text(
+                      //             "Match",
+                      //             style:
+                      //                 TextStyle(
+                      //               color:
+                      //                   AppColors
+                      //                       .kGreen,
+                      //               fontSize:
+                      //                   9,
+                      //             ),
+                      //           ),
+                      //         ],
+                      //       ),
+                      //     ],
+                      //   ),
+                      // ),
                     ],
                   ),
 
@@ -379,7 +380,59 @@ class AlumniDetailView extends StatelessWidget {
                         ),
                       ),
                     ),
+                    
                   ),
+                  const SizedBox(height: 10),
+
+SizedBox(
+  width: double.infinity,
+
+  child: OutlinedButton.icon(
+    onPressed: () {
+      final userId =
+          first.candidatePosted?.userId ??
+          first.candidatePosted?.id;
+
+      if (userId == null) return;
+
+      context.pushNamed(
+        RouteNames.profileDetail,
+        extra: userId,
+      );
+    },
+
+    icon: Icon(
+      Icons.person_outline,
+      size: 18,
+      color: AppColors.kGreen,
+    ),
+
+    label: Text(
+      "Show Profile",
+      style: TextStyle(
+        color: AppColors.kGreen,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+
+    style: OutlinedButton.styleFrom(
+      padding:
+          const EdgeInsets.symmetric(
+        vertical: 14,
+      ),
+
+      side: BorderSide(
+        color:
+            AppColors.kGreen.withOpacity(.5),
+      ),
+
+      shape: RoundedRectangleBorder(
+        borderRadius:
+            BorderRadius.circular(14),
+      ),
+    ),
+  ),
+),
                 ],
               ),
             ),
@@ -387,150 +440,70 @@ class AlumniDetailView extends StatelessWidget {
             const SizedBox(height: 18),
 
             /// EDUCATION + METRICS
-            Row(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
-              children: [
+         /// METRICS
+_modernCard(
+  title: "Metrics",
+  icon: Icons.analytics_outlined,
 
-                /// EDUCATION
-                Expanded(
-                  child: _modernCard(
-                    title: "Education",
-                    icon:
-                        Icons.school_outlined,
-                    child: Column(
-                      crossAxisAlignment:
-                          CrossAxisAlignment
-                              .start,
-                      children: [
+  child: Column(
+    children: [
 
-                        Text(
-                          college.isEmpty
-                              ? "-"
-                              : college,
-                          style:
-                              const TextStyle(
-                            color: Colors
-                                .white,
-                            fontWeight:
-                                FontWeight
-                                    .w600,
-                            fontSize: 14,
-                          ),
-                        ),
+      _metricRow(
+        "Open Jobs",
+        "${referrals.length}",
+      ),
 
-                        const SizedBox(
-                            height: 8),
+      const SizedBox(height: 10),
 
-                        Text(
-                          role,
-                          style:
-                              const TextStyle(
-                            color:
-                                Colors.grey,
-                            fontSize: 12,
-                          ),
-                        ),
+      Row(
+        children: [
 
-                        const SizedBox(
-                            height: 8),
-
-                        _skillChip(
-                          '${(first.candidatePosted?.emailVerified ?? false) ? 'Verified' : 'Unverified'} Professional',
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const SizedBox(width: 14),
-
-                /// METRICS
-                Expanded(
-                  child: _modernCard(
-                    title: "Metrics",
-                    icon: Icons
-                        .analytics_outlined,
-                    child: Column(
-                      children: [
-
-                        _metricRow(
-                          "Open Jobs",
-                          "${referrals.length}",
-                        ),
-
-                        const SizedBox(
-                            height: 10),
-
-                        _metricRow(
-                          "Company",
-                          company.isEmpty
-                              ? "-"
-                              : company,
-                        ),
-
-                        const SizedBox(
-                            height: 10),
-
-                        Row(
-                          children: [
-
-                            const Text(
-                              "Status",
-                              style:
-                                  TextStyle(
-                                color: Colors
-                                    .grey,
-                                fontSize: 12,
-                              ),
-                            ),
-
-                            const Spacer(),
-
-                            Container(
-                              width: 8,
-                              height: 8,
-                              decoration:
-                                  BoxDecoration(
-                                color: isHiring
-                                    ? Colors
-                                        .green
-                                    : Colors
-                                        .red,
-                                shape: BoxShape
-                                    .circle,
-                              ),
-                            ),
-
-                            const SizedBox(
-                                width: 6),
-
-                            Text(
-                              isHiring
-                                  ? "Hiring"
-                                  : "Inactive",
-                              style:
-                                  TextStyle(
-                                color: isHiring
-                                    ? Colors
-                                        .green
-                                    : Colors
-                                        .red,
-                                fontSize:
-                                    12,
-                                fontWeight:
-                                    FontWeight
-                                        .w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+          const Text(
+            "Status",
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
             ),
+          ),
+
+          const Spacer(),
+
+          Container(
+            width: 8,
+            height: 8,
+
+            decoration: BoxDecoration(
+              color: isHiring
+                  ? Colors.green
+                  : Colors.red,
+
+              shape: BoxShape.circle,
+            ),
+          ),
+
+          const SizedBox(width: 6),
+
+          Text(
+            isHiring
+                ? "Hiring"
+                : "Inactive",
+
+            style: TextStyle(
+              color: isHiring
+                  ? Colors.green
+                  : Colors.red,
+
+              fontSize: 12,
+
+              fontWeight:
+                  FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+    ],
+  ),
+),
 
             const SizedBox(height: 18),
 

@@ -662,6 +662,52 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
               ),
             ),
           ),
+          const SizedBox(height: 10),
+
+SizedBox(
+  width: double.infinity,
+
+  child: OutlinedButton.icon(
+    onPressed: () async {
+      final c = referral?.candidatePosted;
+
+      final userId = c?.userId ?? c?.id;
+
+      if (userId == null) return;
+
+      context.pushNamed(
+        RouteNames.profileDetail,
+        extra: userId,
+      );
+    },
+
+    icon: Icon(
+      Icons.person_outline,
+      size: 18,
+      color: AppColors.kGreen,
+    ),
+
+    label: Text(
+      "Show Profile",
+      style: TextStyle(
+        color: AppColors.kGreen,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+
+    style: OutlinedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+
+      side: BorderSide(
+        color: AppColors.kGreen.withOpacity(.5),
+      ),
+
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(10),
+      ),
+    ),
+  ),
+),
         ],
       ),
     );
@@ -739,7 +785,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         const Text(
-                          "85%",
+                          "0%",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

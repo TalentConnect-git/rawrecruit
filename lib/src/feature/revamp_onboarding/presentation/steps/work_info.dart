@@ -4,6 +4,7 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
 import 'package:dio/dio.dart';
+
 class WorkPrefPage extends StatefulWidget {
   final VoidCallback onBack;
   final User data;
@@ -14,14 +15,13 @@ class WorkPrefPage extends StatefulWidget {
   State<WorkPrefPage> createState() => _WorkPrefPageState();
 
   static const employmentOptions = [
-    "Full-time",
-    "Part-time",
-    "Contract",
+    "full time",
+    "part time",
+    "contract",
     "Others",
   ];
 
   static const lookingForOptions = ["Internship", "Job", "Both"];
-
   static const industryOptions = [
     "Technology",
     "Finance",
@@ -95,28 +95,82 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
   List<String> languages = [];
 
   late TextEditingController locationCtrl;
-
+late TextEditingController expectedSalaryCtrl;
+late TextEditingController expectedCurrencyCtrl;
   @override
   void initState() {
     super.initState();
 
-final d = widget.data;
-    employmentType = (d.employmentType != null && d.employmentType!.isNotEmpty)
-        ? d.employmentType!.first
-        : null;
-selectedCities = List.from(d.locations ?? []);
+// final d = widget.data;
+// expectedSalaryCtrl =
+//     TextEditingController(text: d.expectedSalaryAmount ?? '');
 
-fetchStates();
-    lookingFor = (d.lookingFor != null && d.lookingFor!.isNotEmpty)
-        ? d.lookingFor!.first
-        : null;
+// expectedCurrencyCtrl =
+//     TextEditingController(text: d.expectedSalaryCurrency ?? '');
+//     employmentType = (d.employmentType != null && d.employmentType!.isNotEmpty)
+//         ? d.employmentType!.first
+//         : null;
+// selectedCities = List.from(d.locations ?? []);
 
-    industry = List.from(d.industry ?? []);
-    jobRoles = List.from(d.jobRoles ?? []);
-    languages = List.from(d.languagesKnown ?? []);
+// fetchStates();
+//     lookingFor = (d.lookingFor != null && d.lookingFor!.isNotEmpty)
+//         ? d.lookingFor!.first
+//         : null;
 
-    locationCtrl = TextEditingController(text: (d.locations ?? []).join(", "));
+//     industry = List.from(d.industry ?? []);
+//     jobRoles = List.from(d.jobRoles ?? []);
+//     languages = List.from(d.languagesKnown ?? []);
+
+//     locationCtrl = TextEditingController(text: (d.locations ?? []).join(", "));
   }
+  bool isInitialized = false;
+
+  @override
+void didChangeDependencies() {
+  super.didChangeDependencies();
+
+  if (isInitialized) return;
+
+  final d =
+      context.read<AppStateProvider>().data ?? widget.data;
+
+expectedSalaryCtrl =
+    TextEditingController(
+  text: d.expectedSalaryAmount ?? '',
+);
+
+expectedCurrencyCtrl =
+    TextEditingController(
+  text:
+      (d.expectedSalaryCurrency?.isNotEmpty ?? false)
+          ? d.expectedSalaryCurrency!
+          : '₹',
+);
+
+  employmentType =
+      (d.employmentType != null && d.employmentType!.isNotEmpty)
+          ? d.employmentType!.first
+          : null;
+
+  selectedCities = List.from(d.locations ?? []);
+
+  lookingFor =
+      (d.lookingFor != null && d.lookingFor!.isNotEmpty)
+          ? d.lookingFor!.first
+          : null;
+
+  industry = List.from(d.industry ?? []);
+  jobRoles = List.from(d.jobRoles ?? []);
+  languages = List.from(d.languagesKnown ?? []);
+
+  locationCtrl = TextEditingController(
+    text: (d.locations ?? []).join(", "),
+  );
+
+  fetchStates();
+
+  isInitialized = true;
+}
   Future<void> fetchStates() async {
   try {
     setState(() => isLoadingStates = true);
@@ -187,6 +241,8 @@ bool isLoadingCities = false;
           .map((e) => e.trim())
           .where((e) => e.isNotEmpty)
           .toList(),
+          expectedSalaryAmount: expectedSalaryCtrl.text,
+expectedSalaryCurrency: expectedCurrencyCtrl.text,
     );
 
     context.read<AppStateProvider>().data = updatedUser;
@@ -196,6 +252,8 @@ bool isLoadingCities = false;
   void dispose() {
     locationCtrl.dispose();
     super.dispose();
+    expectedSalaryCtrl.dispose();
+expectedCurrencyCtrl.dispose();
   }
 
   @override
@@ -274,7 +332,40 @@ bool isLoadingCities = false;
         ),
 
         const SizedBox(height: 10),
+/// EXPECTED SALARY
+Row(
+  children: [
+    Expanded(
+      flex: 2,
+      child: AppDropdown(
+        hint: "Curr",
+        value: expectedCurrencyCtrl.text.isEmpty
+            ? null
+            : expectedCurrencyCtrl.text,
+        options: const ['\$', '₹', '€', '£'],
+        onChanged: (val) {
+          setState(() {
+            expectedCurrencyCtrl.text = val ?? "";
+            saveData();
+          });
+        },
+      ),
+    ),
 
+    const SizedBox(width: 10),
+
+    Expanded(
+      flex: 4,
+      child: AppInput(
+        "Expected Salary",
+        controller: expectedSalaryCtrl,
+        onChanged: (_) => saveData(),
+      ),
+    ),
+  ],
+),
+
+const SizedBox(height: 10),
         /// LOCATIONS
        isLoadingStates
     ? const CircularProgressIndicator()

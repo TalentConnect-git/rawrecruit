@@ -61,7 +61,12 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 final currentUser =
     context.read<AppStateProvider>().data ?? data;
 
-final body = currentUser.toJson();
+final updatedUser = currentUser.copyWith(
+  profileType:
+      getIt<AppStateProvider>().userType?.name,
+);
+
+final body = updatedUser.toJson();
       final result = await repo.submitOnboardingUser(body: body);
 
       result.fold(
@@ -109,7 +114,7 @@ final body = currentUser.toJson();
                   CareerPage(onBack: onBack, data: data),
                   SkillsDomainPage(onBack: onBack, data: data),
                   WorkPrefPage(onBack: onBack, data: data),
-                  AchievementsPage(onBack: onBack, data: data),
+                  // AchievementsPage(onBack: onBack, data: data),
 
                   /// 🔥 FINAL PAGE
                   OnboardingCompletePage(

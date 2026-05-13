@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
@@ -327,20 +328,13 @@ foregroundColor: Colors.white,
                                   ApplicationStatus
                                       .accepted,
                             );
-
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(
-                                      context)
-                                  .showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Status updated successfully",
-                                  ),
-                                  backgroundColor:
-                                      Colors.green,
-                                ),
-                              );
-                            }
+if (context.mounted) {
+  showStatusPopup(
+    context,
+    "Candidate accepted successfully",
+    Colors.green,
+  );
+}
                           },
                           icon: const Icon(Icons.check),
                         label: const Text(
@@ -384,19 +378,13 @@ foregroundColor: Colors.white,
                                       .rejected,
                             );
 
-                            if (context.mounted) {
-                              ScaffoldMessenger.of(
-                                      context)
-                                  .showSnackBar(
-                                const SnackBar(
-                                  content: Text(
-                                    "Status updated successfully",
-                                  ),
-                                  backgroundColor:
-                                      Colors.green,
-                                ),
-                              );
-                            }
+                         if (context.mounted) {
+  showStatusPopup(
+    context,
+    "Candidate rejected successfully",
+    Colors.red,
+  );
+}
                           },
                           icon: const Icon(
                             Icons.close,
@@ -682,6 +670,13 @@ foregroundColor: Colors.white,
                           ApplicationStatus
                               .referred,
                     );
+                    if (context.mounted) {
+  showStatusPopup(
+    context,
+    "Candidate referred successfully",
+    AppColors.kGreen
+  );
+}
                   },
                   icon:
                       const Icon(Icons.send),
@@ -724,6 +719,7 @@ foregroundColor: Colors.white,
                   onPressed: () async {
                     await vm
                         .updateApplicationStatus(
+                          
                       id:
                           application.id ??
                               "",
@@ -731,6 +727,13 @@ foregroundColor: Colors.white,
                           ApplicationStatus
                               .rejected,
                     );
+                    if (context.mounted) {
+  showStatusPopup(
+    context,
+    "Candidate rejected successfully",
+   Colors.red,
+  );
+}
                   },
                   icon: const Icon(
                     Icons.close,
@@ -746,11 +749,114 @@ foregroundColor: Colors.white,
               ),
             ],
           ),
+          const SizedBox(height: 12),
+
+SizedBox(
+  width: double.infinity,
+
+  child: OutlinedButton.icon(
+    style: OutlinedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(
+        vertical: 14,
+      ),
+
+      side: BorderSide(
+        color: AppColors.kGreen.withOpacity(.4),
+      ),
+
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
+
+    onPressed: () {
+      final userId =
+          application.applicant?.userId;
+
+      if (userId == null ||
+          userId.isEmpty) {
+        return;
+      }
+
+      context.pushNamed(
+        RouteNames.profileDetail,
+        extra: userId,
+      );
+    },
+
+    icon: Icon(
+      Icons.person_outline,
+      color: AppColors.kGreen,
+    ),
+
+    label: Text(
+      "View Full Profile",
+      style: TextStyle(
+        color: AppColors.kGreen,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  ),
+),
         ],
       ),
     );
   }
+void showStatusPopup(
+  BuildContext context,
+  String message,
+  Color color,
+) {
+  showDialog(
+    context: context,
 
+    builder: (_) {
+      return AlertDialog(
+        backgroundColor: AppColors.kCard,
+
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(18),
+        ),
+
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+
+          children: [
+            CircleAvatar(
+              radius: 28,
+              backgroundColor: color.withOpacity(.15),
+
+              child: Icon(
+                Icons.check,
+                color: color,
+                size: 28,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            Text(
+              message,
+              textAlign: TextAlign.center,
+
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      );
+    },
+  );
+
+  Future.delayed(const Duration(seconds: 2), () {
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
+  });
+}
   Widget _modernCard({
     required String title,
     required IconData icon,

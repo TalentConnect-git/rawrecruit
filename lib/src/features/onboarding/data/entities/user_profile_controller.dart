@@ -51,10 +51,9 @@ class UserController {
       expectedSalaryCurrency = TextEditingController(),
       maritalStatus = TextEditingController(),
       visaStatus = TextEditingController(),
-    servingNoticePeriod = TextEditingController(),
 currentCompany = TextEditingController(),
-noticePeriod = TextEditingController();
-
+noticePeriod = TextEditingController(),
+noticePeriodStartDate = TextEditingController();
   /// Basic Fields
   TextEditingController id;
   TextEditingController userId;
@@ -113,9 +112,10 @@ List<InternationalExperienceController>
   TextEditingController expectedSalaryCurrency;
   TextEditingController maritalStatus;
   TextEditingController visaStatus;
-  TextEditingController servingNoticePeriod;
+bool servingNoticePeriod = false;
 TextEditingController currentCompany;
 TextEditingController noticePeriod;
+TextEditingController noticePeriodStartDate;
   Map<String, dynamic> toMap() {
     String? clean(String? v) => v == null || v.trim().isEmpty ? null : v.trim();
 
@@ -161,6 +161,8 @@ TextEditingController noticePeriod;
       'openToShift': clean(openToShift.text),
       'currentCompany': clean(currentCompany.text),
 'noticePeriod': clean(noticePeriod.text),
+'noticePeriodStartDate':
+    clean(noticePeriodStartDate.text),
       'phone': clean(phone.text),
       'portfolio': clean(portfolio.text),
       'profileType': clean(profileType.text),
@@ -177,8 +179,8 @@ TextEditingController noticePeriod;
       'maritalStatus': clean(maritalStatus.text),
       'visaStatus': clean(visaStatus.text),
 
-      'servingNoticePeriod': servingNoticePeriod.text.toLowerCase() == 'true',
-
+'servingNoticePeriod':
+    servingNoticePeriod,
       /// Lists
       'skills': cleanList(skills),
       'domainKnowledge': cleanList(domainKnowledge),
@@ -368,7 +370,7 @@ TextEditingController noticePeriod;
     expectedSalaryCurrency.dispose();
     maritalStatus.dispose();
     visaStatus.dispose();
-    servingNoticePeriod.dispose();
+    noticePeriodStartDate.dispose();
 currentCompany.dispose();
 noticePeriod.dispose();
     for (final controller in domainKnowledge) {

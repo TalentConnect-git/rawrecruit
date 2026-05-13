@@ -37,23 +37,23 @@ class ResumeUploadPage extends StatelessWidget {
 
         const SizedBox(height: 20),
 
-        /// OR
-        Row(
-          children: [
-            Expanded(child: Divider(color: AppColors.kBorder)),
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8),
-              child: Text("or", style: TextStyle(color: Colors.grey)),
-            ),
-            Expanded(child: Divider(color: AppColors.kBorder)),
-          ],
-        ),
+        // /// OR
+        // Row(
+        //   children: [
+        //     Expanded(child: Divider(color: AppColors.kBorder)),
+        //     const Padding(
+        //       padding: EdgeInsets.symmetric(horizontal: 8),
+        //       child: Text("or", style: TextStyle(color: Colors.grey)),
+        //     ),
+        //     Expanded(child: Divider(color: AppColors.kBorder)),
+        //   ],
+        // ),
 
-        const SizedBox(height: 20),
+        // const SizedBox(height: 20),
 
-        _linkedInCard(),
+        // _linkedInCard(),
 
-        const SizedBox(height: 20),
+        // const SizedBox(height: 20),
 
         /// INFO
         Container(
@@ -325,27 +325,27 @@ Future<Map<String, dynamic>?> parseResumeAndFill() async {
     );
   }
 
-  /// 🔗 LINKEDIN CARD
-  Widget _linkedInCard() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.kCard,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kBorder),
-      ),
-      child: Row(
-        children: const [
-          Icon(Icons.auto_awesome, color: Colors.deepPurple),
-          SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              "Autofill from LinkedIn",
-              style: TextStyle(color: Colors.white),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // /// 🔗 LINKEDIN CARD
+  // Widget _linkedInCard() {
+  //   return Container(
+  //     padding: const EdgeInsets.all(16),
+  //     decoration: BoxDecoration(
+  //       color: AppColors.kCard,
+  //       borderRadius: BorderRadius.circular(16),
+  //       border: Border.all(color: AppColors.kBorder),
+  //     ),
+  //     child: Row(
+  //       children: const [
+  //         Icon(Icons.auto_awesome, color: Colors.deepPurple),
+  //         SizedBox(width: 12),
+  //         Expanded(
+  //           child: Text(
+  //             "Autofill from LinkedIn",
+  //             style: TextStyle(color: Colors.white),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 }

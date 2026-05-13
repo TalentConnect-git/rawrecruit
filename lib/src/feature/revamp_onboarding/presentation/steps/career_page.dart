@@ -53,7 +53,8 @@ class _CareerPageState extends State<CareerPage> {
     /// 🔥 EMPTY CONTROLLERS
     currentSalaryCtrl = TextEditingController();
 
-    currentCurrencyCtrl = TextEditingController();
+ currentCurrencyCtrl =
+    TextEditingController(text: '₹');
 
     expectedSalaryCtrl = TextEditingController();
 
@@ -79,12 +80,20 @@ class _CareerPageState extends State<CareerPage> {
 
     currentSalaryCtrl.text = d.currentSalaryAmount ?? '';
 
-    currentCurrencyCtrl.text = d.currentSalaryCurrency ?? '';
-
+currentCurrencyCtrl.text =
+    (d.currentSalaryCurrency?.isNotEmpty ?? false)
+        ? d.currentSalaryCurrency!
+        : '₹';
     expectedSalaryCtrl.text = d.expectedSalaryAmount ?? '';
 
     expectedCurrencyCtrl.text = d.expectedSalaryCurrency ?? '';
+noticePeriodStartDateCtrl =
+    TextEditingController(
+  text: d.noticePeriodStartDate ?? '',
+);
 
+servingNoticePeriod =
+    d.servingNoticePeriod ?? false;
     aboutCtrl.text = d.about ?? '';
 
     currentCompanyCtrl.text = d.currentCompany ?? '';
@@ -164,7 +173,11 @@ class _CareerPageState extends State<CareerPage> {
 
       currentCompany: derivedCurrentCompany,
       noticePeriod: noticePeriodCtrl.text,
+noticePeriodStartDate:
+    noticePeriodStartDateCtrl.text,
 
+servingNoticePeriod:
+    servingNoticePeriod,
       experiences: filteredExperiences,
     );
 
@@ -226,7 +239,7 @@ class _CareerPageState extends State<CareerPage> {
     expectedCurrencyCtrl.dispose();
 
     aboutCtrl.dispose();
-
+noticePeriodStartDateCtrl.dispose();
     currentCompanyCtrl.dispose();
     noticePeriodCtrl.dispose();
 
@@ -252,16 +265,18 @@ class _CareerPageState extends State<CareerPage> {
 
     super.dispose();
   }
+late TextEditingController noticePeriodStartDateCtrl;
 
+bool servingNoticePeriod = false;
   @override
   Widget build(BuildContext context) {
     // final selectedList = certifications != null && certifications!.isNotEmpty
     //     ? certifications!.split(",")
     //     : <String>[];
 
-    final appState = context.watch<AppStateProvider>();
-    final isProfessional =
-        getIt<AppStateProvider>().userType == UserType.professional;
+    // final appState = context.watch<AppStateProvider>();
+    // final isProfessional =
+    //     getIt<AppStateProvider>().userType == UserType.professional;
     debugPrint(context.watch<AppStateProvider>().selectedUserType?.name);
     return Wrapper(
       title: "Career",
@@ -329,186 +344,115 @@ class _CareerPageState extends State<CareerPage> {
 
         const SizedBox(height: 12),
 
-        /// EXPECTED SALARY
-        Row(
-          children: [
-            Expanded(
-              flex: 2,
-              child: AppDropdown(
-                hint: "Curr",
-                value: expectedCurrencyCtrl.text.isEmpty
-                    ? null
-                    : expectedCurrencyCtrl.text,
-                options: const ['\$', '₹', '€', '£'],
-                onChanged: (val) {
-                  expectedCurrencyCtrl.text = val ?? "";
+   
 
-                  saveData();
+        if (experiences.any((e) => e.isCurrent == true)) ...[
+  const SizedBox(height: 20),
 
-                  setState(() {});
-                },
-              ),
-            ),
-            const SizedBox(width: 10),
+  Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
 
-            Expanded(
-              flex: 4,
-              child: AppInput(
-                "Expected Salary",
-                controller: expectedSalaryCtrl,
-                onChanged: (_) => saveData(),
-              ),
-            ),
-          ],
+    children: [
+      const Text(
+        "Current Company",
+        style: TextStyle(color: Colors.white),
+      ),
+
+      const SizedBox(height: 8),
+
+      AbsorbPointer(
+        child: AppInput(
+          "Current Company",
+          controller: currentCompanyCtrl,
         ),
+      ),
+    ],
+  ),
 
-        /// PROFESSIONAL ONLY
-        if (isProfessional) ...[
-          const SizedBox(height: 20),
+  const SizedBox(height: 12),
 
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+  AppInput(
+    "Notice Period (Days)",
+    controller: noticePeriodCtrl,
+    keyboardType: TextInputType.number,
+    onChanged: (_) => saveData(),
+  ),
+  const SizedBox(height: 14),
 
-            children: [
-              const Text(
-                "Current Company",
+/// SERVING NOTICE PERIOD
+Container(
+  padding: const EdgeInsets.symmetric(
+    horizontal: 14,
+    vertical: 6,
+  ),
 
-                style: TextStyle(color: Colors.white),
-              ),
+  decoration: BoxDecoration(
+    color: AppColors.kCard,
+    borderRadius: BorderRadius.circular(12),
+    border: Border.all(
+      color: AppColors.kBorder,
+    ),
+  ),
 
-              const SizedBox(height: 8),
-              AbsorbPointer(
-                child: AppInput(
-                  "Current Company",
-                  controller: currentCompanyCtrl,
-                ),
-              ),
-              //               Autocomplete<String>(
-              //                 // initialValue: TextEditingValue(text: currentCompanyCtrl.text),
+  child: Row(
+    children: [
+      const Expanded(
+        child: Text(
+          "Currently Serving Notice Period",
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
 
-              //                 optionsBuilder: (textEditingValue) {
-              //                   final query = textEditingValue.text;
+      Switch(
+        value: servingNoticePeriod,
 
-              //                   final filtered = companyOptions.where(
-              //                     (option) =>
-              //                         option.toLowerCase().contains(query.toLowerCase()),
-              //                   );
+        activeColor: AppColors.kGreen,
 
-              //                   final exists = companyOptions.any(
-              //                     (e) => e.toLowerCase().trim() == query.toLowerCase().trim(),
-              //                   );
+        onChanged: (value) {
+          setState(() {
+            servingNoticePeriod = value;
 
-              //                   if (query.trim().isNotEmpty && !exists) {
-              //                     return [...filtered, 'Create "$query"'];
-              //                   }
+            saveData();
+          });
+        },
+      ),
+    ],
+  ),
+),
 
-              //                   return filtered;
-              //                 },
+const SizedBox(height: 14),
 
-              //                 onSelected: (value) async {
-              //                   final actualValue = value.startsWith('Create "')
-              //                       ? value.replaceAll('Create "', '').replaceAll('"', '')
-              //                       : value;
+/// NOTICE PERIOD START DATE
+GestureDetector(
+  onTap: () async {
+    final picked = await showDatePicker(
+      context: context,
 
-              //                   await addCompanyIfNeeded(actualValue);
+      initialDate: DateTime.now(),
 
-              //                 currentCompanyCtrl.text = actualValue;
-              // FocusScope.of(context).unfocus();
+      firstDate: DateTime(2000),
 
-              //                   saveData();
+      lastDate: DateTime(2100),
+    );
 
-              //                   setState(() {});
-              //                 },
+    if (picked != null) {
+  noticePeriodStartDateCtrl.text =
+    "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+      saveData();
 
-              //                 fieldViewBuilder:
-              //                     (context, controller, focusNode, onFieldSubmitted) {
-              //                       // controller.text = currentCompanyCtrl.text;
-              // if (controller.text !=
-              //     currentCompanyCtrl.text) {
+      setState(() {});
+    }
+  },
 
-              //   controller.text =
-              //       currentCompanyCtrl.text;
-
-              //   controller.selection =
-              //       TextSelection.fromPosition(
-              //     TextPosition(
-              //       offset: controller.text.length,
-              //     ),
-              //   );
-              // }
-              //                       return TextField(
-              //                         controller: controller,
-
-              //                         focusNode: focusNode,
-
-              //                         style: const TextStyle(color: Colors.white),
-
-              //                         decoration: InputDecoration(
-              //                           hintText: "Current Company",
-
-              //                           filled: true,
-
-              //                           fillColor: AppColors.kCard,
-
-              //                           border: OutlineInputBorder(
-              //                             borderRadius: BorderRadius.circular(12),
-              //                           ),
-              //                         ),
-              //                         onChanged: (value) {
-              //                           currentCompanySearch = value;
-
-              //                           currentCompanyCtrl.text = value;
-
-              //                           saveData();
-
-              //                           setState(() {});
-              //                         },
-              //                       );
-              //                     },
-
-              //                 optionsViewBuilder: (context, onSelected, options) {
-              //                   return Material(
-              //                     color: Colors.black,
-
-              //                     child: Container(
-              //                       width: MediaQuery.of(context).size.width - 32,
-
-              //                       constraints: const BoxConstraints(maxHeight: 220),
-
-              //                       child: ListView.builder(
-              //                         shrinkWrap: true,
-
-              //                         itemCount: options.length,
-
-              //                         itemBuilder: (context, index) {
-              //                           final option = options.elementAt(index);
-
-              //                           return ListTile(
-              //                             title: Text(
-              //                               option,
-
-              //                               style: const TextStyle(color: Colors.white),
-              //                             ),
-
-              //                             onTap: () {
-              //                               onSelected(option);
-              //                             },
-              //                           );
-              //                         },
-              //                       ),
-              //                     ),
-              //                   );
-              //                 },
-              //               ),
-            ],
-          ),
-          if (experiences.any((e) => e.isCurrent == true))
-            AppInput(
-              "Notice Period (Days)",
-              controller: noticePeriodCtrl,
-              keyboardType: TextInputType.number,
-              onChanged: (_) => saveData(),
-            ),
+  child: AbsorbPointer(
+    child: AppInput(
+      "Notice Period Start Date",
+      controller: noticePeriodStartDateCtrl,
+    ),
+  ),
+),
+],
+         
 
           const SizedBox(height: 20),
 
@@ -847,7 +791,7 @@ class _CareerPageState extends State<CareerPage> {
             },
             child: const Text("+ Add Experience"),
           ),
-        ],
+      
 
         const SizedBox(height: 20),
 

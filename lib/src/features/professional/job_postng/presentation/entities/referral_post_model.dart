@@ -23,6 +23,13 @@ List<String>? workMode,
     List<String>? tags,
     String? workAuthorization,
     String? yearsOfExperience,
+    String? minYearofExperience,
+
+List<String>? rounds,
+
+List<String>? selectionProcess,
+
+String? endDate,
   bool? inactive,
     List<String>? benefits,
     List<String>? certifications,
