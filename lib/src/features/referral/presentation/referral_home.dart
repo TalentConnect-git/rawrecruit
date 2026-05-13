@@ -356,13 +356,23 @@ const SizedBox(height: 12),
                                 isSaved: isSaved,
                               );
                             },
-                            onTap: () {
-         context.pushNamed(
-  RouteNames.referralDetail,
-  extra:
-      "${job.id}|||${(job.companyName ?? job.companyPosted?.companyDetails?.companyName ?? "Company")}",
-);
-                            },
+                          onTap: () {
+
+  final candidate =
+      job.candidatePosted;
+
+  final company =
+      candidate?.currentCompany
+              ?.trim() ??
+          "";
+
+  context.pushNamed(
+    RouteNames.referralDetail,
+
+    extra:
+        "${job.id}|||$company",
+  );
+},
                           );
                         },
                       );
