@@ -6,51 +6,133 @@ import 'package:rawrecruit/src/core/index.dart';
 class AlumniHiringCard extends StatelessWidget {
   final List<Job> jobs;
 
-  const AlumniHiringCard({super.key, required this.jobs});
+  const AlumniHiringCard({
+    super.key,
+    required this.jobs,
+  });
 
   @override
   Widget build(BuildContext context) {
-   final candidate = jobs.first.candidatePosted;
-final referralJobs = candidate?.referralJobs ?? [];
-final isHiring = referralJobs.isNotEmpty;
-    final name = candidate?.name ?? "User";
 
-    final college = candidate?.college ?? "Your College";
-    final year = "2024";
-    final designation = candidate?.jobRoles?.join(", ") ?? "role";
-    final company = candidate?.currentCompany ?? "company";
+    /// 🔥 SAFE CHECK
+    if (jobs.isEmpty) {
+      return const SizedBox();
+    }
 
-    // final location = job.location;
+    final firstJob = jobs.first;
 
-    final initials = name.isNotEmpty
-        ? name.split(" ").map((e) => e[0]).take(2).join()
-        : "U";
+    final candidate =
+        firstJob.candidatePosted;
+
+    if (candidate == null) {
+      return const SizedBox();
+    }
+
+    final referralJobs =
+        candidate.referralJobs ?? [];
+
+    final isHiring =
+        referralJobs.isNotEmpty;
+
+    final name =
+        candidate.name ?? "User";
+
+    final college =
+        candidate.college ??
+            "Your College";
+
+    final year =
+        candidate.yearOfGraduation ??
+            '';
+
+    final designation =
+        (candidate.jobRoles != null &&
+                candidate
+                    .jobRoles!
+                    .isNotEmpty)
+            ? candidate.jobRoles!
+                .join(", ")
+            : "Role";
+
+    final company =
+        (candidate.currentCompany
+                    ?.isNotEmpty ??
+                false)
+            ? candidate.currentCompany!
+            : "Company";
+
+    final initials =
+        name.isNotEmpty
+            ? name
+                .split(" ")
+                .where(
+                  (e) =>
+                      e.isNotEmpty,
+                )
+                .map((e) => e[0])
+                .take(2)
+                .join()
+            : "U";
 
     return InkWell(
-      borderRadius: BorderRadius.circular(18),
+      borderRadius:
+          BorderRadius.circular(18),
+
       onTap: () {
-        context.pushNamed("alumniDetail", extra: jobs);
+        context.pushNamed(
+          "alumniDetail",
+          extra: jobs,
+        );
       },
+
       child: Container(
-        margin: const EdgeInsets.only(bottom: 14),
-        padding: const EdgeInsets.all(18), // 🔥 increased padding
-        decoration: BoxDecoration(
-          color: const Color(0xFF111827),
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.white.withOpacity(0.06)),
+        margin:
+            const EdgeInsets.only(
+          bottom: 14,
         ),
+
+        padding:
+            const EdgeInsets.all(18),
+
+        decoration: BoxDecoration(
+          color:
+              const Color(0xFF111827),
+
+          borderRadius:
+              BorderRadius.circular(
+            18,
+          ),
+
+          border: Border.all(
+            color: Colors.white
+                .withOpacity(.06),
+          ),
+        ),
+
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
+
           children: [
-            /// 🔹 Avatar (bigger)
+
+            /// 🔥 AVATAR
             CircleAvatar(
-              radius: 26, // 🔥 increased
-              backgroundColor: AppColors.kGreen,
+              radius: 26,
+
+              backgroundColor:
+                  AppColors.kGreen,
+
               child: Text(
                 initials,
-                style: const TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+
+                style:
+                    const TextStyle(
+                  color:
+                      Colors.black,
+
+                  fontWeight:
+                      FontWeight.bold,
+
                   fontSize: 14,
                 ),
               ),
@@ -58,115 +140,218 @@ final isHiring = referralJobs.isNotEmpty;
 
             const SizedBox(width: 14),
 
-            /// 🔹 Content
+            /// 🔥 CONTENT
             Expanded(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment:
+                    CrossAxisAlignment
+                        .start,
+
                 children: [
-                  /// 🔹 Name + Chips
+
+                  /// NAME + CHIPS
                   Row(
                     children: [
+
                       Expanded(
                         child: Text(
                           name,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 14, // 🔥 bigger
+
+                          maxLines: 1,
+
+                          overflow:
+                              TextOverflow
+                                  .ellipsis,
+
+                          style:
+                              const TextStyle(
+                            color:
+                                Colors.white,
+
+                            fontWeight:
+                                FontWeight
+                                    .w600,
+
+                            fontSize: 14,
                           ),
                         ),
                       ),
-                    _chip(
-  isHiring ? "Hiring" : "Not Hiring",
-  isHiring ? Colors.green : Colors.red,
-),
-                      const SizedBox(width: 6),
-                      _chip("Refer", Colors.blue),
+
+                      _chip(
+                        isHiring
+                            ? "Hiring"
+                            : "Not Hiring",
+
+                        isHiring
+                            ? Colors.green
+                            : Colors.red,
+                      ),
+
+                      const SizedBox(
+                        width: 6,
+                      ),
+
+                      _chip(
+                        "Refer",
+                        Colors.blue,
+                      ),
                     ],
                   ),
 
                   const SizedBox(height: 6),
 
-                  /// 🔥 DESIGNATION + COMPANY
+                  /// DESIGNATION + COMPANY
                   Text(
                     "$designation at $company",
-                    style: const TextStyle(color: Colors.grey, fontSize: 13),
+
+                    maxLines: 2,
+
+                    overflow:
+                        TextOverflow
+                            .ellipsis,
+
+                    style:
+                        const TextStyle(
+                      color:
+                          Colors.grey,
+
+                      fontSize: 13,
+                    ),
                   ),
 
                   const SizedBox(height: 6),
 
-                  /// 🔥 COLLEGE + YEAR
+                  /// COLLEGE + YEAR
                   Text(
                     "$college • $year",
-                    style: const TextStyle(color: Colors.grey, fontSize: 13),
+
+                    maxLines: 1,
+
+                    overflow:
+                        TextOverflow
+                            .ellipsis,
+
+                    style:
+                        const TextStyle(
+                      color:
+                          Colors.grey,
+
+                      fontSize: 13,
+                    ),
                   ),
 
-                  const SizedBox(height: 10), // 🔥 more spacing
-                  /// 🔹 Bottom Row
+                  const SizedBox(
+                    height: 10,
+                  ),
+
+                  /// BOTTOM ROW
                   Row(
                     children: [
-                      /// Location
-                      // Expanded(
-                      //   child: Text(
-                      //     location?.join(", ") ?? "",
-                      //     overflow: TextOverflow.ellipsis,
-                      //     style: const TextStyle(
-                      //       color: Colors.grey,
-                      //       fontSize: 13,
-                      //     ),
-                      //   ),
-                      // ),
 
-                      // const SizedBox(width: 10),
+                      Expanded(
+                        child: Text(
+                          isHiring
+                              ? "${referralJobs.length} open jobs available"
+                              : "No jobs available",
 
-                      /// Jobs
-                   Text(
-  isHiring
-      ? "${referralJobs.length} open jobs available"
-      : "No jobs available",
-  style: TextStyle(
-    color: isHiring ? Colors.green : Colors.red,
-    fontSize: 10,
-    fontWeight: FontWeight.w600,
-  ),
-),
+                          overflow:
+                              TextOverflow
+                                  .ellipsis,
 
-                      const SizedBox(width: 12),
+                          style:
+                              TextStyle(
+                            color: isHiring
+                                ? Colors.green
+                                : Colors.red,
 
-                      /// 🔥 Message Button (bigger)
+                            fontSize: 10,
+
+                            fontWeight:
+                                FontWeight
+                                    .w600,
+                          ),
+                        ),
+                      ),
+
+                      const SizedBox(
+                        width: 10,
+                      ),
+
+                      /// MESSAGE BUTTON
                       GestureDetector(
-                        behavior: HitTestBehavior.opaque,
+                        behavior:
+                            HitTestBehavior
+                                .opaque,
+
                         onTap: () {
-                          if (candidate != null) {
-                            context.pushNamed(
-                              RouteNames.chatUser,
-                              extra: candidate,
-                            );
-                          }
+                          context.pushNamed(
+                            RouteNames
+                                .chatUser,
+
+                            extra:
+                                candidate,
+                          );
                         },
+
                         child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 12,
+                          padding:
+                              const EdgeInsets.symmetric(
+                            horizontal:
+                                12,
+
                             vertical: 6,
                           ),
-                          decoration: BoxDecoration(
-                            color: AppColors.kGreen.withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(22),
+
+                          decoration:
+                              BoxDecoration(
+                            color: AppColors
+                                .kGreen
+                                .withOpacity(
+                              0.15,
+                            ),
+
+                            borderRadius:
+                                BorderRadius.circular(
+                              22,
+                            ),
                           ),
-                          child: const Row(
+
+                          child:
+                              const Row(
+                            mainAxisSize:
+                                MainAxisSize
+                                    .min,
+
                             children: [
+
                               Icon(
-                                Icons.message,
+                                Icons
+                                    .message,
+
                                 size: 14,
-                                color: Colors.green,
+
+                                color: Colors
+                                    .green,
                               ),
-                              SizedBox(width: 6),
+
+                              SizedBox(
+                                width: 6,
+                              ),
+
                               Text(
                                 "Message",
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w600,
+
+                                style:
+                                    TextStyle(
+                                  color: Colors
+                                      .green,
+
+                                  fontSize:
+                                      12,
+
+                                  fontWeight:
+                                      FontWeight
+                                          .w600,
                                 ),
                               ),
                             ],
@@ -184,19 +369,37 @@ final isHiring = referralJobs.isNotEmpty;
     );
   }
 
-  Widget _chip(String text, Color color) {
+  Widget _chip(
+    String text,
+    Color color,
+  ) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(12),
+      padding:
+          const EdgeInsets.symmetric(
+        horizontal: 10,
+        vertical: 4,
       ),
+
+      decoration: BoxDecoration(
+        color:
+            color.withOpacity(0.2),
+
+        borderRadius:
+            BorderRadius.circular(
+          12,
+        ),
+      ),
+
       child: Text(
         text,
+
         style: TextStyle(
           color: color,
-          fontSize: 11, // 🔥 slightly bigger
-          fontWeight: FontWeight.w600,
+
+          fontSize: 11,
+
+          fontWeight:
+              FontWeight.w600,
         ),
       ),
     );

@@ -30,4 +30,6 @@ class RouteNames {
   static const String referrer = 'referrer';
   static const String referrerDetail = 'referrer-detail';
   static const String alumniDetail = 'alumniDetail';
+  static const profileDetail =
+    'profileDetail';
 }

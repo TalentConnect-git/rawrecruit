@@ -501,7 +501,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     "Others",
   ];
 
-  final employmentOptions = ["Full-time", "Part-time", "Contract", "Others"];
+  final employmentOptions = ["full time", "part time", "contract"];
 
   final lookingForOptions = ["Internship", "Job", "Both"];
 
@@ -896,6 +896,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                   AppTextFields(
                                     controller: controller.cgpa,
 
+
+
                                     hint: 'CGPA',
 
                                     onChanged: (_) => markChanged(),
@@ -959,7 +961,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                               spacing: 16,
 
                               children: [
-                                if (isProfessional) ...[
+                    
                                   CommonAutocomplete(
                                     label: "Current Company",
 
@@ -1002,7 +1004,185 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                   ),
 
                                   const SizedBox(height: 12),
-                                ],
+                                  const SizedBox(height: 16),
+
+Container(
+  padding: const EdgeInsets.symmetric(
+    horizontal: 14,
+    vertical: 6,
+  ),
+
+  decoration: BoxDecoration(
+    color: const Color(0xFF1F2937),
+    borderRadius: BorderRadius.circular(12),
+  ),
+
+  child: Row(
+    children: [
+      const Expanded(
+        child: Text(
+          "Currently Serving Notice Period",
+          style: TextStyle(
+            color: Colors.white,
+          ),
+        ),
+      ),
+
+      Switch(
+        value:
+            controller.servingNoticePeriod,
+
+        onChanged: (value) {
+          setState(() {
+            controller.servingNoticePeriod =
+                value;
+          });
+
+          markChanged();
+        },
+      ),
+    ],
+  ),
+),
+
+const SizedBox(height: 16),
+
+GestureDetector(
+  onTap: () async {
+    final picked = await showDatePicker(
+      context: context,
+
+      initialDate: DateTime.now(),
+
+      firstDate: DateTime(2000),
+
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      controller.noticePeriodStartDate.text =
+          "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+
+      setState(() {});
+
+      markChanged();
+    }
+  },
+
+  child: AbsorbPointer(
+    child: AppTextFields(
+      controller:
+          controller.noticePeriodStartDate,
+
+      hint: 'Notice Period Start Date',
+    ),
+  ),
+),
+                                  Builder(
+  builder: (_) {
+    final notice =
+        calculateNoticePeriodStatus(
+      controller.noticePeriodStartDate.text,
+      controller.noticePeriod.text,
+    );
+
+    if (notice == null ||
+        controller.servingNoticePeriod != true) {
+      return const SizedBox();
+    }
+
+    return Container(
+      margin: const EdgeInsets.only(top: 16),
+
+      padding: const EdgeInsets.all(16),
+
+      decoration: BoxDecoration(
+        color: const Color(0xFF1F2937),
+        borderRadius: BorderRadius.circular(16),
+      ),
+
+      child: Column(
+        crossAxisAlignment:
+            CrossAxisAlignment.start,
+
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  notice["isExpired"]
+                      ? "Notice Period Complete"
+                      : "In Notice Period",
+
+                  style: TextStyle(
+                    color: notice["isExpired"]
+                        ? Colors.green
+                        : Colors.orange,
+
+                    fontWeight:
+                        FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 14),
+
+          Text(
+            "Start Date: ${controller.noticePeriodStartDate.text}",
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            "Total Notice Period: ${controller.noticePeriod.text} days",
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            "Days Served: ${notice["daysPassed"]}",
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            "Days Remaining: ${notice["daysRemaining"]}",
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(height: 8),
+
+          Text(
+            "Expected Last Day: ${notice["endDate"]}",
+            style: const TextStyle(
+              color: Colors.white,
+            ),
+          ),
+
+          const SizedBox(height: 14),
+
+          LinearProgressIndicator(
+            value: notice["progress"] / 100,
+          ),
+        ],
+      ),
+    );
+  },
+),
+                          
 
                                 Row(
                                   children: [
@@ -1079,9 +1259,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                   controller.employmentType.first,
                                   'Employment Type',
                                   [
-                                    'Full-time',
-                                    'Part-time',
-                                    'Contract',
+                                    'full time',
+                                    'part time',
+                                    'contract',
                                     'Internship',
                                   ],
                                 ),
@@ -1403,7 +1583,29 @@ SingleChildScrollView(
                                     if (mounted) {
                                       context.pop(true);
                                     }
-                                  }
+                                  }if (failure == null) {
+  hasChanges = false;
+
+  try {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
+        endpoint: "api/onboarding/me",
+        isSafeRoute: true,
+      ),
+    );
+
+    final latestUser = User.fromJson(response.data["data"]);
+
+    context.read<AppStateProvider>().data = latestUser;
+  } catch (e) {
+    debugPrint("Refresh profile failed: $e");
+  }
+
+  if (mounted) {
+    context.pop(true);
+  }
+}
                                 },
                                 child: const Text(
                                   "Save",
@@ -1615,11 +1817,37 @@ Widget _experienceCard(
         _header(index, "Leadership"),
 
         const SizedBox(height: 12),
+CommonAutocomplete(
+  label: "Company",
 
-        _input(
-          controller: e.organization,
-          hint: "Organization",
-        ),
+  hint: "Company",
+
+  options: companyOptions,
+
+  initialValue: e.organization.text,
+
+  onChanged: (value) {
+    e.organization.text = value;
+
+    markChanged();
+  },
+
+  onSubmitted: (value) async {
+    await addCompanyIfNeeded(value);
+
+    e.organization.text = value;
+
+    markChanged();
+  },
+
+  onSelected: (value) async {
+    await addCompanyIfNeeded(value);
+
+    e.organization.text = value;
+
+    markChanged();
+  },
+),
 
         const SizedBox(height: 12),
 
@@ -2186,6 +2414,85 @@ Widget _dateRowOnly(
       onChanged: markChanged,
     );
   }
+
+  Map<String, dynamic>? calculateNoticePeriodStatus(
+  String? startDateStr,
+  String? totalDaysStr,
+) {
+  if (startDateStr == null ||
+      startDateStr.isEmpty ||
+      totalDaysStr == null ||
+      totalDaysStr.isEmpty) {
+    return null;
+  }
+
+  final totalDays =
+      int.tryParse(totalDaysStr) ?? 0;
+
+  if (totalDays <= 0) {
+    return null;
+  }
+
+  try {
+    final start =
+        DateTime.parse(startDateStr);
+
+    final today = DateTime.now();
+
+    final normalizedStart = DateTime(
+      start.year,
+      start.month,
+      start.day,
+    );
+
+    final normalizedToday = DateTime(
+      today.year,
+      today.month,
+      today.day,
+    );
+
+    final daysPassed =
+        normalizedToday
+            .difference(normalizedStart)
+            .inDays;
+
+    final safeDaysPassed =
+        daysPassed < 0 ? 0 : daysPassed;
+
+    final daysRemaining =
+        (totalDays - safeDaysPassed)
+            .clamp(0, totalDays);
+
+    final endDate =
+        normalizedStart.add(
+      Duration(days: totalDays),
+    );
+
+    final progress =
+        totalDays == 0
+        ? 0.0
+        : (safeDaysPassed / totalDays)
+              .clamp(0, 1);
+
+    return {
+      "daysPassed": safeDaysPassed,
+
+      "daysRemaining": daysRemaining,
+
+      "isExpired":
+          safeDaysPassed >= totalDays,
+
+      "progress": progress,
+
+      "endDate":
+          "${endDate.day.toString().padLeft(2, '0')}/"
+          "${endDate.month.toString().padLeft(2, '0')}/"
+          "${endDate.year}",
+    };
+  } catch (e) {
+    return null;
+  }
+}
   // ── Resume parser ────────────────────────────────────────────────────────────
 
   Future<void> parseResumeAndFill() async {
@@ -2362,29 +2669,54 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
     widget.onChanged?.call();
   }
+void _addItem(String value) {
+  final trimmed = value.trim();
 
-  void _addItem(String value) {
-    final trimmed = value.trim();
-
-    if (trimmed.isEmpty) {
-      return;
-    }
-
-    final current = _selectedItems;
-
-    if (!current.contains(trimmed)) {
-      current.add(trimmed);
-
-      _sync(current);
-    }
-
-    _textController.clear();
-
-    _focusNode.requestFocus();
-
-    setState(() {});
+  if (trimmed.isEmpty) {
+    return;
   }
 
+  final current = _selectedItems;
+
+  /// 🔥 normalize
+  final normalizedInput =
+      trimmed.toLowerCase().replaceAll(' ', '');
+
+  /// 🔥 find matching option from API
+  String? matchedOption;
+
+  for (final option in widget.options) {
+    final normalizedOption =
+        option.toLowerCase().replaceAll(' ', '');
+
+    if (normalizedOption == normalizedInput) {
+      matchedOption = option;
+      break;
+    }
+  }
+
+  /// 🔥 use API option if exists
+  final finalValue = matchedOption ?? trimmed;
+
+  /// 🔥 avoid duplicate after normalization
+  final alreadyExists = current.any(
+    (e) =>
+        e.toLowerCase().replaceAll(' ', '') ==
+        finalValue.toLowerCase().replaceAll(' ', ''),
+  );
+
+  if (!alreadyExists) {
+    current.add(finalValue);
+
+    _sync(current);
+  }
+
+  _textController.clear();
+
+  _focusNode.requestFocus();
+
+  setState(() {});
+}
   void _removeItem(String value) {
     final current = _selectedItems..remove(value);
 
@@ -2431,7 +2763,27 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
     super.dispose();
   }
+List<String> get _filteredSuggestions {
+  final query = _textController.text.trim().toLowerCase();
 
+  if (query.isEmpty) {
+    return [];
+  }
+
+  final selectedNormalized = _selectedItems
+      .map(
+        (e) => e.toLowerCase().replaceAll(' ', ''),
+      )
+      .toSet();
+
+  return widget.options.where((option) {
+    final normalized =
+        option.toLowerCase().replaceAll(' ', '');
+
+    return option.toLowerCase().contains(query) &&
+        !selectedNormalized.contains(normalized);
+  }).take(8).toList();
+}
   @override
   Widget build(BuildContext context) {
     final selected = _selectedItems;
@@ -2478,12 +2830,14 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                 ),
               ),
 
-              if (_textController.text.trim().isNotEmpty &&
+          if (_textController.text.trim().isNotEmpty &&
+    _filteredSuggestions.isEmpty &&
                   !widget.options.any(
                     (e) =>
                         e.toLowerCase().trim() ==
                         _textController.text.toLowerCase().trim(),
                   ))
+                  
                 Container(
                   margin: const EdgeInsets.only(top: 8),
 

@@ -18,10 +18,17 @@ final first = jobs.first;    final candidate = first.candidatePosted;
 
     final name = candidate?.name ?? "User";
     final role = first.jobTitle ?? "Professional";
-
-    final initials = name.isNotEmpty
-        ? name.split(" ").map((e) => e[0]).take(2).join()
-        : "U";
+final initials = name.trim().isNotEmpty
+    ? name
+        .trim()
+        .split(" ")
+        .where(
+          (e) => e.trim().isNotEmpty,
+        )
+        .map((e) => e[0])
+        .take(2)
+        .join()
+    : "U";
 
 final referralJobs = candidate?.referralJobs ?? [];
 final jobCount = referralJobs.length;
@@ -100,8 +107,10 @@ final jobCount = referralJobs.length;
   children: [
     Flexible(
       child: Text(
-        first.jobRoles?.firstOrNull ?? 'Designation',
-        maxLines: 1,
+(first.jobRoles != null &&
+        first.jobRoles!.isNotEmpty)
+    ? first.jobRoles!.first
+    : 'Designation',        maxLines: 1,
         overflow: TextOverflow.ellipsis,
         style: const TextStyle(color: Colors.grey, fontSize: 12),
       ),

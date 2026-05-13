@@ -5,6 +5,8 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
 
+import '../../../../core/index.dart';
+
 class ReferralPostView extends StatefulWidget {
   const ReferralPostView({super.key});
 
@@ -14,7 +16,28 @@ class ReferralPostView extends StatefulWidget {
 
 class _ReferralPostViewState extends State<ReferralPostView> {
   final _formKey = GlobalKey<FormState>();
+List<String> skillOptionsApi = [];
+Future<void> fetchSkills() async {
+  final response = await getIt<NetworkService>().request(
+    Request(
+      method: RequestMethod.get,
+      endpoint: "api/meta/get-skills",
+      isSafeRoute: true,
+    ),
+  );
 
+  final data =
+      List<Map<String, dynamic>>.from(response.data);
+
+  skillOptionsApi = [
+    ...data.map(
+      (e) => e['skills'].toString(),
+    ),
+    "Others",
+  ];
+
+  setState(() {});
+}
   // Text controllers
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -35,8 +58,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
   // Dropdowns
   // String selectedJobTitle = "Software Developer";
-  String employmentType = "Full-time";
-  String workMode = "On-site";
+String employmentType = "Full-time";  String workMode = "On-site";
   String broadcastType = "Everyone";
   String minEducation = "High School";
   String workAuthorization = "Citizens Only";
@@ -56,7 +78,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
 int currentStep = 0;
 
-final int totalSteps = 6;
+final int totalSteps = 9;
 
 void nextStep() {
   if (currentStep < totalSteps - 1) {
@@ -66,7 +88,31 @@ void nextStep() {
     );
   }
 }
+Future<void> addSkillIfNeeded(
+  String value,
+) async {
 
+  final exists = skillOptionsApi.any(
+    (e) =>
+        e.toLowerCase().trim() ==
+        value.toLowerCase().trim(),
+  );
+
+  if (exists) return;
+
+  await getIt<NetworkService>().request(
+    Request(
+      method: RequestMethod.post,
+      endpoint: "/api/meta/add-skill",
+      isSafeRoute: true,
+      body: {
+        "skills": value,
+      },
+    ),
+  );
+
+  await fetchSkills();
+}
 void previousStep() {
   if (currentStep > 0) {
     _pageController.previousPage(
@@ -137,6 +183,7 @@ Future<void> fetchCities(String state) async {
   void initState() {
     super.initState();
     fetchStates(); // 🔥 ADD THIS
+    fetchSkills();
   }
 
   // ── Enum options ────────────────────────────────────────────────────────────
@@ -422,14 +469,71 @@ Future<void> fetchCities(String state) async {
     "PhD",
     "Postgraduate Diploma",
   ];
+final roundsController =
+    TextEditingController();
 
+final selectionProcessController =
+    TextEditingController();
+
+final endDateController =
+    TextEditingController();
+
+final minExperienceController =
+    TextEditingController();
   final List<String> experienceOptions = [
     "0-1 years",
     "1-3 years",
     "3-5 years",
     "5-10 years",
   ];
+final List<String> roundsOptions = [
+  "1 Round",
+  "2 Rounds",
+  "3 Rounds",
+  "4 Rounds",
+  "5 Rounds",
+  "6 Rounds",
+  "7+ Rounds",
+];
+final List<String> selectionProcessOptions = [
+  "Aptitude Test 1",
+  "Case Study 1",
+  "Coding Test 1",
+  "Group Discussion 1",
+  "HR Interview 1",
+  "Online Test 1",
+  "Presentation 1",
+  "Technical Interview 1",
+];
 
+  Widget _chipMultiSelectField(
+    String label,
+    TextEditingController controller,
+    List<String> options,
+  ) {
+    return _ChipMultiSelectField(
+      key: ValueKey(label),
+      label: label,
+      controller: controller,
+      options: options,
+    );
+  }
+
+Future<void> pickEndDate() async {
+  final picked = await showDatePicker(
+    context: context,
+    initialDate: DateTime.now(),
+    firstDate: DateTime.now(),
+    lastDate: DateTime(2100),
+  );
+
+  if (picked != null) {
+    endDateController.text =
+        picked.toIso8601String();
+        
+    setState(() {});
+  }
+}
   final List<String> workAuthorizationOptions = [
     "Citizens Only",
     "Permanent Residents",
@@ -452,6 +556,10 @@ Future<void> fetchCities(String state) async {
     currencyController.dispose();
     totalCTCController.dispose();
     fixedPayController.dispose();
+    roundsController.dispose();
+selectionProcessController.dispose();
+endDateController.dispose();
+minExperienceController.dispose();
     joiningBonusController.dispose();
     super.dispose();
   }
@@ -561,11 +669,18 @@ SizedBox(height: 10),
                                 () => selectedCity = val!,
                               ),
                             ),
-
+_dropdownDark(
+  "Broadcast Type",
+  broadcastType,
+  ["Everyone", "Location"],
+  (val) => setState(
+    () => broadcastType = val!,
+  ),
+),
                     _dropdownDark(
                       "Employment Type",
                       employmentType,
-                      ["Full-time", "Part-time","Contract"],
+                   ["Full-time", "Part-time", "Contract"],
                       (val) =>
                           setState(() => employmentType = val!),
                     ),
@@ -579,7 +694,57 @@ SizedBox(height: 10),
                   ],
                 ),
               ),
+/// STEP 9 — BENEFITS & STUDIES
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
 
+  child: _card(
+    title:
+        "Benefits & Studies",
+
+    children: [
+
+      SearchableChipField(
+        label:
+            "Preferred Field of Study",
+
+        controller:
+            fieldOfStudyController,
+
+        options:
+            fieldOfStudyOptions,
+      ),
+
+      const SizedBox(height: 16),
+
+      SearchableChipField(
+        label: "Benefits",
+
+        controller:
+            benefitsController,
+
+        options:
+            benefitOptions,
+      ),
+
+      const SizedBox(height: 16),
+
+      _dropdownDark(
+        "Work Authorization",
+
+        workAuthorization,
+
+        workAuthorizationOptions,
+
+        (val) => setState(
+          () =>
+              workAuthorization =
+                  val!,
+        ),
+      ),
+    ],
+  ),
+),
               /// STEP 3 — EDUCATION
               SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -595,15 +760,24 @@ SizedBox(height: 10),
                         fieldOfStudyController.clear();
                       }),
                     ),
+                    const SizedBox(height: 12),
 
-                    MultiSelectDropdownChips(
-                      key: ValueKey(
-                        'fieldOfStudy_$minEducation',
-                      ),
-                      label: "Preferred Field of Study",
-                      controller: fieldOfStudyController,
-                      options: fieldOfStudyOptions,
-                    ),
+_fieldDark(
+  "Minimum Experience",
+  controller:
+      minExperienceController,
+  keyboardType:
+      TextInputType.number,
+),
+
+                    // MultiSelectDropdownChips(
+                    //   key: ValueKey(
+                    //     'fieldOfStudy_$minEducation',
+                    //   ),
+                    //   label: "Preferred Field of Study",
+                    //   controller: fieldOfStudyController,
+                    //   options: fieldOfStudyOptions,
+                    // ),
 
                     const SizedBox(height: 12),
 
@@ -617,14 +791,52 @@ SizedBox(height: 10),
                     ),
 
                     _fieldDark(
-                      "Openings",
+                      "No. of Openings",
                       controller: openingsController,
                       keyboardType: TextInputType.number,
                     ),
                   ],
                 ),
               ),
+/// STEP 4 — HIRING PROCESS
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
 
+  child: _card(
+    title: "Hiring Process",
+
+    children: [
+
+      _chipMultiSelectField(
+        "Rounds",
+        roundsController,
+        roundsOptions,
+      ),
+
+      const SizedBox(height: 16),
+
+      _chipMultiSelectField(
+        "Selection Process",
+        selectionProcessController,
+        selectionProcessOptions,
+      ),
+
+      const SizedBox(height: 16),
+
+      GestureDetector(
+        onTap: pickEndDate,
+
+        child: AbsorbPointer(
+          child: _fieldDark(
+            "Application Deadline",
+            controller:
+                endDateController,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
               /// STEP 4 — PACKAGE
               SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -669,47 +881,48 @@ SizedBox(height: 10),
                   children: [_tagsEnumField()],
                 ),
               ),
+/// STEP 6 — SKILLS
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
 
-              /// STEP 6 — SKILLS
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: _card(
-                  title: "Skills & Certifications",
-                  children: [
-                    MultiSelectDropdownChips(
-                      key: const ValueKey('skills'),
-                      label: "Skills",
-                      controller: skillsController,
-                      options: skillOptions,
-                    ),
+  child: _card(
+    title: "Skills",
 
-                    const SizedBox(height: 12),
+    children: [
 
-                    MultiSelectDropdownChips(
-                      key: const ValueKey(
-                        'certifications',
-                      ),
-                      label: "Certifications",
-                      controller: certificationsController,
-                      options: certificationOptions,
-                    ),
+      _ChipMultiSelectField(
+  label: "Skills",
+  controller: skillsController,
+  options: skillOptionsApi,
+),
+    ],
+  ),
+),/// STEP 7 — CERTIFICATIONS
+/// STEP 7 — CERTIFICATIONS
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
 
-                    const SizedBox(height: 12),
+  child: _card(
+    title: "Certifications",
 
-                    MultiSelectDropdownChips(
-                      key: const ValueKey('benefits'),
-                      label: "Benefits",
-                      controller: benefitsController,
-                      options: benefitOptions,
-                    ),
-                  ],
-                ),
-              ),
-            ],
+    children: [
+
+      SearchableChipField(
+        label: "Certifications",
+        controller:
+            certificationsController,
+
+        options:
+            certificationOptions,
+      ),
+    ],
+  ),
+),
+               ],
           ),
         ),
-      ),
-
+      ),           /// STEP 6 — SKILLS
+             
       /// 🔥 BOTTOM BUTTONS
       Padding(
         padding: const EdgeInsets.all(16),
@@ -768,6 +981,7 @@ workMode: [workMode],
                                 openingsController.text,
                               ) ??
                               0,
+                              
                           packageDetails: PackageDetails(
                             currency:
                                 currencyController.text.trim(),
@@ -790,6 +1004,20 @@ workMode: [workMode],
                           skills: _splitController(
                             skillsController,
                           ),
+                          rounds: _splitController(
+  roundsController,
+),
+
+selectionProcess:
+    _splitController(
+  selectionProcessController,
+),
+
+endDate:
+    endDateController.text,
+
+minYearofExperience:
+    minExperienceController.text,
                           studentStreams:
                               _splitController(
                                 fieldOfStudyController,
@@ -1172,6 +1400,591 @@ if (selected.isNotEmpty)
         ),
         
 
+      ],
+    );
+  }
+  
+}
+class SearchableChipField
+    extends StatefulWidget {
+
+  const SearchableChipField({
+    super.key,
+    required this.label,
+    required this.options,
+    required this.controller,
+  });
+
+  final String label;
+  final List<String> options;
+  final TextEditingController controller;
+
+  @override
+  State<SearchableChipField>
+      createState() =>
+          _SearchableChipFieldState();
+}
+
+class _SearchableChipFieldState
+    extends State<SearchableChipField> {
+
+  final TextEditingController
+      searchController =
+          TextEditingController();
+
+  List<String> selected = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    selected =
+        widget.controller.text.isEmpty
+            ? []
+            : widget.controller.text
+                .split(',')
+                .map((e) => e.trim())
+                .toList();
+  }
+
+  void _updateController() {
+    widget.controller.text =
+        selected.join(', ');
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    final query =
+        searchController.text
+            .trim()
+            .toLowerCase();
+
+    final suggestions =
+        widget.options.where((e) {
+
+      final alreadySelected =
+          selected.any(
+        (s) =>
+            s.toLowerCase() ==
+            e.toLowerCase(),
+      );
+
+      return e
+              .toLowerCase()
+              .contains(query) &&
+          !alreadySelected;
+    }).toList();
+
+    return Column(
+      crossAxisAlignment:
+          CrossAxisAlignment.start,
+
+      children: [
+
+        Text(
+          widget.label,
+
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight:
+                FontWeight.w600,
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        /// SELECTED CHIPS
+        if (selected.isNotEmpty)
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+
+            children:
+                selected.map((item) {
+
+              return Chip(
+                label: Text(item),
+
+                onDeleted: () {
+                  setState(() {
+                    selected.remove(item);
+                    _updateController();
+                  });
+                },
+              );
+            }).toList(),
+          ),
+
+        if (selected.isNotEmpty)
+          const SizedBox(height: 12),
+
+        /// SEARCH FIELD
+        TextField(
+          controller: searchController,
+
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+
+          decoration: InputDecoration(
+            hintText:
+                "Search or add",
+
+            hintStyle:
+                const TextStyle(
+              color: Colors.grey,
+            ),
+
+            filled: true,
+
+            fillColor:
+                AppColors.kCard,
+
+            border:
+                OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(
+                      12),
+
+              borderSide:
+                  BorderSide.none,
+            ),
+
+            suffixIcon: IconButton(
+              icon: const Icon(
+                Icons.add,
+                color: Colors.white,
+              ),
+
+              onPressed: () {
+                final val =
+                    searchController
+                        .text
+                        .trim();
+
+                if (val.isEmpty) {
+                  return;
+                }
+
+                final exists =
+                    selected.any(
+                  (e) =>
+                      e.toLowerCase() ==
+                      val.toLowerCase(),
+                );
+
+                if (!exists) {
+                  setState(() {
+                    selected.add(val);
+                    _updateController();
+                  });
+                }
+
+                searchController.clear();
+              },
+            ),
+          ),
+
+          onChanged: (_) {
+            setState(() {});
+          },
+        ),
+
+        const SizedBox(height: 12),
+
+        /// SUGGESTIONS
+        if (suggestions.isNotEmpty)
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+
+            children:
+                suggestions.take(12).map(
+              (item) {
+
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      selected.add(item);
+                      _updateController();
+                      searchController
+                          .clear();
+                    });
+                  },
+
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+
+                    decoration:
+                        BoxDecoration(
+                      color: AppColors
+                          .kCard,
+
+                      borderRadius:
+                          BorderRadius.circular(
+                              30),
+
+                      border: Border.all(
+                        color:
+                            Colors.white
+                                .withOpacity(
+                          .08,
+                        ),
+                      ),
+                    ),
+
+                    child: Text(
+                      item,
+
+                      style:
+                          const TextStyle(
+                        color:
+                            Colors.white,
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ).toList(),
+          ),
+      ],
+    );
+  }
+}
+class _ChipMultiSelectField extends StatefulWidget {
+  const _ChipMultiSelectField({
+    required this.label,
+    required this.controller,
+    required this.options,
+    this.onChanged,
+    super.key,
+  });
+
+  final String label;
+  final TextEditingController controller;
+  final List<String> options;
+  final VoidCallback? onChanged;
+  @override
+  State<_ChipMultiSelectField> createState() => _ChipMultiSelectFieldState();
+}
+
+class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
+  final TextEditingController _textController = TextEditingController();
+
+  final FocusNode _focusNode = FocusNode();
+
+  bool _showFreeText = false;
+
+  List<String> get _selectedItems {
+    if (widget.controller.text.isEmpty) {
+      return [];
+    }
+
+    return widget.controller.text
+        .split(',')
+        .map((e) => e.trim())
+        .where((e) => e.isNotEmpty)
+        .toList();
+  }
+
+  void _sync(List<String> items) {
+    widget.controller.text = items.join(', ');
+
+    widget.onChanged?.call();
+  }
+void _addItem(String value) {
+  final trimmed = value.trim();
+
+  if (trimmed.isEmpty) {
+    return;
+  }
+
+  final current = _selectedItems;
+
+  /// 🔥 normalize
+  final normalizedInput =
+      trimmed.toLowerCase().replaceAll(' ', '');
+
+  /// 🔥 find matching option from API
+  String? matchedOption;
+
+  for (final option in widget.options) {
+    final normalizedOption =
+        option.toLowerCase().replaceAll(' ', '');
+
+    if (normalizedOption == normalizedInput) {
+      matchedOption = option;
+      break;
+    }
+  }
+
+  /// 🔥 use API option if exists
+  final finalValue = matchedOption ?? trimmed;
+
+  /// 🔥 avoid duplicate after normalization
+  final alreadyExists = current.any(
+    (e) =>
+        e.toLowerCase().replaceAll(' ', '') ==
+        finalValue.toLowerCase().replaceAll(' ', ''),
+  );
+
+  if (!alreadyExists) {
+    current.add(finalValue);
+
+    _sync(current);
+  }
+
+  _textController.clear();
+
+  _focusNode.requestFocus();
+
+  setState(() {});
+}
+  void _removeItem(String value) {
+    final current = _selectedItems..remove(value);
+
+    _sync(current);
+
+    if (value == 'Others') {
+      setState(() {
+        _showFreeText = false;
+      });
+    }
+
+    setState(() {});
+  }
+
+  void _toggleEnumChip(String value) {
+    final current = _selectedItems;
+
+    if (current.contains(value)) {
+      current.remove(value);
+
+      _sync(current);
+
+      if (value == 'Others') {
+        _showFreeText = false;
+      }
+    } else {
+      current.add(value);
+
+      _sync(current);
+
+      if (value == 'Others') {
+        _showFreeText = true;
+      }
+    }
+
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _textController.dispose();
+
+    _focusNode.dispose();
+
+    super.dispose();
+  }
+List<String> get _filteredSuggestions {
+  final query = _textController.text.trim().toLowerCase();
+
+  if (query.isEmpty) {
+    return [];
+  }
+
+  final selectedNormalized = _selectedItems
+      .map(
+        (e) => e.toLowerCase().replaceAll(' ', ''),
+      )
+      .toSet();
+
+  return widget.options.where((option) {
+    final normalized =
+        option.toLowerCase().replaceAll(' ', '');
+
+    return option.toLowerCase().contains(query) &&
+        !selectedNormalized.contains(normalized);
+  }).take(8).toList();
+}
+  @override
+  Widget build(BuildContext context) {
+    final selected = _selectedItems;
+
+    final hasEnums = widget.options.isNotEmpty;
+
+    final isSimpleSelection = widget.label == 'Employment Type';
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+
+      children: [
+        /// SEARCH FIELD
+        if (!isSimpleSelection) ...[
+          Column(
+            children: [
+              TextField(
+                controller: _textController,
+
+                focusNode: _focusNode,
+
+                style: const TextStyle(color: Colors.white),
+
+                onChanged: (_) {
+                  setState(() {});
+                },
+
+                decoration: InputDecoration(
+                  hintText: "Search or add ${widget.label}",
+
+                  hintStyle: const TextStyle(color: Colors.grey),
+
+                  filled: true,
+
+                  fillColor: AppColors.kCard,
+
+                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
+
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(14),
+
+                    borderSide: BorderSide.none,
+                  ),
+                ),
+              ),
+
+          if (_textController.text.trim().isNotEmpty &&
+    _filteredSuggestions.isEmpty &&
+                  !widget.options.any(
+                    (e) =>
+                        e.toLowerCase().trim() ==
+                        _textController.text.toLowerCase().trim(),
+                  ))
+                  
+                Container(
+                  margin: const EdgeInsets.only(top: 8),
+
+                  decoration: BoxDecoration(
+                    color: AppColors.kCard,
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+
+                  child: ListTile(
+                    leading: const Icon(Icons.add, color: Color(0xFF22C55E)),
+
+                    title: Text(
+                      'Create "${_textController.text.trim()}"',
+
+                      style: const TextStyle(color: Colors.white),
+                    ),
+
+                    onTap: () async {
+                      final value = _textController.text.trim();
+
+                      _addItem(value);
+
+                final parentState = context
+    .findAncestorStateOfType<_ReferralPostViewState>();
+
+                      if (widget.label == 'Skills') {
+                        await parentState?.addSkillIfNeeded(value);
+                      }
+
+                  
+                      _textController.clear();
+
+                      setState(() {});
+                    },
+                  ),
+                ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+        ],
+
+        /// SELECTED ITEMS
+        if (selected.isNotEmpty) ...[
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+
+            children: selected.map((item) {
+              return Chip(
+                label: Text(item),
+
+                backgroundColor: const Color(0xFF22C55E),
+
+                labelStyle: const TextStyle(color: Colors.black),
+
+                deleteIcon: const Icon(Icons.close, size: 18),
+
+                onDeleted: () => _removeItem(item),
+              );
+            }).toList(),
+          ),
+
+          const SizedBox(height: 20),
+        ],
+
+        /// POPULAR TITLE
+        Text(
+          "POPULAR ${widget.label.toUpperCase()}",
+
+          style: const TextStyle(color: Colors.grey),
+        ),
+
+        const SizedBox(height: 10),
+
+        /// OPTIONS
+        if (hasEnums)
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+
+            children: widget.options.map((option) {
+              final isSelected = selected.contains(option);
+
+              return GestureDetector(
+                onTap: () {
+                  if (isSelected) {
+                    _removeItem(option);
+                  } else {
+                    _addItem(option);
+                  }
+                },
+
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
+                  ),
+
+                  decoration: BoxDecoration(
+                    color: isSelected
+                        ? const Color(0xFF22C55E)
+                        : AppColors.kCard,
+
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+
+                  child: Text(
+                    option,
+
+                    style: TextStyle(
+                      color: isSelected ? Colors.black : Colors.white,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
       ],
     );
   }

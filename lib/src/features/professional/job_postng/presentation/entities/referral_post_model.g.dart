@@ -38,6 +38,12 @@ _ReferralPostModel _$ReferralPostModelFromJson(
   tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
   workAuthorization: json['workAuthorization'] as String?,
   yearsOfExperience: json['yearsOfExperience'] as String?,
+  minYearofExperience: json['minYearofExperience'] as String?,
+  rounds: (json['rounds'] as List<dynamic>?)?.map((e) => e as String).toList(),
+  selectionProcess: (json['selectionProcess'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  endDate: json['endDate'] as String?,
   inactive: json['inactive'] as bool?,
   benefits: (json['benefits'] as List<dynamic>?)
       ?.map((e) => e as String)
@@ -70,6 +76,10 @@ Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
       'tags': instance.tags,
       'workAuthorization': instance.workAuthorization,
       'yearsOfExperience': instance.yearsOfExperience,
+      'minYearofExperience': instance.minYearofExperience,
+      'rounds': instance.rounds,
+      'selectionProcess': instance.selectionProcess,
+      'endDate': instance.endDate,
       'inactive': instance.inactive,
       'benefits': instance.benefits,
       'certifications': instance.certifications,

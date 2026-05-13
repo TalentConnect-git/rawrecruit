@@ -74,7 +74,8 @@ class AddEditProfileViewModel extends ViewStateProvider {
 
     c.noticePeriod.text =
         user.noticePeriod ?? '';
-
+c.noticePeriodStartDate.text =
+    user.noticePeriodStartDate ?? '';
     c.phone.text = user.phone ?? '';
     c.portfolio.text =
         user.portfolio ?? '';
@@ -116,11 +117,8 @@ class AddEditProfileViewModel extends ViewStateProvider {
 
     c.visaStatus.text =
         user.visaStatus ?? '';
-
-    c.servingNoticePeriod.text =
-        user.servingNoticePeriod
-            .toString();
-
+c.servingNoticePeriod =
+    user.servingNoticePeriod ?? false;
     /// -------- CLEAR LISTS --------
 
     c.skills.clear();

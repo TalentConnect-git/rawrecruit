@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show RouteNames, User, UserType, Job, StudentJobType;
+import 'package:rawrecruit/src/feature/profile_detail/presentation/view/profile_cv_page.dart';
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/alumni_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
@@ -199,7 +200,20 @@ class AppRouter {
           );
         },
       ),
+GoRoute(
+  path: '/profile-detail',
 
+  name: RouteNames.profileDetail,
+
+  builder: (context, state) {
+    final userId =
+        state.extra as String;
+
+    return ProfileDetailView(
+      userId: userId,
+    );
+  },
+),
       GoRoute(
         name: RouteNames.addEditProfileView,
         path: '/add-edit-profile-view',

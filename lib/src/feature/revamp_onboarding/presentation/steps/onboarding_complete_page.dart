@@ -151,19 +151,10 @@ class _OnboardingCompletePageState
               ),
             ),
             onPressed: isLoading ? null : handleSubmit,
-            child: isLoading
-                ? const SizedBox(
-                    height: 18,
-                    width: 18,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.black,
-                    ),
-                  )
-                : const Text(
-                    "👉 Go to Home  >",
-                    style: TextStyle(color: Colors.black),
-                  ),
+          child: const Text(
+  "👉 Go to Home  >",
+  style: TextStyle(color: Colors.black),
+),
           ),
         ),
 

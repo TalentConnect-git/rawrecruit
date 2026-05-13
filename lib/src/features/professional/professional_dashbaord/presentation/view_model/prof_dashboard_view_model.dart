@@ -60,14 +60,24 @@ class ProfessionalViewModel extends ViewStateProvider {
     final result = await _repository.getReferralJobDetails(id);
 
     result.fold((_) {}, (data) async {
-      selectedReferralJob = data;
-      if (data.companyName != null) {
-        log('Company Name: ${data.companyName}');
-        await fetchCompanyAlumni(data.companyName!);
-      } else {
-        log('Company Name: Not Found');
-      }
-    });
+  selectedReferralJob = data;
+
+  final companyName =
+      data.candidatePosted
+              ?.currentCompany
+              ?.trim() ??
+          '';
+
+  log('Company Name: $companyName');
+
+  if (companyName.isNotEmpty) {
+    await fetchCompanyAlumni(
+      companyName,
+    );
+  } else {
+    log('Company Name: Not Found');
+  }
+});
 
     setViewState(ViewState.complete);
     notifyListeners();

@@ -215,126 +215,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
       ),
 child: Column(
   children: [
-//     Align(
-//       alignment: Alignment.topRight,
-//       child: Row(
-//         mainAxisSize: MainAxisSize.min,
-//         children: [
 
-//           /// GITHUB
-//           if ((p?.github ?? '').isNotEmpty)
-//             GestureDetector(
-//               onTap: () async {
-//   final raw = p?.github ?? '';
-
-//   if (raw.isEmpty) return;
-
-//   final formattedUrl = raw.startsWith('http://') ||
-//           raw.startsWith('https://')
-//       ? raw
-//       : 'https://$raw';
-
-//   await launchUrl(
-//     Uri.parse(formattedUrl),
-//     mode: LaunchMode.externalApplication,
-//   );
-// },
-//               child: Padding(
-//                 padding: const EdgeInsets.only(left: 8),
-//                 child: Image.asset(
-//                   'assets/images/github.png',
-//                   height: 20,
-//                   width: 20,
-//                 ),
-//               ),
-//             ),
-
-//           /// LINKEDIN
-//           if ((p?.linkedin ?? '').isNotEmpty)
-//             GestureDetector(
-//              onTap: () async {
-//   final raw = p?.linkedin ?? '';
-
-//   if (raw.isEmpty) return;
-
-//   final formattedUrl = raw.startsWith('http://') ||
-//           raw.startsWith('https://')
-//       ? raw
-//       : 'https://$raw';
-
-//   await launchUrl(
-//     Uri.parse(formattedUrl),
-//     mode: LaunchMode.externalApplication,
-//   );
-// },
-//               child: Padding(
-//                 padding: const EdgeInsets.only(left: 8),
-//                 child: Image.asset(
-//                   'assets/images/linkedin.png',
-//                   height: 20,
-//                   width: 20,
-//                 ),
-//               ),
-//             ),
-
-//           /// PORTFOLIO
-//           if ((p?.portfolio ?? '').isNotEmpty)
-//             GestureDetector(
-//              onTap: () async {
-//   final raw = p?.portfolio ?? '';
-
-//   if (raw.isEmpty) return;
-
-//   final formattedUrl = raw.startsWith('http://') ||
-//           raw.startsWith('https://')
-//       ? raw
-//       : 'https://$raw';
-
-//   await launchUrl(
-//     Uri.parse(formattedUrl),
-//     mode: LaunchMode.externalApplication,
-//   );
-// },
-//               child: Padding(
-//                 padding: const EdgeInsets.only(left: 8),
-//                 child: Image.asset(
-//                   'assets/images/portfolio.png',
-//                   height: 20,
-//                   width: 20,
-//                 ),
-//               ),
-//             ),
-
-//           /// RESUME
-//           if ((p?.resume ?? '').isNotEmpty)
-//             GestureDetector(
-//              onTap: () async {
-//   final raw = p?.resume ?? '';
-
-//   if (raw.isEmpty) return;
-
-//   final formattedUrl = raw.startsWith('http://') ||
-//           raw.startsWith('https://')
-//       ? raw
-//       : 'https://$raw';
-
-//   await launchUrl(
-//     Uri.parse(formattedUrl),
-//     mode: LaunchMode.externalApplication,
-//   );
-// },
-//               child: Padding(
-//                 padding: const EdgeInsets.only(left: 8),
-//                 child: Image.asset(
-//                   'assets/images/cv.png',
-//                   height: 20,
-//                   width: 20,
-//                 ),
-//               ),
-//             ),
-//         ],
-//       ),
-//     ),
           /// Avatar
           SizedBox(
             height: 64,
@@ -563,31 +444,7 @@ SizedBox(height :5),
       ),
   ],
 ),
-          const SizedBox(height: 12),
-
-          /// Skills Chips
-          Wrap(
-            spacing: 8,
-            runSpacing: 6,
-            children: (p?.skills ?? ["React", "Node.js"]).map<Widget>((s) {
-              return Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 5,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.kGreen.withOpacity(0.15),
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  s,
-                  style: TextStyle(color: AppColors.kGreen, fontSize: 11),
-                ),
-              );
-            }).toList(),
-          ),
-
-          const SizedBox(height: 12),
+      
         ],
       ),
     );
