@@ -63,14 +63,8 @@ class _SplashViewState extends State<SplashView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Image.network(
-            'https://rawrecruit.in/assets/RR-Tagline-CmOUAebu.png',
-          ),
-        ),
-      ),
+      backgroundColor: Colors.black,
+      body: Image.asset('assets/images/Splash.png', fit: BoxFit.cover),
     );
   }
 }
