@@ -233,7 +233,11 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
   // ============================================================
   Widget _header(Job job, dynamic referral) {
     final role = job.jobTitle ?? "Software Developer";
-    final company = widget.companyName ?? "Company";
+   final company =
+    widget.companyName ??
+    referral?.candidatePosted?.currentCompany ??
+    job.candidatePosted?.currentCompany ??
+    "Company";
     final location = (job.location?.isNotEmpty ?? false)
         ? job.location!.join(", ")
         : "—";
@@ -723,7 +727,7 @@ SizedBox(
     final openings = job.numberOfOpenings?.toString() ?? "—";
     final rounds = (job.selectionProcess?.length ?? 0).toString();
     final views = job.views?.toString() ?? "0";
-
+final score = (job.matchScore ?? 0).clamp(0, 100);
     return _cardContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -775,7 +779,7 @@ SizedBox(
                       width: 80,
                       height: 80,
                       child: CircularProgressIndicator(
-                        value: 0.85,
+                      value: score / 100,
                         strokeWidth: 6,
                         backgroundColor: Colors.white.withOpacity(0.08),
                         valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
@@ -784,8 +788,8 @@ SizedBox(
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Text(
-                          "0%",
+                Text(
+  "$score%",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,
@@ -1249,6 +1253,7 @@ SizedBox(
       eligibilityCriteria: r.eligibilityCriteria,
       cgpa: r.cgpa,
       views: r.views,
+      matchScore: r.matchScore,
       status: r.status,
       toolsAndPlatforms: r.toolsAndPlatforms,
       employmentType: r.employmentType,

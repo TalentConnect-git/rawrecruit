@@ -87,6 +87,7 @@ _ReferralJobModel _$ReferralJobModelFromJson(
   endDate: json['endDate'] == null
       ? null
       : DateTime.parse(json['endDate'] as String),
+  matchScore: (json['matchScore'] as num?)?.toInt(),
   expireAt: json['expireAt'] == null
       ? null
       : DateTime.parse(json['expireAt'] as String),
@@ -140,6 +141,7 @@ Map<String, dynamic> _$ReferralJobModelToJson(_ReferralJobModel instance) =>
       'numberOfStudent': instance.numberOfStudent,
       'packageDetails': instance.packageDetails,
       'endDate': instance.endDate?.toIso8601String(),
+      'matchScore': instance.matchScore,
       'expireAt': instance.expireAt?.toIso8601String(),
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),

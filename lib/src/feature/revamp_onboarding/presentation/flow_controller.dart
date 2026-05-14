@@ -23,7 +23,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   final PageController _controller = PageController();
   int currentPage = 0;
 
-  final int totalPages = 9;
+  final int totalPages = 8;
 
   /// 🔥 SHARED DATA
   final User data = User();

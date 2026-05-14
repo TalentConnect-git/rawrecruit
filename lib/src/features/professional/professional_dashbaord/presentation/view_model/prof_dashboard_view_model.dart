@@ -59,25 +59,39 @@ class ProfessionalViewModel extends ViewStateProvider {
 
     final result = await _repository.getReferralJobDetails(id);
 
-    result.fold((_) {}, (data) async {
-  selectedReferralJob = data;
+   result.fold(
+  (failure) {
+  print(failure.toString());
+},
+  (data) async {
+    try {
+      log("REFERRAL DATA: $data");
 
-  final companyName =
-      data.candidatePosted
-              ?.currentCompany
-              ?.trim() ??
-          '';
+      selectedReferralJob = data;
 
-  log('Company Name: $companyName');
+      log("SELECTED REFERRAL SET");
 
-  if (companyName.isNotEmpty) {
-    await fetchCompanyAlumni(
-      companyName,
-    );
-  } else {
-    log('Company Name: Not Found');
-  }
-});
+      final companyName =
+          data.candidatePosted
+                  ?.currentCompany
+                  ?.trim() ??
+              '';
+
+      log("Company Name: $companyName");
+
+      if (companyName.isNotEmpty) {
+        await fetchCompanyAlumni(companyName);
+      } else {
+        log("Company Name: Not Found");
+      }
+
+      log("FETCH REFERRAL SUCCESS");
+    } catch (e, s) {
+      log("REFERRAL CRASH: $e");
+      log(s.toString());
+    }
+  },
+);
 
     setViewState(ViewState.complete);
     notifyListeners();
