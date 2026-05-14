@@ -23,6 +23,7 @@ class ReferredApplicantCard extends StatelessWidget {
 
     /// ✅ NAME
     final name = user.name ?? "Candidate";
+    
 
     /// ✅ MATCH SCORE
     final match = application.matchScore ?? 0;

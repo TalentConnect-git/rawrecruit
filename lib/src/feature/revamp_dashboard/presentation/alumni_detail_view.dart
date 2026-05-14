@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class AlumniDetailView extends StatelessWidget {
   final List<Job> jobs;
@@ -527,51 +529,102 @@ _modernCard(
             ),
 
             const SizedBox(height: 18),
+const SizedBox(height: 18),
 
-            /// SKILLS
-       /// SKILLS
 _modernCard(
-  title: "Skills & Domain",
-  icon: Icons.code,
-  child: Wrap(
-    spacing: 8,
-    runSpacing: 8,
-    children: skills
-        .map(
-          (s) => Container(
-            padding:
-                const EdgeInsets.symmetric(
-              horizontal: 12,
-              vertical: 8,
-            ),
-            decoration: BoxDecoration(
-              color: Colors.white
-                  .withOpacity(.06),
-              borderRadius:
-                  BorderRadius.circular(
-                      30),
-              border: Border.all(
-                color: Colors.white
-                    .withOpacity(.05),
-              ),
-            ),
-            child: Text(
-              s,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 11,
-                fontWeight:
-                    FontWeight.w500,
-              ),
-            ),
-          ),
-        )
-        .toList(),
+  title: "Professional Links",
+  icon: Icons.link,
+  child: Column(
+    children: [
+      if ((first.candidatePosted?.linkedin ?? '').isNotEmpty)
+        _linkTile(
+            context: context,
+
+          icon: Icons.work_outline,
+          title: "LinkedIn",
+          value: first.candidatePosted!.linkedin!,
+        ),
+ if ((first.candidatePosted?.email ?? '').isNotEmpty)
+        _linkTile(
+            context: context,
+
+          icon: Icons.work_outline,
+          title: "Email",
+          value: first.candidatePosted!.email!,
+        ),
+      if ((first.candidatePosted?.github ?? '').isNotEmpty)
+        _linkTile(
+            context: context,
+
+          icon: Icons.code,
+          title: "GitHub",
+          value: first.candidatePosted!.github!,
+        ),
+
+      if ((first.candidatePosted?.portfolio ?? '').isNotEmpty)
+        _linkTile(
+            context: context,
+
+          icon: Icons.web,
+          title: "Portfolio",
+          value: first.candidatePosted!.portfolio!,
+        ),
+
+      if ((first.candidatePosted?.resume ?? '').isNotEmpty)
+        _linkTile(
+            context: context,
+
+          icon: Icons.description_outlined,
+          title: "Resume",
+          value: first.candidatePosted!.resume!,
+        ),
+    ],
   ),
 ),
+            /// SKILLS
+       /// SKILLS
+// _modernCard(
+//   title: "Skills & Domain",
+//   icon: Icons.code,
+//   child: Wrap(
+//     spacing: 8,
+//     runSpacing: 8,
+//     children: skills
+//         .map(
+//           (s) => Container(
+//             padding:
+//                 const EdgeInsets.symmetric(
+//               horizontal: 12,
+//               vertical: 8,
+//             ),
+//             decoration: BoxDecoration(
+//               color: Colors.white
+//                   .withOpacity(.06),
+//               borderRadius:
+//                   BorderRadius.circular(
+//                       30),
+//               border: Border.all(
+//                 color: Colors.white
+//                     .withOpacity(.05),
+//               ),
+//             ),
+//             child: Text(
+//               s,
+//               style: const TextStyle(
+//                 color: Colors.white,
+//                 fontSize: 11,
+//                 fontWeight:
+//                     FontWeight.w500,
+//               ),
+//             ),
+//           ),
+//         )
+//         .toList(),
+//   ),
+// ),
 
-            const SizedBox(height: 18),
-
+//             const SizedBox(height: 18),
+const SizedBox(height: 18),
             /// OPEN POSITIONS
             _modernCard(
               title: "Open Positions",
@@ -596,7 +649,161 @@ _modernCard(
       ),
     );
   }
+  Widget _linkTile({
+  required BuildContext context,
+  required IconData icon,
+  required String title,
+  required String value,
+}) {
+  return GestureDetector(
+    onTap: () async {
+      try {
+        /// EMAIL
+        if (title == "Email") {
+          final uri = Uri(
+            scheme: "mailto",
+            path: value,
+          );
 
+          final launched =
+              await launchUrl(
+            uri,
+            mode:
+                LaunchMode.platformDefault,
+          );
+
+          /// fallback if no mail app
+          if (!launched) {
+            await Clipboard.setData(
+              ClipboardData(
+                text: value,
+              ),
+            );
+
+            if (context.mounted) {
+              ScaffoldMessenger.of(
+                context,
+              ).showSnackBar(
+                const SnackBar(
+                  content: Text(
+                    "Email copied",
+                  ),
+                ),
+              );
+            }
+          }
+
+          return;
+        }
+
+        /// OTHER LINKS
+        final uri =
+            Uri.tryParse(value);
+
+        if (uri != null) {
+          await launchUrl(
+            uri,
+            mode: LaunchMode
+                .externalApplication,
+          );
+        }
+      } catch (e) {
+        debugPrint(
+          "LINK ERROR: $e",
+        );
+      }
+    },
+
+    child: Container(
+      margin:
+          const EdgeInsets.only(
+        bottom: 10,
+      ),
+
+      padding:
+          const EdgeInsets.all(12),
+
+      decoration: BoxDecoration(
+        color:
+            Colors.white.withOpacity(
+                .03),
+
+        borderRadius:
+            BorderRadius.circular(
+                12),
+
+        border: Border.all(
+          color: Colors.white
+              .withOpacity(.05),
+        ),
+      ),
+
+      child: Row(
+        children: [
+
+          Icon(
+            icon,
+            color: AppColors.kGreen,
+            size: 18,
+          ),
+
+          const SizedBox(width: 12),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment
+                      .start,
+
+              children: [
+
+                Text(
+                  title,
+
+                  style:
+                      const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 11,
+                  ),
+                ),
+
+                const SizedBox(
+                    height: 3),
+
+                Text(
+                  value,
+
+                  maxLines: 1,
+
+                  overflow:
+                      TextOverflow
+                          .ellipsis,
+
+                  style:
+                      const TextStyle(
+                    color: Colors.white,
+                    fontSize: 13,
+                    fontWeight:
+                        FontWeight.w500,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Icon(
+            title == "Email"
+                ? Icons.email_outlined
+                : Icons.open_in_new,
+
+            size: 16,
+            color: Colors.grey,
+          ),
+        ],
+      ),
+    ),
+  );
+}
   Widget _modernCard({
     required String title,
     required IconData icon,

@@ -52,7 +52,7 @@ abstract class ReferralJobModel with _$ReferralJobModel {
 
     PackageDetails? packageDetails,
     DateTime? endDate, // ✅ ADD THIS
-
+int? matchScore,
     DateTime? expireAt,
     DateTime? createdAt,
     DateTime? updatedAt,

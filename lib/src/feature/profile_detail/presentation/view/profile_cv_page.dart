@@ -1293,8 +1293,101 @@ if ((user.internationalExperiences ??
             ),
           ),
         ),
-const SizedBox(height: 12),
 
+const SizedBox(height: 12),
+if ((user.github?.isNotEmpty ?? false)) ...[
+  const SizedBox(height: 12),
+
+  SizedBox(
+    width: double.infinity,
+
+    child: ElevatedButton.icon(
+      onPressed: () async {
+        final uri = Uri.parse(
+          user.github!,
+        );
+
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri);
+        }
+      },
+
+      icon: const Icon(Icons.code),
+
+      label: const Text(
+        "Open GitHub",
+      ),
+
+      style:
+          ElevatedButton.styleFrom(
+        backgroundColor:
+            Colors.white12,
+
+        foregroundColor:
+            Colors.white,
+
+        padding:
+            const EdgeInsets.symmetric(
+          vertical: 14,
+        ),
+
+        shape:
+            RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.circular(
+                  14),
+        ),
+      ),
+    ),
+  ),
+],
+if ((user.portfolio?.isNotEmpty ??
+    false)) ...[
+  const SizedBox(height: 12),
+
+  SizedBox(
+    width: double.infinity,
+
+    child: ElevatedButton.icon(
+      onPressed: () async {
+        final uri = Uri.parse(
+          user.portfolio!,
+        );
+
+        if (await canLaunchUrl(uri)) {
+          await launchUrl(uri);
+        }
+      },
+
+      icon: const Icon(Icons.web),
+
+      label: const Text(
+        "Open Portfolio",
+      ),
+
+      style:
+          ElevatedButton.styleFrom(
+        backgroundColor:
+            Colors.white12,
+
+        foregroundColor:
+            Colors.white,
+
+        padding:
+            const EdgeInsets.symmetric(
+          vertical: 14,
+        ),
+
+        shape:
+            RoundedRectangleBorder(
+          borderRadius:
+              BorderRadius.circular(
+                  14),
+        ),
+      ),
+    ),
+  ),
+],
 if ((user.resume?.isNotEmpty ??
     false))
   SizedBox(

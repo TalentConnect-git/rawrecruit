@@ -277,36 +277,35 @@ Future<void> _togglePauseJob() async {
   );
 
   if (mounted) Navigator.pop(context);
-
-  result.fold(
-    (failure) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Failed to pause job",
-          ),
+result.fold(
+  (failure) {
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Failed to pause job",
         ),
-      );
-    },
-    (_) {
-      setState(() {
-        isPaused = true;
-      });
+      ),
+    );
+  },
+  (_) {
 
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Job paused successfully",
-          ),
+    setState(() {
+      isPaused = true;
+    });
+
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Job paused successfully",
         ),
-      );
-    },
-  );
-}
+      ),
+    );
+  },
+);}
 Future<void>
     _showReactivateDialog() async {
   DateTime? startDate;

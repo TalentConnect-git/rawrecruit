@@ -200,37 +200,37 @@ class ApplicationDetailView extends StatelessWidget {
               status == "rejected",
             ),
 
-            const SizedBox(height: 30),
+            // const SizedBox(height: 30),
 
-            /// 🔥 BUTTON
-            OutlinedButton(
-              onPressed:
-                  status == "accepted"
-                      ? null
-                      : () {},
-              style: OutlinedButton.styleFrom(
-                side: BorderSide(
-                  color: status == "accepted"
-                      ? Colors.grey
-                      : Colors.red,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                      BorderRadius.circular(12),
-                ),
-              ),
-              child: Text(
-                status == "accepted"
-                    ? "Application Accepted"
-                    : "Withdraw Application",
-                style: TextStyle(
-                  color: status == "accepted"
-                      ? Colors.grey
-                      : Colors.red,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
+            // /// 🔥 BUTTON
+            // OutlinedButton(
+            //   onPressed:
+            //       status == "accepted"
+            //           ? null
+            //           : () {},
+            //   style: OutlinedButton.styleFrom(
+            //     side: BorderSide(
+            //       color: status == "accepted"
+            //           ? Colors.grey
+            //           : Colors.red,
+            //     ),
+            //     shape: RoundedRectangleBorder(
+            //       borderRadius:
+            //           BorderRadius.circular(12),
+            //     ),
+            //   ),
+            //   child: Text(
+            //     status == "accepted"
+            //         ? "Application Accepted"
+            //         : "Withdraw Application",
+            //     style: TextStyle(
+            //       color: status == "accepted"
+            //           ? Colors.grey
+            //           : Colors.red,
+            //       fontWeight: FontWeight.w600,
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),

@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/index.dart';
 
@@ -16,6 +19,7 @@ class ReferralPostView extends StatefulWidget {
 
 class _ReferralPostViewState extends State<ReferralPostView> {
   final _formKey = GlobalKey<FormState>();
+  static const draftKey = "referral_post_draft";
 List<String> skillOptionsApi = [];
 Future<void> fetchSkills() async {
   final response = await getIt<NetworkService>().request(
@@ -88,6 +92,111 @@ void nextStep() {
     );
   }
 }
+Future<void> saveDraft() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  final data = {
+    "title": titleController.text,
+    "description": descriptionController.text,
+    "eligibility": eligibilityController.text,
+    "openings": openingsController.text,
+    "skills": skillsController.text,
+    "certifications": certificationsController.text,
+    "benefits": benefitsController.text,
+    "stream": fieldOfStudyController.text,
+    "currency": currencyController.text,
+    "totalCTC": totalCTCController.text,
+    "fixedPay": fixedPayController.text,
+    "bonus": joiningBonusController.text,
+    "employmentType": employmentType,
+    "workMode": workMode,
+    "broadcastType": broadcastType,
+    "minEducation": minEducation,
+    "workAuthorization": workAuthorization,
+    "experienceRange": experienceRange,
+    "selectedState": selectedState,
+    "selectedCity": selectedCity,
+    "rounds": roundsController.text,
+    "selectionProcess": selectionProcessController.text,
+    "endDate": endDateController.text,
+    "minExperience": minExperienceController.text,
+    "tags": selectedTags.toList(),
+    "currentStep": currentStep,
+  };
+
+  await prefs.setString(
+    draftKey,
+    jsonEncode(data),
+  );
+}
+Future<void> loadDraft() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  final raw = prefs.getString(draftKey);
+
+  if (raw == null) return;
+
+  final data = jsonDecode(raw);
+
+  titleController.text = data["title"] ?? "";
+  descriptionController.text = data["description"] ?? "";
+  eligibilityController.text = data["eligibility"] ?? "";
+  openingsController.text = data["openings"] ?? "";
+  skillsController.text = data["skills"] ?? "";
+  certificationsController.text = data["certifications"] ?? "";
+  benefitsController.text = data["benefits"] ?? "";
+  fieldOfStudyController.text = data["stream"] ?? "";
+  currencyController.text = data["currency"] ?? "INR";
+  totalCTCController.text = data["totalCTC"] ?? "";
+  fixedPayController.text = data["fixedPay"] ?? "";
+  joiningBonusController.text = data["bonus"] ?? "";
+  roundsController.text = data["rounds"] ?? "";
+  selectionProcessController.text =
+      data["selectionProcess"] ?? "";
+  endDateController.text = data["endDate"] ?? "";
+  minExperienceController.text =
+      data["minExperience"] ?? "";
+
+  employmentType =
+      data["employmentType"] ?? "Full-time";
+
+  workMode =
+      data["workMode"] ?? "On-site";
+
+  broadcastType =
+      data["broadcastType"] ?? "Everyone";
+
+  minEducation =
+      data["minEducation"] ?? "High School";
+
+  workAuthorization =
+      data["workAuthorization"] ??
+          "Citizens Only";
+
+  experienceRange =
+      data["experienceRange"] ?? "0-1 years";
+
+  selectedState =
+      data["selectedState"] ?? "";
+
+  selectedCity =
+      data["selectedCity"] ?? "";
+
+  currentStep =
+      data["currentStep"] ?? 0;
+
+  final tags =
+      List<String>.from(data["tags"] ?? []);
+
+  selectedTags.clear();
+  selectedTags.addAll(tags);
+
+  setState(() {});
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    _pageController.jumpToPage(currentStep);
+  });
+}
 Future<void> addSkillIfNeeded(
   String value,
 ) async {
@@ -113,7 +222,9 @@ Future<void> addSkillIfNeeded(
 
   await fetchSkills();
 }
-void previousStep() {
+void previousStep() async {
+  await saveDraft();
+
   if (currentStep > 0) {
     _pageController.previousPage(
       duration: const Duration(milliseconds: 300),
@@ -184,6 +295,8 @@ Future<void> fetchCities(String state) async {
     super.initState();
     fetchStates(); // 🔥 ADD THIS
     fetchSkills();
+      loadDraft();
+
   }
 
   // ── Enum options ────────────────────────────────────────────────────────────
@@ -577,6 +690,16 @@ minExperienceController.dispose();
           "Post Referral",
           style: TextStyle(color: Colors.white),
         ),
+        leading: IconButton(
+  icon: const Icon(Icons.arrow_back),
+  onPressed: () async {
+    await saveDraft();
+
+    if (mounted) {
+      Navigator.pop(context);
+    }
+  },
+),
       ),
    body: SafeArea(
   child: Column(
@@ -629,6 +752,13 @@ SizedBox(height: 10),
                       controller: eligibilityController,
                       maxLines: 3,
                     ),
+                    const SizedBox(height: 12),
+
+_fieldDark(
+  "Minimum Experience",
+  controller: minExperienceController,
+  keyboardType: TextInputType.number,
+),
                   ],
                 ),
               ),
@@ -704,18 +834,18 @@ SingleChildScrollView(
 
     children: [
 
-      SearchableChipField(
-        label:
-            "Preferred Field of Study",
+      // SearchableChipField(
+      //   label:
+      //       "Preferred Field of Study",
 
-        controller:
-            fieldOfStudyController,
+      //   controller:
+      //       fieldOfStudyController,
 
-        options:
-            fieldOfStudyOptions,
-      ),
+      //   options:
+      //       fieldOfStudyOptions,
+      // ),
 
-      const SizedBox(height: 16),
+      // const SizedBox(height: 16),
 
       SearchableChipField(
         label: "Benefits",
@@ -760,15 +890,20 @@ SingleChildScrollView(
                         fieldOfStudyController.clear();
                       }),
                     ),
-                    const SizedBox(height: 12),
 
-_fieldDark(
-  "Minimum Experience",
-  controller:
-      minExperienceController,
-  keyboardType:
-      TextInputType.number,
+SearchableChipField(
+  label: "Stream",
+  controller: fieldOfStudyController,
+  options: fieldOfStudyOptions,
 ),
+
+// _fieldDark(
+//   "Minimum Experience",
+//   controller:
+//       minExperienceController,
+//   keyboardType:
+//       TextInputType.number,
+// ),
 
                     // MultiSelectDropdownChips(
                     //   key: ValueKey(
@@ -779,7 +914,7 @@ _fieldDark(
                     //   options: fieldOfStudyOptions,
                     // ),
 
-                    const SizedBox(height: 12),
+                     const SizedBox(height: 14),
 
                     _dropdownDark(
                       "Experience Range",
@@ -1053,7 +1188,10 @@ minYearofExperience:
                               ),
                             ),
                           );
+final prefs =
+    await SharedPreferences.getInstance();
 
+await prefs.remove(draftKey);
                           Navigator.pop(context);
                         }
                       }

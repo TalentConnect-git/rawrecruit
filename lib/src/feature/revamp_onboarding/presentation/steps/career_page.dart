@@ -419,39 +419,42 @@ Container(
     ],
   ),
 ),
+if (servingNoticePeriod) ...[
+  const SizedBox(height: 14),
 
-const SizedBox(height: 14),
+  /// NOTICE PERIOD START DATE
+  GestureDetector(
+    onTap: () async {
+      final picked = await showDatePicker(
+        context: context,
 
-/// NOTICE PERIOD START DATE
-GestureDetector(
-  onTap: () async {
-    final picked = await showDatePicker(
-      context: context,
+        initialDate: DateTime.now(),
 
-      initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
 
-      firstDate: DateTime(2000),
+        lastDate: DateTime(2100),
+      );
 
-      lastDate: DateTime(2100),
-    );
+      if (picked != null) {
+        noticePeriodStartDateCtrl.text =
+            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
 
-    if (picked != null) {
-  noticePeriodStartDateCtrl.text =
-    "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-      saveData();
+        saveData();
 
-      setState(() {});
-    }
-  },
+        setState(() {});
+      }
+    },
 
-  child: AbsorbPointer(
-    child: AppInput(
-      "Notice Period Start Date",
-      controller: noticePeriodStartDateCtrl,
+    child: AbsorbPointer(
+      child: AppInput(
+        "Notice Period Start Date",
+        controller:
+            noticePeriodStartDateCtrl,
+      ),
     ),
   ),
-),
-],
+
+],],
          
 
           const SizedBox(height: 20),
