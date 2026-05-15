@@ -52,11 +52,19 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
   /// 🔹 APPLY REFERRAL
   @override
-  ResultFuture<void> applyReferral(String referralId, int? matchScore) async {
+  ResultFuture<void> applyReferral(
+    String referralId,
+    int? matchScore,
+    String companyName,
+  ) async {
     final request = Request(
       method: RequestMethod.post,
       endpoint: "/application/candidate/referral",
-      body: {"referralId": referralId, 'matchScore': matchScore},
+      body: {
+        "referralId": referralId,
+        'matchScore': matchScore,
+        'companyName': companyName,
+      },
       isSafeRoute: true,
     );
 

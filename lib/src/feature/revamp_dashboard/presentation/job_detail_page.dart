@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
+import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
+
 import '../../../common/index.dart';
 import '../../../core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
-
 import 'view_model/dashboard_view_model.dart';
 
 class JobDetailView extends StatelessWidget {
@@ -67,15 +67,15 @@ class JobDetailView extends StatelessWidget {
             Expanded(
               flex: 2,
               child: ElevatedButton(
-              onPressed: isApplied
-    ? null
-    : () => applicationVM.apply(
-          jobId: jobId,
-          jobType: "Off-campus",
-        ),
+                onPressed: isApplied
+                    ? null
+                    : () => applicationVM.apply(
+                        jobId: jobId,
+                        jobType: "Off-campus",
+                        companyName: job.companyName ?? '',
+                      ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                      isApplied ? Colors.grey : AppColors.kGreen,
+                  backgroundColor: isApplied ? Colors.grey : AppColors.kGreen,
                 ),
                 child: Text(isApplied ? 'Applied' : 'Apply Now'),
               ),
@@ -89,13 +89,12 @@ class JobDetailView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             /// 🔥 HEADER
             _header(),
 
             const SizedBox(height: 20),
-/// 🔥 HIGHLIGHTED COMPANY + POSTED BY SECTION
 
+            /// 🔥 HIGHLIGHTED COMPANY + POSTED BY SECTION
 
             /// 🔥 ABOUT
             if ((job.description ?? '').isNotEmpty)
@@ -162,344 +161,323 @@ class JobDetailView extends StatelessWidget {
                 _info("Name", employer.name),
                 _info("Designation", employer.designation),
               ]),
-              _containerSection(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
-    children: [
+            _containerSection(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  /// COMPANY
+                  if (company != null) ...[
+                    const Text(
+                      "Company Details",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
 
-      /// COMPANY
-      if (company != null) ...[
-        const Text(
-          "Company Details",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+                    const SizedBox(height: 14),
 
-        const SizedBox(height: 14),
+                    _highlightInfo("Company", company.companyName),
+                    _highlightInfo("Industry", company.industryType),
+                    _highlightInfo("Company Type", company.companyType),
 
-        _highlightInfo("Company", company.companyName),
-        _highlightInfo("Industry", company.industryType),
-        _highlightInfo("Company Type", company.companyType),
+                    _highlightInfo(
+                      "Location",
+                      "${company.city ?? ''}, ${company.state ?? ''}",
+                    ),
 
-        _highlightInfo(
-          "Location",
-          "${company.city ?? ''}, ${company.state ?? ''}",
-        ),
+                    _highlightInfo("Employees", company.numberOfEmployees),
 
-        _highlightInfo("Employees", company.numberOfEmployees),
+                    const SizedBox(height: 20),
+                  ],
 
-        const SizedBox(height: 20),
-      ],
+                  /// CONTACT PERSON
+                  if (contact != null) ...[
+                    const SizedBox(height: 20),
 
+                    const Text(
+                      "Contact Person",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
 
-      /// CONTACT PERSON
-      if (contact != null) ...[
-        const SizedBox(height: 20),
+                    const SizedBox(height: 14),
 
-        const Text(
-          "Contact Person",
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
+                    _highlightInfo("Name", contact.name),
+                    _highlightInfo("Email", contact.email),
+                    _highlightInfo("Designation", employer?.designation),
 
-        const SizedBox(height: 14),
+                    _highlightInfo("Mobile", contact.mobile),
+                    const SizedBox(height: 16),
 
-        _highlightInfo("Name", contact.name),
-        _highlightInfo("Email", contact.email),
-                _highlightInfo("Designation", employer?.designation),
+                    GestureDetector(
+                      onTap: () {
+                        final userId = job.companyPosted?.userId;
 
-        _highlightInfo("Mobile", contact.mobile),
-        const SizedBox(height: 16),
+                        if (userId == null || userId.isEmpty) return;
 
-GestureDetector(
- onTap: () {
-  final userId = job.companyPosted?.userId;
+                        final user = User(
+                          id: userId,
+                          name: employer?.name,
+                          email: employer?.email,
+                          phone: employer?.mobile,
+                        );
 
-  if (userId == null || userId.isEmpty) return;
+                        context.pushNamed(RouteNames.chatUser, extra: user);
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.kGreen.withOpacity(.15),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: AppColors.kGreen.withOpacity(.4),
+                          ),
+                        ),
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.message, size: 18, color: Colors.green),
 
-  final user = User(
-    id: userId,
-    name: employer?.name,
-    email: employer?.email,
-    phone: employer?.mobile,
-  );
+                            SizedBox(width: 8),
 
-  context.pushNamed(
-    RouteNames.chatUser,
-    extra: user,
-  );
-},
-  child: Container(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 10,
-    ),
-    decoration: BoxDecoration(
-      color: AppColors.kGreen.withOpacity(.15),
-      borderRadius: BorderRadius.circular(30),
-      border: Border.all(
-        color: AppColors.kGreen.withOpacity(.4),
-      ),
-    ),
-    child: const Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          Icons.message,
-          size: 18,
-          color: Colors.green,
-        ),
+                            Text(
+                              "Message",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+            ),
+            const SizedBox(height: 24),
 
-        SizedBox(width: 8),
+            Text(
+              "Alumni Who Can Help",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
 
-        Text(
-          "Message",
-          style: TextStyle(
-            color: Colors.green,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    ),
-  ),
-),
-      ],
-    ],
-  ),
-),
-const SizedBox(height: 24),
+            const SizedBox(height: 12),
 
-Text(
-  "Alumni Who Can Help",
-  style: TextStyle(
-    color: Colors.white,
-    fontSize: 16,
-    fontWeight: FontWeight.w600,
-  ),
-),
+            /// 🔥 ALUMNI LIST
+            Consumer<DashboardViewModel>(
+              builder: (context, vm, _) {
+                if (vm.groupedAlumni.isEmpty) {
+                  return const Text(
+                    "No alumni available",
+                    style: TextStyle(color: Colors.grey),
+                  );
+                }
 
-const SizedBox(height: 12),
+                final alumniList = vm.groupedAlumni.values.toList();
 
-/// 🔥 ALUMNI LIST
-Consumer<DashboardViewModel>(
-  builder: (context, vm, _) {
-    if (vm.groupedAlumni.isEmpty) {
-      return const Text(
-        "No alumni available",
-        style: TextStyle(color: Colors.grey),
-      );
-    }
-
-    final alumniList = vm.groupedAlumni.values.toList();
-
-    return ListView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: alumniList.length.clamp(0, 3), // show 3 like UI
-      itemBuilder: (context, index) {
-        return AlumniHiringCard(
-          jobs: alumniList[index],
-        );
-      },
-    );
-  },
-),
+                return ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemCount: alumniList.length.clamp(0, 3), // show 3 like UI
+                  itemBuilder: (context, index) {
+                    return AlumniHiringCard(jobs: alumniList[index]);
+                  },
+                );
+              },
+            ),
             const SizedBox(height: 40),
           ],
         ),
       ),
     );
   }
-Widget _containerSection({required Widget child}) {
-  return Container(
-    width: double.infinity,
-    padding: const EdgeInsets.all(16),
-    margin: const EdgeInsets.only(bottom: 20),
-    decoration: BoxDecoration(
-      color: AppColors.kCard,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: AppColors.kGreen.withOpacity(.25),
+
+  Widget _containerSection({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 20),
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.kGreen.withOpacity(.25)),
       ),
-    ),
-    child: child,
-  );
-}
+      child: child,
+    );
+  }
 
-Widget _highlightInfo(String title, String? value) {
-  final text =
-      (value == null || value.trim().isEmpty) ? "-" : value;
+  Widget _highlightInfo(String title, String? value) {
+    final text = (value == null || value.trim().isEmpty) ? "-" : value;
 
-  return Padding(
-    padding: const EdgeInsets.only(bottom: 12),
-    child: Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 110,
-          child: Text(
-            title,
-            style: TextStyle(
-              color: AppColors.kGreen,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-      ],
-    ),
-  );
-}
-  /// 🔥 HEADER
- Widget _header() {
-  final title = job.jobRoles?.isNotEmpty == true
-      ? job.jobRoles!.first
-      : job.jobTitle ?? "-";
-
-final company = job.companyName?.isNotEmpty == true
-    ? job.companyName!
-    : job.companyPosted?.companyDetails?.companyName?.isNotEmpty == true
-        ? job.companyPosted!.companyDetails!.companyName!
-        : job.candidatePosted?.currentCompany?.isNotEmpty == true
-            ? job.candidatePosted!.currentCompany!
-            : "-";
-
-  final location = job.location?.join(', ') ?? "-";
-
-  final workMode = job.workMode?.isNotEmpty == true
-      ? job.workMode!.join(', ')
-      : null;
-
-  final salary = job.packageDetails?.totalCTC != null
-      ? "₹${job.packageDetails!.totalCTC} LPA"
-      : null;
-
-  final experience = job.yearsOfExperience?.toString();
-
-  final match = job.matchScore ?? 0;
-
-  return Container(
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      color: AppColors.kCard,
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(color: AppColors.kBorder),
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-
-        /// 🔥 TITLE
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-
-        const SizedBox(height: 6),
-
-        /// 🔥 COMPANY
-        Text(
-          company,
-          style: const TextStyle(color: Colors.grey),
-        ),
-
-        const SizedBox(height: 12),
-
-        /// 🔥 LOCATION + MODE + SALARY
-        Wrap(
-          spacing: 12,
-          runSpacing: 8,
-          children: [
-            _iconText(Icons.location_on, location),
-
-            if (workMode != null)
-              _iconText(Icons.work_outline, workMode),
-
-            if (salary != null)
-              _iconText(Icons.currency_rupee, salary),
-          ],
-        ),
-
-        const SizedBox(height: 10),
-
-        /// 🔥 EXPERIENCE
-        if (experience != null)
-          _iconText(Icons.access_time, "$experience years"),
-
-        const SizedBox(height: 12),
-
-        /// 🔥 MATCH + REFERRERS + ALUMNI
-        Row(
-          children: [
-            Text(
-              "$match% match",
-              style: const TextStyle(
-                color: Colors.green,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 110,
+            child: Text(
+              title,
+              style: TextStyle(
+                color: AppColors.kGreen,
                 fontWeight: FontWeight.w600,
               ),
             ),
+          ),
 
-            const SizedBox(width: 12),
-
-            Text(
-              "${job.views ?? 0} referrers",
-              style: const TextStyle(color: Colors.grey),
-            ),
-
-            const SizedBox(width: 12),
-
-            Text(
-              "${job.numberOfStudent ?? 0} alumni",
-              style: const TextStyle(color: Colors.green),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
-}
-Widget _iconText(IconData icon, String text) {
-  return Row(
-    mainAxisSize: MainAxisSize.min,
-    children: [
-      Icon(icon, size: 14, color: Colors.grey),
-      const SizedBox(width: 4),
-      Text(
-        text,
-        style: const TextStyle(color: Colors.grey),
+          Expanded(
+            child: Text(text, style: const TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
-    ],
-  );
-}
+    );
+  }
+
+  /// 🔥 HEADER
+  Widget _header() {
+    final title = job.jobRoles?.isNotEmpty == true
+        ? job.jobRoles!.first
+        : job.jobTitle ?? "-";
+
+    final company = job.companyName?.isNotEmpty == true
+        ? job.companyName!
+        : job.companyPosted?.companyDetails?.companyName?.isNotEmpty == true
+        ? job.companyPosted!.companyDetails!.companyName!
+        : job.candidatePosted?.currentCompany?.isNotEmpty == true
+        ? job.candidatePosted!.currentCompany!
+        : "-";
+
+    final location = job.location?.join(', ') ?? "-";
+
+    final workMode = job.workMode?.isNotEmpty == true
+        ? job.workMode!.join(', ')
+        : null;
+
+    final salary = job.packageDetails?.totalCTC != null
+        ? "₹${job.packageDetails!.totalCTC} LPA"
+        : null;
+
+    final experience = job.yearsOfExperience?.toString();
+
+    final match = job.matchScore ?? 0;
+
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: AppColors.kBorder),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// 🔥 TITLE
+          Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+
+          const SizedBox(height: 6),
+
+          /// 🔥 COMPANY
+          Text(company, style: const TextStyle(color: Colors.grey)),
+
+          const SizedBox(height: 12),
+
+          /// 🔥 LOCATION + MODE + SALARY
+          Wrap(
+            spacing: 12,
+            runSpacing: 8,
+            children: [
+              _iconText(Icons.location_on, location),
+
+              if (workMode != null) _iconText(Icons.work_outline, workMode),
+
+              if (salary != null) _iconText(Icons.currency_rupee, salary),
+            ],
+          ),
+
+          const SizedBox(height: 10),
+
+          /// 🔥 EXPERIENCE
+          if (experience != null)
+            _iconText(Icons.access_time, "$experience years"),
+
+          const SizedBox(height: 12),
+
+          /// 🔥 MATCH + REFERRERS + ALUMNI
+          Row(
+            children: [
+              Text(
+                "$match% match",
+                style: const TextStyle(
+                  color: Colors.green,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              const SizedBox(width: 12),
+
+              Text(
+                "${job.views ?? 0} referrers",
+                style: const TextStyle(color: Colors.grey),
+              ),
+
+              const SizedBox(width: 12),
+
+              Text(
+                "${job.numberOfStudent ?? 0} alumni",
+                style: const TextStyle(color: Colors.green),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _iconText(IconData icon, String text) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Icon(icon, size: 14, color: Colors.grey),
+        const SizedBox(width: 4),
+        Text(text, style: const TextStyle(color: Colors.grey)),
+      ],
+    );
+  }
+
   /// 🔥 TEXT
   Widget _sectionText(String title, String? content) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 10),
-        Text(content ?? "-",
-            style: const TextStyle(color: Colors.grey)),
+        Text(content ?? "-", style: const TextStyle(color: Colors.grey)),
         const SizedBox(height: 20),
       ],
     );
@@ -512,19 +490,24 @@ Widget _iconText(IconData icon, String text) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 10),
-        ...items.map((e) => Row(
-              children: [
-                const Text("• ", style: TextStyle(color: Colors.green)),
-                Expanded(
-                  child: Text(e,
-                      style: const TextStyle(color: Colors.grey)),
-                ),
-              ],
-            )),
+        ...items.map(
+          (e) => Row(
+            children: [
+              const Text("• ", style: TextStyle(color: Colors.green)),
+              Expanded(
+                child: Text(e, style: const TextStyle(color: Colors.grey)),
+              ),
+            ],
+          ),
+        ),
         const SizedBox(height: 20),
       ],
     );
@@ -535,9 +518,13 @@ Widget _iconText(IconData icon, String text) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title,
-            style: const TextStyle(
-                color: Colors.white, fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         const SizedBox(height: 10),
         ...children,
         const SizedBox(height: 20),
@@ -552,13 +539,16 @@ Widget _iconText(IconData icon, String text) {
       child: Row(
         children: [
           Expanded(
-              flex: 2,
-              child:
-                  Text(title, style: const TextStyle(color: Colors.grey))),
+            flex: 2,
+            child: Text(title, style: const TextStyle(color: Colors.grey)),
+          ),
           Expanded(
-              flex: 3,
-              child: Text(value ?? '',
-                  style: const TextStyle(color: Colors.white))),
+            flex: 3,
+            child: Text(
+              value ?? '',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
         ],
       ),
     );

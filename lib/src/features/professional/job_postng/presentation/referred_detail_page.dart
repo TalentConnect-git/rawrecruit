@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
@@ -94,18 +93,12 @@ class ReferredCandidateDetailPage extends StatelessWidget {
                   name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 16),
                 ),
 
                 const SizedBox(height: 4),
 
-                const Text(
-                  "Candidate",
-                  style: TextStyle(color: Colors.grey),
-                ),
+                const Text("Candidate", style: TextStyle(color: Colors.grey)),
               ],
             ),
           ),
@@ -126,19 +119,13 @@ class ReferredCandidateDetailPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            "JOB",
-            style: TextStyle(color: Colors.green),
-          ),
+          const Text("JOB", style: TextStyle(color: Colors.green)),
 
           const SizedBox(height: 6),
 
           Text(
             jobTitle,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-            ),
+            style: const TextStyle(color: Colors.white, fontSize: 16),
           ),
 
           const SizedBox(height: 6),
@@ -169,18 +156,12 @@ class ReferredCandidateDetailPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
-          "Progress",
-          style: TextStyle(color: Colors.white),
-        ),
+        const Text("Progress", style: TextStyle(color: Colors.white)),
 
         const SizedBox(height: 10),
 
         ...List.generate(steps.length, (index) {
-          final isDone =
-              currentIndex == -1
-                  ? false
-                  : index <= currentIndex;
+          final isDone = currentIndex == -1 ? false : index <= currentIndex;
 
           return Row(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,23 +170,15 @@ class ReferredCandidateDetailPage extends StatelessWidget {
               Column(
                 children: [
                   Icon(
-                    isDone
-                        ? Icons.check_circle
-                        : Icons.radio_button_unchecked,
-                    color:
-                        isDone
-                            ? Colors.green
-                            : Colors.grey,
+                    isDone ? Icons.check_circle : Icons.radio_button_unchecked,
+                    color: isDone ? Colors.green : Colors.grey,
                   ),
 
                   if (index != steps.length - 1)
                     Container(
                       width: 2,
                       height: 30,
-                      color:
-                          isDone
-                              ? Colors.green
-                              : Colors.grey,
+                      color: isDone ? Colors.green : Colors.grey,
                     ),
                 ],
               ),
@@ -216,12 +189,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
                   steps[index],
-                  style: TextStyle(
-                    color:
-                        isDone
-                            ? Colors.white
-                            : Colors.grey,
-                  ),
+                  style: TextStyle(color: isDone ? Colors.white : Colors.grey),
                 ),
               ),
             ],
@@ -242,8 +210,9 @@ class ReferredCandidateDetailPage extends StatelessWidget {
             minimumSize: const Size(double.infinity, 50),
           ),
           onPressed: () {
-            context.goNamed(
-              RouteNames.chatUserList,
+            context.pushNamed(
+              RouteNames.chatUser,
+              extra: application.applicant,
             );
           },
           child: Text(
@@ -261,22 +230,19 @@ class ReferredCandidateDetailPage extends StatelessWidget {
             onSelected: (value) async {
               // final vm = context.read<ApplicationViewModel>();
 
-            final vm = ApplicationViewModel();
+              final vm = ApplicationViewModel();
 
-await vm.updateReferralStatus(
-  context: context,
-  applicationId: application.id ?? "",
-  status: value,
-  jobRole: application.jobTitle ?? "",
-);
+              await vm.updateReferralStatus(
+                context: context,
+                applicationId: application.id ?? "",
+                status: value,
+                jobRole: application.jobTitle ?? "",
+              );
             },
             itemBuilder: (_) => const [
               PopupMenuItem(
                 value: "Shortlisted",
-                child: Text(
-                  "Shortlist",
-                  style: TextStyle(color: Colors.black),
-                ),
+                child: Text("Shortlist", style: TextStyle(color: Colors.black)),
               ),
               PopupMenuItem(
                 value: "Interview Scheduled",
@@ -295,23 +261,18 @@ await vm.updateReferralStatus(
               PopupMenuItem(
                 value: "Accepted",
                 child: Text(
-                  "Referred",
+                  "Refer",
                   style: TextStyle(color: Colors.black),
                 ),
               ),
               PopupMenuItem(
                 value: "Rejected",
-                child: Text(
-                  "Reject",
-                  style: TextStyle(color: Colors.black),
-                ),
+                child: Text("Reject", style: TextStyle(color: Colors.black)),
               ),
             ],
             child: Container(
               width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                vertical: 14,
-              ),
+              padding: const EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(
                 color: Colors.white,
                 borderRadius: BorderRadius.circular(12),

@@ -246,6 +246,7 @@ Expanded(
       onApply: () => applicationVM.apply(
         jobId: job.id ?? '',
         jobType: job.jobType ?? 'Off-campus',
+        companyName: job.companyName ?? '',
       ),
       onBookmarkToggle: () {
         shortlistVM.toggleSave(
