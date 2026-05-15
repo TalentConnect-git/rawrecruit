@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/home/presentation/widgets/app_bottom_nav.dart';
+import 'package:rawrecruit/src/features/notifications/index.dart';
 
 import '../../chat/index.dart';
 
@@ -19,13 +20,14 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final appStateProvider = getIt<AppStateProvider>();
-
+final notificationVm =
+    getIt<NotificationViewModel>();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final chatVm = context.read<ChatViewModel>();
       chatVm.fetchUnreadCounts();
-
+await notificationVm.getNotifications();
       if (!appStateProvider.isAuthComplete) {
         final failure = await appStateProvider.getAuthDetails();
         failure?.showError(context);
@@ -103,13 +105,55 @@ class _HomeViewState extends State<HomeView> {
               color: Colors.white,
               tooltip: 'Scheduled Interviews',
             ),
-            IconButton(
-              onPressed: () async {
-                context.pushNamed(RouteNames.notification);
-              },
-              icon: Icon(Icons.notifications),
-              color: Colors.white,
+           ListenableBuilder(
+  listenable: notificationVm,
+  builder: (_, __) {
+    return IconButton(
+      onPressed: () async {
+
+        await context.pushNamed(
+          RouteNames.notification,
+        );
+
+        if (context.mounted) {
+          await notificationVm
+              .getNotifications();
+        }
+      },
+
+      icon: Stack(
+        clipBehavior: Clip.none,
+
+        children: [
+
+          const Icon(
+            Icons.notifications,
+          ),
+
+          if (notificationVm
+              .hasUnreadNotifications)
+            Positioned(
+              right: -1,
+              top: -1,
+
+              child: Container(
+                width: 10,
+                height: 10,
+
+                decoration:
+                    const BoxDecoration(
+                  color: Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
             ),
+        ],
+      ),
+
+      color: Colors.white,
+    );
+  },
+),
             IconButton(
               onPressed: () {
                 context.pushNamed(RouteNames.chatUserList);

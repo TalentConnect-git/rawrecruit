@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -12,8 +11,8 @@ import 'package:rawrecruit/src/features/onboarding/data/entities/leadership_cont
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_edit_profile_view_model.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
-
 import '../data/entities/international.dart';
+
 
 class AddEditProfileView extends StatefulWidget {
   const AddEditProfileView({this.user, this.initialStep, super.key});
@@ -22,9 +21,11 @@ class AddEditProfileView extends StatefulWidget {
 
   @override
   State<AddEditProfileView> createState() => _AddEditProfileViewState();
+
 }
 
 class _AddEditProfileViewState extends State<AddEditProfileView> {
+  
   final AddEditProfileViewModel addEditProfileViewModel =
       AddEditProfileViewModel();
   late UserController controller = addEditProfileViewModel.userController;
@@ -994,7 +995,17 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       markChanged();
                                     },
                                   ),
+const SizedBox(height: 12),
 
+AppTextFields(
+  controller: controller.companyEmail,
+
+  hint: 'Official Company Email',
+
+  keyboardType: TextInputType.emailAddress,
+
+  onChanged: (_) => markChanged(),
+),
                                   AppTextFields(
                                     controller: controller.noticePeriod,
 
@@ -1046,38 +1057,38 @@ Container(
 ),
 
 const SizedBox(height: 16),
+if (controller.servingNoticePeriod)
+  GestureDetector(
+    onTap: () async {
+      final picked = await showDatePicker(
+        context: context,
 
-GestureDetector(
-  onTap: () async {
-    final picked = await showDatePicker(
-      context: context,
+        initialDate: DateTime.now(),
 
-      initialDate: DateTime.now(),
+        firstDate: DateTime(2000),
 
-      firstDate: DateTime(2000),
+        lastDate: DateTime(2100),
+      );
 
-      lastDate: DateTime(2100),
-    );
+      if (picked != null) {
+        controller.noticePeriodStartDate.text =
+            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
 
-    if (picked != null) {
-      controller.noticePeriodStartDate.text =
-          "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+        setState(() {});
 
-      setState(() {});
+        markChanged();
+      }
+    },
 
-      markChanged();
-    }
-  },
+    child: AbsorbPointer(
+      child: AppTextFields(
+        controller:
+            controller.noticePeriodStartDate,
 
-  child: AbsorbPointer(
-    child: AppTextFields(
-      controller:
-          controller.noticePeriodStartDate,
-
-      hint: 'Notice Period Start Date',
+        hint: 'Notice Period Start Date',
+      ),
     ),
   ),
-),
                                   Builder(
   builder: (_) {
     final notice =

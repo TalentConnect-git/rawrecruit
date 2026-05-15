@@ -62,11 +62,12 @@ Future<void> fetchSkills() async {
 
   // Dropdowns
   // String selectedJobTitle = "Software Developer";
-String employmentType = "Full-time";  String workMode = "On-site";
-  String broadcastType = "Everyone";
-  String minEducation = "High School";
-  String workAuthorization = "Citizens Only";
-  String experienceRange = "0-1 years";
+String? employmentType;
+String? workMode;
+String? broadcastType;
+String? minEducation;
+String? workAuthorization;
+String? experienceRange;
   String selectedState = "";
   String selectedCity = "";
 
@@ -156,25 +157,24 @@ Future<void> loadDraft() async {
   endDateController.text = data["endDate"] ?? "";
   minExperienceController.text =
       data["minExperience"] ?? "";
+employmentType =
+    data["employmentType"];
 
-  employmentType =
-      data["employmentType"] ?? "Full-time";
+workMode =
+    data["workMode"];
 
-  workMode =
-      data["workMode"] ?? "On-site";
+broadcastType =
+    data["broadcastType"];
 
-  broadcastType =
-      data["broadcastType"] ?? "Everyone";
+minEducation =
+    data["minEducation"];
 
-  minEducation =
-      data["minEducation"] ?? "High School";
+workAuthorization =
+    data["workAuthorization"];
 
-  workAuthorization =
-      data["workAuthorization"] ??
-          "Citizens Only";
+experienceRange =
+    data["experienceRange"];
 
-  experienceRange =
-      data["experienceRange"] ?? "0-1 years";
 
   selectedState =
       data["selectedState"] ?? "";
@@ -752,13 +752,13 @@ SizedBox(height: 10),
                       controller: eligibilityController,
                       maxLines: 3,
                     ),
-                    const SizedBox(height: 12),
+//                     const SizedBox(height: 12),
 
-_fieldDark(
-  "Minimum Experience",
-  controller: minExperienceController,
-  keyboardType: TextInputType.number,
-),
+// _fieldDark(
+//   "Minimum Experience",
+//   controller: minExperienceController,
+//   keyboardType: TextInputType.number,
+// ),
                   ],
                 ),
               ),
@@ -824,57 +824,7 @@ _dropdownDark(
                   ],
                 ),
               ),
-/// STEP 9 — BENEFITS & STUDIES
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
 
-  child: _card(
-    title:
-        "Benefits & Studies",
-
-    children: [
-
-      // SearchableChipField(
-      //   label:
-      //       "Preferred Field of Study",
-
-      //   controller:
-      //       fieldOfStudyController,
-
-      //   options:
-      //       fieldOfStudyOptions,
-      // ),
-
-      // const SizedBox(height: 16),
-
-      SearchableChipField(
-        label: "Benefits",
-
-        controller:
-            benefitsController,
-
-        options:
-            benefitOptions,
-      ),
-
-      const SizedBox(height: 16),
-
-      _dropdownDark(
-        "Work Authorization",
-
-        workAuthorization,
-
-        workAuthorizationOptions,
-
-        (val) => setState(
-          () =>
-              workAuthorization =
-                  val!,
-        ),
-      ),
-    ],
-  ),
-),
               /// STEP 3 — EDUCATION
               SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -1007,7 +957,57 @@ SingleChildScrollView(
                   ],
                 ),
               ),
+/// STEP 9 — BENEFITS & STUDIES
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
 
+  child: _card(
+    title:
+        "Benefits & Studies",
+
+    children: [
+
+      // SearchableChipField(
+      //   label:
+      //       "Preferred Field of Study",
+
+      //   controller:
+      //       fieldOfStudyController,
+
+      //   options:
+      //       fieldOfStudyOptions,
+      // ),
+
+      // const SizedBox(height: 16),
+
+      SearchableChipField(
+        label: "Benefits",
+
+        controller:
+            benefitsController,
+
+        options:
+            benefitOptions,
+      ),
+
+      const SizedBox(height: 16),
+
+      _dropdownDark(
+        "Work Authorization",
+
+        workAuthorization,
+
+        workAuthorizationOptions,
+
+        (val) => setState(
+          () =>
+              workAuthorization =
+                  val!,
+        ),
+      ),
+    ],
+  ),
+),
               /// STEP 5 — TAGS
               SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
@@ -1105,8 +1105,13 @@ SingleChildScrollView(
                                   inactive: false,
                           description:
                               descriptionController.text.trim(),
-                   employmentType: [employmentType],
-workMode: [workMode],
+                   employmentType: employmentType == null
+    ? []
+    : [employmentType!],
+
+workMode: workMode == null
+    ? []
+    : [workMode!],
                           broadcastType: broadcastType,
                           jobType: "Referral",
                           location: [selectedCity],

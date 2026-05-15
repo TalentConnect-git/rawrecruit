@@ -489,7 +489,7 @@ $MetricsCopyWith<$Res>? get metrics {
 /// @nodoc
 mixin _$Metrics {
 
- int? get totalApplicationsReceived; int? get totalReferredToCompany; int? get totalAcceptedByCompany; int? get responseRate; int? get referralSuccessRate;
+ int? get totalApplicationsReceived; int? get totalReferredToCompany; int? get totalAcceptedByCompany; int? get totalInterviewScheduled; int? get responseRate; int? get referralSuccessRate;
 /// Create a copy of Metrics
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -502,16 +502,16 @@ $MetricsCopyWith<Metrics> get copyWith => _$MetricsCopyWithImpl<Metrics>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Metrics&&(identical(other.totalApplicationsReceived, totalApplicationsReceived) || other.totalApplicationsReceived == totalApplicationsReceived)&&(identical(other.totalReferredToCompany, totalReferredToCompany) || other.totalReferredToCompany == totalReferredToCompany)&&(identical(other.totalAcceptedByCompany, totalAcceptedByCompany) || other.totalAcceptedByCompany == totalAcceptedByCompany)&&(identical(other.responseRate, responseRate) || other.responseRate == responseRate)&&(identical(other.referralSuccessRate, referralSuccessRate) || other.referralSuccessRate == referralSuccessRate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Metrics&&(identical(other.totalApplicationsReceived, totalApplicationsReceived) || other.totalApplicationsReceived == totalApplicationsReceived)&&(identical(other.totalReferredToCompany, totalReferredToCompany) || other.totalReferredToCompany == totalReferredToCompany)&&(identical(other.totalAcceptedByCompany, totalAcceptedByCompany) || other.totalAcceptedByCompany == totalAcceptedByCompany)&&(identical(other.totalInterviewScheduled, totalInterviewScheduled) || other.totalInterviewScheduled == totalInterviewScheduled)&&(identical(other.responseRate, responseRate) || other.responseRate == responseRate)&&(identical(other.referralSuccessRate, referralSuccessRate) || other.referralSuccessRate == referralSuccessRate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalApplicationsReceived,totalReferredToCompany,totalAcceptedByCompany,responseRate,referralSuccessRate);
+int get hashCode => Object.hash(runtimeType,totalApplicationsReceived,totalReferredToCompany,totalAcceptedByCompany,totalInterviewScheduled,responseRate,referralSuccessRate);
 
 @override
 String toString() {
-  return 'Metrics(totalApplicationsReceived: $totalApplicationsReceived, totalReferredToCompany: $totalReferredToCompany, totalAcceptedByCompany: $totalAcceptedByCompany, responseRate: $responseRate, referralSuccessRate: $referralSuccessRate)';
+  return 'Metrics(totalApplicationsReceived: $totalApplicationsReceived, totalReferredToCompany: $totalReferredToCompany, totalAcceptedByCompany: $totalAcceptedByCompany, totalInterviewScheduled: $totalInterviewScheduled, responseRate: $responseRate, referralSuccessRate: $referralSuccessRate)';
 }
 
 
@@ -522,7 +522,7 @@ abstract mixin class $MetricsCopyWith<$Res>  {
   factory $MetricsCopyWith(Metrics value, $Res Function(Metrics) _then) = _$MetricsCopyWithImpl;
 @useResult
 $Res call({
- int? totalApplicationsReceived, int? totalReferredToCompany, int? totalAcceptedByCompany, int? responseRate, int? referralSuccessRate
+ int? totalApplicationsReceived, int? totalReferredToCompany, int? totalAcceptedByCompany, int? totalInterviewScheduled, int? responseRate, int? referralSuccessRate
 });
 
 
@@ -539,11 +539,12 @@ class _$MetricsCopyWithImpl<$Res>
 
 /// Create a copy of Metrics
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? totalApplicationsReceived = freezed,Object? totalReferredToCompany = freezed,Object? totalAcceptedByCompany = freezed,Object? responseRate = freezed,Object? referralSuccessRate = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? totalApplicationsReceived = freezed,Object? totalReferredToCompany = freezed,Object? totalAcceptedByCompany = freezed,Object? totalInterviewScheduled = freezed,Object? responseRate = freezed,Object? referralSuccessRate = freezed,}) {
   return _then(_self.copyWith(
 totalApplicationsReceived: freezed == totalApplicationsReceived ? _self.totalApplicationsReceived : totalApplicationsReceived // ignore: cast_nullable_to_non_nullable
 as int?,totalReferredToCompany: freezed == totalReferredToCompany ? _self.totalReferredToCompany : totalReferredToCompany // ignore: cast_nullable_to_non_nullable
 as int?,totalAcceptedByCompany: freezed == totalAcceptedByCompany ? _self.totalAcceptedByCompany : totalAcceptedByCompany // ignore: cast_nullable_to_non_nullable
+as int?,totalInterviewScheduled: freezed == totalInterviewScheduled ? _self.totalInterviewScheduled : totalInterviewScheduled // ignore: cast_nullable_to_non_nullable
 as int?,responseRate: freezed == responseRate ? _self.responseRate : responseRate // ignore: cast_nullable_to_non_nullable
 as int?,referralSuccessRate: freezed == referralSuccessRate ? _self.referralSuccessRate : referralSuccessRate // ignore: cast_nullable_to_non_nullable
 as int?,
@@ -631,10 +632,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? totalApplicationsReceived,  int? totalReferredToCompany,  int? totalAcceptedByCompany,  int? responseRate,  int? referralSuccessRate)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? totalApplicationsReceived,  int? totalReferredToCompany,  int? totalAcceptedByCompany,  int? totalInterviewScheduled,  int? responseRate,  int? referralSuccessRate)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Metrics() when $default != null:
-return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_that.totalAcceptedByCompany,_that.responseRate,_that.referralSuccessRate);case _:
+return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_that.totalAcceptedByCompany,_that.totalInterviewScheduled,_that.responseRate,_that.referralSuccessRate);case _:
   return orElse();
 
 }
@@ -652,10 +653,10 @@ return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? totalApplicationsReceived,  int? totalReferredToCompany,  int? totalAcceptedByCompany,  int? responseRate,  int? referralSuccessRate)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? totalApplicationsReceived,  int? totalReferredToCompany,  int? totalAcceptedByCompany,  int? totalInterviewScheduled,  int? responseRate,  int? referralSuccessRate)  $default,) {final _that = this;
 switch (_that) {
 case _Metrics():
-return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_that.totalAcceptedByCompany,_that.responseRate,_that.referralSuccessRate);case _:
+return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_that.totalAcceptedByCompany,_that.totalInterviewScheduled,_that.responseRate,_that.referralSuccessRate);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -672,10 +673,10 @@ return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_th
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? totalApplicationsReceived,  int? totalReferredToCompany,  int? totalAcceptedByCompany,  int? responseRate,  int? referralSuccessRate)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? totalApplicationsReceived,  int? totalReferredToCompany,  int? totalAcceptedByCompany,  int? totalInterviewScheduled,  int? responseRate,  int? referralSuccessRate)?  $default,) {final _that = this;
 switch (_that) {
 case _Metrics() when $default != null:
-return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_that.totalAcceptedByCompany,_that.responseRate,_that.referralSuccessRate);case _:
+return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_that.totalAcceptedByCompany,_that.totalInterviewScheduled,_that.responseRate,_that.referralSuccessRate);case _:
   return null;
 
 }
@@ -687,12 +688,13 @@ return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_th
 @JsonSerializable()
 
 class _Metrics implements Metrics {
-  const _Metrics({this.totalApplicationsReceived, this.totalReferredToCompany, this.totalAcceptedByCompany, this.responseRate, this.referralSuccessRate});
+  const _Metrics({this.totalApplicationsReceived, this.totalReferredToCompany, this.totalAcceptedByCompany, this.totalInterviewScheduled, this.responseRate, this.referralSuccessRate});
   factory _Metrics.fromJson(Map<String, dynamic> json) => _$MetricsFromJson(json);
 
 @override final  int? totalApplicationsReceived;
 @override final  int? totalReferredToCompany;
 @override final  int? totalAcceptedByCompany;
+@override final  int? totalInterviewScheduled;
 @override final  int? responseRate;
 @override final  int? referralSuccessRate;
 
@@ -709,16 +711,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Metrics&&(identical(other.totalApplicationsReceived, totalApplicationsReceived) || other.totalApplicationsReceived == totalApplicationsReceived)&&(identical(other.totalReferredToCompany, totalReferredToCompany) || other.totalReferredToCompany == totalReferredToCompany)&&(identical(other.totalAcceptedByCompany, totalAcceptedByCompany) || other.totalAcceptedByCompany == totalAcceptedByCompany)&&(identical(other.responseRate, responseRate) || other.responseRate == responseRate)&&(identical(other.referralSuccessRate, referralSuccessRate) || other.referralSuccessRate == referralSuccessRate));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Metrics&&(identical(other.totalApplicationsReceived, totalApplicationsReceived) || other.totalApplicationsReceived == totalApplicationsReceived)&&(identical(other.totalReferredToCompany, totalReferredToCompany) || other.totalReferredToCompany == totalReferredToCompany)&&(identical(other.totalAcceptedByCompany, totalAcceptedByCompany) || other.totalAcceptedByCompany == totalAcceptedByCompany)&&(identical(other.totalInterviewScheduled, totalInterviewScheduled) || other.totalInterviewScheduled == totalInterviewScheduled)&&(identical(other.responseRate, responseRate) || other.responseRate == responseRate)&&(identical(other.referralSuccessRate, referralSuccessRate) || other.referralSuccessRate == referralSuccessRate));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,totalApplicationsReceived,totalReferredToCompany,totalAcceptedByCompany,responseRate,referralSuccessRate);
+int get hashCode => Object.hash(runtimeType,totalApplicationsReceived,totalReferredToCompany,totalAcceptedByCompany,totalInterviewScheduled,responseRate,referralSuccessRate);
 
 @override
 String toString() {
-  return 'Metrics(totalApplicationsReceived: $totalApplicationsReceived, totalReferredToCompany: $totalReferredToCompany, totalAcceptedByCompany: $totalAcceptedByCompany, responseRate: $responseRate, referralSuccessRate: $referralSuccessRate)';
+  return 'Metrics(totalApplicationsReceived: $totalApplicationsReceived, totalReferredToCompany: $totalReferredToCompany, totalAcceptedByCompany: $totalAcceptedByCompany, totalInterviewScheduled: $totalInterviewScheduled, responseRate: $responseRate, referralSuccessRate: $referralSuccessRate)';
 }
 
 
@@ -729,7 +731,7 @@ abstract mixin class _$MetricsCopyWith<$Res> implements $MetricsCopyWith<$Res> {
   factory _$MetricsCopyWith(_Metrics value, $Res Function(_Metrics) _then) = __$MetricsCopyWithImpl;
 @override @useResult
 $Res call({
- int? totalApplicationsReceived, int? totalReferredToCompany, int? totalAcceptedByCompany, int? responseRate, int? referralSuccessRate
+ int? totalApplicationsReceived, int? totalReferredToCompany, int? totalAcceptedByCompany, int? totalInterviewScheduled, int? responseRate, int? referralSuccessRate
 });
 
 
@@ -746,11 +748,12 @@ class __$MetricsCopyWithImpl<$Res>
 
 /// Create a copy of Metrics
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? totalApplicationsReceived = freezed,Object? totalReferredToCompany = freezed,Object? totalAcceptedByCompany = freezed,Object? responseRate = freezed,Object? referralSuccessRate = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? totalApplicationsReceived = freezed,Object? totalReferredToCompany = freezed,Object? totalAcceptedByCompany = freezed,Object? totalInterviewScheduled = freezed,Object? responseRate = freezed,Object? referralSuccessRate = freezed,}) {
   return _then(_Metrics(
 totalApplicationsReceived: freezed == totalApplicationsReceived ? _self.totalApplicationsReceived : totalApplicationsReceived // ignore: cast_nullable_to_non_nullable
 as int?,totalReferredToCompany: freezed == totalReferredToCompany ? _self.totalReferredToCompany : totalReferredToCompany // ignore: cast_nullable_to_non_nullable
 as int?,totalAcceptedByCompany: freezed == totalAcceptedByCompany ? _self.totalAcceptedByCompany : totalAcceptedByCompany // ignore: cast_nullable_to_non_nullable
+as int?,totalInterviewScheduled: freezed == totalInterviewScheduled ? _self.totalInterviewScheduled : totalInterviewScheduled // ignore: cast_nullable_to_non_nullable
 as int?,responseRate: freezed == responseRate ? _self.responseRate : responseRate // ignore: cast_nullable_to_non_nullable
 as int?,referralSuccessRate: freezed == referralSuccessRate ? _self.referralSuccessRate : referralSuccessRate // ignore: cast_nullable_to_non_nullable
 as int?,

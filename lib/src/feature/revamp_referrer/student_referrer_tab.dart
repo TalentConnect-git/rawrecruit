@@ -38,9 +38,23 @@ class _StudentApplicationsViewState
                   _buildTabs(),
                   const SizedBox(height: 10),
 
-                  Expanded(
-                    child: _buildBody(),
-                  ),
+              Expanded(
+  child: Builder(
+    builder: (context) {
+      return RefreshIndicator(
+        color: AppColors.kGreen,
+
+        onRefresh: () async {
+          await context
+              .read<ApplicationViewModel>()
+              .fetchApplications();
+        },
+
+        child: _buildBody(),
+      );
+    },
+  ),
+),
                 ],
               ),
             ),
@@ -76,14 +90,22 @@ class _StudentApplicationsViewState
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: isSelected ? Colors.black : Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+         child: FittedBox(
+  fit: BoxFit.scaleDown,
+  child: FittedBox(
+  fit: BoxFit.scaleDown,
+  child: Text(
+    title,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: TextStyle(
+      color: isSelected ? Colors.black : Colors.white,
+      fontSize: 12,
+      fontWeight: FontWeight.w600,
+    ),
+  ),
+),
+),
           ),
         ),
       ),
@@ -127,15 +149,24 @@ class _StudentApplicationsViewState
     break;
 }
         if (filtered.isEmpty) {
-          return const Center(
-            child: Text(
-              "No applications found",
-              style: TextStyle(color: Colors.grey),
-            ),
-          );
+        return ListView(
+  physics: const AlwaysScrollableScrollPhysics(),
+
+  children: const [
+    SizedBox(height: 250),
+
+    Center(
+      child: Text(
+        "No applications found",
+        style: TextStyle(color: Colors.grey),
+      ),
+    ),
+  ],
+);
         }
 
         return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           children: filtered.map((item) {
             return ApplicationCard(model: item); // ✅ reuse
           }).toList(),

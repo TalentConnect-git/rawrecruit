@@ -62,8 +62,43 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
                 children: [
                   _buildTabs(),
                   const SizedBox(height: 10),
+Expanded(
+  child: Builder(
+    builder: (context) {
+      return RefreshIndicator(
+        color: AppColors.kGreen,
 
-                  Expanded(child: _buildBody()),
+        onRefresh: () async {
+          await context
+              .read<DashboardViewModel>()
+              .getJobs();
+
+          await context
+              .read<DashboardViewModel>()
+              .fetchProfessionalData();
+
+          await context
+              .read<PostedJobViewModel>()
+              .getPostedJobs();
+
+          await context
+              .read<PostedJobViewModel>()
+              .getJobs();
+
+          await context
+              .read<ShortlistViewModel>()
+              .fetchSaved();
+
+          await context
+              .read<ApplicationViewModel>()
+              .fetchApplications();
+        },
+
+        child: _buildBody(),
+      );
+    },
+  ),
+),
                 ],
               ),
             ),
@@ -123,6 +158,7 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
         final applicationVM = context.watch<ApplicationViewModel>();
 
         return ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
           children: [
             if (getIt<AppStateProvider>().userType !=
                 UserType.professional) ...[
@@ -230,10 +266,24 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
     return Consumer<PostedJobViewModel>(
       builder: (context, vm, _) {
         if (vm.jobs.isEmpty) {
-          return const Center(child: Text("No posted jobs"));
+        return ListView(
+  physics: const AlwaysScrollableScrollPhysics(),
+
+  children: const [
+    SizedBox(height: 250),
+
+    Center(
+      child: Text(
+        "No posted jobs",
+        style: TextStyle(color: Colors.grey),
+      ),
+    ),
+  ],
+);
         }
 
         return ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: vm.jobs.length,
           itemBuilder: (_, index) {
             final job = vm.jobs[index];
@@ -261,12 +311,24 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
         }
 
         if (vm.saved.isEmpty) {
-          return const Center(
-            child: Text("No saved jobs", style: TextStyle(color: Colors.grey)),
-          );
+         return ListView(
+  physics: const AlwaysScrollableScrollPhysics(),
+
+  children: const [
+    SizedBox(height: 250),
+
+    Center(
+      child: Text(
+        "No saved jobs",
+        style: TextStyle(color: Colors.grey),
+      ),
+    ),
+  ],
+);
         }
 
         return ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: vm.saved.length,
           itemBuilder: (_, index) {
             final item = vm.saved[index];

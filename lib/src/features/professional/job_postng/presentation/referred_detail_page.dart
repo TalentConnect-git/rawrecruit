@@ -295,7 +295,7 @@ await vm.updateReferralStatus(
               PopupMenuItem(
                 value: "Accepted",
                 child: Text(
-                  "Accept",
+                  "Referred",
                   style: TextStyle(color: Colors.black),
                 ),
               ),

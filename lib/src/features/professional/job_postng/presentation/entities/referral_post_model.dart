@@ -46,6 +46,8 @@ abstract class Metrics with _$Metrics {
     int? totalApplicationsReceived,
     int? totalReferredToCompany,
     int? totalAcceptedByCompany,
+        int? totalInterviewScheduled,
+
     int? responseRate,
     int? referralSuccessRate,
   }) = _Metrics;

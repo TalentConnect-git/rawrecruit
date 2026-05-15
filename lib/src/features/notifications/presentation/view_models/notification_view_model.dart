@@ -10,7 +10,10 @@ class NotificationViewModel extends ViewStateProvider {
     _notifications = notification;
     notifyListeners();
   }
-
+bool get hasUnreadNotifications =>
+    _notifications.any(
+      (e) => e.read == false,
+    );
   Future<Failure?> getNotifications() async {
     Failure? failure;
 

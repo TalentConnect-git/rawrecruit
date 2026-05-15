@@ -10,6 +10,7 @@ import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/alu
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
 import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
+import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/my_job_card.dart';
 import 'package:rawrecruit/src/features/referral/data/entities/incoming_request.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
@@ -70,9 +71,44 @@ class _ReferralHomeState extends State<ReferralHome> {
 
           return Scaffold(
             backgroundColor: AppColors.kBg,
-            body: SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
-              child: Column(
+          body: RefreshIndicator(
+  color: AppColors.kGreen,
+onRefresh: () async {
+  await referralHomeViewModel.getRequests();
+
+  await postedJobViewModel.getPostedJobs();
+
+  await postedJobViewModel.getJobs();
+
+  await context
+      .read<DashboardViewModel>()
+      .getAlumniData();
+
+  await context
+      .read<MyProfileViewModel>()
+      .getUser();
+
+  await context
+      .read<MyProfileViewModel>()
+      .getReferralMetrics();
+
+  await context
+      .read<ShortlistViewModel>()
+      .fetchSaved();
+
+  await context
+      .read<ApplicationViewModel>()
+      .fetchApplications();
+      await getIt<NotificationViewModel>()
+    .getNotifications();
+},
+  child: SingleChildScrollView(
+    physics:
+        const AlwaysScrollableScrollPhysics(),
+
+    padding: const EdgeInsets.all(16),
+
+    child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   /// 🔥 NEW HEADER
@@ -456,7 +492,8 @@ const SizedBox(height: 12),
                   ),
                 ],
               ),
-            ),
+           ),
+),
           );
         }, // 👈 closes Builder
       ),

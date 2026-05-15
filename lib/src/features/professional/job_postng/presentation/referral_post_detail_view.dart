@@ -179,7 +179,7 @@ final metrics = job.metrics;
 
          SizedBox(height: 20,),
           /// STATS
-        Row(
+     Row(
   children: [
     Expanded(
       child: _stat(
@@ -187,28 +187,32 @@ final metrics = job.metrics;
         "Candidates",
       ),
     ),
+
     Expanded(
       child: _stat(
-        "${metrics?.responseRate ?? 0} %",
+        "${metrics?.responseRate ?? 0}%",
         "Response",
       ),
     ),
+
     Expanded(
       child: _stat(
         "${metrics?.totalReferredToCompany ?? 0}",
         "Referred",
       ),
     ),
+
     Expanded(
       child: _stat(
-        "${metrics?.totalAcceptedByCompany ?? 0}",
+        "${metrics?.totalInterviewScheduled ?? 0}",
         "Interviews",
       ),
     ),
+
     Expanded(
       child: _stat(
-        "${metrics?.referralSuccessRate ?? 0} %",
-        "Success",
+        "${metrics?.totalAcceptedByCompany ?? 0}",
+        "Accepted",
       ),
     ),
   ],

@@ -10,6 +10,7 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   id: json['_id'] as String?,
   userId: json['userId'] as String?,
   v: (json['__v'] as num?)?.toInt(),
+  companyEmail: json['companyEmail'] as String?,
   achievements: (json['achievements'] as List<dynamic>?)
       ?.map((e) => Achievement.fromJson(e as Map<String, dynamic>))
       .toList(),
@@ -101,6 +102,7 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   '_id': instance.id,
   'userId': instance.userId,
   '__v': instance.v,
+  'companyEmail': instance.companyEmail,
   'achievements': instance.achievements?.map((e) => e.toJson()).toList(),
   'awards': instance.awards?.map((e) => e.toJson()).toList(),
   'publications': instance.publications?.map((e) => e.toJson()).toList(),
