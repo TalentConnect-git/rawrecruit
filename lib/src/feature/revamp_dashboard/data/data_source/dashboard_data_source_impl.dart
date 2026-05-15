@@ -194,9 +194,9 @@ class DashboardDataSourceImpl implements DashboardDataSource {
     final request = Request(
       method: RequestMethod.get,
       endpoint: Endpoints.apiCandidateHiringNetwork,
-      // queryParams: {
-      //   if (onlyPostedJob) 'jobPostedOnly': onlyPostedJob.toString(),
-      // },
+      queryParams: {
+        if (onlyPostedJob) 'jobPostedOnly': onlyPostedJob.toString(),
+      },
       isSafeRoute: true,
     );
 

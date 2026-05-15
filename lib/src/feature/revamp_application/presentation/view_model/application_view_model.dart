@@ -2,7 +2,6 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/feature/revamp_application/repository/application_repository.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 
@@ -11,7 +10,8 @@ enum ApplicationTab { offCampus, internship }
 class ApplicationViewModel extends ViewStateProvider {
   final _repository = GetIt.instance<ApplicationRepository>();
   List<ReferralApplication> referralApplications = [];
-List<ReferralApplication> referredByMe = [];
+  List<ReferralApplication> referredByMe = [];
+
   /// 🔹 Full list (for Applications screen)
   List<Job> appliedApplications = [];
 
@@ -21,73 +21,74 @@ List<ReferralApplication> referredByMe = [];
   bool isApplied(String jobId) => appliedJobIds.contains(jobId);
 
   Future<void> fetchReferredByMe() async {
-  setViewState(ViewState.busy);
-  notifyListeners();
+    setViewState(ViewState.busy);
+    notifyListeners();
 
-  final result = await _repository.fetchReferredByMe();
+    final result = await _repository.fetchReferredByMe();
 
-  result.fold(
-    (failure) {
-      setViewState(ViewState.idle);
-    },
-    (data) {
-      referredByMe = data;
-      setViewState(ViewState.idle);
-    },
-  );
+    result.fold(
+      (failure) {
+        setViewState(ViewState.idle);
+      },
+      (data) {
+        referredByMe = data;
+        setViewState(ViewState.idle);
+      },
+    );
 
-  notifyListeners();
-}
-Future<void> apply({
-  required String jobId,
-  required String jobType,
-}) async {
-Either<APIException, void> result;
-  if (jobType == "Referral") {
-    result = await _repository.applyReferral(jobId);
-  } else if (jobType == "Internship") {
-    result = await _repository.applyInternship(jobId);
-  } else {
-    result = await _repository.applyOffCampus(jobId: jobId);
+    notifyListeners();
   }
 
-  result.fold((failure) {}, (_) {
-    appliedJobIds.add(jobId);
-  });
+  Future<void> apply({
+    required String jobId,
+    required String jobType,
+    int? matchScore,
+  }) async {
+    Either<APIException, void> result;
+    if (jobType == "Referral") {
+      result = await _repository.applyReferral(jobId, matchScore);
+    } else if (jobType == "Internship") {
+      result = await _repository.applyInternship(jobId);
+    } else {
+      result = await _repository.applyOffCampus(jobId: jobId);
+    }
 
-  notifyListeners();
-}
-Future<void> updateReferralStatus({
-  required BuildContext context,
-  required String applicationId,
-  required String status,
-  required String jobRole,
-}) async {
-  final result = await _repository.updateReferralStatus(
-    applicationId: applicationId,
-    status: status,
-    jobRole: jobRole,
-  );
+    result.fold((failure) {}, (_) {
+      appliedJobIds.add(jobId);
+    });
 
-  result.fold(
-    (failure) {
-      Toasts.showErrorToast(
-        context,
-        message: failure.message,
-      );
-    },
-    (_) async {
-      Toasts.showSuccessToast(
-        context,
-        message: "Status updated successfully",
-      );
+    notifyListeners();
+  }
 
-      await fetchReferredByMe();
-    },
-  );
-}
+  Future<void> updateReferralStatus({
+    required BuildContext context,
+    required String applicationId,
+    required String status,
+    required String jobRole,
+  }) async {
+    final result = await _repository.updateReferralStatus(
+      applicationId: applicationId,
+      status: status,
+      jobRole: jobRole,
+    );
+
+    result.fold(
+      (failure) {
+        Toasts.showErrorToast(context, message: failure.message);
+      },
+      (_) async {
+        Toasts.showSuccessToast(
+          context,
+          message: "Status updated successfully",
+        );
+
+        await fetchReferredByMe();
+      },
+    );
+  }
+
   /// 🔹 FETCH APPLIED LIST
- Future<void> fetchApplications() async {
+  Future<void> fetchApplications() async {
     setViewState(ViewState.busy);
     notifyListeners();
 
@@ -121,13 +122,10 @@ Future<void> updateReferralStatus({
 
     final result = await _repository.fetchReferralApplications();
 
-    result.fold(
-      (failure) => setViewState(ViewState.idle),
-      (data) {
-        referralApplications = data;
-        setViewState(ViewState.idle);
-      },
-    );
+    result.fold((failure) => setViewState(ViewState.idle), (data) {
+      referralApplications = data;
+      setViewState(ViewState.idle);
+    });
 
     notifyListeners();
   }

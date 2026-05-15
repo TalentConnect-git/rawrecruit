@@ -289,7 +289,7 @@ class DashboardViewModel extends ViewStateProvider {
   }
 
   Future<void> getAlumniData() async {
-    final result = await _repository.getHiringAlumni(onlyPostedJob: true);
+    final result = await _repository.getHiringAlumni(onlyPostedJob: false);
 
     result.fold((_) {}, (data) {
       processAlumni(data); // ✅ IMPORTANT

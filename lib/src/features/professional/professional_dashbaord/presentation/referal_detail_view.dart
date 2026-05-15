@@ -157,6 +157,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                           : () => applicationVM.apply(
                               jobId: jobId,
                               jobType: "Referral",
+                              matchScore: job.matchScore,
                             ),
                       icon: Icon(
                         isApplied ? Icons.check_circle : Icons.send_rounded,
@@ -233,11 +234,11 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
   // ============================================================
   Widget _header(Job job, dynamic referral) {
     final role = job.jobTitle ?? "Software Developer";
-   final company =
-    widget.companyName ??
-    referral?.candidatePosted?.currentCompany ??
-    job.candidatePosted?.currentCompany ??
-    "Company";
+    final company =
+        widget.companyName ??
+        referral?.candidatePosted?.currentCompany ??
+        job.candidatePosted?.currentCompany ??
+        "Company";
     final location = (job.location?.isNotEmpty ?? false)
         ? job.location!.join(", ")
         : "—";
@@ -668,50 +669,45 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
           ),
           const SizedBox(height: 10),
 
-SizedBox(
-  width: double.infinity,
+          SizedBox(
+            width: double.infinity,
 
-  child: OutlinedButton.icon(
-    onPressed: () async {
-      final c = referral?.candidatePosted;
+            child: OutlinedButton.icon(
+              onPressed: () async {
+                final c = referral?.candidatePosted;
 
-      final userId = c?.userId ?? c?.id;
+                final userId = c?.userId ?? c?.id;
 
-      if (userId == null) return;
+                if (userId == null) return;
 
-      context.pushNamed(
-        RouteNames.profileDetail,
-        extra: userId,
-      );
-    },
+                context.pushNamed(RouteNames.profileDetail, extra: userId);
+              },
 
-    icon: Icon(
-      Icons.person_outline,
-      size: 18,
-      color: AppColors.kGreen,
-    ),
+              icon: Icon(
+                Icons.person_outline,
+                size: 18,
+                color: AppColors.kGreen,
+              ),
 
-    label: Text(
-      "Show Profile",
-      style: TextStyle(
-        color: AppColors.kGreen,
-        fontWeight: FontWeight.w600,
-      ),
-    ),
+              label: Text(
+                "Show Profile",
+                style: TextStyle(
+                  color: AppColors.kGreen,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
 
-    style: OutlinedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(vertical: 12),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
 
-      side: BorderSide(
-        color: AppColors.kGreen.withOpacity(.5),
-      ),
+                side: BorderSide(color: AppColors.kGreen.withOpacity(.5)),
 
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(10),
-      ),
-    ),
-  ),
-),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );
@@ -727,7 +723,7 @@ SizedBox(
     final openings = job.numberOfOpenings?.toString() ?? "—";
     final rounds = (job.selectionProcess?.length ?? 0).toString();
     final views = job.views?.toString() ?? "0";
-final score = (job.matchScore ?? 0).clamp(0, 100);
+    final score = (job.matchScore ?? 0).clamp(0, 100);
     return _cardContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -779,7 +775,7 @@ final score = (job.matchScore ?? 0).clamp(0, 100);
                       width: 80,
                       height: 80,
                       child: CircularProgressIndicator(
-                      value: score / 100,
+                        value: score / 100,
                         strokeWidth: 6,
                         backgroundColor: Colors.white.withOpacity(0.08),
                         valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
@@ -788,8 +784,8 @@ final score = (job.matchScore ?? 0).clamp(0, 100);
                     Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                Text(
-  "$score%",
+                        Text(
+                          "$score%",
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 16,

@@ -52,11 +52,11 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
   /// 🔹 APPLY REFERRAL
   @override
-  ResultFuture<void> applyReferral(String referralId) async {
+  ResultFuture<void> applyReferral(String referralId, int? matchScore) async {
     final request = Request(
       method: RequestMethod.post,
       endpoint: "/application/candidate/referral",
-      body: {"referralId": referralId},
+      body: {"referralId": referralId, 'matchScore': matchScore},
       isSafeRoute: true,
     );
 
@@ -187,7 +187,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
   ResultFuture<List<ReferralApplication>> fetchReferredByMe() async {
     final request = Request(
       method: RequestMethod.get,
-    endpoint: "/application/referrals/referred-by-me",
+      endpoint: "/application/referrals/referred-by-me",
       isSafeRoute: true,
     );
 
@@ -206,28 +206,25 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       return Left(APIException.from(e));
     }
   }
-  @override
-ResultFuture<void> updateReferralStatus({
-  required String applicationId,
-  required String status,
-  required String jobRole,
-}) async {
-  final request = Request(
-    method: RequestMethod.patch,
-    endpoint:
-        "/application/referrals/$applicationId/status",
-    body: {
-      "status": status,
-      "jobRole": jobRole,
-    },
-    isSafeRoute: true,
-  );
 
-  try {
-    await _networkService.request(request);
-    return const Right(null);
-  } catch (e) {
-    return Left(APIException.from(e));
+  @override
+  ResultFuture<void> updateReferralStatus({
+    required String applicationId,
+    required String status,
+    required String jobRole,
+  }) async {
+    final request = Request(
+      method: RequestMethod.patch,
+      endpoint: "/application/referrals/$applicationId/status",
+      body: {"status": status, "jobRole": jobRole},
+      isSafeRoute: true,
+    );
+
+    try {
+      await _networkService.request(request);
+      return const Right(null);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
 }

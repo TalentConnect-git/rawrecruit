@@ -65,11 +65,10 @@ class AppStateProvider extends ViewStateProvider {
   }
 
   bool get isProfileComplete => user != null;
-
+  //&& (user?.onboardingCompleted ?? false)
   bool get isAuthComplete => auth != null;
 
   bool get isProfileRemaining => !isProfileComplete;
-
 
   bool isSaved(String? jobId) {
     for (String job in shortlistSchools) {
