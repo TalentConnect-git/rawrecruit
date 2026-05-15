@@ -260,7 +260,10 @@ class ReferredCandidateDetailPage extends StatelessWidget {
               ),
               PopupMenuItem(
                 value: "Accepted",
-                child: Text("Accept", style: TextStyle(color: Colors.black)),
+                child: Text(
+                  "Refer",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
               PopupMenuItem(
                 value: "Rejected",

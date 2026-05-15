@@ -62,8 +62,39 @@ class _StudentJobsViewState extends State<StudentJobsView> {
                 children: [
                   _buildTabs(),
                   const SizedBox(height: 10),
+Expanded(
+  child: Builder(
+    builder: (context) {
+      return RefreshIndicator(
+        color: AppColors.kGreen,
 
-                  Expanded(child: _buildBody()),
+        onRefresh: () async {
+          await context
+              .read<DashboardViewModel>()
+              .getJobs();
+
+          await context
+              .read<DashboardViewModel>()
+              .getInternships();
+
+          await context
+              .read<DashboardViewModel>()
+              .fetchProfessionalData();
+
+          await context
+              .read<ShortlistViewModel>()
+              .fetchSaved();
+
+          await context
+              .read<ApplicationViewModel>()
+              .fetchApplications();
+        },
+
+        child: _buildBody(),
+      );
+    },
+  ),
+),
                 ],
               ),
             ),
@@ -133,6 +164,7 @@ class _StudentJobsViewState extends State<StudentJobsView> {
         if (vm.referralJobs.isEmpty) return _empty();
 
         return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           children: vm.referralJobs.map((job) {
             return _jobCard(job, shortlistVM, applicationVM);
           }).toList(),
@@ -150,6 +182,7 @@ class _StudentJobsViewState extends State<StudentJobsView> {
         if (vm.jobs.isEmpty) return _empty();
 
         return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           children: vm.jobs.map((job) {
             return _jobCard(job, shortlistVM, applicationVM);
           }).toList(),
@@ -167,6 +200,7 @@ class _StudentJobsViewState extends State<StudentJobsView> {
         if (vm.internships.isEmpty) return _empty();
 
         return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           children: vm.internships.map((job) {
             return _jobCard(job, shortlistVM, applicationVM);
           }).toList(),
@@ -184,6 +218,7 @@ class _StudentJobsViewState extends State<StudentJobsView> {
         if (vm.saved.isEmpty) return _empty();
 
         return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
           children: vm.saved.map((item) {
             final job = item.job;
             if (job == null) return const SizedBox();
@@ -230,9 +265,20 @@ class _StudentJobsViewState extends State<StudentJobsView> {
     );
   }
 
-  Widget _empty() {
-    return const Center(
-      child: Text("No data available", style: TextStyle(color: Colors.grey)),
-    );
-  }
+ Widget _empty() {
+  return ListView(
+    physics: const AlwaysScrollableScrollPhysics(),
+
+    children: const [
+      SizedBox(height: 250),
+
+      Center(
+        child: Text(
+          "No data available",
+          style: TextStyle(color: Colors.grey),
+        ),
+      ),
+    ],
+  );
+}
 }

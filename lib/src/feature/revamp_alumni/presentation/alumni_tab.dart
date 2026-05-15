@@ -75,7 +75,25 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
               const SizedBox(height: 16),
 
               /// 🔥 LIST
-              Expanded(child: _buildBody()),
+             Expanded(
+  child: Builder(
+    builder: (context) {
+      return RefreshIndicator(
+        color: AppColors.kGreen,
+
+        onRefresh: () async {
+          await Future.wait([
+            alumniViewModel.fetchCollegeAlumni(),
+            alumniViewModel.fetchCompanyAlumni(),
+            alumniViewModel.fetchHiringAlumni(),
+          ], eagerError: true);
+        },
+
+        child: _buildBody(),
+      );
+    },
+  ),
+),
             ],
           ),
         ),
@@ -150,15 +168,24 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
         final groupedList = vm.jobs(type);
 
         if (groupedList.isEmpty) {
-          return const Center(
-            child: Text(
-              "No alumni found",
-              style: TextStyle(color: Colors.grey),
-            ),
-          );
+          return ListView(
+  physics: const AlwaysScrollableScrollPhysics(),
+
+  children: const [
+    SizedBox(height: 250),
+
+    Center(
+      child: Text(
+        "No alumni found",
+        style: TextStyle(color: Colors.grey),
+      ),
+    ),
+  ],
+);
         }
 
         return ListView.builder(
+            physics: const AlwaysScrollableScrollPhysics(),
           itemCount: groupedList.length,
           itemBuilder: (_, index) {
             return AlumniHiringCard(jobs: groupedList[index]);

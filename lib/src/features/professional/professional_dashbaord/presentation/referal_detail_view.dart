@@ -108,86 +108,115 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
             ),
 
             /// 🔥 BOTTOM SAVE + APPLY BAR (logic preserved, only styling refreshed)
-            bottomNavigationBar: Container(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-              decoration: BoxDecoration(
-                color: AppColors.kCard,
-                border: Border(
-                  top: BorderSide(color: Colors.white.withOpacity(0.06)),
-                ),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => shortlistVM.toggleSave(
-                        jobId: jobId,
-                        jobType: "Referral",
-                        isSaved: isSaved,
-                      ),
-                      icon: Icon(
-                        isSaved ? Icons.bookmark : Icons.bookmark_border,
-                        color: AppColors.kGreen,
-                        size: 18,
-                      ),
-                      label: Text(
-                        isSaved ? "Saved" : "Save",
-                        style: TextStyle(
-                          color: AppColors.kGreen,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        side: BorderSide(
-                          color: AppColors.kGreen.withOpacity(.5),
-                        ),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    flex: 2,
-                    child: ElevatedButton.icon(
-                      onPressed: isApplied
-                          ? null
-                          : () => applicationVM.apply(
-                              jobId: jobId,
-                              jobType: "Referral",
-                              matchScore: job.matchScore,
-                              companyName:
-                                  widget.companyName ??
-                                  referral?.candidatePosted?.currentCompany ??
-                                  job.candidatePosted?.currentCompany ??
-                                  '',
-                            ),
-                      icon: Icon(
-                        isApplied ? Icons.check_circle : Icons.send_rounded,
-                        size: 18,
-                      ),
-                      label: Text(
-                        isApplied ? "Applied" : "Apply Now",
-                        style: const TextStyle(fontWeight: FontWeight.w600),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isApplied
-                            ? Colors.grey
-                            : AppColors.kGreen,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+           bottomNavigationBar: SafeArea(
+  top: false,
+  child: Container(
+    padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+    decoration: BoxDecoration(
+      color: AppColors.kCard,
+      border: Border(
+        top: BorderSide(
+          color: Colors.white.withOpacity(0.06),
+        ),
+      ),
+    ),
+
+    child: Row(
+      children: [
+        Expanded(
+          child: OutlinedButton.icon(
+            onPressed: () => shortlistVM.toggleSave(
+              jobId: jobId,
+              jobType: "Referral",
+              isSaved: isSaved,
+            ),
+
+            icon: Icon(
+              isSaved
+                  ? Icons.bookmark
+                  : Icons.bookmark_border,
+              color: AppColors.kGreen,
+              size: 18,
+            ),
+
+            label: Text(
+              isSaved ? "Saved" : "Save",
+              style: TextStyle(
+                color: AppColors.kGreen,
+                fontWeight: FontWeight.w600,
               ),
             ),
 
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(
+                vertical: 14,
+              ),
+
+              side: BorderSide(
+                color:
+                    AppColors.kGreen.withOpacity(.5),
+              ),
+
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+
+        const SizedBox(width: 12),
+
+        Expanded(
+          flex: 2,
+          child: ElevatedButton.icon(
+            onPressed: isApplied
+                ? null
+                : () => applicationVM.apply(
+                    jobId: jobId,
+                    jobType: "Referral",
+                    matchScore: job.matchScore,
+                  ),
+
+            icon: Icon(
+              isApplied
+                  ? Icons.check_circle
+                  : Icons.send_rounded,
+              size: 18,
+            ),
+
+            label: Text(
+              isApplied
+                  ? "Applied"
+                  : "Apply Now",
+
+              style: const TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+
+            style: ElevatedButton.styleFrom(
+              backgroundColor: isApplied
+                  ? Colors.grey
+                  : AppColors.kGreen,
+
+              foregroundColor: Colors.white,
+
+              padding: const EdgeInsets.symmetric(
+                vertical: 14,
+              ),
+
+              shape: RoundedRectangleBorder(
+                borderRadius:
+                    BorderRadius.circular(12),
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  ),
+),
             /// 🔥 BODY
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -214,9 +243,6 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 
                   _eligibilitySection(job),
                   const SizedBox(height: 16),
-
-                  _aboutCompanySection(job),
-                  const SizedBox(height: 24),
 
                   _alumniHeader(),
                   const SizedBox(height: 12),
@@ -597,12 +623,12 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      "Software Engineer @ $company",
+                      "Software Engineer",
                       style: const TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
                     Text(
-                      college,
+                      company,
                       style: const TextStyle(color: Colors.grey, fontSize: 11),
                     ),
                     const SizedBox(height: 6),
@@ -726,8 +752,12 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
   // ============================================================
   Widget _matchInsightsSection(Job job) {
     final openings = job.numberOfOpenings?.toString() ?? "—";
-    final rounds = (job.selectionProcess?.length ?? 0).toString();
-    final views = job.views?.toString() ?? "0";
+final rounds = (job.rounds?.length ?? 0).toString();
+
+final process =
+    (job.selectionProcess?.isNotEmpty ?? false)
+        ? job.selectionProcess!.join(", ")
+        : "—";   final views = job.views?.toString() ?? "0";
     final score = (job.matchScore ?? 0).clamp(0, 100);
     return _cardContainer(
       child: Column(
@@ -758,11 +788,19 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                   children: [
                     _insightRow(Icons.work_outline, "Openings", openings),
                     const SizedBox(height: 10),
-                    _insightRow(
-                      Icons.checklist_rounded,
-                      "Selection Rounds",
-                      rounds,
-                    ),
+                _insightRow(
+  Icons.checklist_rounded,
+  "Selection Rounds",
+  rounds,
+),
+
+const SizedBox(height: 10),
+
+_insightRow(
+  Icons.account_tree_outlined,
+  "Selection Process",
+  process,
+),
                     const SizedBox(height: 10),
                     _insightRow(Icons.visibility_outlined, "Views", views),
                   ],
@@ -770,45 +808,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
               ),
               const SizedBox(width: 16),
               // Match Score circle (kept)
-              SizedBox(
-                width: 80,
-                height: 80,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    SizedBox(
-                      width: 80,
-                      height: 80,
-                      child: CircularProgressIndicator(
-                        value: score / 100,
-                        strokeWidth: 6,
-                        backgroundColor: Colors.white.withOpacity(0.08),
-                        valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
-                      ),
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          "$score%",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        Text(
-                          "Match Score",
-                          style: TextStyle(
-                            color: AppColors.kGreen,
-                            fontSize: 9,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+            AnimatedMatchScore(score: score),
             ],
           ),
         ],
@@ -1142,39 +1142,39 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
   // ============================================================
   // ABOUT COMPANY
   // ============================================================
-  Widget _aboutCompanySection(Job job) {
-    final company = widget.companyName ?? "Company";
-    return _cardContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: const [
-              Icon(Icons.apartment_rounded, size: 18, color: Colors.blueAccent),
-              SizedBox(width: 8),
-              Text(
-                "About Company",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 10),
-          Text(
-            "$company is a leading organization focused on innovation, growth and excellence. Join the team to work on impactful, cutting-edge projects.",
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 12,
-              height: 1.5,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _aboutCompanySection(Job job) {
+  //   final company = widget.companyName ?? "Company";
+  //   return _cardContainer(
+  //     child: Column(
+  //       crossAxisAlignment: CrossAxisAlignment.start,
+  //       children: [
+  //         Row(
+  //           children: const [
+  //             Icon(Icons.apartment_rounded, size: 18, color: Colors.blueAccent),
+  //         //     SizedBox(width: 8),
+  //         //     Text(
+  //         //       "About Company",
+  //         //       style: TextStyle(
+  //         //         color: Colors.white,
+  //         //         fontSize: 15,
+  //         //         fontWeight: FontWeight.w600,
+  //         //       ),
+  //         //     ),
+  //         //   ],
+  //         // ),
+  //   //       const SizedBox(height: 10),
+  //   //       Text(
+  //   //         "$company is a leading organization focused on innovation, growth and excellence. Join the team to work on impactful, cutting-edge projects.",
+  //   //         style: const TextStyle(
+  //   //           color: Colors.grey,
+  //   //           fontSize: 12,
+  //   //           height: 1.5,
+  //   //         ),
+  //   //       ),
+  //   //     ],
+  //   //   ),
+  //   // );
+  // }
 
   // ============================================================
   // ALUMNI SECTION (logic preserved)
@@ -1273,6 +1273,88 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
         email: r.candidatePosted?.email,
         phone: r.candidatePosted?.phone,
       ),
+    );
+  }
+}
+class AnimatedMatchScore extends StatefulWidget {
+  final int score;
+  const AnimatedMatchScore({super.key, required this.score});
+
+  @override
+  State<AnimatedMatchScore> createState() => _AnimatedMatchScoreState();
+}
+
+class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _ctrl;
+  late final Animation<double> _anim;
+
+  @override
+  void initState() {
+    super.initState();
+    final target = (widget.score.clamp(0, 100) / 100);
+
+    _ctrl = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+
+    _anim = Tween<double>(begin: 0.0, end: target).animate(
+      CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
+    );
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => _ctrl.forward());
+  }
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _anim,
+      builder: (context, _) {
+        final displayed = (_anim.value * 100).round();
+        return SizedBox(
+          width: 80,
+          height: 80,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              SizedBox(
+                width: 80,
+                height: 80,
+                child: CircularProgressIndicator(
+                  value: _anim.value,          // animated 0 → target
+                  strokeWidth: 6,
+                  backgroundColor: Colors.white.withOpacity(0.08),
+                  valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
+                ),
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    '$displayed%',         // counts up live
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Match Score',
+                    style: TextStyle(color: AppColors.kGreen, fontSize: 9),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 }

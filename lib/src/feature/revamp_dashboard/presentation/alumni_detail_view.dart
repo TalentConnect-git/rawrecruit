@@ -443,6 +443,7 @@ SizedBox(
 
             /// EDUCATION + METRICS
          /// METRICS
+/// METRICS
 _modernCard(
   title: "Metrics",
   icon: Icons.analytics_outlined,
@@ -470,36 +471,37 @@ _modernCard(
 
           const Spacer(),
 
-          Container(
-            width: 8,
-            height: 8,
+          Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
 
-            decoration: BoxDecoration(
-              color: isHiring
-                  ? Colors.green
-                  : Colors.red,
+              Text(
+                isHiring
+                    ? "Hiring"
+                    : "Inactive",
+                style: TextStyle(
+                  color: isHiring
+                      ? Colors.green
+                      : Colors.red,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+                            const SizedBox(width: 6),
 
-              shape: BoxShape.circle,
-            ),
-          ),
+              Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  color: isHiring
+                      ? Colors.green
+                      : Colors.red,
+                  shape: BoxShape.circle,
+                ),
+              ),
 
-          const SizedBox(width: 6),
 
-          Text(
-            isHiring
-                ? "Hiring"
-                : "Inactive",
-
-            style: TextStyle(
-              color: isHiring
-                  ? Colors.green
-                  : Colors.red,
-
-              fontSize: 12,
-
-              fontWeight:
-                  FontWeight.w600,
-            ),
+            ],
           ),
         ],
       ),
@@ -862,68 +864,35 @@ const SizedBox(height: 18),
       ),
     );
   }
+Widget _metricRow(
+  String title,
+  String value,
+) {
+  return Row(
+    children: [
 
-  Widget _metricRow(
-    String title,
-    String value,
-  ) {
-    return Row(
-      children: [
-
-        Text(
-          title,
-          style: const TextStyle(
-            color: Colors.grey,
-            fontSize: 12,
-          ),
+      Text(
+        title,
+        style: const TextStyle(
+          color: Colors.grey,
+          fontSize: 12,
         ),
-
-        const Spacer(),
-
-        Flexible(
-          child: Text(
-            value,
-            overflow:
-                TextOverflow.ellipsis,
-            style:
-                const TextStyle(
-              color:
-                  Colors.white,
-              fontSize: 12,
-              fontWeight:
-                  FontWeight.w600,
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _skillChip(
-      String skill) {
-    return Container(
-      padding:
-          const EdgeInsets.symmetric(
-        horizontal: 14,
-        vertical: 6,
       ),
-      decoration: BoxDecoration(
-        color:
-            Colors.white.withOpacity(
-                .06),
-        borderRadius:
-            BorderRadius.circular(
-                30),
-      ),
-      child: Text(
-        skill,
+
+      const Spacer(),
+
+      Text(
+        value,
+        textAlign: TextAlign.right,
         style: const TextStyle(
           color: Colors.white,
-          fontSize: 11,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
         ),
       ),
-    );
-  }
+    ],
+  );
+}
 
   Widget _jobTile(
     BuildContext context,

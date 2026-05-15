@@ -92,6 +92,7 @@ _Metrics _$MetricsFromJson(Map<String, dynamic> json) => _Metrics(
       ?.toInt(),
   totalReferredToCompany: (json['totalReferredToCompany'] as num?)?.toInt(),
   totalAcceptedByCompany: (json['totalAcceptedByCompany'] as num?)?.toInt(),
+  totalInterviewScheduled: (json['totalInterviewScheduled'] as num?)?.toInt(),
   responseRate: (json['responseRate'] as num?)?.toInt(),
   referralSuccessRate: (json['referralSuccessRate'] as num?)?.toInt(),
 );
@@ -100,6 +101,7 @@ Map<String, dynamic> _$MetricsToJson(_Metrics instance) => <String, dynamic>{
   'totalApplicationsReceived': instance.totalApplicationsReceived,
   'totalReferredToCompany': instance.totalReferredToCompany,
   'totalAcceptedByCompany': instance.totalAcceptedByCompany,
+  'totalInterviewScheduled': instance.totalInterviewScheduled,
   'responseRate': instance.responseRate,
   'referralSuccessRate': instance.referralSuccessRate,
 };

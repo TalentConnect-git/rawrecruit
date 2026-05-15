@@ -15,7 +15,7 @@ abstract class User with _$User {
     @JsonKey(name: '_id') String? id,
     String? userId,
     @JsonKey(name: '__v') int? v,
-
+String? companyEmail,
     List<Achievement>? achievements,
     List<Award>? awards,
     List<Publication>? publications,

@@ -335,8 +335,97 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                     ),
                   ),
 
-                  const SizedBox(height: 18),
+                  const SizedBox(height: 5),
+if ((user.email?.isNotEmpty ?? false)) ...[
+  const SizedBox(height: 18),
 
+  GestureDetector(
+    onTap: () async {
+      final uri = Uri(
+        scheme: 'mailto',
+        path: user.email,
+      );
+
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+      }
+    },
+
+    child: Container(
+      width: double.infinity,
+
+      padding: const EdgeInsets.all(16),
+
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
+
+        borderRadius: BorderRadius.circular(18),
+
+        border: Border.all(
+          color: Colors.white.withOpacity(.05),
+        ),
+      ),
+
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+
+            decoration: BoxDecoration(
+              color: AppColors.kGreen.withOpacity(.12),
+
+              borderRadius: BorderRadius.circular(14),
+            ),
+
+            child: Icon(
+              Icons.email_outlined,
+              color: AppColors.kGreen,
+            ),
+          ),
+
+          const SizedBox(width: 14),
+
+          Expanded(
+            child: Column(
+              crossAxisAlignment:
+                  CrossAxisAlignment.start,
+
+              children: [
+                const Text(
+                  "Official Email",
+
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 11,
+                  ),
+                ),
+
+                const SizedBox(height: 4),
+
+                Text(
+                  user.email!,
+
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const Icon(
+            Icons.open_in_new,
+            color: Colors.grey,
+            size: 18,
+          ),
+        ],
+      ),
+    ),
+  ),
+],
+SizedBox(height: 18,),
                   /// DETAILS GRID
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -382,7 +471,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                 "Current Company",
                                 user.currentCompany,
                               ),
-                              _detailTile("Email", user.email),
 
                               _detailTile("Phone", user.phone),
 

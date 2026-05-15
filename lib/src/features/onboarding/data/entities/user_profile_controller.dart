@@ -53,6 +53,7 @@ class UserController {
       visaStatus = TextEditingController(),
 currentCompany = TextEditingController(),
 noticePeriod = TextEditingController(),
+companyEmail = TextEditingController(),
 noticePeriodStartDate = TextEditingController();
   /// Basic Fields
   TextEditingController id;
@@ -115,6 +116,7 @@ List<InternationalExperienceController>
 bool servingNoticePeriod = false;
 TextEditingController currentCompany;
 TextEditingController noticePeriod;
+TextEditingController companyEmail;
 TextEditingController noticePeriodStartDate;
   Map<String, dynamic> toMap() {
     String? clean(String? v) => v == null || v.trim().isEmpty ? null : v.trim();
@@ -160,6 +162,7 @@ TextEditingController noticePeriodStartDate;
       'name': clean(name.text),
       'openToShift': clean(openToShift.text),
       'currentCompany': clean(currentCompany.text),
+      'companyEmail': clean(companyEmail.text),
 'noticePeriod': clean(noticePeriod.text),
 'noticePeriodStartDate':
     clean(noticePeriodStartDate.text),
@@ -372,6 +375,7 @@ TextEditingController noticePeriodStartDate;
     visaStatus.dispose();
     noticePeriodStartDate.dispose();
 currentCompany.dispose();
+companyEmail.dispose();
 noticePeriod.dispose();
     for (final controller in domainKnowledge) {
       controller.dispose();

@@ -12,7 +12,6 @@ import '../../../features/professional/job_postng/presentation/widgets/referred_
 class ProfessionalReferralView extends StatefulWidget {
   const ProfessionalReferralView({this.selectedType, super.key});
   final ProfessionalReferrerApplicationType? selectedType;
-
   @override
   State<ProfessionalReferralView> createState() =>
       _ProfessionalReferralViewState();
@@ -63,7 +62,36 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
                 children: [
                   _buildTabs(context),
                   const SizedBox(height: 10),
-                  Expanded(child: _buildBody()),
+              Expanded(
+  child: Builder(
+    builder: (context) {
+      return RefreshIndicator(
+        color: AppColors.kGreen,
+
+        onRefresh: () async {
+          final vm =
+              context.read<ApplicationViewModel>();
+
+          await vm.fetchApplications();
+
+          if (selectedTab ==
+              ProfessionalReferrerApplicationType
+                  .requestsReceived) {
+            await vm.fetchReferralRequests();
+          }
+
+          if (selectedTab ==
+              ProfessionalReferrerApplicationType
+                  .referredByMe) {
+            await vm.fetchReferredByMe();
+          }
+        },
+
+        child: _buildBody(),
+      );
+    },
+  ),
+),
                 ],
               ),
             ),
@@ -126,7 +154,21 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
       ),
     );
   }
+Future<void> _refresh() async {
+  final vm = context.read<ApplicationViewModel>();
 
+  await vm.fetchApplications();
+
+  if (selectedTab ==
+      ProfessionalReferrerApplicationType.requestsReceived) {
+    await vm.fetchReferralRequests();
+  }
+
+  if (selectedTab ==
+      ProfessionalReferrerApplicationType.referredByMe) {
+    await vm.fetchReferredByMe();
+  }
+}
   /// 🔥 BODY SWITCH
   Widget _buildBody() {
     switch (selectedTab) {
@@ -148,15 +190,24 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
         }
 
         if (vm.referralApplications.isEmpty) {
-          return const Center(
-            child: Text(
-              "No requests received",
-              style: TextStyle(color: Colors.grey),
-            ),
-          );
+         return ListView(
+  physics: const AlwaysScrollableScrollPhysics(),
+
+  children: const [
+    SizedBox(height: 250),
+
+    Center(
+      child: Text(
+        "No requests received",
+        style: TextStyle(color: Colors.grey),
+      ),
+    ),
+  ],
+);
         }
 
         return ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: vm.referralApplications.length,
           itemBuilder: (context, index) {
             final app = vm.referralApplications[index];
@@ -176,15 +227,24 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
         }
 
         if (vm.appliedApplications.isEmpty) {
-          return const Center(
-            child: Text(
-              "No applications found",
-              style: TextStyle(color: Colors.grey),
-            ),
-          );
+       return ListView(
+  physics: const AlwaysScrollableScrollPhysics(),
+
+  children: const [
+    SizedBox(height: 250),
+
+    Center(
+      child: Text(
+        "No applications found",
+        style: TextStyle(color: Colors.grey),
+      ),
+    ),
+  ],
+);
         }
 
         return ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: vm.appliedApplications.length,
           itemBuilder: (context, index) {
             final job = vm.appliedApplications[index];
@@ -204,15 +264,24 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
         }
 
         if (vm.referredByMe.isEmpty) {
-          return const Center(
-            child: Text(
-              "No referred candidates",
-              style: TextStyle(color: Colors.grey),
-            ),
-          );
+          return ListView(
+  physics: const AlwaysScrollableScrollPhysics(),
+
+  children: const [
+    SizedBox(height: 250),
+
+    Center(
+      child: Text(
+        "No referred candidates",
+        style: TextStyle(color: Colors.grey),
+      ),
+    ),
+  ],
+);
         }
 
         return ListView.builder(
+          physics: const AlwaysScrollableScrollPhysics(),
           itemCount: vm.referredByMe.length,
           itemBuilder: (context, index) {
             final app = vm.referredByMe[index];

@@ -66,7 +66,8 @@ class AddEditProfileViewModel extends ViewStateProvider {
 
     c.currentCompany.text =
         user.currentCompany ?? '';
-
+c.companyEmail.text =
+    user.companyEmail ?? '';
     c.noticePeriod.text =
         user.noticePeriod ?? '';
 c.noticePeriodStartDate.text =

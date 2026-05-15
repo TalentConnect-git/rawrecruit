@@ -173,7 +173,38 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
             .toList();
 
         final mixed = [...referrals, ...internships, ...offCampus];
-        return ListView(
+     return RefreshIndicator(
+  color: AppColors.kGreen,
+
+  onRefresh: () async {
+    await context.read<DashboardViewModel>().getJobs();
+
+    await context.read<DashboardViewModel>().getInternships();
+
+    await context
+        .read<DashboardViewModel>()
+        .fetchProfessionalData();
+
+    await context.read<DashboardViewModel>().getAlumniData();
+
+    await context.read<ShortlistViewModel>().fetchSaved();
+
+    await context
+        .read<ApplicationViewModel>()
+        .fetchApplications();
+await context
+    .read<MyProfileViewModel>()
+    .getCandidateStats();
+
+await context
+    .read<MyProfileViewModel>()
+    .getCareerInsights();
+  },
+
+  child: ListView(
+    physics: const AlwaysScrollableScrollPhysics(),
+
+
           children: [
             /// 🔥 MY APPLICATIONS SECTION
             _SectionHeader(
@@ -347,8 +378,9 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                 },
               );
             }),
-          ],
-        );
+                   ],
+        ),
+      );
       },
     );
   }

@@ -33,6 +33,7 @@ class _CareerPageState extends State<CareerPage> {
 
   final Map<int, String> expCompanySearch = {};
   late TextEditingController currentCompanyCtrl;
+  late TextEditingController companyEmailCtrl;
   late TextEditingController noticePeriodCtrl;
 
   String? certifications;
@@ -52,7 +53,7 @@ class _CareerPageState extends State<CareerPage> {
 
     /// 🔥 EMPTY CONTROLLERS
     currentSalaryCtrl = TextEditingController();
-
+companyEmailCtrl = TextEditingController();
  currentCurrencyCtrl =
     TextEditingController(text: '₹');
 
@@ -97,7 +98,7 @@ servingNoticePeriod =
     aboutCtrl.text = d.about ?? '';
 
     currentCompanyCtrl.text = d.currentCompany ?? '';
-
+    companyEmailCtrl.text = d.companyEmail ?? '';
     noticePeriodCtrl.text = d.noticePeriod ?? '';
 
     certifications = d.certifications;
@@ -158,7 +159,7 @@ servingNoticePeriod =
 
     final updatedUser = currentUser.copyWith(
       openToShift: shift,
-
+companyEmail: companyEmailCtrl.text,
       currentSalaryAmount: currentSalaryCtrl.text,
 
       currentSalaryCurrency: currentCurrencyCtrl.text,
@@ -234,7 +235,7 @@ servingNoticePeriod:
   void dispose() {
     currentSalaryCtrl.dispose();
     currentCurrencyCtrl.dispose();
-
+companyEmailCtrl.dispose();
     expectedSalaryCtrl.dispose();
     expectedCurrencyCtrl.dispose();
 
@@ -370,6 +371,14 @@ bool servingNoticePeriod = false;
   ),
 
   const SizedBox(height: 12),
+
+AppInput(
+  "Official Company Email",
+  controller: companyEmailCtrl,
+  keyboardType: TextInputType.emailAddress,
+  onChanged: (_) => saveData(),
+),
+const SizedBox(height: 12),
 
   AppInput(
     "Notice Period (Days)",

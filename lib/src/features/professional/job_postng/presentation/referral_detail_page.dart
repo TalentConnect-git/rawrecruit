@@ -6,6 +6,7 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/posted_job_application_view_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/utils/enum.dart';
+import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ReferralDetailPage extends StatelessWidget {
@@ -338,7 +339,7 @@ if (context.mounted) {
                           },
                           icon: const Icon(Icons.check),
                         label: const Text(
-  "Accept",
+  "Refer",
   style: TextStyle(
     color: Colors.white,
     fontWeight: FontWeight.w600,
@@ -565,67 +566,10 @@ if (context.mounted) {
 
               const SizedBox(width: 10),
 
-              /// SCORE
-              SizedBox(
-                width: 80,
-                height: 80,
-                child: Stack(
-                  alignment:
-                      Alignment.center,
-                  children: [
-
-                    SizedBox(
-                      width: 80,
-                      height: 80,
-                      child:
-                          CircularProgressIndicator(
-                        value:
-                            (match / 100),
-                        strokeWidth: 6,
-                        backgroundColor:
-                            Colors.white
-                                .withOpacity(
-                                    .08),
-                        valueColor:
-                            AlwaysStoppedAnimation(
-                          AppColors.kGreen,
-                        ),
-                      ),
-                    ),
-
-                    Column(
-                      mainAxisSize:
-                          MainAxisSize.min,
-                      children: [
-
-                        Text(
-                          "$match%",
-                          style:
-                              const TextStyle(
-                            color:
-                                Colors.white,
-                            fontWeight:
-                                FontWeight
-                                    .bold,
-                            fontSize: 18,
-                          ),
-                        ),
-
-                        Text(
-                          "Match",
-                          style:
-                              TextStyle(
-                            color:
-                                AppColors
-                                    .kGreen,
-                            fontSize: 10,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+             /// ANIMATED SCORE
+AnimatedMatchScore(
+  score: match,
+),
             ],
           ),
 

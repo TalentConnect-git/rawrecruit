@@ -135,7 +135,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         "My Posted Jobs",
                         Icons.work,
                         onTap: () {
-                          context.goNamed(
+                          context.pushNamed(
                             RouteNames.application,
                             extra: {
                               'userType': UserType.professional,
@@ -149,7 +149,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         "Referrals",
                         Icons.share,
                         onTap: () {
-                          context.goNamed(
+                          context.pushNamed(
                             RouteNames.referrer,
                             extra: {'userType': UserType.professional},
                           );
@@ -161,7 +161,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                       "Alumni Network",
                       Icons.group,
                       onTap: () {
-                        context.goNamed(RouteNames.shortlist);
+                        context.pushNamed(RouteNames.shortlist);
                       },
                     ),
                     _menuItem(
@@ -176,13 +176,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         );
                       },
                     ),
-                    _menuItem(
-                      "Notifications",
-                      Icons.notifications,
-                      onTap: () {
-                        context.pushNamed(RouteNames.notification);
-                      },
-                    ),
+                
 
                     const SizedBox(height: 20),
 
@@ -199,237 +193,267 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
   }
 
   /// 🔥 TOP SECTION (CONNECTED TO BACKEND)
-  Widget _topProfileSection(User? p) {
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: AppColors.kCard,
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AppColors.kBorder),
-      ),
-      child: Column(
-        children: [
-          /// Avatar
-          SizedBox(
-            height: 64,
-            width: 64,
-            child: ProfileImage(
-              imagePath: p?.profileImage ?? '',
-              onImageSelected: null,
-            ),
+  /// 🔥 TOP SECTION (CONNECTED TO BACKEND)
+Widget _topProfileSection(User? p) {
+  return Container(
+    width: double.infinity,
+    padding: const EdgeInsets.all(20),
+    decoration: BoxDecoration(
+      color: AppColors.kCard,
+      borderRadius: BorderRadius.circular(20),
+      border: Border.all(color: AppColors.kBorder),
+    ),
+    child: Column(
+      children: [
+        /// Avatar
+        SizedBox(
+          height: 64,
+          width: 64,
+          child: ProfileImage(
+            imagePath: p?.profileImage ?? '',
+            onImageSelected: null,
           ),
-          const SizedBox(height: 10),
+        ),
 
-          /// Name
-          Text(
-            p?.name ?? "-",
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 16,
-            ),
-          ),
+        const SizedBox(height: 14),
 
-          const SizedBox(height: 8),
-          if (getIt<AppStateProvider>().isProfessional)
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(60),
-                border: Border.all(color: AppColors.white, width: 0.5),
-                color: const Color(0xff222222),
-              ),
+        /// NAME + VERIFIED TICK
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Flexible(
               child: Text(
-                p?.emailVerified ?? false
-                    ? 'Verified'
-                    : 'Unverified Professional',
-                style: AppTextStyles.s12W400.copyWith(color: AppColors.white),
-              ),
-            ),
-          const SizedBox(height: 12),
-
-          /// 🔥 Resume Button
-          if ((p?.resume ?? '').isNotEmpty)
-            GestureDetector(
-              onTap: () {
-                final url = p!.resume!;
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (_) => ResumeViewerPage(url: url)),
-                );
-              },
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                decoration: BoxDecoration(
-                  color: AppColors.kGreen,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(Icons.download, color: Colors.black, size: 16),
-                    SizedBox(width: 6),
-                    Text(
-                      "View Resume",
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
+                p?.name ?? "-",
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
                 ),
               ),
             ),
 
-          const SizedBox(height: 10),
-
-          /// Role (you can map from backend later)
-          /// Info Section
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              /// ROLE • COMPANY
-              Text(
-                getIt<AppStateProvider>().isProfessional
-                    ? '${p?.jobRoles?.firstOrNull ?? p?.designation ?? 'Role'} • ${p?.currentCompany ?? '-'}'
-                    : '${p?.degree ?? 'Student'} • ${p?.college ?? '-'}',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey[400], fontSize: 12),
+            if (p?.emailVerified ?? false) ...[
+              const SizedBox(width: 6),
+              const Icon(
+                Icons.verified,
+                color: Colors.blue,
+                size: 18,
               ),
+            ],
+          ],
+        ),
 
-              const SizedBox(height: 4),
+        const SizedBox(height: 14),
 
-              /// LOCATION
-              Text(
-                p?.locations?.join(', ') ?? '-',
-                textAlign: TextAlign.center,
-                style: TextStyle(color: Colors.grey[500], fontSize: 11),
+        /// 🔥 VIEW RESUME BUTTON
+        if ((p?.resume ?? '').isNotEmpty)
+          GestureDetector(
+            onTap: () {
+              final url = p!.resume!;
+
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => ResumeViewerPage(url: url),
+                ),
+              );
+            },
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 8,
               ),
-
-              const SizedBox(height: 10),
-
-              /// 🔥 SOCIAL ICONS CENTERED BELOW LOCATION
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  /// GITHUB
-                  if ((p?.github ?? '').isNotEmpty)
-                    GestureDetector(
-                      onTap: () async {
-                        final raw = p?.github ?? '';
-                        final formattedUrl = raw.startsWith('http')
-                            ? raw
-                            : 'https://$raw';
-
-                        await launchUrl(
-                          Uri.parse(formattedUrl),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: Image.asset(
-                          'assets/images/github.png',
-                          height: 22,
-                          width: 22,
-                        ),
-                      ),
+              decoration: BoxDecoration(
+                color: AppColors.kGreen,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: const [
+                  Icon(
+                    Icons.download,
+                    color: Colors.black,
+                    size: 16,
+                  ),
+                  SizedBox(width: 6),
+                  Text(
+                    "View Resume",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
                     ),
-
-                  /// LINKEDIN
-                  if ((p?.linkedin ?? '').isNotEmpty)
-                    GestureDetector(
-                      onTap: () async {
-                        final raw = p?.linkedin ?? '';
-                        final formattedUrl = raw.startsWith('http')
-                            ? raw
-                            : 'https://$raw';
-
-                        await launchUrl(
-                          Uri.parse(formattedUrl),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: Image.asset(
-                          'assets/images/linkedin.png',
-                          height: 22,
-                          width: 22,
-                        ),
-                      ),
-                    ),
-
-                  /// PORTFOLIO
-                  if ((p?.portfolio ?? '').isNotEmpty)
-                    GestureDetector(
-                      onTap: () async {
-                        final raw = p?.portfolio ?? '';
-                        final formattedUrl = raw.startsWith('http')
-                            ? raw
-                            : 'https://$raw';
-
-                        await launchUrl(
-                          Uri.parse(formattedUrl),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: Image.asset(
-                          'assets/images/portfolio.png',
-                          height: 22,
-                          width: 22,
-                        ),
-                      ),
-                    ),
-
-                  /// RESUME
-                  if ((p?.resume ?? '').isNotEmpty)
-                    GestureDetector(
-                      onTap: () async {
-                        final raw = p?.resume ?? '';
-                        final formattedUrl = raw.startsWith('http')
-                            ? raw
-                            : 'https://$raw';
-
-                        await launchUrl(
-                          Uri.parse(formattedUrl),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 6),
-                        child: Image.asset(
-                          'assets/images/cv.png',
-                          height: 22,
-                          width: 22,
-                        ),
-                      ),
-                    ),
+                  ),
                 ],
               ),
-              SizedBox(height: 5),
-
-              /// COLLEGE
-              if (getIt<AppStateProvider>().isProfessional)
-                Text(
-                  'College: ${p?.college ?? '-'}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.grey[500], fontSize: 11),
-                ),
-            ],
+            ),
           ),
-        ],
-      ),
-    );
-  }
+
+        const SizedBox(height: 14),
+
+        /// LOCATION WITH ICON
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.location_on_outlined,
+              color: Colors.grey[400],
+              size: 15,
+            ),
+
+            const SizedBox(width: 4),
+
+            Flexible(
+              child: Text(
+                p?.locations?.join(', ') ?? '-',
+                textAlign: TextAlign.center,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: Colors.grey[400],
+                  fontSize: 12,
+                ),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 8),
+
+        /// COMPANY NAME • ROLE
+        Text(
+          getIt<AppStateProvider>().isProfessional
+              ? '${p?.currentCompany ?? '-'} • ${p?.jobRoles?.firstOrNull ?? p?.designation ?? 'Role'}'
+              : '${p?.college ?? '-'} • ${p?.degree ?? 'Student'}',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.grey[300],
+            fontSize: 13,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+
+        const SizedBox(height: 8),
+
+        /// COLLEGE NAME
+        if ((p?.college ?? '').isNotEmpty)
+          Text(
+            p?.college ?? '-',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.grey[500],
+              fontSize: 15,
+            ),
+          ),
+
+        const SizedBox(height: 14),
+
+        /// 🔥 SOCIAL LINKS ICONS
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            /// GITHUB
+            if ((p?.github ?? '').isNotEmpty)
+              GestureDetector(
+                onTap: () async {
+                  final raw = p?.github ?? '';
+                  final formattedUrl = raw.startsWith('http')
+                      ? raw
+                      : 'https://$raw';
+
+                  await launchUrl(
+                    Uri.parse(formattedUrl),
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Image.asset(
+                    'assets/images/github.png',
+                    height: 22,
+                    width: 22,
+                  ),
+                ),
+              ),
+
+            /// LINKEDIN
+            if ((p?.linkedin ?? '').isNotEmpty)
+              GestureDetector(
+                onTap: () async {
+                  final raw = p?.linkedin ?? '';
+                  final formattedUrl = raw.startsWith('http')
+                      ? raw
+                      : 'https://$raw';
+
+                  await launchUrl(
+                    Uri.parse(formattedUrl),
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Image.asset(
+                    'assets/images/linkedin.png',
+                    height: 22,
+                    width: 22,
+                  ),
+                ),
+              ),
+
+            /// PORTFOLIO
+            if ((p?.portfolio ?? '').isNotEmpty)
+              GestureDetector(
+                onTap: () async {
+                  final raw = p?.portfolio ?? '';
+                  final formattedUrl = raw.startsWith('http')
+                      ? raw
+                      : 'https://$raw';
+
+                  await launchUrl(
+                    Uri.parse(formattedUrl),
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Image.asset(
+                    'assets/images/portfolio.png',
+                    height: 22,
+                    width: 22,
+                  ),
+                ),
+              ),
+
+            /// RESUME ICON
+            if ((p?.resume ?? '').isNotEmpty)
+              GestureDetector(
+                onTap: () async {
+                  final raw = p?.resume ?? '';
+                  final formattedUrl = raw.startsWith('http')
+                      ? raw
+                      : 'https://$raw';
+
+                  await launchUrl(
+                    Uri.parse(formattedUrl),
+                    mode: LaunchMode.externalApplication,
+                  );
+                },
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 6),
+                  child: Image.asset(
+                    'assets/images/cv.png',
+                    height: 22,
+                    width: 22,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _statsGrid(MyProfileViewModel vm) {
     final appState = getIt<AppStateProvider>();
