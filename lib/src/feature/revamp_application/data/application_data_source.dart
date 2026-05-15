@@ -7,7 +7,11 @@ abstract class ApplicationDataSource {
   ResultFuture<List<Job>> fetchAppliedJobs();
   ResultFuture<List<Job>> fetchReferralAppliedJobs();
   ResultFuture<List<Job>> fetchInternshipAppliedJobs();
-  ResultFuture<void> applyReferral(String referralId, int? matchScore);
+  ResultFuture<void> applyReferral(
+    String referralId,
+    int? matchScore,
+    String companyName,
+  );
   ResultFuture<void> applyInternship(String jobId);
   ResultFuture<List<ReferralApplication>> fetchReferralApplications();
   ResultFuture<List<ReferralApplication>> fetchReferredByMe();

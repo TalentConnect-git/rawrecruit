@@ -209,7 +209,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
             ),
 
             SizedBox(
-              height: 240,
+              height: 260,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
                 itemCount: vm.groupedAlumni.values.take(3).length,
@@ -244,6 +244,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                 onApply: () => applicationVM.apply(
                   jobId: job.id ?? '',
                   jobType: 'Referral',
+                  companyName: job.companyName ?? '',
                 ),
                 onTap: () {
                   context.pushNamed(RouteNames.referralDetail, extra: job.id);
@@ -282,6 +283,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                 onApply: () => applicationVM.apply(
                   jobId: job.id ?? '',
                   jobType: "Internship",
+                  companyName: job.companyName ?? '',
                 ),
                 onBookmarkToggle: () {
                   shortlistVM.toggleSave(
@@ -327,6 +329,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                 onApply: () => applicationVM.apply(
                   jobId: job.id ?? '',
                   jobType: 'Off-campus',
+                  companyName: job.companyName ?? '',
                 ),
                 onBookmarkToggle: () {
                   shortlistVM.toggleSave(

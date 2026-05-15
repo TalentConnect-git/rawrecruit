@@ -59,12 +59,12 @@ class _ShortlistViewState extends State<ShortlistView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                     Text(
+                    Text(
                       "Saved Opportunities",
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
-                        color: AppColors.white
+                        color: AppColors.white,
                       ),
                     ),
 
@@ -91,7 +91,8 @@ class _ShortlistViewState extends State<ShortlistView> {
                                 );
 
                                 return JobCard(
-                               job: job,
+                                  job: job,
+
                                   /// Bookmark
                                   isSaved: isSaved,
                                   onBookmarkToggle: () {
@@ -104,10 +105,12 @@ class _ShortlistViewState extends State<ShortlistView> {
 
                                   /// Apply
                                   isApplied: isApplied,
-                                 onApply: () => applicationVM.apply(
-  jobId: job.id ?? '',
-  jobType: item.jobType ?? '' // or pass manually
-),
+                                  onApply: () => applicationVM.apply(
+                                    jobId: job.id ?? '',
+                                    jobType:
+                                        item.jobType ?? '', // or pass manually
+                                    companyName: job.companyName ?? '',
+                                  ),
 
                                   onTap: () {
                                     context.pushNamed(

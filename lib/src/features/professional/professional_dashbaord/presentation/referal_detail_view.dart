@@ -158,6 +158,11 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                               jobId: jobId,
                               jobType: "Referral",
                               matchScore: job.matchScore,
+                              companyName:
+                                  widget.companyName ??
+                                  referral?.candidatePosted?.currentCompany ??
+                                  job.candidatePosted?.currentCompany ??
+                                  '',
                             ),
                       icon: Icon(
                         isApplied ? Icons.check_circle : Icons.send_rounded,

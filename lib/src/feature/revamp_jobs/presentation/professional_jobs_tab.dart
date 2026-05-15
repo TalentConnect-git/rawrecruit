@@ -158,6 +158,7 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
                     onApply: () => applicationVM.apply(
                       jobId: job.id ?? '',
                       jobType: "Off-campus",
+                      companyName: job.companyName ?? '',
                     ),
                     onBookmarkToggle: () {
                       shortlistVM.toggleSave(
@@ -206,6 +207,7 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
                   onApply: () => applicationVM.apply(
                     jobId: job.id ?? '',
                     jobType: "Referral",
+                    companyName: job.companyName ?? '',
                   ),
                   onBookmarkToggle: () {
                     shortlistVM.toggleSave(
@@ -284,6 +286,7 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
               onApply: () => applicationVM.apply(
                 jobId: job.id ?? '',
                 jobType: item.jobType ?? "Off-campus",
+                companyName: job.companyName ?? '',
               ),
               onBookmarkToggle: () {
                 vm.toggleSave(

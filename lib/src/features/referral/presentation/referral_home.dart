@@ -11,7 +11,6 @@ import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job
 import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/my_job_card.dart';
-import 'package:rawrecruit/src/features/referral/data/entities/incoming_request.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
 import 'package:rawrecruit/src/features/referral/presentation/widgets/incoming_request_card.dart';
 
@@ -213,34 +212,36 @@ class _ReferralHomeState extends State<ReferralHome> {
 
                   /// 🔥 MY POSTED JOBS SECTION
                   const SizedBox(height: 24),
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Text(
-      'Alumni Hiring Network',
-      style: AppTextStyles.s16W600.copyWith(color: Colors.white),
-    ),
-    GestureDetector(
-      onTap: () {
-        context.pushNamed(RouteNames.shortlist);
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 4,
-        ),
-        child: Text(
-          'View All',
-          style: AppTextStyles.s14W600.copyWith(
-            color: AppColors.kGreen,
-          ),
-        ),
-      ),
-    ),
-  ],
-),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Alumni Hiring Network',
+                        style: AppTextStyles.s16W600.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context.pushNamed(RouteNames.shortlist);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          child: Text(
+                            'View All',
+                            style: AppTextStyles.s14W600.copyWith(
+                              color: AppColors.kGreen,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
 
-const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   Consumer<DashboardViewModel>(
                     builder: (context, vm, _) {
@@ -271,44 +272,46 @@ const SizedBox(height: 12),
                   const SizedBox(height: 24),
 
                   /// Jobs Section
-             /// Jobs Section
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Text(
-      'Jobs For You',
-      style: AppTextStyles.s16W600.copyWith(color: Colors.white),
-    ),
-    GestureDetector(
-      onTap: () {
-  context.pushNamed(
-  RouteNames.application,
-  extra: {
-    'userType': UserType.professional,
-    'jobType': ProfessionalJobType.available,
-  },
-);
-},
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 4,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Text(
-          'View All',
-          style: AppTextStyles.s14W600.copyWith(
-            color: AppColors.kGreen,
-          ),
-        ),
-      ),
-    ),
-  ],
-),
+                  /// Jobs Section
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Jobs For You',
+                        style: AppTextStyles.s16W600.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context.pushNamed(
+                            RouteNames.application,
+                            extra: {
+                              'userType': UserType.professional,
+                              'jobType': ProfessionalJobType.available,
+                            },
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            'View All',
+                            style: AppTextStyles.s14W600.copyWith(
+                              color: AppColors.kGreen,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
 
-const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   Consumer<PostedJobViewModel>(
                     builder: (context, vm, _) {
@@ -347,7 +350,9 @@ const SizedBox(height: 12),
                             isApplied: isApplied,
                             onApply: () => applicationVM.apply(
                               jobId: job.id ?? '',
-                              jobType: 'Referral', // or pass manually
+                              jobType: 'Referral',
+                              companyName:
+                                  job.companyName ?? '', // or pass manually
                             ),
                             onBookmarkToggle: () {
                               shortlistVM.toggleSave(
@@ -356,23 +361,18 @@ const SizedBox(height: 12),
                                 isSaved: isSaved,
                               );
                             },
-                          onTap: () {
+                            onTap: () {
+                              final candidate = job.candidatePosted;
 
-  final candidate =
-      job.candidatePosted;
+                              final company =
+                                  candidate?.currentCompany?.trim() ?? "";
 
-  final company =
-      candidate?.currentCompany
-              ?.trim() ??
-          "";
+                              context.pushNamed(
+                                RouteNames.referralDetail,
 
-  context.pushNamed(
-    RouteNames.referralDetail,
-
-    extra:
-        "${job.id}|||$company",
-  );
-},
+                                extra: "${job.id}|||$company",
+                              );
+                            },
                           );
                         },
                       );
@@ -380,43 +380,45 @@ const SizedBox(height: 12),
                   ),
 
                   const SizedBox(height: 24),
-Row(
-  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  children: [
-    Text(
-      'My Posted Jobs',
-      style: AppTextStyles.s16W600.copyWith(color: Colors.white),
-    ),
-    GestureDetector(
-    onTap: () {
- context.pushNamed(
-  RouteNames.application,
-  extra: {
-    'userType': UserType.professional,
-    'jobType': ProfessionalJobType.posted,
-  },
-);
-},
-      child: Container(
-        padding: const EdgeInsets.symmetric(
-          horizontal: 12,
-          vertical: 4,
-        ),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        child: Text(
-          'View All',
-          style: AppTextStyles.s14W600.copyWith(
-            color: AppColors.kGreen,
-          ),
-        ),
-      ),
-    ),
-  ],
-),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'My Posted Jobs',
+                        style: AppTextStyles.s16W600.copyWith(
+                          color: Colors.white,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context.pushNamed(
+                            RouteNames.application,
+                            extra: {
+                              'userType': UserType.professional,
+                              'jobType': ProfessionalJobType.posted,
+                            },
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 12,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Text(
+                            'View All',
+                            style: AppTextStyles.s14W600.copyWith(
+                              color: AppColors.kGreen,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
 
-const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
                   Consumer<PostedJobViewModel>(
                     builder: (context, vm, _) {

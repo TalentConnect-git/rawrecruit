@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
+
 import '../../../../core/index.dart';
 
 class AlumniCard extends StatelessWidget {
@@ -10,37 +11,33 @@ class AlumniCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-if (jobs.isEmpty) {
-  return const SizedBox(); // or empty container
-}
+    if (jobs.isEmpty) {
+      return const SizedBox(); // or empty container
+    }
 
-final first = jobs.first;    final candidate = first.candidatePosted;
+    final first = jobs.first;
+    final candidate = first.candidatePosted;
 
     final name = candidate?.name ?? "User";
     final role = first.jobTitle ?? "Professional";
-final initials = name.trim().isNotEmpty
-    ? name
-        .trim()
-        .split(" ")
-        .where(
-          (e) => e.trim().isNotEmpty,
-        )
-        .map((e) => e[0])
-        .take(2)
-        .join()
-    : "U";
+    final initials = name.trim().isNotEmpty
+        ? name
+              .trim()
+              .split(" ")
+              .where((e) => e.trim().isNotEmpty)
+              .map((e) => e[0])
+              .take(2)
+              .join()
+        : "U";
 
-final referralJobs = candidate?.referralJobs ?? [];
-final jobCount = referralJobs.length;
-                                     final isHiring = jobCount > 0;
+    final referralJobs = candidate?.referralJobs ?? [];
+    final jobCount = referralJobs.length;
+    final isHiring = jobCount > 0;
 
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: () {
-        context.pushNamed(
-          "alumniDetail",
-          extra: jobs,
-        );
+        context.pushNamed("alumniDetail", extra: jobs);
       },
       child: Container(
         margin: const EdgeInsets.only(right: 14),
@@ -54,7 +51,6 @@ final jobCount = referralJobs.length;
         child: Column(
           mainAxisSize: MainAxisSize.min, // 🔥 prevents overflow
           children: [
-
             /// 🔹 TOP CONTENT
             Column(
               mainAxisSize: MainAxisSize.min,
@@ -102,59 +98,79 @@ final jobCount = referralJobs.length;
                 const SizedBox(height: 4),
 
                 /// DESIGNATION + COMPANY
-               Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    Flexible(
-      child: Text(
-(first.jobRoles != null &&
-        first.jobRoles!.isNotEmpty)
-    ? first.jobRoles!.first
-    : 'Designation',        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(color: Colors.grey, fontSize: 12),
-      ),
-    ),
-    const SizedBox(width: 4),
-    Flexible(
-      child: Text(
-        candidate?.currentCompany ?? 'Company', // ✅ FIXED
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(color: Colors.grey, fontSize: 12),
-      ),
-    ),
-  ],
-),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        (candidate?.jobRoles != null &&
+                                candidate!.jobRoles!.isNotEmpty)
+                            ? candidate.jobRoles!.first
+                            : '-',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 4),
+                    Flexible(
+                      child: Text(
+                        candidate?.currentCompany ?? 'Company', // ✅ FIXED
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        candidate?.college ?? '-',
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 8),
 
                 /// 🔹 HIRING STATUS
                 Row(
-
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: isHiring ? Colors.green : Colors.red,
+                        shape: BoxShape.circle,
+                      ),
+                    ),
 
-Container(
-  width: 8,
-  height: 8,
-  decoration: BoxDecoration(
-    color: isHiring ? Colors.green : Colors.red,
-    shape: BoxShape.circle,
-  ),
-),
+                    const SizedBox(width: 6),
 
-const SizedBox(width: 6),
-
-Text(
-  isHiring
-      ? "Hiring • $jobCount jobs"
-      : "Not Hiring",
-  style: TextStyle(
-    color: isHiring ? Colors.green : Colors.red,
-    fontSize: 12,
-    fontWeight: FontWeight.w500,
-  ),
-),
+                    Text(
+                      isHiring ? "Hiring • $jobCount jobs" : "Not Hiring",
+                      style: TextStyle(
+                        color: isHiring ? Colors.green : Colors.red,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
                   ],
                 ),
               ],
@@ -167,15 +183,14 @@ Text(
               behavior: HitTestBehavior.opaque,
               onTap: () {
                 if (candidate != null) {
-                  context.pushNamed(
-                    RouteNames.chatUser,
-                    extra: candidate,
-                  );
+                  context.pushNamed(RouteNames.chatUser, extra: candidate);
                 }
               },
               child: Container(
                 padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 6),
+                  horizontal: 12,
+                  vertical: 6,
+                ),
                 decoration: BoxDecoration(
                   color: AppColors.kGreen.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(20),
@@ -183,8 +198,7 @@ Text(
                 child: const Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.message,
-                        size: 14, color: Colors.green),
+                    Icon(Icons.message, size: 14, color: Colors.green),
                     SizedBox(width: 6),
                     Text(
                       "Message",

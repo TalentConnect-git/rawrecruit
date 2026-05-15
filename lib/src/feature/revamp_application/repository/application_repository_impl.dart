@@ -15,8 +15,12 @@ class ApplicationRepositoryImpl implements ApplicationRepository {
   }
 
   @override
-  ResultFuture<void> applyReferral(String referralId, int? matchScore) {
-    return _dataSource.applyReferral(referralId, matchScore);
+  ResultFuture<void> applyReferral(
+    String referralId,
+    int? matchScore,
+    String companyName,
+  ) {
+    return _dataSource.applyReferral(referralId, matchScore, companyName);
   }
 
   @override

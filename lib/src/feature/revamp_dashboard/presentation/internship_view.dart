@@ -6,7 +6,6 @@ import 'package:rawrecruit/src/feature/revamp_application/presentation/view_mode
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/dashboard_provider.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
-
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../../core/index.dart';
@@ -63,9 +62,8 @@ class _InternshipViewState extends State<InternshipView> {
               /// ✅ DEFINE isApplied
               final isApplied = applicationVM.isApplied(internship.id ?? '');
 
-             
               return JobCard(
-               job: internship,
+                job: internship,
                 isSaved: isSaved,
                 onBookmarkToggle: () {
                   shortlistVM.toggleSave(
@@ -76,19 +74,21 @@ class _InternshipViewState extends State<InternshipView> {
                 },
                 isApplied: isApplied,
                 onApply: () => applicationVM.apply(
-  jobId: internship.id ?? '',
-  jobType:  'Internship',
-),
-              onTap: () async {
-  await context.pushNamed(
-    RouteNames.internshipDetail,
-    extra: internship,
-  );
-  if (context.mounted) {
-    context.read<ShortlistViewModel>().fetchSaved();
-    context.read<ApplicationViewModel>().fetchApplications();
-  }
-},
+                  jobId: internship.id ?? '',
+                  jobType: 'Internship',
+
+                  companyName: internship.companyName ?? '',
+                ),
+                onTap: () async {
+                  await context.pushNamed(
+                    RouteNames.internshipDetail,
+                    extra: internship,
+                  );
+                  if (context.mounted) {
+                    context.read<ShortlistViewModel>().fetchSaved();
+                    context.read<ApplicationViewModel>().fetchApplications();
+                  }
+                },
               );
             },
           );

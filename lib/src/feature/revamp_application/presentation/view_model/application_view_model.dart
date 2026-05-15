@@ -42,11 +42,12 @@ class ApplicationViewModel extends ViewStateProvider {
   Future<void> apply({
     required String jobId,
     required String jobType,
+    required String companyName,
     int? matchScore,
   }) async {
     Either<APIException, void> result;
     if (jobType == "Referral") {
-      result = await _repository.applyReferral(jobId, matchScore);
+      result = await _repository.applyReferral(jobId, matchScore, companyName);
     } else if (jobType == "Internship") {
       result = await _repository.applyInternship(jobId);
     } else {
