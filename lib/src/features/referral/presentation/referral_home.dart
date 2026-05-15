@@ -255,7 +255,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                       }
 
                       return SizedBox(
-                        height: 240,
+                        height: 260,
                         child: ListView.builder(
                           scrollDirection: Axis.horizontal,
                           itemCount: vm.groupedAlumni.values.take(3).length,

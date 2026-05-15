@@ -70,6 +70,7 @@ const _$NotificationTypeEnumMap = {
   NotificationType.collegeApplicationRejected: 'COLLEGE_APPLICATION_REJECTED',
   NotificationType.jobRegistration: 'JOB_REGISTRATION',
   NotificationType.interviewScheduled: 'INTERVIEW_SCHEDULED',
+  NotificationType.newChatMessage: 'NEW_CHAT_MESSAGE',
 };
 
 const _$JobTypeEnumMap = {

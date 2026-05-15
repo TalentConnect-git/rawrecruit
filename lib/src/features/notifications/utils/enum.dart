@@ -65,27 +65,27 @@ enum NotificationType {
     backgroundColor: Color(0xFFDCFCE7),
     icon: Icons.verified,
   ),
-@JsonValue('APPLICATION_INTERVIEW_SCHEDULED')
-applicationInterviewScheduled(
-  label: 'Interview Scheduled',
-  textColor: Color(0xFF2563EB),
-  backgroundColor: Color(0xFFDBEAFE),
-  icon: Icons.video_call_outlined,
-),
-@JsonValue('APPLICATION_OFFER_EXTENDED')
-applicationOfferExtended(
-  label: 'Offer Extended',
-  textColor: Color(0xFF7C3AED),
-  backgroundColor: Color(0xFFEDE9FE),
-  icon: Icons.workspace_premium_outlined,
-),
-@JsonValue('REFERRAL_APPLICATION_APPROVED')
-referralApplicationApproved(
-  label: 'Referral Approved',
-  textColor: Color(0xFF059669),
-  backgroundColor: Color(0xFFD1FAE5),
-  icon: Icons.verified_outlined,
-),
+  @JsonValue('APPLICATION_INTERVIEW_SCHEDULED')
+  applicationInterviewScheduled(
+    label: 'Interview Scheduled',
+    textColor: Color(0xFF2563EB),
+    backgroundColor: Color(0xFFDBEAFE),
+    icon: Icons.video_call_outlined,
+  ),
+  @JsonValue('APPLICATION_OFFER_EXTENDED')
+  applicationOfferExtended(
+    label: 'Offer Extended',
+    textColor: Color(0xFF7C3AED),
+    backgroundColor: Color(0xFFEDE9FE),
+    icon: Icons.workspace_premium_outlined,
+  ),
+  @JsonValue('REFERRAL_APPLICATION_APPROVED')
+  referralApplicationApproved(
+    label: 'Referral Approved',
+    textColor: Color(0xFF059669),
+    backgroundColor: Color(0xFFD1FAE5),
+    icon: Icons.verified_outlined,
+  ),
   @JsonValue('APPLICATION_REJECTED')
   applicationRejected(
     label: 'Application Rejected',
@@ -132,6 +132,28 @@ referralApplicationApproved(
     textColor: Color(0xFF7C3AED),
     backgroundColor: Color(0xFFEDE9FE),
     icon: Icons.event_available,
+  ),
+  @JsonValue('ALTERNATE_DATE_REQUEST')
+  alternateDateRequest(
+    label: 'Alternate Date Request',
+    textColor: Color(0xFFD97706),
+    backgroundColor: Color(0xFFFEF3C7),
+    icon: Icons.date_range_outlined,
+  ),
+
+  @JsonValue('APPLICATION_REFERRED_TO_COMPANY')
+  applicationReferredToCompany(
+    label: 'Application Referred',
+    textColor: Color(0xFF0F766E),
+    backgroundColor: Color(0xFFCCFBF1),
+    icon: Icons.forward_to_inbox_outlined,
+  ),
+  @JsonValue('NEW_CHAT_MESSAGE')
+  newChatMessage(
+    label: 'New Chat Message',
+    textColor: Color(0xFFCA8A04),
+    backgroundColor: Color(0xFFEDE9FE),
+    icon: Icons.message,
   );
 
   final String label;
@@ -157,7 +179,7 @@ enum JobType {
   @JsonValue('Pool-campus')
   poolCampus('Pool Campus'),
 
- @JsonValue('Referral')
+  @JsonValue('Referral')
   referral('Referral');
 
   final String label;
