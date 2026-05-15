@@ -59,49 +59,52 @@ class ProfessionalViewModel extends ViewStateProvider {
 
     final result = await _repository.getReferralJobDetails(id);
 
-   result.fold(
-  (failure) {
-  print(failure.toString());
-},
-  (data) async {
-    try {
-      log("REFERRAL DATA: $data");
+    result.fold(
+      (failure) {
+        print(failure.toString());
+      },
+      (data) async {
+        try {
+          log("REFERRAL DATA: $data");
 
-      selectedReferralJob = data;
+          selectedReferralJob = data;
 
-      log("SELECTED REFERRAL SET");
+          log("SELECTED REFERRAL SET");
 
-      final companyName =
-          data.candidatePosted
-                  ?.currentCompany
-                  ?.trim() ??
-              '';
+          final companyName =
+              data.candidatePosted?.currentCompany?.trim() ?? '';
 
-      log("Company Name: $companyName");
+          final userId = data.candidatePosted?.id?.trim() ?? '';
 
-      if (companyName.isNotEmpty) {
-        await fetchCompanyAlumni(companyName);
-      } else {
-        log("Company Name: Not Found");
-      }
+          log("Company Name: $companyName");
 
-      log("FETCH REFERRAL SUCCESS");
-    } catch (e, s) {
-      log("REFERRAL CRASH: $e");
-      log(s.toString());
-    }
-  },
-);
+          if (companyName.isNotEmpty) {
+            await fetchCompanyAlumni(companyName: companyName, userId: userId);
+          } else {
+            log("Company Name: Not Found");
+          }
+
+          log("FETCH REFERRAL SUCCESS");
+        } catch (e, s) {
+          log("REFERRAL CRASH: $e");
+          log(s.toString());
+        }
+      },
+    );
 
     setViewState(ViewState.complete);
     notifyListeners();
   }
 
-  Future<void> fetchCompanyAlumni(String companyName) async {
+  Future<void> fetchCompanyAlumni({
+    required String companyName,
+    required String userId,
+  }) async {
     isFetchingAlumni = true;
 
     final result = await getIt<DashboardRepository>().getAlumniByCompany(
       companyName: companyName,
+      userId: userId,
     );
 
     result.fold(

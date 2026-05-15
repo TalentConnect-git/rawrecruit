@@ -166,10 +166,11 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   @override
   ResultFuture<List<User>> getAlumniByCompany({
     required String companyName,
+    required String userId,
   }) async {
     final request = Request(
       method: RequestMethod.get,
-      endpoint: "${Endpoints.apiCandidateAlumni}/$companyName",
+      endpoint: "${Endpoints.apiCandidateAlumni}/$companyName/$userId",
       isSafeRoute: true,
     );
 

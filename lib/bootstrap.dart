@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/config/index.dart'
@@ -15,6 +17,8 @@ Future<void> bootstrap(Flavor flavor) async {
   WidgetsFlutterBinding.ensureInitialized();
   await _preInit(flavor);
   await _init(flavor);
+
+  await FlutterDownloader.initialize(debug: kDebugMode, ignoreSsl: true);
 
   runApp(
     MultiProvider(

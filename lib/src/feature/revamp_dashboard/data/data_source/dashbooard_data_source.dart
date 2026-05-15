@@ -12,5 +12,8 @@ abstract class DashboardDataSource {
   ResultFuture<List<User>> getCollegeAlumni();
   ResultFuture<CompanyAlumniResponse> getCompanyAlumni();
   ResultFuture<List<User>> getHiringAlumni({required bool onlyPostedJob});
-  ResultFuture<List<User>> getAlumniByCompany({required String companyName});
+  ResultFuture<List<User>> getAlumniByCompany({
+    required String companyName,
+    required String userId,
+  });
 }
