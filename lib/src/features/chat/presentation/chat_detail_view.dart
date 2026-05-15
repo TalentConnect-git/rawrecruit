@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/features/chat/data/entities/message_model.dart';
 
 import '../../../core/index.dart';
 import '../index.dart';
@@ -129,35 +130,40 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                 ),
               ),
               Expanded(
-                child: ListView.builder(
-                  padding: EdgeInsets.all(20),
-                  itemCount: vm.messages.length,
-                  itemBuilder: (_, index) {
-                    final msg = vm.messages[index];
+                child: Selector<ChatViewModel, List<MessageModel>>(
+                  selector: (_, vm) => vm.messages,
+                  builder: (_, messages, _) => ListView.builder(
+                    padding: EdgeInsets.all(20),
+                    itemCount: messages.length,
+                    itemBuilder: (_, index) {
+                      final msg = messages[index];
 
-                    final isMe =
-                        msg.senderId == getIt<AppStateProvider>().userId;
+                      final isMe =
+                          msg.senderId == getIt<AppStateProvider>().userId;
 
-                    return Align(
-                      alignment: isMe
-                          ? Alignment.centerRight
-                          : Alignment.centerLeft,
-                      child: Container(
-                        padding: const EdgeInsets.all(10),
-                        margin: const EdgeInsets.all(6),
-                        decoration: BoxDecoration(
-                          color: isMe ? AppColors.kGreen : Colors.grey.shade300,
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Text(
-                          msg.message ?? "",
-                          style: TextStyle(
-                            color: isMe ? Colors.white : Colors.black,
+                      return Align(
+                        alignment: isMe
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          padding: const EdgeInsets.all(10),
+                          margin: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: isMe
+                                ? AppColors.kGreen.withValues(alpha: 0.5)
+                                : Colors.grey.shade300,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Text(
+                            msg.message ?? "",
+                            style: TextStyle(
+                              color: isMe ? Colors.white : Colors.black,
+                            ),
                           ),
                         ),
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  ),
                 ),
               ),
 

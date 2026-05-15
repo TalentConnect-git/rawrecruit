@@ -10,7 +10,17 @@ class ChatViewModel extends ViewStateProvider {
   final _repository = GetIt.instance<ChatRepository>();
 
   List<User> users = [];
-  List<MessageModel> messages = [];
+  List<MessageModel> _messages = [];
+  List<MessageModel> get messages => _messages;
+  set messages(List<MessageModel> msgs) {
+    if (_messages.isEmpty) {
+      _messages = msgs;
+    } else {
+      _messages = [..._messages, ...msgs];
+    }
+    notifyListeners();
+  }
+
   List<ChatUnreadModel> unreadCounts = [];
   Set<String> onlineUsers = {};
   String? activeChatUserId;
@@ -86,7 +96,7 @@ class ChatViewModel extends ViewStateProvider {
     final result = await _repository.sendMessage(userId, message);
 
     result.fold((failure) {}, (data) {
-      messages.add(data);
+      messages = [data];
     });
 
     safeNotify();
