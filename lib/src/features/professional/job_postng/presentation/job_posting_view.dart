@@ -624,10 +624,10 @@ Future<void> pickEndDate() async {
   );
 
   if (picked != null) {
- endDateController.text =
-    "${picked.day.toString().padLeft(2, '0')}/"
-    "${picked.month.toString().padLeft(2, '0')}/"
-    "${picked.year}";
+endDateController.text =
+    "${picked.year}-"
+    "${picked.month.toString().padLeft(2, '0')}-"
+    "${picked.day.toString().padLeft(2, '0')}";
         
     setState(() {});
   }
@@ -1090,13 +1090,8 @@ SingleChildScrollView(
                                   inactive: false,
                           description:
                               descriptionController.text.trim(),
-                   employmentType: employmentType == null
-    ? []
-    : [employmentType!],
-
-workMode: workMode == null
-    ? []
-    : [workMode!],
+              workMode: workMode != null ? [workMode!] : [],
+employmentType: employmentType != null ? [employmentType!] : [],
                           broadcastType: broadcastType,
                           jobType: "Referral",
                           location: [selectedCity],
@@ -1541,18 +1536,19 @@ class SearchableChipField
     required this.label,
     required this.options,
     required this.controller,
+      this.onChanged,
+
   });
 
   final String label;
   final List<String> options;
   final TextEditingController controller;
-
+final Function(String value)? onChanged;
   @override
   State<SearchableChipField>
       createState() =>
           _SearchableChipFieldState();
 }
-
 class _SearchableChipFieldState
     extends State<SearchableChipField> {
 
@@ -1578,6 +1574,10 @@ class _SearchableChipFieldState
   void _updateController() {
     widget.controller.text =
         selected.join(', ');
+
+    widget.onChanged?.call(
+      widget.controller.text,
+    );
   }
 
   @override
@@ -1678,40 +1678,6 @@ class _SearchableChipFieldState
               borderSide:
                   BorderSide.none,
             ),
-
-            suffixIcon: IconButton(
-              icon: const Icon(
-                Icons.add,
-                color: Colors.white,
-              ),
-
-              onPressed: () {
-                final val =
-                    searchController
-                        .text
-                        .trim();
-
-                if (val.isEmpty) {
-                  return;
-                }
-
-                final exists =
-                    selected.any(
-                  (e) =>
-                      e.toLowerCase() ==
-                      val.toLowerCase(),
-                );
-
-                if (!exists) {
-                  setState(() {
-                    selected.add(val);
-                    _updateController();
-                  });
-                }
-
-                searchController.clear();
-              },
-            ),
           ),
 
           onChanged: (_) {
@@ -1720,6 +1686,63 @@ class _SearchableChipFieldState
         ),
 
         const SizedBox(height: 12),
+
+        /// CREATE OPTION
+        if (searchController.text.trim().isNotEmpty &&
+            suggestions.isEmpty &&
+            !widget.options.any(
+              (e) =>
+                  e.toLowerCase().trim() ==
+                  searchController.text
+                      .toLowerCase()
+                      .trim(),
+            ))
+          Container(
+            margin: const EdgeInsets.only(top: 8),
+
+            decoration: BoxDecoration(
+              color: AppColors.kCard,
+              borderRadius: BorderRadius.circular(12),
+            ),
+
+            child: ListTile(
+              leading: const Icon(
+                Icons.add,
+                color: Color(0xFF22C55E),
+              ),
+
+              title: Text(
+                'Create "${searchController.text.trim()}"',
+
+                style: const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+
+              onTap: () async {
+                final value =
+                    searchController.text.trim();
+
+                setState(() {
+                  selected.add(value);
+                  _updateController();
+                });
+
+                final parentState = context
+                    .findAncestorStateOfType<
+                        _ReferralPostViewState>();
+
+                if (widget.label == 'Skills') {
+                  await parentState
+                      ?.addSkillIfNeeded(value);
+                }
+
+                searchController.clear();
+
+                setState(() {});
+              },
+            ),
+          ),
 
         /// SUGGESTIONS
         if (suggestions.isNotEmpty)

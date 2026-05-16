@@ -167,11 +167,13 @@ servingNoticePeriod =
 
   void saveData() {
     final currentUser = context.read<AppStateProvider>().data ?? widget.data;
-
-    final filteredExperiences = experiences.where((e) {
-      return (e.company?.trim().isNotEmpty ?? false) &&
-          (e.role?.trim().isNotEmpty ?? false);
-    }).toList();
+final filteredExperiences = experiences.where((e) {
+  return (e.company?.trim().isNotEmpty ?? false) ||
+      (e.role?.trim().isNotEmpty ?? false) ||
+      (e.startDate?.trim().isNotEmpty ?? false) ||
+      (e.endDate?.trim().isNotEmpty ?? false) ||
+      (e.description?.trim().isNotEmpty ?? false);
+}).toList();
     final currentExp = experiences.firstWhere(
       (e) => e.isCurrent == true,
       orElse: () => const Experience(),
@@ -640,12 +642,24 @@ if (servingNoticePeriod) ...[
                   ],
                 ),
 SizedBox(height: 10,),
-              SearchableChipField(
+           SearchableChipField(
   label: "Role",
 
   controller: roleCtrls[i],
 
   options: jobTitleOptions,
+
+  onChanged: (value) {
+    roleCtrls[i].text = value;
+
+    experiences[i] = experiences[i].copyWith(
+      role: value,
+    );
+
+    saveData();
+
+    setState(() {});
+  },
 ),
 
                 GestureDetector(
