@@ -14,6 +14,9 @@ import 'package:rawrecruit/src/core/index.dart'
         getIt,
         AppStateProvider;
 import 'package:rawrecruit/src/feature/revamp_auth/index.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RevampRegisterView extends StatefulWidget {
   const RevampRegisterView({super.key});
@@ -154,13 +157,29 @@ padding: EdgeInsets.symmetric(
                                             failure: failure,
                                             successMsg: 'Register Successful!',
                                             popOnSuccess: false,
-                                            successCallback: () {
-                                              context.pushReplacementNamed(
-                                                RouteNames.dashboard,
-                                                extra: getIt<AppStateProvider>()
-                                                    .selectedUserType,
-                                              );
-                                            },
+                                         successCallback: () async {
+
+  final onboardingService =
+      getIt<OnboardingLocalService>();
+
+  await onboardingService.clear();
+
+  final prefs =
+      await SharedPreferences.getInstance();
+
+  await prefs.setBool(
+    'onboarding_completed',
+    false,
+  );
+
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (_) =>
+          const OnboardingFlow(),
+    ),
+  );
+},
                                           );
                                         } else {
                                           failure = await registerViewModel

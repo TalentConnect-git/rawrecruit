@@ -2092,7 +2092,7 @@ Widget _header(
     children: [
       Text(
         'Achievement ${controller.achievements.indexOf(a) + 1}',
-        style: AppTextStyles.s14W600,
+        style: AppTextStyles.s14W600.copyWith(color: AppColors.white),
       ),
 
       AppTextFields(
@@ -2109,7 +2109,7 @@ Widget _header(
 
       _datePickerField(a.date, 'Date'),
 
-      const AppDivider(),
+      // const AppDivider(),
     ],
   );
   Widget _awardForm(AwardController a) => Column(
@@ -2118,7 +2118,7 @@ Widget _header(
     children: [
       Text(
         'Award ${controller.awards.indexOf(a) + 1}',
-        style: AppTextStyles.s14W600,
+   style: AppTextStyles.s14W600.copyWith(color: AppColors.white),
       ),
 
       AppTextFields(
@@ -2141,7 +2141,7 @@ Widget _header(
         onChanged: (_) => markChanged(),
       ),
 
-      const AppDivider(),
+      // const AppDivider(),
     ],
   );
   Widget _publicationForm(PublicationController p) => Column(
@@ -2165,7 +2165,7 @@ Widget _header(
         onChanged: (_) => markChanged(),
       ),
 
-      const AppDivider(),
+      // const AppDivider(),
     ],
   );
 Widget _internationalCard(

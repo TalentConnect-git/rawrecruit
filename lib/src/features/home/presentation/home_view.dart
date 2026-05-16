@@ -3,9 +3,11 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import 'package:rawrecruit/src/features/home/presentation/widgets/app_bottom_nav.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
 
+import '../../../feature/revamp_onboarding/presentation/flow_controller.dart';
 import '../../chat/index.dart';
 
 class HomeView extends StatefulWidget {
@@ -34,16 +36,23 @@ await notificationVm.getNotifications();
       }
 
       if (appStateProvider.isProfileRemaining) {
-        final failure = await appStateProvider.getUserDetails();
-        Toasts.showSuccessOrFailureToast(
-          context,
-          failure: failure,
-          hideSuccess: true,
-          popOnSuccess: false,
-        );
-        if (appStateProvider.isProfileRemaining) {
-          context.goNamed(RouteNames.onboarding);
-        }
+      final onboardingService =
+    getIt<OnboardingLocalService>();
+
+final completed =
+    await onboardingService.isCompleted();
+
+if (!completed) {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (_) =>
+          const OnboardingFlow(),
+    ),
+  );
+
+  return;
+}
       }
     });
     super.initState();

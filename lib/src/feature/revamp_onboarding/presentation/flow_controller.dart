@@ -11,6 +11,7 @@ import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/pr
 import 'steps/onboarding_complete_page.dart';
 import 'widgets/continue_button.dart';
 import 'index.dart';
+import 'widgets/onboarding_local_service.dart';
 
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({super.key});
@@ -24,7 +25,8 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   int currentPage = 0;
 
   final int totalPages = 8;
-
+final onboardingLocal =
+    getIt<OnboardingLocalService>();
   /// 🔥 SHARED DATA
   final User data = User();
 
@@ -32,7 +34,12 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
   final repo = RevampOnboardingRepositoryImpl(
     onboardingDataSource: RevampOnboardingDataSourceImpl(),
   );
+@override
+void initState() {
+  super.initState();
 
+  restoreOnboarding();
+}
   /// 👉 NEXT
   void nextPage() {
     if (currentPage < totalPages - 1) {
@@ -42,7 +49,27 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       );
     }
   }
+Future<void> restoreOnboarding() async {
+  final savedStep =
+      await onboardingLocal.getStep();
 
+  final savedUser =
+      await onboardingLocal.getUser();
+
+  if (savedUser != null) {
+    context.read<AppStateProvider>().data =
+        savedUser;
+  }
+
+  currentPage = savedStep;
+
+  WidgetsBinding.instance
+      .addPostFrameCallback((_) {
+    _controller.jumpToPage(savedStep);
+  });
+
+  setState(() {});
+}
   /// 👉 BACK
   void onBack() {
     if (currentPage > 0) {
@@ -75,12 +102,21 @@ final body = updatedUser.toJson();
             context,
           ).showSnackBar(SnackBar(content: Text(failure.message ?? '')));
         },
-        (profile) {
-          context.pushReplacementNamed(
-            RouteNames.dashboard,
-            extra: getIt<AppStateProvider>().userType,
-          );
-        },
+       (profile) async {
+  final onboardingLocal =
+      getIt<OnboardingLocalService>();
+
+  /// ✅ MARK COMPLETE
+  await onboardingLocal.markCompleted();
+
+  /// ✅ CLEAR SAVED STEP + USER CACHE
+  await onboardingLocal.clear();
+
+  context.pushReplacementNamed(
+    RouteNames.dashboard,
+    extra: getIt<AppStateProvider>().userType,
+  );
+},
       );
     } catch (e) {
       debugPrint(e.toString());
@@ -102,7 +138,11 @@ final body = updatedUser.toJson();
               child: PageView(
                 controller: _controller,
                 physics: const NeverScrollableScrollPhysics(),
-                onPageChanged: (i) => setState(() => currentPage = i),
+             onPageChanged: (i) async {
+  setState(() => currentPage = i);
+
+  await onboardingLocal.saveStep(i);
+},
                 children: [
                   /// (skip resume for now or keep simple)
                 ResumeUploadPage(onNext: nextPage),

@@ -176,6 +176,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                     jobId: jobId,
                     jobType: "Referral",
                     matchScore: job.matchScore,
+                    companyName : job.companyName ?? '',
                   ),
 
             icon: Icon(

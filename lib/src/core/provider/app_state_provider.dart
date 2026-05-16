@@ -15,6 +15,7 @@ import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingRepository;
 
+import '../../feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import '../network/socket_service.dart';
 
 class AppStateProvider extends ViewStateProvider {
@@ -136,7 +137,8 @@ class AppStateProvider extends ViewStateProvider {
       },
       (res) async {
         await SecretRepo.clearAll();
-
+await getIt<OnboardingLocalService>()
+    .clear();
         final token = await SecretRepo.getString('auth_token');
         log(token ?? '', name: 'token');
 

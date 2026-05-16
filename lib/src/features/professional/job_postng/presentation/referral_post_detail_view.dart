@@ -800,19 +800,35 @@ Future<void> _deleteJob() async {
         if ((job.benefits ?? []).isNotEmpty)
           _sectionList("Benefits", job.benefits),
 
-        _sectionInfo("Job Info", [
-          _info("Experience", job.yearsOfExperience),
-          _info("Min Education", job.minEducation),
-          _info("Work Authorization", job.workAuthorization),
-          _info("Openings", job.numberOfOpenings?.toString()),
-          _info("Status", job.approvalStatus),
-        ]),
+     _sectionInfo("Job Info", [
+  _info("Experience", job.yearsOfExperience),
+  _info("Min Education", job.minEducation),
+
+  _info(
+    "Streams",
+    (job.studentStreams ?? []).join(", "),
+  ),
+
+  _info(
+    "Rounds",
+    (job.rounds ?? []).join(", "),
+  ),
+
+  _info(
+    "Selection Process",
+    (job.selectionProcess ?? []).join(", "),
+  ),
+
+  _info("Work Authorization", job.workAuthorization),
+  _info("Openings", job.numberOfOpenings?.toString()),
+  _info("Status", job.approvalStatus),
+]),
 
         _sectionInfo("Package Details", [
           _info("Currency", pkg?.currency),
           _info("CTC", pkg?.totalCTC?.toString()),
           _info("Fixed Pay", pkg?.fixedPay?.toString()),
-          _info("Joining Bonus", pkg?.joiningBonus?.toString()),
+          _info("Variable Pay", pkg?.joiningBonus?.toString()),
         ]),
       ],
     );
