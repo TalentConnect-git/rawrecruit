@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
+import 'package:rawrecruit/src/feature/revamp_profile/presentation/support_page.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/edit_profile_sections_page.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -176,7 +177,18 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         );
                       },
                     ),
-                
+                   _menuItem(
+                      "Support",
+                      Icons.trending_up,
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const SupportPage(),
+                          ),
+                        );
+                      },
+                    ),
 
                     const SizedBox(height: 20),
 
