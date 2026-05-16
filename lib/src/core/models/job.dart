@@ -10,10 +10,10 @@ part 'job.g.dart';
 abstract class Job with _$Job {
   const factory Job({
     @JsonKey(name: '_id') String? id,
-String? postedByUser,
+    String? postedByUser,
     // Basic
-@JsonKey(fromJson: _jobTitleFromJson)
-String? jobTitle,    String? description,
+    @JsonKey(fromJson: _jobTitleFromJson) String? jobTitle,
+    String? description,
     String? jobStatus,
     String? approvalStatus,
     String? visibleTo,
@@ -80,6 +80,7 @@ String? jobTitle,    String? description,
     User? candidatePosted,
     JobPosting? companyPosted,
     JobPosting? jobCompanyPosted,
+    String? referralCompany,
 
     // Dates
     DateTime? onlineTestDate,
@@ -91,15 +92,16 @@ String? jobTitle,    String? description,
     DateTime? updatedAt,
   }) = _Job;
   factory Job.fromJson(Map<String, dynamic> json) => _$JobFromJson(json);
-  
 }
- String? _jobTitleFromJson(dynamic value) {
+
+String? _jobTitleFromJson(dynamic value) {
   if (value is List) {
     return value.join(', ');
   }
 
   return value?.toString();
 }
+
 List<String>? _safeList(dynamic value) {
   if (value is List) {
     return value.map((e) => e.toString()).toList();

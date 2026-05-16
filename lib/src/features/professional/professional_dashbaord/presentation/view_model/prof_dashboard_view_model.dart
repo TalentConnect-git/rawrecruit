@@ -74,7 +74,7 @@ class ProfessionalViewModel extends ViewStateProvider {
           final companyName =
               data.candidatePosted?.currentCompany?.trim() ?? '';
 
-          final userId = data.candidatePosted?.id?.trim() ?? '';
+          final userId = data.candidatePosted?.userId?.trim() ?? '';
 
           log("Company Name: $companyName");
 

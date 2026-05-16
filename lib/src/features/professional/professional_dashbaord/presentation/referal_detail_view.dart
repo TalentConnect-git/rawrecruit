@@ -108,115 +108,101 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
             ),
 
             /// 🔥 BOTTOM SAVE + APPLY BAR (logic preserved, only styling refreshed)
-           bottomNavigationBar: SafeArea(
-  top: false,
-  child: Container(
-    padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
-    decoration: BoxDecoration(
-      color: AppColors.kCard,
-      border: Border(
-        top: BorderSide(
-          color: Colors.white.withOpacity(0.06),
-        ),
-      ),
-    ),
-
-    child: Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () => shortlistVM.toggleSave(
-              jobId: jobId,
-              jobType: "Referral",
-              isSaved: isSaved,
-            ),
-
-            icon: Icon(
-              isSaved
-                  ? Icons.bookmark
-                  : Icons.bookmark_border,
-              color: AppColors.kGreen,
-              size: 18,
-            ),
-
-            label: Text(
-              isSaved ? "Saved" : "Save",
-              style: TextStyle(
-                color: AppColors.kGreen,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(
-                vertical: 14,
-              ),
-
-              side: BorderSide(
-                color:
-                    AppColors.kGreen.withOpacity(.5),
-              ),
-
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ),
-
-        const SizedBox(width: 12),
-
-        Expanded(
-          flex: 2,
-          child: ElevatedButton.icon(
-            onPressed: isApplied
-                ? null
-                : () => applicationVM.apply(
-                    jobId: jobId,
-                    jobType: "Referral",
-                    matchScore: job.matchScore,
+            bottomNavigationBar: SafeArea(
+              top: false,
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                decoration: BoxDecoration(
+                  color: AppColors.kCard,
+                  border: Border(
+                    top: BorderSide(color: Colors.white.withOpacity(0.06)),
                   ),
+                ),
 
-            icon: Icon(
-              isApplied
-                  ? Icons.check_circle
-                  : Icons.send_rounded,
-              size: 18,
-            ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => shortlistVM.toggleSave(
+                          jobId: jobId,
+                          jobType: "Referral",
+                          isSaved: isSaved,
+                        ),
 
-            label: Text(
-              isApplied
-                  ? "Applied"
-                  : "Apply Now",
+                        icon: Icon(
+                          isSaved ? Icons.bookmark : Icons.bookmark_border,
+                          color: AppColors.kGreen,
+                          size: 18,
+                        ),
 
-              style: const TextStyle(
-                fontWeight: FontWeight.w600,
+                        label: Text(
+                          isSaved ? "Saved" : "Save",
+                          style: TextStyle(
+                            color: AppColors.kGreen,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+
+                        style: OutlinedButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+
+                          side: BorderSide(
+                            color: AppColors.kGreen.withOpacity(.5),
+                          ),
+
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(width: 12),
+
+                    Expanded(
+                      flex: 2,
+                      child: ElevatedButton.icon(
+                        onPressed: isApplied
+                            ? null
+                            : () => applicationVM.apply(
+                                jobId: jobId,
+                                jobType: "Referral",
+                                matchScore: job.matchScore,
+                                companyName:
+                                    job.candidatePosted?.currentCompany ?? '',
+                              ),
+
+                        icon: Icon(
+                          isApplied ? Icons.check_circle : Icons.send_rounded,
+                          size: 18,
+                        ),
+
+                        label: Text(
+                          isApplied ? "Applied" : "Apply Now",
+
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
+
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isApplied
+                              ? Colors.grey
+                              : AppColors.kGreen,
+
+                          foregroundColor: Colors.white,
+
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
 
-            style: ElevatedButton.styleFrom(
-              backgroundColor: isApplied
-                  ? Colors.grey
-                  : AppColors.kGreen,
-
-              foregroundColor: Colors.white,
-
-              padding: const EdgeInsets.symmetric(
-                vertical: 14,
-              ),
-
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                    BorderRadius.circular(12),
-              ),
-            ),
-          ),
-        ),
-      ],
-    ),
-  ),
-),
             /// 🔥 BODY
             body: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
@@ -623,7 +609,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                     ),
                     const SizedBox(height: 2),
                     Text(
-                      "Software Engineer",
+                      job.jobTitle ?? 'Software Engineer',
                       style: const TextStyle(color: Colors.grey, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
@@ -752,12 +738,12 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
   // ============================================================
   Widget _matchInsightsSection(Job job) {
     final openings = job.numberOfOpenings?.toString() ?? "—";
-final rounds = (job.rounds?.length ?? 0).toString();
+    final rounds = (job.rounds?.length ?? 0).toString();
 
-final process =
-    (job.selectionProcess?.isNotEmpty ?? false)
+    final process = (job.selectionProcess?.isNotEmpty ?? false)
         ? job.selectionProcess!.join(", ")
-        : "—";   final views = job.views?.toString() ?? "0";
+        : "—";
+    final views = job.views?.toString() ?? "0";
     final score = (job.matchScore ?? 0).clamp(0, 100);
     return _cardContainer(
       child: Column(
@@ -788,19 +774,19 @@ final process =
                   children: [
                     _insightRow(Icons.work_outline, "Openings", openings),
                     const SizedBox(height: 10),
-                _insightRow(
-  Icons.checklist_rounded,
-  "Selection Rounds",
-  rounds,
-),
+                    _insightRow(
+                      Icons.checklist_rounded,
+                      "Selection Rounds",
+                      rounds,
+                    ),
 
-const SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
-_insightRow(
-  Icons.account_tree_outlined,
-  "Selection Process",
-  process,
-),
+                    _insightRow(
+                      Icons.account_tree_outlined,
+                      "Selection Process",
+                      process,
+                    ),
                     const SizedBox(height: 10),
                     _insightRow(Icons.visibility_outlined, "Views", views),
                   ],
@@ -808,7 +794,7 @@ _insightRow(
               ),
               const SizedBox(width: 16),
               // Match Score circle (kept)
-            AnimatedMatchScore(score: score),
+              AnimatedMatchScore(score: score),
             ],
           ),
         ],
@@ -1276,6 +1262,7 @@ _insightRow(
     );
   }
 }
+
 class AnimatedMatchScore extends StatefulWidget {
   final int score;
   const AnimatedMatchScore({super.key, required this.score});
@@ -1299,9 +1286,10 @@ class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
       duration: const Duration(milliseconds: 1200),
     );
 
-    _anim = Tween<double>(begin: 0.0, end: target).animate(
-      CurvedAnimation(parent: _ctrl, curve: Curves.easeOut),
-    );
+    _anim = Tween<double>(
+      begin: 0.0,
+      end: target,
+    ).animate(CurvedAnimation(parent: _ctrl, curve: Curves.easeOut));
 
     WidgetsBinding.instance.addPostFrameCallback((_) => _ctrl.forward());
   }
@@ -1328,7 +1316,7 @@ class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
                 width: 80,
                 height: 80,
                 child: CircularProgressIndicator(
-                  value: _anim.value,          // animated 0 → target
+                  value: _anim.value, // animated 0 → target
                   strokeWidth: 6,
                   backgroundColor: Colors.white.withOpacity(0.08),
                   valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
@@ -1338,7 +1326,7 @@ class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    '$displayed%',         // counts up live
+                    '$displayed%', // counts up live
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 16,

@@ -3,25 +3,44 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/internship_detail_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../../common/index.dart';
 import '../../../core/index.dart';
-import 'view_model/dashboard_view_model.dart';
 
-class JobDetailView extends StatelessWidget {
+class JobDetailView extends StatefulWidget {
   final Job job;
 
   const JobDetailView({super.key, required this.job});
 
+  @override
+  State<JobDetailView> createState() => _JobDetailViewState();
+}
+
+class _JobDetailViewState extends State<JobDetailView> {
   String _fmt(DateTime? date) {
     if (date == null) return '-';
     return "${date.day}/${date.month}/${date.year}";
   }
 
+  InternshipDetailViewModel internshipDetailViewModel =
+      InternshipDetailViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await internshipDetailViewModel.fetchCompanyAlumni(
+        companyName: widget.job.candidatePosted?.currentCompany ?? '',
+        userId: widget.job.candidatePosted?.userId ?? '',
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final jobId = job.id ?? '';
+    final jobId = widget.job.id ?? '';
 
     final shortlistVM = context.watch<ShortlistViewModel>();
     final applicationVM = context.watch<ApplicationViewModel>();
@@ -29,277 +48,284 @@ class JobDetailView extends StatelessWidget {
     final isSaved = shortlistVM.savedJobIds.contains(jobId);
     final isApplied = applicationVM.isApplied(jobId);
 
-    final pkg = job.packageDetails;
-    final company = job.companyPosted?.companyDetails;
-    final employer = job.companyPosted?.employerDetails;
-    final contact = job.contactPerson;
+    final pkg = widget.job.packageDetails;
+    final company = widget.job.companyPosted?.companyDetails;
+    final employer = widget.job.companyPosted?.employerDetails;
+    final contact = widget.job.contactPerson;
 
-    return Scaffold(
-      backgroundColor: AppColors.secBorder,
+    return ChangeNotifierProvider.value(
+      value: internshipDetailViewModel,
+      child: Scaffold(
+        backgroundColor: AppColors.secBorder,
 
-      appBar: AppBar(
-        backgroundColor: AppColors.kCard,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          job.jobRoles?.first ?? job.jobTitle ?? 'Job Detail',
-          style: const TextStyle(color: Colors.white),
+        appBar: AppBar(
+          backgroundColor: AppColors.kCard,
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: Text(
+            widget.job.jobRoles?.first ?? widget.job.jobTitle ?? 'Job Detail',
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
-      ),
 
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-        child: Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => shortlistVM.toggleSave(
-                  jobId: jobId,
-                  jobType: 'Off-campus',
-                  isSaved: isSaved,
-                ),
-                child: Text(
-                  isSaved ? 'Saved' : 'Save',
-                  style: TextStyle(color: AppColors.kGreen),
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => shortlistVM.toggleSave(
+                    jobId: jobId,
+                    jobType: 'Off-campus',
+                    isSaved: isSaved,
+                  ),
+                  child: Text(
+                    isSaved ? 'Saved' : 'Save',
+                    style: TextStyle(color: AppColors.kGreen),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                onPressed: isApplied
-                    ? null
-                    : () => applicationVM.apply(
-                        jobId: jobId,
-                        jobType: "Off-campus",
-                        companyName: job.companyName ?? '',
-                      ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isApplied ? Colors.grey : AppColors.kGreen,
-                ),
-                child: Text(isApplied ? 'Applied' : 'Apply Now'),
-              ),
-            ),
-          ],
-        ),
-      ),
-
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// 🔥 HEADER
-            _header(),
-
-            const SizedBox(height: 20),
-
-            /// 🔥 HIGHLIGHTED COMPANY + POSTED BY SECTION
-
-            /// 🔥 ABOUT
-            if ((job.description ?? '').isNotEmpty)
-              _sectionText("About the Role", job.description),
-
-            /// 🔥 RESPONSIBILITIES
-            if ((job.workAchievements ?? []).isNotEmpty)
-              _sectionList("Responsibilities", job.workAchievements),
-
-            /// 🔥 REQUIREMENTS
-            if ((job.skills ?? []).isNotEmpty)
-              _sectionList("Requirements", job.skills),
-
-            /// 🔥 PREFERRED
-            if ((job.certifications ?? []).isNotEmpty)
-              _sectionList("Preferred", job.certifications),
-
-            /// 🔥 IMPORTANT DATES
-            _sectionInfo("Important Dates", [
-              _info("Start Date", _fmt(job.startDate)),
-              _info("End Date", _fmt(job.endDate)),
-              _info("Test Date", _fmt(job.onlineTestDate)),
-              _info("Offer Date", _fmt(job.offerRolloutDate)),
-              _info("Expires", _fmt(job.expireAt)),
-            ]),
-
-            /// 🔥 PACKAGE
-            _sectionInfo("Package Details", [
-              _info("CTC", pkg?.totalCTC?.toString()),
-              _info("Fixed Pay", pkg?.fixedPay?.toString()),
-              _info("Bonus", pkg?.joiningBonus?.toString()),
-            ]),
-
-            /// 🔥 SELECTION PROCESS
-            if ((job.selectionProcess ?? []).isNotEmpty)
-              _sectionList("Selection Process", job.selectionProcess),
-
-            /// 🔥 TOOLS
-            if ((job.toolsAndPlatforms ?? []).isNotEmpty)
-              _sectionList("Tools & Platforms", job.toolsAndPlatforms),
-
-            /// 🔥 BENEFITS
-            _sectionList("Benefits", job.benefits),
-
-            /// 🔥 CONTACT
-            if (contact != null)
-              _sectionInfo("Contact Person", [
-                _info("Name", contact.name),
-                _info("Email", contact.email),
-                _info("Mobile", contact.mobile),
-              ]),
-
-            /// 🔥 COMPANY
-            if (company != null)
-              _sectionInfo("Company Details", [
-                _info("Name", company.companyName),
-                _info("Industry", company.industryType),
-                _info("City", company.city),
-              ]),
-
-            /// 🔥 EMPLOYER
-            if (employer != null)
-              _sectionInfo("Employer", [
-                _info("Name", employer.name),
-                _info("Designation", employer.designation),
-              ]),
-            _containerSection(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// COMPANY
-                  if (company != null) ...[
-                    const Text(
-                      "Company Details",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 14),
-
-                    _highlightInfo("Company", company.companyName),
-                    _highlightInfo("Industry", company.industryType),
-                    _highlightInfo("Company Type", company.companyType),
-
-                    _highlightInfo(
-                      "Location",
-                      "${company.city ?? ''}, ${company.state ?? ''}",
-                    ),
-
-                    _highlightInfo("Employees", company.numberOfEmployees),
-
-                    const SizedBox(height: 20),
-                  ],
-
-                  /// CONTACT PERSON
-                  if (contact != null) ...[
-                    const SizedBox(height: 20),
-
-                    const Text(
-                      "Contact Person",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-
-                    const SizedBox(height: 14),
-
-                    _highlightInfo("Name", contact.name),
-                    _highlightInfo("Email", contact.email),
-                    _highlightInfo("Designation", employer?.designation),
-
-                    _highlightInfo("Mobile", contact.mobile),
-                    const SizedBox(height: 16),
-
-                    GestureDetector(
-                      onTap: () {
-                        final userId = job.companyPosted?.userId;
-
-                        if (userId == null || userId.isEmpty) return;
-
-                        final user = User(
-                          id: userId,
-                          name: employer?.name,
-                          email: employer?.email,
-                          phone: employer?.mobile,
-                        );
-
-                        context.pushNamed(RouteNames.chatUser, extra: user);
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton(
+                  onPressed: isApplied
+                      ? null
+                      : () => applicationVM.apply(
+                          jobId: jobId,
+                          jobType: "Off-campus",
+                          companyName: widget.job.companyName ?? '',
                         ),
-                        decoration: BoxDecoration(
-                          color: AppColors.kGreen.withOpacity(.15),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: AppColors.kGreen.withOpacity(.4),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isApplied ? Colors.grey : AppColors.kGreen,
+                  ),
+                  child: Text(isApplied ? 'Applied' : 'Apply Now'),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// 🔥 HEADER
+              _header(),
+
+              const SizedBox(height: 20),
+
+              /// 🔥 HIGHLIGHTED COMPANY + POSTED BY SECTION
+
+              /// 🔥 ABOUT
+              if ((widget.job.description ?? '').isNotEmpty)
+                _sectionText("About the Role", widget.job.description),
+
+              /// 🔥 RESPONSIBILITIES
+              if ((widget.job.workAchievements ?? []).isNotEmpty)
+                _sectionList("Responsibilities", widget.job.workAchievements),
+
+              /// 🔥 REQUIREMENTS
+              if ((widget.job.skills ?? []).isNotEmpty)
+                _sectionList("Requirements", widget.job.skills),
+
+              /// 🔥 PREFERRED
+              if ((widget.job.certifications ?? []).isNotEmpty)
+                _sectionList("Preferred", widget.job.certifications),
+
+              /// 🔥 IMPORTANT DATES
+              _sectionInfo("Important Dates", [
+                _info("Start Date", _fmt(widget.job.startDate)),
+                _info("End Date", _fmt(widget.job.endDate)),
+                _info("Test Date", _fmt(widget.job.onlineTestDate)),
+                _info("Offer Date", _fmt(widget.job.offerRolloutDate)),
+                _info("Expires", _fmt(widget.job.expireAt)),
+              ]),
+
+              /// 🔥 PACKAGE
+              _sectionInfo("Package Details", [
+                _info("CTC", pkg?.totalCTC?.toString()),
+                _info("Fixed Pay", pkg?.fixedPay?.toString()),
+                _info("Bonus", pkg?.joiningBonus?.toString()),
+              ]),
+
+              /// 🔥 SELECTION PROCESS
+              if ((widget.job.selectionProcess ?? []).isNotEmpty)
+                _sectionList("Selection Process", widget.job.selectionProcess),
+
+              /// 🔥 TOOLS
+              if ((widget.job.toolsAndPlatforms ?? []).isNotEmpty)
+                _sectionList("Tools & Platforms", widget.job.toolsAndPlatforms),
+
+              /// 🔥 BENEFITS
+              _sectionList("Benefits", widget.job.benefits),
+
+              /// 🔥 CONTACT
+              if (contact != null)
+                _sectionInfo("Contact Person", [
+                  _info("Name", contact.name),
+                  _info("Email", contact.email),
+                  _info("Mobile", contact.mobile),
+                ]),
+
+              /// 🔥 COMPANY
+              if (company != null)
+                _sectionInfo("Company Details", [
+                  _info("Name", company.companyName),
+                  _info("Industry", company.industryType),
+                  _info("City", company.city),
+                ]),
+
+              /// 🔥 EMPLOYER
+              if (employer != null)
+                _sectionInfo("Employer", [
+                  _info("Name", employer.name),
+                  _info("Designation", employer.designation),
+                ]),
+              _containerSection(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// COMPANY
+                    if (company != null) ...[
+                      const Text(
+                        "Company Details",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 14),
+
+                      _highlightInfo("Company", company.companyName),
+                      _highlightInfo("Industry", company.industryType),
+                      _highlightInfo("Company Type", company.companyType),
+
+                      _highlightInfo(
+                        "Location",
+                        "${company.city ?? ''}, ${company.state ?? ''}",
+                      ),
+
+                      _highlightInfo("Employees", company.numberOfEmployees),
+
+                      const SizedBox(height: 20),
+                    ],
+
+                    /// CONTACT PERSON
+                    if (contact != null) ...[
+                      const SizedBox(height: 20),
+
+                      const Text(
+                        "Contact Person",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                      const SizedBox(height: 14),
+
+                      _highlightInfo("Name", contact.name),
+                      _highlightInfo("Email", contact.email),
+                      _highlightInfo("Designation", employer?.designation),
+
+                      _highlightInfo("Mobile", contact.mobile),
+                      const SizedBox(height: 16),
+
+                      GestureDetector(
+                        onTap: () {
+                          final userId = widget.job.companyPosted?.userId;
+
+                          if (userId == null || userId.isEmpty) return;
+
+                          final user = User(
+                            id: userId,
+                            name: employer?.name,
+                            email: employer?.email,
+                            phone: employer?.mobile,
+                          );
+
+                          context.pushNamed(RouteNames.chatUser, extra: user);
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 10,
+                          ),
+                          decoration: BoxDecoration(
+                            color: AppColors.kGreen.withOpacity(.15),
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              color: AppColors.kGreen.withOpacity(.4),
+                            ),
+                          ),
+                          child: const Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.message,
+                                size: 18,
+                                color: Colors.green,
+                              ),
+
+                              SizedBox(width: 8),
+
+                              Text(
+                                "Message",
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.message, size: 18, color: Colors.green),
-
-                            SizedBox(width: 8),
-
-                            Text(
-                              "Message",
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
                       ),
-                    ),
+                    ],
                   ],
-                ],
+                ),
               ),
-            ),
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            Text(
-              "Alumni Who Can Help",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
+              Text(
+                "Alumni Who Can Help",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
 
-            const SizedBox(height: 12),
+              const SizedBox(height: 12),
 
-            /// 🔥 ALUMNI LIST
-            Consumer<DashboardViewModel>(
-              builder: (context, vm, _) {
-                if (vm.groupedAlumni.isEmpty) {
-                  return const Text(
-                    "No alumni available",
-                    style: TextStyle(color: Colors.grey),
+              /// 🔥 ALUMNI LIST
+              Consumer<InternshipDetailViewModel>(
+                builder: (context, vm, _) {
+                  if (vm.companyAlumni.isEmpty) {
+                    return const Text(
+                      "No alumni available",
+                      style: TextStyle(color: Colors.grey),
+                    );
+                  }
+
+                  final alumniList = vm.companyAlumni.values.toList();
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: alumniList.length.clamp(0, 3), // show 3 like UI
+                    itemBuilder: (context, index) {
+                      return AlumniHiringCard(jobs: alumniList[index]);
+                    },
                   );
-                }
-
-                final alumniList = vm.groupedAlumni.values.toList();
-
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: alumniList.length.clamp(0, 3), // show 3 like UI
-                  itemBuilder: (context, index) {
-                    return AlumniHiringCard(jobs: alumniList[index]);
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 40),
-          ],
+                },
+              ),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
@@ -348,31 +374,32 @@ class JobDetailView extends StatelessWidget {
 
   /// 🔥 HEADER
   Widget _header() {
-    final title = job.jobRoles?.isNotEmpty == true
-        ? job.jobRoles!.first
-        : job.jobTitle ?? "-";
+    final title = widget.job.jobRoles?.isNotEmpty == true
+        ? widget.job.jobRoles!.first
+        : widget.job.jobTitle ?? "-";
 
-    final company = job.companyName?.isNotEmpty == true
-        ? job.companyName!
-        : job.companyPosted?.companyDetails?.companyName?.isNotEmpty == true
-        ? job.companyPosted!.companyDetails!.companyName!
-        : job.candidatePosted?.currentCompany?.isNotEmpty == true
-        ? job.candidatePosted!.currentCompany!
+    final company = widget.job.companyName?.isNotEmpty == true
+        ? widget.job.companyName!
+        : widget.job.companyPosted?.companyDetails?.companyName?.isNotEmpty ==
+              true
+        ? widget.job.companyPosted!.companyDetails!.companyName!
+        : widget.job.candidatePosted?.currentCompany?.isNotEmpty == true
+        ? widget.job.candidatePosted!.currentCompany!
         : "-";
 
-    final location = job.location?.join(', ') ?? "-";
+    final location = widget.job.location?.join(', ') ?? "-";
 
-    final workMode = job.workMode?.isNotEmpty == true
-        ? job.workMode!.join(', ')
+    final workMode = widget.job.workMode?.isNotEmpty == true
+        ? widget.job.workMode!.join(', ')
         : null;
 
-    final salary = job.packageDetails?.totalCTC != null
-        ? "₹${job.packageDetails!.totalCTC} LPA"
+    final salary = widget.job.packageDetails?.totalCTC != null
+        ? "₹${widget.job.packageDetails!.totalCTC} LPA"
         : null;
 
-    final experience = job.yearsOfExperience?.toString();
+    final experience = widget.job.yearsOfExperience?.toString();
 
-    final match = job.matchScore ?? 0;
+    final match = widget.job.matchScore ?? 0;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -436,14 +463,14 @@ class JobDetailView extends StatelessWidget {
               const SizedBox(width: 12),
 
               Text(
-                "${job.views ?? 0} referrers",
+                "${widget.job.views ?? 0} referrers",
                 style: const TextStyle(color: Colors.grey),
               ),
 
               const SizedBox(width: 12),
 
               Text(
-                "${job.numberOfStudent ?? 0} alumni",
+                "${widget.job.numberOfStudent ?? 0} alumni",
                 style: const TextStyle(color: Colors.green),
               ),
             ],

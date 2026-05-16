@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
@@ -104,6 +106,8 @@ class ApplicationViewModel extends ViewStateProvider {
     internship.fold((_) {}, (data) => all.addAll(data));
 
     appliedApplications = all;
+
+    log('Applied pplication: ${appliedApplications.toString()}');
 
     appliedJobIds.clear();
     for (final job in all) {
