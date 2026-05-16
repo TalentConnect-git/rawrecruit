@@ -15,6 +15,8 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     return Job.fromJson({
       ...(job ?? {}),
 
+      "referralCompany": e['referralCompany'],
+
       /// 🔥 prevent parsing crash
       "companyPosted": null,
       "jobCompanyPosted": null,
@@ -63,7 +65,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       body: {
         "referralId": referralId,
         'matchScore': matchScore,
-        'companyName': companyName,
+        'referralCompany': companyName,
       },
       isSafeRoute: true,
     );

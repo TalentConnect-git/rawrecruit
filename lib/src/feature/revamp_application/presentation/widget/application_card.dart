@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
@@ -6,10 +8,7 @@ import 'package:rawrecruit/src/core/index.dart';
 class ApplicationCard extends StatelessWidget {
   final Job model;
 
-  const ApplicationCard({
-    super.key,
-    required this.model,
-  });
+  const ApplicationCard({super.key, required this.model});
 
   /// 🔥 TOTAL STEPS
   static const int totalSteps = 7;
@@ -42,8 +41,7 @@ class ApplicationCard extends StatelessWidget {
       return 5;
     }
 
-    if (s.contains("accepted") ||
-        s.contains("rejected")) {
+    if (s.contains("accepted") || s.contains("rejected")) {
       return 6;
     }
 
@@ -63,16 +61,14 @@ class ApplicationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final title = (model.jobRoles?.isNotEmpty == true)
         ? model.jobRoles!.first
-        : (model.jobTitle?.isNotEmpty == true
-            ? model.jobTitle!
-            : "-");
+        : (model.jobTitle?.isNotEmpty == true ? model.jobTitle! : "-");
 
-    final company =
-        (model.companyName?.isNotEmpty == true)
-            ? model.companyName!
-            : (model.jobType == "Referral"
-                ? "Referral"
-                : "-");
+    final company = (model.referralCompany != null)
+        ? model.referralCompany
+        : (model.jobType == "Referral" ? "Referral" : "-");
+
+    log('Referral Company: ${model.referralCompany}');
+    log(' Company: ${company}');
 
     final status = model.status ?? "pending";
 
@@ -82,16 +78,12 @@ class ApplicationCard extends StatelessWidget {
 
     final percent = _getPercentage(status);
 
-    final isRejected =
-        status.toLowerCase().contains("rejected");
+    final isRejected = status.toLowerCase().contains("rejected");
 
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: () {
-        context.pushNamed(
-          RouteNames.applicationDetail,
-          extra: model,
-        );
+        context.pushNamed(RouteNames.applicationDetail, extra: model);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -99,18 +91,14 @@ class ApplicationCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.kTile,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: AppColors.kBorder,
-          ),
+          border: Border.all(color: AppColors.kBorder),
         ),
         child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// 🔹 HEADER
             Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
                   child: Text(
@@ -136,23 +124,17 @@ class ApplicationCard extends StatelessWidget {
             const SizedBox(height: 6),
 
             Text(
-              company,
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-              ),
+              company ?? '',
+              style: const TextStyle(color: Colors.grey, fontSize: 12),
             ),
 
             const SizedBox(height: 16),
 
-   
             /// 🔥 STEP LABEL
             Text(
               status,
               style: TextStyle(
-                color: isRejected
-                    ? Colors.red
-                    : AppColors.kGreen,
+                color: isRejected ? Colors.red : AppColors.kGreen,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -161,34 +143,26 @@ class ApplicationCard extends StatelessWidget {
 
             /// 🔥 MINI STEPPER
             Row(
-              children: List.generate(
-                totalSteps,
-                (index) {
-                  final isActive = index <= step;
+              children: List.generate(totalSteps, (index) {
+                final isActive = index <= step;
 
-                  final color = isActive
-                      ? (isRejected &&
-                              index == step
+                final color = isActive
+                    ? (isRejected && index == step
                           ? Colors.red
                           : AppColors.kGreen)
-                      : Colors.grey.shade700;
+                    : Colors.grey.shade700;
 
-                  return Expanded(
-                    child: Container(
-                      margin:
-                          const EdgeInsets.symmetric(
-                        horizontal: 2,
-                      ),
-                      height: 6,
-                      decoration: BoxDecoration(
-                        color: color,
-                        borderRadius:
-                            BorderRadius.circular(20),
-                      ),
+                return Expanded(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 2),
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(20),
                     ),
-                  );
-                },
-              ),
+                  ),
+                );
+              }),
             ),
           ],
         ),

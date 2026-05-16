@@ -90,6 +90,7 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   jobCompanyPosted: json['jobCompanyPosted'] == null
       ? null
       : JobPosting.fromJson(json['jobCompanyPosted'] as Map<String, dynamic>),
+  referralCompany: json['referralCompany'] as String?,
   onlineTestDate: json['onlineTestDate'] == null
       ? null
       : DateTime.parse(json['onlineTestDate'] as String),
@@ -165,6 +166,7 @@ Map<String, dynamic> _$JobToJson(_Job instance) => <String, dynamic>{
   ),
   'companyPosted': instance.companyPosted,
   'jobCompanyPosted': instance.jobCompanyPosted,
+  'referralCompany': instance.referralCompany,
   'onlineTestDate': instance.onlineTestDate?.toIso8601String(),
   'offerRolloutDate': instance.offerRolloutDate?.toIso8601String(),
   'startDate': instance.startDate?.toIso8601String(),

@@ -7,21 +7,40 @@ import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortl
 
 import '../../../common/index.dart';
 import '../../revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
-import 'view_model/dashboard_view_model.dart';
+import 'view_model/internship_detail_view_model.dart';
 
-class InternshipDetailView extends StatelessWidget {
+class InternshipDetailView extends StatefulWidget {
   final Job internship;
 
   const InternshipDetailView({super.key, required this.internship});
 
+  @override
+  State<InternshipDetailView> createState() => _InternshipDetailViewState();
+}
+
+class _InternshipDetailViewState extends State<InternshipDetailView> {
   String _fmt(DateTime? date) {
     if (date == null) return '-';
     return "${date.day}/${date.month}/${date.year}";
   }
 
+  InternshipDetailViewModel internshipDetailViewModel =
+      InternshipDetailViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await internshipDetailViewModel.fetchCompanyAlumni(
+        companyName: widget.internship.candidatePosted?.currentCompany ?? '',
+        userId: widget.internship.candidatePosted?.userId ?? '',
+      );
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    final jobId = internship.id ?? '';
+    final jobId = widget.internship.id ?? '';
 
     final shortlistVM = context.watch<ShortlistViewModel>();
     final applicationVM = context.watch<ApplicationViewModel>();
@@ -29,135 +48,173 @@ class InternshipDetailView extends StatelessWidget {
     final isSaved = shortlistVM.savedJobIds.contains(jobId);
     final isApplied = applicationVM.isApplied(jobId);
 
-    final pkg = internship.packageDetails;
-    final contact = internship.contactPerson;
-    final company = internship.companyPosted?.companyDetails;
+    final pkg = widget.internship.packageDetails;
+    final contact = widget.internship.contactPerson;
+    final company = widget.internship.companyPosted?.companyDetails;
 
-    return Scaffold(
-      backgroundColor: AppColors.secBorder,
+    return ChangeNotifierProvider.value(
+      value: internshipDetailViewModel,
+      child: Scaffold(
+        backgroundColor: AppColors.secBorder,
 
-      appBar: AppBar(
-        backgroundColor: AppColors.kCard,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: Text(
-          internship.jobRoles?.first ?? 'Internship Detail',
-          style: const TextStyle(color: Colors.white),
+        appBar: AppBar(
+          backgroundColor: AppColors.kCard,
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: Text(
+            widget.internship.jobRoles?.first ?? 'Internship Detail',
+            style: const TextStyle(color: Colors.white),
+          ),
         ),
-      ),
 
-      /// 🔻 BUTTONS
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-        child: Row(
-          children: [
-            Expanded(
-              child: OutlinedButton(
-                onPressed: () => shortlistVM.toggleSave(
-                  jobId: jobId,
-                  jobType: 'Internship',
-                  isSaved: isSaved,
-                ),
-                child: Text(
-                  isSaved ? 'Saved' : 'Save',
-                  style: TextStyle(color: AppColors.kGreen),
+        /// 🔻 BUTTONS
+        bottomNavigationBar: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+          child: Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => shortlistVM.toggleSave(
+                    jobId: jobId,
+                    jobType: 'Internship',
+                    isSaved: isSaved,
+                  ),
+                  child: Text(
+                    isSaved ? 'Saved' : 'Save',
+                    style: TextStyle(color: AppColors.kGreen),
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              flex: 2,
-              child: ElevatedButton(
-                onPressed: isApplied
-                    ? null
-                    : () => applicationVM.apply(
-                        jobId: jobId,
-                        jobType: "Internship",
-                        companyName: internship.companyName ?? '',
+              const SizedBox(width: 12),
+              Expanded(
+                flex: 2,
+                child: ElevatedButton(
+                  onPressed: isApplied
+                      ? null
+                      : () => applicationVM.apply(
+                          jobId: jobId,
+                          jobType: "Internship",
+                          companyName: widget.internship.companyName ?? '',
+                        ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: isApplied ? Colors.grey : AppColors.kGreen,
+                  ),
+                  child: Text(isApplied ? 'Applied' : 'Apply Now'),
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        /// 🔥 BODY
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// 🔥 HEADER
+              _header(),
+
+              const SizedBox(height: 20),
+
+              /// 🔥 HIGHLIGHTED COMPANY SECTION
+
+              /// 🔥 ABOUT
+              if ((widget.internship.description ?? '').isNotEmpty)
+                _sectionText("About the Role", widget.internship.description),
+
+              /// 🔥 RESPONSIBILITIES
+              if ((widget.internship.workAchievements ?? []).isNotEmpty)
+                _sectionList(
+                  "Responsibilities",
+                  widget.internship.workAchievements,
+                ),
+
+              /// 🔥 REQUIREMENTS
+              if ((widget.internship.skills ?? []).isNotEmpty)
+                _sectionList("Requirements", widget.internship.skills),
+
+              /// 🔥 IMPORTANT DATES
+              _sectionInfo("Important Dates", [
+                _info("Start Date", _fmt(widget.internship.startDate)),
+                _info("End Date", _fmt(widget.internship.endDate)),
+                _info("Posted", _fmt(widget.internship.createdAt)),
+              ]),
+
+              /// 🔥 STIPEND
+              _sectionInfo("Stipend", [
+                _info("CTC", pkg?.totalCTC?.toString()),
+                _info("Fixed Pay", pkg?.fixedPay?.toString()),
+                _info("Bonus", pkg?.joiningBonus?.toString()),
+              ]),
+
+              /// 🔥 SELECTION PROCESS
+              if ((widget.internship.selectionProcess ?? []).isNotEmpty)
+                _sectionList(
+                  "Selection Process",
+                  widget.internship.selectionProcess,
+                ),
+
+              /// 🔥 TOOLS
+              if ((widget.internship.toolsAndPlatforms ?? []).isNotEmpty)
+                _sectionList(
+                  "Tools & Platforms",
+                  widget.internship.toolsAndPlatforms,
+                ),
+
+              /// 🔥 BENEFITS
+              if ((widget.internship.benefits ?? []).isNotEmpty)
+                _sectionList("Benefits", widget.internship.benefits),
+
+              /// 🔥 CONTACT
+              if (contact != null)
+                _sectionInfo("Contact Person", [
+                  _info("Name", contact.name),
+                  _info("Email", contact.email),
+                  _info("Mobile", contact.mobile),
+                ]),
+
+              /// 🔥 COMPANY
+              if (company != null)
+                _sectionInfo("Company Details", [
+                  _info("Name", company.companyName),
+                  _info("Industry", company.industryType),
+                  _info("City", company.city),
+                ]),
+              _containerSection(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// COMPANY
+                    if (company != null) ...[
+                      const Text(
+                        "Company Details",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: isApplied ? Colors.grey : AppColors.kGreen,
-                ),
-                child: Text(isApplied ? 'Applied' : 'Apply Now'),
-              ),
-            ),
-          ],
-        ),
-      ),
 
-      /// 🔥 BODY
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            /// 🔥 HEADER
-            _header(),
+                      const SizedBox(height: 14),
 
-            const SizedBox(height: 20),
+                      _highlightInfo("Company", company.companyName),
+                      _highlightInfo("Industry", company.industryType),
+                      _highlightInfo("Company Type", company.companyType),
 
-            /// 🔥 HIGHLIGHTED COMPANY SECTION
+                      _highlightInfo(
+                        "Location",
+                        "${company.city ?? ''}, ${company.state ?? ''}",
+                      ),
 
-            /// 🔥 ABOUT
-            if ((internship.description ?? '').isNotEmpty)
-              _sectionText("About the Role", internship.description),
+                      _highlightInfo("Employees", company.numberOfEmployees),
 
-            /// 🔥 RESPONSIBILITIES
-            if ((internship.workAchievements ?? []).isNotEmpty)
-              _sectionList("Responsibilities", internship.workAchievements),
+                      const SizedBox(height: 20),
+                    ],
 
-            /// 🔥 REQUIREMENTS
-            if ((internship.skills ?? []).isNotEmpty)
-              _sectionList("Requirements", internship.skills),
-
-            /// 🔥 IMPORTANT DATES
-            _sectionInfo("Important Dates", [
-              _info("Start Date", _fmt(internship.startDate)),
-              _info("End Date", _fmt(internship.endDate)),
-              _info("Posted", _fmt(internship.createdAt)),
-            ]),
-
-            /// 🔥 STIPEND
-            _sectionInfo("Stipend", [
-              _info("CTC", pkg?.totalCTC?.toString()),
-              _info("Fixed Pay", pkg?.fixedPay?.toString()),
-              _info("Bonus", pkg?.joiningBonus?.toString()),
-            ]),
-
-            /// 🔥 SELECTION PROCESS
-            if ((internship.selectionProcess ?? []).isNotEmpty)
-              _sectionList("Selection Process", internship.selectionProcess),
-
-            /// 🔥 TOOLS
-            if ((internship.toolsAndPlatforms ?? []).isNotEmpty)
-              _sectionList("Tools & Platforms", internship.toolsAndPlatforms),
-
-            /// 🔥 BENEFITS
-            if ((internship.benefits ?? []).isNotEmpty)
-              _sectionList("Benefits", internship.benefits),
-
-            /// 🔥 CONTACT
-            if (contact != null)
-              _sectionInfo("Contact Person", [
-                _info("Name", contact.name),
-                _info("Email", contact.email),
-                _info("Mobile", contact.mobile),
-              ]),
-
-            /// 🔥 COMPANY
-            if (company != null)
-              _sectionInfo("Company Details", [
-                _info("Name", company.companyName),
-                _info("Industry", company.industryType),
-                _info("City", company.city),
-              ]),
-            _containerSection(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  /// COMPANY
-                  if (company != null) ...[
+                    /// EMPLOYER
+                    /// MESSAGE RECRUITER
                     const Text(
-                      "Company Details",
+                      "Connect",
                       style: TextStyle(
                         color: Colors.white,
                         fontSize: 16,
@@ -167,129 +224,103 @@ class InternshipDetailView extends StatelessWidget {
 
                     const SizedBox(height: 14),
 
-                    _highlightInfo("Company", company.companyName),
-                    _highlightInfo("Industry", company.industryType),
-                    _highlightInfo("Company Type", company.companyType),
+                    GestureDetector(
+                      onTap: () {
+                        final userId = widget.internship.postedByUser;
 
-                    _highlightInfo(
-                      "Location",
-                      "${company.city ?? ''}, ${company.state ?? ''}",
+                        if (userId == null || userId.isEmpty) return;
+
+                        final user = User(id: userId);
+
+                        context.pushNamed(RouteNames.chatUser, extra: user);
+                      },
+
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 16,
+                          vertical: 10,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.kGreen.withOpacity(.15),
+                          borderRadius: BorderRadius.circular(30),
+                          border: Border.all(
+                            color: AppColors.kGreen.withOpacity(.4),
+                          ),
+                        ),
+
+                        child: const Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.message, size: 18, color: Colors.green),
+
+                            SizedBox(width: 8),
+
+                            Text(
+                              "Message Recruiter",
+                              style: TextStyle(
+                                color: Colors.green,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-
-                    _highlightInfo("Employees", company.numberOfEmployees),
-
-                    const SizedBox(height: 20),
                   ],
+                ),
+              ),
+              const SizedBox(height: 24),
 
-                  /// EMPLOYER
-                  /// MESSAGE RECRUITER
-                  const Text(
-                    "Connect",
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Alumni Who Can Help",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 16,
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-
-                  const SizedBox(height: 14),
-
                   GestureDetector(
                     onTap: () {
-                      final userId = internship.postedByUser;
-
-                      if (userId == null || userId.isEmpty) return;
-
-                      final user = User(id: userId);
-
-                      context.pushNamed(RouteNames.chatUser, extra: user);
+                      context.goNamed(RouteNames.shortlist);
                     },
-
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 10,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.kGreen.withOpacity(.15),
-                        borderRadius: BorderRadius.circular(30),
-                        border: Border.all(
-                          color: AppColors.kGreen.withOpacity(.4),
-                        ),
-                      ),
-
-                      child: const Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.message, size: 18, color: Colors.green),
-
-                          SizedBox(width: 8),
-
-                          Text(
-                            "Message Recruiter",
-                            style: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
+                    child: Text(
+                      "View All",
+                      style: TextStyle(color: AppColors.kGreen),
                     ),
                   ),
                 ],
               ),
-            ),
-            const SizedBox(height: 24),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Alumni Who Can Help",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    context.goNamed(RouteNames.shortlist);
-                  },
-                  child: Text(
-                    "View All",
-                    style: TextStyle(color: AppColors.kGreen),
-                  ),
-                ),
-              ],
-            ),
+              const SizedBox(height: 12),
 
-            const SizedBox(height: 12),
+              /// 🔥 ALUMNI LIST
+              Consumer<InternshipDetailViewModel>(
+                builder: (context, vm, _) {
+                  if (vm.companyAlumni.isEmpty) {
+                    return const Text(
+                      "No alumni available",
+                      style: TextStyle(color: Colors.grey),
+                    );
+                  }
 
-            /// 🔥 ALUMNI LIST
-            Consumer<DashboardViewModel>(
-              builder: (context, vm, _) {
-                if (vm.groupedAlumni.isEmpty) {
-                  return const Text(
-                    "No alumni available",
-                    style: TextStyle(color: Colors.grey),
+                  final alumniList = vm.companyAlumni.values.toList();
+
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: alumniList.length.clamp(0, 3),
+                    itemBuilder: (context, index) {
+                      return AlumniHiringCard(jobs: alumniList[index]);
+                    },
                   );
-                }
-
-                final alumniList = vm.groupedAlumni.values.toList();
-
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: alumniList.length.clamp(0, 3),
-                  itemBuilder: (context, index) {
-                    return AlumniHiringCard(jobs: alumniList[index]);
-                  },
-                );
-              },
-            ),
-            const SizedBox(height: 40),
-          ],
+                },
+              ),
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
@@ -297,20 +328,20 @@ class InternshipDetailView extends StatelessWidget {
 
   /// 🔥 HEADER (FULL LIKE JOB)
   Widget _header() {
-    final title = internship.jobRoles?.isNotEmpty == true
-        ? internship.jobRoles!.first
-        : internship.jobTitle ?? "-";
+    final title = widget.internship.jobRoles?.isNotEmpty == true
+        ? widget.internship.jobRoles!.first
+        : widget.internship.jobTitle ?? "-";
 
-    final company = internship.companyName ?? "-";
-    final location = internship.location?.join(', ') ?? "-";
-    final workMode = internship.workMode?.join(', ');
-    final salary = internship.packageDetails?.totalCTC != null
-        ? "₹${internship.packageDetails!.totalCTC}"
+    final company = widget.internship.companyName ?? "-";
+    final location = widget.internship.location?.join(', ') ?? "-";
+    final workMode = widget.internship.workMode?.join(', ');
+    final salary = widget.internship.packageDetails?.totalCTC != null
+        ? "₹${widget.internship.packageDetails!.totalCTC}"
         : null;
 
-    final match = internship.matchScore ?? 0;
-    final referrers = internship.views ?? 0;
-    final alumni = internship.numberOfStudent ?? 0;
+    final match = widget.internship.matchScore ?? 0;
+    final referrers = widget.internship.views ?? 0;
+    final alumni = widget.internship.numberOfStudent ?? 0;
 
     return Container(
       padding: const EdgeInsets.all(16),
