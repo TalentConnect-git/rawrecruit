@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/feature/revamp_auth/presentation/index.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
 
 import '../../../common/index.dart';
 import '../../../core/index.dart';
+import '../../revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 
 class RevampLoginView extends StatefulWidget {
   const RevampLoginView({super.key});
@@ -116,14 +118,32 @@ class _LoginViewState extends State<RevampLoginView> {
                           failure: failure,
                           successMsg: 'Login Successful!',
                           popOnSuccess: false,
-                          successCallback: () {
-                            context.pushReplacementNamed(
-                              RouteNames.dashboard,
-                              extra: {
-                                'userType': getIt<AppStateProvider>().userType,
-                              },
-                            );
-                          },
+                          successCallback: () async {
+  final onboardingService =
+      getIt<OnboardingLocalService>();
+
+  final completed =
+      await onboardingService.isCompleted();
+
+  if (completed) {
+    context.pushReplacementNamed(
+      RouteNames.dashboard,
+      extra: {
+        'userType':
+            getIt<AppStateProvider>()
+                .userType,
+      },
+    );
+  } else {
+      Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            const OnboardingFlow(),
+      ),
+    );
+  }
+},
                         );
                       }
                     },

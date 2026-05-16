@@ -4,6 +4,8 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
 
+import '../widgets/onboarding_local_service.dart';
+
 class LinksPage extends StatefulWidget {
   final VoidCallback onBack;
   final User data;
@@ -71,6 +73,8 @@ class _LinksPageState extends State<LinksPage> {
 
     context.read<AppStateProvider>().data =
         updatedUser;
+        getIt<OnboardingLocalService>()
+    .saveUser(updatedUser);
   }
 
   @override

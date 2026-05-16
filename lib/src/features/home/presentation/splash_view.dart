@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show RouteNames, getIt, AppStateProvider, SecretRepo;
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
+
+import '../../../feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -37,11 +40,17 @@ class _SplashViewState extends State<SplashView> {
         await appStateProvider.getAuthDetails();
         await appStateProvider.getUserDetails();
         if (appStateProvider.isAuthComplete) {
-          if (appStateProvider.isProfileRemaining) {
-            next = RouteNames.onboarding;
-          } else {
-            next = RouteNames.dashboard;
-          }
+        final onboardingService =
+    getIt<OnboardingLocalService>();
+
+final completed =
+    await onboardingService.isCompleted();
+
+if (!completed) {
+  next = 'onboarding_flow';
+} else {
+  next = RouteNames.dashboard;
+}
         } else {
           await SecretRepo.remove('auth_token');
           next = RouteNames.login;
@@ -54,10 +63,23 @@ class _SplashViewState extends State<SplashView> {
 
     if (!mounted) return;
 
-    context.pushReplacementNamed(
-      next,
-      extra: {'userType': appStateProvider.userType},
-    );
+   if (next == 'onboarding_flow') {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (_) =>
+          const OnboardingFlow(),
+    ),
+  );
+} else {
+  context.pushReplacementNamed(
+    next,
+    extra: {
+      'userType':
+          appStateProvider.userType,
+    },
+  );
+}
   }
 
   @override

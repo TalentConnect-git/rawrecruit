@@ -1152,6 +1152,8 @@ SizedBox(height: 18,),
                       ),
                     ),
                   ],
+
+                              const SizedBox(height: 15),
                   if ((user.resume?.isNotEmpty ?? false))
                     SizedBox(
                       width: double.infinity,

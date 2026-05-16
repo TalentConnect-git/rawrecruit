@@ -323,7 +323,7 @@ Future<void> fetchCities(String state) async {
     "Marketing Specialist",
     "Sales Executive",
     "Finance Analyst",
-    "Others",
+
   ];
 
   final List<String> skillOptions = [
@@ -346,7 +346,6 @@ Future<void> fetchCities(String state) async {
     'Git',
     'REST API',
     'GraphQL',
-    'Others',
   ];
 
   final List<String> certificationOptions = [
@@ -358,7 +357,6 @@ Future<void> fetchCities(String state) async {
     'CFA',
     'CISSP',
     'Scrum Master',
-    'Others',
   ];
 
   final List<String> benefitOptions = [
@@ -372,7 +370,6 @@ Future<void> fetchCities(String state) async {
     'Stock Options',
     'Learning Budget',
     'Gym Membership',
-    'Others',
   ];
 
   // ── fieldOfStudyOptions — dynamic getter based on minEducation ────────────
@@ -385,7 +382,6 @@ Future<void> fetchCities(String state) async {
           'Commerce Stream',
           'Arts Stream',
           'Vocational',
-          'Others',
         ];
 
       /// BACHELOR DEGREES
@@ -399,7 +395,6 @@ Future<void> fetchCities(String state) async {
           'Electronics & Communication',
           'Information Technology',
           'Artificial Intelligence',
-          'Others',
         ];
 
       case "B.Sc":
@@ -410,7 +405,6 @@ Future<void> fetchCities(String state) async {
           'Chemistry',
           'Biotechnology',
           'Data Science',
-          'Others',
         ];
 
       case "B.Com":
@@ -420,7 +414,6 @@ Future<void> fetchCities(String state) async {
           'Banking',
           'Taxation',
           'Economics',
-          'Others',
         ];
 
       case "B.A":
@@ -432,7 +425,6 @@ Future<void> fetchCities(String state) async {
           'Psychology',
           'Economics',
           'Law',
-          'Others',
         ];
 
       case "BBA":
@@ -443,7 +435,6 @@ Future<void> fetchCities(String state) async {
           'International Business',
           'Operations',
           'Entrepreneurship',
-          'Others',
         ];
 
       /// MASTER DEGREES
@@ -454,7 +445,6 @@ Future<void> fetchCities(String state) async {
           'Data Science',
           'AI & ML',
           'Structural Engineering',
-          'Others',
         ];
 
       case "M.Sc":
@@ -465,7 +455,6 @@ Future<void> fetchCities(String state) async {
           'Chemistry',
           'Biotechnology',
           'Data Science',
-          'Others',
         ];
 
       case "M.Com":
@@ -475,7 +464,6 @@ Future<void> fetchCities(String state) async {
           'Banking',
           'Economics',
           'Taxation',
-          'Others',
         ];
 
       case "MBA":
@@ -486,7 +474,6 @@ Future<void> fetchCities(String state) async {
           'Operations',
           'Business Analytics',
           'International Business',
-          'Others',
         ];
 
       case "MCA":
@@ -496,7 +483,6 @@ Future<void> fetchCities(String state) async {
           'AI & ML',
           'Cyber Security',
           'Cloud Computing',
-          'Others',
         ];
 
       case "M.Pharm":
@@ -505,7 +491,6 @@ Future<void> fetchCities(String state) async {
           'Pharmacology',
           'Pharmaceutical Chemistry',
           'Quality Assurance',
-          'Others',
         ];
 
       /// PhD
@@ -520,7 +505,6 @@ Future<void> fetchCities(String state) async {
           'Medicine',
           'Social Sciences',
           'Humanities',
-          'Others',
         ];
 
       /// Diploma
@@ -531,7 +515,6 @@ Future<void> fetchCities(String state) async {
           'Cyber Security',
           'Finance',
           'Marketing',
-          'Others',
         ];
 
       default:
@@ -641,8 +624,10 @@ Future<void> pickEndDate() async {
   );
 
   if (picked != null) {
-    endDateController.text =
-        picked.toIso8601String();
+ endDateController.text =
+    "${picked.day.toString().padLeft(2, '0')}/"
+    "${picked.month.toString().padLeft(2, '0')}/"
+    "${picked.year}";
         
     setState(() {});
   }
@@ -891,12 +876,12 @@ SingleChildScrollView(
     title: "Hiring Process",
 
     children: [
-
-      _chipMultiSelectField(
-        "Rounds",
-        roundsController,
-        roundsOptions,
-      ),
+_ChipMultiSelectField(
+  label: "Rounds",
+  controller: roundsController,
+  options: roundsOptions,
+  singleSelect: true,
+),
 
       const SizedBox(height: 16),
 
@@ -1803,6 +1788,7 @@ class _SearchableChipFieldState
 class _ChipMultiSelectField extends StatefulWidget {
   const _ChipMultiSelectField({
     required this.label,
+    this.singleSelect = false,
     required this.controller,
     required this.options,
     this.onChanged,
@@ -1813,6 +1799,7 @@ class _ChipMultiSelectField extends StatefulWidget {
   final TextEditingController controller;
   final List<String> options;
   final VoidCallback? onChanged;
+  final bool singleSelect;
   @override
   State<_ChipMultiSelectField> createState() => _ChipMultiSelectFieldState();
 }
@@ -1878,10 +1865,15 @@ void _addItem(String value) {
   );
 
   if (!alreadyExists) {
-    current.add(finalValue);
 
-    _sync(current);
+  if (widget.singleSelect) {
+    current.clear();
   }
+
+  current.add(finalValue);
+
+  _sync(current);
+}
 
   _textController.clear();
 

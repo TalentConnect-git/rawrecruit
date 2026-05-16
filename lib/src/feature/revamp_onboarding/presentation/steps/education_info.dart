@@ -6,6 +6,7 @@ import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wr
 
 import '../../data/index.dart';
 import '../index.dart';
+import '../widgets/onboarding_local_service.dart';
 
 class EducationPage extends StatefulWidget {
   final VoidCallback onBack;
@@ -278,6 +279,8 @@ if (selected.isNotEmpty) {
     );
 
     context.read<AppStateProvider>().data = updatedUser;
+    getIt<OnboardingLocalService>()
+    .saveUser(updatedUser);
   }
 
   /// 🔥 SEMESTERS

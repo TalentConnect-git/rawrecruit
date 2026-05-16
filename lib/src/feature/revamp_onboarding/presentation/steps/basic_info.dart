@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
 import '../widgets/input_widgets.dart';
+import '../widgets/onboarding_local_service.dart';
 
 class BasicPage extends StatefulWidget {
   final VoidCallback onBack;
@@ -117,6 +118,8 @@ class _BasicPageState extends State<BasicPage> {
 
     /// ✅ STORE UPDATED USER
     context.read<AppStateProvider>().data = updatedUser;
+    getIt<OnboardingLocalService>()
+    .saveUser(updatedUser);
   }
 
   @override

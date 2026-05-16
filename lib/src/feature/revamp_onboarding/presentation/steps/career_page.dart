@@ -4,8 +4,10 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/core/models/experience.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
 
 import '../../../../common/index.dart';
+import '../widgets/onboarding_local_service.dart';
 
 class CareerPage extends StatefulWidget {
   final VoidCallback onBack;
@@ -35,7 +37,7 @@ class _CareerPageState extends State<CareerPage> {
   late TextEditingController currentCompanyCtrl;
   late TextEditingController companyEmailCtrl;
   late TextEditingController noticePeriodCtrl;
-
+List<String> roleOptions = [];
   String? certifications;
 
   List<Experience> experiences = [];
@@ -45,6 +47,29 @@ class _CareerPageState extends State<CareerPage> {
   final List<TextEditingController> startCtrls = [];
   final List<TextEditingController> endCtrls = [];
   final List<TextEditingController> descCtrls = [];
+final List<String> jobTitleOptions = [
+  "Software Developer",
+  "Frontend Developer",
+  "Backend Developer",
+  "Full Stack Developer",
+  "Mobile App Developer",
+  "UI/UX Designer",
+  "Data Analyst",
+  "Data Scientist",
+  "Machine Learning Engineer",
+  "DevOps Engineer",
+  "Cloud Architect",
+  "QA Engineer",
+  "Cyber Security Specialist",
+  "Network Engineer",
+  "Business Analyst",
+  "Product Manager",
+  "Project Manager",
+  "HR Recruiter",
+  "Marketing Specialist",
+  "Sales Executive",
+  "Finance Analyst",
+];  
   @override
   void initState() {
     super.initState();
@@ -183,6 +208,8 @@ servingNoticePeriod:
     );
 
     context.read<AppStateProvider>().data = updatedUser;
+    getIt<OnboardingLocalService>()
+    .saveUser(updatedUser);
   }
 
   Future<void> fetchCompanies() async {
@@ -612,19 +639,14 @@ if (servingNoticePeriod) ...[
                     ),
                   ],
                 ),
+SizedBox(height: 10,),
+              SearchableChipField(
+  label: "Role",
 
-                AppInput(
-                  "Role",
-                  controller: roleCtrls[i],
-                  onChanged: (v) {
-                    experiences[i] = experiences[i].copyWith(
-                      role: v,
-                      // isCurrent: experiences[i].isCurrent ?? false,
-                    );
+  controller: roleCtrls[i],
 
-                    saveData();
-                  },
-                ),
+  options: jobTitleOptions,
+),
 
                 GestureDetector(
                   onTap: () async {

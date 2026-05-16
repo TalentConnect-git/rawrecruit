@@ -5,6 +5,8 @@ import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/in
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
 import 'package:dio/dio.dart';
 
+import '../widgets/onboarding_local_service.dart';
+
 class WorkPrefPage extends StatefulWidget {
   final VoidCallback onBack;
   final User data;
@@ -246,6 +248,8 @@ expectedSalaryCurrency: expectedCurrencyCtrl.text,
     );
 
     context.read<AppStateProvider>().data = updatedUser;
+    getIt<OnboardingLocalService>()
+    .saveUser(updatedUser);
   }
 
   @override

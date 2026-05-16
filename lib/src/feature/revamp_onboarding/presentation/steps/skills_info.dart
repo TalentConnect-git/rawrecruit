@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import '../../../../common/index.dart';
+import '../widgets/onboarding_local_service.dart';
 
 class SkillsDomainPage extends StatefulWidget {
   final VoidCallback onBack;
@@ -62,6 +63,8 @@ void didChangeDependencies() {
     final updatedUser = currentUser.copyWith(skills: selected);
 
     context.read<AppStateProvider>().data = updatedUser;
+    getIt<OnboardingLocalService>()
+    .saveUser(updatedUser);
   }
 
   /// 🔥 ADD SKILL

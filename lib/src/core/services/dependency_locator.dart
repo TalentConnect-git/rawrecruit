@@ -29,6 +29,7 @@ import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repositor
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository_impl.dart';
 
 import '../../feature/revamp_onboarding/data/data_source/revamp_on_boarding_data_source.dart';
+import '../../feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import '../../features/chat/index.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source_impl.dart';
@@ -51,6 +52,9 @@ Future<void> initDependencyLocator() async {
   getIt
     ..registerLazySingleton<NetworkService>(NetworkService.new)
     ..registerLazySingleton<AppStateProvider>(AppStateProvider.new)
+    ..registerLazySingleton<OnboardingLocalService>(
+      () => OnboardingLocalService(),
+    )
     ..registerLazySingleton<AuthDataSource>(() => AuthDataSourceImpl())
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(authDataSource: getIt()),
@@ -134,9 +138,7 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<InterviewRepository>(
       () => InterviewRepositoryImpl(dataSource: getIt<InterviewDataSource>()),
     )
-    ..registerLazySingleton<MyProfileViewModel>(
-  () => MyProfileViewModel(),
-)
+    ..registerLazySingleton<MyProfileViewModel>(() => MyProfileViewModel())
     ..registerFactory<InterviewViewModel>(() => InterviewViewModel())
     ..registerLazySingleton<ReferralDataSource>(() => ReferralDataSourceImpl())
     ..registerLazySingleton<ReferralRepository>(
