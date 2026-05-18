@@ -119,6 +119,8 @@ class _LoginViewState extends State<RevampLoginView> {
                           successMsg: 'Login Successful!',
                           popOnSuccess: false,
                           successCallback: () async {
+                            await getIt<AppStateProvider>()
+    .getUserDetails();
   final onboardingService =
       getIt<OnboardingLocalService>();
 

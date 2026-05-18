@@ -63,7 +63,7 @@ class AddEditProfileViewModel extends ViewStateProvider {
     c.linkedin.text = user.linkedin ?? '';
     c.name.text = user.name ?? '';
     c.openToShift.text = user.openToShift ?? '';
-
+c.totalYearsOfExperience.text = user.totalYearsOfExperience ?? '' ;
     c.currentCompany.text =
         user.currentCompany ?? '';
 c.companyEmail.text =

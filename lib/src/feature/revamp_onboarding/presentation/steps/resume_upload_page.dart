@@ -123,7 +123,11 @@ Future<void> _handleUpload(BuildContext context) async {
       );
       return;
     }
-
+ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(
+    content: Text("Resume uploaded successfully"),
+  ),
+);
     /// 🔥 UPDATE GLOBAL STATE
     final currentUser =
         context.read<AppStateProvider>().data ?? User();

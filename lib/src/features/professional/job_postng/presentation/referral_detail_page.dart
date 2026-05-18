@@ -38,9 +38,7 @@ class ReferralDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = application.applicant ?? const User();
 
-    final name = safe(user.name);
     final college = safe(user.college);
-    final degree = safe(user.degree);
     final graduation = safe(user.yearOfGraduation);
     final cgpa = safe(user.cgpa);
 
@@ -98,17 +96,7 @@ class ReferralDetailPage extends StatelessWidget {
                                 CrossAxisAlignment.start,
                             children: [
 
-                              Text(
-                                degree,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontWeight:
-                                      FontWeight.w600,
-                                  fontSize: 15,
-                                ),
-                              ),
-
-                              const SizedBox(height: 4),
+                           
 
                               Text(
                                 college,
@@ -424,7 +412,27 @@ if (context.mounted) {
     final college = safe(user.college);
     final graduation =
         safe(user.yearOfGraduation);
+final company =
+    safe(user.currentCompany);
 
+final experience =
+    safe(
+      user.totalYearsOfExperience,
+    );
+
+final role =
+    user.jobRoles?.isNotEmpty == true
+        ? user.jobRoles!.first
+        : user.experiences
+                    ?.isNotEmpty ==
+                true
+            ? safe(
+                user
+                    .experiences!
+                    .first
+                    .role,
+              )
+            : "Professional";
     final match =
         application.matchScore ?? 0;
 
@@ -498,69 +506,133 @@ if (context.mounted) {
                       ],
                     ),
 
-                    const SizedBox(height: 4),
+                    // const SizedBox(height: 4),
 
-                    Text(
-                      degree,
-                      style:
-                          const TextStyle(
-                        color: Colors.grey,
-                        fontSize: 13,
-                      ),
-                    ),
+                    // Text(
+                    //   degree,
+                    //   style:
+                    //       const TextStyle(
+                    //     color: Colors.grey,
+                    //     fontSize: 13,
+                    //   ),
+                    // ),
 
                     const SizedBox(height: 10),
 
-                    Row(
-                      children: [
+                Column(
+  crossAxisAlignment:
+      CrossAxisAlignment.start,
 
-                        Icon(
-                          Icons.school,
-                          size: 14,
-                          color: Colors.grey,
-                        ),
+  children: [
 
-                        const SizedBox(width: 6),
+    /// LOCATION / DEGREE
+    Row(
+      children: [
 
-                        Expanded(
-                          child: Text(
-                            college,
-                            style:
-                                const TextStyle(
-                              color:
-                                  Colors.white70,
-                              fontSize: 12,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
+        const Icon(
+          Icons.collections_bookmark_outlined,
+          size: 14,
+          color: Colors.grey,
+        ),
 
-                    const SizedBox(height: 6),
+        const SizedBox(width: 6),
 
-                    Row(
-                      children: [
+        Expanded(
+          child: Text(
+            degree,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 12,
+            ),
+          ),
+        ),
+      ],
+    ),
 
-                        Icon(
-                          Icons.calendar_month,
-                          size: 14,
-                          color: Colors.grey,
-                        ),
+    const SizedBox(height: 6),
 
-                        const SizedBox(width: 6),
+    /// COLLEGE
+    Row(
+      children: [
 
-                        Text(
-                          graduation,
-                          style:
-                              const TextStyle(
-                            color:
-                                Colors.white70,
-                            fontSize: 12,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+        const Icon(
+          Icons.school_outlined,
+          size: 14,
+          color: Colors.grey,
+        ),
+
+        const SizedBox(width: 6),
+
+        Expanded(
+          child: Text(
+            college,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 12,
+            ),
+          ),
+        ),
+      ],
+    ),
+
+    const SizedBox(height: 6),
+
+    /// ROLE @ COMPANY
+    Row(
+      children: [
+
+        const Icon(
+          Icons.work_outline,
+          size: 14,
+          color: Colors.grey,
+        ),
+
+        const SizedBox(width: 6),
+
+        Expanded(
+          child: Text(
+            company != "-"
+                ? "$role @ $company"
+                : role,
+
+            style: const TextStyle(
+              color: Colors.white70,
+              fontSize: 12,
+            ),
+          ),
+        ),
+      ],
+    ),
+
+    const SizedBox(height: 6),
+
+    /// EXPERIENCE
+    if (experience != "-")
+      Row(
+        children: [
+
+          const Icon(
+            Icons.work_history_outlined,
+            size: 14,
+            color: Colors.grey,
+          ),
+
+          const SizedBox(width: 6),
+
+          Expanded(
+            child: Text(
+              "$experience years experience",
+
+              style: const TextStyle(
+                color: Colors.white70,
+                fontSize: 12,
+              ),
+            ),
+          ),
+        ],
+      ),
+  ],
+),                  ],
                 ),
               ),
 

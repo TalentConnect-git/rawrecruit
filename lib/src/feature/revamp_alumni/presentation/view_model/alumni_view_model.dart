@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/core/index.dart';
 
+import '../../../../core/models/experience.dart';
 import '../../../revamp_dashboard/data/repository/dashboard_repository.dart';
 
 class AlumniViewModel extends ChangeNotifier {
@@ -118,40 +119,70 @@ class AlumniViewModel extends ChangeNotifier {
   // =========================================================
   // COMPANY ALUMNI
   // =========================================================
+Future<void> fetchCompanyAlumni() async {
+  _setLoading(true);
+final user = getIt<AppStateProvider>().user;
 
-  Future<void> fetchCompanyAlumni() async {
-    _setLoading(true);
+String? companyName = user?.currentCompany;
 
-    final companyName = getIt<AppStateProvider>().user?.currentCompany;
+if (companyName == null || companyName.trim().isEmpty) {
+  final currentExp = user?.experiences?.firstWhere(
+    (e) => e.isCurrent == true,
+    orElse: () => Experience(),
+  );
 
-    if (companyName == null) {
-      _setLoading(false);
-      log("Company alumni error: Company Name Not Found.");
-      return;
-    }
+  companyName = currentExp?.company;
+}
 
-    final result = await _repo.getCompanyAlumni();
+  log("Current Company => $companyName");
 
-    result.fold(
-      (failure) {
-        log("Company alumni error: $failure");
-      },
-      (res) {
-        final allCompanies = res.alumni ?? {};
-        final currentCompanyAlumni = allCompanies[companyName] ?? [];
-
-        _companySource
-          ..clear()
-          ..addAll(currentCompanyAlumni);
-
-        filtered = List.from(_companySource);
-        companyAlumni = _groupUsers(filtered);
-      },
-    );
-
+  if (companyName == null || companyName.trim().isEmpty) {
     _setLoading(false);
+
+    log("Company alumni error: Company Name Not Found.");
+
+    return;
   }
 
+  final result = await _repo.getCompanyAlumni();
+
+  result.fold(
+    (failure) {
+      log("Company alumni error: $failure");
+    },
+    (res) {
+      final allCompanies = res.alumni ?? {};
+
+      log("API Companies => ${allCompanies.keys.toList()}");
+
+      /// 🔥 FIXED MATCHING
+final currentCompanyAlumni =
+    allCompanies.values
+        .expand((e) => e)
+        .toList();
+
+      log(
+        "Matched Alumni Count => ${currentCompanyAlumni.length}",
+      );
+
+      _companySource
+        ..clear()
+        ..addAll(currentCompanyAlumni);
+
+      filtered = List.from(_companySource);
+
+      companyAlumni = _groupUsers(filtered);
+
+      log(
+        "Final Company Alumni Groups => ${companyAlumni.length}",
+      );
+
+      notifyListeners();
+    },
+  );
+
+  _setLoading(false);
+}
   // =========================================================
   // SEARCH
   // =========================================================

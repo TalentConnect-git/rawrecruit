@@ -962,39 +962,36 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                               spacing: 16,
 
                               children: [
-                    
-                                  CommonAutocomplete(
-                                    label: "Current Company",
+                    AppTextFields(
+  controller: controller.currentCompany,
 
-                                    hint: "Current Company",
+  hint: 'Current Company',
 
-                                    options: companyOptions,
+  enable: false,
 
-                                    initialValue:
-                                        controller.currentCompany.text,
+  suffixIcon: const Icon(
+    Icons.lock_outline,
+    color: Colors.grey,
+    size: 18,
+  ),
 
-                                    onChanged: (value) {
-                                      controller.currentCompany.text = value;
+  helperText:
+      "Automatically fetched from current experience",
 
-                                      markChanged();
-                                    },
+  onChanged: (_) => markChanged(),
+),
+const SizedBox(height: 12),
 
-                                    onSubmitted: (value) async {
-                                      await addCompanyIfNeeded(value);
+AppTextFields(
+  controller:
+      controller.totalYearsOfExperience,
 
-                                      controller.currentCompany.text = value;
+  hint: 'Total Years Of Experience',
 
-                                      markChanged();
-                                    },
+  keyboardType: TextInputType.text,
 
-                                    onSelected: (value) async {
-                                      await addCompanyIfNeeded(value);
-
-                                      controller.currentCompany.text = value;
-
-                                      markChanged();
-                                    },
-                                  ),
+  onChanged: (_) => markChanged(),
+),
 const SizedBox(height: 12),
 
 AppTextFields(
@@ -1921,27 +1918,41 @@ Widget _header(
 
       initialValue: e.company.text,
 
-      onChanged: (value) {
-        e.company.text = value;
+ onChanged: (value) {
+  e.company.text = value;
 
-        markChanged();
-      },
+  /// auto update current company
+  if (e.isCurrent) {
+    controller.currentCompany.text = value;
+  }
 
-      onSubmitted: (value) async {
-        await addCompanyIfNeeded(value);
+  markChanged();
+},
+onSubmitted: (value) async {
+  await addCompanyIfNeeded(value);
 
-        e.company.text = value;
+  e.company.text = value;
 
-        markChanged();
-      },
+  /// auto update current company
+  if (e.isCurrent) {
+    controller.currentCompany.text = value;
+  }
 
-      onSelected: (value) async {
-        await addCompanyIfNeeded(value);
+  markChanged();
+},
 
-        e.company.text = value;
+    onSelected: (value) async {
+  await addCompanyIfNeeded(value);
 
-        markChanged();
-      },
+  e.company.text = value;
+
+  /// auto update current company
+  if (e.isCurrent) {
+    controller.currentCompany.text = value;
+  }
+
+  markChanged();
+},
     );
   }
 
@@ -1958,9 +1969,31 @@ Widget _header(
       children: [
         Checkbox(
           value: e.isCurrent,
-          onChanged: (val) {
-            setState(() => e.isCurrent = val ?? false);
-          },
+        onChanged: (val) {
+  setState(() {
+    e.isCurrent = val ?? false;
+
+    /// remove current flag from others
+    for (final exp in controller.experiences) {
+      if (exp != e) {
+        exp.isCurrent = false;
+      }
+    }
+
+    /// auto fill current company
+    if (e.isCurrent) {
+      controller.currentCompany.text = e.company.text;
+    }
+
+    /// clear if unchecked
+    if (!e.isCurrent &&
+        controller.currentCompany.text == e.company.text) {
+      controller.currentCompany.clear();
+    }
+  });
+
+  markChanged();
+},
         ),
         const Text(
           "I currently work here",
@@ -2556,13 +2589,24 @@ Widget _dateRowOnly(
       /// 🔥 SAFE PARSING
       final data = response.data["data"] ?? response.data;
 
-      if (data == null) {
-        debugPrint("No data found in response");
-        return;
-      }
+    if (data == null) {
+  debugPrint("No data found in response");
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    const SnackBar(
+      content: Text("Resume upload failed"),
+    ),
+  );
+
+  return;
+}
 
       debugPrint("PARSED DATA: $data");
-
+ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(
+    content: Text("Resume uploaded successfully"),
+  ),
+);
       /// 🔥 BASIC FIELDS
       controller.name.text = data['name'] ?? controller.name.text;
       controller.email.text = data['email'] ?? controller.email.text;
@@ -2627,8 +2671,14 @@ Widget _dateRowOnly(
 
       setState(() {});
     } catch (e, s) {
-      debugPrint("FULL ERROR: $e");
-      debugPrint("STACK: $s");
+    debugPrint("FULL ERROR: $e");
+debugPrint("STACK: $s");
+
+ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(
+    content: Text("Something went wrong"),
+  ),
+);
     } finally {
       setState(() => _isParsingResume = false);
     }

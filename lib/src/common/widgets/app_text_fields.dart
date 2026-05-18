@@ -7,6 +7,7 @@ class AppTextFields extends StatefulWidget {
     this.hint,
     this.prefixIcon,
     this.suffixIcon,
+    this.helperText,
     this.enable = true,
     this.readOnly = false,
     this.validator,
@@ -27,6 +28,7 @@ class AppTextFields extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.keyboardType,
+    this.helperText,
     super.key,
   }) : _isPassword = true;
 
@@ -39,6 +41,7 @@ class AppTextFields extends StatefulWidget {
   final TextInputType? keyboardType;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final String? helperText;
   final AutovalidateMode autoValidateMode;
   final String? Function(String? val)? validator;
   final void Function(String? val)? onChanged;
@@ -98,6 +101,11 @@ class _AppTextFieldsState extends State<AppTextFields> {
               floatingLabelStyle: AppTextStyles.s16W400.copyWith(
                 color: AppColors.white,
               ),
+              helperText: widget.helperText,
+
+helperStyle: AppTextStyles.s12W400.copyWith(
+  color: Colors.grey,
+),
               errorStyle: AppTextStyles.s12W600.copyWith(color: Colors.red),
               isDense: true,
               prefixIcon: widget.prefixIcon,
