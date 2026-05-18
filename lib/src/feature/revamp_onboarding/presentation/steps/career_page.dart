@@ -37,6 +37,8 @@ class _CareerPageState extends State<CareerPage> {
   late TextEditingController currentCompanyCtrl;
   late TextEditingController companyEmailCtrl;
   late TextEditingController noticePeriodCtrl;
+  late TextEditingController
+    totalYearsOfExperienceCtrl;
 List<String> roleOptions = [];
   String? certifications;
 
@@ -91,6 +93,8 @@ companyEmailCtrl = TextEditingController();
     currentCompanyCtrl = TextEditingController();
 
     noticePeriodCtrl = TextEditingController();
+    totalYearsOfExperienceCtrl =
+    TextEditingController();
   }
 
   @override
@@ -125,7 +129,8 @@ servingNoticePeriod =
     currentCompanyCtrl.text = d.currentCompany ?? '';
     companyEmailCtrl.text = d.companyEmail ?? '';
     noticePeriodCtrl.text = d.noticePeriod ?? '';
-
+totalYearsOfExperienceCtrl.text =
+    d.totalYearsOfExperience ?? '';
     certifications = d.certifications;
 
     /// 🔥 EXPERIENCE AUTOFILL
@@ -201,6 +206,8 @@ companyEmail: companyEmailCtrl.text,
 
       currentCompany: derivedCurrentCompany,
       noticePeriod: noticePeriodCtrl.text,
+      totalYearsOfExperience:
+    totalYearsOfExperienceCtrl.text,
 noticePeriodStartDate:
     noticePeriodStartDateCtrl.text,
 
@@ -272,7 +279,7 @@ companyEmailCtrl.dispose();
 noticePeriodStartDateCtrl.dispose();
     currentCompanyCtrl.dispose();
     noticePeriodCtrl.dispose();
-
+totalYearsOfExperienceCtrl.dispose();
     for (final c in companyCtrls) {
       c.dispose();
     }
@@ -408,7 +415,18 @@ AppInput(
   onChanged: (_) => saveData(),
 ),
 const SizedBox(height: 12),
+AppInput(
+  "Total Years Of Experience",
 
+  controller:
+      totalYearsOfExperienceCtrl,
+
+  keyboardType: TextInputType.text,
+
+  onChanged: (_) => saveData(),
+),
+
+const SizedBox(height: 12),
   AppInput(
     "Notice Period (Days)",
     controller: noticePeriodCtrl,

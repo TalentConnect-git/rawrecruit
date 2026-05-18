@@ -19,7 +19,7 @@ class AlumniCard extends StatelessWidget {
     final candidate = first.candidatePosted;
 
     final name = candidate?.name ?? "User";
-    final role = first.jobTitle ?? "Professional";
+    // final role = first.jobTitle ?? "Professional";
     final initials = name.trim().isNotEmpty
         ? name
               .trim()
@@ -86,16 +86,16 @@ class AlumniCard extends StatelessWidget {
 
                 const SizedBox(height: 4),
 
-                /// ROLE
-                Text(
-                  role,
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                ),
+                // /// ROLE
+                // Text(
+                //   role,
+                //   textAlign: TextAlign.center,
+                //   maxLines: 1,
+                //   overflow: TextOverflow.ellipsis,
+                //   style: const TextStyle(color: Colors.grey, fontSize: 12),
+                // ),
 
-                const SizedBox(height: 4),
+                // const SizedBox(height: 4),
 
                 /// DESIGNATION + COMPANY
                 Row(

@@ -111,7 +111,8 @@ final body = updatedUser.toJson();
 
   /// ✅ CLEAR SAVED STEP + USER CACHE
   await onboardingLocal.clear();
-
+  await getIt<AppStateProvider>()
+      .getUserDetails();
   context.pushReplacementNamed(
     RouteNames.dashboard,
     extra: getIt<AppStateProvider>().userType,

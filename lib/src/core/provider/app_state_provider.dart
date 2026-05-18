@@ -14,6 +14,7 @@ import 'package:rawrecruit/src/core/index.dart'
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingRepository;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import '../network/socket_service.dart';
@@ -139,6 +140,10 @@ class AppStateProvider extends ViewStateProvider {
         await SecretRepo.clearAll();
 await getIt<OnboardingLocalService>()
     .clear();
+     final prefs = await SharedPreferences.getInstance();
+
+  await prefs.remove("referral_post_draft");
+
         final token = await SecretRepo.getString('auth_token');
         log(token ?? '', name: 'token');
 

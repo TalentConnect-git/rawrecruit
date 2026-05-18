@@ -126,16 +126,33 @@ Expanded(
             color: isSelected ? AppColors.kGreen : const Color(0xFF1F2937),
             borderRadius: BorderRadius.circular(20),
           ),
-          child: Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: isSelected ? Colors.black : Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
+        child: SizedBox(
+  height: 36,
+
+  child: Center(
+    child: Text(
+      title,
+
+      textAlign: TextAlign.center,
+
+      maxLines: 2,
+
+      overflow: TextOverflow.ellipsis,
+
+      style: TextStyle(
+        color:
+            isSelected
+                ? Colors.black
+                : Colors.white,
+
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+
+        height: 1.1,
+      ),
+    ),
+  ),
+),
         ),
       ),
     );

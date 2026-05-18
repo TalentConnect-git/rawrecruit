@@ -53,6 +53,8 @@ class UserController {
       visaStatus = TextEditingController(),
 currentCompany = TextEditingController(),
 noticePeriod = TextEditingController(),
+totalYearsOfExperience = TextEditingController(),
+
 companyEmail = TextEditingController(),
 noticePeriodStartDate = TextEditingController();
   /// Basic Fields
@@ -115,6 +117,8 @@ List<InternationalExperienceController>
   TextEditingController visaStatus;
 bool servingNoticePeriod = false;
 TextEditingController currentCompany;
+TextEditingController totalYearsOfExperience;
+
 TextEditingController noticePeriod;
 TextEditingController companyEmail;
 TextEditingController noticePeriodStartDate;
@@ -163,6 +167,8 @@ TextEditingController noticePeriodStartDate;
       'openToShift': clean(openToShift.text),
       'currentCompany': clean(currentCompany.text),
       'companyEmail': clean(companyEmail.text),
+      'totalYearsOfExperience':
+    clean(totalYearsOfExperience.text),
 'noticePeriod': clean(noticePeriod.text),
 'noticePeriodStartDate':
     clean(noticePeriodStartDate.text),
@@ -375,6 +381,8 @@ TextEditingController noticePeriodStartDate;
     visaStatus.dispose();
     noticePeriodStartDate.dispose();
 currentCompany.dispose();
+totalYearsOfExperience.dispose();
+
 companyEmail.dispose();
 noticePeriod.dispose();
     for (final controller in domainKnowledge) {

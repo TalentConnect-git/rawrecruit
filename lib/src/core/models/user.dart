@@ -25,6 +25,9 @@ String? companyEmail,
 
     String? profileImage,
     String? currentCompany,
+    
+    @JsonKey(name: 'totalYearsOfExperience')
+    String? totalYearsOfExperience,
     String? noticePeriod,
 String? noticePeriodStartDate,
 bool? servingNoticePeriod,
