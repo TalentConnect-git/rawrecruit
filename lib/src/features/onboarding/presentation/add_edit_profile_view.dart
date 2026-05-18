@@ -823,6 +823,15 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       'Visa Status / Work Authorization',
                                       visaStatusOptions,
                                     ),
+                                    AppTextFields(
+  controller: controller.about,
+
+  hint: 'About',
+
+  maxLines: 4,
+
+  onChanged: (_) => markChanged(),
+),
                                   ],
                                 ),
                               ],

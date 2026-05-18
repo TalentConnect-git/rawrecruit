@@ -538,13 +538,14 @@ final role =
         const SizedBox(width: 6),
 
         Expanded(
-          child: Text(
-            degree,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
-            ),
-          ),
+         child: Text(
+  company != "-" ? company : degree,
+
+  style: const TextStyle(
+    color: Colors.white70,
+    fontSize: 12,
+  ),
+),
         ),
       ],
     ),

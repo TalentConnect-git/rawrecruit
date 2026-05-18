@@ -184,7 +184,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                             Expanded(
                               child: _smallInfoCard(
                                 "Experience",
-                                "${user.totalYearsOfExperience ?? 0} Years",
+                                "${user.experiences?.length ?? 0}",
                                 Icons.work_outline,
                               ),
                             ),
@@ -570,6 +570,7 @@ SizedBox(height: 18,),
                             .toList(),
                       ),
                     ),
+                  const SizedBox(height: 18),
 
                   /// INDUSTRIES + ROLES
                   Row(
