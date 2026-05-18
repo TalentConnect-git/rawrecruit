@@ -939,30 +939,31 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
           const SizedBox(height: 14),
           Row(
             children: [
-              Expanded(child: _detailRow("Experience", exp)),
+              // Expanded(child: _detailRow("Experience", exp)),
               Expanded(child: _detailRow("Job Type", jobType)),
-            ],
-          ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
               Expanded(child: _detailRow("Education", education)),
-              Expanded(child: _detailRow("Work Mode", workMode)),
             ],
           ),
-          const SizedBox(height: 14),
-          Row(
-            children: [
-              Expanded(child: _detailRow("Openings", openings)),
-              Expanded(
-                child: _detailRow(
-                  "Location",
-                  location,
-                  valueColor: AppColors.kGreen,
-                ),
-              ),
-            ],
-          ),
+          // const SizedBox(height: 14),
+          // Row(
+          //   children: [
+          //     Expanded(child: _detailRow("Education", education)),
+          //     // Expanded(child: _detailRow("Work Mode", workMode)),
+          //   ],
+          // ),
+          // const SizedBox(height: 14),
+          // Row(
+          //   children: [
+          //     Expanded(child: _detailRow("Openings", openings)),
+          //     // Expanded(
+          //     //   child: _detailRow(
+          //     //     "Location",
+          //     //     location,
+          //     //     valueColor: AppColors.kGreen,
+          //     //   ),
+          //     // ),
+          //   ],
+          // ),
         ],
       ),
     );
