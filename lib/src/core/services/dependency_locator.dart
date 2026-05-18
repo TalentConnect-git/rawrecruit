@@ -139,7 +139,7 @@ Future<void> initDependencyLocator() async {
       () => InterviewRepositoryImpl(dataSource: getIt<InterviewDataSource>()),
     )
     ..registerLazySingleton<MyProfileViewModel>(() => MyProfileViewModel())
-    ..registerFactory<InterviewViewModel>(() => InterviewViewModel())
+    ..registerLazySingleton<InterviewViewModel>(() => InterviewViewModel())
     ..registerLazySingleton<ReferralDataSource>(() => ReferralDataSourceImpl())
     ..registerLazySingleton<ReferralRepository>(
       () => ReferralRepositoryImpl(dataSource: getIt<ReferralDataSource>()),

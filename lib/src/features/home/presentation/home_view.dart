@@ -9,6 +9,8 @@ import 'package:rawrecruit/src/features/notifications/index.dart';
 
 import '../../../feature/revamp_onboarding/presentation/flow_controller.dart';
 import '../../chat/index.dart';
+import '../../scheduled_interviews/data/entity/interview_model.dart';
+import '../../scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({required this.navigationShell, super.key});
@@ -22,37 +24,35 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final appStateProvider = getIt<AppStateProvider>();
-final notificationVm =
-    getIt<NotificationViewModel>();
+  final notificationVm = getIt<NotificationViewModel>();
+  final interviewViewModel = getIt<InterviewViewModel>();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final chatVm = context.read<ChatViewModel>();
       chatVm.fetchUnreadCounts();
-await notificationVm.getNotifications();
+      await notificationVm.getNotifications();
       if (!appStateProvider.isAuthComplete) {
         final failure = await appStateProvider.getAuthDetails();
         failure?.showError(context);
+
+        final failure2 = await interviewViewModel.getInterviews();
+        failure2?.showError(context);
       }
 
       if (appStateProvider.isProfileRemaining) {
-      final onboardingService =
-    getIt<OnboardingLocalService>();
+        final onboardingService = getIt<OnboardingLocalService>();
 
-final completed =
-    await onboardingService.isCompleted();
+        final completed = await onboardingService.isCompleted();
 
-if (!completed) {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (_) =>
-          const OnboardingFlow(),
-    ),
-  );
+        if (!completed) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (_) => const OnboardingFlow()),
+          );
 
-  return;
-}
+          return;
+        }
       }
     });
     super.initState();
@@ -98,150 +98,167 @@ if (!completed) {
           );
         }
       },
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: RAppBar(
-          title: Text(
-            'RawRecruit',
-            style: AppTextStyles.s24W600.copyWith(color: AppColors.kGreen),
-          ),
-          actions: [
-            IconButton(
-              onPressed: () {
-                context.pushNamed(RouteNames.scheduledInterviews);
-              },
-              icon: const Icon(Icons.calendar_month_outlined),
-              color: Colors.white,
-              tooltip: 'Scheduled Interviews',
+      child: ChangeNotifierProvider.value(
+        value: interviewViewModel,
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: RAppBar(
+            title: Text(
+              'RawRecruit',
+              style: AppTextStyles.s24W600.copyWith(color: AppColors.kGreen),
             ),
-           ListenableBuilder(
-  listenable: notificationVm,
-  builder: (_, __) {
-    return IconButton(
-      onPressed: () async {
+            actions: [
+              Selector<InterviewViewModel, List<InterviewModel>>(
+                selector: (_, vm) => vm.interviews,
+                builder: (_, interviews, _) => IconButton(
+                  onPressed: () {
+                    context.pushNamed(RouteNames.scheduledInterviews);
+                  },
+                  icon: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      const Icon(Icons.calendar_month_outlined),
+                      if (interviews.isNotEmpty)
+                        Positioned(
+                          right: -1,
+                          top: -1,
 
-        await context.pushNamed(
-          RouteNames.notification,
-        );
+                          child: Container(
+                            width: 10,
+                            height: 10,
 
-        if (context.mounted) {
-          await notificationVm
-              .getNotifications();
-        }
-      },
-
-      icon: Stack(
-        clipBehavior: Clip.none,
-
-        children: [
-
-          const Icon(
-            Icons.notifications,
-          ),
-
-          if (notificationVm
-              .hasUnreadNotifications)
-            Positioned(
-              right: -1,
-              top: -1,
-
-              child: Container(
-                width: 10,
-                height: 10,
-
-                decoration:
-                    const BoxDecoration(
-                  color: Colors.red,
-                  shape: BoxShape.circle,
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  color: Colors.white,
+                  tooltip: 'Scheduled Interviews',
                 ),
               ),
-            ),
-        ],
-      ),
+              ListenableBuilder(
+                listenable: notificationVm,
+                builder: (_, __) {
+                  return IconButton(
+                    onPressed: () async {
+                      await context.pushNamed(RouteNames.notification);
 
-      color: Colors.white,
-    );
-  },
-),
-            IconButton(
-              onPressed: () {
-                context.pushNamed(RouteNames.chatUserList);
-              },
-              icon: Image.asset(
-                'assets/images/chat.png',
-                height: 24,
-                width: 24,
-                color: Colors.white,
+                      if (context.mounted) {
+                        await notificationVm.getNotifications();
+                      }
+                    },
+
+                    icon: Stack(
+                      clipBehavior: Clip.none,
+
+                      children: [
+                        const Icon(Icons.notifications),
+
+                        if (notificationVm.hasUnreadNotifications)
+                          Positioned(
+                            right: -1,
+                            top: -1,
+
+                            child: Container(
+                              width: 10,
+                              height: 10,
+
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    color: Colors.white,
+                  );
+                },
               ),
-            ),
-          ],
-        ),
-        body: widget.navigationShell,
-        bottomNavigationBar: AppBottomNav(
-          currentIndex: currentIndex,
-          hasUnread: chatVm.totalUnreadCount > 0,
-          onTap: (tab) {
-            final extra = {'userType': appStateProvider.userType};
+              IconButton(
+                onPressed: () {
+                  context.pushNamed(RouteNames.chatUserList);
+                },
+                icon: Image.asset(
+                  'assets/images/chat.png',
+                  height: 24,
+                  width: 24,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          body: widget.navigationShell,
+          bottomNavigationBar: AppBottomNav(
+            currentIndex: currentIndex,
+            hasUnread: chatVm.totalUnreadCount > 0,
+            onTap: (tab) {
+              final extra = {'userType': appStateProvider.userType};
 
-            context.goNamed(tab.path, extra: extra);
+              context.goNamed(tab.path, extra: extra);
 
-            // switch (tab) {
-            //   // case 0:
-            //   //   context.goNamed(
-            //   //     RouteNames.dashboard,
-            //   //     extra: appStateProvider.userType,
-            //   //   );
-            //   //   break;
-            //   // case 1:
-            //   //   if (appStateProvider.isProfessional) {
-            //   //     context.goNamed(RouteNames.jobPosted);
-            //   //   } else {
-            //   //     context.goNamed(RouteNames.application);
-            //   //   }
-            //   //   break;
-            //   // case 2:
-            //   //   if (appStateProvider.isProfessional) {
-            //   //     context.goNamed(
-            //   //       RouteNames.application,
-            //   //       extra: appStateProvider.userType,
-            //   //     );
-            //   //   } else {
-            //   //     context.goNamed(RouteNames.shortlist);
-            //   //   }
-            //   //   break;
-            //   // case 3:
-            //   //   if (appStateProvider.isProfessional) {
-            //   //     context.goNamed(RouteNames.shortlist);
-            //   //   } else {
-            //   //     context.goNamed(RouteNames.myProfile);
-            //   //   }
-            //   //   break;
-            //   // case 4:
-            //   //   if (appStateProvider.isProfessional) {
-            //   //     context.goNamed(RouteNames.myProfile);
-            //   //   } else {
-            //   //     context.goNamed(RouteNames.chatUserList);
-            //   //   }
-            //   //   break;
-            //   // case 5:
-            //   //   context.goNamed(RouteNames.chatUserList);
-            //   case NavItem.home:
-            //     // TODO: Handle this case.
-            //     throw UnimplementedError();
-            //   case NavItem.referrer:
-            //     // TODO: Handle this case.
-            //     throw UnimplementedError();
-            //   case NavItem.applications:
-            //     // TODO: Handle this case.
-            //     throw UnimplementedError();
-            //   case NavItem.shortlist:
-            //     // TODO: Handle this case.
-            //     throw UnimplementedError();
-            //   case NavItem.chat:
-            //     // TODO: Handle this case.
-            //     throw UnimplementedError();
-            // }
-          },
+              // switch (tab) {
+              //   // case 0:
+              //   //   context.goNamed(
+              //   //     RouteNames.dashboard,
+              //   //     extra: appStateProvider.userType,
+              //   //   );
+              //   //   break;
+              //   // case 1:
+              //   //   if (appStateProvider.isProfessional) {
+              //   //     context.goNamed(RouteNames.jobPosted);
+              //   //   } else {
+              //   //     context.goNamed(RouteNames.application);
+              //   //   }
+              //   //   break;
+              //   // case 2:
+              //   //   if (appStateProvider.isProfessional) {
+              //   //     context.goNamed(
+              //   //       RouteNames.application,
+              //   //       extra: appStateProvider.userType,
+              //   //     );
+              //   //   } else {
+              //   //     context.goNamed(RouteNames.shortlist);
+              //   //   }
+              //   //   break;
+              //   // case 3:
+              //   //   if (appStateProvider.isProfessional) {
+              //   //     context.goNamed(RouteNames.shortlist);
+              //   //   } else {
+              //   //     context.goNamed(RouteNames.myProfile);
+              //   //   }
+              //   //   break;
+              //   // case 4:
+              //   //   if (appStateProvider.isProfessional) {
+              //   //     context.goNamed(RouteNames.myProfile);
+              //   //   } else {
+              //   //     context.goNamed(RouteNames.chatUserList);
+              //   //   }
+              //   //   break;
+              //   // case 5:
+              //   //   context.goNamed(RouteNames.chatUserList);
+              //   case NavItem.home:
+              //     // TODO: Handle this case.
+              //     throw UnimplementedError();
+              //   case NavItem.referrer:
+              //     // TODO: Handle this case.
+              //     throw UnimplementedError();
+              //   case NavItem.applications:
+              //     // TODO: Handle this case.
+              //     throw UnimplementedError();
+              //   case NavItem.shortlist:
+              //     // TODO: Handle this case.
+              //     throw UnimplementedError();
+              //   case NavItem.chat:
+              //     // TODO: Handle this case.
+              //     throw UnimplementedError();
+              // }
+            },
+          ),
         ),
       ),
     );
