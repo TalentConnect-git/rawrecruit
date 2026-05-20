@@ -7,6 +7,8 @@ import 'package:rawrecruit/src/features/onboarding/data/entities/international.d
 import 'package:rawrecruit/src/features/onboarding/data/entities/leadership_controller.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 
+import '../steps/education_controller.dart';
+
 class AddEditProfileViewModel extends ViewStateProvider {
   final OnboardingRepository _onboardingRepository = getIt();
 
@@ -55,11 +57,56 @@ class AddEditProfileViewModel extends ViewStateProvider {
     c.resume.text = user.resume ?? '';
     c.about.text = user.about ?? '';
     c.certifications.text = user.certifications ?? '';
-    c.cgpa.text = user.cgpa ?? '';
-    c.college.text = user.college ?? '';
-    c.degree.text = user.degree ?? '';
-    c.degreeCertificate.text =
-        user.degreeCertificate ?? '';
+   /// -------- EDUCATIONS --------
+
+c.educations.clear();
+
+for (final e
+    in user.educations ?? []) {
+
+  final ec =
+      EducationController();
+
+  ec.college.text =
+      e.college ?? '';
+
+  ec.degree.text =
+      e.degree ?? '';
+
+  ec.specialization.text =
+      e.specialization ?? '';
+
+  ec.semester.text =
+      e.semester ?? '';
+
+  ec.cgpa.text =
+      e.cgpa ?? '';
+
+  ec.yearOfGraduation.text =
+      e.yearOfGraduation ?? '';
+
+  ec.startDate.text =
+      e.startDate ?? '';
+
+  ec.endDate.text =
+      e.endDate ?? '';
+
+  ec.educationType =
+      e.educationType ??
+          "bachelors";
+
+  ec.isCurrent =
+      e.isCurrent ?? false;
+
+  c.educations.add(ec);
+}
+
+if (c.educations.isEmpty) {
+
+  c.educations.add(
+    EducationController(),
+  );
+}
 
     c.email.text = user.email ?? '';
     c.gender.text = user.gender ?? '';
@@ -86,15 +133,6 @@ c.noticePeriodStartDate.text =
 
     c.referralSource.text =
         user.referralSource ?? '';
-
-    c.semester.text =
-        user.semester ?? '';
-
-    c.specialization.text =
-        user.specialization ?? '';
-
-    c.yearOfGraduation.text =
-        user.yearOfGraduation ?? '';
 
     c.currentSalaryAmount.text =
         user.currentSalaryAmount ?? '';
@@ -292,6 +330,10 @@ for (final e
   ec.country.text =
       e.country ?? '';
 
+ec.organization.text =
+    e.organization ?? '';
+ec.organization.text =
+    e.organization ?? '';
   ec.role.text =
       e.role ?? '';
 

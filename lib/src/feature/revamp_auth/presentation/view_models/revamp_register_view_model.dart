@@ -63,8 +63,12 @@ class RevampRegisterViewModel extends ViewStateProvider {
         failure = APIFailure.fromException(exception: exception);
       },
       (res) async {
-        getIt<AppStateProvider>().auth = res;
-
+      getIt<AppStateProvider>().auth =
+    res?.copyWith(
+  email: email,
+);
+print(res);
+print(res?.email);
         /// ✅ OPTIONAL CLEANUP
         getIt<AppStateProvider>().selectedUserType = null;
       },

@@ -2,6 +2,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/core/models/experience.dart';
 
+import 'education.dart';
 import 'international_experience.dart';
 import 'leadership_experience.dart';
 
@@ -40,6 +41,8 @@ List<LeadershipExperience>? leadershipExperiences,
 
 @JsonKey(name: 'internationalExperience')
 List<InternationalExperience>? internationalExperiences,
+
+List<Education>? educations,
     List<String>? jobRoles,
     List<String>? languagesKnown,
     List<String>? locations,
@@ -51,9 +54,7 @@ List<InternationalExperience>? internationalExperiences,
 
     String? about,
     String? certifications,
-    String? cgpa,
-    String? college,
-    String? degree,
+  
     String? degreeCertificate,
     String? email,
     bool? emailVerified,
@@ -69,9 +70,7 @@ List<InternationalExperience>? internationalExperiences,
     String? profileType,
     bool? onboardingCompleted,
     String? referralSource,
-    String? semester,
-    String? specialization,
-    String? yearOfGraduation,
+  
 
     String? currentSalaryAmount,
     String? currentSalaryCurrency,

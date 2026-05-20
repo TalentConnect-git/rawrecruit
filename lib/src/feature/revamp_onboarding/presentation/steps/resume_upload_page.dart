@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
 import '../../../../core/index.dart';
+import '../../../../core/models/education.dart';
 import '../../../../core/models/experience.dart';
 import '../widgets/input_widgets.dart';
 
@@ -133,10 +134,7 @@ ScaffoldMessenger.of(context).showSnackBar(
         context.read<AppStateProvider>().data ?? User();
 final education = parsedData['education'] as List?;
 
-final firstEducation =
-    education != null && education.isNotEmpty
-        ? education.first
-        : null;
+
 
 context.read<AppStateProvider>().data =
     currentUser.copyWith(
@@ -155,13 +153,36 @@ context.read<AppStateProvider>().data =
       .toList(),
 
   /// 🔥 EDUCATION
-  college: firstEducation?['institution'],
-  degree: firstEducation?['degree'],
-  specialization:
-      firstEducation?['field_of_study'],
-  cgpa: firstEducation?['cgpa'],
-  yearOfGraduation:
-      firstEducation?['year'],
+ /// 🔥 EDUCATIONS
+educations:
+    education
+        ?.map(
+          (e) => Education(
+            college:
+                e['institution'],
+
+            degree:
+                e['degree'],
+
+            specialization:
+                e['field_of_study'],
+
+            cgpa:
+                e['cgpa']
+                    ?.toString(),
+
+            yearOfGraduation:
+                e['year']
+                    ?.toString(),
+
+            educationType:
+                "bachelors",
+
+            isCurrent:
+                false,
+          ),
+        )
+        .toList(),
       experiences: (parsedData['work_experience'] as List?)
     ?.map(
       (e) => Experience(
@@ -277,57 +298,73 @@ Future<Map<String, dynamic>?> parseResumeAndFill() async {
   }
 }
   /// 📄 UPLOAD BOX
-  Widget _uploadBox(BuildContext context) {
-    return Container(
+ Widget _uploadBox(BuildContext context) {
+  return GestureDetector(
+    onTap: () => _handleUpload(context),
+
+    child: Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 26,
+      ),
+
       decoration: BoxDecoration(
         color: AppColors.kCard,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kBorder),
+
+        borderRadius: BorderRadius.circular(18),
+
+        border: Border.all(
+          color: AppColors.kBorder,
+        ),
       ),
+
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.all(14),
+            padding: const EdgeInsets.all(16),
+
             decoration: BoxDecoration(
-              color: AppColors.kGreen.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
+              color: AppColors.kGreen.withOpacity(.12),
+
+              shape: BoxShape.circle,
             ),
-            child: Icon(Icons.upload, color: AppColors.kGreen),
+
+            child: Icon(
+              Icons.upload_file_rounded,
+              color: AppColors.kGreen,
+              size: 28,
+            ),
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 18),
 
           const Text(
-            "Drop your resume here",
-            style: TextStyle(color: Colors.white),
+            "Upload Your Resume",
+
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.w700,
+            ),
           ),
 
-          const SizedBox(height: 4),
+          const SizedBox(height: 6),
 
           const Text(
             "PDF • Max 5MB",
-            style: TextStyle(color: Colors.grey, fontSize: 12),
-          ),
 
-          const SizedBox(height: 12),
-
-          /// 🔥 BUTTON CONNECTED
-          OutlinedButton(
-            onPressed: () => _handleUpload(context),
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: AppColors.kBorder),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
+            style: TextStyle(
+              color: Colors.grey,
+              fontSize: 12,
             ),
-            child: const Text("Browse Files"),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   // /// 🔗 LINKEDIN CARD
   // Widget _linkedInCard() {

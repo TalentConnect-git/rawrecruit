@@ -4,7 +4,8 @@ import '../../../common/index.dart';
 import '../../../core/index.dart';
 import 'add_edit_profile_view.dart';
 
-class EditProfileSectionsPage extends StatelessWidget {
+class EditProfileSectionsPage
+    extends StatefulWidget {
   const EditProfileSectionsPage({
     required this.user,
     super.key,
@@ -13,7 +14,20 @@ class EditProfileSectionsPage extends StatelessWidget {
   final User user;
 
   @override
+  State<EditProfileSectionsPage>
+      createState() =>
+          _EditProfileSectionsPageState();
+}
+
+class _EditProfileSectionsPageState
+    extends State<
+        EditProfileSectionsPage> {
+
+  bool hasUpdated = false;
+
+  @override
   Widget build(BuildContext context) {
+
     final sections = [
       'Basic',
       'Education',
@@ -28,83 +42,183 @@ class EditProfileSectionsPage extends StatelessWidget {
       'Tools & Platforms',
       'Publications',
       'Achievements',
-'Experience',
-'Leadership Experience',
-'International Experience',    ];
+      'Experience',
+      'Leadership Experience',
+      'International Experience',
+    ];
 
-    return Scaffold(
-      backgroundColor: AppColors.kBg,
+    return PopScope(
+      canPop: false,
 
-      appBar: RAppBar(
-        title: Text(
-          'Edit Profile',
-          style: AppTextStyles.s16W600.copyWith(
-            color: AppColors.white,
-          ),
-        ),
-      ),
+      onPopInvokedWithResult:
+          (didPop, result) {
 
-      body: ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: sections.length,
+        if (didPop) return;
 
-        itemBuilder: (_, index) {
-          return GestureDetector(
-            onTap: () async {
-              await Navigator.push(
+        Navigator.pop(
+          context,
+          hasUpdated,
+        );
+      },
+
+      child: Scaffold(
+        backgroundColor:
+            AppColors.kBg,
+
+        appBar: RAppBar(
+
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
+
+            onPressed: () {
+
+              Navigator.pop(
                 context,
-                MaterialPageRoute(
-                  builder: (_) => AddEditProfileView(
-                    user: user,
-                    initialStep: index,
-                  ),
-                ),
+                hasUpdated,
               );
             },
+          ),
 
-            child: Container(
-              margin: const EdgeInsets.only(bottom: 10),
-              padding: const EdgeInsets.all(16),
+          title: Text(
+            'Edit Profile',
 
-              decoration: BoxDecoration(
-                color: AppColors.kCard,
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                  color: AppColors.kBorder,
-                ),
-              ),
+            style:
+                AppTextStyles
+                    .s16W600
+                    .copyWith(
+              color:
+                  AppColors.white,
+            ),
+          ),
+        ),
 
-              child: Row(
-                children: [
+        body: ListView.builder(
+          padding:
+              const EdgeInsets.all(
+            16,
+          ),
 
-                  Icon(
-                    Icons.edit_outlined,
-                    color: AppColors.kGreen,
-                  ),
+          itemCount:
+              sections.length,
 
-                  const SizedBox(width: 12),
+          itemBuilder: (_, index) {
 
-                  Expanded(
-                    child: Text(
-                      sections[index],
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                      ),
+            return GestureDetector(
+              onTap: () async {
+
+                final result =
+                    await Navigator.push(
+                  context,
+
+                  MaterialPageRoute(
+                    builder: (_) =>
+                        AddEditProfileView(
+                      user:
+                          getIt<
+                                      AppStateProvider>()
+                                  .user ??
+                              widget.user,
+
+                      initialStep:
+                          index,
                     ),
                   ),
+                );
 
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    size: 14,
-                    color: Colors.grey,
+                if (result == true) {
+
+                  hasUpdated = true;
+
+                  await getIt<
+                          AppStateProvider>()
+                      .getUserDetails();
+
+                  if (mounted) {
+                    setState(() {});
+                  }
+                }
+              },
+
+              child: Container(
+                margin:
+                    const EdgeInsets.only(
+                  bottom: 10,
+                ),
+
+                padding:
+                    const EdgeInsets.all(
+                  16,
+                ),
+
+                decoration:
+                    BoxDecoration(
+                  color:
+                      AppColors.kCard,
+
+                  borderRadius:
+                      BorderRadius.circular(
+                    14,
                   ),
-                ],
+
+                  border: Border.all(
+                    color:
+                        AppColors.kBorder,
+                  ),
+                ),
+
+                child: Row(
+                  children: [
+
+                    Icon(
+                      Icons
+                          .edit_outlined,
+
+                      color:
+                          AppColors
+                              .kGreen,
+                    ),
+
+                    const SizedBox(
+                      width: 12,
+                    ),
+
+                    Expanded(
+                      child: Text(
+                        sections[index],
+
+                        style:
+                            const TextStyle(
+                          color:
+                              Colors.white,
+
+                          fontWeight:
+                              FontWeight
+                                  .w600,
+
+                          fontSize:
+                              15,
+                        ),
+                      ),
+                    ),
+
+                    const Icon(
+                      Icons
+                          .arrow_forward_ios,
+
+                      size: 14,
+
+                      color:
+                          Colors.grey,
+                    ),
+                  ],
+                ),
               ),
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }

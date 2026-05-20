@@ -8,6 +8,7 @@ abstract class InternationalExperience
     with _$InternationalExperience {
 
   const factory InternationalExperience({
+    String? organization,
     String? country,
     String? role,
     String? startDate,

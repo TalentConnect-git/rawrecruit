@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$InternationalExperience {
 
- String? get country; String? get role; String? get startDate; String? get endDate; String? get description;
+ String? get organization; String? get country; String? get role; String? get startDate; String? get endDate; String? get description;
 /// Create a copy of InternationalExperience
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $InternationalExperienceCopyWith<InternationalExperience> get copyWith => _$Inte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternationalExperience&&(identical(other.country, country) || other.country == country)&&(identical(other.role, role) || other.role == role)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InternationalExperience&&(identical(other.organization, organization) || other.organization == organization)&&(identical(other.country, country) || other.country == country)&&(identical(other.role, role) || other.role == role)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,country,role,startDate,endDate,description);
+int get hashCode => Object.hash(runtimeType,organization,country,role,startDate,endDate,description);
 
 @override
 String toString() {
-  return 'InternationalExperience(country: $country, role: $role, startDate: $startDate, endDate: $endDate, description: $description)';
+  return 'InternationalExperience(organization: $organization, country: $country, role: $role, startDate: $startDate, endDate: $endDate, description: $description)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $InternationalExperienceCopyWith<$Res>  {
   factory $InternationalExperienceCopyWith(InternationalExperience value, $Res Function(InternationalExperience) _then) = _$InternationalExperienceCopyWithImpl;
 @useResult
 $Res call({
- String? country, String? role, String? startDate, String? endDate, String? description
+ String? organization, String? country, String? role, String? startDate, String? endDate, String? description
 });
 
 
@@ -65,9 +65,10 @@ class _$InternationalExperienceCopyWithImpl<$Res>
 
 /// Create a copy of InternationalExperience
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? country = freezed,Object? role = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? description = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? organization = freezed,Object? country = freezed,Object? role = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? description = freezed,}) {
   return _then(_self.copyWith(
-country: freezed == country ? _self.country : country // ignore: cast_nullable_to_non_nullable
+organization: freezed == organization ? _self.organization : organization // ignore: cast_nullable_to_non_nullable
+as String?,country: freezed == country ? _self.country : country // ignore: cast_nullable_to_non_nullable
 as String?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as String?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
@@ -157,10 +158,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? country,  String? role,  String? startDate,  String? endDate,  String? description)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? organization,  String? country,  String? role,  String? startDate,  String? endDate,  String? description)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InternationalExperience() when $default != null:
-return $default(_that.country,_that.role,_that.startDate,_that.endDate,_that.description);case _:
+return $default(_that.organization,_that.country,_that.role,_that.startDate,_that.endDate,_that.description);case _:
   return orElse();
 
 }
@@ -178,10 +179,10 @@ return $default(_that.country,_that.role,_that.startDate,_that.endDate,_that.des
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? country,  String? role,  String? startDate,  String? endDate,  String? description)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? organization,  String? country,  String? role,  String? startDate,  String? endDate,  String? description)  $default,) {final _that = this;
 switch (_that) {
 case _InternationalExperience():
-return $default(_that.country,_that.role,_that.startDate,_that.endDate,_that.description);case _:
+return $default(_that.organization,_that.country,_that.role,_that.startDate,_that.endDate,_that.description);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +199,10 @@ return $default(_that.country,_that.role,_that.startDate,_that.endDate,_that.des
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? country,  String? role,  String? startDate,  String? endDate,  String? description)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? organization,  String? country,  String? role,  String? startDate,  String? endDate,  String? description)?  $default,) {final _that = this;
 switch (_that) {
 case _InternationalExperience() when $default != null:
-return $default(_that.country,_that.role,_that.startDate,_that.endDate,_that.description);case _:
+return $default(_that.organization,_that.country,_that.role,_that.startDate,_that.endDate,_that.description);case _:
   return null;
 
 }
@@ -213,9 +214,10 @@ return $default(_that.country,_that.role,_that.startDate,_that.endDate,_that.des
 @JsonSerializable()
 
 class _InternationalExperience implements InternationalExperience {
-  const _InternationalExperience({this.country, this.role, this.startDate, this.endDate, this.description});
+  const _InternationalExperience({this.organization, this.country, this.role, this.startDate, this.endDate, this.description});
   factory _InternationalExperience.fromJson(Map<String, dynamic> json) => _$InternationalExperienceFromJson(json);
 
+@override final  String? organization;
 @override final  String? country;
 @override final  String? role;
 @override final  String? startDate;
@@ -235,16 +237,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternationalExperience&&(identical(other.country, country) || other.country == country)&&(identical(other.role, role) || other.role == role)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.description, description) || other.description == description));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InternationalExperience&&(identical(other.organization, organization) || other.organization == organization)&&(identical(other.country, country) || other.country == country)&&(identical(other.role, role) || other.role == role)&&(identical(other.startDate, startDate) || other.startDate == startDate)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.description, description) || other.description == description));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,country,role,startDate,endDate,description);
+int get hashCode => Object.hash(runtimeType,organization,country,role,startDate,endDate,description);
 
 @override
 String toString() {
-  return 'InternationalExperience(country: $country, role: $role, startDate: $startDate, endDate: $endDate, description: $description)';
+  return 'InternationalExperience(organization: $organization, country: $country, role: $role, startDate: $startDate, endDate: $endDate, description: $description)';
 }
 
 
@@ -255,7 +257,7 @@ abstract mixin class _$InternationalExperienceCopyWith<$Res> implements $Interna
   factory _$InternationalExperienceCopyWith(_InternationalExperience value, $Res Function(_InternationalExperience) _then) = __$InternationalExperienceCopyWithImpl;
 @override @useResult
 $Res call({
- String? country, String? role, String? startDate, String? endDate, String? description
+ String? organization, String? country, String? role, String? startDate, String? endDate, String? description
 });
 
 
@@ -272,9 +274,10 @@ class __$InternationalExperienceCopyWithImpl<$Res>
 
 /// Create a copy of InternationalExperience
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? country = freezed,Object? role = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? description = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? organization = freezed,Object? country = freezed,Object? role = freezed,Object? startDate = freezed,Object? endDate = freezed,Object? description = freezed,}) {
   return _then(_InternationalExperience(
-country: freezed == country ? _self.country : country // ignore: cast_nullable_to_non_nullable
+organization: freezed == organization ? _self.organization : organization // ignore: cast_nullable_to_non_nullable
+as String?,country: freezed == country ? _self.country : country // ignore: cast_nullable_to_non_nullable
 as String?,role: freezed == role ? _self.role : role // ignore: cast_nullable_to_non_nullable
 as String?,startDate: freezed == startDate ? _self.startDate : startDate // ignore: cast_nullable_to_non_nullable
 as String?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable

@@ -5,10 +5,12 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/feature/revamp_profile/presentation/support_page.dart';
+import 'package:rawrecruit/src/features/onboarding/presentation/add_edit_profile_view.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/edit_profile_sections_page.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../core/models/education.dart';
 import '../../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart'
     show InterviewViewModel;
 import '../../revamp_onboarding/presentation/index.dart';
@@ -110,7 +112,103 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                     _statsGrid(vm),
 
                     const SizedBox(height: 16),
+if (!getIt<AppStateProvider>()
+    .isProfessional)
+  Container(
+    margin: const EdgeInsets.only(
+      bottom: 16,
+    ),
 
+    padding: const EdgeInsets.all(
+      16,
+    ),
+
+    decoration: BoxDecoration(
+      color: AppColors.kCard,
+
+      borderRadius:
+          BorderRadius.circular(
+        16,
+      ),
+
+      border: Border.all(
+        color:
+            AppColors.kGreen
+                .withOpacity(.2),
+      ),
+    ),
+
+    child: Row(
+      children: [
+
+        Expanded(
+          child: Column(
+            crossAxisAlignment:
+                CrossAxisAlignment
+                    .start,
+
+            children: [
+
+              const Text(
+                "Switch to Professional",
+
+                style: TextStyle(
+                  color:
+                      Colors.white,
+
+                  fontWeight:
+                      FontWeight.bold,
+
+                  fontSize: 15,
+                ),
+              ),
+
+              const SizedBox(
+                height: 4,
+              ),
+
+              Text(
+                "Add experience & unlock professional profile",
+
+                style: TextStyle(
+                  color:
+                      Colors.grey[400],
+
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        Switch(
+          value: false,
+
+          activeColor:
+              AppColors.kGreen,
+
+          onChanged: (value) {
+
+            Navigator.push(
+              context,
+
+              MaterialPageRoute(
+                builder: (_) =>
+                    AddEditProfileView(
+                  user: vm.user,
+
+                  initialStep: 13,
+
+                  isSwitchingToProfessional:
+                      true,
+                ),
+              ),
+            );
+          },
+        ),
+      ],
+    ),
+  ),
                     /// 🔥 MENU LIST
                     _menuItem(
                       "Edit Profile",
@@ -125,10 +223,24 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                           ),
                         );
 
-                        if (result == true) {
-                          final failure = await vm.getUser();
-                          if (mounted) failure?.showError(context);
-                        }
+                      if (result == true) {
+
+  /// 🔥 CALL onboarding/me AGAIN
+  final failure =
+      await getIt<AppStateProvider>()
+          .getUserDetails();
+
+  /// 🔥 UPDATE LOCAL VM
+  vm.user =
+      getIt<AppStateProvider>()
+          .user;
+
+  if (mounted) {
+    setState(() {});
+
+    failure?.showError(context);
+  }
+}
                       },
                     ),
                     if (getIt<AppStateProvider>().isProfessional) ...[
@@ -270,10 +382,10 @@ Widget _topProfileSection(User? p) {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
 
-                  border: Border.all(
-                    color: AppColors.kGreen,
-                    width: 2,
-                  ),
+                  // border: Border.all(
+                  //   color: AppColors.kGreen,
+                  //   width: 2,
+                  // ),
                 ),
 
                 child: SizedBox(
@@ -361,7 +473,23 @@ Widget _topProfileSection(User? p) {
                   getIt<AppStateProvider>()
                           .isProfessional
                       ? '${p?.currentCompany ?? '-'} • ${p?.jobRoles?.firstOrNull ?? p?.designation ?? 'Role'}'
-                   : '🎓 ${p?.college ?? '-'} • ${p?.degree ?? 'Student'}',
+                 : (() {
+
+    final education =
+        p?.educations?.firstWhere(
+
+      (e) => e.isCurrent == true,
+
+      orElse: () =>
+          p?.educations?.isNotEmpty ==
+                  true
+              ? p!.educations!.first
+              : Education(),
+    );
+
+    return
+        '🎓 ${education?.college ?? '-'} • ${education?.degree ?? 'Student'}';
+  })(),
 
                   textAlign: TextAlign.center,
 
@@ -417,24 +545,50 @@ Widget _topProfileSection(User? p) {
                 ],
               ),
 
-              if ((p?.college ?? '')
-                  .isNotEmpty) ...[
-                const SizedBox(height: 10),
+            if ((p?.educations
+            ?.isNotEmpty ??
+        false)) ...[
 
-                Text(
-                '🎓 ${p?.college ?? '-'}',
+  const SizedBox(height: 10),
 
-                  textAlign:
-                      TextAlign.center,
+  Text(
 
-                  style: TextStyle(
-                    color: Colors.grey[500],
+    '🎓 ${(() {
 
-                    fontSize: 14,
-                  ),
-                ),
-              ],
+      final education =
+          p?.educations
+              ?.firstWhere(
 
+        (e) =>
+            e.isCurrent ==
+            true,
+
+        orElse: () =>
+            p?.educations
+                        ?.isNotEmpty ==
+                    true
+                ? p!
+                    .educations!
+                    .first
+                : Education(),
+      );
+
+      return education
+              ?.college ??
+          '-';
+    })()}',
+
+    textAlign:
+        TextAlign.center,
+
+    style: TextStyle(
+      color:
+          Colors.grey[500],
+
+      fontSize: 14,
+    ),
+  ),
+],
               const SizedBox(height: 20),
 
               /// VIEW RESUME
@@ -529,26 +683,21 @@ Widget _topProfileSection(User? p) {
                       .isNotEmpty)
                     _socialBox(
                       'assets/images/github.png',
-                      () async {
-                        final raw =
-                            p?.github ?? '';
+                     () {
+  final url =
+      p!.resume!;
 
-                        final formatted =
-                            raw.startsWith(
-                                  'http',
-                                )
-                                ? raw
-                                : 'https://$raw';
+  Navigator.push(
+    context,
 
-                        await launchUrl(
-                          Uri.parse(
-                            formatted,
-                          ),
-
-                          mode: LaunchMode
-                              .externalApplication,
-                        );
-                      },
+    MaterialPageRoute(
+      builder: (_) =>
+          ResumeViewerPage(
+        url: url,
+      ),
+    ),
+  );
+},
                     ),
 
                   if ((p?.linkedin ?? '')
@@ -603,31 +752,31 @@ Widget _topProfileSection(User? p) {
                       },
                     ),
 
-                  if ((p?.resume ?? '')
-                      .isNotEmpty)
-                    _socialBox(
-                      'assets/images/cv.png',
-                      () async {
-                        final raw =
-                            p?.resume ?? '';
+                  // if ((p?.resume ?? '')
+                  //     .isNotEmpty)
+                  //   _socialBox(
+                  //     'assets/images/cv.png',
+                  //     () async {
+                  //       final raw =
+                  //           p?.resume ?? '';
 
-                        final formatted =
-                            raw.startsWith(
-                                  'http',
-                                )
-                                ? raw
-                                : 'https://$raw';
+                  //       final formatted =
+                  //           raw.startsWith(
+                  //                 'http',
+                  //               )
+                  //               ? raw
+                  //               : 'https://$raw';
 
-                        await launchUrl(
-                          Uri.parse(
-                            formatted,
-                          ),
+                  //       await launchUrl(
+                  //         Uri.parse(
+                  //           formatted,
+                  //         ),
 
-                          mode: LaunchMode
-                              .externalApplication,
-                        );
-                      },
-                    ),
+                  //         mode: LaunchMode
+                  //             .externalApplication,
+                  //       );
+                  //     },
+                  //   ),
                 ],
               ),
             ],

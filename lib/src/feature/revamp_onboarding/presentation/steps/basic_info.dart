@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
+import '../../../../common/index.dart';
 import '../widgets/input_widgets.dart';
 import '../widgets/onboarding_local_service.dart';
 
@@ -14,41 +15,6 @@ class BasicPage extends StatefulWidget {
     required this.onBack,
     required this.data,
   });
-
-  /// ✅ OPTIONS HERE
-  static const genderOptions = [
-    "Male",
-    "Female",
-    "Non-binary",
-    "Prefer not to say",
-  ];
-
-  static const ethnicityOptions = [
-    "Asian",
-    "Black or African American",
-    "Hispanic or Latino",
-    "Native American or Alaska Native",
-    "White",
-    "Two or More Races",
-    "Prefer not to say",
-  ];
-
-  static const maritalStatusOptions = [
-    "Single",
-    "Married",
-    "Divorced",
-    "Widowed",
-    "Prefer not to say",
-  ];
-
-  static const visaStatusOptions = [
-    "Citizen",
-    "Permanent Resident",
-    "Work Visa (e.g., H1B)",
-    "Student Visa (e.g., F1)",
-    "Not Authorized to Work",
-    "Other",
-  ];
 
   @override
   State<BasicPage> createState() => _BasicPageState();
@@ -65,61 +31,109 @@ class _BasicPageState extends State<BasicPage> {
   String? maritalStatus;
   String? visaStatus;
 
-  bool isInitialized = false;
+  String countryCode = "+91";
 
   @override
   void initState() {
     super.initState();
 
-    /// 🔥 EMPTY CONTROLLERS
     nameCtrl = TextEditingController();
     emailCtrl = TextEditingController();
     phoneCtrl = TextEditingController();
     dobCtrl = TextEditingController();
+
+    /// 🔥 FETCH EMAIL AFTER NAVIGATION
+    Future.delayed(
+      const Duration(milliseconds: 500),
+      () {
+        final email =
+            getIt<AppStateProvider>()
+                    .auth
+                    ?.email ??
+                '';
+
+        print("EMAIL => $email");
+
+        if (email.isNotEmpty) {
+          emailCtrl.text = email;
+
+          saveData();
+
+          setState(() {});
+        }
+      },
+    );
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    /// 🔥 PREVENT RESET ON EVERY REBUILD
-    if (isInitialized) return;
-
     final d =
-        context.read<AppStateProvider>().data ?? widget.data;
+        context.read<AppStateProvider>().data ??
+        widget.data;
 
     nameCtrl.text = d.name ?? '';
-    emailCtrl.text = d.email ?? '';
-    phoneCtrl.text = d.phone ?? '';
+
+    final phone = d.phone ?? '';
+
+    if (phone.startsWith("+1")) {
+      countryCode = "+1";
+
+      phoneCtrl.text =
+          phone.replaceAll("+1", "");
+    } else if (phone.startsWith("+44")) {
+      countryCode = "+44";
+
+      phoneCtrl.text =
+          phone.replaceAll("+44", "");
+    } else if (phone.startsWith("+971")) {
+      countryCode = "+971";
+
+      phoneCtrl.text =
+          phone.replaceAll("+971", "");
+    } else {
+      countryCode = "+91";
+
+      phoneCtrl.text =
+          phone.replaceAll("+91", "");
+    }
+
     dobCtrl.text = d.dob ?? '';
 
     gender = d.gender;
     ethnicity = d.ethnicity;
     maritalStatus = d.maritalStatus;
     visaStatus = d.visaStatus;
-
-    isInitialized = true;
   }
 
   void saveData() {
     final currentUser =
-        context.read<AppStateProvider>().data ?? widget.data;
+        context.read<AppStateProvider>().data ??
+        widget.data;
 
     final updatedUser = currentUser.copyWith(
       name: nameCtrl.text,
+
       email: emailCtrl.text,
-      phone: phoneCtrl.text,
+
+      phone: phoneCtrl.text.trim().isNotEmpty
+          ? "$countryCode${phoneCtrl.text.trim()}"
+          : null,
+
       dob: dobCtrl.text,
+
       gender: gender,
       ethnicity: ethnicity,
       maritalStatus: maritalStatus,
       visaStatus: visaStatus,
     );
 
-    /// ✅ STORE UPDATED USER
-    context.read<AppStateProvider>().data = updatedUser;
+    context.read<AppStateProvider>().data =
+        updatedUser;
+
     getIt<OnboardingLocalService>()
-    .saveUser(updatedUser);
+        .saveUser(updatedUser);
   }
 
   @override
@@ -128,6 +142,7 @@ class _BasicPageState extends State<BasicPage> {
     emailCtrl.dispose();
     phoneCtrl.dispose();
     dobCtrl.dispose();
+
     super.dispose();
   }
 
@@ -135,10 +150,13 @@ class _BasicPageState extends State<BasicPage> {
   Widget build(BuildContext context) {
     return Wrapper(
       title: "Basic",
+
       children: [
         AppHeader(
           title: "Your Professional",
+
           highlight: "details",
+
           onBack: widget.onBack,
         ),
 
@@ -146,6 +164,7 @@ class _BasicPageState extends State<BasicPage> {
 
         const Text(
           "Add your information",
+
           style: TextStyle(color: Colors.grey),
         ),
 
@@ -153,77 +172,117 @@ class _BasicPageState extends State<BasicPage> {
 
         AppInput(
           "Full Name",
+
           controller: nameCtrl,
+
           onChanged: (_) => saveData(),
         ),
 
         AppInput(
           "Email",
+
           controller: emailCtrl,
+
           onChanged: (_) => saveData(),
         ),
 
-        AppInput(
-          "Phone",
-          controller: phoneCtrl,
-          onChanged: (_) => saveData(),
+        Row(
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
+
+          children: [
+            Container(
+              margin:
+                  const EdgeInsets.only(top: 16),
+
+              padding:
+                  const EdgeInsets.symmetric(
+                horizontal: 14,
+                vertical: 2,
+              ),
+
+              decoration: BoxDecoration(
+                color: Colors.grey.shade900,
+
+                borderRadius:
+                    BorderRadius.circular(14),
+
+                border: Border.all(
+                  color: AppColors.kBorder,
+                ),
+              ),
+
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: countryCode,
+
+                  dropdownColor:
+                      Colors.grey.shade900,
+
+                  icon: const Icon(
+                    Icons.keyboard_arrow_down,
+                    color: Colors.grey,
+                  ),
+
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight:
+                        FontWeight.w600,
+                  ),
+
+                  items: const [
+                    DropdownMenuItem(
+                      value: "+91",
+                      child: Text("IN +91"),
+                    ),
+
+                    DropdownMenuItem(
+                      value: "+1",
+                      child: Text("US +1"),
+                    ),
+
+                    DropdownMenuItem(
+                      value: "+44",
+                      child: Text("UK +44"),
+                    ),
+
+                    DropdownMenuItem(
+                      value: "+971",
+                      child: Text("UAE +971"),
+                    ),
+                  ],
+
+                  onChanged: (v) {
+                    if (v == null) return;
+
+                    setState(() {
+                      countryCode = v;
+                    });
+
+                    saveData();
+                  },
+                ),
+              ),
+            ),
+
+            const SizedBox(width: 10),
+
+            Expanded(
+              child: AppInput(
+                "enter your phone",
+
+                controller: phoneCtrl,
+
+                keyboardType:
+                    TextInputType.phone,
+
+                onChanged: (_) =>
+                    saveData(),
+              ),
+            ),
+          ],
         ),
-
-        const SizedBox(height: 8),
-
-        // AppDropdown(
-        //   hint: "Gender",
-        //   value: gender,
-        //   options: BasicPage.genderOptions,
-        //   onChanged: (val) {
-        //     setState(() {
-        //       gender = val;
-        //       saveData();
-        //     });
-        //   },
-        // ),
-
-        // AppInput(
-        //   "Date of Birth",
-        //   controller: dobCtrl,
-        //   onChanged: (_) => saveData(),
-        // ),
-
-        // AppDropdown(
-        //   hint: "Ethnicity",
-        //   value: ethnicity,
-        //   options: BasicPage.ethnicityOptions,
-        //   onChanged: (val) {
-        //     setState(() {
-        //       ethnicity = val;
-        //       saveData();
-        //     });
-        //   },
-        // ),
-
-        // AppDropdown(
-        //   hint: "Marital Status",
-        //   value: maritalStatus,
-        //   options: BasicPage.maritalStatusOptions,
-        //   onChanged: (val) {
-        //     setState(() {
-        //       maritalStatus = val;
-        //       saveData();
-        //     });
-        //   },
-        // ),
-
-        // AppDropdown(
-        //   hint: "Visa Status / Work Authorization",
-        //   value: visaStatus,
-        //   options: BasicPage.visaStatusOptions,
-        //   onChanged: (val) {
-        //     setState(() {
-        //       visaStatus = val;
-        //       saveData();
-        //     });
-        //   },
-        // ),
 
         const SizedBox(height: 20),
       ],

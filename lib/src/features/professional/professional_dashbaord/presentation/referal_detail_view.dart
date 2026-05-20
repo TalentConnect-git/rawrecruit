@@ -8,7 +8,6 @@ import 'package:rawrecruit/src/feature/revamp_application/presentation/view_mode
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../../common/index.dart';
 import 'view_model/prof_dashboard_view_model.dart';
 
@@ -1062,9 +1061,6 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
   Widget _eligibilitySection(Job job) {
     final List<String> items = [];
 
-    if (job.cgpa != null) {
-      items.add("CGPA > ${job.cgpa} or Above");
-    }
     if (job.eligibilityCriteria != null) {
       if (job.eligibilityCriteria is List) {
         items.addAll(
@@ -1255,7 +1251,6 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
       candidatePosted: User(
         id: r.candidatePosted?.userId,
         name: r.candidatePosted?.name,
-        college: r.candidatePosted?.college,
         currentCompany: r.candidatePosted?.currentCompany,
         email: r.candidatePosted?.email,
         phone: r.candidatePosted?.phone,

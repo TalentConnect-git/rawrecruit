@@ -11,14 +11,18 @@ import 'package:rawrecruit/src/features/onboarding/data/entities/leadership_cont
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_edit_profile_view_model.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
+import '../../../feature/revamp_onboarding/presentation/steps/education_controller.dart';
+import '../../professional/job_postng/presentation/job_posting_view.dart';
 import '../data/entities/international.dart';
 
 
 class AddEditProfileView extends StatefulWidget {
-  const AddEditProfileView({this.user, this.initialStep, super.key});
+  const AddEditProfileView({this.user, this.initialStep,  this.isSwitchingToProfessional =
+      false, super.key});
   final int? initialStep;
   final User? user;
-
+final bool
+    isSwitchingToProfessional;
   @override
   State<AddEditProfileView> createState() => _AddEditProfileViewState();
 
@@ -447,12 +451,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
   static const List<String> _defaultSpecializations = ["Other"];
 
-  /// Returns the specialization options for the currently selected degree.
-  List<String> get _currentSpecializationOptions {
-    final deg = controller.degree.text;
-    if (deg.isEmpty) return _defaultSpecializations;
-    return _specializationByDegree[deg] ?? _defaultSpecializations;
-  }
+ 
 
   final semesterOptions = List.generate(8, (i) => "Semester ${i + 1}");
 
@@ -477,30 +476,49 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     "Others",
   ];
 
-  final jobRoleOptions = [
-    "Software Developer",
-    "Frontend Developer",
-    "Backend Developer",
-    "Full Stack Developer",
-    "Mobile App Developer",
-    "UI/UX Designer",
-    "Data Analyst",
-    "Data Scientist",
-    "Machine Learning Engineer",
-    "DevOps Engineer",
-    "Cloud Architect",
-    "QA Engineer",
-    "Cyber Security Specialist",
-    "Network Engineer",
-    "Business Analyst",
-    "Product Manager",
-    "Project Manager",
-    "HR Recruiter",
-    "Marketing Specialist",
-    "Sales Executive",
-    "Finance Analyst",
-    "Others",
-  ];
+ List<String> jobRoleOptions = [];
+ Future<void> fetchJobRoles() async {
+  final response =
+      await getIt<NetworkService>()
+          .request(
+    Request(
+      method: RequestMethod.get,
+
+      endpoint:
+          "api/company-master-data?type=JOB_ROLE",
+
+      isSafeRoute: true,
+    ),
+  );
+
+  final data =
+      List<Map<String, dynamic>>.from(
+    response.data['data'] ?? [],
+  );
+
+ jobRoleOptions =
+    data
+        .map(
+          (e) => e['value']
+              .toString()
+              .trim(),
+        )
+        .where(
+          (e) => e.isNotEmpty,
+        )
+        .toSet()
+        .toList()
+      ..sort();
+
+  if (!jobRoleOptions
+      .contains("Others")) {
+    jobRoleOptions.add(
+      "Others",
+    );
+  }
+
+  setState(() {});
+}
 
   final employmentOptions = ["full time", "part time", "contract"];
 
@@ -656,6 +674,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     fetchCompanies();
 
     fetchSkills();
+    fetchJobRoles();
     addEditProfileViewModel.setUserController(widget.user);
     // if (controller.experiences.isEmpty) {
     //   controller.experiences.add(ExperienceController());
@@ -839,82 +858,449 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                           ),
 
                           /// ───────────────── EDUCATION ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
+                     /// ───────────────── EDUCATION ─────────────────
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
 
-                            child: ProfileSection(
-                              label: 'Education',
+  child: ProfileSection(
+    label: 'Education',
 
-                              spacing: 16,
+    trailing: _addButton(() {
+      setState(() {
+        controller.educations.add(
+          EducationController(),
+        );
+      });
+    }),
 
-                              children: [
-                                CommonAutocomplete(
-                                  label: "College",
-                                  hint: "College",
+    children: controller.educations
+        .asMap()
+        .entries
+        .map((entry) {
 
-                                  options: colleges
-                                      .map((e) => e['label'].toString())
-                                      .toList(),
+      final index = entry.key;
 
-                                  initialValue: controller.college.text,
+      final e = entry.value;
 
-                                  onChanged: (value) {
-                                    controller.college.text = value;
-                                    markChanged();
-                                  },
+      return Container(
+        margin:
+            const EdgeInsets.only(
+          bottom: 16,
+        ),
 
-                                  onSelected: (value) async {
-                                    await addCollegeIfNeeded(value);
-                                    controller.college.text = value;
-                                    markChanged();
-                                  },
+        padding:
+            const EdgeInsets.all(
+          16,
+        ),
 
-                                  onSubmitted: (value) async {
-                                    await addCollegeIfNeeded(value);
-                                    controller.college.text = value;
-                                    markChanged();
-                                  },
+        decoration: BoxDecoration(
+          color:
+              const Color(
+            0xFF111827,
+          ),
 
-                                  /// 🔥 NEW (IMPORTANT)
-                                  ///
-                                  showCreateOption: true,
+          borderRadius:
+              BorderRadius.circular(
+            16,
+          ),
+        ),
 
-                                  onCreate: (value) async {
-                                    await addCollegeIfNeeded(value);
-                                    controller.college.text = value;
-                                    markChanged();
-                                  },
-                                ),
-                                _degreeDropdownField(),
+        child: Column(
+          crossAxisAlignment:
+              CrossAxisAlignment.start,
 
-                                _specializationDropdownField(),
+          children: [
 
-                                if (!isProfessional && !isFresher)
-                                  _dropdownField(
-                                    controller.semester,
-                                    'Semester',
-                                    semesterOptions,
-                                  ),
+            Row(
+              mainAxisAlignment:
+                  MainAxisAlignment
+                      .spaceBetween,
 
-                                _dropdownField(
-                                  controller.yearOfGraduation,
-                                  'Graduation Year',
-                                  graduationYears,
-                                ),
+              children: [
 
-                                if (!isProfessional)
-                                  AppTextFields(
-                                    controller: controller.cgpa,
+                Text(
+                  "Education ${index + 1}",
 
+                  style:
+                      const TextStyle(
+                    color:
+                        Colors.white,
 
+                    fontWeight:
+                        FontWeight
+                            .bold,
+                  ),
+                ),
 
-                                    hint: 'CGPA',
+                if (controller
+                        .educations
+                        .length >
+                    1)
+                  GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        controller
+                            .educations
+                            .removeAt(
+                              index,
+                            );
+                      });
+                    },
 
-                                    onChanged: (_) => markChanged(),
-                                  ),
-                              ],
-                            ),
-                          ),
+                    child: const Text(
+                      "Remove",
+
+                      style: TextStyle(
+                        color:
+                            Colors.red,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            /// COLLEGE
+            CommonAutocomplete(
+              label: "College",
+
+              hint: "College",
+
+              options: colleges
+                  .map(
+                    (e) => e['label']
+                        .toString(),
+                  )
+                  .toList(),
+
+              initialValue:
+                  e.college.text,
+
+              showCreateOption:
+                  true,
+
+              onChanged:
+                  (value) {
+
+                e.college.text =
+                    value;
+
+                markChanged();
+              },
+
+              onSelected:
+                  (value) async {
+
+                await addCollegeIfNeeded(
+                  value,
+                );
+
+                e.college.text =
+                    value;
+
+                markChanged();
+              },
+
+              onCreate:
+                  (value) async {
+
+                await addCollegeIfNeeded(
+                  value,
+                );
+
+                e.college.text =
+                    value;
+
+                markChanged();
+              },
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            /// DEGREE
+            CommonAutocomplete(
+              label: "Degree",
+
+              hint: "Degree",
+
+              options: degrees
+                  .map(
+                    (e) => e['value']
+                        .toString(),
+                  )
+                  .toList(),
+
+              initialValue:
+                  e.degree.text,
+
+              showCreateOption:
+                  true,
+
+              onChanged:
+                  (value) {
+
+                e.degree.text =
+                    value;
+
+                markChanged();
+              },
+
+              onSelected:
+                  (value) async {
+
+                await addDegreeIfNeeded(
+                  value,
+                );
+
+                e.degree.text =
+                    value;
+
+                final selected =
+                    degrees.firstWhere(
+                  (d) =>
+                      d['value']
+                          .toString()
+                          .toLowerCase() ==
+                      value
+                          .toLowerCase(),
+
+                  orElse: () => {},
+                );
+
+                if (selected
+                    .isNotEmpty) {
+
+                  e.selectedDegreeId =
+                      selected['_id'];
+
+                  await fetchStreams(
+                    e.selectedDegreeId!,
+                  );
+
+                  e.streams =
+                      streams;
+                }
+
+                setState(() {});
+              },
+
+              onCreate:
+                  (value) async {
+
+                await addDegreeIfNeeded(
+                  value,
+                );
+
+                e.degree.text =
+                    value;
+
+                markChanged();
+              },
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            /// SPECIALIZATION
+            CommonAutocomplete(
+              label:
+                  "Specialization",
+
+              hint:
+                  "Specialization",
+
+              options: e.streams
+                  .map(
+                    (s) => s['value']
+                        .toString(),
+                  )
+                  .toList(),
+
+              initialValue:
+                  e.specialization
+                      .text,
+
+              showCreateOption:
+                  true,
+
+              onChanged:
+                  (value) {
+
+                e.specialization
+                    .text = value;
+
+                markChanged();
+              },
+
+              onSelected:
+                  (value) {
+
+                e.specialization
+                    .text = value;
+
+                markChanged();
+              },
+
+              onCreate:
+                  (value) async {
+
+                if (e.selectedDegreeId !=
+                    null) {
+
+                  await addStreamIfNeeded(
+                    value,
+                  );
+
+                  await fetchStreams(
+                    e.selectedDegreeId!,
+                  );
+
+                  e.streams =
+                      streams;
+                }
+
+                e.specialization
+                    .text = value;
+
+                markChanged();
+
+                setState(() {});
+              },
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            _dropdownField(
+              e.educationType ==
+                      null
+                  ? TextEditingController(
+                      text:
+                          "bachelors",
+                    )
+                  : TextEditingController(
+                      text:
+                          e.educationType,
+                    ),
+
+              'Education Type',
+
+              [
+                "school",
+                "diploma",
+                "bachelors",
+                "masters",
+                "phd",
+                "certification",
+                "other",
+              ],
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            AppTextFields(
+              controller: e.cgpa,
+
+              hint: 'CGPA',
+
+              onChanged: (_) =>
+                  markChanged(),
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            _dropdownField(
+              e.yearOfGraduation,
+
+              'Graduation Year',
+
+              graduationYears,
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            Row(
+              children: [
+
+                Expanded(
+                  child: _dateField(
+                    e.startDate,
+
+                    "Start Date",
+                  ),
+                ),
+
+                const SizedBox(
+                  width: 10,
+                ),
+
+                Expanded(
+                  child: _dateField(
+                    e.endDate,
+
+                    "End Date",
+
+                    enabled:
+                        !e.isCurrent,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(
+              height: 16,
+            ),
+
+            Row(
+              children: [
+
+                Checkbox(
+                  value:
+                      e.isCurrent,
+
+                  onChanged: (
+                    val,
+                  ) {
+
+                    setState(() {
+                      e.isCurrent =
+                          val ??
+                              false;
+                    });
+
+                    markChanged();
+                  },
+                ),
+
+                const Text(
+                  "Currently Studying",
+
+                  style: TextStyle(
+                    color:
+                        Colors.white,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+    }).toList(),
+  ),
+),
 
                           /// ───────────────── LINKS ─────────────────
                           SingleChildScrollView(
@@ -1003,15 +1389,7 @@ AppTextFields(
 ),
 const SizedBox(height: 12),
 
-AppTextFields(
-  controller: controller.companyEmail,
 
-  hint: 'Official Company Email',
-
-  keyboardType: TextInputType.emailAddress,
-
-  onChanged: (_) => markChanged(),
-),
                                   AppTextFields(
                                     controller: controller.noticePeriod,
 
@@ -1493,18 +1871,29 @@ if (controller.servingNoticePeriod)
                                 });
                               }),
 
-                              children: controller.experiences
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                    final index = entry.key;
+                          
+  children: [
 
-                                    final e = entry.value;
+    /// 🔥 COMMON EMAIL FIELD
+  
+    const SizedBox(height: 20),
 
-                                    return _experienceCard(e, index);
-                                  })
-                                  .toList(),
-                            ),
+    ...controller.experiences
+        .asMap()
+        .entries
+        .map((entry) {
+          final index = entry.key;
+
+          final e = entry.value;
+
+          return _experienceCard(
+            e,
+            index,
+          );
+        })
+        .toList(),
+  ],
+),
                           ),
 
    SingleChildScrollView(
@@ -1565,7 +1954,6 @@ SingleChildScrollView(
                   ),
 
                   /// 🔥 BOTTOM BUTTONS
-                  /// 🔥 BOTTOM BUTTONS
                   SafeArea(
                     top: false,
                     child: Padding(
@@ -1586,47 +1974,99 @@ SingleChildScrollView(
                                   ),
                                 ),
 
-                                onPressed: () async {
-                                  if (!_formKey.currentState!.validate()) {
-                                    return;
-                                  }
-
-                                  final failure = await addEditProfileViewModel
-                                      .saveProfile();
-
-                                  if (failure == null) {
-                                    hasChanges = false;
-
-                                    if (mounted) {
-                                      context.pop(true);
-                                    }
-                                  }if (failure == null) {
-  hasChanges = false;
-
-  try {
-    final response = await getIt<NetworkService>().request(
-      Request(
-        method: RequestMethod.get,
-        endpoint: "api/onboarding/me",
-        isSafeRoute: true,
-      ),
-    );
-
-    final latestUser = User.fromJson(response.data["data"]);
-
-    context.read<AppStateProvider>().data = latestUser;
-  } catch (e) {
-    debugPrint("Refresh profile failed: $e");
+                             onPressed: () async {
+  if (!_formKey.currentState!.validate()) {
+    return;
   }
+if (widget
+    .isSwitchingToProfessional) {
 
-  if (mounted) {
-    context.pop(true);
-  }
+  await getIt<NetworkService>()
+      .request(
+    Request(
+      method:
+          RequestMethod.put,
+
+      endpoint:
+          "/api/onboarding/update",
+
+      isSafeRoute: true,
+
+      body: {
+        "profileType":
+            "professional",
+      },
+    ),
+  );
 }
-                                },
-                                child: const Text(
-                                  "Save",
+  final failure =
+      await addEditProfileViewModel
+          .saveProfile();
 
+  if (failure == null) {
+    hasChanges = false;
+
+    try {
+      final response =
+          await getIt<NetworkService>()
+              .request(
+        Request(
+          method: RequestMethod.get,
+          endpoint:
+              "api/onboarding/me",
+          isSafeRoute: true,
+        ),
+      );
+
+      final latestUser =
+          User.fromJson(
+response.data      );
+
+     if (mounted) {
+  ScaffoldMessenger.of(
+    context,
+  ).showSnackBar(
+     SnackBar(
+      content: Text(
+    widget.isSwitchingToProfessional
+    ? "Switched successfully"
+    : "Saved successfully"
+      ),
+    ),
+  );
+}
+
+context
+    .read<AppStateProvider>()
+    .data = latestUser;
+
+setState(() {});
+if (mounted) {
+if (widget
+    .isSwitchingToProfessional) {
+
+  context.goNamed(
+  RouteNames.splash,
+);
+
+} else {
+
+  context.pop(true);
+}
+}
+    } catch (e) {
+      debugPrint(
+        "Refresh profile failed: $e",
+      );
+    }
+  }
+
+                                },
+                              child: Text(
+  widget
+          .isSwitchingToProfessional
+      ? "Switch"
+      : "Save",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -1718,62 +2158,6 @@ SingleChildScrollView(
     );
   }
 
-  Widget _degreeDropdownField() {
-    return CommonAutocomplete(
-      label: "Degree",
-      hint: "Degree",
-
-      onSubmitted: (value) async {
-        await addDegreeIfNeeded(value);
-
-        await fetchDegrees();
-
-        final selected = degrees.firstWhere(
-          (e) => e['value'].toString().toLowerCase() == value.toLowerCase(),
-
-          orElse: () => {},
-        );
-
-        if (selected.isNotEmpty) {
-          selectedDegreeId = selected['_id'];
-
-          await fetchStreams(selectedDegreeId!);
-        }
-      },
-
-      options: degrees.map((e) => e['value'].toString()).toList(),
-
-      initialValue: controller.degree.text,
-
-      onChanged: (value) {
-        controller.degree.text = value;
-
-        markChanged();
-      },
-
-      onSelected: (value) async {
-        controller.degree.text = value;
-
-        controller.specialization.text = '';
-
-        final selected = degrees.firstWhere(
-          (e) => e['value'].toString().toLowerCase() == value.toLowerCase(),
-
-          orElse: () => {},
-        );
-
-        if (selected.isNotEmpty) {
-          selectedDegreeId = selected['_id'];
-
-          await fetchStreams(selectedDegreeId!);
-        }
-
-        setState(() {});
-
-        markChanged();
-      },
-    );
-  }
 Widget _experienceCard(
   ExperienceController e,
   int index, {
@@ -1796,12 +2180,29 @@ Widget _experienceCard(
           _companyField(e),
           const SizedBox(height: 12),
 
-          _roleField(e),
-          const SizedBox(height: 10),
+_roleField(e.role),          const SizedBox(height: 10),
 
           _currentCheckbox(e),
 
-          const SizedBox(height: 10),
+         const SizedBox(height: 12),
+
+if (e.isCurrent) ...[
+  AppTextFields(
+    controller: controller.companyEmail,
+
+    hint: 'Official Company Email',
+
+    keyboardType: TextInputType.emailAddress,
+
+    helperText: "Used for company verification",
+
+    onChanged: (_) => markChanged(),
+  ),
+
+  const SizedBox(height: 12),
+],
+
+const SizedBox(height: 10),
 
           _dateRow(e),
 
@@ -1840,7 +2241,21 @@ CommonAutocomplete(
   hint: "Company",
 
   options: companyOptions,
+showCreateOption: true,
 
+onCreate: (value) async {
+
+  await addCompanyIfNeeded(
+    value,
+  );
+
+  e.organization.text =
+      value;
+
+  markChanged();
+
+  setState(() {});
+},
   initialValue: e.organization.text,
 
   onChanged: (value) {
@@ -1868,11 +2283,7 @@ CommonAutocomplete(
 
         const SizedBox(height: 12),
 
-        _input(
-          controller: e.role,
-          hint: "Role",
-        ),
-
+       _roleField(e.role),
         const SizedBox(height: 12),
 
         _dateRowOnly(
@@ -1924,9 +2335,26 @@ Widget _header(
       hint: "Company",
 
       options: companyOptions,
-
+showCreateOption: true,
       initialValue: e.company.text,
+onCreate: (value) async {
 
+  await addCompanyIfNeeded(
+    value,
+  );
+
+  e.company.text =
+      value;
+
+  if (e.isCurrent) {
+    controller.currentCompany.text =
+        value;
+  }
+
+  markChanged();
+
+  setState(() {});
+},
  onChanged: (value) {
   e.company.text = value;
 
@@ -1964,15 +2392,70 @@ onSubmitted: (value) async {
 },
     );
   }
+Widget _roleField(
+  TextEditingController controller,
+) {
+  return CommonAutocomplete(
+    label: "Role",
 
-  Widget _roleField(ExperienceController e) {
-    return _input(
-      controller: e.role,
-      hint: "e.g., Software Engineer",
-      onChanged: (_) => markChanged(),
-    );
-  }
+    hint: "Role",
 
+    options:
+        jobRoleOptions,
+
+    initialValue:
+        controller.text,
+
+    onChanged: (value) {
+      controller.text =
+          value;
+
+      markChanged();
+    },
+
+    onSubmitted:
+        (value) async {
+
+      await addJobRoleIfNeeded(
+        value,
+      );
+
+      controller.text =
+          value;
+
+      markChanged();
+    },
+
+    onSelected:
+        (value) async {
+
+      await addJobRoleIfNeeded(
+        value,
+      );
+
+      controller.text =
+          value;
+
+      markChanged();
+    },
+
+    showCreateOption:
+        true,
+
+    onCreate:
+        (value) async {
+
+      await addJobRoleIfNeeded(
+        value,
+      );
+
+      controller.text =
+          value;
+
+      markChanged();
+    },
+  );
+}
   Widget _currentCheckbox(ExperienceController e) {
     return Row(
       children: [
@@ -2237,13 +2720,69 @@ Widget _internationalCard(
           controller: e.country,
           hint: "Country",
         ),
+const SizedBox(height: 12),
 
+CommonAutocomplete(
+  label: "Organization",
+showCreateOption: true,
+
+onCreate: (value) async {
+
+  await addCompanyIfNeeded(
+    value,
+  );
+
+  e.organization.text =
+      value;
+
+  markChanged();
+
+  setState(() {});
+},
+  hint: "Organization",
+
+  options: companyOptions,
+
+  initialValue:
+      e.organization.text,
+
+  onChanged: (value) {
+    e.organization.text =
+        value;
+
+    markChanged();
+  },
+
+  onSubmitted:
+      (value) async {
+
+    await addCompanyIfNeeded(
+      value,
+    );
+
+    e.organization.text =
+        value;
+
+    markChanged();
+  },
+
+  onSelected:
+      (value) async {
+
+    await addCompanyIfNeeded(
+      value,
+    );
+
+    e.organization.text =
+        value;
+
+    markChanged();
+  },
+),
         const SizedBox(height: 12),
 
-        _input(
-          controller: e.role,
-          hint: "Role",
-        ),
+
+       _roleField(e.role),
 
         const SizedBox(height: 12),
 
@@ -2547,151 +3086,297 @@ Widget _dateRowOnly(
   }
 }
   // ── Resume parser ────────────────────────────────────────────────────────────
+Future<void> parseResumeAndFill() async {
+  try {
+    debugPrint("Starting resume upload");
 
-  Future<void> parseResumeAndFill() async {
-    try {
-      debugPrint("Starting resume upload");
+    final result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['pdf'],
+      withData: false,
+    );
 
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-        withData: false,
+    if (result == null) {
+      debugPrint("No file selected");
+      return;
+    }
+
+    final file = result.files.single;
+
+    if (file.path == null) {
+      debugPrint("File path is null");
+      return;
+    }
+
+    _pickedResumeFile = File(file.path!);
+
+    addEditProfileViewModel.pickedResumeFile =
+        _pickedResumeFile;
+
+    setState(() {
+      _isParsingResume = true;
+    });
+
+    /// 🔥 FORM DATA
+    final formData = FormData.fromMap({
+      'resume': await MultipartFile.fromFile(
+        file.path!,
+        filename: file.name,
+      ),
+    });
+
+    /// 🔥 NETWORK CALL
+    final networkService =
+        NetworkService();
+
+    final response =
+        await networkService.request(
+      Request(
+        method: RequestMethod.post,
+
+        endpoint:
+            "/api/upload/resume",
+
+        formData: formData,
+
+        isSafeRoute: true,
+      ),
+    );
+
+    debugPrint(
+      "STATUS: ${response.statusCode}",
+    );
+
+    debugPrint(
+      "FULL RESPONSE: ${response.data}",
+    );
+
+    /// 🔥 SAFE PARSING
+    final data =
+        response.data["data"] ??
+            response.data;
+
+    if (data == null) {
+
+      debugPrint(
+        "No data found in response",
       );
 
-      if (result == null) {
-        debugPrint("No file selected");
-        return;
-      }
-
-      final file = result.files.single;
-
-      if (file.path == null) {
-        debugPrint("File path is null");
-        return;
-      }
-
-      _pickedResumeFile = File(file.path!);
-      addEditProfileViewModel.pickedResumeFile = _pickedResumeFile;
-
-      setState(() => _isParsingResume = true);
-
-      /// 🔥 FORM DATA
-      final formData = FormData.fromMap({
-        'resume': await MultipartFile.fromFile(file.path!, filename: file.name),
-      });
-
-      /// 🔥 USE NETWORK SERVICE (IMPORTANT)
-      final networkService = NetworkService();
-
-      final response = await networkService.request(
-        Request(
-          method: RequestMethod.post,
-          endpoint: "/api/upload/resume",
-          formData: formData,
-          isSafeRoute: true, // 🔥 TOKEN AUTOMATIC
+      ScaffoldMessenger.of(context)
+          .showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Resume upload failed",
+          ),
         ),
       );
 
-      debugPrint("STATUS: ${response.statusCode}");
-      debugPrint("FULL RESPONSE: ${response.data}");
-
-      /// 🔥 SAFE PARSING
-      final data = response.data["data"] ?? response.data;
-
-    if (data == null) {
-  debugPrint("No data found in response");
-
-  ScaffoldMessenger.of(context).showSnackBar(
-    const SnackBar(
-      content: Text("Resume upload failed"),
-    ),
-  );
-
-  return;
-}
-
-      debugPrint("PARSED DATA: $data");
-ScaffoldMessenger.of(context).showSnackBar(
-  const SnackBar(
-    content: Text("Resume uploaded successfully"),
-  ),
-);
-      /// 🔥 BASIC FIELDS
-      controller.name.text = data['name'] ?? controller.name.text;
-      controller.email.text = data['email'] ?? controller.email.text;
-      controller.phone.text = data['phone'] ?? controller.phone.text;
-      controller.gender.text = data['gender'] ?? controller.gender.text;
-      controller.about.text = data['about'] ?? controller.about.text;
-      controller.linkedin.text =
-          data['linkedin_url'] ?? controller.linkedin.text;
-      controller.github.text = data['github_url'] ?? controller.github.text;
-      controller.portfolio.text =
-          data['portfolio_url'] ?? controller.portfolio.text;
-
-      /// 🔥 SKILLS
-      if (data['skills'] != null && data['skills'] is List) {
-        controller.skills.first.text = (data['skills'] as List).join(', ');
-      }
-
-      /// 🔥 EDUCATION
-      if (data['education'] != null &&
-          data['education'] is List &&
-          (data['education'] as List).isNotEmpty) {
-        final edu = data['education'].last;
-
-        controller.college.text = controller.college.text.isEmpty
-            ? (edu['institution'] ?? '')
-            : controller.college.text;
-
-        if (edu['degree'] != null) {
-          final parsedDegree = edu['degree'].toString();
-
-          if (!degreeOptions.contains(parsedDegree)) {
-            degreeOptions.add(parsedDegree);
-          }
-
-          controller.degree.text = parsedDegree;
-          controller.specialization.text = '';
-        }
-
-        if (edu['field_of_study'] != null) {
-          final parsedSpec = edu['field_of_study'].toString();
-
-          final specOptions =
-              _specializationByDegree[controller.degree.text] ??
-              _defaultSpecializations;
-
-          if (!specOptions.contains(parsedSpec)) {
-            _specializationByDegree[controller.degree.text]?.add(parsedSpec);
-          }
-
-          controller.specialization.text = parsedSpec;
-        }
-
-        controller.yearOfGraduation.text =
-            controller.yearOfGraduation.text.isEmpty
-            ? (edu['year']?.toString() ?? '')
-            : controller.yearOfGraduation.text;
-
-        controller.cgpa.text = controller.cgpa.text.isEmpty
-            ? (edu['cgpa']?.toString() ?? '')
-            : controller.cgpa.text;
-      }
-
-      setState(() {});
-    } catch (e, s) {
-    debugPrint("FULL ERROR: $e");
-debugPrint("STACK: $s");
-
-ScaffoldMessenger.of(context).showSnackBar(
-  const SnackBar(
-    content: Text("Something went wrong"),
-  ),
-);
-    } finally {
-      setState(() => _isParsingResume = false);
+      return;
     }
+
+    debugPrint(
+      "PARSED DATA: $data",
+    );
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Resume uploaded successfully",
+        ),
+      ),
+    );
+
+    /// 🔥 BASIC FIELDS
+    controller.name.text =
+        data['name'] ??
+            controller.name.text;
+
+    controller.email.text =
+        data['email'] ??
+            controller.email.text;
+
+    controller.phone.text =
+        data['phone'] ??
+            controller.phone.text;
+
+    controller.gender.text =
+        data['gender'] ??
+            controller.gender.text;
+
+    controller.about.text =
+        data['about'] ??
+            controller.about.text;
+
+    controller.linkedin.text =
+        data['linkedin_url'] ??
+            controller.linkedin.text;
+
+    controller.github.text =
+        data['github_url'] ??
+            controller.github.text;
+
+    controller.portfolio.text =
+        data['portfolio_url'] ??
+            controller.portfolio.text;
+
+    /// 🔥 SKILLS
+    if (data['skills'] != null &&
+        data['skills'] is List &&
+        controller.skills.isNotEmpty) {
+
+      controller.skills.first.text =
+          (data['skills'] as List)
+              .join(', ');
+    }
+
+    /// 🔥 EDUCATIONS
+    if (data['education'] != null &&
+        data['education'] is List &&
+        (data['education'] as List)
+            .isNotEmpty) {
+
+      controller.educations.clear();
+
+      for (final edu
+          in data['education']) {
+
+        final education =
+            EducationController();
+
+        /// COLLEGE
+        education.college.text =
+            edu['institution'] ??
+                '';
+
+        /// DEGREE
+        final parsedDegree =
+            edu['degree']
+                    ?.toString() ??
+                '';
+
+        education.degree.text =
+            parsedDegree;
+
+        if (parsedDegree
+                .isNotEmpty &&
+            !degreeOptions.contains(
+              parsedDegree,
+            )) {
+
+          degreeOptions.add(
+            parsedDegree,
+          );
+        }
+
+        /// SPECIALIZATION
+        final parsedSpec =
+            edu['field_of_study']
+                    ?.toString() ??
+                '';
+
+        education.specialization
+            .text = parsedSpec;
+
+        /// YEAR
+        education
+            .yearOfGraduation
+            .text = edu['year']
+                ?.toString() ??
+            '';
+
+        /// CGPA
+        education.cgpa.text =
+            edu['cgpa']
+                ?.toString() ??
+            '';
+
+        /// EDUCATION TYPE
+        education.educationType =
+            "bachelors";
+
+        /// CURRENT
+        education.isCurrent =
+            false;
+
+        /// 🔥 FETCH STREAMS
+        final selected =
+            degrees.firstWhere(
+          (d) =>
+              d['value']
+                  .toString()
+                  .toLowerCase() ==
+              parsedDegree
+                  .toLowerCase(),
+
+          orElse: () => {},
+        );
+
+        if (selected.isNotEmpty) {
+
+          education.selectedDegreeId =
+              selected['_id'];
+
+          final response =
+              await getIt<
+                  NetworkService>()
+                  .request(
+            Request(
+              method:
+                  RequestMethod
+                      .get,
+
+              endpoint:
+                  "api/master-data?type=STREAM&parent=${education.selectedDegreeId}",
+
+              isSafeRoute:
+                  true,
+            ),
+          );
+
+          education.streams =
+              List<
+                  Map<String,
+                      dynamic>>.from(
+            response.data['data'] ??
+                [],
+          );
+        }
+
+        controller.educations.add(
+          education,
+        );
+      }
+    }
+
+    setState(() {});
+
+  } catch (e, s) {
+
+    debugPrint(
+      "FULL ERROR: $e",
+    );
+
+    debugPrint(
+      "STACK: $s",
+    );
+
+    ScaffoldMessenger.of(context)
+        .showSnackBar(
+      const SnackBar(
+        content: Text(
+          "Something went wrong",
+        ),
+      ),
+    );
+
+  } finally {
+
+    setState(() {
+      _isParsingResume = false;
+    });
   }
+}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -2834,25 +3519,52 @@ void _addItem(String value) {
     super.dispose();
   }
 List<String> get _filteredSuggestions {
-  final query = _textController.text.trim().toLowerCase();
+
+  final query =
+      _textController.text
+          .trim()
+          .toLowerCase();
 
   if (query.isEmpty) {
     return [];
   }
 
-  final selectedNormalized = _selectedItems
+  final selectedNormalized =
+      _selectedItems
+          .map(
+            (e) => e
+                .toLowerCase()
+                .replaceAll(' ', ''),
+          )
+          .toSet();
+
+  return widget.options
       .map(
-        (e) => e.toLowerCase().replaceAll(' ', ''),
+        (e) => e.trim(),
       )
-      .toSet();
+      .where(
+        (option) {
 
-  return widget.options.where((option) {
-    final normalized =
-        option.toLowerCase().replaceAll(' ', '');
+          final normalized =
+              option
+                  .toLowerCase()
+                  .replaceAll(
+                    ' ',
+                    '',
+                  );
 
-    return option.toLowerCase().contains(query) &&
-        !selectedNormalized.contains(normalized);
-  }).take(8).toList();
+          return option
+                  .toLowerCase()
+                  .contains(query) &&
+              !selectedNormalized
+                  .contains(
+                    normalized,
+                  );
+        },
+      )
+      .toSet()
+      .toList()
+    ..sort();
 }
   @override
   Widget build(BuildContext context) {

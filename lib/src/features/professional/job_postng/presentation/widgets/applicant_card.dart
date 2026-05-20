@@ -41,14 +41,31 @@ final jobTitle = application.job?.jobTitle is List
         child: Row(
           children: [
             /// 🔥 AVATAR
-            CircleAvatar(
-              radius: 22,
-              backgroundColor: AppColors.kGreen,
-              child: Text(
-                _initials(name),
-                style: const TextStyle(color: Colors.black),
+        CircleAvatar(
+  radius: 22,
+
+  backgroundColor: AppColors.kGreen,
+
+  backgroundImage:
+      (user.profileImage ?? '')
+              .isNotEmpty
+          ? NetworkImage(
+              user.profileImage!,
+            )
+          : null,
+
+  child:
+      (user.profileImage ?? '')
+              .isEmpty
+          ? Text(
+              _initials(name),
+
+              style: const TextStyle(
+                color: Colors.black,
               ),
-            ),
+            )
+          : null,
+),
 
             const SizedBox(width: 12),
 

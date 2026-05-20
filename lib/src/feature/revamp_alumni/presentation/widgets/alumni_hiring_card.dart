@@ -36,14 +36,33 @@ class AlumniHiringCard extends StatelessWidget {
 
     final name =
         candidate.name ?? "User";
+final currentEducation =
+    candidate.educations != null &&
+            candidate
+                .educations!
+                .isNotEmpty
+        ? candidate.educations!
+            .firstWhere(
+            (e) =>
+                e.isCurrent ==
+                true,
 
-    final college =
-        candidate.college ??
-            "Your College";
+            orElse: () =>
+                candidate
+                    .educations!
+                    .first,
+          )
+        : null;
 
-    final year =
-        candidate.yearOfGraduation ??
-            '';
+final college =
+    currentEducation
+            ?.college ??
+        "Your College";
+
+final year =
+    currentEducation
+            ?.yearOfGraduation ??
+        '';
 
     final designation =
         (candidate.jobRoles != null &&
@@ -116,27 +135,39 @@ class AlumniHiringCard extends StatelessWidget {
           children: [
 
             /// 🔥 AVATAR
-            CircleAvatar(
-              radius: 26,
+          CircleAvatar(
+  radius: 26,
 
-              backgroundColor:
-                  AppColors.kGreen,
+  backgroundColor:
+      AppColors.kGreen,
 
-              child: Text(
-                initials,
+  backgroundImage:
+      (candidate.profileImage ?? '')
+              .isNotEmpty
+          ? NetworkImage(
+              candidate.profileImage!,
+            )
+          : null,
 
-                style:
-                    const TextStyle(
-                  color:
-                      Colors.black,
+  child:
+      (candidate.profileImage ?? '')
+              .isEmpty
+          ? Text(
+              initials,
 
-                  fontWeight:
-                      FontWeight.bold,
+              style:
+                  const TextStyle(
+                color:
+                    Colors.black,
 
-                  fontSize: 14,
-                ),
+                fontWeight:
+                    FontWeight.bold,
+
+                fontSize: 14,
               ),
-            ),
+            )
+          : null,
+),
 
             const SizedBox(width: 14),
 
@@ -187,14 +218,7 @@ class AlumniHiringCard extends StatelessWidget {
                             : Colors.red,
                       ),
 
-                      const SizedBox(
-                        width: 6,
-                      ),
-
-                      _chip(
-                        "Refer",
-                        Colors.blue,
-                      ),
+                  
                     ],
                   ),
 

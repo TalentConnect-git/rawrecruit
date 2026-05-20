@@ -46,6 +46,9 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   internationalExperiences: (json['internationalExperience'] as List<dynamic>?)
       ?.map((e) => InternationalExperience.fromJson(e as Map<String, dynamic>))
       .toList(),
+  educations: (json['educations'] as List<dynamic>?)
+      ?.map((e) => Education.fromJson(e as Map<String, dynamic>))
+      .toList(),
   jobRoles: (json['jobRoles'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
@@ -65,9 +68,6 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
       .toList(),
   about: json['about'] as String?,
   certifications: json['certifications'] as String?,
-  cgpa: json['cgpa'] as String?,
-  college: json['college'] as String?,
-  degree: json['degree'] as String?,
   degreeCertificate: json['degreeCertificate'] as String?,
   email: json['email'] as String?,
   emailVerified: json['emailVerified'] as bool?,
@@ -83,9 +83,6 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   profileType: json['profileType'] as String?,
   onboardingCompleted: json['onboardingCompleted'] as bool?,
   referralSource: json['referralSource'] as String?,
-  semester: json['semester'] as String?,
-  specialization: json['specialization'] as String?,
-  yearOfGraduation: json['yearOfGraduation'] as String?,
   currentSalaryAmount: json['currentSalaryAmount'] as String?,
   currentSalaryCurrency: json['currentSalaryCurrency'] as String?,
   dob: json['dob'] as String?,
@@ -123,6 +120,7 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'internationalExperience': instance.internationalExperiences
       ?.map((e) => e.toJson())
       .toList(),
+  'educations': instance.educations?.map((e) => e.toJson()).toList(),
   'jobRoles': instance.jobRoles,
   'languagesKnown': instance.languagesKnown,
   'locations': instance.locations,
@@ -132,9 +130,6 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'toolsAndPlatforms': instance.toolsAndPlatforms,
   'about': instance.about,
   'certifications': instance.certifications,
-  'cgpa': instance.cgpa,
-  'college': instance.college,
-  'degree': instance.degree,
   'degreeCertificate': instance.degreeCertificate,
   'email': instance.email,
   'emailVerified': instance.emailVerified,
@@ -150,9 +145,6 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'profileType': instance.profileType,
   'onboardingCompleted': instance.onboardingCompleted,
   'referralSource': instance.referralSource,
-  'semester': instance.semester,
-  'specialization': instance.specialization,
-  'yearOfGraduation': instance.yearOfGraduation,
   'currentSalaryAmount': instance.currentSalaryAmount,
   'currentSalaryCurrency': instance.currentSalaryCurrency,
   'dob': instance.dob,
