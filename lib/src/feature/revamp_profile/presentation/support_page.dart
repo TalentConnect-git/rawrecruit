@@ -16,9 +16,7 @@ class SupportPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.kTile,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: AppColors.border,
-        ),
+        border: Border.all(color: AppColors.border),
       ),
       child: Row(
         children: [
@@ -28,10 +26,7 @@ class SupportPage extends StatelessWidget {
               color: AppColors.kCard,
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(
-              icon,
-              color: AppColors.kGreen,
-            ),
+            child: Icon(icon, color: AppColors.kGreen),
           ),
           const SizedBox(width: 14),
           Expanded(
@@ -49,10 +44,7 @@ class SupportPage extends StatelessWidget {
                 const SizedBox(height: 4),
                 Text(
                   subtitle,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                    fontSize: 13,
-                  ),
+                  style: const TextStyle(color: Colors.grey, fontSize: 13),
                 ),
               ],
             ),
@@ -74,15 +66,10 @@ class SupportPage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.kCard,
         elevation: 0,
-        iconTheme: const IconThemeData(
-          color: Colors.white,
-        ),
+        iconTheme: const IconThemeData(color: Colors.white),
         title: const Text(
           "Support",
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
       ),
       body: SingleChildScrollView(
@@ -96,9 +83,7 @@ class SupportPage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.kTile,
                 borderRadius: BorderRadius.circular(22),
-                border: Border.all(
-                  color: AppColors.border,
-                ),
+                border: Border.all(color: AppColors.border),
               ),
               child: Column(
                 children: [
@@ -127,10 +112,7 @@ class SupportPage extends StatelessWidget {
                   Text(
                     "Reach out to us anytime through email or our social platforms.",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                      height: 1.5,
-                    ),
+                    style: TextStyle(color: Colors.grey.shade400, height: 1.5),
                   ),
                 ],
               ),
@@ -197,17 +179,20 @@ class SupportPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.kTile,
                         borderRadius: BorderRadius.circular(18),
-                        border: Border.all(
-                          color: AppColors.border,
-                        ),
+                        border: Border.all(color: AppColors.border),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            'assets/images/insta.png',
-                            height: 30,
-                            width: 30,
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+
+                            child: Image.asset(
+                              'assets/images/insta.png',
+                              height: 30,
+                              width: 30,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           const Text(
@@ -242,17 +227,20 @@ class SupportPage extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: AppColors.kTile,
                         borderRadius: BorderRadius.circular(18),
-                        border: Border.all(
-                          color: AppColors.border,
-                        ),
+                        border: Border.all(color: AppColors.border),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset(
-                            'assets/images/linkedin.png',
-                            height: 30,
-                            width: 30,
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+
+                            child: Image.asset(
+                              'assets/images/linked.png',
+                              height: 30,
+                              width: 30,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                           const SizedBox(height: 10),
                           const Text(
@@ -278,9 +266,7 @@ class SupportPage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.kTile,
                 borderRadius: BorderRadius.circular(22),
-                border: Border.all(
-                  color: AppColors.border,
-                ),
+                border: Border.all(color: AppColors.border),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -298,10 +284,7 @@ class SupportPage extends StatelessWidget {
 
                   Text(
                     "A complete platform for campus hiring, internships, and fresher job opportunities across India.",
-                    style: TextStyle(
-                      color: Colors.grey.shade300,
-                      height: 1.6,
-                    ),
+                    style: TextStyle(color: Colors.grey.shade300, height: 1.6),
                   ),
 
                   const SizedBox(height: 20),
@@ -345,9 +328,7 @@ class SupportPage extends StatelessWidget {
               decoration: BoxDecoration(
                 color: AppColors.kTile,
                 borderRadius: BorderRadius.circular(18),
-                border: Border.all(
-                  color: AppColors.border,
-                ),
+                border: Border.all(color: AppColors.border),
               ),
               child: Column(
                 children: [
@@ -369,10 +350,7 @@ class SupportPage extends StatelessWidget {
                   Text(
                     "Monday - Saturday 9:00 AM to 7:00 PM",
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: Colors.grey.shade400,
-                      height: 1.6,
-                    ),
+                    style: TextStyle(color: Colors.grey.shade400, height: 1.6),
                   ),
                 ],
               ),

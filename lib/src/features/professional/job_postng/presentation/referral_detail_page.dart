@@ -37,10 +37,29 @@ class ReferralDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = application.applicant ?? const User();
+final currentEducation =
+    user.educations != null &&
+            user.educations!.isNotEmpty
+        ? user.educations!.firstWhere(
+            (e) => e.isCurrent == true,
 
-    final college = safe(user.college);
-    final graduation = safe(user.yearOfGraduation);
-    final cgpa = safe(user.cgpa);
+            orElse: () =>
+                user.educations!.first,
+          )
+        : null;
+  final degree =
+    safe(currentEducation?.degree);
+
+final college =
+    safe(currentEducation?.college);
+
+final graduation = safe(
+  currentEducation
+      ?.yearOfGraduation,
+);
+
+final cgpa =
+    safe(currentEducation?.cgpa);
 
     final linkedin = safe(user.linkedin);
     final github = safe(user.github);
@@ -406,12 +425,18 @@ if (context.mounted) {
     String status,
   ) {
     final user = application.applicant ?? const User();
+final currentEducation =
+    user.educations != null &&
+            user.educations!.isNotEmpty
+        ? user.educations!.firstWhere(
+            (e) => e.isCurrent == true,
 
+            orElse: () =>
+                user.educations!.first,
+          )
+        : null;
     final name = safe(user.name);
-    final degree = safe(user.degree);
-    final college = safe(user.college);
-    final graduation =
-        safe(user.yearOfGraduation);
+ 
 final company =
     safe(user.currentCompany);
 
@@ -419,7 +444,19 @@ final experience =
     safe(
       user.totalYearsOfExperience,
     );
+final degree =
+    safe(currentEducation?.degree);
 
+final college =
+    safe(currentEducation?.college);
+
+final graduation = safe(
+  currentEducation
+      ?.yearOfGraduation,
+);
+
+final cgpa =
+    safe(currentEducation?.cgpa);
 final role =
     user.jobRoles?.isNotEmpty == true
         ? user.jobRoles!.first

@@ -56,18 +56,31 @@ class AlumniCard extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 /// AVATAR
-                CircleAvatar(
-                  radius: 26,
-                  backgroundColor: AppColors.kGreen,
-                  child: Text(
-                    initials,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                ),
+             CircleAvatar(
+  radius: 26,
+  backgroundColor: AppColors.kGreen,
+
+  backgroundImage:
+      (candidate?.profileImage ?? '')
+              .isNotEmpty
+          ? NetworkImage(
+              candidate!.profileImage!,
+            )
+          : null,
+
+  child:
+      (candidate?.profileImage ?? '')
+              .isEmpty
+          ? Text(
+              initials,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            )
+          : null,
+),
 
                 const SizedBox(height: 12),
 
@@ -135,7 +148,25 @@ class AlumniCard extends StatelessWidget {
                   children: [
                     Flexible(
                       child: Text(
-                        candidate?.college ?? '-',
+                    candidate?.educations != null &&
+        candidate!
+            .educations!
+            .isNotEmpty
+    ? candidate
+            .educations!
+            .firstWhere(
+              (e) =>
+                  e.isCurrent ==
+                  true,
+
+              orElse: () =>
+                  candidate
+                      .educations!
+                      .first,
+            )
+            .college ??
+        '-'
+    : '-',
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: const TextStyle(

@@ -25,7 +25,6 @@ class AlumniDetailView extends StatelessWidget {
 
     final name = first.candidatePosted?.name ?? "User";
 
-    final college = first.candidatePosted?.college ?? "";
 final role =
     first.candidatePosted
         ?.jobRoles
@@ -74,18 +73,34 @@ final role =
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// AVATAR
-                      CircleAvatar(
-                        radius: 32,
-                        backgroundColor: AppColors.kGreen,
-                        child: Text(
-                          name.getInitials,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
+                 CircleAvatar(
+  radius: 32,
+  backgroundColor: AppColors.kGreen,
+
+  backgroundImage:
+      (first.candidatePosted?.profileImage ??
+                  '')
+              .isNotEmpty
+          ? NetworkImage(
+              first.candidatePosted!
+                  .profileImage!,
+            )
+          : null,
+
+  child:
+      (first.candidatePosted?.profileImage ??
+                  '')
+              .isEmpty
+          ? Text(
+              name.getInitials,
+              style: const TextStyle(
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
+            )
+          : null,
+),
 
                       const SizedBox(width: 14),
 
@@ -94,26 +109,31 @@ final role =
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    name,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                ),
+                          Row(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    Flexible(
+      child: Text(
+        name,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 24,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    ),
 
-                                Icon(
-                                  Icons.verified,
-                                  color: AppColors.kGreen,
-                                  size: 18,
-                                ),
-                              ],
-                            ),
+    const SizedBox(width: 6),
+
+    Icon(
+      Icons.verified,
+      color: AppColors.kGreen,
+      size: 18,
+    ),
+  ],
+),
 
                             const SizedBox(height: 4),
 
@@ -140,7 +160,7 @@ final role =
             location,
             style: const TextStyle(
               color: Colors.grey,
-              fontSize: 13,
+              fontSize: 15,
             ),
           ),
         ),
@@ -149,29 +169,29 @@ final role =
 
     const SizedBox(height: 6),
 
-    /// COLLEGE
-    Row(
-      children: [
+    // /// COLLEGE
+    // Row(
+    //   children: [
 
-        const Icon(
-          Icons.school_outlined,
-          size: 14,
-          color: Colors.grey,
-        ),
+    //     const Icon(
+    //       Icons.school_outlined,
+    //       size: 14,
+    //       color: Colors.grey,
+    //     ),
 
-        const SizedBox(width: 6),
+    //     const SizedBox(width: 6),
 
-        Expanded(
-          child: Text(
-            college,
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 13,
-            ),
-          ),
-        ),
-      ],
-    ),
+    //     // Expanded(
+    //     //   child: Text(
+    //     //     college,
+    //     //     style: const TextStyle(
+    //     //       color: Colors.grey,
+    //     //       fontSize: 13,
+    //     //     ),
+    //     //   ),
+    //     // ),
+    //   ],
+    // ),
 
     const SizedBox(height: 6),
 

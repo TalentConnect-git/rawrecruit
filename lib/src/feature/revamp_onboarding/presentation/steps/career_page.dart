@@ -49,35 +49,53 @@ List<String> roleOptions = [];
   final List<TextEditingController> startCtrls = [];
   final List<TextEditingController> endCtrls = [];
   final List<TextEditingController> descCtrls = [];
-final List<String> jobTitleOptions = [
-  "Software Developer",
-  "Frontend Developer",
-  "Backend Developer",
-  "Full Stack Developer",
-  "Mobile App Developer",
-  "UI/UX Designer",
-  "Data Analyst",
-  "Data Scientist",
-  "Machine Learning Engineer",
-  "DevOps Engineer",
-  "Cloud Architect",
-  "QA Engineer",
-  "Cyber Security Specialist",
-  "Network Engineer",
-  "Business Analyst",
-  "Product Manager",
-  "Project Manager",
-  "HR Recruiter",
-  "Marketing Specialist",
-  "Sales Executive",
-  "Finance Analyst",
-];  
+List<String> jobTitleOptions = [];
+Future<void> fetchJobRoles() async {
+  try {
+
+    final response =
+        await getIt<NetworkService>()
+            .request(
+      Request(
+        method: RequestMethod.get,
+
+        endpoint:
+            "api/company-master-data?type=JOB_ROLE",
+
+        isSafeRoute: true,
+      ),
+    );
+
+    final data =
+        List<Map<String, dynamic>>.from(
+      response.data['data'] ?? [],
+    );
+
+    final roles =
+        data
+            .map(
+              (e) => e['value']
+                  .toString(),
+            )
+            .toSet()
+            .toList();
+
+    if (!roles.contains("Others")) {
+      roles.add("Others");
+    }
+
+    setState(() {
+      jobTitleOptions = roles;
+    });
+
+  } catch (_) {}
+}
   @override
   void initState() {
     super.initState();
 
     fetchCompanies();
-
+fetchJobRoles();
     /// 🔥 EMPTY CONTROLLERS
     currentSalaryCtrl = TextEditingController();
 companyEmailCtrl = TextEditingController();
@@ -302,6 +320,52 @@ totalYearsOfExperienceCtrl.dispose();
 
     super.dispose();
   }
+  Future<void> addRoleIfNeeded(
+  String value,
+) async {
+
+  final exists =
+      jobTitleOptions.any(
+    (e) =>
+        e.toLowerCase().trim() ==
+        value
+            .toLowerCase()
+            .trim(),
+  );
+
+  if (exists) return;
+
+  try {
+
+    await getIt<NetworkService>()
+        .request(
+      Request(
+        method:
+            RequestMethod.post,
+
+        endpoint:
+            "api/company-master-data",
+
+        isSafeRoute:
+            true,
+
+        body: {
+          "type": "JOB_ROLE",
+          "value": value,
+        },
+      ),
+    );
+
+    setState(() {
+      jobTitleOptions.add(
+        value,
+      );
+    });
+
+  } catch (e) {
+    debugPrint(e.toString());
+  }
+}
 late TextEditingController noticePeriodStartDateCtrl;
 
 bool servingNoticePeriod = false;
@@ -371,7 +435,7 @@ bool servingNoticePeriod = false;
             Expanded(
               flex: 4,
               child: AppInput(
-                "Current Salary",
+                "Current Salary (annual)",
                 controller: currentSalaryCtrl,
                 onChanged: (_) => saveData(),
               ),
@@ -413,6 +477,24 @@ AppInput(
   controller: companyEmailCtrl,
   keyboardType: TextInputType.emailAddress,
   onChanged: (_) => saveData(),
+),
+const SizedBox(height: 6),
+
+const Padding(
+  padding: EdgeInsets.only(left: 4),
+
+  child: Align(
+    alignment: Alignment.centerLeft,
+
+    child: Text(
+      "Used only to verify employment — never shared publicly",
+
+      style: TextStyle(
+        color: Colors.grey,
+        fontSize: 12,
+      ),
+    ),
+  ),
 ),
 const SizedBox(height: 12),
 AppInput(
@@ -660,26 +742,224 @@ if (servingNoticePeriod) ...[
                   ],
                 ),
 SizedBox(height: 10,),
-           SearchableChipField(
-  label: "Role",
+        Autocomplete<String>(
+  optionsBuilder:
+      (textEditingValue) {
 
-  controller: roleCtrls[i],
+    final query =
+        textEditingValue.text;
 
-  options: jobTitleOptions,
+    final filtered =
+        jobTitleOptions.where(
+      (option) => option
+          .toLowerCase()
+          .contains(
+            query
+                .toLowerCase(),
+          ),
+    );
 
-  onChanged: (value) {
-    roleCtrls[i].text = value;
+    final exists =
+        jobTitleOptions.any(
+      (e) =>
+          e
+              .toLowerCase()
+              .trim() ==
+          query
+              .toLowerCase()
+              .trim(),
+    );
 
-    experiences[i] = experiences[i].copyWith(
-      role: value,
+    if (query
+            .trim()
+            .isNotEmpty &&
+        !exists) {
+
+      return [
+        ...filtered,
+        'Create "$query"',
+      ];
+    }
+
+    return filtered;
+  },
+
+  onSelected:
+      (value) async {
+
+    final actualValue =
+        value.startsWith(
+              'Create "',
+            )
+            ? value
+                .replaceAll(
+                  'Create "',
+                  '',
+                )
+                .replaceAll(
+                  '"',
+                  '',
+                )
+            : value;
+
+    await addRoleIfNeeded(
+      actualValue,
+    );
+
+    roleCtrls[i].text =
+        actualValue;
+
+    experiences[i] =
+        experiences[i]
+            .copyWith(
+      role: actualValue,
     );
 
     saveData();
 
     setState(() {});
   },
-),
 
+  fieldViewBuilder: (
+    context,
+    controller,
+    focusNode,
+    onFieldSubmitted,
+  ) {
+
+    if (controller.text !=
+        roleCtrls[i].text) {
+
+      controller.text =
+          roleCtrls[i].text;
+
+      controller.selection =
+          TextSelection
+              .fromPosition(
+        TextPosition(
+          offset: controller
+              .text
+              .length,
+        ),
+      );
+    }
+
+    return TextField(
+      controller:
+          controller,
+
+      focusNode:
+          focusNode,
+
+      style:
+          const TextStyle(
+        color:
+            Colors.white,
+      ),
+
+      decoration:
+          InputDecoration(
+        hintText: "Role",
+
+        filled: true,
+
+        fillColor:
+            AppColors.kCard,
+
+        border:
+            OutlineInputBorder(
+          borderRadius:
+              BorderRadius.circular(
+            12,
+          ),
+        ),
+      ),
+
+      onChanged: (
+        value,
+      ) {
+
+        roleCtrls[i].text =
+            value;
+
+        experiences[i] =
+            experiences[i]
+                .copyWith(
+          role: value,
+        );
+
+        saveData();
+
+        setState(() {});
+      },
+    );
+  },
+
+  optionsViewBuilder:
+      (
+        context,
+        onSelected,
+        options,
+      ) {
+
+    return Material(
+      color: Colors.black,
+
+      child: Container(
+        width:
+            MediaQuery.of(
+                  context,
+                )
+                .size
+                .width -
+            32,
+
+        constraints:
+            const BoxConstraints(
+          maxHeight: 220,
+        ),
+
+        child:
+            ListView.builder(
+          shrinkWrap: true,
+
+          itemCount:
+              options.length,
+
+          itemBuilder:
+              (
+                context,
+                index,
+              ) {
+
+            final option =
+                options
+                    .elementAt(
+              index,
+            );
+
+            return ListTile(
+              title: Text(
+                option,
+
+                style:
+                    const TextStyle(
+                  color: Colors.white,
+                ),
+              ),
+
+              onTap: () {
+                onSelected(
+                  option,
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  },
+),
                 GestureDetector(
                   onTap: () async {
                     final pickedDate = await showDatePicker(

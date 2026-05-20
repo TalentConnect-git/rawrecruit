@@ -9,6 +9,7 @@ part of 'international_experience.dart';
 _InternationalExperience _$InternationalExperienceFromJson(
   Map<String, dynamic> json,
 ) => _InternationalExperience(
+  organization: json['organization'] as String?,
   country: json['country'] as String?,
   role: json['role'] as String?,
   startDate: json['startDate'] as String?,
@@ -19,6 +20,7 @@ _InternationalExperience _$InternationalExperienceFromJson(
 Map<String, dynamic> _$InternationalExperienceToJson(
   _InternationalExperience instance,
 ) => <String, dynamic>{
+  'organization': instance.organization,
   'country': instance.country,
   'role': instance.role,
   'startDate': instance.startDate,

@@ -107,30 +107,61 @@ class _LinksPageState extends State<LinksPage> {
 
         const SizedBox(height: 10),
 
-        AppInput(
-          "Github",
-          controller: githubCtrl,
-          onChanged: (_) => saveData(),
-        ),
+      AppInput(
+  "Github",
+  controller: githubCtrl,
+  prefixIcon: Padding(
+    padding: const EdgeInsets.all(12),
+    child: Image.asset(
+      'assets/images/github.png',
+      height: 20,
+      width: 20,
+    ),
+  ),
+  onChanged: (_) => saveData(),
+),
 
-        AppInput(
-          "LinkedIn",
-          controller: linkedinCtrl,
-          onChanged: (_) => saveData(),
-        ),
+AppInput(
+  "LinkedIn",
+  controller: linkedinCtrl,
+  prefixIcon: Padding(
+    padding: const EdgeInsets.all(12),
+    child: Image.asset(
+      'assets/images/linkedin.png',
+      height: 20,
+      width: 20,
+    ),
+  ),
+  onChanged: (_) => saveData(),
+),
 
-        AppInput(
-          "Portfolio",
-          controller: portfolioCtrl,
-          onChanged: (_) => saveData(),
-        ),
+AppInput(
+  "Portfolio",
+  controller: portfolioCtrl,
+  prefixIcon: Padding(
+    padding: const EdgeInsets.all(12),
+    child: Image.asset(
+      'assets/images/portfolio.png',
+      height: 20,
+      width: 20,
+    ),
+  ),
+  onChanged: (_) => saveData(),
+),
 
-        AppInput(
-          "Resume URL",
-          controller: resumeCtrl,
-          onChanged: (_) => saveData(),
-        ),
-      ],
+AppInput(
+  "Resume URL",
+  controller: resumeCtrl,
+  prefixIcon: Padding(
+    padding: const EdgeInsets.all(12),
+    child: Image.asset(
+      'assets/images/cv.png',
+      height: 20,
+      width: 20,
+    ),
+  ),
+  onChanged: (_) => saveData(),
+),      ],
     );
   }
 }

@@ -4,8 +4,10 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
 import 'package:dio/dio.dart';
+import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../common/index.dart';
 import '../widgets/onboarding_local_service.dart';
 
 class WorkPrefPage extends StatefulWidget {
@@ -52,31 +54,7 @@ class WorkPrefPage extends StatefulWidget {
     "Agriculture",
     "Others",
   ];
-
-  static const jobRoleOptions = [
-    "Software Developer",
-    "Frontend Developer",
-    "Backend Developer",
-    "Full Stack Developer",
-    "Mobile App Developer",
-    "UI/UX Designer",
-    "Data Analyst",
-    "Data Scientist",
-    "Machine Learning Engineer",
-    "DevOps Engineer",
-    "Cloud Architect",
-    "QA Engineer",
-    "Cyber Security Specialist",
-    "Network Engineer",
-    "Business Analyst",
-    "Product Manager",
-    "Project Manager",
-    "HR Recruiter",
-    "Marketing Specialist",
-    "Sales Executive",
-    "Finance Analyst",
-    "Others",
-  ];
+static List<String> jobRoleOptions = [];
 
   static const languageOptions = [
     "English",
@@ -108,8 +86,47 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
 
   late TextEditingController locationCtrl;
   late TextEditingController expectedSalaryCtrl;
+  late TextEditingController
+    jobRolesCtrl;
   late TextEditingController expectedCurrencyCtrl;
+Future<void> fetchJobRoles() async {
+  final response =
+      await getIt<NetworkService>()
+          .request(
+    Request(
+      method: RequestMethod.get,
 
+      endpoint:
+          "api/company-master-data?type=JOB_ROLE",
+
+      isSafeRoute: true,
+    ),
+  );
+
+  final data =
+      List<Map<String, dynamic>>.from(
+    response.data['data'] ?? [],
+  );
+
+  final roles =
+      data
+          .map(
+            (e) =>
+                e['value']
+                    .toString(),
+          )
+          .toSet()
+          .toList();
+
+  if (!roles.contains("Others")) {
+    roles.add("Others");
+  }
+
+  setState(() {
+    WorkPrefPage.jobRoleOptions =
+        roles;
+  });
+}
   bool isInitialized = false;
 
   String selectedState = "";
@@ -156,6 +173,10 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
 
     industry = List.from(d.industry ?? []);
     jobRoles = List.from(d.jobRoles ?? []);
+    jobRolesCtrl =
+    TextEditingController(
+  text: jobRoles.join(", "),
+);
     languages = List.from(d.languagesKnown ?? []);
 
     selectedCities = List.from(d.locations ?? []);
@@ -165,7 +186,7 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
     );
 
     fetchStates();
-
+fetchJobRoles();
     loadSelectedState();
 
     isInitialized = true;
@@ -293,10 +314,59 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
   void dispose() {
     locationCtrl.dispose();
     expectedSalaryCtrl.dispose();
+    jobRolesCtrl.dispose();
     expectedCurrencyCtrl.dispose();
     super.dispose();
   }
+Future<void> addRoleIfNeeded(
+  String value,
+) async {
 
+  final exists =
+      WorkPrefPage
+          .jobRoleOptions
+          .any(
+    (e) =>
+        e.toLowerCase().trim() ==
+        value
+            .toLowerCase()
+            .trim(),
+  );
+
+  if (exists) return;
+
+  try {
+
+    await getIt<NetworkService>()
+        .request(
+      Request(
+        method:
+            RequestMethod.post,
+
+        endpoint:
+            "api/company-master-data",
+
+        isSafeRoute:
+            true,
+
+        body: {
+          "type": "JOB_ROLE",
+          "value": value,
+        },
+      ),
+    );
+
+    setState(() {
+
+      WorkPrefPage
+          .jobRoleOptions
+          .add(value);
+    });
+
+  } catch (e) {
+    debugPrint(e.toString());
+  }
+}
   @override
   Widget build(BuildContext context) {
     return Wrapper(
@@ -348,21 +418,256 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
         ),
 
         const SizedBox(height: 10),
+Column(
+  crossAxisAlignment:
+      CrossAxisAlignment.start,
 
-        AppMultiSelectChips(
-          label: "Job Roles",
-          options:
-              WorkPrefPage.jobRoleOptions,
-          initialValues: jobRoles,
-          onChanged: (val) {
+  children: [
+
+    const Text(
+      "Job Roles",
+
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight:
+            FontWeight.w600,
+      ),
+    ),
+
+    const SizedBox(height: 10),
+
+    Wrap(
+      spacing: 8,
+      runSpacing: 8,
+
+      children:
+          jobRoles.map((role) {
+
+        return Chip(
+          label: Text(role),
+
+          onDeleted: () {
+
             setState(() {
-              jobRoles = val;
+              jobRoles.remove(
+                role,
+              );
+
+              jobRolesCtrl.text =
+                  jobRoles.join(
+                ", ",
+              );
             });
 
             saveData();
           },
-        ),
+        );
+      }).toList(),
+    ),
 
+    const SizedBox(height: 10),
+
+    Autocomplete<String>(
+      optionsBuilder: (
+        textEditingValue,
+      ) {
+
+        final query =
+            textEditingValue.text;
+
+        final filtered =
+            WorkPrefPage
+                .jobRoleOptions
+                .where(
+          (option) =>
+              option
+                  .toLowerCase()
+                  .contains(
+                    query
+                        .toLowerCase(),
+                  ) &&
+              !jobRoles.contains(
+                option,
+              ),
+        );
+
+        final exists =
+            WorkPrefPage
+                .jobRoleOptions
+                .any(
+          (e) =>
+              e
+                  .toLowerCase()
+                  .trim() ==
+              query
+                  .toLowerCase()
+                  .trim(),
+        );
+
+        if (query
+                .trim()
+                .isNotEmpty &&
+            !exists) {
+
+          return [
+            ...filtered,
+            'Create "$query"',
+          ];
+        }
+
+        return filtered;
+      },
+
+      onSelected:
+          (value) async {
+
+        final actualValue =
+            value.startsWith(
+                  'Create "',
+                )
+                ? value
+                    .replaceAll(
+                      'Create "',
+                      '',
+                    )
+                    .replaceAll(
+                      '"',
+                      '',
+                    )
+                : value;
+
+        await addRoleIfNeeded(
+          actualValue,
+        );
+
+        if (!jobRoles.contains(
+          actualValue,
+        )) {
+
+          setState(() {
+
+            jobRoles.add(
+              actualValue,
+            );
+
+            jobRolesCtrl.text =
+                jobRoles.join(
+              ", ",
+            );
+          });
+
+          saveData();
+        }
+      },
+
+      fieldViewBuilder: (
+        context,
+        controller,
+        focusNode,
+        onFieldSubmitted,
+      ) {
+
+        return TextField(
+          controller:
+              controller,
+
+          focusNode:
+              focusNode,
+
+          style:
+              const TextStyle(
+            color:
+                Colors.white,
+          ),
+
+          decoration:
+              InputDecoration(
+            hintText:
+                "Search Job Role",
+
+            filled: true,
+
+            fillColor:
+                AppColors.kCard,
+
+            border:
+                OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(
+                12,
+              ),
+            ),
+          ),
+        );
+      },
+
+      optionsViewBuilder: (
+        context,
+        onSelected,
+        options,
+      ) {
+
+        return Material(
+          color: Colors.black,
+
+          child: Container(
+            width:
+                MediaQuery.of(
+                      context,
+                    )
+                    .size
+                    .width -
+                32,
+
+            constraints:
+                const BoxConstraints(
+              maxHeight: 220,
+            ),
+
+            child:
+                ListView.builder(
+              shrinkWrap: true,
+
+              itemCount:
+                  options.length,
+
+              itemBuilder:
+                  (
+                    context,
+                    index,
+                  ) {
+
+                final option =
+                    options
+                        .elementAt(
+                  index,
+                );
+
+                return ListTile(
+                  title: Text(
+                    option,
+
+                    style:
+                        const TextStyle(
+                      color:
+                          Colors.white,
+                    ),
+                  ),
+
+                  onTap: () {
+                    onSelected(
+                      option,
+                    );
+                  },
+                );
+              },
+            ),
+          ),
+        );
+      },
+    ),
+  ],
+),
         const SizedBox(height: 10),
 
         AppDropdown(

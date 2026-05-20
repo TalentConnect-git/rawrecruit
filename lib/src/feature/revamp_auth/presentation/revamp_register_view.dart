@@ -18,6 +18,8 @@ import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_contr
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/models/index.dart';
+
 class RevampRegisterView extends StatefulWidget {
   const RevampRegisterView({super.key});
 
@@ -171,7 +173,13 @@ padding: EdgeInsets.symmetric(
     'onboarding_completed',
     false,
   );
+final email =
+    emailController.text.trim();
 
+getIt<AppStateProvider>().data =
+    User(
+  email: email,
+);
   Navigator.pushReplacement(
     context,
     MaterialPageRoute(

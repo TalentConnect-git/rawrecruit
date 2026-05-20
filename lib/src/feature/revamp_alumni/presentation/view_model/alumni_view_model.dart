@@ -121,9 +121,14 @@ class AlumniViewModel extends ChangeNotifier {
   // =========================================================
 Future<void> fetchCompanyAlumni() async {
   _setLoading(true);
-final user = getIt<AppStateProvider>().user;
+await getIt<AppStateProvider>()
+    .getUserDetails();
 
-String? companyName = user?.currentCompany;
+final user =
+    getIt<AppStateProvider>().user;
+
+String? companyName =
+    user?.currentCompany;
 
 if (companyName == null || companyName.trim().isEmpty) {
   final currentExp = user?.experiences?.firstWhere(

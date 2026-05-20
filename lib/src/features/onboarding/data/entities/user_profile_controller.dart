@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../feature/revamp_onboarding/presentation/steps/education_controller.dart';
 import 'achievement_controller.dart';
 import 'award_controller.dart';
 import 'international.dart';
@@ -26,10 +27,7 @@ class UserController {
       resume = TextEditingController(),
       about = TextEditingController(),
       certifications = TextEditingController(),
-      cgpa = TextEditingController(),
-      college = TextEditingController(),
-      degree = TextEditingController(),
-      degreeCertificate = TextEditingController(),
+     
       email = TextEditingController(),
       gender = TextEditingController(),
       github = TextEditingController(),
@@ -69,6 +67,8 @@ noticePeriodStartDate = TextEditingController();
   List<TextEditingController> domainKnowledge = [];
   List<TextEditingController> employmentType = [];
   List<ExperienceController> experiences = [];
+  List<EducationController>
+    educations = [];
   List<TextEditingController> industry = [];
   List<TextEditingController> jobRoles = [];
   List<TextEditingController> languagesKnown = [];
@@ -90,10 +90,7 @@ List<InternationalExperienceController>
   TextEditingController resume;
   TextEditingController about;
   TextEditingController certifications;
-  TextEditingController cgpa;
-  TextEditingController college;
-  TextEditingController degree;
-  TextEditingController degreeCertificate;
+
   TextEditingController email;
   TextEditingController gender;
   TextEditingController github;
@@ -155,10 +152,7 @@ TextEditingController noticePeriodStartDate;
       'resume': clean(resume.text),
       'about': clean(about.text),
       'certifications': clean(certifications.text),
-      'cgpa': clean(cgpa.text),
-      'college': clean(college.text),
-      'degree': clean(degree.text),
-      'degreeCertificate': clean(degreeCertificate.text),
+      
       'email': clean(email.text),
       'gender': clean(gender.text),
       'github': clean(github.text),
@@ -194,6 +188,66 @@ TextEditingController noticePeriodStartDate;
       'skills': cleanList(skills),
       'domainKnowledge': cleanList(domainKnowledge),
       'employmentType': cleanList(employmentType),
+      'educations': educations
+    .where(
+      (e) =>
+          e.college.text.isNotEmpty ||
+          e.degree.text.isNotEmpty ||
+          e.specialization.text.isNotEmpty ||
+          e.cgpa.text.isNotEmpty,
+    )
+    .map(
+      (e) => cleanMap({
+
+        'college':
+            clean(
+              e.college.text,
+            ),
+
+        'degree':
+            clean(
+              e.degree.text,
+            ),
+
+        'specialization':
+            clean(
+              e.specialization.text,
+            ),
+
+        'semester':
+            clean(
+              e.semester.text,
+            ),
+
+        'cgpa':
+            clean(
+              e.cgpa.text,
+            ),
+
+        'yearOfGraduation':
+            clean(
+              e.yearOfGraduation
+                  .text,
+            ),
+
+        'startDate':
+            clean(
+              e.startDate.text,
+            ),
+
+        'endDate':
+            clean(
+              e.endDate.text,
+            ),
+
+        'educationType':
+            e.educationType,
+
+        'isCurrent':
+            e.isCurrent,
+      }),
+    )
+    .toList(),
       'experiences': experiences
           .where(
             (e) =>
@@ -256,6 +310,8 @@ TextEditingController noticePeriodStartDate;
           (e) =>
               e.country.text
                   .isNotEmpty ||
+                  e.organization.text.isNotEmpty ||
+
               e.role.text.isNotEmpty ||
               e.startDate.text
                   .isNotEmpty ||
@@ -269,6 +325,10 @@ TextEditingController noticePeriodStartDate;
             'country': clean(
               e.country.text,
             ),
+            'organization': clean(
+  e.organization.text,
+),
+
             'role': clean(
               e.role.text,
             ),
@@ -354,10 +414,7 @@ TextEditingController noticePeriodStartDate;
     resume.dispose();
     about.dispose();
     certifications.dispose();
-    cgpa.dispose();
-    college.dispose();
-    degree.dispose();
-    degreeCertificate.dispose();
+
     email.dispose();
     gender.dispose();
     github.dispose();
@@ -382,7 +439,24 @@ TextEditingController noticePeriodStartDate;
     noticePeriodStartDate.dispose();
 currentCompany.dispose();
 totalYearsOfExperience.dispose();
+for (final e in educations) {
 
+  e.college.dispose();
+
+  e.degree.dispose();
+
+  e.specialization.dispose();
+
+  e.semester.dispose();
+
+  e.cgpa.dispose();
+
+  e.yearOfGraduation.dispose();
+
+  e.startDate.dispose();
+
+  e.endDate.dispose();
+}
 companyEmail.dispose();
 noticePeriod.dispose();
     for (final controller in domainKnowledge) {

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 
+import '../../../../feature/revamp_onboarding/presentation/steps/education_controller.dart';
 import '../../data/entities/international.dart';
 import '../../data/entities/leadership_controller.dart';
 
@@ -53,10 +54,7 @@ class AddEditProfileViewModel extends ViewStateProvider {
     c.resume.text = user.resume ?? '';
     c.about.text = user.about ?? '';
     c.certifications.text = user.certifications ?? '';
-    c.cgpa.text = user.cgpa ?? '';
-    c.college.text = user.college ?? '';
-    c.degree.text = user.degree ?? '';
-    c.degreeCertificate.text = user.degreeCertificate ?? '';
+   
     c.email.text = user.email ?? '';
     c.gender.text = user.gender ?? '';
     c.github.text = user.github ?? '';
@@ -76,11 +74,55 @@ c.noticePeriodStartDate.text =
     c.portfolio.text = user.portfolio ?? '';
     c.profileType.text = user.profileType ?? '';
     c.referralSource.text = user.referralSource ?? '';
-    c.semester.text = user.semester ?? '';
-    c.specialization.text = user.specialization ?? '';
-    c.yearOfGraduation.text =
-        user.yearOfGraduation ?? '';
+   /// -------- EDUCATIONS --------
+c.educations.clear();
 
+for (final e
+    in user.educations ?? []) {
+
+  final ec =
+      EducationController();
+
+  ec.college.text =
+      e.college ?? '';
+
+  ec.degree.text =
+      e.degree ?? '';
+
+  ec.specialization.text =
+      e.specialization ?? '';
+
+  ec.semester.text =
+      e.semester ?? '';
+
+  ec.cgpa.text =
+      e.cgpa ?? '';
+
+  ec.yearOfGraduation.text =
+      e.yearOfGraduation ?? '';
+
+  ec.startDate.text =
+      e.startDate ?? '';
+
+  ec.endDate.text =
+      e.endDate ?? '';
+
+  ec.educationType =
+      e.educationType ??
+          "bachelors";
+
+  ec.isCurrent =
+      e.isCurrent ?? false;
+
+  c.educations.add(ec);
+}
+
+if (c.educations.isEmpty) {
+
+  c.educations.add(
+    EducationController(),
+  );
+}
     c.currentSalaryAmount.text =
         user.currentSalaryAmount ?? '';
 
@@ -263,6 +305,9 @@ for (final e
   ec.country.text =
       e.country ?? '';
 
+ec.organization.text =
+    e.organization ?? '';
+ec.organization.text = e.organization ?? '';
   ec.role.text =
       e.role ?? '';
 

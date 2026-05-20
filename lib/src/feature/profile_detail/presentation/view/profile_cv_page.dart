@@ -85,6 +85,16 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
           }
 
           final user = vm.user;
+          final currentEducation =
+    user?.educations != null &&
+            user!.educations!.isNotEmpty
+        ? user.educations!.firstWhere(
+            (e) => e.isCurrent == true,
+
+            orElse: () =>
+                user.educations!.first,
+          )
+        : null;
           final noticeData = calculateNoticePeriodStatus(
             user?.noticePeriodStartDate,
             user?.noticePeriod,
@@ -167,9 +177,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         const SizedBox(height: 6),
 
                         Text(
-                          user.currentCompany?.isNotEmpty == true
-                              ? user.currentCompany!
-                              : user.college ?? '',
+                     user.currentCompany?.isNotEmpty == true
+    ? user.currentCompany!
+    : currentEducation?.college ?? '',
 
                           style: const TextStyle(
                             color: Colors.grey,
@@ -336,96 +346,93 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                   ),
 
                   const SizedBox(height: 5),
-if ((user.email?.isNotEmpty ?? false)) ...[
-  const SizedBox(height: 18),
+                  if ((user.email?.isNotEmpty ?? false)) ...[
+                    const SizedBox(height: 18),
 
-  GestureDetector(
-    onTap: () async {
-      final uri = Uri(
-        scheme: 'mailto',
-        path: user.email,
-      );
+                    GestureDetector(
+                      onTap: () async {
+                        final uri = Uri(scheme: 'mailto', path: user.email);
 
-      if (await canLaunchUrl(uri)) {
-        await launchUrl(uri);
-      }
-    },
+                        if (await canLaunchUrl(uri)) {
+                          await launchUrl(uri);
+                        }
+                      },
 
-    child: Container(
-      width: double.infinity,
+                      child: Container(
+                        width: double.infinity,
 
-      padding: const EdgeInsets.all(16),
+                        padding: const EdgeInsets.all(16),
 
-      decoration: BoxDecoration(
-        color: AppColors.kCard,
+                        decoration: BoxDecoration(
+                          color: AppColors.kCard,
 
-        borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(18),
 
-        border: Border.all(
-          color: Colors.white.withOpacity(.05),
-        ),
-      ),
+                          border: Border.all(
+                            color: Colors.white.withOpacity(.05),
+                          ),
+                        ),
 
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(12),
 
-            decoration: BoxDecoration(
-              color: AppColors.kGreen.withOpacity(.12),
+                              decoration: BoxDecoration(
+                                color: AppColors.kGreen.withOpacity(.12),
 
-              borderRadius: BorderRadius.circular(14),
-            ),
+                                borderRadius: BorderRadius.circular(14),
+                              ),
 
-            child: Icon(
-              Icons.email_outlined,
-              color: AppColors.kGreen,
-            ),
-          ),
+                              child: Icon(
+                                Icons.email_outlined,
+                                color: AppColors.kGreen,
+                              ),
+                            ),
 
-          const SizedBox(width: 14),
+                            const SizedBox(width: 14),
 
-          Expanded(
-            child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment.start,
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
 
-              children: [
-                const Text(
-                  "Official Email",
+                                children: [
+                                  const Text(
+                                    "Official Email",
 
-                  style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 11,
-                  ),
-                ),
+                                    style: TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 11,
+                                    ),
+                                  ),
 
-                const SizedBox(height: 4),
+                                  const SizedBox(height: 4),
 
-                Text(
-                  user.email!,
+                                  Text(
+                                    user.email!,
 
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
-            ),
-          ),
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
 
-          const Icon(
-            Icons.open_in_new,
-            color: Colors.grey,
-            size: 18,
-          ),
-        ],
-      ),
-    ),
-  ),
-],
-SizedBox(height: 18,),
+                            const Icon(
+                              Icons.open_in_new,
+                              color: Colors.grey,
+                              size: 18,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                  SizedBox(height: 18),
+
                   /// DETAILS GRID
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -440,13 +447,26 @@ SizedBox(height: 18,),
                             crossAxisAlignment: CrossAxisAlignment.start,
 
                             children: [
-                              _detailTile("Degree", user.degree),
+                           _detailTile(
+  "Degree",
+  currentEducation?.degree,
+),
 
-                              _detailTile("College", user.college),
+_detailTile(
+  "College",
+  currentEducation?.college,
+),
 
-                              _detailTile("CGPA", user.cgpa),
+_detailTile(
+  "CGPA",
+  currentEducation?.cgpa,
+),
 
-                              _detailTile("Graduation", user.yearOfGraduation),
+_detailTile(
+  "Graduation",
+  currentEducation
+      ?.yearOfGraduation,
+),
                             ],
                           ),
                         ),
@@ -463,10 +483,11 @@ SizedBox(height: 18,),
                             crossAxisAlignment: CrossAxisAlignment.start,
 
                             children: [
-                              _detailTile(
-                                "Specialization",
-                                user.specialization,
-                              ),
+                          _detailTile(
+  "Specialization",
+  currentEducation
+      ?.specialization,
+),
                               _detailTile(
                                 "Current Company",
                                 user.currentCompany,
@@ -1055,6 +1076,220 @@ SizedBox(height: 18,),
                       ),
                     ),
                   ],
+                  if ((user.achievements ?? []).isNotEmpty) ...[
+                    const SizedBox(height: 18),
+
+                    _modernSection(
+                      title: "Achievements",
+                      icon: Icons.emoji_events_outlined,
+
+                      child: Column(
+                        children: (user.achievements ?? [])
+                            .map(
+                              (e) => Container(
+                                width: double.infinity,
+
+                                margin: const EdgeInsets.only(bottom: 14),
+
+                                padding: const EdgeInsets.all(14),
+
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(.04),
+
+                                  borderRadius: BorderRadius.circular(16),
+
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(.05),
+                                  ),
+                                ),
+
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                                  children: [
+                                    Text(
+                                      e.title ?? '-',
+
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 6),
+
+                                    Text(
+                                      e.event ?? '-',
+
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 10),
+
+                                    Text(
+                                      e.date ?? '-',
+
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+
+                  if ((user.awards ?? []).isNotEmpty) ...[
+                    const SizedBox(height: 18),
+
+                    _modernSection(
+                      title: "Awards",
+                      icon: Icons.workspace_premium_outlined,
+
+                      child: Column(
+                        children: (user.awards ?? [])
+                            .map(
+                              (e) => Container(
+                                width: double.infinity,
+
+                                margin: const EdgeInsets.only(bottom: 14),
+
+                                padding: const EdgeInsets.all(14),
+
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(.04),
+
+                                  borderRadius: BorderRadius.circular(16),
+
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(.05),
+                                  ),
+                                ),
+
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                                  children: [
+                                    Text(
+                                      e.title ?? '-',
+
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 6),
+
+                                    Text(
+                                      e.organization ?? '-',
+
+                                      style: const TextStyle(
+                                        color: Colors.grey,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 12),
+
+                                    Text(
+                                      e.description ?? '-',
+
+                                      style: const TextStyle(
+                                        color: Colors.white70,
+                                        height: 1.5,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
+
+                  if ((user.publications ?? []).isNotEmpty) ...[
+                    const SizedBox(height: 18),
+
+                    _modernSection(
+                      title: "Publications",
+                      icon: Icons.menu_book_outlined,
+
+                      child: Column(
+                        children: (user.publications ?? [])
+                            .map(
+                              (e) => Container(
+                                width: double.infinity,
+
+                                margin: const EdgeInsets.only(bottom: 14),
+
+                                padding: const EdgeInsets.all(14),
+
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(.04),
+
+                                  borderRadius: BorderRadius.circular(16),
+
+                                  border: Border.all(
+                                    color: Colors.white.withOpacity(.05),
+                                  ),
+                                ),
+
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+
+                                  children: [
+                                    Text(
+                                      e.title ?? '-',
+
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w700,
+                                      ),
+                                    ),
+
+                                    if ((e.url?.isNotEmpty ?? false)) ...[
+                                      const SizedBox(height: 10),
+
+                                      GestureDetector(
+                                        onTap: () async {
+                                          final uri = Uri.parse(e.url!);
+
+                                          if (await canLaunchUrl(uri)) {
+                                            await launchUrl(uri);
+                                          }
+                                        },
+
+                                        child: Text(
+                                          e.url!,
+
+                                          style: TextStyle(
+                                            color: AppColors.kGreen,
+                                            fontSize: 13,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  ],
                   const SizedBox(height: 22),
 
                   if ((user.linkedin?.isNotEmpty ?? false))
@@ -1154,7 +1389,7 @@ SizedBox(height: 18,),
                     ),
                   ],
 
-                              const SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   if ((user.resume?.isNotEmpty ?? false))
                     SizedBox(
                       width: double.infinity,
