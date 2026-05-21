@@ -27,7 +27,7 @@ class UserController {
       resume = TextEditingController(),
       about = TextEditingController(),
       certifications = TextEditingController(),
-     
+
       email = TextEditingController(),
       gender = TextEditingController(),
       github = TextEditingController(),
@@ -49,12 +49,13 @@ class UserController {
       expectedSalaryCurrency = TextEditingController(),
       maritalStatus = TextEditingController(),
       visaStatus = TextEditingController(),
-currentCompany = TextEditingController(),
-noticePeriod = TextEditingController(),
-totalYearsOfExperience = TextEditingController(),
+      currentCompany = TextEditingController(),
+      noticePeriod = TextEditingController(),
+      totalYearsOfExperience = TextEditingController(),
 
-companyEmail = TextEditingController(),
-noticePeriodStartDate = TextEditingController();
+      companyEmail = TextEditingController(),
+      noticePeriodStartDate = TextEditingController();
+
   /// Basic Fields
   TextEditingController id;
   TextEditingController userId;
@@ -67,8 +68,7 @@ noticePeriodStartDate = TextEditingController();
   List<TextEditingController> domainKnowledge = [];
   List<TextEditingController> employmentType = [];
   List<ExperienceController> experiences = [];
-  List<EducationController>
-    educations = [];
+  List<EducationController> educations = [];
   List<TextEditingController> industry = [];
   List<TextEditingController> jobRoles = [];
   List<TextEditingController> languagesKnown = [];
@@ -76,11 +76,10 @@ noticePeriodStartDate = TextEditingController();
   List<TextEditingController> lookingFor = [];
   List<TextEditingController> skills = [];
   List<TextEditingController> toolsAndPlatforms = [];
-List<LeadershipExperienceController>
-    leadershipExperiences = [];
+  List<LeadershipExperienceController> leadershipExperiences = [];
 
-List<InternationalExperienceController>
-    internationalExperiences = [];
+  List<InternationalExperienceController> internationalExperiences = [];
+
   /// Nested Controllers
   List<AchievementController> achievements = [];
   List<AwardController> awards = [];
@@ -112,13 +111,13 @@ List<InternationalExperienceController>
   TextEditingController expectedSalaryCurrency;
   TextEditingController maritalStatus;
   TextEditingController visaStatus;
-bool servingNoticePeriod = false;
-TextEditingController currentCompany;
-TextEditingController totalYearsOfExperience;
+  bool servingNoticePeriod = false;
+  TextEditingController currentCompany;
+  TextEditingController totalYearsOfExperience;
 
-TextEditingController noticePeriod;
-TextEditingController companyEmail;
-TextEditingController noticePeriodStartDate;
+  TextEditingController noticePeriod;
+  TextEditingController companyEmail;
+  TextEditingController noticePeriodStartDate;
   Map<String, dynamic> toMap() {
     String? clean(String? v) => v == null || v.trim().isEmpty ? null : v.trim();
 
@@ -152,7 +151,7 @@ TextEditingController noticePeriodStartDate;
       'resume': clean(resume.text),
       'about': clean(about.text),
       'certifications': clean(certifications.text),
-      
+
       'email': clean(email.text),
       'gender': clean(gender.text),
       'github': clean(github.text),
@@ -161,11 +160,9 @@ TextEditingController noticePeriodStartDate;
       'openToShift': clean(openToShift.text),
       'currentCompany': clean(currentCompany.text),
       'companyEmail': clean(companyEmail.text),
-      'totalYearsOfExperience':
-    clean(totalYearsOfExperience.text),
-'noticePeriod': clean(noticePeriod.text),
-'noticePeriodStartDate':
-    clean(noticePeriodStartDate.text),
+      'totalYearsOfExperience': clean(totalYearsOfExperience.text),
+      'noticePeriod': clean(noticePeriod.text),
+      'noticePeriodStartDate': clean(noticePeriodStartDate.text),
       'phone': clean(phone.text),
       'portfolio': clean(portfolio.text),
       'profileType': clean(profileType.text),
@@ -182,72 +179,45 @@ TextEditingController noticePeriodStartDate;
       'maritalStatus': clean(maritalStatus.text),
       'visaStatus': clean(visaStatus.text),
 
-'servingNoticePeriod':
-    servingNoticePeriod,
+      'servingNoticePeriod': servingNoticePeriod,
+
       /// Lists
       'skills': cleanList(skills),
+
       'domainKnowledge': cleanList(domainKnowledge),
       'employmentType': cleanList(employmentType),
       'educations': educations
-    .where(
-      (e) =>
-          e.college.text.isNotEmpty ||
-          e.degree.text.isNotEmpty ||
-          e.specialization.text.isNotEmpty ||
-          e.cgpa.text.isNotEmpty,
-    )
-    .map(
-      (e) => cleanMap({
+          .where(
+            (e) =>
+                e.college.text.isNotEmpty ||
+                e.degree.text.isNotEmpty ||
+                e.specialization.text.isNotEmpty ||
+                e.cgpa.text.isNotEmpty,
+          )
+          .map(
+            (e) => cleanMap({
+              'college': clean(e.college.text),
 
-        'college':
-            clean(
-              e.college.text,
-            ),
+              'degree': clean(e.degree.text),
 
-        'degree':
-            clean(
-              e.degree.text,
-            ),
+              'specialization': clean(e.specialization.text),
 
-        'specialization':
-            clean(
-              e.specialization.text,
-            ),
+              'semester': clean(e.semester.text),
 
-        'semester':
-            clean(
-              e.semester.text,
-            ),
+              'cgpa': clean(e.cgpa.text),
 
-        'cgpa':
-            clean(
-              e.cgpa.text,
-            ),
+              'yearOfGraduation': clean(e.yearOfGraduation.text),
 
-        'yearOfGraduation':
-            clean(
-              e.yearOfGraduation
-                  .text,
-            ),
+              'startDate': clean(e.startDate.text),
 
-        'startDate':
-            clean(
-              e.startDate.text,
-            ),
+              'endDate': clean(e.endDate.text),
 
-        'endDate':
-            clean(
-              e.endDate.text,
-            ),
+              'educationType': e.educationType,
 
-        'educationType':
-            e.educationType,
-
-        'isCurrent':
-            e.isCurrent,
-      }),
-    )
-    .toList(),
+              'isCurrent': e.isCurrent,
+            }),
+          )
+          .toList(),
       'experiences': experiences
           .where(
             (e) =>
@@ -261,7 +231,8 @@ TextEditingController noticePeriodStartDate;
             (e) => cleanMap({
               'company': clean(e.company.text),
               'role': clean(e.role.text),
-'isCurrent': e.isCurrent,              'startDate': clean(e.startDate.text),
+              'isCurrent': e.isCurrent,
+              'startDate': clean(e.startDate.text),
               'endDate': clean(e.endDate.text),
               'description': clean(e.description.text),
             }),
@@ -270,80 +241,47 @@ TextEditingController noticePeriodStartDate;
       'industry': cleanList(industry),
       'jobRoles': cleanList(jobRoles),
       'languagesKnown': cleanList(languagesKnown),
-   'leadership':
-    leadershipExperiences
-        .where(
-          (e) =>
-              e.organization.text
-                  .isNotEmpty ||
-              e.role.text.isNotEmpty ||
-              e.startDate.text
-                  .isNotEmpty ||
-              e.endDate.text
-                  .isNotEmpty ||
-              e.description.text
-                  .isNotEmpty,
-        )
-        .map(
-          (e) => cleanMap({
-            'organization': clean(
-              e.organization.text,
-            ),
-            'role': clean(
-              e.role.text,
-            ),
-            'startDate': clean(
-              e.startDate.text,
-            ),
-            'endDate': clean(
-              e.endDate.text,
-            ),
-            'description': clean(
-              e.description.text ,
-            ),
-          }),
-        )
-        .toList(),
-'internationalExperience':
-    internationalExperiences
-        .where(
-          (e) =>
-              e.country.text
-                  .isNotEmpty ||
-                  e.organization.text.isNotEmpty ||
+      'leadership': leadershipExperiences
+          .where(
+            (e) =>
+                e.organization.text.isNotEmpty ||
+                e.role.text.isNotEmpty ||
+                e.startDate.text.isNotEmpty ||
+                e.endDate.text.isNotEmpty ||
+                e.description.text.isNotEmpty,
+          )
+          .map(
+            (e) => cleanMap({
+              'organization': clean(e.organization.text),
+              'role': clean(e.role.text),
+              'startDate': clean(e.startDate.text),
+              'endDate': clean(e.endDate.text),
+              'description': clean(e.description.text),
+            }),
+          )
+          .toList(),
+      'internationalExperience': internationalExperiences
+          .where(
+            (e) =>
+                e.country.text.isNotEmpty ||
+                e.organization.text.isNotEmpty ||
+                e.role.text.isNotEmpty ||
+                e.startDate.text.isNotEmpty ||
+                e.endDate.text.isNotEmpty ||
+                e.description.text.isNotEmpty,
+          )
+          .map(
+            (e) => cleanMap({
+              'country': clean(e.country.text),
+              'organization': clean(e.organization.text),
 
-              e.role.text.isNotEmpty ||
-              e.startDate.text
-                  .isNotEmpty ||
-              e.endDate.text
-                  .isNotEmpty ||
-              e.description.text
-                  .isNotEmpty,
-        )
-        .map(
-          (e) => cleanMap({
-            'country': clean(
-              e.country.text,
-            ),
-            'organization': clean(
-  e.organization.text,
-),
-
-            'role': clean(
-              e.role.text,
-            ),
-            'startDate': clean(
-              e.startDate.text,
-            ),
-            'endDate': clean(
-              e.endDate.text,
-            ),
-            'description': clean(
-              e.description.text,
-            ),
-          }),
-        )
-        .toList(),
+              'role': clean(e.role.text),
+              'startDate': clean(e.startDate.text),
+              'endDate': clean(e.endDate.text),
+              'description': clean(e.description.text),
+            }),
+          )
+          .toList(),
       'locations': cleanList(locations),
       'lookingFor': cleanList(lookingFor),
       'toolsAndPlatforms': cleanList(toolsAndPlatforms),
@@ -437,28 +375,27 @@ TextEditingController noticePeriodStartDate;
     maritalStatus.dispose();
     visaStatus.dispose();
     noticePeriodStartDate.dispose();
-currentCompany.dispose();
-totalYearsOfExperience.dispose();
-for (final e in educations) {
+    currentCompany.dispose();
+    totalYearsOfExperience.dispose();
+    for (final e in educations) {
+      e.college.dispose();
 
-  e.college.dispose();
+      e.degree.dispose();
 
-  e.degree.dispose();
+      e.specialization.dispose();
 
-  e.specialization.dispose();
+      e.semester.dispose();
 
-  e.semester.dispose();
+      e.cgpa.dispose();
 
-  e.cgpa.dispose();
+      e.yearOfGraduation.dispose();
 
-  e.yearOfGraduation.dispose();
+      e.startDate.dispose();
 
-  e.startDate.dispose();
-
-  e.endDate.dispose();
-}
-companyEmail.dispose();
-noticePeriod.dispose();
+      e.endDate.dispose();
+    }
+    companyEmail.dispose();
+    noticePeriod.dispose();
     for (final controller in domainKnowledge) {
       controller.dispose();
     }
@@ -475,39 +412,35 @@ noticePeriod.dispose();
     for (final controller in industry) {
       controller.dispose();
     }
- for (final e
-    in leadershipExperiences) {
+    for (final e in leadershipExperiences) {
+      e.organization.dispose();
 
-  e.organization.dispose();
+      e.role.dispose();
 
-  e.role.dispose();
+      e.startDate.dispose();
 
-  e.startDate.dispose();
+      e.endDate.dispose();
 
-  e.endDate.dispose();
+      e.description.dispose();
+    }
+    for (final e in internationalExperiences) {
+      e.country.dispose();
 
-  e.description.dispose();
-}
-for (final e
-    in internationalExperiences) {
+      e.role.dispose();
 
-  e.country.dispose();
+      e.startDate.dispose();
 
-  e.role.dispose();
+      e.endDate.dispose();
 
-  e.startDate.dispose();
-
-  e.endDate.dispose();
-
-  e.description.dispose();
-}
+      e.description.dispose();
+    }
     for (final controller in jobRoles) {
       controller.dispose();
     }
     for (final controller in languagesKnown) {
       controller.dispose();
     }
-    
+
     for (final controller in locations) {
       controller.dispose();
     }

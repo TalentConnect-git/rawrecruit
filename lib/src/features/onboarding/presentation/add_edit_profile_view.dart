@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -11,25 +12,25 @@ import 'package:rawrecruit/src/features/onboarding/data/entities/leadership_cont
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_edit_profile_view_model.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
+
 import '../../../feature/revamp_onboarding/presentation/steps/education_controller.dart';
-import '../../professional/job_postng/presentation/job_posting_view.dart';
 import '../data/entities/international.dart';
 
-
 class AddEditProfileView extends StatefulWidget {
-  const AddEditProfileView({this.user, this.initialStep,  this.isSwitchingToProfessional =
-      false, super.key});
+  const AddEditProfileView({
+    this.user,
+    this.initialStep,
+    this.isSwitchingToProfessional = false,
+    super.key,
+  });
   final int? initialStep;
   final User? user;
-final bool
-    isSwitchingToProfessional;
+  final bool isSwitchingToProfessional;
   @override
   State<AddEditProfileView> createState() => _AddEditProfileViewState();
-
 }
 
 class _AddEditProfileViewState extends State<AddEditProfileView> {
-  
   final AddEditProfileViewModel addEditProfileViewModel =
       AddEditProfileViewModel();
   late UserController controller = addEditProfileViewModel.userController;
@@ -451,8 +452,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
   static const List<String> _defaultSpecializations = ["Other"];
 
- 
-
   final semesterOptions = List.generate(8, (i) => "Semester ${i + 1}");
 
   final graduationYears = List.generate(91, (i) => (1960 + i).toString());
@@ -476,49 +475,34 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     "Others",
   ];
 
- List<String> jobRoleOptions = [];
- Future<void> fetchJobRoles() async {
-  final response =
-      await getIt<NetworkService>()
-          .request(
-    Request(
-      method: RequestMethod.get,
+  List<String> jobRoleOptions = [];
+  Future<void> fetchJobRoles() async {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
 
-      endpoint:
-          "api/company-master-data?type=JOB_ROLE",
+        endpoint: "api/company-master-data?type=JOB_ROLE",
 
-      isSafeRoute: true,
-    ),
-  );
-
-  final data =
-      List<Map<String, dynamic>>.from(
-    response.data['data'] ?? [],
-  );
-
- jobRoleOptions =
-    data
-        .map(
-          (e) => e['value']
-              .toString()
-              .trim(),
-        )
-        .where(
-          (e) => e.isNotEmpty,
-        )
-        .toSet()
-        .toList()
-      ..sort();
-
-  if (!jobRoleOptions
-      .contains("Others")) {
-    jobRoleOptions.add(
-      "Others",
+        isSafeRoute: true,
+      ),
     );
-  }
 
-  setState(() {});
-}
+    final data = List<Map<String, dynamic>>.from(response.data['data'] ?? []);
+
+    jobRoleOptions =
+        data
+            .map((e) => e['value'].toString().trim())
+            .where((e) => e.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
+
+    if (!jobRoleOptions.contains("Others")) {
+      jobRoleOptions.add("Others");
+    }
+
+    setState(() {});
+  }
 
   final employmentOptions = ["full time", "part time", "contract"];
 
@@ -843,14 +827,14 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       visaStatusOptions,
                                     ),
                                     AppTextFields(
-  controller: controller.about,
+                                      controller: controller.about,
 
-  hint: 'About',
+                                      hint: 'About',
 
-  maxLines: 4,
+                                      maxLines: 4,
 
-  onChanged: (_) => markChanged(),
-),
+                                      onChanged: (_) => markChanged(),
+                                    ),
                                   ],
                                 ),
                               ],
@@ -858,449 +842,336 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                           ),
 
                           /// ───────────────── EDUCATION ─────────────────
-                     /// ───────────────── EDUCATION ─────────────────
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
-
-  child: ProfileSection(
-    label: 'Education',
-
-    trailing: _addButton(() {
-      setState(() {
-        controller.educations.add(
-          EducationController(),
-        );
-      });
-    }),
-
-    children: controller.educations
-        .asMap()
-        .entries
-        .map((entry) {
-
-      final index = entry.key;
-
-      final e = entry.value;
-
-      return Container(
-        margin:
-            const EdgeInsets.only(
-          bottom: 16,
-        ),
-
-        padding:
-            const EdgeInsets.all(
-          16,
-        ),
-
-        decoration: BoxDecoration(
-          color:
-              const Color(
-            0xFF111827,
-          ),
-
-          borderRadius:
-              BorderRadius.circular(
-            16,
-          ),
-        ),
-
-        child: Column(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
-
-          children: [
-
-            Row(
-              mainAxisAlignment:
-                  MainAxisAlignment
-                      .spaceBetween,
-
-              children: [
-
-                Text(
-                  "Education ${index + 1}",
-
-                  style:
-                      const TextStyle(
-                    color:
-                        Colors.white,
-
-                    fontWeight:
-                        FontWeight
-                            .bold,
-                  ),
-                ),
-
-                if (controller
-                        .educations
-                        .length >
-                    1)
-                  GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        controller
-                            .educations
-                            .removeAt(
-                              index,
-                            );
-                      });
-                    },
-
-                    child: const Text(
-                      "Remove",
-
-                      style: TextStyle(
-                        color:
-                            Colors.red,
-                      ),
-                    ),
-                  ),
-              ],
-            ),
-
-            const SizedBox(
-              height: 16,
-            ),
+                          /// ───────────────── EDUCATION ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
 
-            /// COLLEGE
-            CommonAutocomplete(
-              label: "College",
+                            child: ProfileSection(
+                              label: 'Education',
 
-              hint: "College",
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.educations.add(
+                                    EducationController(),
+                                  );
+                                });
+                              }),
 
-              options: colleges
-                  .map(
-                    (e) => e['label']
-                        .toString(),
-                  )
-                  .toList(),
+                              children: controller.educations
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                    final index = entry.key;
 
-              initialValue:
-                  e.college.text,
+                                    final e = entry.value;
 
-              showCreateOption:
-                  true,
+                                    return Container(
+                                      margin: const EdgeInsets.only(bottom: 16),
 
-              onChanged:
-                  (value) {
+                                      padding: const EdgeInsets.all(16),
 
-                e.college.text =
-                    value;
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF111827),
 
-                markChanged();
-              },
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
 
-              onSelected:
-                  (value) async {
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
 
-                await addCollegeIfNeeded(
-                  value,
-                );
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
 
-                e.college.text =
-                    value;
+                                            children: [
+                                              Text(
+                                                "Education ${index + 1}",
 
-                markChanged();
-              },
+                                                style: const TextStyle(
+                                                  color: Colors.white,
 
-              onCreate:
-                  (value) async {
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
 
-                await addCollegeIfNeeded(
-                  value,
-                );
+                                              if (controller.educations.length >
+                                                  1)
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      controller.educations
+                                                          .removeAt(index);
+                                                    });
+                                                  },
 
-                e.college.text =
-                    value;
+                                                  child: const Text(
+                                                    "Remove",
 
-                markChanged();
-              },
-            ),
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
 
-            const SizedBox(
-              height: 16,
-            ),
+                                          const SizedBox(height: 16),
 
-            /// DEGREE
-            CommonAutocomplete(
-              label: "Degree",
+                                          /// COLLEGE
+                                          CommonAutocomplete(
+                                            label: "College",
 
-              hint: "Degree",
+                                            hint: "College",
 
-              options: degrees
-                  .map(
-                    (e) => e['value']
-                        .toString(),
-                  )
-                  .toList(),
+                                            options: colleges
+                                                .map(
+                                                  (e) => e['label'].toString(),
+                                                )
+                                                .toList(),
 
-              initialValue:
-                  e.degree.text,
+                                            initialValue: e.college.text,
 
-              showCreateOption:
-                  true,
+                                            showCreateOption: true,
 
-              onChanged:
-                  (value) {
+                                            onChanged: (value) {
+                                              e.college.text = value;
 
-                e.degree.text =
-                    value;
+                                              markChanged();
+                                            },
 
-                markChanged();
-              },
+                                            onSelected: (value) async {
+                                              await addCollegeIfNeeded(value);
 
-              onSelected:
-                  (value) async {
+                                              e.college.text = value;
 
-                await addDegreeIfNeeded(
-                  value,
-                );
+                                              markChanged();
+                                            },
 
-                e.degree.text =
-                    value;
+                                            onCreate: (value) async {
+                                              await addCollegeIfNeeded(value);
 
-                final selected =
-                    degrees.firstWhere(
-                  (d) =>
-                      d['value']
-                          .toString()
-                          .toLowerCase() ==
-                      value
-                          .toLowerCase(),
+                                              e.college.text = value;
 
-                  orElse: () => {},
-                );
+                                              markChanged();
+                                            },
+                                          ),
 
-                if (selected
-                    .isNotEmpty) {
+                                          const SizedBox(height: 16),
 
-                  e.selectedDegreeId =
-                      selected['_id'];
+                                          /// DEGREE
+                                          CommonAutocomplete(
+                                            label: "Degree",
 
-                  await fetchStreams(
-                    e.selectedDegreeId!,
-                  );
+                                            hint: "Degree",
 
-                  e.streams =
-                      streams;
-                }
+                                            options: degrees
+                                                .map(
+                                                  (e) => e['value'].toString(),
+                                                )
+                                                .toList(),
 
-                setState(() {});
-              },
+                                            initialValue: e.degree.text,
 
-              onCreate:
-                  (value) async {
+                                            showCreateOption: true,
 
-                await addDegreeIfNeeded(
-                  value,
-                );
+                                            onChanged: (value) {
+                                              e.degree.text = value;
 
-                e.degree.text =
-                    value;
+                                              markChanged();
+                                            },
 
-                markChanged();
-              },
-            ),
+                                            onSelected: (value) async {
+                                              await addDegreeIfNeeded(value);
 
-            const SizedBox(
-              height: 16,
-            ),
+                                              e.degree.text = value;
 
-            /// SPECIALIZATION
-            CommonAutocomplete(
-              label:
-                  "Specialization",
+                                              final selected = degrees
+                                                  .firstWhere(
+                                                    (d) =>
+                                                        d['value']
+                                                            .toString()
+                                                            .toLowerCase() ==
+                                                        value.toLowerCase(),
 
-              hint:
-                  "Specialization",
+                                                    orElse: () => {},
+                                                  );
 
-              options: e.streams
-                  .map(
-                    (s) => s['value']
-                        .toString(),
-                  )
-                  .toList(),
+                                              if (selected.isNotEmpty) {
+                                                e.selectedDegreeId =
+                                                    selected['_id'];
 
-              initialValue:
-                  e.specialization
-                      .text,
+                                                await fetchStreams(
+                                                  e.selectedDegreeId!,
+                                                );
 
-              showCreateOption:
-                  true,
+                                                e.streams = streams;
+                                              }
 
-              onChanged:
-                  (value) {
+                                              setState(() {});
+                                            },
 
-                e.specialization
-                    .text = value;
+                                            onCreate: (value) async {
+                                              await addDegreeIfNeeded(value);
 
-                markChanged();
-              },
+                                              e.degree.text = value;
 
-              onSelected:
-                  (value) {
+                                              markChanged();
+                                            },
+                                          ),
 
-                e.specialization
-                    .text = value;
+                                          const SizedBox(height: 16),
 
-                markChanged();
-              },
+                                          /// SPECIALIZATION
+                                          CommonAutocomplete(
+                                            label: "Specialization",
 
-              onCreate:
-                  (value) async {
+                                            hint: "Specialization",
 
-                if (e.selectedDegreeId !=
-                    null) {
+                                            options: e.streams
+                                                .map(
+                                                  (s) => s['value'].toString(),
+                                                )
+                                                .toList(),
 
-                  await addStreamIfNeeded(
-                    value,
-                  );
+                                            initialValue: e.specialization.text,
 
-                  await fetchStreams(
-                    e.selectedDegreeId!,
-                  );
+                                            showCreateOption: true,
 
-                  e.streams =
-                      streams;
-                }
+                                            onChanged: (value) {
+                                              e.specialization.text = value;
 
-                e.specialization
-                    .text = value;
+                                              markChanged();
+                                            },
 
-                markChanged();
+                                            onSelected: (value) {
+                                              e.specialization.text = value;
 
-                setState(() {});
-              },
-            ),
+                                              markChanged();
+                                            },
 
-            const SizedBox(
-              height: 16,
-            ),
+                                            onCreate: (value) async {
+                                              if (e.selectedDegreeId != null) {
+                                                await addStreamIfNeeded(value);
 
-            _dropdownField(
-              e.educationType ==
-                      null
-                  ? TextEditingController(
-                      text:
-                          "bachelors",
-                    )
-                  : TextEditingController(
-                      text:
-                          e.educationType,
-                    ),
+                                                await fetchStreams(
+                                                  e.selectedDegreeId!,
+                                                );
 
-              'Education Type',
+                                                e.streams = streams;
+                                              }
 
-              [
-                "school",
-                "diploma",
-                "bachelors",
-                "masters",
-                "phd",
-                "certification",
-                "other",
-              ],
-            ),
+                                              e.specialization.text = value;
 
-            const SizedBox(
-              height: 16,
-            ),
+                                              markChanged();
 
-            AppTextFields(
-              controller: e.cgpa,
+                                              setState(() {});
+                                            },
+                                          ),
 
-              hint: 'CGPA',
+                                          const SizedBox(height: 16),
 
-              onChanged: (_) =>
-                  markChanged(),
-            ),
+                                          _dropdownField(
+                                            e.educationType == null
+                                                ? TextEditingController(
+                                                    text: "bachelors",
+                                                  )
+                                                : TextEditingController(
+                                                    text: e.educationType,
+                                                  ),
 
-            const SizedBox(
-              height: 16,
-            ),
+                                            'Education Type',
 
-            _dropdownField(
-              e.yearOfGraduation,
+                                            [
+                                              "school",
+                                              "diploma",
+                                              "bachelors",
+                                              "masters",
+                                              "phd",
+                                              "certification",
+                                              "other",
+                                            ],
+                                          ),
 
-              'Graduation Year',
+                                          const SizedBox(height: 16),
 
-              graduationYears,
-            ),
+                                          AppTextFields(
+                                            controller: e.cgpa,
 
-            const SizedBox(
-              height: 16,
-            ),
+                                            hint: 'CGPA',
 
-            Row(
-              children: [
+                                            onChanged: (_) => markChanged(),
+                                          ),
 
-                Expanded(
-                  child: _dateField(
-                    e.startDate,
+                                          const SizedBox(height: 16),
 
-                    "Start Date",
-                  ),
-                ),
+                                          _dropdownField(
+                                            e.yearOfGraduation,
 
-                const SizedBox(
-                  width: 10,
-                ),
+                                            'Graduation Year',
 
-                Expanded(
-                  child: _dateField(
-                    e.endDate,
+                                            graduationYears,
+                                          ),
 
-                    "End Date",
+                                          const SizedBox(height: 16),
 
-                    enabled:
-                        !e.isCurrent,
-                  ),
-                ),
-              ],
-            ),
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: _dateField(
+                                                  e.startDate,
 
-            const SizedBox(
-              height: 16,
-            ),
+                                                  "Start Date",
+                                                ),
+                                              ),
 
-            Row(
-              children: [
+                                              const SizedBox(width: 10),
 
-                Checkbox(
-                  value:
-                      e.isCurrent,
+                                              Expanded(
+                                                child: _dateField(
+                                                  e.endDate,
 
-                  onChanged: (
-                    val,
-                  ) {
+                                                  "End Date",
 
-                    setState(() {
-                      e.isCurrent =
-                          val ??
-                              false;
-                    });
+                                                  enabled: !e.isCurrent,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
 
-                    markChanged();
-                  },
-                ),
+                                          const SizedBox(height: 16),
 
-                const Text(
-                  "Currently Studying",
+                                          Row(
+                                            children: [
+                                              Checkbox(
+                                                value: e.isCurrent,
 
-                  style: TextStyle(
-                    color:
-                        Colors.white,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-    }).toList(),
-  ),
-),
+                                                onChanged: (val) {
+                                                  setState(() {
+                                                    e.isCurrent = val ?? false;
+                                                  });
+
+                                                  markChanged();
+                                                },
+                                              ),
+
+                                              const Text(
+                                                "Currently Studying",
+
+                                                style: TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  })
+                                  .toList(),
+                            ),
+                          ),
 
                           /// ───────────────── LINKS ─────────────────
                           SingleChildScrollView(
@@ -1357,227 +1228,220 @@ SingleChildScrollView(
                               spacing: 16,
 
                               children: [
-                    AppTextFields(
-  controller: controller.currentCompany,
+                                AppTextFields(
+                                  controller: controller.currentCompany,
 
-  hint: 'Current Company',
+                                  hint: 'Current Company',
 
-  enable: false,
+                                  enable: false,
 
-  suffixIcon: const Icon(
-    Icons.lock_outline,
-    color: Colors.grey,
-    size: 18,
-  ),
-
-  helperText:
-      "Automatically fetched from current experience",
-
-  onChanged: (_) => markChanged(),
-),
-const SizedBox(height: 12),
-
-AppTextFields(
-  controller:
-      controller.totalYearsOfExperience,
-
-  hint: 'Total Years Of Experience',
-
-  keyboardType: TextInputType.text,
-
-  onChanged: (_) => markChanged(),
-),
-const SizedBox(height: 12),
-
-
-                                  AppTextFields(
-                                    controller: controller.noticePeriod,
-
-                                    hint: 'Notice Period (days)',
-
-                                    onChanged: (_) => markChanged(),
+                                  suffixIcon: const Icon(
+                                    Icons.lock_outline,
+                                    color: Colors.grey,
+                                    size: 18,
                                   ),
 
-                                  const SizedBox(height: 12),
-                                  const SizedBox(height: 16),
+                                  helperText:
+                                      "Automatically fetched from current experience",
 
-Container(
-  padding: const EdgeInsets.symmetric(
-    horizontal: 14,
-    vertical: 6,
-  ),
+                                  onChanged: (_) => markChanged(),
+                                ),
+                                const SizedBox(height: 12),
 
-  decoration: BoxDecoration(
-    color: const Color(0xFF1F2937),
-    borderRadius: BorderRadius.circular(12),
-  ),
+                                AppTextFields(
+                                  controller: controller.totalYearsOfExperience,
 
-  child: Row(
-    children: [
-      const Expanded(
-        child: Text(
-          "Currently Serving Notice Period",
-          style: TextStyle(
-            color: Colors.white,
-          ),
-        ),
-      ),
+                                  hint: 'Total Years Of Experience',
 
-      Switch(
-        value:
-            controller.servingNoticePeriod,
+                                  keyboardType: TextInputType.text,
 
-        onChanged: (value) {
-          setState(() {
-            controller.servingNoticePeriod =
-                value;
-          });
+                                  onChanged: (_) => markChanged(),
+                                ),
+                                const SizedBox(height: 12),
 
-          markChanged();
-        },
-      ),
-    ],
-  ),
-),
+                                AppTextFields(
+                                  controller: controller.noticePeriod,
 
-const SizedBox(height: 16),
-if (controller.servingNoticePeriod)
-  GestureDetector(
-    onTap: () async {
-      final picked = await showDatePicker(
-        context: context,
+                                  hint: 'Notice Period (days)',
 
-        initialDate: DateTime.now(),
+                                  onChanged: (_) => markChanged(),
+                                ),
 
-        firstDate: DateTime(2000),
+                                const SizedBox(height: 12),
+                                const SizedBox(height: 16),
 
-        lastDate: DateTime(2100),
-      );
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 6,
+                                  ),
 
-      if (picked != null) {
-        controller.noticePeriodStartDate.text =
-            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF1F2937),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
 
-        setState(() {});
+                                  child: Row(
+                                    children: [
+                                      const Expanded(
+                                        child: Text(
+                                          "Currently Serving Notice Period",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
 
-        markChanged();
-      }
-    },
+                                      Switch(
+                                        value: controller.servingNoticePeriod,
 
-    child: AbsorbPointer(
-      child: AppTextFields(
-        controller:
-            controller.noticePeriodStartDate,
+                                        onChanged: (value) {
+                                          setState(() {
+                                            controller.servingNoticePeriod =
+                                                value;
+                                          });
 
-        hint: 'Notice Period Start Date',
-      ),
-    ),
-  ),
-                                  Builder(
-  builder: (_) {
-    final notice =
-        calculateNoticePeriodStatus(
-      controller.noticePeriodStartDate.text,
-      controller.noticePeriod.text,
-    );
+                                          markChanged();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
 
-    if (notice == null ||
-        controller.servingNoticePeriod != true) {
-      return const SizedBox();
-    }
+                                const SizedBox(height: 16),
+                                if (controller.servingNoticePeriod)
+                                  GestureDetector(
+                                    onTap: () async {
+                                      final picked = await showDatePicker(
+                                        context: context,
 
-    return Container(
-      margin: const EdgeInsets.only(top: 16),
+                                        initialDate: DateTime.now(),
 
-      padding: const EdgeInsets.all(16),
+                                        firstDate: DateTime(2000),
 
-      decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
-        borderRadius: BorderRadius.circular(16),
-      ),
+                                        lastDate: DateTime(2100),
+                                      );
 
-      child: Column(
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+                                      if (picked != null) {
+                                        controller.noticePeriodStartDate.text =
+                                            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
 
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  notice["isExpired"]
-                      ? "Notice Period Complete"
-                      : "In Notice Period",
+                                        setState(() {});
 
-                  style: TextStyle(
-                    color: notice["isExpired"]
-                        ? Colors.green
-                        : Colors.orange,
+                                        markChanged();
+                                      }
+                                    },
 
-                    fontWeight:
-                        FontWeight.bold,
-                  ),
-                ),
-              ),
-            ],
-          ),
+                                    child: AbsorbPointer(
+                                      child: AppTextFields(
+                                        controller:
+                                            controller.noticePeriodStartDate,
 
-          const SizedBox(height: 14),
+                                        hint: 'Notice Period Start Date',
+                                      ),
+                                    ),
+                                  ),
+                                Builder(
+                                  builder: (_) {
+                                    final notice = calculateNoticePeriodStatus(
+                                      controller.noticePeriodStartDate.text,
+                                      controller.noticePeriod.text,
+                                    );
 
-          Text(
-            "Start Date: ${controller.noticePeriodStartDate.text}",
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
+                                    if (notice == null ||
+                                        controller.servingNoticePeriod !=
+                                            true) {
+                                      return const SizedBox();
+                                    }
 
-          const SizedBox(height: 8),
+                                    return Container(
+                                      margin: const EdgeInsets.only(top: 16),
 
-          Text(
-            "Total Notice Period: ${controller.noticePeriod.text} days",
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
+                                      padding: const EdgeInsets.all(16),
 
-          const SizedBox(height: 8),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF1F2937),
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
 
-          Text(
-            "Days Served: ${notice["daysPassed"]}",
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
 
-          const SizedBox(height: 8),
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  notice["isExpired"]
+                                                      ? "Notice Period Complete"
+                                                      : "In Notice Period",
 
-          Text(
-            "Days Remaining: ${notice["daysRemaining"]}",
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
+                                                  style: TextStyle(
+                                                    color: notice["isExpired"]
+                                                        ? Colors.green
+                                                        : Colors.orange,
 
-          const SizedBox(height: 8),
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
 
-          Text(
-            "Expected Last Day: ${notice["endDate"]}",
-            style: const TextStyle(
-              color: Colors.white,
-            ),
-          ),
+                                          const SizedBox(height: 14),
 
-          const SizedBox(height: 14),
+                                          Text(
+                                            "Start Date: ${controller.noticePeriodStartDate.text}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
 
-          LinearProgressIndicator(
-            value: notice["progress"] / 100,
-          ),
-        ],
-      ),
-    );
-  },
-),
-                          
+                                          const SizedBox(height: 8),
+
+                                          Text(
+                                            "Total Notice Period: ${controller.noticePeriod.text} days",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 8),
+
+                                          Text(
+                                            "Days Served: ${notice["daysPassed"]}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 8),
+
+                                          Text(
+                                            "Days Remaining: ${notice["daysRemaining"]}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 8),
+
+                                          Text(
+                                            "Expected Last Day: ${notice["endDate"]}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 14),
+
+                                          LinearProgressIndicator(
+                                            value: notice["progress"] / 100,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
 
                                 Row(
                                   children: [
@@ -1658,6 +1522,21 @@ if (controller.servingNoticePeriod)
                                     'part time',
                                     'contract',
                                     'Internship',
+                                  ],
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                _dropdownField(
+                                  controller.jobRoles.first,
+                                  'Job Role',
+                                  [
+                                    'Software Developer',
+                                    'Mobile App Developer',
+                                    'Flutter Developer',
+                                    'Web Developer',
+                                    'Frontend Developer',
+                                    'Backend Developer',
                                   ],
                                 ),
 
@@ -1871,83 +1750,75 @@ if (controller.servingNoticePeriod)
                                 });
                               }),
 
-                          
-  children: [
+                              children: [
+                                /// 🔥 COMMON EMAIL FIELD
+                                const SizedBox(height: 20),
 
-    /// 🔥 COMMON EMAIL FIELD
-  
-    const SizedBox(height: 20),
+                                ...controller.experiences.asMap().entries.map((
+                                  entry,
+                                ) {
+                                  final index = entry.key;
 
-    ...controller.experiences
-        .asMap()
-        .entries
-        .map((entry) {
-          final index = entry.key;
+                                  final e = entry.value;
 
-          final e = entry.value;
-
-          return _experienceCard(
-            e,
-            index,
-          );
-        })
-        .toList(),
-  ],
-),
+                                  return _experienceCard(e, index);
+                                }).toList(),
+                              ],
+                            ),
                           ),
 
-   SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
 
-  child: ProfileSection(
-    label: 'Leadership Experience',
+                            child: ProfileSection(
+                              label: 'Leadership Experience',
 
-    trailing: _addButton(() {
-      setState(() {
-        controller.leadershipExperiences.add(
-          LeadershipExperienceController(),
-        );
-      });
-    }),
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.leadershipExperiences.add(
+                                    LeadershipExperienceController(),
+                                  );
+                                });
+                              }),
 
-    children: controller.leadershipExperiences
-        .asMap()
-        .entries
-        .map((entry) {
-          final index = entry.key;
-          final e = entry.value;
+                              children: controller.leadershipExperiences
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                    final index = entry.key;
+                                    final e = entry.value;
 
-          return _leadershipCard(e, index);
-        })
-        .toList(),
-  ),
-),
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
+                                    return _leadershipCard(e, index);
+                                  })
+                                  .toList(),
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
 
-  child: ProfileSection(
-    label: 'International Experience',
+                            child: ProfileSection(
+                              label: 'International Experience',
 
-    trailing: _addButton(() {
-      setState(() {
-        controller.internationalExperiences.add(
-          InternationalExperienceController(),
-        );
-      });
-    }),
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.internationalExperiences.add(
+                                    InternationalExperienceController(),
+                                  );
+                                });
+                              }),
 
-    children: controller.internationalExperiences
-        .asMap()
-        .entries
-        .map((entry) {
-          final index = entry.key;
-          final e = entry.value;
+                              children: controller.internationalExperiences
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                    final index = entry.key;
+                                    final e = entry.value;
 
-          return _internationalCard(e, index);
-        })
-        .toList(),
-  ),
-),
+                                    return _internationalCard(e, index);
+                                  })
+                                  .toList(),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -1974,99 +1845,77 @@ SingleChildScrollView(
                                   ),
                                 ),
 
-                             onPressed: () async {
-  if (!_formKey.currentState!.validate()) {
-    return;
-  }
-if (widget
-    .isSwitchingToProfessional) {
+                                onPressed: () async {
+                                  if (!_formKey.currentState!.validate()) {
+                                    return;
+                                  }
+                                  if (widget.isSwitchingToProfessional) {
+                                    await getIt<NetworkService>().request(
+                                      Request(
+                                        method: RequestMethod.put,
 
-  await getIt<NetworkService>()
-      .request(
-    Request(
-      method:
-          RequestMethod.put,
+                                        endpoint: "/api/onboarding/update",
 
-      endpoint:
-          "/api/onboarding/update",
+                                        isSafeRoute: true,
 
-      isSafeRoute: true,
+                                        body: {"profileType": "professional"},
+                                      ),
+                                    );
+                                  }
+                                  final failure = await addEditProfileViewModel
+                                      .saveProfile();
 
-      body: {
-        "profileType":
-            "professional",
-      },
-    ),
-  );
-}
-  final failure =
-      await addEditProfileViewModel
-          .saveProfile();
+                                  if (failure == null) {
+                                    hasChanges = false;
 
-  if (failure == null) {
-    hasChanges = false;
+                                    try {
+                                      final response =
+                                          await getIt<NetworkService>().request(
+                                            Request(
+                                              method: RequestMethod.get,
+                                              endpoint: "api/onboarding/me",
+                                              isSafeRoute: true,
+                                            ),
+                                          );
 
-    try {
-      final response =
-          await getIt<NetworkService>()
-              .request(
-        Request(
-          method: RequestMethod.get,
-          endpoint:
-              "api/onboarding/me",
-          isSafeRoute: true,
-        ),
-      );
+                                      final latestUser = User.fromJson(
+                                        response.data,
+                                      );
 
-      final latestUser =
-          User.fromJson(
-response.data      );
+                                      if (mounted) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          SnackBar(
+                                            content: Text(
+                                              widget.isSwitchingToProfessional
+                                                  ? "Switched successfully"
+                                                  : "Saved successfully",
+                                            ),
+                                          ),
+                                        );
+                                      }
 
-     if (mounted) {
-  ScaffoldMessenger.of(
-    context,
-  ).showSnackBar(
-     SnackBar(
-      content: Text(
-    widget.isSwitchingToProfessional
-    ? "Switched successfully"
-    : "Saved successfully"
-      ),
-    ),
-  );
-}
+                                      context.read<AppStateProvider>().data =
+                                          latestUser;
 
-context
-    .read<AppStateProvider>()
-    .data = latestUser;
-
-setState(() {});
-if (mounted) {
-if (widget
-    .isSwitchingToProfessional) {
-
-  context.goNamed(
-  RouteNames.splash,
-);
-
-} else {
-
-  context.pop(true);
-}
-}
-    } catch (e) {
-      debugPrint(
-        "Refresh profile failed: $e",
-      );
-    }
-  }
-
+                                      setState(() {});
+                                      if (mounted) {
+                                        if (widget.isSwitchingToProfessional) {
+                                          context.goNamed(RouteNames.splash);
+                                        } else {
+                                          context.pop(true);
+                                        }
+                                      }
+                                    } catch (e) {
+                                      debugPrint("Refresh profile failed: $e");
+                                    }
+                                  }
                                 },
-                              child: Text(
-  widget
-          .isSwitchingToProfessional
-      ? "Switch"
-      : "Save",
+                                child: Text(
+                                  widget.isSwitchingToProfessional
+                                      ? "Switch"
+                                      : "Save",
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontWeight: FontWeight.bold,
@@ -2158,11 +2007,11 @@ if (widget
     );
   }
 
-Widget _experienceCard(
-  ExperienceController e,
-  int index, {
-  String title = "Experience",
-}) {
+  Widget _experienceCard(
+    ExperienceController e,
+    int index, {
+    String title = "Experience",
+  }) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -2174,35 +2023,36 @@ Widget _experienceCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-        _header(index, title),
+          _header(index, title),
           const SizedBox(height: 12),
 
           _companyField(e),
           const SizedBox(height: 12),
 
-_roleField(e.role),          const SizedBox(height: 10),
+          _roleField(e.role),
+          const SizedBox(height: 10),
 
           _currentCheckbox(e),
 
-         const SizedBox(height: 12),
+          const SizedBox(height: 12),
 
-if (e.isCurrent) ...[
-  AppTextFields(
-    controller: controller.companyEmail,
+          if (e.isCurrent) ...[
+            AppTextFields(
+              controller: controller.companyEmail,
 
-    hint: 'Official Company Email',
+              hint: 'Official Company Email',
 
-    keyboardType: TextInputType.emailAddress,
+              keyboardType: TextInputType.emailAddress,
 
-    helperText: "Used for company verification",
+              helperText: "Used for company verification",
 
-    onChanged: (_) => markChanged(),
-  ),
+              onChanged: (_) => markChanged(),
+            ),
 
-  const SizedBox(height: 12),
-],
+            const SizedBox(height: 12),
+          ],
 
-const SizedBox(height: 10),
+          const SizedBox(height: 10),
 
           _dateRow(e),
 
@@ -2213,104 +2063,87 @@ const SizedBox(height: 10),
       ),
     );
   }
-  Widget _leadershipCard(
-  LeadershipExperienceController e,
-  int index,
-) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 16),
-    padding: const EdgeInsets.all(16),
 
-    decoration: BoxDecoration(
-      color: const Color(0xFF111827),
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: Colors.white.withOpacity(0.06),
+  Widget _leadershipCard(LeadershipExperienceController e, int index) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
+
+      decoration: BoxDecoration(
+        color: const Color(0xFF111827),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.06)),
       ),
-    ),
 
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _header(index, "Leadership"),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _header(index, "Leadership"),
 
-        const SizedBox(height: 12),
-CommonAutocomplete(
-  label: "Company",
+          const SizedBox(height: 12),
+          CommonAutocomplete(
+            label: "Company",
 
-  hint: "Company",
+            hint: "Company",
 
-  options: companyOptions,
-showCreateOption: true,
+            options: companyOptions,
+            showCreateOption: true,
 
-onCreate: (value) async {
+            onCreate: (value) async {
+              await addCompanyIfNeeded(value);
 
-  await addCompanyIfNeeded(
-    value,
-  );
+              e.organization.text = value;
 
-  e.organization.text =
-      value;
+              markChanged();
 
-  markChanged();
+              setState(() {});
+            },
+            initialValue: e.organization.text,
 
-  setState(() {});
-},
-  initialValue: e.organization.text,
+            onChanged: (value) {
+              e.organization.text = value;
 
-  onChanged: (value) {
-    e.organization.text = value;
+              markChanged();
+            },
 
-    markChanged();
-  },
+            onSubmitted: (value) async {
+              await addCompanyIfNeeded(value);
 
-  onSubmitted: (value) async {
-    await addCompanyIfNeeded(value);
+              e.organization.text = value;
 
-    e.organization.text = value;
+              markChanged();
+            },
 
-    markChanged();
-  },
+            onSelected: (value) async {
+              await addCompanyIfNeeded(value);
 
-  onSelected: (value) async {
-    await addCompanyIfNeeded(value);
+              e.organization.text = value;
 
-    e.organization.text = value;
+              markChanged();
+            },
+          ),
 
-    markChanged();
-  },
-),
+          const SizedBox(height: 12),
 
-        const SizedBox(height: 12),
+          _roleField(e.role),
+          const SizedBox(height: 12),
 
-       _roleField(e.role),
-        const SizedBox(height: 12),
+          _dateRowOnly(e.startDate, e.endDate),
 
-        _dateRowOnly(
-          e.startDate,
-          e.endDate,
-        ),
+          const SizedBox(height: 12),
 
-        const SizedBox(height: 12),
+          _input(controller: e.description, hint: "Description", maxLines: 3),
+        ],
+      ),
+    );
+  }
 
-        _input(
-          controller: e.description,
-          hint: "Description",
-          maxLines: 3,
-        ),
-      ],
-    ),
-  );
-}
-Widget _header(
-  int index,
-  String title,
-){
+  Widget _header(int index, String title) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-"$title ${index + 1}",
+          "$title ${index + 1}",
           style: const TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -2335,157 +2168,133 @@ Widget _header(
       hint: "Company",
 
       options: companyOptions,
-showCreateOption: true,
+      showCreateOption: true,
       initialValue: e.company.text,
-onCreate: (value) async {
+      onCreate: (value) async {
+        await addCompanyIfNeeded(value);
 
-  await addCompanyIfNeeded(
-    value,
-  );
+        e.company.text = value;
 
-  e.company.text =
-      value;
+        if (e.isCurrent) {
+          controller.currentCompany.text = value;
+        }
 
-  if (e.isCurrent) {
-    controller.currentCompany.text =
-        value;
-  }
+        markChanged();
 
-  markChanged();
+        setState(() {});
+      },
+      onChanged: (value) {
+        e.company.text = value;
 
-  setState(() {});
-},
- onChanged: (value) {
-  e.company.text = value;
+        /// auto update current company
+        if (e.isCurrent) {
+          controller.currentCompany.text = value;
+        }
 
-  /// auto update current company
-  if (e.isCurrent) {
-    controller.currentCompany.text = value;
-  }
+        markChanged();
+      },
+      onSubmitted: (value) async {
+        await addCompanyIfNeeded(value);
 
-  markChanged();
-},
-onSubmitted: (value) async {
-  await addCompanyIfNeeded(value);
+        e.company.text = value;
 
-  e.company.text = value;
+        /// auto update current company
+        if (e.isCurrent) {
+          controller.currentCompany.text = value;
+        }
 
-  /// auto update current company
-  if (e.isCurrent) {
-    controller.currentCompany.text = value;
-  }
+        markChanged();
+      },
 
-  markChanged();
-},
+      onSelected: (value) async {
+        await addCompanyIfNeeded(value);
 
-    onSelected: (value) async {
-  await addCompanyIfNeeded(value);
+        e.company.text = value;
 
-  e.company.text = value;
+        /// auto update current company
+        if (e.isCurrent) {
+          controller.currentCompany.text = value;
+        }
 
-  /// auto update current company
-  if (e.isCurrent) {
-    controller.currentCompany.text = value;
-  }
-
-  markChanged();
-},
+        markChanged();
+      },
     );
   }
-Widget _roleField(
-  TextEditingController controller,
-) {
-  return CommonAutocomplete(
-    label: "Role",
 
-    hint: "Role",
+  Widget _roleField(TextEditingController controller) {
+    return CommonAutocomplete(
+      label: "Role",
 
-    options:
-        jobRoleOptions,
+      hint: "Role",
 
-    initialValue:
-        controller.text,
+      options: jobRoleOptions,
 
-    onChanged: (value) {
-      controller.text =
-          value;
+      initialValue: controller.text,
 
-      markChanged();
-    },
+      onChanged: (value) {
+        controller.text = value;
 
-    onSubmitted:
-        (value) async {
+        markChanged();
+      },
 
-      await addJobRoleIfNeeded(
-        value,
-      );
+      onSubmitted: (value) async {
+        await addJobRoleIfNeeded(value);
 
-      controller.text =
-          value;
+        controller.text = value;
 
-      markChanged();
-    },
+        markChanged();
+      },
 
-    onSelected:
-        (value) async {
+      onSelected: (value) async {
+        await addJobRoleIfNeeded(value);
 
-      await addJobRoleIfNeeded(
-        value,
-      );
+        controller.text = value;
 
-      controller.text =
-          value;
+        markChanged();
+      },
 
-      markChanged();
-    },
+      showCreateOption: true,
 
-    showCreateOption:
-        true,
+      onCreate: (value) async {
+        await addJobRoleIfNeeded(value);
 
-    onCreate:
-        (value) async {
+        controller.text = value;
 
-      await addJobRoleIfNeeded(
-        value,
-      );
+        markChanged();
+      },
+    );
+  }
 
-      controller.text =
-          value;
-
-      markChanged();
-    },
-  );
-}
   Widget _currentCheckbox(ExperienceController e) {
     return Row(
       children: [
         Checkbox(
           value: e.isCurrent,
-        onChanged: (val) {
-  setState(() {
-    e.isCurrent = val ?? false;
+          onChanged: (val) {
+            setState(() {
+              e.isCurrent = val ?? false;
 
-    /// remove current flag from others
-    for (final exp in controller.experiences) {
-      if (exp != e) {
-        exp.isCurrent = false;
-      }
-    }
+              /// remove current flag from others
+              for (final exp in controller.experiences) {
+                if (exp != e) {
+                  exp.isCurrent = false;
+                }
+              }
 
-    /// auto fill current company
-    if (e.isCurrent) {
-      controller.currentCompany.text = e.company.text;
-    }
+              /// auto fill current company
+              if (e.isCurrent) {
+                controller.currentCompany.text = e.company.text;
+              }
 
-    /// clear if unchecked
-    if (!e.isCurrent &&
-        controller.currentCompany.text == e.company.text) {
-      controller.currentCompany.clear();
-    }
-  });
+              /// clear if unchecked
+              if (!e.isCurrent &&
+                  controller.currentCompany.text == e.company.text) {
+                controller.currentCompany.clear();
+              }
+            });
 
-  markChanged();
-},
+            markChanged();
+          },
         ),
         const Text(
           "I currently work here",
@@ -2643,7 +2452,7 @@ Widget _roleField(
     children: [
       Text(
         'Award ${controller.awards.indexOf(a) + 1}',
-   style: AppTextStyles.s14W600.copyWith(color: AppColors.white),
+        style: AppTextStyles.s14W600.copyWith(color: AppColors.white),
       ),
 
       AppTextFields(
@@ -2693,139 +2502,95 @@ Widget _roleField(
       // const AppDivider(),
     ],
   );
-Widget _internationalCard(
-  InternationalExperienceController e,
-  int index,
-) {
-  return Container(
-    margin: const EdgeInsets.only(bottom: 16),
-    padding: const EdgeInsets.all(16),
+  Widget _internationalCard(InternationalExperienceController e, int index) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(16),
 
-    decoration: BoxDecoration(
-      color: const Color(0xFF111827),
-      borderRadius: BorderRadius.circular(16),
-      border: Border.all(
-        color: Colors.white.withOpacity(0.06),
+      decoration: BoxDecoration(
+        color: const Color(0xFF111827),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.white.withOpacity(0.06)),
       ),
-    ),
 
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _header(index, "International"),
+
+          const SizedBox(height: 12),
+
+          _input(controller: e.country, hint: "Country"),
+          const SizedBox(height: 12),
+
+          CommonAutocomplete(
+            label: "Organization",
+            showCreateOption: true,
+
+            onCreate: (value) async {
+              await addCompanyIfNeeded(value);
+
+              e.organization.text = value;
+
+              markChanged();
+
+              setState(() {});
+            },
+            hint: "Organization",
+
+            options: companyOptions,
+
+            initialValue: e.organization.text,
+
+            onChanged: (value) {
+              e.organization.text = value;
+
+              markChanged();
+            },
+
+            onSubmitted: (value) async {
+              await addCompanyIfNeeded(value);
+
+              e.organization.text = value;
+
+              markChanged();
+            },
+
+            onSelected: (value) async {
+              await addCompanyIfNeeded(value);
+
+              e.organization.text = value;
+
+              markChanged();
+            },
+          ),
+          const SizedBox(height: 12),
+
+          _roleField(e.role),
+
+          const SizedBox(height: 12),
+
+          _dateRowOnly(e.startDate, e.endDate),
+
+          const SizedBox(height: 12),
+
+          _input(controller: e.description, hint: "Description", maxLines: 3),
+        ],
+      ),
+    );
+  }
+
+  Widget _dateRowOnly(TextEditingController start, TextEditingController end) {
+    return Row(
       children: [
-        _header(index, "International"),
+        Expanded(child: _dateField(start, "Start Date")),
 
-        const SizedBox(height: 12),
+        const SizedBox(width: 10),
 
-        _input(
-          controller: e.country,
-          hint: "Country",
-        ),
-const SizedBox(height: 12),
-
-CommonAutocomplete(
-  label: "Organization",
-showCreateOption: true,
-
-onCreate: (value) async {
-
-  await addCompanyIfNeeded(
-    value,
-  );
-
-  e.organization.text =
-      value;
-
-  markChanged();
-
-  setState(() {});
-},
-  hint: "Organization",
-
-  options: companyOptions,
-
-  initialValue:
-      e.organization.text,
-
-  onChanged: (value) {
-    e.organization.text =
-        value;
-
-    markChanged();
-  },
-
-  onSubmitted:
-      (value) async {
-
-    await addCompanyIfNeeded(
-      value,
-    );
-
-    e.organization.text =
-        value;
-
-    markChanged();
-  },
-
-  onSelected:
-      (value) async {
-
-    await addCompanyIfNeeded(
-      value,
-    );
-
-    e.organization.text =
-        value;
-
-    markChanged();
-  },
-),
-        const SizedBox(height: 12),
-
-
-       _roleField(e.role),
-
-        const SizedBox(height: 12),
-
-        _dateRowOnly(
-          e.startDate,
-          e.endDate,
-        ),
-
-        const SizedBox(height: 12),
-
-        _input(
-          controller: e.description,
-          hint: "Description",
-          maxLines: 3,
-        ),
+        Expanded(child: _dateField(end, "End Date")),
       ],
-    ),
-  );
-}
-Widget _dateRowOnly(
-  TextEditingController start,
-  TextEditingController end,
-) {
-  return Row(
-    children: [
-      Expanded(
-        child: _dateField(
-          start,
-          "Start Date",
-        ),
-      ),
-
-      const SizedBox(width: 10),
-
-      Expanded(
-        child: _dateField(
-          end,
-          "End Date",
-        ),
-      ),
-    ],
-  );
-}
+    );
+  }
   // ── Reusable field helpers ───────────────────────────────────────────────────
 
   Widget _profileListSection(String label, List<TextEditingController> list) {
@@ -3008,375 +2773,248 @@ Widget _dateRowOnly(
   }
 
   Map<String, dynamic>? calculateNoticePeriodStatus(
-  String? startDateStr,
-  String? totalDaysStr,
-) {
-  if (startDateStr == null ||
-      startDateStr.isEmpty ||
-      totalDaysStr == null ||
-      totalDaysStr.isEmpty) {
-    return null;
+    String? startDateStr,
+    String? totalDaysStr,
+  ) {
+    if (startDateStr == null ||
+        startDateStr.isEmpty ||
+        totalDaysStr == null ||
+        totalDaysStr.isEmpty) {
+      return null;
+    }
+
+    final totalDays = int.tryParse(totalDaysStr) ?? 0;
+
+    if (totalDays <= 0) {
+      return null;
+    }
+
+    try {
+      final start = DateTime.parse(startDateStr);
+
+      final today = DateTime.now();
+
+      final normalizedStart = DateTime(start.year, start.month, start.day);
+
+      final normalizedToday = DateTime(today.year, today.month, today.day);
+
+      final daysPassed = normalizedToday.difference(normalizedStart).inDays;
+
+      final safeDaysPassed = daysPassed < 0 ? 0 : daysPassed;
+
+      final daysRemaining = (totalDays - safeDaysPassed).clamp(0, totalDays);
+
+      final endDate = normalizedStart.add(Duration(days: totalDays));
+
+      final progress = totalDays == 0
+          ? 0.0
+          : (safeDaysPassed / totalDays).clamp(0, 1);
+
+      return {
+        "daysPassed": safeDaysPassed,
+
+        "daysRemaining": daysRemaining,
+
+        "isExpired": safeDaysPassed >= totalDays,
+
+        "progress": progress,
+
+        "endDate":
+            "${endDate.day.toString().padLeft(2, '0')}/"
+            "${endDate.month.toString().padLeft(2, '0')}/"
+            "${endDate.year}",
+      };
+    } catch (e) {
+      return null;
+    }
   }
 
-  final totalDays =
-      int.tryParse(totalDaysStr) ?? 0;
-
-  if (totalDays <= 0) {
-    return null;
-  }
-
-  try {
-    final start =
-        DateTime.parse(startDateStr);
-
-    final today = DateTime.now();
-
-    final normalizedStart = DateTime(
-      start.year,
-      start.month,
-      start.day,
-    );
-
-    final normalizedToday = DateTime(
-      today.year,
-      today.month,
-      today.day,
-    );
-
-    final daysPassed =
-        normalizedToday
-            .difference(normalizedStart)
-            .inDays;
-
-    final safeDaysPassed =
-        daysPassed < 0 ? 0 : daysPassed;
-
-    final daysRemaining =
-        (totalDays - safeDaysPassed)
-            .clamp(0, totalDays);
-
-    final endDate =
-        normalizedStart.add(
-      Duration(days: totalDays),
-    );
-
-    final progress =
-        totalDays == 0
-        ? 0.0
-        : (safeDaysPassed / totalDays)
-              .clamp(0, 1);
-
-    return {
-      "daysPassed": safeDaysPassed,
-
-      "daysRemaining": daysRemaining,
-
-      "isExpired":
-          safeDaysPassed >= totalDays,
-
-      "progress": progress,
-
-      "endDate":
-          "${endDate.day.toString().padLeft(2, '0')}/"
-          "${endDate.month.toString().padLeft(2, '0')}/"
-          "${endDate.year}",
-    };
-  } catch (e) {
-    return null;
-  }
-}
   // ── Resume parser ────────────────────────────────────────────────────────────
-Future<void> parseResumeAndFill() async {
-  try {
-    debugPrint("Starting resume upload");
+  Future<void> parseResumeAndFill() async {
+    try {
+      debugPrint("Starting resume upload");
 
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-      withData: false,
-    );
-
-    if (result == null) {
-      debugPrint("No file selected");
-      return;
-    }
-
-    final file = result.files.single;
-
-    if (file.path == null) {
-      debugPrint("File path is null");
-      return;
-    }
-
-    _pickedResumeFile = File(file.path!);
-
-    addEditProfileViewModel.pickedResumeFile =
-        _pickedResumeFile;
-
-    setState(() {
-      _isParsingResume = true;
-    });
-
-    /// 🔥 FORM DATA
-    final formData = FormData.fromMap({
-      'resume': await MultipartFile.fromFile(
-        file.path!,
-        filename: file.name,
-      ),
-    });
-
-    /// 🔥 NETWORK CALL
-    final networkService =
-        NetworkService();
-
-    final response =
-        await networkService.request(
-      Request(
-        method: RequestMethod.post,
-
-        endpoint:
-            "/api/upload/resume",
-
-        formData: formData,
-
-        isSafeRoute: true,
-      ),
-    );
-
-    debugPrint(
-      "STATUS: ${response.statusCode}",
-    );
-
-    debugPrint(
-      "FULL RESPONSE: ${response.data}",
-    );
-
-    /// 🔥 SAFE PARSING
-    final data =
-        response.data["data"] ??
-            response.data;
-
-    if (data == null) {
-
-      debugPrint(
-        "No data found in response",
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+        withData: false,
       );
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(
-        const SnackBar(
-          content: Text(
-            "Resume upload failed",
-          ),
-        ),
-      );
-
-      return;
-    }
-
-    debugPrint(
-      "PARSED DATA: $data",
-    );
-
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
-      const SnackBar(
-        content: Text(
-          "Resume uploaded successfully",
-        ),
-      ),
-    );
-
-    /// 🔥 BASIC FIELDS
-    controller.name.text =
-        data['name'] ??
-            controller.name.text;
-
-    controller.email.text =
-        data['email'] ??
-            controller.email.text;
-
-    controller.phone.text =
-        data['phone'] ??
-            controller.phone.text;
-
-    controller.gender.text =
-        data['gender'] ??
-            controller.gender.text;
-
-    controller.about.text =
-        data['about'] ??
-            controller.about.text;
-
-    controller.linkedin.text =
-        data['linkedin_url'] ??
-            controller.linkedin.text;
-
-    controller.github.text =
-        data['github_url'] ??
-            controller.github.text;
-
-    controller.portfolio.text =
-        data['portfolio_url'] ??
-            controller.portfolio.text;
-
-    /// 🔥 SKILLS
-    if (data['skills'] != null &&
-        data['skills'] is List &&
-        controller.skills.isNotEmpty) {
-
-      controller.skills.first.text =
-          (data['skills'] as List)
-              .join(', ');
-    }
-
-    /// 🔥 EDUCATIONS
-    if (data['education'] != null &&
-        data['education'] is List &&
-        (data['education'] as List)
-            .isNotEmpty) {
-
-      controller.educations.clear();
-
-      for (final edu
-          in data['education']) {
-
-        final education =
-            EducationController();
-
-        /// COLLEGE
-        education.college.text =
-            edu['institution'] ??
-                '';
-
-        /// DEGREE
-        final parsedDegree =
-            edu['degree']
-                    ?.toString() ??
-                '';
-
-        education.degree.text =
-            parsedDegree;
-
-        if (parsedDegree
-                .isNotEmpty &&
-            !degreeOptions.contains(
-              parsedDegree,
-            )) {
-
-          degreeOptions.add(
-            parsedDegree,
-          );
-        }
-
-        /// SPECIALIZATION
-        final parsedSpec =
-            edu['field_of_study']
-                    ?.toString() ??
-                '';
-
-        education.specialization
-            .text = parsedSpec;
-
-        /// YEAR
-        education
-            .yearOfGraduation
-            .text = edu['year']
-                ?.toString() ??
-            '';
-
-        /// CGPA
-        education.cgpa.text =
-            edu['cgpa']
-                ?.toString() ??
-            '';
-
-        /// EDUCATION TYPE
-        education.educationType =
-            "bachelors";
-
-        /// CURRENT
-        education.isCurrent =
-            false;
-
-        /// 🔥 FETCH STREAMS
-        final selected =
-            degrees.firstWhere(
-          (d) =>
-              d['value']
-                  .toString()
-                  .toLowerCase() ==
-              parsedDegree
-                  .toLowerCase(),
-
-          orElse: () => {},
-        );
-
-        if (selected.isNotEmpty) {
-
-          education.selectedDegreeId =
-              selected['_id'];
-
-          final response =
-              await getIt<
-                  NetworkService>()
-                  .request(
-            Request(
-              method:
-                  RequestMethod
-                      .get,
-
-              endpoint:
-                  "api/master-data?type=STREAM&parent=${education.selectedDegreeId}",
-
-              isSafeRoute:
-                  true,
-            ),
-          );
-
-          education.streams =
-              List<
-                  Map<String,
-                      dynamic>>.from(
-            response.data['data'] ??
-                [],
-          );
-        }
-
-        controller.educations.add(
-          education,
-        );
+      if (result == null) {
+        debugPrint("No file selected");
+        return;
       }
-    }
 
-    setState(() {});
+      final file = result.files.single;
 
-  } catch (e, s) {
+      if (file.path == null) {
+        debugPrint("File path is null");
+        return;
+      }
 
-    debugPrint(
-      "FULL ERROR: $e",
-    );
+      _pickedResumeFile = File(file.path!);
 
-    debugPrint(
-      "STACK: $s",
-    );
+      addEditProfileViewModel.pickedResumeFile = _pickedResumeFile;
 
-    ScaffoldMessenger.of(context)
-        .showSnackBar(
-      const SnackBar(
-        content: Text(
-          "Something went wrong",
+      setState(() {
+        _isParsingResume = true;
+      });
+
+      /// 🔥 FORM DATA
+      final formData = FormData.fromMap({
+        'resume': await MultipartFile.fromFile(file.path!, filename: file.name),
+      });
+
+      /// 🔥 NETWORK CALL
+      final networkService = NetworkService();
+
+      final response = await networkService.request(
+        Request(
+          method: RequestMethod.post,
+
+          endpoint: "/api/upload/resume",
+
+          formData: formData,
+
+          isSafeRoute: true,
         ),
-      ),
-    );
+      );
 
-  } finally {
+      debugPrint("STATUS: ${response.statusCode}");
 
-    setState(() {
-      _isParsingResume = false;
-    });
+      debugPrint("FULL RESPONSE: ${response.data}");
+
+      /// 🔥 SAFE PARSING
+      final data = response.data["data"] ?? response.data;
+
+      if (data == null) {
+        debugPrint("No data found in response");
+
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text("Resume upload failed")));
+
+        return;
+      }
+
+      debugPrint("PARSED DATA: $data");
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Resume uploaded successfully")),
+      );
+
+      /// 🔥 BASIC FIELDS
+      controller.name.text = data['name'] ?? controller.name.text;
+
+      controller.email.text = data['email'] ?? controller.email.text;
+
+      controller.phone.text = data['phone'] ?? controller.phone.text;
+
+      controller.gender.text = data['gender'] ?? controller.gender.text;
+
+      controller.about.text = data['about'] ?? controller.about.text;
+
+      controller.linkedin.text =
+          data['linkedin_url'] ?? controller.linkedin.text;
+
+      controller.github.text = data['github_url'] ?? controller.github.text;
+
+      controller.portfolio.text =
+          data['portfolio_url'] ?? controller.portfolio.text;
+
+      /// 🔥 SKILLS
+      if (data['skills'] != null &&
+          data['skills'] is List &&
+          controller.skills.isNotEmpty) {
+        controller.skills.first.text = (data['skills'] as List).join(', ');
+      }
+
+      /// 🔥 EDUCATIONS
+      if (data['education'] != null &&
+          data['education'] is List &&
+          (data['education'] as List).isNotEmpty) {
+        controller.educations.clear();
+
+        for (final edu in data['education']) {
+          final education = EducationController();
+
+          /// COLLEGE
+          education.college.text = edu['institution'] ?? '';
+
+          /// DEGREE
+          final parsedDegree = edu['degree']?.toString() ?? '';
+
+          education.degree.text = parsedDegree;
+
+          if (parsedDegree.isNotEmpty &&
+              !degreeOptions.contains(parsedDegree)) {
+            degreeOptions.add(parsedDegree);
+          }
+
+          /// SPECIALIZATION
+          final parsedSpec = edu['field_of_study']?.toString() ?? '';
+
+          education.specialization.text = parsedSpec;
+
+          /// YEAR
+          education.yearOfGraduation.text = edu['year']?.toString() ?? '';
+
+          /// CGPA
+          education.cgpa.text = edu['cgpa']?.toString() ?? '';
+
+          /// EDUCATION TYPE
+          education.educationType = "bachelors";
+
+          /// CURRENT
+          education.isCurrent = false;
+
+          /// 🔥 FETCH STREAMS
+          final selected = degrees.firstWhere(
+            (d) =>
+                d['value'].toString().toLowerCase() ==
+                parsedDegree.toLowerCase(),
+
+            orElse: () => {},
+          );
+
+          if (selected.isNotEmpty) {
+            education.selectedDegreeId = selected['_id'];
+
+            final response = await getIt<NetworkService>().request(
+              Request(
+                method: RequestMethod.get,
+
+                endpoint:
+                    "api/master-data?type=STREAM&parent=${education.selectedDegreeId}",
+
+                isSafeRoute: true,
+              ),
+            );
+
+            education.streams = List<Map<String, dynamic>>.from(
+              response.data['data'] ?? [],
+            );
+          }
+
+          controller.educations.add(education);
+        }
+      }
+
+      setState(() {});
+    } catch (e, s) {
+      debugPrint("FULL ERROR: $e");
+
+      debugPrint("STACK: $s");
+
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
+    } finally {
+      setState(() {
+        _isParsingResume = false;
+      });
+    }
   }
-}
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -3424,54 +3062,54 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
     widget.onChanged?.call();
   }
-void _addItem(String value) {
-  final trimmed = value.trim();
 
-  if (trimmed.isEmpty) {
-    return;
-  }
+  void _addItem(String value) {
+    final trimmed = value.trim();
 
-  final current = _selectedItems;
-
-  /// 🔥 normalize
-  final normalizedInput =
-      trimmed.toLowerCase().replaceAll(' ', '');
-
-  /// 🔥 find matching option from API
-  String? matchedOption;
-
-  for (final option in widget.options) {
-    final normalizedOption =
-        option.toLowerCase().replaceAll(' ', '');
-
-    if (normalizedOption == normalizedInput) {
-      matchedOption = option;
-      break;
+    if (trimmed.isEmpty) {
+      return;
     }
+
+    final current = _selectedItems;
+
+    /// 🔥 normalize
+    final normalizedInput = trimmed.toLowerCase().replaceAll(' ', '');
+
+    /// 🔥 find matching option from API
+    String? matchedOption;
+
+    for (final option in widget.options) {
+      final normalizedOption = option.toLowerCase().replaceAll(' ', '');
+
+      if (normalizedOption == normalizedInput) {
+        matchedOption = option;
+        break;
+      }
+    }
+
+    /// 🔥 use API option if exists
+    final finalValue = matchedOption ?? trimmed;
+
+    /// 🔥 avoid duplicate after normalization
+    final alreadyExists = current.any(
+      (e) =>
+          e.toLowerCase().replaceAll(' ', '') ==
+          finalValue.toLowerCase().replaceAll(' ', ''),
+    );
+
+    if (!alreadyExists) {
+      current.add(finalValue);
+
+      _sync(current);
+    }
+
+    _textController.clear();
+
+    _focusNode.requestFocus();
+
+    setState(() {});
   }
 
-  /// 🔥 use API option if exists
-  final finalValue = matchedOption ?? trimmed;
-
-  /// 🔥 avoid duplicate after normalization
-  final alreadyExists = current.any(
-    (e) =>
-        e.toLowerCase().replaceAll(' ', '') ==
-        finalValue.toLowerCase().replaceAll(' ', ''),
-  );
-
-  if (!alreadyExists) {
-    current.add(finalValue);
-
-    _sync(current);
-  }
-
-  _textController.clear();
-
-  _focusNode.requestFocus();
-
-  setState(() {});
-}
   void _removeItem(String value) {
     final current = _selectedItems..remove(value);
 
@@ -3518,54 +3156,31 @@ void _addItem(String value) {
 
     super.dispose();
   }
-List<String> get _filteredSuggestions {
 
-  final query =
-      _textController.text
-          .trim()
-          .toLowerCase();
+  List<String> get _filteredSuggestions {
+    final query = _textController.text.trim().toLowerCase();
 
-  if (query.isEmpty) {
-    return [];
+    if (query.isEmpty) {
+      return [];
+    }
+
+    final selectedNormalized = _selectedItems
+        .map((e) => e.toLowerCase().replaceAll(' ', ''))
+        .toSet();
+
+    return widget.options
+        .map((e) => e.trim())
+        .where((option) {
+          final normalized = option.toLowerCase().replaceAll(' ', '');
+
+          return option.toLowerCase().contains(query) &&
+              !selectedNormalized.contains(normalized);
+        })
+        .toSet()
+        .toList()
+      ..sort();
   }
 
-  final selectedNormalized =
-      _selectedItems
-          .map(
-            (e) => e
-                .toLowerCase()
-                .replaceAll(' ', ''),
-          )
-          .toSet();
-
-  return widget.options
-      .map(
-        (e) => e.trim(),
-      )
-      .where(
-        (option) {
-
-          final normalized =
-              option
-                  .toLowerCase()
-                  .replaceAll(
-                    ' ',
-                    '',
-                  );
-
-          return option
-                  .toLowerCase()
-                  .contains(query) &&
-              !selectedNormalized
-                  .contains(
-                    normalized,
-                  );
-        },
-      )
-      .toSet()
-      .toList()
-    ..sort();
-}
   @override
   Widget build(BuildContext context) {
     final selected = _selectedItems;
@@ -3612,14 +3227,13 @@ List<String> get _filteredSuggestions {
                 ),
               ),
 
-          if (_textController.text.trim().isNotEmpty &&
-    _filteredSuggestions.isEmpty &&
+              if (_textController.text.trim().isNotEmpty &&
+                  _filteredSuggestions.isEmpty &&
                   !widget.options.any(
                     (e) =>
                         e.toLowerCase().trim() ==
                         _textController.text.toLowerCase().trim(),
                   ))
-                  
                 Container(
                   margin: const EdgeInsets.only(top: 8),
 
