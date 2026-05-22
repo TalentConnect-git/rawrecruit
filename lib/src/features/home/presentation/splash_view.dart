@@ -40,17 +40,15 @@ class _SplashViewState extends State<SplashView> {
         await appStateProvider.getAuthDetails();
         await appStateProvider.getUserDetails();
         if (appStateProvider.isAuthComplete) {
-        final onboardingService =
-    getIt<OnboardingLocalService>();
+          final onboardingService = getIt<OnboardingLocalService>();
 
-final completed =
-    await onboardingService.isCompleted();
+          final completed = await onboardingService.isCompleted();
 
-if (!completed) {
-  next = 'onboarding_flow';
-} else {
-  next = RouteNames.dashboard;
-}
+          if (!completed) {
+            next = 'onboarding_flow';
+          } else {
+            next = RouteNames.dashboard;
+          }
         } else {
           await SecretRepo.remove('auth_token');
           next = RouteNames.login;
@@ -63,30 +61,24 @@ if (!completed) {
 
     if (!mounted) return;
 
-   if (next == 'onboarding_flow') {
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (_) =>
-          const OnboardingFlow(),
-    ),
-  );
-} else {
-  context.pushReplacementNamed(
-    next,
-    extra: {
-      'userType':
-          appStateProvider.userType,
-    },
-  );
-}
+    if (next == 'onboarding_flow') {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (_) => const OnboardingFlow()),
+      );
+    } else {
+      context.pushReplacementNamed(
+        next,
+        extra: {'userType': appStateProvider.userType},
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: Image.asset('assets/images/Splash.png', fit: BoxFit.cover),
+      body: Image.asset('assets/images/splash-screen.png', fit: BoxFit.cover),
     );
   }
 }
