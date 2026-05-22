@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:rawrecruit/src/core/services/index.dart';
+import 'package:rawrecruit/src/core/index.dart';
 
 class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
@@ -43,6 +43,8 @@ class NotificationService {
         ),
         id: message.hashCode,
       );
+
+      getIt<NotificationProvider>().setNewNotificationsAvailable();
     });
 
     // When opened from background

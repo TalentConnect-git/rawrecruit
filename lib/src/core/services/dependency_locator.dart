@@ -52,6 +52,7 @@ Future<void> initDependencyLocator() async {
   getIt
     ..registerLazySingleton<NetworkService>(NetworkService.new)
     ..registerLazySingleton<AppStateProvider>(AppStateProvider.new)
+    ..registerLazySingleton<NotificationProvider>(NotificationProvider.new)
     ..registerLazySingleton<OnboardingLocalService>(
       () => OnboardingLocalService(),
     )
@@ -129,9 +130,7 @@ Future<void> initDependencyLocator() async {
       () => ChatRepositoryImpl(getIt<ChatDataSource>()),
     )
     ..registerLazySingleton<ChatViewModel>(() => ChatViewModel())
-    ..registerLazySingleton<NotificationViewModel>(
-      () => NotificationViewModel(),
-    )
+    ..registerLazySingleton<NotificationViewModel>(NotificationViewModel.new)
     ..registerLazySingleton<InterviewDataSource>(
       () => InterviewDataSourceImpl(),
     )

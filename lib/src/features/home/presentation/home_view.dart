@@ -139,9 +139,8 @@ class _HomeViewState extends State<HomeView> {
                   tooltip: 'Scheduled Interviews',
                 ),
               ),
-              ListenableBuilder(
-                listenable: notificationVm,
-                builder: (_, __) {
+              Selector<NotificationProvider, bool>(
+                builder: (_, available, _) {
                   return IconButton(
                     onPressed: () async {
                       await context.pushNamed(RouteNames.notification);
@@ -157,7 +156,7 @@ class _HomeViewState extends State<HomeView> {
                       children: [
                         const Icon(Icons.notifications),
 
-                        if (notificationVm.hasUnreadNotifications)
+                        if (available)
                           Positioned(
                             right: -1,
                             top: -1,
@@ -178,6 +177,7 @@ class _HomeViewState extends State<HomeView> {
                     color: Colors.white,
                   );
                 },
+                selector: (_, vm) => vm.hasNewNotifications,
               ),
               IconButton(
                 onPressed: () {
