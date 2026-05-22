@@ -86,15 +86,13 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
           final user = vm.user;
           final currentEducation =
-    user?.educations != null &&
-            user!.educations!.isNotEmpty
-        ? user.educations!.firstWhere(
-            (e) => e.isCurrent == true,
+              user?.educations != null && user!.educations!.isNotEmpty
+              ? user.educations!.firstWhere(
+                  (e) => e.isCurrent == true,
 
-            orElse: () =>
-                user.educations!.first,
-          )
-        : null;
+                  orElse: () => user.educations!.first,
+                )
+              : null;
           final noticeData = calculateNoticePeriodStatus(
             user?.noticePeriodStartDate,
             user?.noticePeriod,
@@ -177,9 +175,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         const SizedBox(height: 6),
 
                         Text(
-                     user.currentCompany?.isNotEmpty == true
-    ? user.currentCompany!
-    : currentEducation?.college ?? '',
+                          user.currentCompany?.isNotEmpty == true
+                              ? user.currentCompany!
+                              : currentEducation?.college ?? '',
 
                           style: const TextStyle(
                             color: Colors.grey,
@@ -434,73 +432,25 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                   SizedBox(height: 18),
 
                   /// DETAILS GRID
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                  _modernSection(
+                    title: "Profile",
+                    icon: Icons.badge_outlined,
 
-                    children: [
-                      Expanded(
-                        child: _modernSection(
-                          title: "Education",
-                          icon: Icons.school_outlined,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
 
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-
-                            children: [
-                           _detailTile(
-  "Degree",
-  currentEducation?.degree,
-),
-
-_detailTile(
-  "College",
-  currentEducation?.college,
-),
-
-_detailTile(
-  "CGPA",
-  currentEducation?.cgpa,
-),
-
-_detailTile(
-  "Graduation",
-  currentEducation
-      ?.yearOfGraduation,
-),
-                            ],
-                          ),
+                      children: [
+                        _detailTile(
+                          "Specialization",
+                          currentEducation?.specialization,
                         ),
-                      ),
+                        _detailTile("Current Company", user.currentCompany),
 
-                      const SizedBox(width: 14),
+                        _detailTile("Phone", user.phone),
 
-                      Expanded(
-                        child: _modernSection(
-                          title: "Profile",
-                          icon: Icons.badge_outlined,
-
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-
-                            children: [
-                          _detailTile(
-  "Specialization",
-  currentEducation
-      ?.specialization,
-),
-                              _detailTile(
-                                "Current Company",
-                                user.currentCompany,
-                              ),
-
-                              _detailTile("Phone", user.phone),
-
-                              _detailTile("Gender", user.gender),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                        _detailTile("Gender", user.gender),
+                      ],
+                    ),
                   ),
 
                   const SizedBox(height: 18),
@@ -782,6 +732,137 @@ _detailTile(
                         ],
                       ),
                     ),
+
+                  SizedBox(height: 10),
+
+                  _modernSection(
+                    title: "Education",
+                    icon: Icons.school_outlined,
+
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: (user.educations ?? [])
+                          .map(
+                            (e) => Container(
+                              width: double.infinity,
+
+                              margin: const EdgeInsets.only(bottom: 14),
+
+                              padding: const EdgeInsets.all(14),
+
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(.04),
+
+                                borderRadius: BorderRadius.circular(16),
+
+                                border: Border.all(
+                                  color: Colors.white.withOpacity(.05),
+                                ),
+                              ),
+
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+
+                                children: [
+                                  Row(
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          e.degree ?? '',
+
+                                          style: const TextStyle(
+                                            color: Colors.white,
+
+                                            fontSize: 15,
+
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
+
+                                      if (e.isCurrent == true)
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 10,
+                                            vertical: 5,
+                                          ),
+
+                                          decoration: BoxDecoration(
+                                            color: AppColors.kGreen,
+
+                                            borderRadius: BorderRadius.circular(
+                                              30,
+                                            ),
+                                          ),
+
+                                          child: const Text(
+                                            "Current",
+
+                                            style: TextStyle(
+                                              color: Colors.black,
+
+                                              fontSize: 10,
+
+                                              fontWeight: FontWeight.w700,
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 6),
+
+                                  Text(
+                                    e.college ?? '',
+
+                                    style: const TextStyle(
+                                      color: Colors.grey,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+
+                                  const SizedBox(height: 10),
+
+                                  Row(
+                                    children: [
+                                      Icon(
+                                        Icons.calendar_month,
+                                        color: Colors.grey,
+                                        size: 15,
+                                      ),
+
+                                      const SizedBox(width: 6),
+
+                                      Text(
+                                        "${e.startDate ?? ''} - ${e.endDate ?? ''}",
+
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  const SizedBox(height: 12),
+
+                                  Text(
+                                    e.yearOfGraduation ?? '-',
+
+                                    style: const TextStyle(
+                                      color: Colors.white70,
+                                      height: 1.5,
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
 
                   SizedBox(height: 10),
 
