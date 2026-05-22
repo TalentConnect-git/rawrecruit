@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:rawrecruit/src/common/index.dart';
 
 class AppInput extends StatelessWidget {
@@ -8,6 +9,7 @@ class AppInput extends StatelessWidget {
   final TextInputType? keyboardType;
   final int maxLines;
   final Widget? prefixIcon;
+  final List<TextInputFormatter>? inputFormatter;
 
   const AppInput(
     this.hint, {
@@ -17,6 +19,7 @@ class AppInput extends StatelessWidget {
     this.keyboardType,
     this.maxLines = 1,
     this.prefixIcon,
+    this.inputFormatter,
   });
 
   @override
@@ -27,14 +30,11 @@ class AppInput extends StatelessWidget {
         controller: controller,
         onChanged: onChanged,
         keyboardType: keyboardType,
+        inputFormatters: inputFormatter,
         maxLines: maxLines,
         style: const TextStyle(color: Colors.white),
 
-        decoration: appInputDecoration(
-          hint,
-        ).copyWith(
-          prefixIcon: prefixIcon,
-        ),
+        decoration: appInputDecoration(hint).copyWith(prefixIcon: prefixIcon),
       ),
     );
   }
@@ -69,8 +69,7 @@ class _AppDropdownState extends State<AppDropdown> {
 
   @override
   Widget build(BuildContext context) {
-    final safeValue =
-        widget.options.contains(selected) ? selected : null;
+    final safeValue = widget.options.contains(selected) ? selected : null;
 
     return Container(
       margin: const EdgeInsets.only(top: 16),
@@ -79,34 +78,24 @@ class _AppDropdownState extends State<AppDropdown> {
         isExpanded: true,
         dropdownColor: AppColors.kCard,
 
-        hint: Text(
-          widget.hint,
-          style: const TextStyle(color: Colors.white),
-        ),
+        hint: Text(widget.hint, style: const TextStyle(color: Colors.white)),
 
         style: const TextStyle(color: Colors.white),
 
         decoration: appInputDecoration("").copyWith(
           isDense: true,
-          contentPadding:
-              const EdgeInsets.symmetric(
+          contentPadding: const EdgeInsets.symmetric(
             horizontal: 16,
             vertical: 14,
           ),
         ),
 
-        icon: const Icon(
-          Icons.keyboard_arrow_down,
-          color: Colors.grey,
-        ),
+        icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
 
         items: widget.options.map((e) {
           return DropdownMenuItem(
             value: e,
-            child: Text(
-              e,
-              style: const TextStyle(color: Colors.white),
-            ),
+            child: Text(e, style: const TextStyle(color: Colors.white)),
           );
         }).toList(),
 
@@ -137,14 +126,11 @@ class AppMultiSelectChips extends StatefulWidget {
   });
 
   @override
-  State<AppMultiSelectChips> createState() =>
-      _AppMultiSelectChipsState();
+  State<AppMultiSelectChips> createState() => _AppMultiSelectChipsState();
 }
 
-class _AppMultiSelectChipsState
-    extends State<AppMultiSelectChips> {
-  final TextEditingController customCtrl =
-      TextEditingController();
+class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
+  final TextEditingController customCtrl = TextEditingController();
 
   List<String> selected = [];
   bool showCustom = false;
@@ -218,10 +204,7 @@ class _AppMultiSelectChipsState
       children: [
         Text(
           widget.label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 14,
-          ),
+          style: const TextStyle(color: Colors.white, fontSize: 14),
         ),
 
         const SizedBox(height: 8),
@@ -236,14 +219,11 @@ class _AppMultiSelectChipsState
 
             borderRadius: BorderRadius.circular(14),
 
-            border: Border.all(
-              color: AppColors.kBorder,
-            ),
+            border: Border.all(color: AppColors.kBorder),
           ),
 
           child: Column(
-            crossAxisAlignment:
-                CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
 
             children: [
               Wrap(
@@ -251,32 +231,26 @@ class _AppMultiSelectChipsState
                 runSpacing: 8,
 
                 children: widget.options.map((e) {
-                  final isSelected =
-                      selected.contains(e);
+                  final isSelected = selected.contains(e);
 
                   return GestureDetector(
                     onTap: () => toggle(e),
 
                     child: Container(
-                      padding:
-                          const EdgeInsets.symmetric(
+                      padding: const EdgeInsets.symmetric(
                         horizontal: 12,
                         vertical: 8,
                       ),
 
                       decoration: BoxDecoration(
                         color: isSelected
-                            ? AppColors.kGreen
-                                .withOpacity(0.2)
+                            ? AppColors.kGreen.withOpacity(0.2)
                             : Colors.transparent,
 
-                        borderRadius:
-                            BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20),
 
                         border: Border.all(
-                          color: isSelected
-                              ? AppColors.kGreen
-                              : Colors.white,
+                          color: isSelected ? AppColors.kGreen : Colors.white,
                         ),
                       ),
 
@@ -284,9 +258,7 @@ class _AppMultiSelectChipsState
                         e,
 
                         style: TextStyle(
-                          color: isSelected
-                              ? AppColors.kGreen
-                              : Colors.white,
+                          color: isSelected ? AppColors.kGreen : Colors.white,
                         ),
                       ),
                     ),
@@ -300,26 +272,21 @@ class _AppMultiSelectChipsState
                 TextField(
                   controller: customCtrl,
 
-                  style: const TextStyle(
-                    color: Colors.white,
-                  ),
+                  style: const TextStyle(color: Colors.white),
 
                   onSubmitted: addCustom,
 
                   decoration: InputDecoration(
                     hintText: "Add custom value",
 
-                    hintStyle: const TextStyle(
-                      color: Colors.grey,
-                    ),
+                    hintStyle: const TextStyle(color: Colors.grey),
 
                     filled: true,
 
                     fillColor: Colors.grey.shade900,
 
                     border: OutlineInputBorder(
-                      borderRadius:
-                          BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12),
                     ),
                   ),
                 ),
@@ -338,12 +305,9 @@ class _AppMultiSelectChipsState
 
                       onDeleted: () => remove(e),
 
-                      backgroundColor:
-                          AppColors.kGreen,
+                      backgroundColor: AppColors.kGreen,
 
-                      labelStyle: const TextStyle(
-                        color: Colors.black,
-                      ),
+                      labelStyle: const TextStyle(color: Colors.black),
                     );
                   }).toList(),
                 ),
@@ -370,8 +334,7 @@ class AppHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
         if (onBack != null)
@@ -380,48 +343,32 @@ class AppHeader extends StatelessWidget {
 
             child: const Row(
               children: [
-                Icon(
-                  Icons.arrow_back_ios,
-                  size: 16,
-                  color: Colors.grey,
-                ),
+                Icon(Icons.arrow_back_ios, size: 16, color: Colors.grey),
 
                 SizedBox(width: 4),
 
-                Text(
-                  "Back",
-                  style:
-                      TextStyle(color: Colors.grey),
-                ),
+                Text("Back", style: TextStyle(color: Colors.grey)),
               ],
             ),
           ),
 
-        if (onBack != null)
-          const SizedBox(height: 20),
+        if (onBack != null) const SizedBox(height: 20),
 
         RichText(
           text: TextSpan(
-            style: const TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
 
             children: [
               TextSpan(
                 text: "$title ",
 
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
+                style: const TextStyle(color: Colors.white),
               ),
 
               const TextSpan(
                 text: "details",
 
-                style: TextStyle(
-                  color: Color(0xFF22C55E),
-                ),
+                style: TextStyle(color: Color(0xFF22C55E)),
               ),
             ],
           ),
@@ -446,11 +393,9 @@ class AppChips extends StatelessWidget {
             (e) => Chip(
               label: Text(e),
 
-              backgroundColor:
-                  const Color(0xFF1F2937),
+              backgroundColor: const Color(0xFF1F2937),
 
-              labelStyle:
-                  const TextStyle(color: Colors.white),
+              labelStyle: const TextStyle(color: Colors.white),
             ),
           )
           .toList(),
@@ -462,42 +407,30 @@ InputDecoration appInputDecoration(String hint) {
   return InputDecoration(
     hintText: hint,
 
-    hintStyle: const TextStyle(
-      color: Colors.white,
-    ),
+    hintStyle: const TextStyle(color: Colors.white),
 
     filled: true,
 
     fillColor: Colors.grey.shade900,
 
-    contentPadding:
-        const EdgeInsets.symmetric(
-      horizontal: 16,
-      vertical: 16,
-    ),
+    contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
 
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
 
-      borderSide: BorderSide(
-        color: AppColors.kBorder,
-      ),
+      borderSide: BorderSide(color: AppColors.kBorder),
     ),
 
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
 
-      borderSide: BorderSide(
-        color: AppColors.kBorder,
-      ),
+      borderSide: BorderSide(color: AppColors.kBorder),
     ),
 
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
 
-      borderSide: BorderSide(
-        color: AppColors.kGreen,
-      ),
+      borderSide: BorderSide(color: AppColors.kGreen),
     ),
   );
 }

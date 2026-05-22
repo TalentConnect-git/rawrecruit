@@ -403,6 +403,18 @@ class _CareerPageState extends State<CareerPage> {
 
         const SizedBox(height: 12),
 
+        AppInput(
+          "Total Years Of Experience",
+
+          controller: totalYearsOfExperienceCtrl,
+
+          keyboardType: TextInputType.text,
+
+          onChanged: (_) => saveData(),
+        ),
+
+        const SizedBox(height: 12),
+
         if (experiences.any((e) => e.isCurrent == true)) ...[
           const SizedBox(height: 20),
 
@@ -861,15 +873,7 @@ class _CareerPageState extends State<CareerPage> {
                       ),
                     ),
               const SizedBox(height: 12),
-              AppInput(
-                "Total Years Of Experience",
 
-                controller: totalYearsOfExperienceCtrl,
-
-                keyboardType: TextInputType.text,
-
-                onChanged: (_) => saveData(),
-              ),
               CheckboxListTile(
                 value: experiences[i].isCurrent ?? false,
 

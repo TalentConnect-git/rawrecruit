@@ -796,6 +796,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       hint: 'Phone',
 
                                       onChanged: (_) => markChanged(),
+                                      keyboardType: TextInputType.number,
                                     ),
 
                                     _dropdownField(
@@ -1072,30 +1073,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                           const SizedBox(height: 16),
 
-                                          _dropdownField(
-                                            e.educationType == null
-                                                ? TextEditingController(
-                                                    text: "bachelors",
-                                                  )
-                                                : TextEditingController(
-                                                    text: e.educationType,
-                                                  ),
-
-                                            'Education Type',
-
-                                            [
-                                              "school",
-                                              "diploma",
-                                              "bachelors",
-                                              "masters",
-                                              "phd",
-                                              "certification",
-                                              "other",
-                                            ],
-                                          ),
-
-                                          const SizedBox(height: 16),
-
                                           AppTextFields(
                                             controller: e.cgpa,
 
@@ -1114,57 +1091,60 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                             graduationYears,
                                           ),
 
-                                          const SizedBox(height: 16),
+                                          if (!isProfessional &&
+                                              !isFresher) ...[
+                                            const SizedBox(height: 16),
 
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: _dateField(
-                                                  e.startDate,
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: _dateField(
+                                                    e.startDate,
 
-                                                  "Start Date",
+                                                    "Start Date",
+                                                  ),
                                                 ),
-                                              ),
 
-                                              const SizedBox(width: 10),
+                                                const SizedBox(width: 10),
 
-                                              Expanded(
-                                                child: _dateField(
-                                                  e.endDate,
+                                                Expanded(
+                                                  child: _dateField(
+                                                    e.endDate,
 
-                                                  "End Date",
+                                                    "End Date",
 
-                                                  enabled: !e.isCurrent,
+                                                    enabled: !e.isCurrent,
+                                                  ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 16),
 
-                                          const SizedBox(height: 16),
+                                            Row(
+                                              children: [
+                                                Checkbox(
+                                                  value: e.isCurrent,
 
-                                          Row(
-                                            children: [
-                                              Checkbox(
-                                                value: e.isCurrent,
+                                                  onChanged: (val) {
+                                                    setState(() {
+                                                      e.isCurrent =
+                                                          val ?? false;
+                                                    });
 
-                                                onChanged: (val) {
-                                                  setState(() {
-                                                    e.isCurrent = val ?? false;
-                                                  });
-
-                                                  markChanged();
-                                                },
-                                              ),
-
-                                              const Text(
-                                                "Currently Studying",
-
-                                                style: TextStyle(
-                                                  color: Colors.white,
+                                                    markChanged();
+                                                  },
                                                 ),
-                                              ),
-                                            ],
-                                          ),
+
+                                                const Text(
+                                                  "Currently Studying",
+
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
                                         ],
                                       ),
                                     );

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wrapper.dart';
+
 import '../../../../common/index.dart';
 import '../widgets/input_widgets.dart';
 import '../widgets/onboarding_local_service.dart';
@@ -10,11 +12,7 @@ class BasicPage extends StatefulWidget {
   final VoidCallback onBack;
   final User data;
 
-  const BasicPage({
-    super.key,
-    required this.onBack,
-    required this.data,
-  });
+  const BasicPage({super.key, required this.onBack, required this.data});
 
   @override
   State<BasicPage> createState() => _BasicPageState();
@@ -43,35 +41,26 @@ class _BasicPageState extends State<BasicPage> {
     dobCtrl = TextEditingController();
 
     /// 🔥 FETCH EMAIL AFTER NAVIGATION
-    Future.delayed(
-      const Duration(milliseconds: 500),
-      () {
-        final email =
-            getIt<AppStateProvider>()
-                    .auth
-                    ?.email ??
-                '';
+    Future.delayed(const Duration(milliseconds: 500), () {
+      final email = getIt<AppStateProvider>().auth?.email ?? '';
 
-        print("EMAIL => $email");
+      print("EMAIL => $email");
 
-        if (email.isNotEmpty) {
-          emailCtrl.text = email;
+      if (email.isNotEmpty) {
+        emailCtrl.text = email;
 
-          saveData();
+        saveData();
 
-          setState(() {});
-        }
-      },
-    );
+        setState(() {});
+      }
+    });
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    final d =
-        context.read<AppStateProvider>().data ??
-        widget.data;
+    final d = context.read<AppStateProvider>().data ?? widget.data;
 
     nameCtrl.text = d.name ?? '';
 
@@ -80,23 +69,19 @@ class _BasicPageState extends State<BasicPage> {
     if (phone.startsWith("+1")) {
       countryCode = "+1";
 
-      phoneCtrl.text =
-          phone.replaceAll("+1", "");
+      phoneCtrl.text = phone.replaceAll("+1", "");
     } else if (phone.startsWith("+44")) {
       countryCode = "+44";
 
-      phoneCtrl.text =
-          phone.replaceAll("+44", "");
+      phoneCtrl.text = phone.replaceAll("+44", "");
     } else if (phone.startsWith("+971")) {
       countryCode = "+971";
 
-      phoneCtrl.text =
-          phone.replaceAll("+971", "");
+      phoneCtrl.text = phone.replaceAll("+971", "");
     } else {
       countryCode = "+91";
 
-      phoneCtrl.text =
-          phone.replaceAll("+91", "");
+      phoneCtrl.text = phone.replaceAll("+91", "");
     }
 
     dobCtrl.text = d.dob ?? '';
@@ -108,9 +93,7 @@ class _BasicPageState extends State<BasicPage> {
   }
 
   void saveData() {
-    final currentUser =
-        context.read<AppStateProvider>().data ??
-        widget.data;
+    final currentUser = context.read<AppStateProvider>().data ?? widget.data;
 
     final updatedUser = currentUser.copyWith(
       name: nameCtrl.text,
@@ -129,11 +112,9 @@ class _BasicPageState extends State<BasicPage> {
       visaStatus: visaStatus,
     );
 
-    context.read<AppStateProvider>().data =
-        updatedUser;
+    context.read<AppStateProvider>().data = updatedUser;
 
-    getIt<OnboardingLocalService>()
-        .saveUser(updatedUser);
+    getIt<OnboardingLocalService>().saveUser(updatedUser);
   }
 
   @override
@@ -178,46 +159,30 @@ class _BasicPageState extends State<BasicPage> {
           onChanged: (_) => saveData(),
         ),
 
-        AppInput(
-          "Email",
-
-          controller: emailCtrl,
-
-          onChanged: (_) => saveData(),
-        ),
+        AppInput("Email", controller: emailCtrl, onChanged: (_) => saveData()),
 
         Row(
-          crossAxisAlignment:
-              CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
             Container(
-              margin:
-                  const EdgeInsets.only(top: 16),
+              margin: const EdgeInsets.only(top: 16),
 
-              padding:
-                  const EdgeInsets.symmetric(
-                horizontal: 14,
-                vertical: 2,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 2),
 
               decoration: BoxDecoration(
                 color: Colors.grey.shade900,
 
-                borderRadius:
-                    BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(14),
 
-                border: Border.all(
-                  color: AppColors.kBorder,
-                ),
+                border: Border.all(color: AppColors.kBorder),
               ),
 
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: countryCode,
 
-                  dropdownColor:
-                      Colors.grey.shade900,
+                  dropdownColor: Colors.grey.shade900,
 
                   icon: const Icon(
                     Icons.keyboard_arrow_down,
@@ -227,30 +192,17 @@ class _BasicPageState extends State<BasicPage> {
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 16,
-                    fontWeight:
-                        FontWeight.w600,
+                    fontWeight: FontWeight.w600,
                   ),
 
                   items: const [
-                    DropdownMenuItem(
-                      value: "+91",
-                      child: Text("IN +91"),
-                    ),
+                    DropdownMenuItem(value: "+91", child: Text("IN +91")),
 
-                    DropdownMenuItem(
-                      value: "+1",
-                      child: Text("US +1"),
-                    ),
+                    DropdownMenuItem(value: "+1", child: Text("US +1")),
 
-                    DropdownMenuItem(
-                      value: "+44",
-                      child: Text("UK +44"),
-                    ),
+                    DropdownMenuItem(value: "+44", child: Text("UK +44")),
 
-                    DropdownMenuItem(
-                      value: "+971",
-                      child: Text("UAE +971"),
-                    ),
+                    DropdownMenuItem(value: "+971", child: Text("UAE +971")),
                   ],
 
                   onChanged: (v) {
@@ -274,11 +226,14 @@ class _BasicPageState extends State<BasicPage> {
 
                 controller: phoneCtrl,
 
-                keyboardType:
-                    TextInputType.phone,
+                keyboardType: TextInputType.numberWithOptions(
+                  signed: false,
+                  decimal: false,
+                ),
 
-                onChanged: (_) =>
-                    saveData(),
+                inputFormatter: [FilteringTextInputFormatter.digitsOnly],
+
+                onChanged: (_) => saveData(),
               ),
             ),
           ],

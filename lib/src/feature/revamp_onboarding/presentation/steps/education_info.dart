@@ -16,93 +16,61 @@ class EducationPage extends StatefulWidget {
   final VoidCallback onBack;
   final User data;
 
-  const EducationPage({
-    super.key,
-    required this.onBack,
-    required this.data,
-  });
+  const EducationPage({super.key, required this.onBack, required this.data});
 
   @override
-  State<EducationPage> createState() =>
-      _EducationPageState();
+  State<EducationPage> createState() => _EducationPageState();
 }
 
-class _EducationPageState
-    extends State<EducationPage> {
+class _EducationPageState extends State<EducationPage> {
+  final List<EducationController> educations = [];
 
-  final List<EducationController>
-      educations = [];
-
-  List<Map<String, dynamic>>
-      colleges = [];
+  List<Map<String, dynamic>> colleges = [];
 
   bool loadingColleges = true;
 
   bool isInitialized = false;
 
   Future<void> fetchColleges() async {
-
-    final result =
-        await getIt<
-                RevampOnboardingRepository>()
-            .getColleges();
+    final result = await getIt<RevampOnboardingRepository>().getColleges();
 
     result.fold((_) {}, (r) {
-
       colleges = r;
     });
 
     if (mounted) {
-
       setState(() {
-
         loadingColleges = false;
       });
     }
   }
 
-  Future<void> registerCollegeIfNeeded(
-    String value,
-  ) async {
-
+  Future<void> registerCollegeIfNeeded(String value) async {
     final exists = colleges.any(
       (e) =>
-          e['label']
-              .toString()
-              .toLowerCase()
-              .trim() ==
-          value
-              .toLowerCase()
-              .trim(),
+          e['label'].toString().toLowerCase().trim() ==
+          value.toLowerCase().trim(),
     );
 
     if (exists) return;
 
-    final result =
-        await getIt<
-                RevampOnboardingRepository>()
-            .registerCollege(
+    final result = await getIt<RevampOnboardingRepository>().registerCollege(
       name: value,
     );
 
     result.fold((_) {}, (r) {
-
       colleges.add(r);
     });
   }
 
   @override
   void initState() {
-
     super.initState();
 
     fetchColleges();
 
     Future.microtask(() async {
-
-      await getIt<
-              MyProfileViewModel>()
-          .getDegrees();
+      await getIt<MyProfileViewModel>().getDegrees();
 
       if (mounted) {
         setState(() {});
@@ -112,133 +80,76 @@ class _EducationPageState
 
   @override
   void didChangeDependencies() {
-
     super.didChangeDependencies();
 
     if (isInitialized) return;
 
-    final d =
-        context
-                .read<
-                    AppStateProvider>()
-                .data ??
-            widget.data;
+    final d = context.read<AppStateProvider>().data ?? widget.data;
 
     educations.clear();
 
-    if (d.educations != null &&
-        d.educations!.isNotEmpty) {
+    if (d.educations != null && d.educations!.isNotEmpty) {
+      for (final e in d.educations!) {
+        final ec = EducationController();
 
-      for (final e
-          in d.educations!) {
+        ec.college.text = e.college ?? '';
 
-        final ec =
-            EducationController();
+        ec.degree.text = e.degree ?? '';
 
-        ec.college.text =
-            e.college ?? '';
+        ec.specialization.text = e.specialization ?? '';
 
-        ec.degree.text =
-            e.degree ?? '';
+        ec.semester.text = e.semester ?? '';
 
-        ec.specialization.text =
-            e.specialization ?? '';
+        ec.cgpa.text = e.cgpa ?? '';
 
-        ec.semester.text =
-            e.semester ?? '';
+        ec.yearOfGraduation.text = e.yearOfGraduation ?? '';
 
-        ec.cgpa.text =
-            e.cgpa ?? '';
+        ec.startDate.text = e.startDate ?? '';
 
-        ec.yearOfGraduation.text =
-            e.yearOfGraduation ??
-                '';
+        ec.endDate.text = e.endDate ?? '';
 
-        ec.startDate.text =
-            e.startDate ?? '';
+        ec.educationType = e.educationType ?? "bachelors";
 
-        ec.endDate.text =
-            e.endDate ?? '';
-
-        ec.educationType =
-            e.educationType ??
-                "bachelors";
-
-        ec.isCurrent =
-            e.isCurrent ?? false;
+        ec.isCurrent = e.isCurrent ?? false;
 
         educations.add(ec);
 
         Future.microtask(() async {
-
-          if (e.college != null &&
-              e.college!
-                  .trim()
-                  .isNotEmpty) {
-
-            await registerCollegeIfNeeded(
-              e.college!,
-            );
+          if (e.college != null && e.college!.trim().isNotEmpty) {
+            await registerCollegeIfNeeded(e.college!);
           }
 
-          final vm =
-              getIt<
-                  MyProfileViewModel>();
+          final vm = getIt<MyProfileViewModel>();
 
-          if (e.degree != null &&
-              e.degree!
-                  .trim()
-                  .isNotEmpty) {
-
-            await vm
-                .addDegreeIfNeeded(
-              e.degree!,
-            );
+          if (e.degree != null && e.degree!.trim().isNotEmpty) {
+            await vm.addDegreeIfNeeded(e.degree!);
 
             await vm.getDegrees();
 
-            final selected =
-                vm.degrees.firstWhere(
-              (d) =>
-                  d['value'] ==
-                  e.degree,
+            final selected = vm.degrees.firstWhere(
+              (d) => d['value'] == e.degree,
 
               orElse: () => {},
             );
 
             if (selected.isNotEmpty) {
+              ec.selectedDegreeId = selected['_id'];
 
-              ec.selectedDegreeId =
-                  selected['_id'];
+              await vm.getStreams(selected['_id']);
 
-              await vm.getStreams(
-                selected['_id'],
-              );
+              ec.streams = vm.streams;
 
-              ec.streams =
-                  vm.streams;
+              if (e.specialization != null &&
+                  e.specialization!.trim().isNotEmpty) {
+                await vm.addStreamIfNeeded(
+                  value: e.specialization!,
 
-              if (e.specialization !=
-                      null &&
-                  e.specialization!
-                      .trim()
-                      .isNotEmpty) {
-
-                await vm
-                    .addStreamIfNeeded(
-                  value:
-                      e.specialization!,
-
-                  parentId:
-                      selected['_id'],
+                  parentId: selected['_id'],
                 );
 
-                await vm.getStreams(
-                  selected['_id'],
-                );
+                await vm.getStreams(selected['_id']);
 
-                ec.streams =
-                    vm.streams;
+                ec.streams = vm.streams;
               }
 
               if (mounted) {
@@ -248,727 +159,421 @@ class _EducationPageState
           }
         });
       }
-
     } else {
-
-      educations.add(
-        EducationController(),
-      );
+      educations.add(EducationController());
     }
 
     isInitialized = true;
   }
 
   void saveData() {
+    final currentUser = context.read<AppStateProvider>().data ?? widget.data;
 
-    final currentUser =
-        context
-                .read<
-                    AppStateProvider>()
-                .data ??
-            widget.data;
-
-    final updatedUser =
-        currentUser.copyWith(
-
-      educations:
-          educations.map((e) {
-
+    final updatedUser = currentUser.copyWith(
+      educations: educations.map((e) {
         return Education(
-          college:
-              e.college.text,
+          college: e.college.text,
 
-          degree:
-              e.degree.text,
+          degree: e.degree.text,
 
-          specialization:
-              e.specialization
-                  .text,
+          specialization: e.specialization.text,
 
-          semester:
-              e.semester.text,
+          semester: e.semester.text,
 
-          cgpa:
-              e.cgpa.text,
+          cgpa: e.cgpa.text,
 
-          yearOfGraduation:
-              e.yearOfGraduation
-                  .text,
+          yearOfGraduation: e.yearOfGraduation.text,
 
-          startDate:
-              e.startDate.text,
+          startDate: e.startDate.text,
 
-          endDate:
-              e.endDate.text,
+          endDate: e.endDate.text,
 
-          educationType:
-              e.educationType,
+          educationType: e.educationType,
 
-          isCurrent:
-              e.isCurrent,
+          isCurrent: e.isCurrent,
         );
       }).toList(),
     );
 
-    context
-        .read<
-            AppStateProvider>()
-        .data = updatedUser;
+    context.read<AppStateProvider>().data = updatedUser;
 
-    getIt<
-            OnboardingLocalService>()
-        .saveUser(
-      updatedUser,
-    );
+    getIt<OnboardingLocalService>().saveUser(updatedUser);
   }
 
-  final List<String>
-      semesterOptions =
-      List.generate(
+  final List<String> semesterOptions = List.generate(
     8,
     (i) => "Semester ${i + 1}",
   );
 
-  final List<String>
-      graduationYears =
-      List.generate(
+  final List<String> graduationYears = List.generate(
     91,
-    (i) => (1960 + i)
-        .toString(),
+    (i) => (1960 + i).toString(),
   );
 
   @override
   Widget build(BuildContext context) {
-
     final isProfessional =
-        getIt<AppStateProvider>()
-                .userType ==
-            UserType
-                .professional;
+        getIt<AppStateProvider>().userType == UserType.professional;
 
-    final isFresher =
-        getIt<AppStateProvider>()
-                .userType ==
-            UserType.fresher;
+    final isFresher = getIt<AppStateProvider>().userType == UserType.fresher;
 
     return Wrapper(
       title: "Education",
 
       children: [
-
         AppHeader(
-          title:
-              "Your Educational",
+          title: "Your Educational",
 
           highlight: "details",
 
-          onBack:
-              widget.onBack,
+          onBack: widget.onBack,
         ),
 
-        const SizedBox(
-          height: 10,
-        ),
+        const SizedBox(height: 10),
 
         const Text(
           "What's your qualifications?",
 
-          style: TextStyle(
-            color: Colors.grey,
-          ),
+          style: TextStyle(color: Colors.grey),
         ),
 
-        const SizedBox(
-          height: 16,
-        ),
+        const SizedBox(height: 16),
 
-        ...educations
-            .asMap()
-            .entries
-            .map((entry) {
+        ...educations.asMap().entries.map((entry) {
+          final index = entry.key;
 
-          final index =
-              entry.key;
-
-          final e =
-              entry.value;
+          final e = entry.value;
 
           return Container(
-            margin:
-                const EdgeInsets.only(
-              bottom: 20,
-            ),
+            margin: const EdgeInsets.only(bottom: 20),
 
-            padding:
-                const EdgeInsets.all(
-              16,
-            ),
+            padding: const EdgeInsets.all(16),
 
-            decoration:
-                BoxDecoration(
+            decoration: BoxDecoration(
               color: Colors.black,
 
-              borderRadius:
-                  BorderRadius.circular(
-                16,
-              ),
+              borderRadius: BorderRadius.circular(16),
 
-              border: Border.all(
-                color:
-                    Colors.grey
-                        .shade800,
-              ),
+              border: Border.all(color: Colors.grey.shade800),
             ),
 
             child: Column(
-              crossAxisAlignment:
-                  CrossAxisAlignment
-                      .start,
+              crossAxisAlignment: CrossAxisAlignment.start,
 
               children: [
-
                 Row(
                   children: [
-
                     Text(
                       "Education ${index + 1}",
 
-                      style:
-                          const TextStyle(
-                        color:
-                            Colors.white,
+                      style: const TextStyle(
+                        color: Colors.white,
 
-                        fontWeight:
-                            FontWeight
-                                .bold,
+                        fontWeight: FontWeight.bold,
 
-                        fontSize:
-                            16,
+                        fontSize: 16,
                       ),
                     ),
 
                     const Spacer(),
 
-                    if (educations
-                            .length >
-                        1)
-
+                    if (educations.length > 1)
                       IconButton(
                         onPressed: () {
-
                           setState(() {
-
-                            educations
-                                .removeAt(
-                              index,
-                            );
+                            educations.removeAt(index);
 
                             saveData();
                           });
                         },
 
-                        icon:
-                            const Icon(
-                          Icons.delete,
-
-                          color:
-                              Colors.red,
-                        ),
+                        icon: const Icon(Icons.delete, color: Colors.red),
                       ),
                   ],
                 ),
 
-                const SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
 
-                AppDropdown(
-                  hint:
-                      "Education Type",
+                CommonAutocomplete(
+                  label: "College",
 
-                  value:
-                      e.educationType,
+                  hint: "College",
 
-                  options: const [
-                    "school",
-                    "diploma",
-                    "bachelors",
-                    "masters",
-                    "phd",
-                    "certification",
-                    "other",
-                  ],
+                  options: colleges.map((e) => e['label'].toString()).toList(),
 
-                  onChanged: (val) {
+                  initialValue: e.college.text,
 
-                    setState(() {
+                  showCreateOption: true,
 
-                      e.educationType =
-                          val ??
-                              "bachelors";
+                  onChanged: (value) {
+                    e.college.text = value;
 
-                      saveData();
-                    });
+                    saveData();
+                  },
+
+                  onSelected: (value) async {
+                    await registerCollegeIfNeeded(value);
+
+                    e.college.text = value;
+
+                    saveData();
+                  },
+
+                  onCreate: (value) async {
+                    await registerCollegeIfNeeded(value);
+
+                    e.college.text = value;
+
+                    saveData();
+
+                    setState(() {});
                   },
                 ),
 
-                const SizedBox(
-                  height: 16,
-                ),
-
-              CommonAutocomplete(
-  label: "College",
-
-  hint: "College",
-
-  options: colleges
-      .map(
-        (e) => e['label']
-            .toString(),
-      )
-      .toList(),
-
-  initialValue:
-      e.college.text,
-
-  showCreateOption:
-      true,
-
-  onChanged:
-      (value) {
-
-    e.college.text =
-        value;
-
-    saveData();
-  },
-
-  onSelected:
-      (value) async {
-
-    await registerCollegeIfNeeded(
-      value,
-    );
-
-    e.college.text =
-        value;
-
-    saveData();
-  },
-
-  onCreate:
-      (value) async {
-
-    await registerCollegeIfNeeded(
-      value,
-    );
-
-    e.college.text =
-        value;
-
-    saveData();
-
-    setState(() {});
-  },
-),
-
-                const SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
 
                 /// DEGREE
                 Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
+                    const Text("Degree", style: TextStyle(color: Colors.white)),
 
-                    const Text(
-                      "Degree",
+                    const SizedBox(height: 8),
 
-                      style:
-                          TextStyle(
-                        color:
-                            Colors.white,
-                      ),
+                    CommonAutocomplete(
+                      label: "Degree",
+
+                      hint: "Degree",
+
+                      options: getIt<MyProfileViewModel>().degrees
+                          .map((e) => e['value'].toString())
+                          .toList(),
+
+                      initialValue: e.degree.text,
+
+                      showCreateOption: true,
+
+                      onChanged: (value) {
+                        e.degree.text = value;
+
+                        saveData();
+                      },
+
+                      onSelected: (value) async {
+                        await getIt<MyProfileViewModel>().addDegreeIfNeeded(
+                          value,
+                        );
+
+                        await getIt<MyProfileViewModel>().getDegrees();
+
+                        e.degree.text = value;
+
+                        final vm = getIt<MyProfileViewModel>();
+
+                        final selected = vm.degrees.firstWhere(
+                          (d) =>
+                              d['value'].toString().toLowerCase() ==
+                              value.toLowerCase(),
+
+                          orElse: () => {},
+                        );
+
+                        if (selected.isNotEmpty) {
+                          e.selectedDegreeId = selected['_id'];
+
+                          await vm.getStreams(e.selectedDegreeId!);
+
+                          e.streams = vm.streams;
+                        }
+
+                        saveData();
+
+                        setState(() {});
+                      },
+
+                      onCreate: (value) async {
+                        final vm = getIt<MyProfileViewModel>();
+
+                        await vm.addDegreeIfNeeded(value);
+
+                        await vm.getDegrees();
+
+                        e.degree.text = value;
+
+                        saveData();
+
+                        setState(() {});
+                      },
                     ),
-
-                    const SizedBox(
-                      height: 8,
-                    ),
-
-                CommonAutocomplete(
-  label: "Degree",
-
-  hint: "Degree",
-
-  options:
-      getIt<MyProfileViewModel>()
-          .degrees
-          .map(
-            (e) => e['value']
-                .toString(),
-          )
-          .toList(),
-
-  initialValue:
-      e.degree.text,
-
-  showCreateOption:
-      true,
-
-  onChanged:
-      (value) {
-
-    e.degree.text =
-        value;
-
-    saveData();
-  },
-
-  onSelected:
-      (value) async {
-
-    await getIt<
-            MyProfileViewModel>()
-        .addDegreeIfNeeded(
-      value,
-    );
-
-    await getIt<
-            MyProfileViewModel>()
-        .getDegrees();
-
-    e.degree.text =
-        value;
-
-    final vm =
-        getIt<
-            MyProfileViewModel>();
-
-    final selected =
-        vm.degrees.firstWhere(
-      (d) =>
-          d['value']
-              .toString()
-              .toLowerCase() ==
-          value.toLowerCase(),
-
-      orElse: () => {},
-    );
-
-    if (selected
-        .isNotEmpty) {
-
-      e.selectedDegreeId =
-          selected['_id'];
-
-      await vm.getStreams(
-        e.selectedDegreeId!,
-      );
-
-      e.streams =
-          vm.streams;
-    }
-
-    saveData();
-
-    setState(() {});
-  },
-
-  onCreate:
-      (value) async {
-
-    final vm =
-        getIt<
-            MyProfileViewModel>();
-
-    await vm
-        .addDegreeIfNeeded(
-      value,
-    );
-
-    await vm.getDegrees();
-
-    e.degree.text =
-        value;
-
-    saveData();
-
-    setState(() {});
-  },
-),
                   ],
                 ),
 
-                const SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
 
                 /// SPECIALIZATION
                 Column(
-                  crossAxisAlignment:
-                      CrossAxisAlignment
-                          .start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
-
                     const Text(
                       "Specialization",
 
-                      style:
-                          TextStyle(
-                        color:
-                            Colors.white,
-                      ),
+                      style: TextStyle(color: Colors.white),
                     ),
 
-                    const SizedBox(
-                      height: 8,
+                    const SizedBox(height: 8),
+                    CommonAutocomplete(
+                      label: "Specialization",
+
+                      hint: "Specialization",
+
+                      options: e.streams
+                          .map((s) => s['value'].toString())
+                          .toList(),
+
+                      initialValue: e.specialization.text,
+
+                      showCreateOption: true,
+
+                      onChanged: (value) {
+                        e.specialization.text = value;
+
+                        saveData();
+                      },
+
+                      onSelected: (value) {
+                        e.specialization.text = value;
+
+                        saveData();
+                      },
+
+                      onCreate: (value) async {
+                        if (e.selectedDegreeId != null) {
+                          final vm = getIt<MyProfileViewModel>();
+
+                          await vm.addStreamIfNeeded(
+                            value: value,
+
+                            parentId: e.selectedDegreeId!,
+                          );
+
+                          await vm.getStreams(e.selectedDegreeId!);
+
+                          e.streams = vm.streams;
+                        }
+
+                        e.specialization.text = value;
+
+                        saveData();
+
+                        setState(() {});
+                      },
                     ),
-CommonAutocomplete(
-  label: "Specialization",
-
-  hint: "Specialization",
-
-  options: e.streams
-      .map(
-        (s) => s['value']
-            .toString(),
-      )
-      .toList(),
-
-  initialValue:
-      e.specialization.text,
-
-  showCreateOption:
-      true,
-
-  onChanged:
-      (value) {
-
-    e.specialization.text =
-        value;
-
-    saveData();
-  },
-
-  onSelected:
-      (value) {
-
-    e.specialization.text =
-        value;
-
-    saveData();
-  },
-
-  onCreate:
-      (value) async {
-
-    if (e.selectedDegreeId !=
-        null) {
-
-      final vm =
-          getIt<
-              MyProfileViewModel>();
-
-      await vm.addStreamIfNeeded(
-        value: value,
-
-        parentId:
-            e.selectedDegreeId!,
-      );
-
-      await vm.getStreams(
-        e.selectedDegreeId!,
-      );
-
-      e.streams =
-          vm.streams;
-    }
-
-    e.specialization.text =
-        value;
-
-    saveData();
-
-    setState(() {});
-  },
-),
                   ],
                 ),
 
-                const SizedBox(
-                  height: 16,
-                ),
-
-                if (!isProfessional &&
-                    !isFresher)
-
+                if (!isProfessional && !isFresher) ...[
+                  const SizedBox(height: 16),
                   AppDropdown(
-                    hint:
-                        "Semester",
+                    hint: "Semester",
 
-                    options:
-                        semesterOptions,
+                    options: semesterOptions,
 
-                    value:
-                        e.semester
-                                .text
-                                .isEmpty
-                            ? null
-                            : e.semester
-                                .text,
+                    value: e.semester.text.isEmpty ? null : e.semester.text,
 
-                    onChanged:
-                        (val) {
-
+                    onChanged: (val) {
                       setState(() {
-
-                        e.semester
-                            .text = val ??
-                            '';
+                        e.semester.text = val ?? '';
 
                         saveData();
                       });
                     },
                   ),
 
-                const SizedBox(
-                  height: 16,
-                ),
-
-                AppInput(
-                  "Start Date",
-
-
-                  controller:
-                      e.startDate,
-
-                  onChanged: (_) {
-                    saveData();
-                  },
-                ),
-
-                const SizedBox(
-                  height: 16,
-                ),
-
-                Row(
-                  children: [
-
-                    Checkbox(
-                      value:
-                          e.isCurrent,
-
-                      onChanged:
-                          (
-                            val,
-                          ) {
-
-                        setState(() {
-
-                          e.isCurrent =
-                              val ??
-                                  false;
-
-                          if (e
-                              .isCurrent) {
-
-                            e.endDate
-                                .clear();
-                          }
-
-                          saveData();
-                        });
-                      },
-                    ),
-
-                    const Text(
-                      "Currently Studying",
-
-                      style:
-                          TextStyle(
-                        color:
-                            Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(
-                  height: 8,
-                ),
-
-                if (!(e.isCurrent))
+                  const SizedBox(height: 16),
 
                   AppInput(
-                    "End Date",
+                    "Start Date",
 
-                 
+                    controller: e.startDate,
 
-                    controller:
-                        e.endDate,
-
-                    onChanged:
-                        (_) {
-
+                    onChanged: (_) {
                       saveData();
                     },
                   ),
 
-                const SizedBox(
-                  height: 16,
-                ),
+                  const SizedBox(height: 16),
+
+                  Row(
+                    children: [
+                      Checkbox(
+                        value: e.isCurrent,
+
+                        onChanged: (val) {
+                          setState(() {
+                            e.isCurrent = val ?? false;
+
+                            if (e.isCurrent) {
+                              e.endDate.clear();
+                            }
+
+                            saveData();
+                          });
+                        },
+                      ),
+
+                      const Text(
+                        "Currently Studying",
+
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 8),
+
+                  if (!(e.isCurrent))
+                    AppInput(
+                      "End Date",
+
+                      controller: e.endDate,
+
+                      onChanged: (_) {
+                        saveData();
+                      },
+                    ),
+                ],
+
+                const SizedBox(height: 16),
 
                 AppDropdown(
-                  hint:
-                      "Graduation Year",
+                  hint: "Graduation Year",
 
-                  options:
-                      graduationYears,
+                  options: graduationYears,
 
-                  value:
-                      e
-                              .yearOfGraduation
-                              .text
-                              .isEmpty
-                          ? null
-                          : e
-                              .yearOfGraduation
-                              .text,
+                  value: e.yearOfGraduation.text.isEmpty
+                      ? null
+                      : e.yearOfGraduation.text,
 
-                  onChanged:
-                      (val) {
-
+                  onChanged: (val) {
                     setState(() {
-
-                      e
-                          .yearOfGraduation
-                          .text = val ??
-                          '';
+                      e.yearOfGraduation.text = val ?? '';
 
                       saveData();
                     });
                   },
                 ),
 
-                const SizedBox(
-                  height: 16,
-                ),
+                const SizedBox(height: 16),
 
                 if (!isProfessional)
-
                   AppInput(
                     "CGPA",
 
-                    controller:
-                        e.cgpa,
+                    controller: e.cgpa,
 
-                    onChanged:
-                        (_) {
-
+                    onChanged: (_) {
                       saveData();
                     },
                   ),
@@ -977,38 +582,28 @@ CommonAutocomplete(
           );
         }),
 
-        const SizedBox(
-          height: 10,
-        ),
+        const SizedBox(height: 10),
 
         AppButton(
           label: "Add Education",
 
           onPressed: () {
-
             setState(() {
-
-              educations.add(
-                EducationController(),
-              );
+              educations.add(EducationController());
 
               saveData();
             });
           },
         ),
 
-        const SizedBox(
-          height: 30,
-        ),
+        const SizedBox(height: 30),
       ],
     );
   }
 
   @override
   void dispose() {
-
     for (final e in educations) {
-
       e.college.dispose();
 
       e.degree.dispose();
