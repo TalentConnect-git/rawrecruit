@@ -18,46 +18,82 @@ class ProfileDetailView extends StatefulWidget {
 
 class _ProfileDetailViewState extends State<ProfileDetailView> {
   Map<String, dynamic>? calculateNoticePeriodStatus(
-    String? startDateStr,
-    String? totalDays,
-  ) {
-    if (startDateStr == null ||
-        totalDays == null ||
-        startDateStr.isEmpty ||
-        totalDays.isEmpty) {
+  String? startDateStr,
+  String? totalDaysStr,
+) {
+  if (startDateStr == null ||
+      startDateStr.isEmpty ||
+      totalDaysStr == null ||
+      totalDaysStr.isEmpty) {
+    return null;
+  }
+
+  try {
+    final totalDays = int.tryParse(totalDaysStr) ?? 0;
+
+    if (totalDays <= 0) {
       return null;
     }
 
-    final start = DateTime.parse(startDateStr);
+    /// NOTICE START DATE
+    final startDate = DateTime.parse(startDateStr);
 
-    final today = DateTime.now();
+    /// TODAY
+    final now = DateTime.now();
 
-    final startDate = DateTime(start.year, start.month, start.day);
+    /// REMOVE TIME PART
+    final start = DateTime(
+      startDate.year,
+      startDate.month,
+      startDate.day,
+    );
 
-    final currentDate = DateTime(today.year, today.month, today.day);
+    final today = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    );
 
-    const msPerDay = Duration.millisecondsPerDay;
+    /// DAYS SERVED
+    int daysPassed = today.difference(start).inDays;
 
-    final daysPassed =
-        currentDate.difference(startDate).inMilliseconds ~/ msPerDay;
+    if (daysPassed < 0) {
+      daysPassed = 0;
+    }
 
-    final total = int.tryParse(totalDays) ?? 0;
+    /// DAYS REMAINING
+    int daysRemaining = totalDays - daysPassed;
 
-    final daysRemaining = (total - daysPassed).clamp(0, total);
+    if (daysRemaining < 0) {
+      daysRemaining = 0;
+    }
 
-    final endDate = startDate.add(Duration(days: total));
+    /// END DATE
+    final endDate = start.add(Duration(days: totalDays));
+
+    /// PROGRESS
+    final progress = (daysPassed / totalDays).clamp(0.0, 1.0);
 
     return {
-      "daysPassed": daysPassed.clamp(0, total),
+      "daysPassed": daysPassed,
 
       "daysRemaining": daysRemaining,
 
-      "endDate": "${endDate.day}/${endDate.month}/${endDate.year}",
+      "totalDays": totalDays,
 
-      "isExpired": daysPassed >= total,
+      "progress": progress,
+
+      "isExpired": daysPassed >= totalDays,
+
+      "endDate":
+          "${endDate.day.toString().padLeft(2, '0')}/"
+          "${endDate.month.toString().padLeft(2, '0')}/"
+          "${endDate.year}",
     };
+  } catch (e) {
+    return null;
   }
-
+}
   final vm = ProfileDetailViewModel();
 
   @override
@@ -125,93 +161,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                 children: [
                   /// HEADER
-                  Container(
-                    width: double.infinity,
-
-                    padding: const EdgeInsets.all(18),
-
-                    decoration: BoxDecoration(
-                      color: AppColors.kCard,
-
-                      borderRadius: BorderRadius.circular(22),
-
-                      border: Border.all(color: Colors.white.withOpacity(.05)),
-                    ),
-
-                    child: Column(
-                      children: [
-                        CircleAvatar(
-                          radius: 42,
-
-                          backgroundColor: AppColors.kGreen,
-
-                          child: Text(
-                            user.name?.isNotEmpty == true
-                                ? user.name![0].toUpperCase()
-                                : "U",
-
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 30,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 14),
-
-                        Text(
-                          user.name ?? '',
-
-                          textAlign: TextAlign.center,
-
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-
-                        const SizedBox(height: 6),
-
-                        Text(
-                          user.currentCompany?.isNotEmpty == true
-                              ? user.currentCompany!
-                              : currentEducation?.college ?? '',
-
-                          style: const TextStyle(
-                            color: Colors.grey,
-                            fontSize: 13,
-                          ),
-                        ),
-
-                        const SizedBox(height: 18),
-
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _smallInfoCard(
-                                "Experience",
-                                "${user.experiences?.length ?? 0}",
-                                Icons.work_outline,
-                              ),
-                            ),
-
-                            const SizedBox(width: 12),
-
-                            Expanded(
-                              child: _smallInfoCard(
-                                "Skills",
-                                "${user.skills?.length ?? 0}",
-                                Icons.code,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-
+                 _premiumHeader(user, currentEducation),
                   const SizedBox(height: 18),
                   if (user.servingNoticePeriod == true && noticeData != null)
                     Column(
@@ -236,7 +186,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                                   Expanded(
                                     child: _smallInfoCard(
-                                      "Days Left",
+                                    "${noticeData["daysRemaining"]} Days Left",
                                       noticeData["daysRemaining"].toString(),
                                       Icons.timelapse,
                                     ),
@@ -250,7 +200,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                 children: [
                                   Expanded(
                                     child: _smallInfoCard(
-                                      "Days Served",
+                                   "${noticeData["daysPassed"]} Days Served",
                                       noticeData["daysPassed"].toString(),
                                       Icons.check_circle,
                                     ),
@@ -492,8 +442,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                     ),
                   ),
 
-                  const SizedBox(height: 18),
-                  const SizedBox(height: 18),
 
                   if ((user.languagesKnown ?? []).isNotEmpty)
                     _modernSection(
@@ -508,6 +456,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                             .map((e) => _chip(e))
                             .toList(),
                       ),
+                      
                     ),
                   const SizedBox(height: 18),
 
@@ -541,50 +490,54 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                             .toList(),
                       ),
                     ),
-                  const SizedBox(height: 18),
 
                   /// INDUSTRIES + ROLES
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+               /// INDUSTRIES
+if ((user.industry ?? []).isNotEmpty)
+  _modernSection(
+    title: "Industries",
+    icon: Icons.business_outlined,
 
-                    children: [
-                      Expanded(
-                        child: _modernSection(
-                          title: "Industries",
-                          icon: Icons.business_outlined,
+    child: Wrap(
+      spacing: 10,
+      runSpacing: 10,
 
-                          child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
+      children: (user.industry ?? [])
+          .map(
+            (e) => _premiumChip(
+              e,
+              color: const Color(0xff5B8CFF),
+              icon: Icons.business_center,
+            ),
+          )
+          .toList(),
+    ),
+  ),
 
-                            children: (user.industry ?? [])
-                                .map((e) => _chip(e))
-                                .toList(),
-                          ),
-                        ),
-                      ),
+const SizedBox(height: 18),
 
-                      const SizedBox(width: 14),
+/// ROLES
+if ((user.jobRoles ?? []).isNotEmpty)
+  _modernSection(
+    title: "Roles",
+    icon: Icons.work_outline,
 
-                      Expanded(
-                        child: _modernSection(
-                          title: "Roles",
-                          icon: Icons.work_outline,
+    child: Wrap(
+      spacing: 10,
+      runSpacing: 10,
 
-                          child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
+      children: (user.jobRoles ?? [])
+          .map(
+            (e) => _premiumChip(
+              e,
+              color: const Color(0xff7F5AF0),
+              icon: Icons.work,
+            ),
+          )
+          .toList(),
+    ),
+  ),
 
-                            children: (user.jobRoles ?? [])
-                                .map((e) => _chip(e))
-                                .toList(),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 18),
                   const SizedBox(height: 18),
 
                   /// PROFESSIONAL DETAILS
@@ -1371,38 +1324,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       ),
                     ),
                   ],
-                  const SizedBox(height: 22),
-
-                  if ((user.linkedin?.isNotEmpty ?? false))
-                    SizedBox(
-                      width: double.infinity,
-
-                      child: ElevatedButton.icon(
-                        onPressed: () async {
-                          final uri = Uri.parse(user.linkedin!);
-
-                          await launchUrl(uri);
-                        },
-
-                        icon: const Icon(Icons.link),
-
-                        label: const Text("Open LinkedIn"),
-
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.kGreen,
-
-                          foregroundColor: Colors.white,
-
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(14),
-                          ),
-                        ),
-                      ),
-                    ),
-
-                  const SizedBox(height: 12),
+               
                   if ((user.github?.isNotEmpty ?? false)) ...[
                     const SizedBox(height: 12),
 
@@ -1520,54 +1442,211 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       ),
     );
   }
+Widget _modernSection({
+  required String title,
+  required IconData icon,
+  required Widget child,
+}) {
+  return TweenAnimationBuilder<double>(
+    tween: Tween(begin: 0, end: 1),
+    duration: const Duration(milliseconds: 500),
+    curve: Curves.easeOut,
+    builder: (context, value, widget) {
+      return Transform.translate(
+        offset: Offset(0, 20 * (1 - value)),
+        child: Opacity(
+          opacity: value,
+          child: widget,
+        ),
+      );
+    },
 
-  Widget _modernSection({
-    required String title,
-    required IconData icon,
-    required Widget child,
-  }) {
-    return Container(
+    child: Container(
       width: double.infinity,
 
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
 
       decoration: BoxDecoration(
-        color: AppColors.kCard,
+        borderRadius: BorderRadius.circular(26),
 
-        borderRadius: BorderRadius.circular(18),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Colors.white.withOpacity(.06),
+            Colors.white.withOpacity(.03),
+          ],
+        ),
 
-        border: Border.all(color: Colors.white.withOpacity(.05)),
-      ),
+        border: Border.all(
+          color: Colors.white.withOpacity(.07),
+        ),
 
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-
-        children: [
-          Row(
-            children: [
-              Icon(icon, color: AppColors.kGreen, size: 18),
-
-              const SizedBox(width: 8),
-
-              Text(
-                title,
-
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ],
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.22),
+            blurRadius: 24,
+            offset: const Offset(0, 14),
           ),
-
-          const SizedBox(height: 16),
-
-          child,
         ],
       ),
-    );
-  }
+
+      child: Stack(
+        children: [
+          /// BACKGROUND GLOW
+          Positioned(
+            top: -25,
+            right: -15,
+            child: Container(
+              height: 90,
+              width: 90,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.kGreen.withOpacity(.08),
+              ),
+            ),
+          ),
+
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              /// PREMIUM HEADER
+              Row(
+                children: [
+                  AnimatedContainer(
+                    duration: const Duration(milliseconds: 300),
+
+                    padding: const EdgeInsets.all(12),
+
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          AppColors.kGreen,
+                          AppColors.kGreen.withOpacity(.7),
+                        ],
+                      ),
+
+                      borderRadius: BorderRadius.circular(18),
+
+                      boxShadow: [
+                        BoxShadow(
+                          color: AppColors.kGreen.withOpacity(.30),
+                          blurRadius: 16,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+
+                    child: Icon(
+                      icon,
+                      color: Colors.black,
+                      size: 18,
+                    ),
+                  ),
+
+                  const SizedBox(width: 14),
+
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+
+                      children: [
+                        Text(
+                          title,
+
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: -.4,
+                          ),
+                        ),
+
+                        const SizedBox(height: 4),
+
+                        Text(
+                          "Professional profile information",
+
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(.45),
+                            fontSize: 11,
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 6,
+                    ),
+
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(.05),
+
+                      borderRadius: BorderRadius.circular(30),
+
+                      border: Border.all(
+                        color: Colors.white.withOpacity(.05),
+                      ),
+                    ),
+
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: 7,
+                          width: 7,
+                          decoration: BoxDecoration(
+                            color: AppColors.kGreen,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+
+                        const SizedBox(width: 6),
+
+                        const Text(
+                          "Active",
+                          style: TextStyle(
+                            color: Colors.white70,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 18),
+
+                height: 1,
+
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.transparent,
+                      Colors.white.withOpacity(.08),
+                      Colors.transparent,
+                    ],
+                  ),
+                ),
+              ),
+
+              /// SECTION CONTENT
+              child,
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
 
   Widget _smallInfoCard(String title, String value, IconData icon) {
     return Container(
@@ -1628,7 +1707,549 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       ),
     );
   }
+Widget _premiumHeader(User user, dynamic currentEducation) {
+  return TweenAnimationBuilder<double>(
+    tween: Tween(begin: 0, end: 1),
+    duration: const Duration(milliseconds: 900),
+    curve: Curves.easeOut,
+    builder: (context, value, child) {
+      return Transform.translate(
+        offset: Offset(0, 30 * (1 - value)),
+        child: Opacity(
+          opacity: value,
+          child: child,
+        ),
+      );
+    },
+    child: Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        gradient: const LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Color(0xff171C3A),
+            Color(0xff232B5D),
+            Color(0xff111111),
+          ],
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.35),
+            blurRadius: 30,
+            offset: const Offset(0, 20),
+          ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          /// GLOW CIRCLES
+          Positioned(
+            top: -40,
+            right: -30,
+            child: Container(
+              height: 130,
+              width: 130,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.black.withOpacity(.18),
+              ),
+            ),
+          ),
 
+          Positioned(
+            bottom: -50,
+            left: -30,
+            child: Container(
+              height: 120,
+              width: 120,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.kGreen.withOpacity(.12),
+              ),
+            ),
+          ),
+
+          Column(
+            children: [
+              /// TOP ACTION ROW
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 7,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withOpacity(.12),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: Colors.green.withOpacity(.25),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: const [
+                        Icon(
+                          Icons.verified,
+                          color: Colors.green,
+                          size: 14,
+                        ),
+                        SizedBox(width: 6),
+                        Text(
+                          "Verified Profile",
+                          style: TextStyle(
+                            color: Colors.green,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                ],
+              ),
+
+              const SizedBox(height: 24),
+
+              /// AVATAR
+              TweenAnimationBuilder<double>(
+                tween: Tween(begin: .8, end: 1),
+                duration: const Duration(milliseconds: 700),
+                curve: Curves.elasticOut,
+                builder: (context, scale, child) {
+                  return Transform.scale(
+                    scale: scale,
+                    child: child,
+                  );
+                },
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Container(
+                      height: 105,
+                      width: 105,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: LinearGradient(
+                          colors: [
+                            AppColors.kGreen.withOpacity(.7),
+                            Colors.black.withOpacity(.7),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    Container(
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: Colors.white.withOpacity(.15),
+                          width: 2,
+                        ),
+                      ),
+                      child: CircleAvatar(
+                        radius: 44,
+                        backgroundColor: Colors.black,
+                        child: Text(
+                          user.name?.isNotEmpty == true
+                              ? user.name![0].toUpperCase()
+                              : "U",
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 34,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ),
+
+                    Positioned(
+                      bottom: 4,
+                      right: 4,
+                      child: Container(
+                        height: 18,
+                        width: 18,
+                        decoration: BoxDecoration(
+                          color: Colors.green,
+                          shape: BoxShape.circle,
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 2,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 18),
+
+              /// NAME
+              Text(
+                user.name ?? "",
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 26,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -.5,
+                ),
+              ),
+
+              const SizedBox(height: 8),
+
+              /// COMPANY
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 14,
+                  vertical: 8,
+                ),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(.06),
+                  borderRadius: BorderRadius.circular(30),
+                ),
+                child: Text(
+                  user.currentCompany?.isNotEmpty == true
+                      ? user.currentCompany!
+                      : currentEducation?.college ?? "",
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 18),
+
+              /// INFO ROW
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  _topInfo(Icons.location_on_outlined, "Mumbai"),
+                  _headerDivider(),
+                  _topInfo(
+                    Icons.work_outline,
+                    "${user.experiences?.length ?? 0}+ Exp",
+                  ),
+                  _headerDivider(),
+                  _topInfo(
+                    Icons.code,
+                    "${user.skills?.length ?? 0} Skills",
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 24),
+
+              /// STATS
+              Row(
+                children: [
+                  Expanded(
+                    child: _premiumStatCard(
+                      title: "Experience",
+                      value: "${user.experiences?.length ?? 0}",
+                      icon: Icons.work_outline,
+                      gradient: const [
+                        Color(0xff7F5AF0),
+                        Color(0xff6246EA),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                  Expanded(
+                    child: _premiumStatCard(
+                      title: "Skills",
+                      value: "${user.skills?.length ?? 0}",
+                      icon: Icons.auto_awesome,
+                      gradient: const [
+                        Color(0xff00C6FB),
+                        Color(0xff005BEA),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(width: 12),
+
+                
+                ],
+              ),
+
+              const SizedBox(height: 22),
+
+           /// ACTION BUTTONS
+Row(
+  children: [
+    /// RESUME
+    Expanded(
+      child: GestureDetector(
+        onTap: (user.resume?.isNotEmpty ?? false)
+            ? () {
+                final url = user.resume;
+
+                if (url == null) {
+                  Toasts.showInfoToast(
+                    context,
+                    message: 'No Resume Found!',
+                  );
+                  return;
+                }
+
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (_) => ResumeViewerPage(url: url),
+                  ),
+                );
+              }
+            : null,
+        child: _headerButton(
+          icon: Icons.picture_as_pdf,
+          title: "Resume",
+          filled: (user.resume?.isNotEmpty ?? false),
+          disabled: !(user.resume?.isNotEmpty ?? false),
+        ),
+      ),
+    ),
+
+    const SizedBox(width: 12),
+
+    /// LINKEDIN
+    Expanded(
+      child: GestureDetector(
+        onTap: (user.linkedin?.isNotEmpty ?? false)
+            ? () async {
+                final uri = Uri.parse(user.linkedin!);
+
+                if (await canLaunchUrl(uri)) {
+                  await launchUrl(uri);
+                }
+              }
+            : null,
+        child: _headerButton(
+          icon: Icons.link,
+          title: "LinkedIn",
+          filled: true,
+          disabled: !(user.linkedin?.isNotEmpty ?? false),
+        ),
+      ),
+    ),
+  ],
+),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
+}
+Widget _topInfo(IconData icon, String text) {
+  return Row(
+    children: [
+      Icon(icon, size: 14, color: Colors.grey),
+      const SizedBox(width: 5),
+      Text(
+        text,
+        style: const TextStyle(
+          color: Colors.grey,
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    ],
+  );
+}
+Widget _premiumChip(
+  String text, {
+  required Color color,
+  required IconData icon,
+}) {
+  return AnimatedContainer(
+    duration: const Duration(milliseconds: 300),
+
+    padding: const EdgeInsets.symmetric(
+      horizontal: 14,
+      vertical: 10,
+    ),
+
+    decoration: BoxDecoration(
+      gradient: LinearGradient(
+        colors: [
+          color.withOpacity(.22),
+          color.withOpacity(.10),
+        ],
+      ),
+
+      borderRadius: BorderRadius.circular(16),
+
+      border: Border.all(
+        color: color.withOpacity(.30),
+      ),
+
+      boxShadow: [
+        BoxShadow(
+          color: color.withOpacity(.15),
+          blurRadius: 14,
+          offset: const Offset(0, 8),
+        ),
+      ],
+    ),
+
+    child: Row(
+      mainAxisSize: MainAxisSize.min,
+
+      children: [
+        Icon(
+          icon,
+          color: color,
+          size: 15,
+        ),
+
+        const SizedBox(width: 8),
+
+        Flexible(
+          child: Text(
+            text,
+            overflow: TextOverflow.ellipsis,
+
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+Widget _headerDivider() {
+  return Container(
+    margin: const EdgeInsets.symmetric(horizontal: 12),
+    height: 12,
+    width: 1,
+    color: Colors.white.withOpacity(.12),
+  );
+}
+
+Widget _premiumStatCard({
+  required String title,
+  required String value,
+  required IconData icon,
+  required List<Color> gradient,
+}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(vertical: 16),
+    decoration: BoxDecoration(
+      gradient: LinearGradient(colors: gradient),
+      borderRadius: BorderRadius.circular(20),
+      boxShadow: [
+        BoxShadow(
+          color: gradient.first.withOpacity(.25),
+          blurRadius: 18,
+          offset: const Offset(0, 10),
+        ),
+      ],
+    ),
+    child: Column(
+      children: [
+        Icon(icon, color: Colors.white, size: 20),
+        const SizedBox(height: 10),
+        Text(
+          value,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 22,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          title,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 11,
+          ),
+        ),
+      ],
+    ),
+  );
+}
+Widget _headerButton({
+  required IconData icon,
+  required String title,
+  bool filled = false,
+  bool disabled = false,
+}) {
+  return AnimatedContainer(
+    duration: const Duration(milliseconds: 300),
+    height: 54,
+    decoration: BoxDecoration(
+      gradient: disabled
+          ? null
+          : filled
+              ? LinearGradient(
+                  colors: [
+                    AppColors.kGreen,
+                    AppColors.kGreen.withOpacity(.7),
+                  ],
+                )
+              : null,
+      color: disabled
+          ? Colors.white.withOpacity(.05)
+          : filled
+              ? null
+              : Colors.white.withOpacity(.06),
+      borderRadius: BorderRadius.circular(18),
+      border: Border.all(
+        color: disabled
+            ? Colors.white.withOpacity(.04)
+            : Colors.white.withOpacity(.08),
+      ),
+      boxShadow: disabled
+          ? []
+          : filled
+              ? [
+                  BoxShadow(
+                    color: AppColors.kGreen.withOpacity(.35),
+                    blurRadius: 20,
+                    offset: const Offset(0, 10),
+                  ),
+                ]
+              : [],
+    ),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(
+          icon,
+          color: disabled ? Colors.grey : Colors.white,
+          size: 18,
+        ),
+
+        const SizedBox(width: 8),
+
+        Text(
+          title,
+          style: TextStyle(
+            color: disabled ? Colors.grey : Colors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: 13,
+          ),
+        ),
+      ],
+    ),
+  );
+}
   Widget _chip(String text) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

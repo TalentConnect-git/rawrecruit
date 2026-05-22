@@ -119,7 +119,7 @@ class ResumeUploadPage extends StatelessWidget {
       if (parsedData == null) {
         ScaffoldMessenger.of(
           context,
-        ).showSnackBar(const SnackBar(content: Text("Resume Parsing failed")));
+        ).showSnackBar(const SnackBar(content: Text("Resume Parsing failed but resume uploaded successfully")));
         return;
       }
       ScaffoldMessenger.of(context).showSnackBar(
@@ -222,8 +222,8 @@ class ResumeUploadPage extends StatelessWidget {
       /// 🔥 DIRECT DIO (same as profile)
       final dio = Dio(
         BaseOptions(
-          receiveTimeout: const Duration(seconds: 60),
-          sendTimeout: const Duration(seconds: 60),
+          receiveTimeout: const Duration(seconds: 120),
+          sendTimeout: const Duration(seconds: 120),
         ),
       );
 

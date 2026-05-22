@@ -22,7 +22,21 @@ class AddEditProfileViewModel extends ViewStateProvider {
     Failure? failure;
 
     setViewState(ViewState.busy);
+/// HANDLE CURRENT COMPANY
+final currentExperience = userController.experiences.where(
+  (e) => e.isCurrent,
+);
 
+if (currentExperience.isEmpty) {
+  userController.currentCompany.text = '';
+} else {
+  userController.currentCompany.text =
+      currentExperience.first.company.text;
+}
+
+debugPrint(
+  'FINAL currentCompany => ${userController.currentCompany.text}',
+);
     final result = await _onboardingRepository.updateOnboardingUser(
       body: userController.toMap(),
       resume: pickedResumeFile,
