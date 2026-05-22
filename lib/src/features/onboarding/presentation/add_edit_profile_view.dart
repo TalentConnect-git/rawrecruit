@@ -1435,7 +1435,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                           const SizedBox(height: 14),
 
                                           LinearProgressIndicator(
-                                            value: notice["progress"] / 100,
+                                          value: notice["progress"],
                                           ),
                                         ],
                                       ),
@@ -1527,18 +1527,49 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                 const SizedBox(height: 20),
 
-                                _dropdownField(
-                                  controller.jobRoles.first,
-                                  'Job Role',
-                                  [
-                                    'Software Developer',
-                                    'Mobile App Developer',
-                                    'Flutter Developer',
-                                    'Web Developer',
-                                    'Frontend Developer',
-                                    'Backend Developer',
-                                  ],
-                                ),
+                           CommonAutocomplete(
+  label: "Preferred Job Roles",
+
+  hint: "Search Job Roles",
+
+  options: jobRoleOptions,
+
+  initialValue: controller.jobRoles.first.text,
+
+  showCreateOption: true,
+
+  onChanged: (value) {
+    controller.jobRoles.first.text = value;
+
+    markChanged();
+  },
+
+  onSelected: (value) async {
+    await addJobRoleIfNeeded(value);
+
+    controller.jobRoles.first.text = value;
+
+    markChanged();
+  },
+
+  onCreate: (value) async {
+    await addJobRoleIfNeeded(value);
+
+    controller.jobRoles.first.text = value;
+
+    markChanged();
+
+    setState(() {});
+  },
+
+  onSubmitted: (value) async {
+    await addJobRoleIfNeeded(value);
+
+    controller.jobRoles.first.text = value;
+
+    markChanged();
+  },
+),
 
                                 // const SizedBox(height: 20),
 
@@ -1605,15 +1636,15 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                           ),
 
                           /// ───────────────── JOB ROLES ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
+                          // SingleChildScrollView(
+                          //   padding: const EdgeInsets.all(16),
 
-                            child: _chipMultiSelectField(
-                              'Job Roles',
-                              controller.jobRoles.first,
-                              jobRoleOptions,
-                            ),
-                          ),
+                          //   child: _chipMultiSelectField(
+                          //     'Job Roles',
+                          //     controller.jobRoles.first,
+                          //     jobRoleOptions,
+                          //   ),
+                          // ),
 
                           /// ───────────────── SKILLS ─────────────────
                           /// ───────────────── SKILLS ─────────────────
@@ -2268,34 +2299,35 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   Widget _currentCheckbox(ExperienceController e) {
     return Row(
       children: [
-        Checkbox(
-          value: e.isCurrent,
-          onChanged: (val) {
-            setState(() {
-              e.isCurrent = val ?? false;
+       Checkbox(
+  value: e.isCurrent,
+  onChanged: (val) {
+  setState(() {
+    e.isCurrent = val ?? false;
 
-              /// remove current flag from others
-              for (final exp in controller.experiences) {
-                if (exp != e) {
-                  exp.isCurrent = false;
-                }
-              }
+    /// remove current flag from others
+    for (final exp in controller.experiences) {
+      if (exp != e) {
+        exp.isCurrent = false;
+      }
+    }
 
-              /// auto fill current company
-              if (e.isCurrent) {
-                controller.currentCompany.text = e.company.text;
-              }
+    final currentExp = controller.experiences.where(
+      (exp) => exp.isCurrent,
+    );
 
-              /// clear if unchecked
-              if (!e.isCurrent &&
-                  controller.currentCompany.text == e.company.text) {
-                controller.currentCompany.clear();
-              }
-            });
+    /// if none selected -> EMPTY STRING
+    if (currentExp.isEmpty) {
+      controller.currentCompany.text = '';
+    } else {
+      controller.currentCompany.text =
+          currentExp.first.company.text;
+    }
+  });
 
-            markChanged();
-          },
-        ),
+  markChanged();
+},
+),
         const Text(
           "I currently work here",
           style: TextStyle(color: Colors.white),
@@ -2771,63 +2803,83 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       onChanged: markChanged,
     );
   }
+Map<String, dynamic>? calculateNoticePeriodStatus(
+  String? startDateStr,
+  String? totalDaysStr,
+) {
+  if (startDateStr == null ||
+      startDateStr.isEmpty ||
+      totalDaysStr == null ||
+      totalDaysStr.isEmpty) {
+    return null;
+  }
 
-  Map<String, dynamic>? calculateNoticePeriodStatus(
-    String? startDateStr,
-    String? totalDaysStr,
-  ) {
-    if (startDateStr == null ||
-        startDateStr.isEmpty ||
-        totalDaysStr == null ||
-        totalDaysStr.isEmpty) {
-      return null;
-    }
-
+  try {
     final totalDays = int.tryParse(totalDaysStr) ?? 0;
 
     if (totalDays <= 0) {
       return null;
     }
 
-    try {
-      final start = DateTime.parse(startDateStr);
+    /// NOTICE START DATE
+    final startDate = DateTime.parse(startDateStr);
 
-      final today = DateTime.now();
+    /// TODAY
+    final now = DateTime.now();
 
-      final normalizedStart = DateTime(start.year, start.month, start.day);
+    /// REMOVE TIME PART
+    final start = DateTime(
+      startDate.year,
+      startDate.month,
+      startDate.day,
+    );
 
-      final normalizedToday = DateTime(today.year, today.month, today.day);
+    final today = DateTime(
+      now.year,
+      now.month,
+      now.day,
+    );
 
-      final daysPassed = normalizedToday.difference(normalizedStart).inDays;
+    /// DAYS SERVED
+    int daysPassed = today.difference(start).inDays;
 
-      final safeDaysPassed = daysPassed < 0 ? 0 : daysPassed;
-
-      final daysRemaining = (totalDays - safeDaysPassed).clamp(0, totalDays);
-
-      final endDate = normalizedStart.add(Duration(days: totalDays));
-
-      final progress = totalDays == 0
-          ? 0.0
-          : (safeDaysPassed / totalDays).clamp(0, 1);
-
-      return {
-        "daysPassed": safeDaysPassed,
-
-        "daysRemaining": daysRemaining,
-
-        "isExpired": safeDaysPassed >= totalDays,
-
-        "progress": progress,
-
-        "endDate":
-            "${endDate.day.toString().padLeft(2, '0')}/"
-            "${endDate.month.toString().padLeft(2, '0')}/"
-            "${endDate.year}",
-      };
-    } catch (e) {
-      return null;
+    if (daysPassed < 0) {
+      daysPassed = 0;
     }
+
+    /// DAYS REMAINING
+    int daysRemaining = totalDays - daysPassed;
+
+    if (daysRemaining < 0) {
+      daysRemaining = 0;
+    }
+
+    /// END DATE
+    final endDate = start.add(Duration(days: totalDays));
+
+    /// PROGRESS
+    final progress = (daysPassed / totalDays).clamp(0.0, 1.0);
+
+    return {
+      "daysPassed": daysPassed,
+
+      "daysRemaining": daysRemaining,
+
+      "totalDays": totalDays,
+
+      "progress": progress,
+
+      "isExpired": daysPassed >= totalDays,
+
+      "endDate":
+          "${endDate.day.toString().padLeft(2, '0')}/"
+          "${endDate.month.toString().padLeft(2, '0')}/"
+          "${endDate.year}",
+    };
+  } catch (e) {
+    return null;
   }
+}
 
   // ── Resume parser ────────────────────────────────────────────────────────────
   Future<void> parseResumeAndFill() async {

@@ -132,7 +132,11 @@ class UserController {
     Map<String, dynamic> cleanMap(Map<String, dynamic> map) {
       map.removeWhere((key, value) {
         if (value == null) return true;
-        if (value is String && value.isEmpty) return true;
+    if (value is String &&
+    value.isEmpty &&
+    key != 'currentCompany') {
+  return true;
+}
         if (value is List && value.isEmpty) return true;
         if (value is Map && value.isEmpty) return true;
         return false;
@@ -158,8 +162,7 @@ class UserController {
       'linkedin': clean(linkedin.text),
       'name': clean(name.text),
       'openToShift': clean(openToShift.text),
-      'currentCompany': clean(currentCompany.text),
-      'companyEmail': clean(companyEmail.text),
+'currentCompany': currentCompany.text.trim(),      'companyEmail': clean(companyEmail.text),
       'totalYearsOfExperience': clean(totalYearsOfExperience.text),
       'noticePeriod': clean(noticePeriod.text),
       'noticePeriodStartDate': clean(noticePeriodStartDate.text),

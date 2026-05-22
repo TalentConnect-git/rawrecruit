@@ -35,7 +35,7 @@ class _EditProfileSectionsPageState
       'Career',
       'Employee Preferences',
       'Languages Known',
-      'Job Roles',
+  
       'Skills',
       'Domain Knowledge',
       'Industry',

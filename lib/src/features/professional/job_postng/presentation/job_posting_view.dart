@@ -42,6 +42,17 @@ Future<void> fetchSkills() async {
 
   setState(() {});
 }
+int get maxSelectionProcessCount {
+  final roundsText = roundsController.text;
+
+  final match = RegExp(r'\d+').firstMatch(roundsText);
+
+  if (match == null) {
+    return 999;
+  }
+
+  return int.tryParse(match.group(0) ?? '') ?? 999;
+}
   // Text controllers
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -881,6 +892,35 @@ _ChipMultiSelectField(
   controller: roundsController,
   options: roundsOptions,
   singleSelect: true,
+
+  onChanged: () {
+    final match = RegExp(r'\d+').firstMatch(
+      roundsController.text,
+    );
+
+    final maxRounds = int.tryParse(
+          match?.group(0) ?? '',
+        ) ??
+        0;
+
+    final currentProcesses =
+        selectionProcessController.text
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList();
+
+    /// REMOVE EXTRA ITEMS
+    if (currentProcesses.length > maxRounds) {
+      final trimmed =
+          currentProcesses.take(maxRounds).toList();
+
+      selectionProcessController.text =
+          trimmed.join(', ');
+
+      setState(() {});
+    }
+  },
 ),
 
       const SizedBox(height: 16),
@@ -1860,6 +1900,36 @@ void _addItem(String value) {
 
   final current = _selectedItems;
 
+  /// 🔥 LIMIT SELECTION PROCESS COUNT
+  if (widget.label == 'Selection Process') {
+    final parentState = context
+        .findAncestorStateOfType<_ReferralPostViewState>();
+
+    final maxAllowed =
+        parentState?.maxSelectionProcessCount ?? 999;
+
+    if (current.length >= maxAllowed) {
+     ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text(
+      'Only $maxAllowed selection process steps allowed',
+    ),
+    behavior: SnackBarBehavior.floating,
+    backgroundColor: Colors.orange,
+    margin: const EdgeInsets.all(16),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(14),
+    ),
+    duration: const Duration(seconds: 2),
+  ),
+);
+
+      return;
+    }
+  }
+
   /// 🔥 normalize
   final normalizedInput =
       trimmed.toLowerCase().replaceAll(' ', '');
@@ -1888,15 +1958,14 @@ void _addItem(String value) {
   );
 
   if (!alreadyExists) {
+    if (widget.singleSelect) {
+      current.clear();
+    }
 
-  if (widget.singleSelect) {
-    current.clear();
+    current.add(finalValue);
+
+    _sync(current);
   }
-
-  current.add(finalValue);
-
-  _sync(current);
-}
 
   _textController.clear();
 
@@ -2146,4 +2215,5 @@ List<String> get _filteredSuggestions {
       ],
     );
   }
+  
 }
