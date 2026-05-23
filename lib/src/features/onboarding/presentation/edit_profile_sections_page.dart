@@ -27,25 +27,23 @@ class _EditProfileSectionsPageState
 
   @override
   Widget build(BuildContext context) {
-
-    final sections = [
-      'Basic',
-      'Education',
-      'Links',
-      'Career',
-      'Employee Preferences',
-      'Languages Known',
-  
-      'Skills',
-      'Domain Knowledge',
-      'Industry',
-      'Tools & Platforms',
-      'Publications',
-      'Achievements',
-      'Experience',
-      'Leadership Experience',
-      'International Experience',
-    ];
+final sections = [
+  'Basic',
+  'Career',
+  'Skills',
+  'Experience',
+  'International Experience',
+  'Leadership Experience',
+  'Employee Preferences',
+  'Domain Knowledge',
+  'Tools & Platforms',
+  'Industry',
+  'Links',
+  'Achievements',
+  'Publications',
+  'Languages Known',
+  'Education'
+];
 
     return PopScope(
       canPop: false,
