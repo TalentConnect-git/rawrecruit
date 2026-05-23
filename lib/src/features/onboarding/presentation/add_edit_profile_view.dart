@@ -842,7 +842,676 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                             ),
                           ),
 
-                          /// ───────────────── EDUCATION ─────────────────
+                          /// ───────────────── CAREER ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'Career',
+
+                              spacing: 16,
+
+                              children: [
+                                AppTextFields(
+                                  controller: controller.currentCompany,
+
+                                  hint: 'Current Company',
+
+                                  enable: false,
+
+                                  suffixIcon: const Icon(
+                                    Icons.lock_outline,
+                                    color: Colors.grey,
+                                    size: 18,
+                                  ),
+
+                                  helperText:
+                                      "Automatically fetched from current experience",
+
+                                  onChanged: (_) => markChanged(),
+                                ),
+                                const SizedBox(height: 12),
+
+                                AppTextFields(
+                                  controller: controller.totalYearsOfExperience,
+
+                                  hint: 'Total Years Of Experience',
+
+                                  keyboardType: TextInputType.text,
+
+                                  onChanged: (_) => markChanged(),
+                                ),
+                                const SizedBox(height: 12),
+
+                             AppTextFields(
+  controller: controller.noticePeriod,
+
+  hint: 'Notice Period (days)',
+
+  enable: false,
+
+  suffixIcon: const Icon(
+    Icons.lock_outline,
+    color: Colors.grey,
+    size: 18,
+  ),
+
+  helperText:
+      "Automatically fetched from current experience",
+),
+                                const SizedBox(height: 16),
+
+                                Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 14,
+                                    vertical: 6,
+                                  ),
+
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF1F2937),
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+
+                                  child: Row(
+                                    children: [
+                                      const Expanded(
+                                        child: Text(
+                                          "Currently Serving Notice Period",
+                                          style: TextStyle(color: Colors.white),
+                                        ),
+                                      ),
+
+                                      Switch(
+                                        value: controller.servingNoticePeriod,
+
+                                        onChanged: (value) {
+                                          setState(() {
+                                            controller.servingNoticePeriod =
+                                                value;
+                                          });
+
+                                          markChanged();
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                                const SizedBox(height: 16),
+                                if (controller.servingNoticePeriod)
+                                  GestureDetector(
+                                    onTap: () async {
+                                      final picked = await showDatePicker(
+                                        context: context,
+
+                                        initialDate: DateTime.now(),
+
+                                        firstDate: DateTime(2000),
+
+                                        lastDate: DateTime(2100),
+                                      );
+
+                                      if (picked != null) {
+                                        controller.noticePeriodStartDate.text =
+                                            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+
+                                        setState(() {});
+
+                                        markChanged();
+                                      }
+                                    },
+
+                                    child: AbsorbPointer(
+                                      child: AppTextFields(
+                                        controller:
+                                            controller.noticePeriodStartDate,
+
+                                        hint: 'Notice Period Start Date',
+                                      ),
+                                    ),
+                                  ),
+                                Builder(
+                                  builder: (_) {
+                                    final notice = calculateNoticePeriodStatus(
+                                      controller.noticePeriodStartDate.text,
+                                      controller.noticePeriod.text,
+                                    );
+
+                                    if (notice == null ||
+                                        controller.servingNoticePeriod !=
+                                            true) {
+                                      return const SizedBox();
+                                    }
+
+                                    return Container(
+                                      margin: const EdgeInsets.only(top: 16),
+
+                                      padding: const EdgeInsets.all(16),
+
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF1F2937),
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+
+                                        children: [
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child: Text(
+                                                  notice["isExpired"]
+                                                      ? "Notice Period Complete"
+                                                      : "In Notice Period",
+
+                                                  style: TextStyle(
+                                                    color: notice["isExpired"]
+                                                        ? Colors.green
+                                                        : Colors.orange,
+
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+
+                                          const SizedBox(height: 14),
+
+                                          Text(
+                                            "Start Date: ${controller.noticePeriodStartDate.text}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 8),
+
+                                          Text(
+                                            "Total Notice Period: ${controller.noticePeriod.text} days",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 8),
+
+                                          Text(
+                                            "Days Served: ${notice["daysPassed"]}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 8),
+
+                                          Text(
+                                            "Days Remaining: ${notice["daysRemaining"]}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 8),
+
+                                          Text(
+                                            "Expected Last Day: ${notice["endDate"]}",
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+
+                                          const SizedBox(height: 14),
+
+                                          LinearProgressIndicator(
+                                          value: notice["progress"],
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  },
+                                ),
+
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 80,
+
+                                      child: _dropdownField(
+                                        controller.currentSalaryCurrency,
+                                        'Cur',
+                                        ['\$', '₹', '€', '£'],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+
+                                    Expanded(
+                                      child: AppTextFields(
+                                        controller:
+                                            controller.currentSalaryAmount,
+
+                                        hint: 'Current Salary',
+
+                                        onChanged: (_) => markChanged(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+
+                        
+                          /// ───────────────── SKILLS ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: _chipMultiSelectField(
+                              'Skills',
+                              controller.skills.first,
+                              skillOptionsApi,
+                            ),
+                          ),
+     /// ───────────────── EXPERIENCE ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              key: ValueKey(
+                                isExperienceExpanded,
+                              ), // 🔥 IMPORTANT
+                              label: 'Experience',
+                              initiallyExpanded:
+                                  isExperienceExpanded ||
+                                  controller.experiences.any(
+                                    (e) =>
+                                        e.company.text.trim().isNotEmpty ||
+                                        e.role.text.trim().isNotEmpty ||
+                                        e.description.text.trim().isNotEmpty,
+                                  ),
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.experiences.add(
+                                    ExperienceController(),
+                                  );
+                                  isExperienceExpanded = true; // 🔥 OPEN IT
+                                });
+                              }),
+
+                              children: [
+                                /// 🔥 COMMON EMAIL FIELD
+                                const SizedBox(height: 20),
+
+                                ...controller.experiences.asMap().entries.map((
+                                  entry,
+                                ) {
+                                  final index = entry.key;
+
+                                  final e = entry.value;
+
+                                  return _experienceCard(e, index);
+                                }).toList(),
+                              ],
+                            ),
+                          ),
+
+      SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'International Experience',
+
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.internationalExperiences.add(
+                                    InternationalExperienceController(),
+                                  );
+                                });
+                              }),
+
+                              children: controller.internationalExperiences
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                    final index = entry.key;
+                                    final e = entry.value;
+
+                                    return _internationalCard(e, index);
+                                  })
+                                  .toList(),
+                            ),
+                          ),
+    SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'Leadership Experience',
+
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.leadershipExperiences.add(
+                                    LeadershipExperienceController(),
+                                  );
+                                });
+                              }),
+
+                              children: controller.leadershipExperiences
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                    final index = entry.key;
+                                    final e = entry.value;
+
+                                    return _leadershipCard(e, index);
+                                  })
+                                  .toList(),
+                            ),
+                          ),
+                        
+                          /// ───────────────── EMPLOYEE PREFERENCES ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: 80,
+
+                                      child: _dropdownField(
+                                        controller.expectedSalaryCurrency,
+                                        'Cur',
+                                        ['\$', '₹', '€', '£'],
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+
+                                    Expanded(
+                                      child: AppTextFields(
+                                        controller:
+                                            controller.expectedSalaryAmount,
+
+                                        hint: 'Expected Salary',
+
+                                        onChanged: (_) => markChanged(),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                _dropdownField(
+                                  controller.openToShift,
+                                  'Open To Shift',
+                                  shiftOptions,
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                _dropdownField(
+                                  controller.employmentType.first,
+                                  'Employment Type',
+                                  [
+                                    'full time',
+                                    'part time',
+                                    'contract',
+                                    'Internship',
+                                  ],
+                                ),
+
+                                const SizedBox(height: 20),
+
+                           CommonAutocomplete(
+  label: "Preferred Job Roles",
+
+  hint: "Search Job Roles",
+
+  options: jobRoleOptions,
+
+  initialValue: controller.jobRoles.first.text,
+
+  showCreateOption: true,
+
+  onChanged: (value) {
+    controller.jobRoles.first.text = value;
+
+    markChanged();
+  },
+
+  onSelected: (value) async {
+      FocusScope.of(context).unfocus();
+    await addJobRoleIfNeeded(value);
+
+    controller.jobRoles.first.text = value;
+
+    markChanged();
+  },
+
+  onCreate: (value) async {
+
+    await addJobRoleIfNeeded(value);
+
+    controller.jobRoles.first.text = value;
+
+    markChanged();
+
+    setState(() {});
+  },
+
+  onSubmitted: (value) async {
+      FocusScope.of(context).unfocus();
+    await addJobRoleIfNeeded(value);
+
+    controller.jobRoles.first.text = value;
+
+    markChanged();
+  },
+),
+
+                                // const SizedBox(height: 20),
+
+                                // ProfileSection(
+                                //   label: 'Employment Type',
+
+                                //   children: [
+                                //     _chipMultiSelectField(
+                                //       'Employment',
+                                //       controller.employmentType.first,
+                                //       employmentOptions,
+                                //     ),
+                                //   ],
+                                // ),
+                                const SizedBox(height: 20),
+
+                                _dropdownField(
+                                  controller.lookingFor.first,
+
+                                  'Looking For',
+
+                                  lookingForOptions,
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                _profileListSection(
+                                  'Locations',
+                                  controller.locations,
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                // _chipMultiSelectField(
+                                //   'Job Roles',
+
+                                //   controller.jobRoles.first,
+
+                                //   jobRoleOptions,
+                                // ),
+
+                                // const SizedBox(height: 20),
+
+                                // _chipMultiSelectField(
+                                //   'Employment Type',
+
+                                //   controller.employmentType.first,
+
+                                //   employmentOptions,
+                                // ),
+                              ],
+                            ),
+                          ),
+
+                          /// ───────────────── DOMAIN KNOWLEDGE ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: _chipMultiSelectField(
+                              'Domain Knowledge',
+                              controller.domainKnowledge.first,
+                              domainKnowledgeOptions,
+                            ),
+                          ),
+
+                          /// ───────────────── TOOLS & PLATFORMS ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: _chipMultiSelectField(
+                              'Tools & Platforms',
+
+                              controller.toolsAndPlatforms.first,
+
+                              toolsOptions,
+                            ),
+                          ),
+
+                       
+                          /// ───────────────── INDUSTRY ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: _chipMultiSelectField(
+                              'Industry',
+                              controller.industry.first,
+                              industryOptions,
+                            ),
+                          ),
+
+                          /// ───────────────── LINKS ─────────────────
+                      /// ───────────────── LINKS ─────────────────
+SingleChildScrollView(
+  padding: const EdgeInsets.all(16),
+
+  child: ProfileSection(
+    label: 'Links',
+
+    spacing: 16,
+
+    children: [
+      _linkField(
+        controller: controller.github,
+        hint: 'Github',
+        asset: 'assets/images/github.png',
+      ),
+
+      _linkField(
+        controller: controller.linkedin,
+        hint: 'LinkedIn',
+        asset: 'assets/images/linkedin.png',
+      ),
+
+      _linkField(
+        controller: controller.portfolio,
+        hint: 'Portfolio',
+        asset: 'assets/images/portfolio.png',
+      ),
+
+      _linkField(
+        controller: controller.resume,
+        hint: 'Resume URL',
+        asset: 'assets/images/cv.png',
+      ),
+    ],
+  ),
+),
+                          /// ───────────────── ACHIEVEMENTS ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: Column(
+                              children: [
+                                ProfileSection(
+                                  label: 'Achievements',
+
+                                  trailing: _addButton(() {
+                                    setState(() {
+                                      controller.achievements.add(
+                                        AchievementController(),
+                                      );
+                                    });
+                                  }),
+
+                                  children: controller.achievements
+                                      .map(_achievementForm)
+                                      .toList(),
+                                ),
+
+                                const SizedBox(height: 20),
+
+                                ProfileSection(
+                                  label: 'Awards',
+
+                                  trailing: _addButton(() {
+                                    setState(() {
+                                      controller.awards.add(AwardController());
+                                    });
+                                  }),
+
+                                  children: controller.awards
+                                      .map(_awardForm)
+                                      .toList(),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          /// ───────────────── PUBLICATIONS ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'Publications',
+
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.publications.add(
+                                    PublicationController(),
+                                  );
+                                });
+                              }),
+
+                              children: controller.publications
+                                  .map(_publicationForm)
+                                  .toList(),
+                            ),
+                          ),
+
+                             SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: _chipMultiSelectField(
+                              'Languages Known',
+                              controller.languagesKnown.first,
+                              languageOptions,
+                            ),
+                          ),
+
+
+                     
                           /// ───────────────── EDUCATION ─────────────────
                           SingleChildScrollView(
                             padding: const EdgeInsets.all(16),
@@ -1158,693 +1827,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                             ),
                           ),
 
-                          /// ───────────────── LINKS ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: ProfileSection(
-                              label: 'Links',
-
-                              spacing: 16,
-
-                              children: [
-                                AppTextFields(
-                                  controller: controller.github,
-
-                                  hint: 'Github',
-
-                                  onChanged: (_) => markChanged(),
-                                ),
-
-                                AppTextFields(
-                                  controller: controller.linkedin,
-
-                                  hint: 'LinkedIn',
-
-                                  onChanged: (_) => markChanged(),
-                                ),
-
-                                AppTextFields(
-                                  controller: controller.portfolio,
-
-                                  hint: 'Portfolio',
-
-                                  onChanged: (_) => markChanged(),
-                                ),
-
-                                AppTextFields(
-                                  controller: controller.resume,
-
-                                  hint: 'Resume URL',
-
-                                  onChanged: (_) => markChanged(),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          /// ───────────────── CAREER ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: ProfileSection(
-                              label: 'Career',
-
-                              spacing: 16,
-
-                              children: [
-                                AppTextFields(
-                                  controller: controller.currentCompany,
-
-                                  hint: 'Current Company',
-
-                                  enable: false,
-
-                                  suffixIcon: const Icon(
-                                    Icons.lock_outline,
-                                    color: Colors.grey,
-                                    size: 18,
-                                  ),
-
-                                  helperText:
-                                      "Automatically fetched from current experience",
-
-                                  onChanged: (_) => markChanged(),
-                                ),
-                                const SizedBox(height: 12),
-
-                                AppTextFields(
-                                  controller: controller.totalYearsOfExperience,
-
-                                  hint: 'Total Years Of Experience',
-
-                                  keyboardType: TextInputType.text,
-
-                                  onChanged: (_) => markChanged(),
-                                ),
-                                const SizedBox(height: 12),
-
-                             AppTextFields(
-  controller: controller.noticePeriod,
-
-  hint: 'Notice Period (days)',
-
-  enable: false,
-
-  suffixIcon: const Icon(
-    Icons.lock_outline,
-    color: Colors.grey,
-    size: 18,
-  ),
-
-  helperText:
-      "Automatically fetched from current experience",
-),
-                                const SizedBox(height: 16),
-
-                                Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 14,
-                                    vertical: 6,
-                                  ),
-
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF1F2937),
-                                    borderRadius: BorderRadius.circular(12),
-                                  ),
-
-                                  child: Row(
-                                    children: [
-                                      const Expanded(
-                                        child: Text(
-                                          "Currently Serving Notice Period",
-                                          style: TextStyle(color: Colors.white),
-                                        ),
-                                      ),
-
-                                      Switch(
-                                        value: controller.servingNoticePeriod,
-
-                                        onChanged: (value) {
-                                          setState(() {
-                                            controller.servingNoticePeriod =
-                                                value;
-                                          });
-
-                                          markChanged();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ),
-
-                                const SizedBox(height: 16),
-                                if (controller.servingNoticePeriod)
-                                  GestureDetector(
-                                    onTap: () async {
-                                      final picked = await showDatePicker(
-                                        context: context,
-
-                                        initialDate: DateTime.now(),
-
-                                        firstDate: DateTime(2000),
-
-                                        lastDate: DateTime(2100),
-                                      );
-
-                                      if (picked != null) {
-                                        controller.noticePeriodStartDate.text =
-                                            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-
-                                        setState(() {});
-
-                                        markChanged();
-                                      }
-                                    },
-
-                                    child: AbsorbPointer(
-                                      child: AppTextFields(
-                                        controller:
-                                            controller.noticePeriodStartDate,
-
-                                        hint: 'Notice Period Start Date',
-                                      ),
-                                    ),
-                                  ),
-                                Builder(
-                                  builder: (_) {
-                                    final notice = calculateNoticePeriodStatus(
-                                      controller.noticePeriodStartDate.text,
-                                      controller.noticePeriod.text,
-                                    );
-
-                                    if (notice == null ||
-                                        controller.servingNoticePeriod !=
-                                            true) {
-                                      return const SizedBox();
-                                    }
-
-                                    return Container(
-                                      margin: const EdgeInsets.only(top: 16),
-
-                                      padding: const EdgeInsets.all(16),
-
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF1F2937),
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  notice["isExpired"]
-                                                      ? "Notice Period Complete"
-                                                      : "In Notice Period",
-
-                                                  style: TextStyle(
-                                                    color: notice["isExpired"]
-                                                        ? Colors.green
-                                                        : Colors.orange,
-
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-
-                                          const SizedBox(height: 14),
-
-                                          Text(
-                                            "Start Date: ${controller.noticePeriodStartDate.text}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-
-                                          const SizedBox(height: 8),
-
-                                          Text(
-                                            "Total Notice Period: ${controller.noticePeriod.text} days",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-
-                                          const SizedBox(height: 8),
-
-                                          Text(
-                                            "Days Served: ${notice["daysPassed"]}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-
-                                          const SizedBox(height: 8),
-
-                                          Text(
-                                            "Days Remaining: ${notice["daysRemaining"]}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-
-                                          const SizedBox(height: 8),
-
-                                          Text(
-                                            "Expected Last Day: ${notice["endDate"]}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
-                                            ),
-                                          ),
-
-                                          const SizedBox(height: 14),
-
-                                          LinearProgressIndicator(
-                                          value: notice["progress"],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                ),
-
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 80,
-
-                                      child: _dropdownField(
-                                        controller.currentSalaryCurrency,
-                                        'Cur',
-                                        ['\$', '₹', '€', '£'],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-
-                                    Expanded(
-                                      child: AppTextFields(
-                                        controller:
-                                            controller.currentSalaryAmount,
-
-                                        hint: 'Current Salary',
-
-                                        onChanged: (_) => markChanged(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          /// ───────────────── EMPLOYEE PREFERENCES ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: Column(
-                              children: [
-                                Row(
-                                  children: [
-                                    SizedBox(
-                                      width: 80,
-
-                                      child: _dropdownField(
-                                        controller.expectedSalaryCurrency,
-                                        'Cur',
-                                        ['\$', '₹', '€', '£'],
-                                      ),
-                                    ),
-                                    const SizedBox(width: 12),
-
-                                    Expanded(
-                                      child: AppTextFields(
-                                        controller:
-                                            controller.expectedSalaryAmount,
-
-                                        hint: 'Expected Salary',
-
-                                        onChanged: (_) => markChanged(),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-
-                                const SizedBox(height: 20),
-
-                                _dropdownField(
-                                  controller.openToShift,
-                                  'Open To Shift',
-                                  shiftOptions,
-                                ),
-
-                                const SizedBox(height: 20),
-
-                                _dropdownField(
-                                  controller.employmentType.first,
-                                  'Employment Type',
-                                  [
-                                    'full time',
-                                    'part time',
-                                    'contract',
-                                    'Internship',
-                                  ],
-                                ),
-
-                                const SizedBox(height: 20),
-
-                           CommonAutocomplete(
-  label: "Preferred Job Roles",
-
-  hint: "Search Job Roles",
-
-  options: jobRoleOptions,
-
-  initialValue: controller.jobRoles.first.text,
-
-  showCreateOption: true,
-
-  onChanged: (value) {
-    controller.jobRoles.first.text = value;
-
-    markChanged();
-  },
-
-  onSelected: (value) async {
-      FocusScope.of(context).unfocus();
-    await addJobRoleIfNeeded(value);
-
-    controller.jobRoles.first.text = value;
-
-    markChanged();
-  },
-
-  onCreate: (value) async {
-
-    await addJobRoleIfNeeded(value);
-
-    controller.jobRoles.first.text = value;
-
-    markChanged();
-
-    setState(() {});
-  },
-
-  onSubmitted: (value) async {
-      FocusScope.of(context).unfocus();
-    await addJobRoleIfNeeded(value);
-
-    controller.jobRoles.first.text = value;
-
-    markChanged();
-  },
-),
-
-                                // const SizedBox(height: 20),
-
-                                // ProfileSection(
-                                //   label: 'Employment Type',
-
-                                //   children: [
-                                //     _chipMultiSelectField(
-                                //       'Employment',
-                                //       controller.employmentType.first,
-                                //       employmentOptions,
-                                //     ),
-                                //   ],
-                                // ),
-                                const SizedBox(height: 20),
-
-                                _dropdownField(
-                                  controller.lookingFor.first,
-
-                                  'Looking For',
-
-                                  lookingForOptions,
-                                ),
-
-                                const SizedBox(height: 20),
-
-                                _profileListSection(
-                                  'Locations',
-                                  controller.locations,
-                                ),
-
-                                const SizedBox(height: 20),
-
-                                // _chipMultiSelectField(
-                                //   'Job Roles',
-
-                                //   controller.jobRoles.first,
-
-                                //   jobRoleOptions,
-                                // ),
-
-                                // const SizedBox(height: 20),
-
-                                // _chipMultiSelectField(
-                                //   'Employment Type',
-
-                                //   controller.employmentType.first,
-
-                                //   employmentOptions,
-                                // ),
-                              ],
-                            ),
-                          ),
-
                           /// ───────────────── LANGUAGES KNOWN ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: _chipMultiSelectField(
-                              'Languages Known',
-                              controller.languagesKnown.first,
-                              languageOptions,
-                            ),
-                          ),
-
-                          /// ───────────────── JOB ROLES ─────────────────
-                          // SingleChildScrollView(
-                          //   padding: const EdgeInsets.all(16),
-
-                          //   child: _chipMultiSelectField(
-                          //     'Job Roles',
-                          //     controller.jobRoles.first,
-                          //     jobRoleOptions,
-                          //   ),
-                          // ),
-
-                          /// ───────────────── SKILLS ─────────────────
-                          /// ───────────────── SKILLS ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: _chipMultiSelectField(
-                              'Skills',
-                              controller.skills.first,
-                              skillOptionsApi,
-                            ),
-                          ),
-
-                          /// ───────────────── DOMAIN KNOWLEDGE ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: _chipMultiSelectField(
-                              'Domain Knowledge',
-                              controller.domainKnowledge.first,
-                              domainKnowledgeOptions,
-                            ),
-                          ),
-
-                          /// ───────────────── INDUSTRY ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: _chipMultiSelectField(
-                              'Industry',
-                              controller.industry.first,
-                              industryOptions,
-                            ),
-                          ),
-
-                          /// ───────────────── TOOLS & PLATFORMS ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: _chipMultiSelectField(
-                              'Tools & Platforms',
-
-                              controller.toolsAndPlatforms.first,
-
-                              toolsOptions,
-                            ),
-                          ),
-
-                          /// ───────────────── PUBLICATIONS ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: ProfileSection(
-                              label: 'Publications',
-
-                              trailing: _addButton(() {
-                                setState(() {
-                                  controller.publications.add(
-                                    PublicationController(),
-                                  );
-                                });
-                              }),
-
-                              children: controller.publications
-                                  .map(_publicationForm)
-                                  .toList(),
-                            ),
-                          ),
-
-                          /// ───────────────── ACHIEVEMENTS ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: Column(
-                              children: [
-                                ProfileSection(
-                                  label: 'Achievements',
-
-                                  trailing: _addButton(() {
-                                    setState(() {
-                                      controller.achievements.add(
-                                        AchievementController(),
-                                      );
-                                    });
-                                  }),
-
-                                  children: controller.achievements
-                                      .map(_achievementForm)
-                                      .toList(),
-                                ),
-
-                                const SizedBox(height: 20),
-
-                                ProfileSection(
-                                  label: 'Awards',
-
-                                  trailing: _addButton(() {
-                                    setState(() {
-                                      controller.awards.add(AwardController());
-                                    });
-                                  }),
-
-                                  children: controller.awards
-                                      .map(_awardForm)
-                                      .toList(),
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          /// ───────────────── EXPERIENCE ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: ProfileSection(
-                              key: ValueKey(
-                                isExperienceExpanded,
-                              ), // 🔥 IMPORTANT
-                              label: 'Experience',
-                              initiallyExpanded:
-                                  isExperienceExpanded ||
-                                  controller.experiences.any(
-                                    (e) =>
-                                        e.company.text.trim().isNotEmpty ||
-                                        e.role.text.trim().isNotEmpty ||
-                                        e.description.text.trim().isNotEmpty,
-                                  ),
-                              trailing: _addButton(() {
-                                setState(() {
-                                  controller.experiences.add(
-                                    ExperienceController(),
-                                  );
-                                  isExperienceExpanded = true; // 🔥 OPEN IT
-                                });
-                              }),
-
-                              children: [
-                                /// 🔥 COMMON EMAIL FIELD
-                                const SizedBox(height: 20),
-
-                                ...controller.experiences.asMap().entries.map((
-                                  entry,
-                                ) {
-                                  final index = entry.key;
-
-                                  final e = entry.value;
-
-                                  return _experienceCard(e, index);
-                                }).toList(),
-                              ],
-                            ),
-                          ),
-
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: ProfileSection(
-                              label: 'Leadership Experience',
-
-                              trailing: _addButton(() {
-                                setState(() {
-                                  controller.leadershipExperiences.add(
-                                    LeadershipExperienceController(),
-                                  );
-                                });
-                              }),
-
-                              children: controller.leadershipExperiences
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                    final index = entry.key;
-                                    final e = entry.value;
-
-                                    return _leadershipCard(e, index);
-                                  })
-                                  .toList(),
-                            ),
-                          ),
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: ProfileSection(
-                              label: 'International Experience',
-
-                              trailing: _addButton(() {
-                                setState(() {
-                                  controller.internationalExperiences.add(
-                                    InternationalExperienceController(),
-                                  );
-                                });
-                              }),
-
-                              children: controller.internationalExperiences
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                    final index = entry.key;
-                                    final e = entry.value;
-
-                                    return _internationalCard(e, index);
-                                  })
-                                  .toList(),
-                            ),
-                          ),
+                   
+                    
                         ],
                       ),
                     ),
@@ -1952,57 +1937,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                             ),
                           ),
 
-                          // const SizedBox(width: 12),
-
-                          // /// NEXT
-                          // Expanded(
-                          //   child: SizedBox(
-                          //     height: 56,
-
-                          //     child: ElevatedButton(
-                          //       style: ElevatedButton.styleFrom(
-                          //         backgroundColor: AppColors.kGreen,
-
-                          //         shape: RoundedRectangleBorder(
-                          //           borderRadius: BorderRadius.circular(12),
-                          //         ),
-                          //       ),
-
-                          //       onPressed: () async {
-                          //         if (!_formKey.currentState!.validate()) {
-                          //           return;
-                          //         }
-
-                          //         final failure = await addEditProfileViewModel
-                          //             .saveProfile();
-
-                          //         if (failure == null) {
-                          //           hasChanges = false;
-
-                          //           if (currentStep == totalSteps - 1) {
-                          //             if (mounted) {
-                          //               context.pop(true);
-                          //             }
-                          //           } else {
-                          //             nextStep();
-                          //           }
-                          //         }
-                          //       },
-
-                          //       child: Text(
-                          //         currentStep == totalSteps - 1
-                          //             ? "Save Profile"
-                          //             : "save and Next",
-
-                          //         style: const TextStyle(
-                          //           color: Colors.white,
-                          //           fontWeight: FontWeight.bold,
-                          //           fontSize: 16,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ),
-                          // ),
                         ],
                       ),
                     ),
@@ -2525,6 +2459,43 @@ AppTextFields(
       // const AppDivider(),
     ],
   );
+  Widget _linkField({
+  required TextEditingController controller,
+  required String hint,
+  required String asset,
+}) {
+  return TextFormField(
+    controller: controller,
+
+    style: const TextStyle(color: Colors.white),
+
+    decoration: InputDecoration(
+      hintText: hint,
+
+      hintStyle: const TextStyle(color: Colors.grey),
+
+      filled: true,
+
+      fillColor: const Color(0xFF1F2937),
+
+      prefixIcon: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Image.asset(
+          asset,
+          width: 22,
+          height: 22,
+        ),
+      ),
+
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(12),
+        borderSide: BorderSide.none,
+      ),
+    ),
+
+    onChanged: (_) => markChanged(),
+  );
+}
   Widget _publicationForm(PublicationController p) => Column(
     spacing: 16,
     crossAxisAlignment: CrossAxisAlignment.start,
