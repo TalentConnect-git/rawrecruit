@@ -44,7 +44,7 @@ class _SplashViewState extends State<SplashView> {
 
           final completed = await onboardingService.isCompleted();
 
-          if (!completed) {
+          if (!appStateProvider.isProfileComplete) {
             next = 'onboarding_flow';
           } else {
             next = RouteNames.dashboard;

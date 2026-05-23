@@ -307,20 +307,6 @@ class SupportPage extends StatelessWidget {
                   ),
 
                   _contactTile(
-                    icon: Icons.groups_outlined,
-                    title: "Direct College Network",
-                    subtitle:
-                        "Access verified colleges and fresher candidates without middle layers.",
-                  ),
-
-                  _contactTile(
-                    icon: Icons.workspaces_outline,
-                    title: "Structured Hiring Pipeline",
-                    subtitle:
-                        "Manage job applications, interviews, shortlisting, and hiring workflows from one place.",
-                  ),
-
-                  _contactTile(
                     icon: Icons.work_outline_rounded,
                     title: "Career build platform",
                     subtitle:
@@ -331,13 +317,6 @@ class SupportPage extends StatelessWidget {
                         mode: LaunchMode.externalApplication,
                       );
                     },
-                  ),
-
-                  _contactTile(
-                    icon: Icons.workspace_premium_outlined,
-                    title: "Built for Freshers",
-                    subtitle:
-                        "Focused completely on internships, fresher hiring, and campus job opportunities.",
                   ),
                 ],
               ),
