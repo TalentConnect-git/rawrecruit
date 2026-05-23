@@ -154,26 +154,15 @@ class AppStateProvider extends ViewStateProvider {
         await SecretRepo.clearAll();
         await getIt<OnboardingLocalService>().clear();
 
-       final prefs = await SharedPreferences.getInstance();
+        final prefs = await SharedPreferences.getInstance();
 
-await prefs.clear();
-
+        await prefs.remove("referral_post_draft");
+await prefs.remove("experience");
         final token = await SecretRepo.getString('auth_token');
         log(token ?? '', name: 'token');
 
         user = null;
         auth = null;
-        _onboardingData = null;
-_selectedUserType = null;
-_shortlistSchools.clear();
-
-/// ALSO TRIGGER PROVIDER UPDATES
-user = null;
-auth = null;
-data = null;
-selectedUserType = null;
-shortlistSchools = [];
-
       },
     );
 
