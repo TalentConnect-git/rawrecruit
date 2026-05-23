@@ -9,52 +9,56 @@ class SupportPage extends StatelessWidget {
     required IconData icon,
     required String title,
     required String subtitle,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 14),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: AppColors.kTile,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.border),
-      ),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: AppColors.kCard,
-              borderRadius: BorderRadius.circular(14),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 14),
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.kTile,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.border),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: AppColors.kCard,
+                borderRadius: BorderRadius.circular(14),
+              ),
+              child: Icon(icon, color: AppColors.kGreen),
             ),
-            child: Icon(icon, color: AppColors.kGreen),
-          ),
-          const SizedBox(width: 14),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.w600,
+            const SizedBox(width: 14),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  subtitle,
-                  style: const TextStyle(color: Colors.grey, fontSize: 13),
-                ),
-              ],
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: const TextStyle(color: Colors.grey, fontSize: 13),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const Icon(
-            Icons.arrow_forward_ios_rounded,
-            color: Colors.grey,
-            size: 16,
-          ),
-        ],
+            const Icon(
+              Icons.arrow_forward_ios_rounded,
+              color: Colors.grey,
+              size: 16,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -294,6 +298,12 @@ class SupportPage extends StatelessWidget {
                     title: "Campus Hiring Platform",
                     subtitle:
                         "Built for companies, colleges, and students through one unified recruitment system.",
+                    onTap: () {
+                      launchUrl(
+                        Uri.parse('https://rawrecruit.in/'),
+                        mode: LaunchMode.externalApplication,
+                      );
+                    },
                   ),
 
                   _contactTile(
@@ -308,6 +318,19 @@ class SupportPage extends StatelessWidget {
                     title: "Structured Hiring Pipeline",
                     subtitle:
                         "Manage job applications, interviews, shortlisting, and hiring workflows from one place.",
+                  ),
+
+                  _contactTile(
+                    icon: Icons.work_outline_rounded,
+                    title: "Career build platform",
+                    subtitle:
+                        "Streamline recruitment, track candidates, schedule interviews, and manage the complete hiring process efficiently.",
+                    onTap: () {
+                      launchUrl(
+                        Uri.parse('https://careerkrafter.in/'),
+                        mode: LaunchMode.externalApplication,
+                      );
+                    },
                   ),
 
                   _contactTile(
