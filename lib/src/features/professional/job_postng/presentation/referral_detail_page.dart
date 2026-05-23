@@ -9,6 +9,8 @@ import 'package:rawrecruit/src/features/professional/job_postng/utils/enum.dart'
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../../../core/models/experience.dart';
+
 class ReferralDetailPage extends StatelessWidget {
   final ReferralApplication application;
 
@@ -110,77 +112,134 @@ final cgpa =
                         child: _modernCard(
                           title: "Education",
                           icon: Icons.school_outlined,
-                          child: Column(
-                            crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                            children: [
+                     child: user.educations != null &&
+        user.educations!.isNotEmpty
+    ? Column(
+        children: user.educations!
+            .map(
+              (edu) => Container(
+                width: double.infinity,
+                margin: const EdgeInsets.only(
+                  bottom: 12,
+                ),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(.03),
+                  borderRadius:
+                      BorderRadius.circular(12),
+                  border: Border.all(
+                    color:
+                        Colors.white.withOpacity(.05),
+                  ),
+                ),
 
-                           
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
 
-                              Text(
-                                college,
-                                style: TextStyle(
-                                  color:
-                                      AppColors.kGreen,
-                                  fontSize: 12,
-                                ),
-                              ),
+                  children: [
 
-                              const SizedBox(height: 10),
+                    /// DEGREE
+                    Text(
+                      safe(edu.degree),
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight:
+                            FontWeight.w600,
+                      ),
+                    ),
 
-                              Row(
-                                children: [
+                    const SizedBox(height: 4),
 
-                                  Icon(
-                                    Icons.calendar_month,
-                                    size: 14,
-                                    color: Colors.grey,
-                                  ),
+/// SPECIALIZATION
+Text(
+  safe(edu.specialization),
 
-                                  const SizedBox(width: 6),
+  style: const TextStyle(
+    color: Colors.white70,
+    fontSize: 12,
+  ),
+),
+                    /// COLLEGE
+                    Text(
+                      safe(edu.college),
+                      style: TextStyle(
+                        color: AppColors.kGreen,
+                        fontSize: 12,
+                      ),
+                    ),
 
-                                  Expanded(
-                                    child: Text(
-                                      graduation,
-                                      style:
-                                          const TextStyle(
-                                        color:
-                                            Colors.grey,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
+                    const SizedBox(height: 10),
 
-                              const SizedBox(height: 6),
+                    /// GRADUATION
+                    Row(
+                      children: [
 
-                              Row(
-                                children: [
+                        const Icon(
+                          Icons.calendar_month,
+                          size: 14,
+                          color: Colors.grey,
+                        ),
 
-                                  Icon(
-                                    Icons.star_border,
-                                    size: 14,
-                                    color: Colors.grey,
-                                  ),
+                        const SizedBox(width: 6),
 
-                                  const SizedBox(width: 6),
-
-                                  Expanded(
-                                    child: Text(
-                                      "CGPA: $cgpa",
-                                      style:
-                                          const TextStyle(
-                                        color:
-                                            Colors.grey,
-                                        fontSize: 12,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ],
+                        Expanded(
+                          child: Text(
+                            safe(
+                              edu.yearOfGraduation,
+                            ),
+                            style:
+                                const TextStyle(
+                              color:
+                                  Colors.grey,
+                              fontSize: 12,
+                            ),
                           ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 6),
+
+                    /// CGPA
+                    Row(
+                      children: [
+
+                        const Icon(
+                          Icons.star_border,
+                          size: 14,
+                          color: Colors.grey,
+                        ),
+
+                        const SizedBox(width: 6),
+
+                        Expanded(
+                          child: Text(
+                            "CGPA: ${safe(edu.cgpa)}",
+
+                            style:
+                                const TextStyle(
+                              color:
+                                  Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            )
+            .toList(),
+      )
+    : const Text(
+        "-",
+        style: TextStyle(
+          color: Colors.grey,
+        ),
+      ),
                         ),
                       ),
 
@@ -223,23 +282,21 @@ final cgpa =
                     child: Column(
                       children: [
 
-                        _modernLinkTile(
-                          "LinkedIn",
-                          linkedin,
-                          Icons.business,
-                        ),
+                      _modernLinkTile(
+  "LinkedIn",
+  linkedin,
+  "assets/images/linkedin.png",
+),_modernLinkTile(
+  "GitHub",
+  github,
+  "assets/images/github.png",
+),
 
-                        _modernLinkTile(
-                          "GitHub",
-                          github,
-                          Icons.code,
-                        ),
-
-                        _modernLinkTile(
-                          "Portfolio",
-                          portfolio,
-                          Icons.web,
-                        ),
+                    _modernLinkTile(
+  "Portfolio",
+  portfolio,
+  "assets/images/portfolio.png",
+),
 
                         const SizedBox(height: 14),
 
@@ -437,39 +494,32 @@ final currentEducation =
         : null;
     final name = safe(user.name);
  
-final company =
-    safe(user.currentCompany);
 
-final experience =
-    safe(
-      user.totalYearsOfExperience,
-    );
-final degree =
-    safe(currentEducation?.degree);
 
 final college =
     safe(currentEducation?.college);
 
-final graduation = safe(
-  currentEducation
-      ?.yearOfGraduation,
-);
+
 
 final cgpa =
     safe(currentEducation?.cgpa);
+    Experience? currentExp;
+
+if (user.experiences?.isNotEmpty ?? false) {
+  currentExp = user.experiences!.firstWhere(
+    (e) => e.isCurrent == true,
+    orElse: () => user.experiences!.first,
+  );
+}
+
 final role =
-    user.jobRoles?.isNotEmpty == true
-        ? user.jobRoles!.first
-        : user.experiences
-                    ?.isNotEmpty ==
-                true
-            ? safe(
-                user
-                    .experiences!
-                    .first
-                    .role,
-              )
-            : "Professional";
+    safe(currentExp?.role);
+
+final company =
+    safe(currentExp?.company);
+
+final experience =
+    safe(user.totalYearsOfExperience);
     final match =
         application.matchScore ?? 0;
 
@@ -563,31 +613,8 @@ final role =
   children: [
 
     /// LOCATION / DEGREE
-    Row(
-      children: [
+    
 
-        const Icon(
-          Icons.collections_bookmark_outlined,
-          size: 14,
-          color: Colors.grey,
-        ),
-
-        const SizedBox(width: 6),
-
-        Expanded(
-         child: Text(
-  company != "-" ? company : degree,
-
-  style: const TextStyle(
-    color: Colors.white70,
-    fontSize: 12,
-  ),
-),
-        ),
-      ],
-    ),
-
-    const SizedBox(height: 6),
 
     /// COLLEGE
     Row(
@@ -990,7 +1017,7 @@ void showStatusPopup(
   Widget _modernLinkTile(
     String title,
     String url,
-    IconData icon,
+  String assetPath,
   ) {
     final enabled = url != "-";
 
@@ -1005,14 +1032,15 @@ void showStatusPopup(
         child: Row(
           children: [
 
-            Icon(
-              icon,
-              size: 18,
-              color: enabled
-                  ? AppColors.kGreen
-                  : Colors.grey,
-            ),
+           Image.asset(
+  assetPath,
+  width: 18,
+  height: 18,
 
+  color: enabled
+      ? null
+      : Colors.grey,
+),
             const SizedBox(width: 10),
 
             Expanded(

@@ -266,7 +266,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
         ? "₹${job.packageDetails!.totalCTC}"
         : "—";
     final experience = job.yearsOfExperience != null
-        ? "${job.yearsOfExperience} Years"
+        ? "${job.yearsOfExperience}"
         : "—";
 
     final deadline = job.endDate != null
@@ -779,15 +779,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                       rounds,
                     ),
 
-                    const SizedBox(height: 10),
-
-                    _insightRow(
-                      Icons.account_tree_outlined,
-                      "Selection Process",
-                      process,
-                    ),
-                    const SizedBox(height: 10),
-                    _insightRow(Icons.visibility_outlined, "Views", views),
+                  
                   ],
                 ),
               ),
@@ -796,6 +788,63 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
               AnimatedMatchScore(score: score),
             ],
           ),
+          const SizedBox(height: 18),
+
+Container(
+  width: double.infinity,
+  padding: const EdgeInsets.all(14),
+
+  decoration: BoxDecoration(
+    color: Colors.white.withOpacity(.03),
+
+    borderRadius: BorderRadius.circular(12),
+
+    border: Border.all(
+      color: Colors.white.withOpacity(.05),
+    ),
+  ),
+
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+
+    children: [
+
+      Row(
+        children: const [
+          Icon(
+            Icons.account_tree_outlined,
+            size: 16,
+            color: Colors.orangeAccent,
+          ),
+
+          SizedBox(width: 8),
+
+          Text(
+            "Selection Process",
+
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 12),
+
+      Text(
+        process,
+
+        style: const TextStyle(
+          color: Colors.grey,
+          fontSize: 13,
+          height: 1.5,
+        ),
+      ),
+    ],
+  ),
+),
         ],
       ),
     );
@@ -899,7 +948,10 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
     final exp = job.yearsOfExperience != null
         ? "${job.yearsOfExperience}"
         : "—";
-    final education = job.minEducation ?? "—";
+ final education =
+    (job.minEducation?.trim().isNotEmpty ?? false)
+        ? job.minEducation!
+        : "Not Specified";
     final openings = job.numberOfOpenings?.toString() ?? "—";
     final String jobType =
         job.jobType ??
@@ -938,10 +990,28 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
           const SizedBox(height: 14),
           Row(
             children: [
-              // Expanded(child: _detailRow("Experience", exp)),
-              Expanded(child: _detailRow("Job Type", jobType)),
-              Expanded(child: _detailRow("Education", education)),
-            ],
+          Expanded(
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+
+    children: [
+
+      _detailRow(
+        "Minimum Education",
+        education,
+      ),
+
+      if (job.studentStreams?.isNotEmpty ?? false) ...[
+        const SizedBox(height: 12),
+
+        _detailRow(
+          "Streams",
+          job.studentStreams!.join(", "),
+        ),
+      ],
+    ],
+  ),
+),    ],
           ),
           // const SizedBox(height: 14),
           // Row(
@@ -1225,6 +1295,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
       endDate: r.endDate,
       description: r.description,
       jobType: r.jobType,
+      studentStreams: r.studentStreams,
       jobStatus: r.jobStatus,
       minEducation: r.minEducation,
       yearsOfExperience: r.yearsOfExperience,

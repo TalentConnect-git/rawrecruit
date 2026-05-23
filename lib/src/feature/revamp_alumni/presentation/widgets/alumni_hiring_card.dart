@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 
+import '../../../../core/models/experience.dart';
+
 class AlumniHiringCard extends StatelessWidget {
   final List<Job> jobs;
 
@@ -57,22 +59,24 @@ final currentEducation =
 final college =
     currentEducation
             ?.college ??
-        "Your College";
+        "College : ";
 
 final year =
     currentEducation
             ?.yearOfGraduation ??
         '';
 
-    final designation =
-        (candidate.jobRoles != null &&
-                candidate
-                    .jobRoles!
-                    .isNotEmpty)
-            ? candidate.jobRoles!
-                .join(", ")
-            : "Role";
+  Experience? currentExp;
 
+if (candidate.experiences?.isNotEmpty ?? false) {
+  currentExp = candidate.experiences!.firstWhere(
+    (e) => e.isCurrent == true,
+    orElse: () => candidate.experiences!.first,
+  );
+}
+
+final designation =
+    currentExp?.role ?? "Role";
     final company =
         (candidate.currentCompany
                     ?.isNotEmpty ??

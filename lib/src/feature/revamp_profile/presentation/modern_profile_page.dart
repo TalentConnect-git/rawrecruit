@@ -11,6 +11,7 @@ import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../core/models/education.dart';
+import '../../../core/models/experience.dart';
 import '../../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart'
     show InterviewViewModel;
 import '../../revamp_onboarding/presentation/index.dart';
@@ -197,7 +198,7 @@ if (!getIt<AppStateProvider>()
                     AddEditProfileView(
                   user: vm.user,
 
-                  initialStep: 13,
+                  initialStep: 12,
 
                   isSwitchingToProfessional:
                       true,
@@ -469,28 +470,24 @@ Widget _topProfileSection(User? p) {
                   ),
                 ),
 
-                child: Text(
-                  getIt<AppStateProvider>()
-                          .isProfessional
-                      ? '${p?.currentCompany ?? '-'} • ${p?.jobRoles?.firstOrNull ?? p?.designation ?? 'Role'}'
-                 : (() {
+             child: Text(
+'${p?.currentCompany ?? '-'} • ${(() {
 
-    final education =
-        p?.educations?.firstWhere(
+  Experience? exp;
+
+  if (p?.experiences?.isNotEmpty ?? false) {
+
+    exp = p!.experiences!.firstWhere(
 
       (e) => e.isCurrent == true,
 
-      orElse: () =>
-          p?.educations?.isNotEmpty ==
-                  true
-              ? p!.educations!.first
-              : Education(),
+      orElse: () => p.experiences!.first,
     );
+  }
 
-    return
-        '🎓 ${education?.college ?? '-'} • ${education?.degree ?? 'Student'}';
-  })(),
+  return exp?.role ?? p?.designation ?? 'Role';
 
+})()}',
                   textAlign: TextAlign.center,
 
                   style: TextStyle(

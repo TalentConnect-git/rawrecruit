@@ -240,7 +240,7 @@ class SupportPage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(8),
 
                             child: Image.asset(
-                              'assets/images/linked.png',
+                              'assets/images/linkedin.png',
                               height: 30,
                               width: 30,
                               fit: BoxFit.cover,

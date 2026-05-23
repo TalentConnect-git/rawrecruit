@@ -414,135 +414,31 @@ class _CareerPageState extends State<CareerPage> {
         ),
 
         const SizedBox(height: 12),
+    if (experiences.any((e) => e.isCurrent == true)) ...[
+  Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
 
-        if (experiences.any((e) => e.isCurrent == true)) ...[
-          const SizedBox(height: 20),
+    children: [
+      const Text(
+        "Current Company",
+        style: TextStyle(color: Colors.white),
+      ),
 
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+      const SizedBox(height: 8),
 
-            children: [
-              const Text(
-                "Current Company",
-                style: TextStyle(color: Colors.white),
-              ),
+      AbsorbPointer(
+        child: AppInput(
+          "Current Company",
+          controller: currentCompanyCtrl,
+        ),
+      ),
+    ],
+  ),
 
-              const SizedBox(height: 8),
+  const SizedBox(height: 12),
+],
 
-              AbsorbPointer(
-                child: AppInput(
-                  "Current Company",
-                  controller: currentCompanyCtrl,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          AppInput(
-            "Official Company Email",
-            controller: companyEmailCtrl,
-            keyboardType: TextInputType.emailAddress,
-            onChanged: (_) => saveData(),
-          ),
-          const SizedBox(height: 6),
-
-          const Padding(
-            padding: EdgeInsets.only(left: 4),
-
-            child: Align(
-              alignment: Alignment.centerLeft,
-
-              child: Text(
-                "Used only to verify employment — never shared publicly",
-
-                style: TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-            ),
-          ),
-
-          const SizedBox(height: 12),
-          AppInput(
-            "Notice Period (Days)",
-            controller: noticePeriodCtrl,
-            keyboardType: TextInputType.number,
-            onChanged: (_) => saveData(),
-          ),
-          const SizedBox(height: 14),
-
-          /// SERVING NOTICE PERIOD
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-
-            decoration: BoxDecoration(
-              color: AppColors.kCard,
-              borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: AppColors.kBorder),
-            ),
-
-            child: Row(
-              children: [
-                const Expanded(
-                  child: Text(
-                    "Currently Serving Notice Period",
-                    style: TextStyle(color: Colors.white),
-                  ),
-                ),
-
-                Switch(
-                  value: servingNoticePeriod,
-
-                  activeColor: AppColors.kGreen,
-
-                  onChanged: (value) {
-                    setState(() {
-                      servingNoticePeriod = value;
-
-                      saveData();
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
-          if (servingNoticePeriod) ...[
-            const SizedBox(height: 14),
-
-            /// NOTICE PERIOD START DATE
-            GestureDetector(
-              onTap: () async {
-                final picked = await showDatePicker(
-                  context: context,
-
-                  initialDate: DateTime.now(),
-
-                  firstDate: DateTime(2000),
-
-                  lastDate: DateTime(2100),
-                );
-
-                if (picked != null) {
-                  noticePeriodStartDateCtrl.text =
-                      "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-
-                  saveData();
-
-                  setState(() {});
-                }
-              },
-
-              child: AbsorbPointer(
-                child: AppInput(
-                  "Notice Period Start Date",
-                  controller: noticePeriodStartDateCtrl,
-                ),
-              ),
-            ),
-          ],
-        ],
-
-        const SizedBox(height: 20),
+       
 
         const Text("Experience", style: TextStyle(color: Colors.grey)),
 
@@ -560,6 +456,7 @@ class _CareerPageState extends State<CareerPage> {
                   const SizedBox(height: 12),
 
                   Autocomplete<String>(
+                      key: ValueKey("company_$i"),
                     optionsBuilder: (textEditingValue) {
                       final query = textEditingValue.text;
 
@@ -580,27 +477,27 @@ class _CareerPageState extends State<CareerPage> {
 
                       return filtered;
                     },
+onSelected: (value) async {
+                      FocusManager.instance.primaryFocus?.unfocus();
+  final actualValue = value.startsWith('Create "')
+      ? value.replaceAll('Create "', '').replaceAll('"', '')
+      : value;
 
-                    onSelected: (value) async {
-                      final actualValue = value.startsWith('Create "')
-                          ? value.replaceAll('Create "', '').replaceAll('"', '')
-                          : value;
 
-                      await addCompanyIfNeeded(actualValue);
+  await addCompanyIfNeeded(actualValue);
 
-                      companyCtrls[i].text = actualValue;
-                      FocusScope.of(context).unfocus();
+  companyCtrls[i].text = actualValue;
 
-                      experiences[i] = experiences[i].copyWith(
-                        company: actualValue,
+  experiences[i] = experiences[i].copyWith(
+    company: actualValue,
+  );
 
-                        // isCurrent: experiences[i].isCurrent ?? false,
-                      );
+  saveData();
 
-                      saveData();
-
-                      setState(() {});
-                    },
+  if (mounted) {
+    setState(() {});
+  }
+},
 
                     fieldViewBuilder:
                         (context, controller, focusNode, onFieldSubmitted) {
@@ -615,7 +512,10 @@ class _CareerPageState extends State<CareerPage> {
                           return TextField(
                             controller: controller,
 
-                            focusNode: focusNode,
+                          focusNode: focusNode,
+onSubmitted: (_) {
+  focusNode.unfocus();
+},
 
                             style: const TextStyle(color: Colors.white),
 
@@ -644,7 +544,7 @@ class _CareerPageState extends State<CareerPage> {
 
                               saveData();
 
-                              setState(() {});
+            
                             },
                           );
                         },
@@ -687,6 +587,7 @@ class _CareerPageState extends State<CareerPage> {
               ),
               SizedBox(height: 10),
               Autocomplete<String>(
+                 key: ValueKey("role_$i"),
                 optionsBuilder: (textEditingValue) {
                   final query = textEditingValue.text;
 
@@ -706,22 +607,27 @@ class _CareerPageState extends State<CareerPage> {
                   return filtered;
                 },
 
-                onSelected: (value) async {
-                  final actualValue = value.startsWith('Create "')
-                      ? value.replaceAll('Create "', '').replaceAll('"', '')
-                      : value;
+           onSelected: (value) async {
+              FocusManager.instance.primaryFocus?.unfocus();
+  final actualValue = value.startsWith('Create "')
+      ? value.replaceAll('Create "', '').replaceAll('"', '')
+      : value;
 
-                  await addRoleIfNeeded(actualValue);
 
-                  roleCtrls[i].text = actualValue;
+  await addRoleIfNeeded(actualValue);
 
-                  experiences[i] = experiences[i].copyWith(role: actualValue);
+  roleCtrls[i].text = actualValue;
 
-                  saveData();
+  experiences[i] = experiences[i].copyWith(
+    role: actualValue,
+  );
 
-                  setState(() {});
-                },
+  saveData();
 
+  if (mounted) {
+    setState(() {});
+  }
+},
                 fieldViewBuilder:
                     (context, controller, focusNode, onFieldSubmitted) {
                       if (controller.text != roleCtrls[i].text) {
@@ -735,7 +641,10 @@ class _CareerPageState extends State<CareerPage> {
                       return TextField(
                         controller: controller,
 
-                        focusNode: focusNode,
+                   focusNode: focusNode,
+onSubmitted: (_) {
+  focusNode.unfocus();
+},
 
                         style: const TextStyle(color: Colors.white),
 
@@ -758,7 +667,7 @@ class _CareerPageState extends State<CareerPage> {
 
                           saveData();
 
-                          setState(() {});
+        
                         },
                       );
                     },
@@ -913,6 +822,113 @@ class _CareerPageState extends State<CareerPage> {
                   });
                 },
               ),
+              if (experiences[i].isCurrent ?? false) ...[
+          const SizedBox(height: 20),
+
+         
+          AppInput(
+            "Official Company Email",
+            controller: companyEmailCtrl,
+            keyboardType: TextInputType.emailAddress,
+            onChanged: (_) => saveData(),
+          ),
+          const SizedBox(height: 6),
+
+          const Padding(
+            padding: EdgeInsets.only(left: 4),
+
+            child: Align(
+              alignment: Alignment.centerLeft,
+
+              child: Text(
+                "Used only to verify employment — never shared publicly",
+
+                style: TextStyle(color: Colors.grey, fontSize: 12),
+              ),
+            ),
+          ),
+
+          const SizedBox(height: 12),
+          AppInput(
+            "Notice Period (Days)",
+            controller: noticePeriodCtrl,
+            keyboardType: TextInputType.number,
+            onChanged: (_) => saveData(),
+          ),
+          const SizedBox(height: 14),
+
+          /// SERVING NOTICE PERIOD
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+
+            decoration: BoxDecoration(
+              color: AppColors.kCard,
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(color: AppColors.kBorder),
+            ),
+
+            child: Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    "Currently Serving Notice Period",
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+
+                Switch(
+                  value: servingNoticePeriod,
+
+                  activeColor: AppColors.kGreen,
+
+                  onChanged: (value) {
+                    setState(() {
+                      servingNoticePeriod = value;
+
+                      saveData();
+                    });
+                  },
+                ),
+              ],
+            ),
+          ),
+          if (servingNoticePeriod) ...[
+            const SizedBox(height: 14),
+
+            /// NOTICE PERIOD START DATE
+            GestureDetector(
+              onTap: () async {
+                final picked = await showDatePicker(
+                  context: context,
+
+                  initialDate: DateTime.now(),
+
+                  firstDate: DateTime(2000),
+
+                  lastDate: DateTime(2100),
+                );
+
+                if (picked != null) {
+                  noticePeriodStartDateCtrl.text =
+                      "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+
+                  saveData();
+
+                  setState(() {});
+                }
+              },
+
+              child: AbsorbPointer(
+                child: AppInput(
+                  "Notice Period Start Date",
+                  controller: noticePeriodStartDateCtrl,
+                ),
+              ),
+            ),
+          ],
+        ],
+
+        const SizedBox(height: 20),
               AppInput(
                 "Description",
                 controller: descCtrls[i],

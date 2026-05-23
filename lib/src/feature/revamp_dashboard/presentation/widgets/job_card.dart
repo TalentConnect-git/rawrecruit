@@ -30,7 +30,8 @@ class JobCard extends StatelessWidget {
     String company = "Company";
     String workMode = "Remote";
     String location = "India";
-    String salary = "Check details";
+
+    String salary = "NA";
 
     int match = 0;
 

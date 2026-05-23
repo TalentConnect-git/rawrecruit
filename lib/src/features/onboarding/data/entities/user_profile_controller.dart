@@ -137,7 +137,8 @@ class UserController {
     key != 'currentCompany') {
   return true;
 }
-        if (value is List && value.isEmpty) return true;
+ /// KEEP EMPTY LISTS SO BACKEND CLEARS DATA
+if (value is List) return false;
         if (value is Map && value.isEmpty) return true;
         return false;
       });
@@ -189,102 +190,52 @@ class UserController {
 
       'domainKnowledge': cleanList(domainKnowledge),
       'employmentType': cleanList(employmentType),
-      'educations': educations
-          .where(
-            (e) =>
-                e.college.text.isNotEmpty ||
-                e.degree.text.isNotEmpty ||
-                e.specialization.text.isNotEmpty ||
-                e.cgpa.text.isNotEmpty,
-          )
-          .map(
-            (e) => cleanMap({
-              'college': clean(e.college.text),
-
-              'degree': clean(e.degree.text),
-
-              'specialization': clean(e.specialization.text),
-
-              'semester': clean(e.semester.text),
-
-              'cgpa': clean(e.cgpa.text),
-
-              'yearOfGraduation': clean(e.yearOfGraduation.text),
-
-              'startDate': clean(e.startDate.text),
-
-              'endDate': clean(e.endDate.text),
-
-              'educationType': e.educationType,
-
-              'isCurrent': e.isCurrent,
-            }),
-          )
-          .toList(),
-      'experiences': experiences
-          .where(
-            (e) =>
-                e.company.text.isNotEmpty ||
-                e.role.text.isNotEmpty ||
-                e.startDate.text.isNotEmpty ||
-                e.endDate.text.isNotEmpty ||
-                e.description.text.isNotEmpty,
-          )
-          .map(
-            (e) => cleanMap({
-              'company': clean(e.company.text),
-              'role': clean(e.role.text),
-              'isCurrent': e.isCurrent,
-              'startDate': clean(e.startDate.text),
-              'endDate': clean(e.endDate.text),
-              'description': clean(e.description.text),
-            }),
-          )
-          .toList(),
+   'educations': educations.map(
+  (e) => {
+    'college': e.college.text.trim(),
+    'degree': e.degree.text.trim(),
+    'specialization': e.specialization.text.trim(),
+    'semester': e.semester.text.trim(),
+    'cgpa': e.cgpa.text.trim(),
+    'yearOfGraduation': e.yearOfGraduation.text.trim(),
+    'startDate': e.startDate.text.trim(),
+    'endDate': e.endDate.text.trim(),
+    'educationType': e.educationType,
+    'isCurrent': e.isCurrent,
+  },
+).toList(),
+   'experiences': experiences.map(
+  (e) => {
+    'company': e.company.text.trim(),
+    'role': e.role.text.trim(),
+    'isCurrent': e.isCurrent,
+    'startDate': e.startDate.text.trim(),
+    'endDate': e.endDate.text.trim(),
+    'description': e.description.text.trim(),
+  },
+).toList(),
       'industry': cleanList(industry),
       'jobRoles': cleanList(jobRoles),
       'languagesKnown': cleanList(languagesKnown),
-      'leadership': leadershipExperiences
-          .where(
-            (e) =>
-                e.organization.text.isNotEmpty ||
-                e.role.text.isNotEmpty ||
-                e.startDate.text.isNotEmpty ||
-                e.endDate.text.isNotEmpty ||
-                e.description.text.isNotEmpty,
-          )
-          .map(
-            (e) => cleanMap({
-              'organization': clean(e.organization.text),
-              'role': clean(e.role.text),
-              'startDate': clean(e.startDate.text),
-              'endDate': clean(e.endDate.text),
-              'description': clean(e.description.text),
-            }),
-          )
-          .toList(),
-      'internationalExperience': internationalExperiences
-          .where(
-            (e) =>
-                e.country.text.isNotEmpty ||
-                e.organization.text.isNotEmpty ||
-                e.role.text.isNotEmpty ||
-                e.startDate.text.isNotEmpty ||
-                e.endDate.text.isNotEmpty ||
-                e.description.text.isNotEmpty,
-          )
-          .map(
-            (e) => cleanMap({
-              'country': clean(e.country.text),
-              'organization': clean(e.organization.text),
-
-              'role': clean(e.role.text),
-              'startDate': clean(e.startDate.text),
-              'endDate': clean(e.endDate.text),
-              'description': clean(e.description.text),
-            }),
-          )
-          .toList(),
+   'leadership': leadershipExperiences.map(
+  (e) => {
+    'organization': e.organization.text.trim(),
+    'role': e.role.text.trim(),
+    'startDate': e.startDate.text.trim(),
+    'endDate': e.endDate.text.trim(),
+    'description': e.description.text.trim(),
+  },
+).toList(),
+  'internationalExperience': internationalExperiences.map(
+  (e) => {
+    'country': e.country.text.trim(),
+    'organization': e.organization.text.trim(),
+    'role': e.role.text.trim(),
+    'startDate': e.startDate.text.trim(),
+    'endDate': e.endDate.text.trim(),
+    'description': e.description.text.trim(),
+  },
+).toList(),
       'locations': cleanList(locations),
       'lookingFor': cleanList(lookingFor),
       'toolsAndPlatforms': cleanList(toolsAndPlatforms),
