@@ -198,7 +198,7 @@ if (!getIt<AppStateProvider>()
                     AddEditProfileView(
                   user: vm.user,
 
-                  initialStep: 12,
+                  initialStep: 3,
 
                   isSwitchingToProfessional:
                       true,
