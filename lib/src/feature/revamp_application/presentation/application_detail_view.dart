@@ -18,16 +18,26 @@ class ApplicationDetailView extends StatelessWidget {
     /// 🔥 RAW + NORMALIZED STATUS
     final rawStatus = job?.status ?? "";
     final status = _normalizeStatus(rawStatus);
+final currentExp =
+    job?.candidatePosted?.experiences?.isNotEmpty == true
+        ? job!.candidatePosted!.experiences!.firstWhere(
+            (e) => e.isCurrent == true,
+            orElse: () =>
+                job.candidatePosted!.experiences!.first,
+          )
+        : null;
 
-    final jobTitle = (job?.jobRoles?.isNotEmpty == true)
-        ? job!.jobRoles!.first
-        : (job?.jobTitle ?? "-");
+final jobTitle =
+    currentExp?.role ??
+    (job?.jobTitle ?? "-");
 
-    final companyName = (job?.companyName?.isNotEmpty == true)
+final companyName =
+    currentExp?.company ??
+    ((job?.companyName?.isNotEmpty == true)
         ? job!.companyName!
         : (job?.jobType == "Referral"
             ? "Referral"
-            : "-");
+            : "-"));
 
     final location = (job?.location ?? []).isNotEmpty
         ? job?.location?.firstOrNull

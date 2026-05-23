@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 
 import '../../../../core/index.dart';
+import '../../../../core/models/experience.dart';
 
 class AlumniCard extends StatelessWidget {
   final List<Job> jobs;
@@ -17,7 +18,21 @@ class AlumniCard extends StatelessWidget {
 
     final first = jobs.first;
     final candidate = first.candidatePosted;
+           final currentExperience =
+    candidate?.experiences?.firstWhere(
+      (e) => e.isCurrent == true,
+      orElse: () => candidate.experiences!.isNotEmpty
+          ? candidate.experiences!.first
+          : Experience(),
+    );
 
+final currentEducation =
+    (candidate?.educations?.isNotEmpty ?? false)
+        ? candidate!.educations!.firstWhere(
+            (e) => e.isCurrent == true,
+            orElse: () => candidate.educations!.first,
+          )
+        : null;
     final name = candidate?.name ?? "User";
     // final role = first.jobTitle ?? "Professional";
     final initials = name.trim().isNotEmpty
@@ -111,73 +126,97 @@ class AlumniCard extends StatelessWidget {
                 // const SizedBox(height: 4),
 
                 /// DESIGNATION + COMPANY
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        (candidate?.jobRoles != null &&
-                                candidate!.jobRoles!.isNotEmpty)
-                            ? candidate.jobRoles!.first
-                            : '-',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(width: 4),
-                    Flexible(
-                      child: Text(
-                        candidate?.currentCompany ?? 'Company', // ✅ FIXED
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      child: Text(
-                    candidate?.educations != null &&
-        candidate!
-            .educations!
-            .isNotEmpty
-    ? candidate
-            .educations!
-            .firstWhere(
-              (e) =>
-                  e.isCurrent ==
-                  true,
+   
 
-              orElse: () =>
-                  candidate
-                      .educations!
-                      .first,
-            )
-            .college ??
-        '-'
-    : '-',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.grey,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+/// COMPANY
+Text(
+  currentExperience?.company?.isNotEmpty == true
+      ? currentExperience!.company!
+      : "-",
+
+  textAlign: TextAlign.center,
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+
+  style: const TextStyle(
+    color: Colors.white,
+    fontWeight: FontWeight.w700,
+    fontSize: 13,
+  ),
+),
+
+const SizedBox(height: 4),
+
+/// ROLE
+Text(
+  currentExperience?.role?.isNotEmpty == true
+      ? currentExperience!.role!
+      : "-",
+
+  textAlign: TextAlign.center,
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+
+  style: const TextStyle(
+    color: Colors.grey,
+    fontSize: 12,
+  ),
+),
+
+const SizedBox(height: 6),
+
+/// COLLEGE
+Text(
+  currentEducation?.college?.isNotEmpty == true
+      ? currentEducation!.college!
+      : "-",
+
+  textAlign: TextAlign.center,
+  maxLines: 1,
+  overflow: TextOverflow.ellipsis,
+
+  style: const TextStyle(
+    color: Color(0xff8B5CF6),
+    fontSize: 12,
+    fontWeight: FontWeight.w600,
+  ),
+),
                 const SizedBox(height: 8),
+    //             Row(
+    //               mainAxisAlignment: MainAxisAlignment.center,
+    //               children: [
+    //                 Flexible(
+    //                   child: Text(
+    //                 candidate?.educations != null &&
+    //     candidate!
+    //         .educations!
+    //         .isNotEmpty
+    // ? candidate
+    //         .educations!
+    //         .firstWhere(
+    //           (e) =>
+    //               e.isCurrent ==
+    //               true,
+
+    //           orElse: () =>
+    //               candidate
+    //                   .educations!
+    //                   .first,
+    //         )
+    //         .college ??
+    //     '-'
+    // : '-',
+    //                     maxLines: 1,
+    //                     overflow: TextOverflow.ellipsis,
+    //                     style: const TextStyle(
+    //                       color: Colors.grey,
+    //                       fontSize: 12,
+    //                     ),
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //             const SizedBox(height: 8),
 
                 /// 🔹 HIRING STATUS
                 Row(

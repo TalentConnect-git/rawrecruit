@@ -25,22 +25,35 @@ class AlumniDetailView extends StatelessWidget {
 
     final name = first.candidatePosted?.name ?? "User";
 
+final currentExperience = first.candidatePosted?.experiences
+    ?.where((e) => e.isCurrent == true)
+    .cast<dynamic?>()
+    .firstOrNull;
+
 final role =
-    first.candidatePosted
-        ?.jobRoles
-        ?.isNotEmpty ==
-    true
-        ? first.candidatePosted!
-            .jobRoles!.first
-        : "Professional";
+    (currentExperience?.role ?? '').toString().trim().isNotEmpty
+        ? currentExperience!.role!
+        : "-";
 
-    final location = first.location?.join(", ") ?? "Location";
+final company =
+    (currentExperience?.company ?? '').toString().trim().isNotEmpty
+        ? currentExperience!.company!
+        : "-";
+            final referrals = first.candidatePosted?.referralJobs ?? [];
 
-    final referrals = first.candidatePosted?.referralJobs ?? [];
+final currentReferral = referrals.isNotEmpty
+    ? referrals.first
+    : null;
+
+final location =
+    (currentReferral?.location?.isNotEmpty ?? false)
+        ? currentReferral!.location!.join(", ")
+        : (first.candidatePosted?.locations?.isNotEmpty ?? false)
+            ? first.candidatePosted!.locations!.join(", ")
+            : "-";
 
     final isHiring = referrals.isNotEmpty;
 
-    final company = first.candidatePosted?.currentCompany ?? "";
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -479,7 +492,8 @@ Row(
                     _linkTile(
                       context: context,
 
-                      icon: Icons.work_outline,
+  image: "assets/images/linkedin.png",
+
                       title: "LinkedIn",
                       value: first.candidatePosted!.linkedin!,
                     ),
@@ -487,7 +501,7 @@ Row(
                     _linkTile(
                       context: context,
 
-                      icon: Icons.work_outline,
+                      image: "assets/images/cv.png",
                       title: "Email",
                       value: first.candidatePosted!.email!,
                     ),
@@ -495,7 +509,7 @@ Row(
                     _linkTile(
                       context: context,
 
-                      icon: Icons.code,
+                        image: "assets/images/github.png",
                       title: "GitHub",
                       value: first.candidatePosted!.github!,
                     ),
@@ -503,8 +517,8 @@ Row(
                   if ((first.candidatePosted?.portfolio ?? '').isNotEmpty)
                     _linkTile(
                       context: context,
+  image: "assets/images/portfolio.png",
 
-                      icon: Icons.web,
                       title: "Portfolio",
                       value: first.candidatePosted!.portfolio!,
                     ),
@@ -513,7 +527,7 @@ Row(
                     _linkTile(
                       context: context,
 
-                      icon: Icons.description_outlined,
+  image: "assets/images/cv.png",
                       title: "Resume",
                       value: first.candidatePosted!.resume!,
                     ),
@@ -544,7 +558,7 @@ Row(
 
   Widget _linkTile({
     required BuildContext context,
-    required IconData icon,
+required String image,
     required String title,
     required String value,
   }) {
@@ -600,7 +614,11 @@ Row(
 
         child: Row(
           children: [
-            Icon(icon, color: AppColors.kGreen, size: 18),
+          Image.asset(
+  image,
+  height: 22,
+  width: 22,
+),
 
             const SizedBox(width: 12),
 

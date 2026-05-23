@@ -1203,21 +1203,125 @@ minYearofExperience:
                         final success =
                             await vm.postJob(model);
 
-                        if (success && mounted) {
-                          ScaffoldMessenger.of(
-                            context,
-                          ).showSnackBar(
-                            const SnackBar(
-                              content: Text(
-                                "Referral Successfully Added",
-                              ),
-                            ),
-                          );
-final prefs =
-    await SharedPreferences.getInstance();
+                       if (success && mounted) {
 
-await prefs.remove(draftKey);
-                          Navigator.pop(context);
+  final prefs =
+      await SharedPreferences.getInstance();
+
+  await prefs.remove(draftKey);
+
+  if (!mounted) return;
+
+  await showDialog(
+    context: context,
+    barrierDismissible: false,
+
+    builder: (_) {
+      return Dialog(
+        backgroundColor: Colors.transparent,
+
+        child: Container(
+          padding: const EdgeInsets.all(24),
+
+          decoration: BoxDecoration(
+            color: AppColors.kCard,
+
+            borderRadius: BorderRadius.circular(24),
+
+            border: Border.all(
+              color: AppColors.kGreen.withOpacity(.25),
+            ),
+          ),
+
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+
+            children: [
+
+              Container(
+                height: 72,
+                width: 72,
+
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColors.kGreen.withOpacity(.12),
+                ),
+
+                child: Icon(
+                  Icons.check_circle,
+                  color: AppColors.kGreen,
+                  size: 52,
+                ),
+              ),
+
+              const SizedBox(height: 18),
+
+              const Text(
+                "Referral Added Successfully",
+
+                textAlign: TextAlign.center,
+
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              Text(
+                "Please Wait For Admin To Approve Your Posted Job",
+
+                textAlign: TextAlign.center,
+
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 13,
+                  height: 1.5,
+                ),
+              ),
+
+              const SizedBox(height: 22),
+
+              SizedBox(
+                width: double.infinity,
+
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.kGreen,
+
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 14,
+                    ),
+
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(14),
+                    ),
+                  ),
+
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+
+                  child: const Text(
+                    "Done",
+
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    },
+  );
+
                         }
                       }
                     : nextStep,

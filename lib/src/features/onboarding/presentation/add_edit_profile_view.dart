@@ -984,6 +984,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                             },
 
                                             onSelected: (value) async {
+                                                FocusScope.of(context).unfocus();
+
                                               await addDegreeIfNeeded(value);
 
                                               e.degree.text = value;
@@ -1047,6 +1049,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                             },
 
                                             onSelected: (value) {
+                                                FocusScope.of(context).unfocus();
+
+
                                               e.specialization.text = value;
 
                                               markChanged();
@@ -1239,15 +1244,22 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                 ),
                                 const SizedBox(height: 12),
 
-                                AppTextFields(
-                                  controller: controller.noticePeriod,
+                             AppTextFields(
+  controller: controller.noticePeriod,
 
-                                  hint: 'Notice Period (days)',
+  hint: 'Notice Period (days)',
 
-                                  onChanged: (_) => markChanged(),
-                                ),
+  enable: false,
 
-                                const SizedBox(height: 12),
+  suffixIcon: const Icon(
+    Icons.lock_outline,
+    color: Colors.grey,
+    size: 18,
+  ),
+
+  helperText:
+      "Automatically fetched from current experience",
+),
                                 const SizedBox(height: 16),
 
                                 Container(
@@ -1525,6 +1537,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   },
 
   onSelected: (value) async {
+      FocusScope.of(context).unfocus();
     await addJobRoleIfNeeded(value);
 
     controller.jobRoles.first.text = value;
@@ -1533,6 +1546,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   },
 
   onCreate: (value) async {
+
     await addJobRoleIfNeeded(value);
 
     controller.jobRoles.first.text = value;
@@ -1543,6 +1557,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   },
 
   onSubmitted: (value) async {
+      FocusScope.of(context).unfocus();
     await addJobRoleIfNeeded(value);
 
     controller.jobRoles.first.text = value;
@@ -2061,6 +2076,17 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
             ),
 
             const SizedBox(height: 12),
+            const SizedBox(height: 12),
+
+AppTextFields(
+  controller: controller.noticePeriod,
+
+  hint: 'Notice Period (days)',
+
+  keyboardType: TextInputType.number,
+
+  onChanged: (_) => markChanged(),
+),
           ],
 
           const SizedBox(height: 10),
@@ -2118,6 +2144,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
             },
 
             onSubmitted: (value) async {
+                FocusScope.of(context).unfocus();
               await addCompanyIfNeeded(value);
 
               e.organization.text = value;
@@ -2126,6 +2153,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
             },
 
             onSelected: (value) async {
+                FocusScope.of(context).unfocus();
               await addCompanyIfNeeded(value);
 
               e.organization.text = value;
@@ -2195,6 +2223,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
         setState(() {});
       },
       onChanged: (value) {
+        
         e.company.text = value;
 
         /// auto update current company
@@ -2205,6 +2234,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
         markChanged();
       },
       onSubmitted: (value) async {
+          FocusScope.of(context).unfocus();
         await addCompanyIfNeeded(value);
 
         e.company.text = value;
@@ -2218,6 +2248,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       },
 
       onSelected: (value) async {
+          FocusScope.of(context).unfocus(); 
         await addCompanyIfNeeded(value);
 
         e.company.text = value;
@@ -2249,6 +2280,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       },
 
       onSubmitted: (value) async {
+          FocusScope.of(context).unfocus();
         await addJobRoleIfNeeded(value);
 
         controller.text = value;
@@ -2257,6 +2289,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       },
 
       onSelected: (value) async {
+          FocusScope.of(context).unfocus();
         await addJobRoleIfNeeded(value);
 
         controller.text = value;
@@ -2402,6 +2435,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       hint: "Specialization",
 
       onSubmitted: (value) async {
+          FocusScope.of(context).unfocus();
         await addStreamIfNeeded(value);
       },
 
@@ -2424,6 +2458,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       },
 
       onSelected: (value) {
+          FocusScope.of(context).unfocus();
         controller.specialization.text = value;
 
         markChanged();
@@ -2561,6 +2596,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
             },
 
             onSubmitted: (value) async {
+                FocusScope.of(context).unfocus();
               await addCompanyIfNeeded(value);
 
               e.organization.text = value;
@@ -2569,6 +2605,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
             },
 
             onSelected: (value) async {
+                FocusScope.of(context).unfocus();
               await addCompanyIfNeeded(value);
 
               e.organization.text = value;
