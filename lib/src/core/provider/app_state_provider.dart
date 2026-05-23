@@ -82,6 +82,20 @@ class AppStateProvider extends ViewStateProvider {
     return false;
   }
 
+  bool _newInterviewsAvailable = false;
+
+  bool get hasNewInterviews => _newInterviewsAvailable;
+
+  void setNewInterviewsAvailable() {
+    _newInterviewsAvailable = true;
+    notifyListeners();
+  }
+
+  void clearNewInterviewsAvailable() {
+    _newInterviewsAvailable = false;
+    notifyListeners();
+  }
+
   Future<Failure?> getAuthDetails() async {
     setViewState(ViewState.busy);
 

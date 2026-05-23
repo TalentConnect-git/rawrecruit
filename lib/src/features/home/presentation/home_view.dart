@@ -9,7 +9,6 @@ import 'package:rawrecruit/src/features/notifications/index.dart';
 
 import '../../../feature/revamp_onboarding/presentation/flow_controller.dart';
 import '../../chat/index.dart';
-import '../../scheduled_interviews/data/entity/interview_model.dart';
 import '../../scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 
 class HomeView extends StatefulWidget {
@@ -31,10 +30,11 @@ class _HomeViewState extends State<HomeView> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final chatVm = context.read<ChatViewModel>();
       chatVm.fetchUnreadCounts();
-      await notificationVm.getNotifications();
       if (!appStateProvider.isAuthComplete) {
         final failure = await appStateProvider.getAuthDetails();
         failure?.showError(context);
+
+        await notificationVm.getNotifications();
 
         final failure2 = await interviewViewModel.getInterviews();
         failure2?.showError(context);
@@ -108,9 +108,9 @@ class _HomeViewState extends State<HomeView> {
               style: AppTextStyles.s24W600.copyWith(color: AppColors.kGreen),
             ),
             actions: [
-              Selector<InterviewViewModel, List<InterviewModel>>(
-                selector: (_, vm) => vm.interviews,
-                builder: (_, interviews, _) => IconButton(
+              Selector<AppStateProvider, bool>(
+                selector: (_, vm) => vm.hasNewInterviews,
+                builder: (_, hasInterviews, _) => IconButton(
                   onPressed: () {
                     context.pushNamed(RouteNames.scheduledInterviews);
                   },
@@ -118,7 +118,7 @@ class _HomeViewState extends State<HomeView> {
                     clipBehavior: Clip.none,
                     children: [
                       const Icon(Icons.calendar_month_outlined),
-                      if (interviews.isNotEmpty)
+                      if (hasInterviews)
                         Positioned(
                           right: -1,
                           top: -1,
@@ -200,63 +200,6 @@ class _HomeViewState extends State<HomeView> {
               final extra = {'userType': appStateProvider.userType};
 
               context.goNamed(tab.path, extra: extra);
-
-              // switch (tab) {
-              //   // case 0:
-              //   //   context.goNamed(
-              //   //     RouteNames.dashboard,
-              //   //     extra: appStateProvider.userType,
-              //   //   );
-              //   //   break;
-              //   // case 1:
-              //   //   if (appStateProvider.isProfessional) {
-              //   //     context.goNamed(RouteNames.jobPosted);
-              //   //   } else {
-              //   //     context.goNamed(RouteNames.application);
-              //   //   }
-              //   //   break;
-              //   // case 2:
-              //   //   if (appStateProvider.isProfessional) {
-              //   //     context.goNamed(
-              //   //       RouteNames.application,
-              //   //       extra: appStateProvider.userType,
-              //   //     );
-              //   //   } else {
-              //   //     context.goNamed(RouteNames.shortlist);
-              //   //   }
-              //   //   break;
-              //   // case 3:
-              //   //   if (appStateProvider.isProfessional) {
-              //   //     context.goNamed(RouteNames.shortlist);
-              //   //   } else {
-              //   //     context.goNamed(RouteNames.myProfile);
-              //   //   }
-              //   //   break;
-              //   // case 4:
-              //   //   if (appStateProvider.isProfessional) {
-              //   //     context.goNamed(RouteNames.myProfile);
-              //   //   } else {
-              //   //     context.goNamed(RouteNames.chatUserList);
-              //   //   }
-              //   //   break;
-              //   // case 5:
-              //   //   context.goNamed(RouteNames.chatUserList);
-              //   case NavItem.home:
-              //     // TODO: Handle this case.
-              //     throw UnimplementedError();
-              //   case NavItem.referrer:
-              //     // TODO: Handle this case.
-              //     throw UnimplementedError();
-              //   case NavItem.applications:
-              //     // TODO: Handle this case.
-              //     throw UnimplementedError();
-              //   case NavItem.shortlist:
-              //     // TODO: Handle this case.
-              //     throw UnimplementedError();
-              //   case NavItem.chat:
-              //     // TODO: Handle this case.
-              //     throw UnimplementedError();
-              // }
             },
           ),
         ),
