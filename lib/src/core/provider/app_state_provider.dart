@@ -66,7 +66,13 @@ class AppStateProvider extends ViewStateProvider {
     notifyListeners();
   }
 
-  bool get isProfileComplete => user != null;
+  bool get isProfileComplete {
+    if (user == null) return false;
+    if (user?.name == null || user!.name!.isEmpty) return false;
+    if (user?.email == null || user!.email!.isEmpty) return false;
+    return true;
+  }
+
   //&& (user?.onboardingCompleted ?? false)
   bool get isAuthComplete => auth != null;
 
@@ -157,7 +163,7 @@ class AppStateProvider extends ViewStateProvider {
         final prefs = await SharedPreferences.getInstance();
 
         await prefs.remove("referral_post_draft");
-await prefs.remove("experience");
+        await prefs.remove("experience");
         final token = await SecretRepo.getString('auth_token');
         log(token ?? '', name: 'token');
 
