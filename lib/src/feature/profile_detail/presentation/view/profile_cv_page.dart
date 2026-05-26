@@ -168,128 +168,158 @@ body: RefreshIndicator(
                   /// HEADER
                   _premiumHeader(user, currentEducation),
                   const SizedBox(height: 18),
-                  if ((user.noticePeriod?.isNotEmpty ?? false) ||
-                      (user.noticePeriodStartDate?.isNotEmpty ?? false) ||
-                      noticeData != null)
-                    Column(
-                      children: [
-                        _modernSection(
-                          title: "Notice Period",
-                          icon: Icons.timer_outlined,
+                 if ((user.noticePeriod?.isNotEmpty ?? false) ||
+    (user.noticePeriodStartDate?.isNotEmpty ?? false) ||
+    noticeData != null)
+  Column(
+    children: [
+      _modernSection(
+        title: "Notice Period",
+        icon: Icons.timer_outlined,
 
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: _smallInfoCard(
-                                      "Notice Days",
-                                      user.noticePeriod ?? "NA",
-                                      Icons.date_range,
-                                    ),
-                                  ),
+        child: Builder(
+          builder: (context) {
+            final List<Widget> cards = [];
 
-                                  const SizedBox(width: 12),
+            if ((user.noticePeriod?.isNotEmpty ?? false)) {
+              cards.add(
+                _smallInfoCard(
+                  "Notice Days",
+                  user.noticePeriod!,
+                  Icons.date_range,
+                ),
+              );
+            }
 
-                                  Expanded(
-                                    child: _smallInfoCard(
-                                      "${noticeData?["daysRemaining"] ?? 'NA'} Days Left",
-                                      noticeData != null
-                                          ? noticeData["daysRemaining"]
-                                                .toString()
-                                          : "NA",
-                                      Icons.timelapse,
-                                    ),
-                                  ),
-                                ],
-                              ),
+            if (noticeData?["daysPassed"] != null) {
+              cards.add(
+                _smallInfoCard(
+                  "Days Served",
+                  noticeData!["daysPassed"].toString(),
+                  Icons.check_circle,
+                ),
+              );
+            }
 
-                              const SizedBox(height: 14),
+            if ((noticeData?["endDate"]
+                    ?.toString()
+                    .isNotEmpty ??
+                false)) {
+              cards.add(
+                _smallInfoCard(
+                  "Last Working Day",
+                  noticeData!["endDate"].toString(),
+                  Icons.event,
+                ),
+              );
+            }
 
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: _smallInfoCard(
-                                      "${noticeData?["daysPassed"] ?? 'NA'} Days Served",
-                                      noticeData?["daysPassed"]?.toString() ??
-                                          "NA",
-                                      Icons.check_circle,
-                                    ),
-                                  ),
+            if (cards.isEmpty) {
+              return Container(
+                width: double.infinity,
 
-                                  const SizedBox(width: 12),
+                padding: const EdgeInsets.symmetric(
+                  vertical: 18,
+                ),
 
-                                  Expanded(
-                                    child: _smallInfoCard(
-                                      "Last Working Day",
-                                      noticeData?["endDate"]?.toString() ??
-                                          "NA",
-                                      Icons.event,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                alignment: Alignment.center,
 
-                              const SizedBox(height: 16),
+                child: const Text(
+                  "No Notice Period",
 
-                              LinearProgressIndicator(
-                                value:
-                                    ((noticeData?["daysPassed"] ?? 0) /
-                                            ((int.tryParse(
-                                                      user.noticePeriod ?? "1",
-                                                    ) ??
-                                                    1)
-                                                .clamp(1, 999)))
-                                        .clamp(0, 1),
+                  style: TextStyle(
+                    color: Colors.white54,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              );
+            }
 
-                                backgroundColor: Colors.white12,
+            return Column(
+              children: [
+                /// INFO CARDS
+                Row(
+                  children: cards.map((card) {
+                    return Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 4),
+                        child: card,
+                      ),
+                    );
+                  }).toList(),
+                ),
 
-                                valueColor: AlwaysStoppedAnimation(
-                                  noticeData?["isExpired"] == true
-                                      ? Colors.green
-                                      : AppColors.kGreen,
-                                ),
-                              ),
+                /// PROGRESS
+                if (noticeData?["daysPassed"] != null &&
+                    (user.noticePeriod?.isNotEmpty ?? false)) ...[
+                  const SizedBox(height: 16),
 
-                              const SizedBox(height: 10),
+                  LinearProgressIndicator(
+                    value:
+                        ((noticeData?["daysPassed"] ?? 0) /
+                                ((int.tryParse(
+                                          user.noticePeriod ?? "1",
+                                        ) ??
+                                        1)
+                                    .clamp(1, 999)))
+                         .clamp(0.0, 1.0)
+    .toDouble(),
+                    backgroundColor: Colors.white12,
 
-                              if (user.servingNoticePeriod == true ||
-    noticeData?["isExpired"] == true)
-  Container(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 12,
-      vertical: 8,
-    ),
-
-    decoration: BoxDecoration(
-      color: noticeData?["isExpired"] == true
-          ? Colors.green.withOpacity(.15)
-          : Colors.orange.withOpacity(.15),
-
-      borderRadius: BorderRadius.circular(30),
-    ),
-
-    child: Text(
-      noticeData?["isExpired"] == true
-          ? "Notice Period Complete"
-          : "Serving Notice Period",
-
-      style: TextStyle(
-        color: noticeData?["isExpired"] == true
-            ? Colors.green
-            : Colors.orange,
-
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-  ),
-                            ],
-                          ),
-                        ),
-
-                        const SizedBox(height: 18),
-                      ],
+                    valueColor: AlwaysStoppedAnimation(
+                      noticeData?["isExpired"] == true
+                          ? Colors.green
+                          : AppColors.kGreen,
                     ),
+                  ),
+                ],
+
+                /// STATUS
+                if (user.servingNoticePeriod == true ||
+                    noticeData?["isExpired"] == true) ...[
+                  const SizedBox(height: 12),
+
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+
+                    decoration: BoxDecoration(
+                      color: noticeData?["isExpired"] == true
+                          ? Colors.green.withOpacity(.15)
+                          : Colors.orange.withOpacity(.15),
+
+                      borderRadius: BorderRadius.circular(30),
+                    ),
+
+                    child: Text(
+                      noticeData?["isExpired"] == true
+                          ? "Notice Period Complete"
+                          : "Serving Notice Period",
+
+                      style: TextStyle(
+                        color: noticeData?["isExpired"] == true
+                            ? Colors.green
+                            : Colors.orange,
+
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
+              ],
+            );
+          },
+        ),
+      ),
+
+      const SizedBox(height: 18),
+    ],
+  ),
+                       
+       
 
                   /// ABOUT
                   _modernSection(
@@ -720,181 +750,212 @@ if ((user.jobRoles ?? []).isNotEmpty) ...[
 
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+children: (user.educations ?? [])
+    .asMap()
+    .entries
+    .map(
+      (entry) {
+        final index = entry.key;
+        final e = entry.value;
 
-                      children: (user.educations ?? [])
-                          .map(
-                            (e) => Container(
-                              width: double.infinity,
+        final isLast =
+            index == (user.educations!.length - 1);
 
-                              margin: const EdgeInsets.only(bottom: 14),
+        return IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-                              padding: const EdgeInsets.all(14),
+            children: [
+              /// TIMELINE
+              Column(
+                children: [
+                  Container(
+                    width: 11,
+                    height: 11,
+
+                    decoration: BoxDecoration(
+                      color: AppColors.kGreen,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+
+                  if (!isLast)
+                    Expanded(
+                      child: Container(
+                        width: 1.5,
+                        margin: const EdgeInsets.symmetric(
+                          vertical: 4,
+                        ),
+                        color: Colors.white12,
+                      ),
+                    ),
+                ],
+              ),
+
+              const SizedBox(width: 16),
+
+              /// CONTENT
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                    bottom: 24,
+                  ),
+
+                  child: Column(
+                    crossAxisAlignment:
+                        CrossAxisAlignment.start,
+
+                    children: [
+                      /// DEGREE
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              e.degree ?? "",
+
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                              ),
+                            ),
+                          ),
+
+                          if (e.isCurrent == true)
+                            Container(
+                              padding:
+                                  const EdgeInsets.symmetric(
+                                horizontal: 10,
+                                vertical: 5,
+                              ),
 
                               decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(.04),
+                                color: AppColors.kGreen
+                                    .withOpacity(.12),
 
-                                borderRadius: BorderRadius.circular(16),
-
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(.05),
+                                borderRadius:
+                                    BorderRadius.circular(
+                                  30,
                                 ),
                               ),
 
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              child: Text(
+                                "Current",
 
-                              children: [
-  Row(
-    children: [
-      Expanded(
-        child: Text(
-          e.degree ?? '',
-
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-      ),
-
-      if (e.isCurrent == true)
-        Container(
-          padding: const EdgeInsets.symmetric(
-            horizontal: 10,
-            vertical: 5,
-          ),
-
-          decoration: BoxDecoration(
-            color: AppColors.kGreen,
-            borderRadius: BorderRadius.circular(30),
-          ),
-
-          child: const Text(
-            "Current",
-
-            style: TextStyle(
-              color: Colors.black,
-              fontSize: 10,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-    ],
-  ),
-
-  const SizedBox(height: 8),
-
-  /// COLLEGE
-  Text(
-    e.college ?? '',
-
-    style: const TextStyle(
-      color: Color(0xff8B5CF6),
-      fontSize: 13,
-      fontWeight: FontWeight.w700,
-      letterSpacing: .2,
-    ),
-  ),
-
-  /// SPECIALIZATION
-  if ((e.specialization?.isNotEmpty ?? false)) ...[
-    const SizedBox(height: 6),
-
-    Text(
-      e.specialization!,
-
-      style: const TextStyle(
-        color: Colors.white70,
-        fontSize: 13,
-        fontWeight: FontWeight.w500,
-      ),
-    ),
-  ],
-if ((e.cgpa?.isNotEmpty ?? false)) ...[
-    const SizedBox(height: 10),
-
-    Row(
-      children: [
-        const Icon(
-          Icons.workspace_premium_outlined,
-          color: Colors.grey,
-          size: 15,
-        ),
-
-        const SizedBox(width: 6),
-
-        Text(
-          "CGPA: ${e.cgpa}",
-
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 12,
-          ),
-        ),
-      ],
-    ),
-  ],
-  // const SizedBox(height: 12),
-
-  // /// DATE + GRAD YEAR
-  // Row(
-  //   children: [
-  //     Icon(
-  //       Icons.calendar_month,
-  //       color: Colors.grey,
-  //       size: 15,
-  //     ),
-
-  //     // const SizedBox(width: 6),
-
-  //     // Expanded(
-  //     //   child: Text(
-  //     //     e.startDate != null || e.endDate != null
-  //     //         ? "${e.startDate ?? '-'} - ${e.endDate ?? 'Present'}"
-  //     //         : "Graduation Year: ${e.yearOfGraduation ?? '-'}",
-
-  //     //     maxLines: 1,
-  //     //     overflow: TextOverflow.ellipsis,
-
-  //     //     style: const TextStyle(
-  //     //       color: Colors.white70,
-  //     //       fontSize: 12,
-  //     //     ),
-  //     //   ),
-  //     // ),
-  //   ],
-  // ),
-
-  if ((e.yearOfGraduation?.isNotEmpty ?? false)) ...[
-    const SizedBox(height: 10),
-
-    Row(
-      children: [
-        const Icon(
-          Icons.workspace_premium_outlined,
-          color: Colors.grey,
-          size: 15,
-        ),
-
-        const SizedBox(width: 6),
-
-        Text(
-          "Graduation Year: ${e.yearOfGraduation}",
-
-          style: const TextStyle(
-            color: Colors.white70,
-            fontSize: 12,
-          ),
-        ),
-      ],
-    ),
-  ],
-],
+                                style: TextStyle(
+                                  color: AppColors.kGreen,
+                                  fontSize: 10,
+                                  fontWeight:
+                                      FontWeight.w700,
+                                ),
                               ),
                             ),
-                          )
-                          .toList(),
+                        ],
+                      ),
+
+                      const SizedBox(height: 5),
+
+                      /// SPECIALIZATION
+                      if ((e.specialization
+                              ?.isNotEmpty ??
+                          false))
+                        Text(
+                          e.specialization!,
+
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 14,
+                          ),
+                        ),
+
+                      const SizedBox(height: 10),
+
+                      /// COLLEGE + YEAR
+                      Wrap(
+                        spacing: 14,
+                        runSpacing: 10,
+
+                        children: [
+                          Row(
+                            mainAxisSize:
+                                MainAxisSize.min,
+
+                            children: [
+                               Icon(
+                                Icons.school_outlined,
+                                size: 15,
+                                color: AppColors.kGreen,
+                              ),
+
+                              const SizedBox(width: 6),
+
+                              Text(
+                                e.college ?? "",
+
+                                style:  TextStyle(
+                                  color: AppColors.kGreen,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          if ((e.yearOfGraduation
+                                  ?.isNotEmpty ??
+                              false))
+                            Row(
+                              mainAxisSize:
+                                  MainAxisSize.min,
+
+                              children: [
+                                const Icon(
+                                  Icons.calendar_month,
+                                  size: 15,
+                                  color: Colors.grey,
+                                ),
+
+                                const SizedBox(width: 6),
+
+                                Text(
+                                  e.yearOfGraduation!,
+
+                                  style:
+                                      const TextStyle(
+                                    color:
+                                        Colors.white70,
+                                    fontSize: 12,
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ],
+                      ),
+
+                      if ((e.cgpa?.isNotEmpty ??
+                          false)) ...[
+                        const SizedBox(height: 10),
+
+                        Text(
+                          "CGPA: ${e.cgpa}",
+
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontSize: 12,
+                            fontWeight:
+                                FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    )
+    .toList(),
                     ),
                   ),
 
@@ -905,127 +966,175 @@ if ((e.cgpa?.isNotEmpty ?? false)) ...[
                     title: "Experience",
                     icon: Icons.work_history,
 
-                    child: Column(
-                      children: (user.experiences ?? [])
-                          .map(
-                            (e) => Container(
-                              width: double.infinity,
+                   child: Column(
+  children: (user.experiences ?? [])
+      .where(
+        (e) =>
+            (e.company?.trim().isNotEmpty ?? false) ||
+            (e.role?.trim().isNotEmpty ?? false),
+      )
+      .map(
+        (e) => Container(
+          margin: const EdgeInsets.only(bottom: 18),
 
-                              margin: const EdgeInsets.only(bottom: 14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-                              padding: const EdgeInsets.all(14),
+            children: [
+              /// COMPANY BOX
+              Container(
+                height: 54,
+                width: 54,
 
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(.04),
+                alignment: Alignment.center,
 
-                                borderRadius: BorderRadius.circular(16),
+                decoration: BoxDecoration(
+                  color: AppColors.kGreen.withOpacity(.14),
 
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(.05),
-                                ),
-                              ),
+                  borderRadius: BorderRadius.circular(14),
 
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                  border: Border.all(
+                    color: AppColors.kGreen.withOpacity(.18),
+                  ),
+                ),
 
-                                children: [
-                                  Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          e.role ?? '',
+                child: Text(
+                  (e.company?.isNotEmpty ?? false)
+                      ? e.company!
+                          .trim()
+                          .substring(0, 1)
+                          .toUpperCase()
+                      : "C",
 
-                                          style: const TextStyle(
-                                            color: Colors.white,
+                  style: TextStyle(
+                    color: AppColors.kGreen,
+                    fontSize: 22,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
 
-                                            fontSize: 15,
+              const SizedBox(width: 14),
 
-                                            fontWeight: FontWeight.w700,
-                                          ),
-                                        ),
-                                      ),
+              /// CONTENT
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
-                                      if (e.isCurrent == true)
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 5,
-                                          ),
+                  children: [
+                    /// TOP ROW
+                    Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                            e.company ?? "",
 
-                                          decoration: BoxDecoration(
-                                            color: AppColors.kGreen,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 19,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                        ),
 
-                                            borderRadius: BorderRadius.circular(
-                                              30,
-                                            ),
-                                          ),
+                        if (e.isCurrent == true)
+                          Container(
+                            padding:
+                                const EdgeInsets.symmetric(
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
 
-                                          child: const Text(
-                                            "Current",
+                            decoration: BoxDecoration(
+                              color: AppColors.kGreen
+                                  .withOpacity(.12),
 
-                                            style: TextStyle(
-                                              color: Colors.black,
-
-                                              fontSize: 10,
-
-                                              fontWeight: FontWeight.w700,
-                                            ),
-                                          ),
-                                        ),
-                                    ],
-                                  ),
-
-                                  const SizedBox(height: 6),
-
-                                  Text(
-                                    e.company ?? '',
-
-                                    style: const TextStyle(
-                                      color: Color(0xff8B5CF6),
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w700,
-                                      letterSpacing: .2,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.calendar_month,
-                                        color: Colors.grey,
-                                        size: 15,
-                                      ),
-
-                                      const SizedBox(width: 6),
-
-                                      Text(
-                                        "${e.startDate ?? ''} - ${e.endDate ?? ''}",
-
-                                        style: const TextStyle(
-                                          color: Colors.white70,
-                                          fontSize: 12,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  const SizedBox(height: 12),
-
-                                  Text(
-                                    e.description ?? '-',
-
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      height: 1.5,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-                                ],
+                              borderRadius:
+                                  BorderRadius.circular(
+                                30,
                               ),
                             ),
-                          )
-                          .toList(),
+
+                            child: Text(
+                              "Current",
+
+                              style: TextStyle(
+                                color: AppColors.kGreen,
+                                fontSize: 11,
+                                fontWeight:
+                                    FontWeight.w700,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 4),
+
+                    /// ROLE
+                    Text(
+                      e.role ?? "",
+
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    /// DATE
+                    Row(
+                      children: [
+                        const Icon(
+                          Icons.calendar_month_outlined,
+                          size: 15,
+                          color: Colors.grey,
+                        ),
+
+                        const SizedBox(width: 7),
+
+                        Expanded(
+                          child: Text(
+                            "${e.startDate ?? ''} - ${e.endDate?.isNotEmpty == true ? e.endDate : 'Present'}",
+
+                            style:
+                                const TextStyle(
+                              color: Colors.white70,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    /// DESCRIPTION
+                    if ((e.description
+                            ?.trim()
+                            .isNotEmpty ??
+                        false)) ...[
+                      const SizedBox(height: 12),
+
+                      Text(
+                        e.description!,
+
+                        style: const TextStyle(
+                          color: Colors.white60,
+                          fontSize: 13,
+                          height: 1.5,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      )
+      .toList(),
+
                     ),
                   ),
                   if ((user.leadershipExperiences ?? []).isNotEmpty) ...[
@@ -1226,8 +1335,8 @@ if ((e.cgpa?.isNotEmpty ?? false)) ...[
                                     Text(
                                       e.title ?? '-',
 
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style:  TextStyle(
+                                        color: AppColors.kGreen,
                                         fontSize: 15,
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -1297,8 +1406,8 @@ if ((e.cgpa?.isNotEmpty ?? false)) ...[
                                     Text(
                                       e.title ?? '-',
 
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style:  TextStyle(
+                                        color:  AppColors.kGreen,
                                         fontSize: 15,
                                         fontWeight: FontWeight.w700,
                                       ),
@@ -1572,19 +1681,7 @@ if ((e.cgpa?.isNotEmpty ?? false)) ...[
         child: Stack(
           children: [
             /// BACKGROUND GLOW
-            Positioned(
-              top: -25,
-              right: -15,
-              child: Container(
-                height: 90,
-                width: 90,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.kGreen.withOpacity(.08),
-                ),
-              ),
-            ),
-
+         
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -1781,243 +1878,102 @@ if ((e.cgpa?.isNotEmpty ?? false)) ...[
       ),
     );
   }
+Widget _premiumHeader(User user, dynamic currentEducation) {
+  Experience? currentExp;
 
-  Widget _premiumHeader(User user, dynamic currentEducation) {
-    Experience? currentExp;
+  final totalExperience =
+      (user.totalYearsOfExperience?.isNotEmpty ?? false)
+          ? user.totalYearsOfExperience!
+          : "0";
 
-    final totalExperience = (user.totalYearsOfExperience?.isNotEmpty ?? false)
-        ? user.totalYearsOfExperience!
-        : "0";
+  final location =
+      (user.locations?.isNotEmpty ?? false)
+          ? user.locations!.first
+          : "India";
 
-    final location = (user.locations?.isNotEmpty ?? false)
-        ? user.locations!.first
-        : "India";
+  if (user.experiences?.isNotEmpty ?? false) {
+    currentExp = user.experiences!.firstWhere(
+      (e) => e.isCurrent == true,
+      orElse: () => user.experiences!.first,
+    );
+  }
 
-    if (user.experiences?.isNotEmpty ?? false) {
-      currentExp = user.experiences!.firstWhere(
-        (e) => e.isCurrent == true,
-        orElse: () => user.experiences!.first,
+  return TweenAnimationBuilder<double>(
+    tween: Tween(begin: 0, end: 1),
+    duration: const Duration(milliseconds: 900),
+    curve: Curves.easeOut,
+
+    builder: (context, value, child) {
+      return Transform.translate(
+        offset: Offset(0, 30 * (1 - value)),
+        child: Opacity(opacity: value, child: child),
       );
-    }
+    },
 
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 900),
-      curve: Curves.easeOut,
+    child: Container(
+      width: double.infinity,
 
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(0, 30 * (1 - value)),
-          child: Opacity(opacity: value, child: child),
-        );
-      },
+      padding: const EdgeInsets.all(22),
 
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(30),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(32),
 
-        child: Container(
-          width: double.infinity,
+    color: const Color(0xff050505),
 
-          padding: const EdgeInsets.all(20),
+        // border: Border.all(
+        //   color: AppColors.kGreen.withOpacity(.18),
+        // ),
 
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(30),
-
-            gradient: const LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [Color(0xff171C3A), Color(0xff232B5D), Color(0xff111111)],
-            ),
-
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(.35),
-                blurRadius: 30,
-                offset: const Offset(0, 20),
-              ),
-            ],
+        boxShadow: [
+          BoxShadow(
+            color: AppColors.kGreen.withOpacity(.12),
+            blurRadius: 35,
+            spreadRadius: 1,
+            offset: const Offset(0, 20),
           ),
+        ],
+      ),
 
-          child: Stack(
+      child: Stack(
+        children: [
+          /// BACKGROUND GLOW
+//        Positioned(
+//   bottom: -70,
+//   left: -40,
+
+//   child: Container(
+//     height: 170,
+//     width: 170,
+
+//     decoration: BoxDecoration(
+//       shape: BoxShape.circle,
+//       color: AppColors.kGreen.withOpacity(.04),
+//     ),
+//   ),
+// ),
+
+          // Positioned(
+          //   bottom: -70,
+          //   left: -40,
+
+          //   child: Container(
+          //     height: 170,
+          //     width: 170,
+
+          //     decoration: BoxDecoration(
+          //       shape: BoxShape.circle,
+          //       color: AppColors.kGreen.withOpacity(.04),
+          //     ),
+          //   ),
+          // ),
+
+          Column(
             children: [
-              /// GLOW CIRCLES
-              Positioned(
-                top: -40,
-                right: -30,
+              /// VERIFIED PROFILE
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
 
-                child: Container(
-                  height: 130,
-                  width: 130,
-
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: Colors.black.withOpacity(.18),
-                  ),
-                ),
-              ),
-
-              Positioned(
-                bottom: -50,
-                left: -30,
-
-                child: Container(
-                  height: 120,
-                  width: 120,
-
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: AppColors.kGreen.withOpacity(.12),
-                  ),
-                ),
-              ),
-
-              Column(
                 children: [
-                  /// VERIFIED
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 12,
-                          vertical: 7,
-                        ),
-
-                        decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(.12),
-
-                          borderRadius: BorderRadius.circular(30),
-
-                          border: Border.all(
-                            color: Colors.green.withOpacity(.25),
-                          ),
-                        ),
-
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-
-                          children: const [
-                            Icon(Icons.verified, color: Colors.green, size: 14),
-
-                            SizedBox(width: 6),
-
-                            Text(
-                              "Verified Profile",
-
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontSize: 11,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 24),
-
-                  /// AVATAR
-                  TweenAnimationBuilder<double>(
-                    tween: Tween(begin: .8, end: 1),
-                    duration: const Duration(milliseconds: 700),
-                    curve: Curves.elasticOut,
-
-                    builder: (context, scale, child) {
-                      return Transform.scale(scale: scale, child: child);
-                    },
-
-                    child: Stack(
-                      alignment: Alignment.center,
-
-                      children: [
-                        Container(
-                          height: 105,
-                          width: 105,
-
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-
-                            gradient: LinearGradient(
-                              colors: [
-                                AppColors.kGreen.withOpacity(.7),
-                                Colors.black.withOpacity(.7),
-                              ],
-                            ),
-                          ),
-                        ),
-
-                        Container(
-                          padding: const EdgeInsets.all(4),
-
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-
-                            border: Border.all(
-                              color: Colors.white.withOpacity(.15),
-                              width: 2,
-                            ),
-                          ),
-
-                          child: CircleAvatar(
-                            radius: 44,
-                            backgroundColor: Colors.black,
-
-                            child: Text(
-                              user.name?.isNotEmpty == true
-                                  ? user.name![0].toUpperCase()
-                                  : "U",
-
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 34,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-
-                        Positioned(
-                          bottom: 4,
-                          right: 4,
-
-                          child: Container(
-                            height: 18,
-                            width: 18,
-
-                            decoration: BoxDecoration(
-                              color: Colors.green,
-                              shape: BoxShape.circle,
-
-                              border: Border.all(color: Colors.black, width: 2),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 18),
-
-                  /// NAME
-                  Text(
-                    user.name ?? "",
-
-                    textAlign: TextAlign.center,
-
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 26,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -.5,
-                    ),
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  /// ROLE + COMPANY
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 14,
@@ -2025,151 +1981,341 @@ if ((e.cgpa?.isNotEmpty ?? false)) ...[
                     ),
 
                     decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(.06),
+                      color: AppColors.kGreen.withOpacity(.10),
+
                       borderRadius: BorderRadius.circular(30),
+
+                      border: Border.all(
+                        color: AppColors.kGreen.withOpacity(.25),
+                      ),
                     ),
 
-                    child: Text(
-                      '${currentExp?.role ?? 'Professional'} @ ${currentExp?.company ?? user.currentCompany ?? '-'}',
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
 
-                      textAlign: TextAlign.center,
+                      children: [
+                        Icon(
+                          Icons.verified,
+                          color: AppColors.kGreen,
+                          size: 14,
+                        ),
 
-                      style: const TextStyle(
-                        color: Colors.white70,
-                        fontSize: 13,
-                        fontWeight: FontWeight.w500,
+                        const SizedBox(width: 6),
+
+                        Text(
+                          "Verified Profile",
+
+                          style: TextStyle(
+                            color: AppColors.kGreen,
+                            fontSize: 11,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 18),
+
+              /// AVATAR
+              Stack(
+                alignment: Alignment.center,
+
+                children: [
+                  /// OUTER RING
+                  Container(
+                    height: 118,
+                    width: 118,
+
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+
+                      border: Border.all(
+                        color: AppColors.kGreen,
+                        width: 2,
                       ),
+
                     ),
                   ),
 
-                  const SizedBox(height: 18),
+                  /// PROFILE
+                  CircleAvatar(
+                    radius: 48,
+                    backgroundColor: Colors.black,
 
-                  /// INFO ROW
+                    backgroundImage:
+                        (user.profileImage?.isNotEmpty ?? false)
+                            ? NetworkImage(user.profileImage!)
+                            : null,
+
+                    child:
+                        (user.profileImage?.isEmpty ?? true)
+                            ? Text(
+                              user.name?.isNotEmpty == true
+                                  ? user.name![0].toUpperCase()
+                                  : "U",
+
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 42,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            )
+                            : null,
+                  ),
+
+                  /// VERIFIED TICK
+                  Positioned(
+                    bottom: 10,
+                    right: 6,
+
+                    child: Container(
+                      height: 24,
+                      width: 24,
+
+                      decoration: BoxDecoration(
+                        color: AppColors.kGreen,
+                        shape: BoxShape.circle,
+
+                        border: Border.all(
+                          color: Colors.black,
+                          width: 3,
+                        ),
+
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.kGreen.withOpacity(.5),
+                            blurRadius: 12,
+                          ),
+                        ],
+                      ),
+
+                      child: const Icon(
+                        Icons.check,
+                        size: 14,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 22),
+
+              /// NAME
+              Text(
+                user.name ?? "",
+
+                textAlign: TextAlign.center,
+
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 34,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: -.8,
+                ),
+              ),
+
+              const SizedBox(height: 10),
+
+              /// ROLE + COMPANY
+              Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 9,
+                ),
+
+                decoration: BoxDecoration(
+                  color: AppColors.kGreen.withOpacity(.10),
+
+                  borderRadius: BorderRadius.circular(30),
+
+                  border: Border.all(
+                    color: AppColors.kGreen.withOpacity(.25),
+                  ),
+                ),
+
+                child: Text(
+                  '${currentExp?.role ?? 'Professional'} @ ${currentExp?.company ?? user.currentCompany ?? '-'}',
+
+                  textAlign: TextAlign.center,
+
+                  style: TextStyle(
+                    color: AppColors.kGreen,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 20),
+
+              /// INFO ROW
+              Wrap(
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 14,
+                runSpacing: 10,
+
+                children: [
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
 
                     children: [
-                      _topInfo(Icons.location_on_outlined, location),
+                      Icon(
+                        Icons.location_on_outlined,
+                        size: 15,
+                        color: AppColors.kGreen,
+                      ),
 
-                      _headerDivider(),
+                      const SizedBox(width: 5),
 
-                      _topInfo(
+                      Text(
+                        location,
+
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  Container(
+                    height: 12,
+                    width: 1,
+                    color: Colors.white24,
+                  ),
+
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+
+                    children: [
+                      Icon(
                         Icons.work_outline,
+                        size: 15,
+                        color: AppColors.kGreen,
+                      ),
+
+                      const SizedBox(width: 5),
+
+                      Text(
                         "Worked at ${user.experiences?.length ?? 0} Companies",
-                      ),
-                    ],
-                  ),
 
-                  const SizedBox(height: 24),
-
-                  /// STATS
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _premiumStatCard(
-                          title: "Years of Experience",
-                          value: totalExperience,
-                          icon: Icons.work_outline,
-
-                          gradient: const [
-                            Color(0xff7F5AF0),
-                            Color(0xff6246EA),
-                          ],
-                        ),
-                      ),
-
-                      const SizedBox(width: 12),
-
-                      Expanded(
-                        child: _premiumStatCard(
-                          title: "Skills",
-                          value: "${user.skills?.length ?? 0}",
-                          icon: Icons.auto_awesome,
-
-                          gradient: const [
-                            Color(0xff00C6FB),
-                            Color(0xff005BEA),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 22),
-
-                  /// BUTTONS
-                  Row(
-                    children: [
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: (user.resume?.isNotEmpty ?? false)
-                              ? () {
-                                  final url = user.resume;
-
-                                  if (url == null) {
-                                    Toasts.showInfoToast(
-                                      context,
-                                      message: 'No Resume Found!',
-                                    );
-                                    return;
-                                  }
-
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) =>
-                                          ResumeViewerPage(url: url),
-                                    ),
-                                  );
-                                }
-                              : null,
-
-                          child: _headerButton(
-                            icon: Icons.picture_as_pdf,
-                            title: "Resume",
-
-                            filled: (user.resume?.isNotEmpty ?? false),
-
-                            disabled: !(user.resume?.isNotEmpty ?? false),
-                          ),
-                        ),
-                      ),
-
-                      const SizedBox(width: 12),
-
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: (user.linkedin?.isNotEmpty ?? false)
-                              ? () async {
-                                  final uri = Uri.parse(user.linkedin!);
-
-                                  if (await canLaunchUrl(uri)) {
-                                    await launchUrl(uri);
-                                  }
-                                }
-                              : null,
-
-                          child: _headerButton(
-                            icon: Icons.link,
-                            title: "LinkedIn",
-
-                            filled: true,
-
-                            disabled: !(user.linkedin?.isNotEmpty ?? false),
-                          ),
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
                         ),
                       ),
                     ],
                   ),
                 ],
               ),
+
+              const SizedBox(height: 24),
+
+              /// STATS
+              Row(
+                children: [
+                  Expanded(
+                    child: _premiumStatCard(
+                      title: "YOE",
+                      value: totalExperience,
+                      icon: Icons.work_outline,
+
+                      gradient: const [
+                        Color(0xff0E1B12),
+                        Color(0xff101A13),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(width: 14),
+
+                  Expanded(
+                    child: _premiumStatCard(
+                      title: "Skills",
+                      value: "${user.skills?.length ?? 0}",
+                      icon: Icons.star_border,
+
+                      gradient: const [
+                        Color(0xff0E1B12),
+                        Color(0xff101A13),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 18),
+
+              /// BUTTONS
+              Row(
+                children: [
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: (user.resume?.isNotEmpty ?? false)
+                          ? () {
+                              final url = user.resume;
+
+                              if (url == null) return;
+
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) =>
+                                      ResumeViewerPage(url: url),
+                                ),
+                              );
+                            }
+                          : null,
+
+                      child: _headerButton(
+                        icon: Icons.picture_as_pdf,
+                        title: "Resume",
+
+                        filled: false,
+
+                        disabled: !(user.resume?.isNotEmpty ?? false),
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(width: 14),
+
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: (user.linkedin?.isNotEmpty ?? false)
+                          ? () async {
+                              final uri = Uri.parse(user.linkedin!);
+
+                              if (await canLaunchUrl(uri)) {
+                                await launchUrl(uri);
+                              }
+                            }
+                          : null,
+
+                      child: _headerButton(
+                        icon: Icons.business,
+                        title: "LinkedIn",
+
+                        filled: true,
+
+                        disabled: !(user.linkedin?.isNotEmpty ?? false),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
-        ),
+        ],
       ),
-    );
-  }
-
+    ),
+  );
+}
   Widget _topInfo(IconData icon, String text) {
     return Row(
       children: [
@@ -2248,47 +2394,91 @@ if ((e.cgpa?.isNotEmpty ?? false)) ...[
       color: Colors.white.withOpacity(.12),
     );
   }
+Widget _premiumStatCard({
+  required String title,
+  required String value,
+  required IconData icon,
+  required List<Color> gradient,
+}) {
+  return Container(
+    padding: const EdgeInsets.symmetric(
+      horizontal: 14,
+      vertical: 14,
+    ),
 
-  Widget _premiumStatCard({
-    required String title,
-    required String value,
-    required IconData icon,
-    required List<Color> gradient,
-  }) {
-    return Container(
-      padding: const EdgeInsets.symmetric(vertical: 16),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(colors: gradient),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: gradient.first.withOpacity(.25),
-            blurRadius: 18,
-            offset: const Offset(0, 10),
-          ),
-        ],
+    decoration: BoxDecoration(
+      color: const Color(0xff0B0B0B),
+
+      borderRadius: BorderRadius.circular(18),
+
+      border: Border.all(
+        color: Colors.white.withOpacity(.05),
       ),
-      child: Column(
-        children: [
-          Icon(icon, color: Colors.white, size: 20),
-          const SizedBox(height: 10),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 22,
-              fontWeight: FontWeight.bold,
+    ),
+
+    child: Row(
+      children: [
+        /// ICON
+        Container(
+          padding: const EdgeInsets.all(10),
+
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+
+            color: AppColors.kGreen.withOpacity(.08),
+
+            border: Border.all(
+              color: AppColors.kGreen.withOpacity(.18),
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(color: Colors.white70, fontSize: 11),
+
+          child: Icon(
+            icon,
+            color: AppColors.kGreen,
+            size: 18,
           ),
-        ],
-      ),
-    );
-  }
+        ),
+
+        const SizedBox(width: 12),
+
+        /// TEXT
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+
+            children: [
+              Text(
+                value,
+
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+
+              const SizedBox(height: 2),
+
+              Text(
+                title,
+
+                maxLines: 2,
+
+                overflow: TextOverflow.ellipsis,
+
+                style: const TextStyle(
+                  color: Colors.white70,
+                  fontSize: 11,
+                  height: 1.3,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    ),
+  );
+}
 
   Widget _headerButton({
     required IconData icon,

@@ -180,13 +180,9 @@ getIt<AppStateProvider>().data =
     User(
   email: email,
 );
-  Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(
-      builder: (_) =>
-          const OnboardingFlow(),
-    ),
-  );
+  context.pushReplacementNamed(
+  RouteNames.onboarding,
+);
 },
                                           );
                                         } else {

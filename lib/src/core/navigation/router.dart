@@ -36,12 +36,15 @@ import 'package:rawrecruit/src/features/referral/presentation/index.dart';
 import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view/interview_screen.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
+import '../../feature/revamp_application/entities/application_model.dart';
 import '../../feature/revamp_auth/index.dart';
 import '../../feature/revamp_jobs/presentation/professional_jobs_tab.dart';
 import '../../feature/revamp_profile/presentation/modern_profile_page.dart';
 import '../../features/chat/index.dart';
 import '../../features/onboarding/presentation/add_edit_profile_view.dart';
+import '../../features/professional/application_listing/presentation/application_detail_view.dart';
 import '../../features/professional/job_postng/presentation/referral_detail_page.dart';
+import '../../features/professional/job_postng/presentation/referred_detail_page.dart';
 import '../../features/scheduled_interviews/presentation/view/interview_detail_screen.dart';
 import '../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 import '../services/dependency_locator.dart';
@@ -116,6 +119,21 @@ GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
+  name: RouteNames.referredCandidateDetail,
+  path: '/referredCandidateDetail',
+
+  builder: (context, state) {
+    final data =
+        state.extra as Map<String, dynamic>;
+
+    return ReferredCandidateDetailPage(
+      application: data['application'],
+      showStatusActions:
+          data['showStatusActions'] ?? false,
+    );
+  },
+),
+    GoRoute(
       name: RouteNames.alumniDetail,
       path: "/alumni-detail",
       builder: (context, state) {
@@ -123,6 +141,7 @@ GoRouter appRouter = GoRouter(
         return AlumniDetailView(jobs: jobs);
       },
     ),
+    
     GoRoute(
       name: RouteNames.referralPost,
       path: '/referralPost',
@@ -218,6 +237,7 @@ GoRouter appRouter = GoRouter(
         return AddEditProfileView(user: user);
       },
     ),
+
     GoRoute(
       name: RouteNames.onboarding,
       path: '/onboarding',
@@ -225,7 +245,19 @@ GoRouter appRouter = GoRouter(
         return OnboardingFlow();
       },
     ),
+GoRoute(
+  name: RouteNames.referralApplicationDetail,
+  path: '/referralApplicationDetail',
 
+  builder: (context, state) {
+    final application =
+        state.extra as ApplicationModel;
+
+    return ReferralApplicationDetailScreen(
+      application: application,
+    );
+  },
+),
     GoRoute(
       name: RouteNames.userType,
       path: '/userType',

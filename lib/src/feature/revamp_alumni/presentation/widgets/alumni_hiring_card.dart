@@ -219,7 +219,7 @@ final designation =
 
                         isHiring
                             ? Colors.green
-                            : Colors.red,
+                            : Colors.grey,
                       ),
 
                   
@@ -290,7 +290,7 @@ final designation =
                               TextStyle(
                             color: isHiring
                                 ? Colors.green
-                                : Colors.red,
+                                : Colors.grey,
 
                             fontSize: 10,
 

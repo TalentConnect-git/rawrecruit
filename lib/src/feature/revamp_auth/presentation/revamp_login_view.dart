@@ -127,7 +127,7 @@ class _LoginViewState extends State<RevampLoginView> {
   final completed =
       await onboardingService.isCompleted();
 
-  if (completed) {
+  if (getIt<AppStateProvider>().isProfileComplete) {
     context.pushReplacementNamed(
       RouteNames.dashboard,
       extra: {
@@ -137,13 +137,9 @@ class _LoginViewState extends State<RevampLoginView> {
       },
     );
   } else {
-      Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (_) =>
-            const OnboardingFlow(),
-      ),
-    );
+     context.pushReplacementNamed(
+  RouteNames.onboarding,
+);
   }
 },
                         );

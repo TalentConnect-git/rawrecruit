@@ -46,15 +46,15 @@ class _HomeViewState extends State<HomeView> {
         final completed = await onboardingService.isCompleted();
 
         if (!completed) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(builder: (_) => const OnboardingFlow()),
-          );
+         context.pushReplacementNamed(
+  RouteNames.onboarding,
+);
 
           return;
         }
       }
     });
+
     super.initState();
   }
 

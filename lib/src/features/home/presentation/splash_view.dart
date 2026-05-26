@@ -62,10 +62,9 @@ class _SplashViewState extends State<SplashView> {
     if (!mounted) return;
 
     if (next == 'onboarding_flow') {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const OnboardingFlow()),
-      );
+    context.pushReplacementNamed(
+  RouteNames.onboarding,
+);
     } else {
       context.pushReplacementNamed(
         next,

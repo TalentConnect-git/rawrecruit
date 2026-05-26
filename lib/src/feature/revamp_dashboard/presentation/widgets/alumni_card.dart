@@ -18,16 +18,14 @@ class AlumniCard extends StatelessWidget {
 
     final first = jobs.first;
     final candidate = first.candidatePosted;
-           final currentExperience =
-    candidate?.experiences?.firstWhere(
+    final currentExperience = candidate?.experiences?.firstWhere(
       (e) => e.isCurrent == true,
       orElse: () => candidate.experiences!.isNotEmpty
           ? candidate.experiences!.first
           : Experience(),
     );
 
-final currentEducation =
-    (candidate?.educations?.isNotEmpty ?? false)
+    final currentEducation = (candidate?.educations?.isNotEmpty ?? false)
         ? candidate!.educations!.firstWhere(
             (e) => e.isCurrent == true,
             orElse: () => candidate.educations!.first,
@@ -71,31 +69,25 @@ final currentEducation =
               mainAxisSize: MainAxisSize.min,
               children: [
                 /// AVATAR
-             CircleAvatar(
-  radius: 26,
-  backgroundColor: AppColors.kGreen,
+                CircleAvatar(
+                  radius: 26,
+                  backgroundColor: AppColors.kGreen,
 
-  backgroundImage:
-      (candidate?.profileImage ?? '')
-              .isNotEmpty
-          ? NetworkImage(
-              candidate!.profileImage!,
-            )
-          : null,
+                  backgroundImage: (candidate?.profileImage ?? '').isNotEmpty
+                      ? NetworkImage(candidate!.profileImage!)
+                      : null,
 
-  child:
-      (candidate?.profileImage ?? '')
-              .isEmpty
-          ? Text(
-              initials,
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-              ),
-            )
-          : null,
-),
+                  child: (candidate?.profileImage ?? '').isEmpty
+                      ? Text(
+                          initials,
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
+                        )
+                      : null,
+                ),
 
                 const SizedBox(height: 12),
 
@@ -126,97 +118,88 @@ final currentEducation =
                 // const SizedBox(height: 4),
 
                 /// DESIGNATION + COMPANY
-   
 
-/// COMPANY
-Text(
-  currentExperience?.company?.isNotEmpty == true
-      ? currentExperience!.company!
-      : "-",
+                /// COMPANY
+             Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+    const Icon(
+      Icons.business_center_outlined,
+      size: 14,
+      color: Colors.white70,
+    ),
 
-  textAlign: TextAlign.center,
-  maxLines: 1,
-  overflow: TextOverflow.ellipsis,
+    const SizedBox(width: 4),
 
-  style: const TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.w700,
-    fontSize: 13,
-  ),
+    Flexible(
+      child: Text(
+        currentExperience?.company?.isNotEmpty == true
+            ? currentExperience!.company!
+            : "-",
+
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+
+        style: const TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.w700,
+          fontSize: 13,
+        ),
+      ),
+    ),
+  ],
 ),
 
-const SizedBox(height: 4),
+                const SizedBox(height: 4),
 
-/// ROLE
-Text(
-  currentExperience?.role?.isNotEmpty == true
-      ? currentExperience!.role!
-      : "-",
+                /// ROLE
+                Text(
+                  currentExperience?.role?.isNotEmpty == true
+                      ? currentExperience!.role!
+                      : "-",
 
-  textAlign: TextAlign.center,
-  maxLines: 1,
-  overflow: TextOverflow.ellipsis,
+                  textAlign: TextAlign.center,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
 
-  style: const TextStyle(
-    color: Colors.grey,
-    fontSize: 12,
-  ),
-),
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
 
-const SizedBox(height: 6),
+                const SizedBox(height: 6),
 
-/// COLLEGE
-Text(
-  currentEducation?.college?.isNotEmpty == true
-      ? currentEducation!.college!
-      : "-",
+                /// COLLEGE
+                Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: [
+     Icon(
+      Icons.school_outlined,
+      size: 14,
+      color:  AppColors.kGreen,
+    ),
 
-  textAlign: TextAlign.center,
-  maxLines: 1,
-  overflow: TextOverflow.ellipsis,
+    const SizedBox(width: 4),
 
-  style: const TextStyle(
-    color: Color(0xff8B5CF6),
-    fontSize: 12,
-    fontWeight: FontWeight.w600,
-  ),
+    Flexible(
+      child: Text(
+        currentEducation?.college?.isNotEmpty == true
+            ? currentEducation!.college!
+            : "-",
+
+        textAlign: TextAlign.center,
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+
+        style:  TextStyle(
+          color: AppColors.kGreen,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ),
+  ],
 ),
                 const SizedBox(height: 8),
-    //             Row(
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               children: [
-    //                 Flexible(
-    //                   child: Text(
-    //                 candidate?.educations != null &&
-    //     candidate!
-    //         .educations!
-    //         .isNotEmpty
-    // ? candidate
-    //         .educations!
-    //         .firstWhere(
-    //           (e) =>
-    //               e.isCurrent ==
-    //               true,
-
-    //           orElse: () =>
-    //               candidate
-    //                   .educations!
-    //                   .first,
-    //         )
-    //         .college ??
-    //     '-'
-    // : '-',
-    //                     maxLines: 1,
-    //                     overflow: TextOverflow.ellipsis,
-    //                     style: const TextStyle(
-    //                       color: Colors.grey,
-    //                       fontSize: 12,
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //             const SizedBox(height: 8),
 
                 /// 🔹 HIRING STATUS
                 Row(
@@ -226,7 +209,7 @@ Text(
                       width: 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: isHiring ? Colors.green : Colors.red,
+                        color: isHiring ? Colors.green : Colors.grey,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -236,7 +219,7 @@ Text(
                     Text(
                       isHiring ? "Hiring • $jobCount jobs" : "Not Hiring",
                       style: TextStyle(
-                        color: isHiring ? Colors.green : Colors.red,
+                        color: isHiring ? Colors.green : Colors.grey,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),

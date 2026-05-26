@@ -41,14 +41,33 @@ void initState() {
   restoreOnboarding();
 }
   /// 👉 NEXT
-  void nextPage() {
-    if (currentPage < totalPages - 1) {
-      _controller.nextPage(
-        duration: const Duration(milliseconds: 300),
-        curve: Curves.easeInOut,
+ void nextPage() {
+  /// 🔥 ONLY FOR BASIC PAGE
+  if (currentPage == 1) {
+    final user =
+        context.read<AppStateProvider>().data ?? data;
+
+    if ((user.name?.trim().isEmpty ?? true) ||
+        (user.email?.trim().isEmpty ?? true)) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            "Name and Email are required",
+          ),
+        ),
       );
+
+      return;
     }
   }
+
+  if (currentPage < totalPages - 1) {
+    _controller.nextPage(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
+  }
+}
 Future<void> restoreOnboarding() async {
   final savedStep =
       await onboardingLocal.getStep();
