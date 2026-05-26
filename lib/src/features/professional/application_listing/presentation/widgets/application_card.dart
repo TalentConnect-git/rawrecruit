@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/presentation/application_detail_view.dart';
+
+import '../../../../../core/index.dart';
 
 class ReferralApplicationCard extends StatelessWidget {
   final ApplicationModel application;
@@ -27,16 +30,13 @@ class ReferralApplicationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final job = application.jobDetails;
 
+
     return GestureDetector(
       onTap: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => ReferralApplicationDetailScreen(
-              application: application,
-            ),
-          ),
-        );
+       context.pushNamed(
+  RouteNames.referralApplicationDetail,
+  extra: application,
+);
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -120,12 +120,7 @@ class ReferralApplicationCard extends StatelessWidget {
                   label: application.currentStatus,
                 ),
 
-                /// Admin Status
-                // if (application.adminApprovalStatus != null)
-                //   _buildStatusChip(
-                //     label:
-                //         "${application.adminApprovalStatus} By Admin",
-                //   ),
+             
               ],
             ),
           ],

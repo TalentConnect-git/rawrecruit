@@ -501,7 +501,7 @@ Row(
                     _linkTile(
                       context: context,
 
-                      image: "assets/images/cv.png",
+                      image: "assets/images/mail.png",
                       title: "Email",
                       value: first.candidatePosted!.email!,
                     ),
