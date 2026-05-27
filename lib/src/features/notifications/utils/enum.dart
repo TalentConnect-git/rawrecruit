@@ -163,6 +163,13 @@ enum NotificationType {
     backgroundColor: Color(0xFFFEE2E2),
     icon: Icons.thumb_down_alt_outlined,
   ),
+  @JsonValue('NEW_APPLICATION_FOR_JOB')
+  newApplicationForJob(
+    label: 'New Application',
+    textColor: Color(0xFF2563EB),
+    backgroundColor: Color(0xFFDBEAFE),
+    icon: Icons.person_add_alt_1_outlined,
+  ),
   @JsonValue('NEW_CHAT_MESSAGE')
   newChatMessage(
     label: 'New Chat Message',

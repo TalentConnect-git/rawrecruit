@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -33,12 +32,9 @@ class NotificationService {
     });
     // Foreground message handling
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      log('Message: ${message.toMap()}', name: '📩 Foreground Message');
+      print('📩 Foreground Message: ${message.toMap()}');
 
-      log(
-        'Notification: ${message.notification?.toMap()}',
-        name: '📩 Foreground Notification',
-      );
+      print('📩 Foreground Notification: ${message.notification?.toMap()}');
 
       _flutterLocalNotificationsPlugin.show(
         title: message.notification?.title,
@@ -59,8 +55,8 @@ class NotificationService {
     });
 
     // When opened from background
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      _handlePushNotificationData(message);
+    FirebaseMessaging.onMessageOpenedApp.listen((message) async {
+      await _handlePushNotificationData(message);
     });
 
     // When opened from terminated state
@@ -81,19 +77,19 @@ class NotificationService {
       notificationData = jsonDecode(message) as Map<String, dynamic>;
     }
 
-    final metaData = notificationData['meta'];
-
-    final topic = metaData['topic'];
-    final subtopic = metaData['subtopic'];
-    final idFromPushNotification = metaData['id'] as String?;
+    print('Notification Data: ${notificationData.toString()}');
 
     final state = navigatorKey.currentState;
+
+    final topic = notificationData['topic'];
+    final subtopic = notificationData['subtopic'];
+    final idFromPushNotification = notificationData['id'] as String?;
 
     switch (topic) {
       case 'Jobs':
         switch (subtopic) {
           case 'My Posted':
-            final jobId = metaData['jobId'];
+            final jobId = notificationData['jobId'];
 
             if (jobId == null) return;
 
@@ -107,7 +103,7 @@ class NotificationService {
             break;
 
           case 'JobDetail':
-            final jobId = metaData['jobId'];
+            final jobId = notificationData['jobId'];
 
             if (jobId == null) return;
 
@@ -122,8 +118,8 @@ class NotificationService {
       case 'Job Detail':
         switch (subtopic) {
           case 'Candidates':
-            final jobId = metaData['jobId'];
-            final applicationId = metaData['applicationId'];
+            final jobId = notificationData['jobId'];
+            final applicationId = notificationData['applicationId'];
 
             if (jobId == null || applicationId == null) return;
 
@@ -139,8 +135,8 @@ class NotificationService {
         break;
 
       case 'Scheduled Interviews':
-        final applicationId = metaData['applicationId'];
-        final jobId = metaData['jobId'];
+        final applicationId = notificationData['applicationId'];
+        final jobId = notificationData['jobId'];
 
         if (applicationId == null || jobId == null) return;
 
@@ -150,12 +146,12 @@ class NotificationService {
       case 'Referrer':
         switch (subtopic) {
           case 'Applied By Me':
-            final applicationId = metaData['applicationId'];
-            final jobId = metaData['jobId'];
+            final applicationId = notificationData['applicationId'];
+            final jobId = notificationData['jobId'];
 
             if (applicationId == null) return;
 
-            state?.context.pushNamed(
+            state?.context.goNamed(
               RouteNames.referrer,
               // extra: {'applicationId': applicationId, 'jobId': jobId},
             );
@@ -165,8 +161,8 @@ class NotificationService {
         break;
 
       case 'Chat':
-        final senderId = metaData['senderId'];
-        final referenceId = metaData['referenceId'];
+        final senderId = notificationData['senderId'];
+        final referenceId = notificationData['referenceId'];
 
         if (senderId == null || referenceId == null) return;
 

@@ -77,6 +77,7 @@ const _$NotificationTypeEnumMap = {
       'APPLICATION_REFERRED_TO_COMPANY',
   NotificationType.referralJobApproved: 'REFERRAL_JOB_APPROVED',
   NotificationType.referralJobRejected: 'REFERRAL_JOB_REJECTED',
+  NotificationType.newApplicationForJob: 'NEW_APPLICATION_FOR_JOB',
   NotificationType.newChatMessage: 'NEW_CHAT_MESSAGE',
 };
 

@@ -206,7 +206,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
             if (applicationId == null) return;
 
-            context.pushNamed(
+            context.goNamed(
               RouteNames.referrer,
               // extra: {'applicationId': applicationId, 'jobId': jobId},
             );
