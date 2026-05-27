@@ -7,6 +7,7 @@ import 'package:rawrecruit/src/feature/revamp_alumni/presentation/widgets/alumni
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../common/index.dart';
 import 'view_model/prof_dashboard_view_model.dart';
@@ -92,12 +93,42 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () async {
-                    final url = Uri.tryParse(
-                      'https://rawrecruit.in/professional-dashboard/Referral/',
-                    );
-                    if (url != null) await launchUrl(url);
-                  },
+                onTap: () async {
+  final company =
+      widget.companyName ??
+      referral?.candidatePosted?.currentCompany ??
+      job.candidatePosted?.currentCompany ??
+      "Company";
+
+  final role = job.jobTitle ?? "Job Opportunity";
+
+  final package = job.packageDetails?.totalCTC != null
+      ? "₹${job.packageDetails!.totalCTC}"
+      : "Not Disclosed";
+
+  final location = (job.location?.isNotEmpty ?? false)
+      ? job.location!.join(", ")
+      : "Not Mentioned";
+
+  final mode = (job.workMode?.isNotEmpty ?? false)
+      ? job.workMode!.join(", ")
+      : "Not Mentioned";
+
+  final shareText = '''
+🚀 Referral Opportunity
+
+💼 Role: $role
+🏢 Company: $company
+💰 Package: $package
+📍 Location: $location
+🧑‍💻 Work Mode: $mode
+
+Apply here:
+https://rawrecruit.in/professional-dashboard/Referral/
+''';
+
+  await Share.share(shareText);
+},
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: Icon(Icons.share, color: AppColors.kGreen),
