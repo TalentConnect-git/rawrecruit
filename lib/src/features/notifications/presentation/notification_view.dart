@@ -23,13 +23,9 @@ class _NotificationViewState extends State<NotificationView> {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final failure =
-          await notificationViewModel.getNotifications();
+      final failure = await notificationViewModel.getNotifications();
 
-      Toasts.showErrorToast(
-        context,
-        message: failure?.message,
-      );
+      Toasts.showErrorToast(context, message: failure?.message);
     });
   }
 
@@ -58,9 +54,7 @@ class _NotificationViewState extends State<NotificationView> {
 
           title: Text(
             "Notifications",
-            style: AppTextStyles.s20W600.copyWith(
-              color: AppColors.white,
-            ),
+            style: AppTextStyles.s20W600.copyWith(color: AppColors.white),
           ),
         ),
 
@@ -68,17 +62,14 @@ class _NotificationViewState extends State<NotificationView> {
           builder: (vmContext, vm, _) {
             /// 🔥 LOADING
             if (vm.isLoading) {
-              return const Center(
-                child: AppLoadingIndicator(),
-              );
+              return const Center(child: AppLoadingIndicator());
             }
 
             /// 🔥 EMPTY
             if (vm.notifications.isEmpty) {
               return Center(
                 child: Column(
-                  mainAxisAlignment:
-                      MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.notifications_off_outlined,
@@ -90,8 +81,7 @@ class _NotificationViewState extends State<NotificationView> {
 
                     Text(
                       'No Notifications Yet',
-                      style:
-                          AppTextStyles.s18W600.copyWith(
+                      style: AppTextStyles.s18W600.copyWith(
                         color: AppColors.white,
                       ),
                     ),
@@ -100,10 +90,7 @@ class _NotificationViewState extends State<NotificationView> {
 
                     Text(
                       'You’ll see updates and alerts here.',
-                      style:
-                          AppTextStyles.s14W400.copyWith(
-                        color: Colors.grey,
-                      ),
+                      style: AppTextStyles.s14W400.copyWith(color: Colors.grey),
                     ),
                   ],
                 ),
@@ -116,14 +103,9 @@ class _NotificationViewState extends State<NotificationView> {
               backgroundColor: AppColors.kTile,
 
               onRefresh: () async {
-                final failure =
-                    await notificationViewModel
-                        .getNotifications();
+                final failure = await notificationViewModel.getNotifications();
 
-                Toasts.showErrorToast(
-                  context,
-                  message: failure?.message,
-                );
+                Toasts.showErrorToast(context, message: failure?.message);
               },
 
               child: ListView.separated(
@@ -134,61 +116,48 @@ class _NotificationViewState extends State<NotificationView> {
 
                 itemCount: vm.notifications.length,
 
-                separatorBuilder: (_, __) =>
-                    const SizedBox(height: 12),
+                separatorBuilder: (_, __) => const SizedBox(height: 12),
 
                 itemBuilder: (_, index) {
-                  final notification =
-                      vm.notifications[index];
+                  final notification = vm.notifications[index];
 
-                  return GestureDetector(
-                    onTap: () async {
-                      final failure =
-                          await vm.markAsRead(
-                        notification.id ?? '',
-                      );
+                  return AnimatedContainer(
+                    duration: const Duration(milliseconds: 250),
 
-                      Toasts.showErrorToast(
-                        context,
-                        message: failure?.message,
-                      );
-                    },
+                    decoration: BoxDecoration(
+                      color: notification.read == true
+                          ? AppColors.kTile
+                          : AppColors.kTile.withOpacity(.95),
 
-                    child: AnimatedContainer(
-                      duration: const Duration(
-                        milliseconds: 250,
-                      ),
+                      borderRadius: BorderRadius.circular(18),
 
-                      decoration: BoxDecoration(
+                      border: Border.all(
                         color: notification.read == true
-                            ? AppColors.kTile
-                            : AppColors.kTile
-                                .withOpacity(.95),
+                            ? AppColors.kBorder
+                            : AppColors.kGreen.withOpacity(.4),
+                      ),
 
-                        borderRadius:
-                            BorderRadius.circular(18),
-
-                        border: Border.all(
-                          color:
-                              notification.read == true
-                                  ? AppColors.kBorder
-                                  : AppColors.kGreen
-                                      .withOpacity(.4),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(.15),
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
                         ),
+                      ],
+                    ),
 
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black
-                                .withOpacity(.15),
-                            blurRadius: 10,
-                            offset: const Offset(0, 4),
-                          ),
-                        ],
-                      ),
+                    child: NotificationCard(
+                      notification: notification,
+                      onTap: () async {
+                        final failure = await vm.markAsRead(
+                          notification.id ?? '',
+                        );
 
-                      child: NotificationCard(
-                        notification: notification,
-                      ),
+                        Toasts.showErrorToast(
+                          context,
+                          message: failure?.message,
+                        );
+                      },
                     ),
                   );
                 },

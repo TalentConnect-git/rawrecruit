@@ -21,7 +21,9 @@ _Notification _$NotificationFromJson(Map<String, dynamic> json) =>
       jobType: $enumDecodeNullable(_$JobTypeEnumMap, json['jobType']),
       read: json['read'] as bool? ?? false,
       jobId: json['jobId'] as String?,
-      meta: json['meta'] as Map<String, dynamic>?,
+      meta: json['meta'] == null
+          ? null
+          : NotificationMeta.fromJson(json['meta'] as Map<String, dynamic>),
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
@@ -73,6 +75,8 @@ const _$NotificationTypeEnumMap = {
   NotificationType.alternateDateRequest: 'ALTERNATE_DATE_REQUEST',
   NotificationType.applicationReferredToCompany:
       'APPLICATION_REFERRED_TO_COMPANY',
+  NotificationType.referralJobApproved: 'REFERRAL_JOB_APPROVED',
+  NotificationType.referralJobRejected: 'REFERRAL_JOB_REJECTED',
   NotificationType.newChatMessage: 'NEW_CHAT_MESSAGE',
 };
 

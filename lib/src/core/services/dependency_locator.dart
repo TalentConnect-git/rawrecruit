@@ -51,6 +51,7 @@ GetIt getIt = GetIt.instance;
 Future<void> initDependencyLocator() async {
   getIt
     ..registerLazySingleton<NetworkService>(NetworkService.new)
+    ..registerLazySingleton<NavigationRepository>(NavigationRepository.new)
     ..registerLazySingleton<AppStateProvider>(AppStateProvider.new)
     ..registerLazySingleton<NotificationProvider>(NotificationProvider.new)
     ..registerLazySingleton<OnboardingLocalService>(

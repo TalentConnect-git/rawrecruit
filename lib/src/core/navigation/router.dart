@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart'
-    show RouteNames, User, UserType, Job, StudentJobType;
+    show RouteNames, User, UserType, Job, StudentJobType, NavigationRepository;
 import 'package:rawrecruit/src/feature/profile_detail/presentation/view/profile_cv_page.dart';
 import 'package:rawrecruit/src/feature/revamp_alumni/presentation/alumni_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
@@ -51,6 +51,7 @@ import '../services/dependency_locator.dart';
 
 GoRouter appRouter = GoRouter(
   initialLocation: '/',
+  navigatorKey: getIt<NavigationRepository>().navigatorKey,
   routes: [
     GoRoute(
       name: RouteNames.splash,
@@ -119,20 +120,18 @@ GoRouter appRouter = GoRouter(
       },
     ),
     GoRoute(
-  name: RouteNames.referredCandidateDetail,
-  path: '/referredCandidateDetail',
+      name: RouteNames.referredCandidateDetail,
+      path: '/referredCandidateDetail',
 
-  builder: (context, state) {
-    final data =
-        state.extra as Map<String, dynamic>;
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>;
 
-    return ReferredCandidateDetailPage(
-      application: data['application'],
-      showStatusActions:
-          data['showStatusActions'] ?? false,
-    );
-  },
-),
+        return ReferredCandidateDetailPage(
+          application: data['application'],
+          showStatusActions: data['showStatusActions'] ?? false,
+        );
+      },
+    ),
     GoRoute(
       name: RouteNames.alumniDetail,
       path: "/alumni-detail",
@@ -141,7 +140,7 @@ GoRouter appRouter = GoRouter(
         return AlumniDetailView(jobs: jobs);
       },
     ),
-    
+
     GoRoute(
       name: RouteNames.referralPost,
       path: '/referralPost',
@@ -245,19 +244,16 @@ GoRouter appRouter = GoRouter(
         return OnboardingFlow();
       },
     ),
-GoRoute(
-  name: RouteNames.referralApplicationDetail,
-  path: '/referralApplicationDetail',
+    GoRoute(
+      name: RouteNames.referralApplicationDetail,
+      path: '/referralApplicationDetail',
 
-  builder: (context, state) {
-    final application =
-        state.extra as ApplicationModel;
+      builder: (context, state) {
+        final application = state.extra as ApplicationModel;
 
-    return ReferralApplicationDetailScreen(
-      application: application,
-    );
-  },
-),
+        return ReferralApplicationDetailScreen(application: application);
+      },
+    ),
     GoRoute(
       name: RouteNames.userType,
       path: '/userType',

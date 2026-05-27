@@ -148,6 +148,21 @@ enum NotificationType {
     backgroundColor: Color(0xFFCCFBF1),
     icon: Icons.forward_to_inbox_outlined,
   ),
+  @JsonValue('REFERRAL_JOB_APPROVED')
+  referralJobApproved(
+    label: 'Referral Job Approved',
+    textColor: Color(0xFF16A34A),
+    backgroundColor: Color(0xFFDCFCE7),
+    icon: Icons.thumb_up_alt_outlined,
+  ),
+
+  @JsonValue('REFERRAL_JOB_REJECTED')
+  referralJobRejected(
+    label: 'Referral Job Rejected',
+    textColor: Color(0xFFDC2626),
+    backgroundColor: Color(0xFFFEE2E2),
+    icon: Icons.thumb_down_alt_outlined,
+  ),
   @JsonValue('NEW_CHAT_MESSAGE')
   newChatMessage(
     label: 'New Chat Message',
