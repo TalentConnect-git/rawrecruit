@@ -208,7 +208,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
             context.goNamed(
               RouteNames.referrer,
-              // extra: {'applicationId': applicationId, 'jobId': jobId},
+              extra: {'userType': UserType.professional},
             );
             break;
         }

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -20,7 +21,10 @@ class NotificationService {
       iOS: iosInit,
     );
 
-    await _flutterLocalNotificationsPlugin.initialize(settings: initSettings);
+    await _flutterLocalNotificationsPlugin.initialize(
+      settings: initSettings,
+      onDidReceiveNotificationResponse: onDidReceiveNotificationResponse,
+    );
 
     // Request permissions
     await _fcm.requestPermission();
@@ -67,6 +71,17 @@ class NotificationService {
     }
   }
 
+  Future<void> onDidReceiveNotificationResponse(
+    NotificationResponse notificationResponse,
+  ) async {
+    print('NotificationResponse: ${notificationResponse.payload}');
+    final payload = notificationResponse.data;
+    print('onNotificationClick: $payload');
+    if (payload.isNotEmpty) {
+      unawaited(_handlePushNotificationData(payload));
+    }
+  }
+
   Future<void> _handlePushNotificationData(dynamic message) async {
     final navigatorKey = getIt<NavigationRepository>().navigatorKey;
     var notificationData = <String, dynamic>{};
@@ -75,6 +90,8 @@ class NotificationService {
       notificationData = message.data;
     } else if (message is String) {
       notificationData = jsonDecode(message) as Map<String, dynamic>;
+    } else if (message is Map<String, dynamic>) {
+      notificationData = message;
     }
 
     print('Notification Data: ${notificationData.toString()}');
@@ -153,7 +170,7 @@ class NotificationService {
 
             state?.context.goNamed(
               RouteNames.referrer,
-              // extra: {'applicationId': applicationId, 'jobId': jobId},
+              extra: {'userType': UserType.professional},
             );
             break;
         }
@@ -164,9 +181,9 @@ class NotificationService {
         final senderId = notificationData['senderId'];
         final referenceId = notificationData['referenceId'];
 
-        if (senderId == null || referenceId == null) return;
+        // if (senderId == null || referenceId == null) return;
 
-        state?.context.pushNamed(
+        state?.context.goNamed(
           RouteNames.chatUserList,
           // extra: {
           //   'senderId': senderId,
