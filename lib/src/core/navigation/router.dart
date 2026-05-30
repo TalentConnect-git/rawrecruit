@@ -280,10 +280,10 @@ GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/scheduled-interviews',
       name: RouteNames.scheduledInterviews,
-      builder: (_, __) => ChangeNotifierProvider(
-        create: (_) => getIt<InterviewViewModel>(),
-        child: const InterviewsScreen(),
-      ),
+     builder: (_, __) => ChangeNotifierProvider.value(
+  value: getIt<InterviewViewModel>(),
+  child: const InterviewsScreen(),
+),
     ),
     GoRoute(
       path: "/interviewDetail",

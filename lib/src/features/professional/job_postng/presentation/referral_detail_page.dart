@@ -18,13 +18,12 @@ class ReferralDetailPage extends StatelessWidget {
     super.key,
     required this.application,
   });
-
-  String safe(dynamic val) {
-    if (val == null) return "-";
-    if (val.toString().trim().isEmpty) return "-";
-    if (val.toString() == "null") return "-";
-    return val.toString();
-  }
+String safe(dynamic val) {
+  if (val == null) return "";
+  if (val.toString().trim().isEmpty) return "";
+  if (val.toString() == "null") return "";
+  return val.toString();
+}
 
   Future<void> openUrl(String url) async {
     if (url == "-" || url.isEmpty) return;
@@ -617,85 +616,75 @@ final experience =
 
 
     /// COLLEGE
-    Row(
-      children: [
-
-        const Icon(
-          Icons.school_outlined,
-          size: 14,
-          color: Colors.grey,
-        ),
-
-        const SizedBox(width: 6),
-
-        Expanded(
-          child: Text(
-            college,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
-            ),
+  if (college.isNotEmpty)
+  Row(
+    children: [
+      const Icon(
+        Icons.school_outlined,
+        size: 14,
+        color: Colors.grey,
+      ),
+      const SizedBox(width: 6),
+      Expanded(
+        child: Text(
+          college,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 12,
           ),
         ),
-      ],
-    ),
+      ),
+    ],
+  ),
 
     const SizedBox(height: 6),
 
     /// ROLE @ COMPANY
-    Row(
-      children: [
-
-        const Icon(
-          Icons.work_outline,
-          size: 14,
-          color: Colors.grey,
-        ),
-
-        const SizedBox(width: 6),
-
-        Expanded(
-          child: Text(
-            company != "-"
-                ? "$role @ $company"
-                : role,
-
-            style: const TextStyle(
-              color: Colors.white70,
-              fontSize: 12,
-            ),
+  if (role.isNotEmpty || company.isNotEmpty)
+  Row(
+    children: [
+      const Icon(
+        Icons.work_outline,
+        size: 14,
+        color: Colors.grey,
+      ),
+      const SizedBox(width: 6),
+      Expanded(
+        child: Text(
+          company.isNotEmpty
+              ? "$role @ $company"
+              : role,
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 12,
           ),
         ),
-      ],
-    ),
-
+      ),
+    ],
+  ),
     const SizedBox(height: 6),
 
     /// EXPERIENCE
-    if (experience != "-")
-      Row(
-        children: [
-
-          const Icon(
-            Icons.work_history_outlined,
-            size: 14,
-            color: Colors.grey,
-          ),
-
-          const SizedBox(width: 6),
-
-          Expanded(
-            child: Text(
-              "$experience years experience",
-
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 12,
-              ),
-            ),
-          ),
-        ],
+   if (experience.isNotEmpty)
+  Row(
+    children: [
+      const Icon(
+        Icons.work_history_outlined,
+        size: 14,
+        color: Colors.grey,
       ),
+      const SizedBox(width: 6),
+      Expanded(
+        child: Text(
+          "$experience years experience",
+          style: const TextStyle(
+            color: Colors.white70,
+            fontSize: 12,
+          ),
+        ),
+      ),
+    ],
+  ),
   ],
 ),                  ],
                 ),

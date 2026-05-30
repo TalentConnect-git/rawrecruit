@@ -30,14 +30,14 @@ class RAppBar extends StatelessWidget implements PreferredSizeWidget {
       scrolledUnderElevation: 0,
       titleSpacing: leading != null ? 0 : null,
       actions: actions,
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(0.25),
-        child: Container(
-          color: AppColors.border,
-          width: double.maxFinite,
-          height: 0.25,
-        ),
-      ),
+      // bottom: PreferredSize(
+      //   preferredSize: Size.fromHeight(0.25),
+      //   child: Container(
+      //     color: Colors.black,
+      //     width: double.maxFinite,
+      //     height: 0.25,
+      //   ),
+      // ),
     );
   }
 

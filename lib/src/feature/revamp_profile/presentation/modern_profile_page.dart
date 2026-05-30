@@ -447,59 +447,53 @@ Widget _topProfileSection(User? p) {
 
               const SizedBox(height: 12),
 
-              /// COMPANY / ROLE
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 9,
-                ),
+/// COMPANY / ROLE
+Container(
+  padding: const EdgeInsets.symmetric(
+    horizontal: 16,
+    vertical: 9,
+  ),
+  decoration: BoxDecoration(
+    color: Colors.white.withOpacity(.05),
+    borderRadius: BorderRadius.circular(30),
+    border: Border.all(
+      color: Colors.white.withOpacity(.06),
+    ),
+  ),
+  child: Builder(
+    builder: (_) {
+      final company = (p?.currentCompany ?? '').trim();
 
-                decoration: BoxDecoration(
-                  color: Colors.white
-                      .withOpacity(.05),
+      Experience? exp;
 
-                  borderRadius:
-                      BorderRadius.circular(
-                    30,
-                  ),
+      if (p?.experiences?.isNotEmpty ?? false) {
+        exp = p!.experiences!.firstWhere(
+          (e) => e.isCurrent == true,
+          orElse: () => p.experiences!.first,
+        );
+      }
 
-                  border: Border.all(
-                    color: Colors.white
-                        .withOpacity(.06),
-                  ),
-                ),
+      final role =
+          (exp?.role ?? p?.designation ?? '').trim();
 
-             child: Text(
-'${p?.currentCompany ?? '-'} • ${(() {
+      final displayText = company.isNotEmpty
+          ? '$company • $role'
+          : role.isNotEmpty
+              ? role
+              : '-';
 
-  Experience? exp;
-
-  if (p?.experiences?.isNotEmpty ?? false) {
-
-    exp = p!.experiences!.firstWhere(
-
-      (e) => e.isCurrent == true,
-
-      orElse: () => p.experiences!.first,
-    );
-  }
-
-  return exp?.role ?? p?.designation ?? 'Role';
-
-})()}',
-                  textAlign: TextAlign.center,
-
-                  style: TextStyle(
-                    color: Colors.grey[300],
-
-                    fontSize: 13,
-
-                    fontWeight:
-                        FontWeight.w500,
-                  ),
-                ),
-              ),
+      return Text(
+        displayText,
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: Colors.grey[300],
+          fontSize: 13,
+          fontWeight: FontWeight.w500,
+        ),
+      );
+    },
+  ),
+),
 
               const SizedBox(height: 14),
 

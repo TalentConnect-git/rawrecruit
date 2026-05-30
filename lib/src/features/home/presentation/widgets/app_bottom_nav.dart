@@ -25,12 +25,12 @@ class AppBottomNav extends StatelessWidget {
     // final items = NavItem.values;
 
     return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: AppColors.secText.withValues(alpha: 0.2),
-          width: 0.4,
-        ),
-      ),
+      // decoration: BoxDecoration(
+      //   border: Border.all(
+      //     color: AppColors.secText.withValues(alpha: 0.2),
+      //     width: 0.4,
+      //   ),
+      // ),
       child: StylishBottomBar(
         currentIndex: currentIndex,
         backgroundColor: AppColors.kBg,
