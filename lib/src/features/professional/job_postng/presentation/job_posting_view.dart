@@ -1211,116 +1211,125 @@ minYearofExperience:
   await prefs.remove(draftKey);
 
   if (!mounted) return;
+await showDialog(
+  context: context,
+  barrierDismissible: false,
 
-  await showDialog(
-    context: context,
-    barrierDismissible: false,
+  // Very light overlay instead of heavy dark background
+  barrierColor: Colors.black.withOpacity(0.12),
 
-    builder: (_) {
-      return Dialog(
-        backgroundColor: Colors.transparent,
+  builder: (_) {
+    return Dialog(
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      insetPadding: const EdgeInsets.symmetric(
+        horizontal: 24,
+      ),
 
-        child: Container(
-          padding: const EdgeInsets.all(24),
+      child: Container(
+        padding: const EdgeInsets.all(24),
 
-          decoration: BoxDecoration(
-            color: AppColors.kCard,
+        decoration: BoxDecoration(
+          color: AppColors.kCard,
+          borderRadius: BorderRadius.circular(24),
 
-            borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+            color: AppColors.kGreen.withOpacity(.25),
+          ),
 
-            border: Border.all(
-              color: AppColors.kGreen.withOpacity(.25),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(.15),
+              blurRadius: 25,
+              offset: const Offset(0, 8),
             ),
-          ),
-
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-
-            children: [
-
-              Container(
-                height: 72,
-                width: 72,
-
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.kGreen.withOpacity(.12),
-                ),
-
-                child: Icon(
-                  Icons.check_circle,
-                  color: AppColors.kGreen,
-                  size: 52,
-                ),
-              ),
-
-              const SizedBox(height: 18),
-
-              const Text(
-                "Referral Added Successfully",
-
-                textAlign: TextAlign.center,
-
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 18,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-
-              const SizedBox(height: 10),
-
-              Text(
-                "Please Wait For Admin To Approve Your Posted Job",
-
-                textAlign: TextAlign.center,
-
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13,
-                  height: 1.5,
-                ),
-              ),
-
-              const SizedBox(height: 22),
-
-              SizedBox(
-                width: double.infinity,
-
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.kGreen,
-
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 14,
-                    ),
-
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                  ),
-
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-
-                  child: const Text(
-                    "Done",
-
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
+          ],
         ),
-      );
-    },
-  );
+
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+
+          children: [
+            Container(
+              height: 72,
+              width: 72,
+
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: AppColors.kGreen.withOpacity(.12),
+              ),
+
+              child: Icon(
+                Icons.check_circle,
+                color: AppColors.kGreen,
+                size: 52,
+              ),
+            ),
+
+            const SizedBox(height: 18),
+
+            const Text(
+              "Referral Added Successfully",
+              textAlign: TextAlign.center,
+
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+
+            const SizedBox(height: 10),
+
+            const Text(
+              "Please wait for admin approval of your posted job.",
+              textAlign: TextAlign.center,
+
+              style: TextStyle(
+                color: Colors.grey,
+                fontSize: 13,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 22),
+
+            SizedBox(
+              width: double.infinity,
+
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.kGreen,
+
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 14,
+                  ),
+
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+
+                onPressed: () {
+                  Navigator.of(context).pop(); // close dialog
+                  Navigator.of(context).pop(); // close page
+                },
+
+                child: const Text(
+                  "Done",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  },
+);
 
                         }
                       }

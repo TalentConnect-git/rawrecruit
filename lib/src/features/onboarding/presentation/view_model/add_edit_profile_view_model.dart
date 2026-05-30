@@ -255,25 +255,27 @@ c.internationalExperiences.clear();
     c.locations.add(TextEditingController());
 
     /// -------- EXPERIENCES --------
-    for (final e in user.experiences ?? []) {
-      final ec = ExperienceController();
+  for (final e in user.experiences ?? []) {
+  final isEmpty =
+      (e.company ?? '').trim().isEmpty &&
+      (e.role ?? '').trim().isEmpty &&
+      (e.startDate ?? '').trim().isEmpty &&
+      (e.endDate ?? '').trim().isEmpty &&
+      (e.description ?? '').trim().isEmpty;
 
-      ec.company.text = e.company ?? '';
-      ec.role.text = e.role ?? '';
-      ec.startDate.text = e.startDate ?? '';
-      ec.endDate.text = e.endDate ?? '';
-      ec.description.text =
-          e.description ?? '';
+  if (isEmpty) continue;
 
-      ec.isCurrent =
-          e.isCurrent ?? false;
+  final ec = ExperienceController();
 
-      c.experiences.add(ec);
-    }
+  ec.company.text = e.company ?? '';
+  ec.role.text = e.role ?? '';
+  ec.startDate.text = e.startDate ?? '';
+  ec.endDate.text = e.endDate ?? '';
+  ec.description.text = e.description ?? '';
+  ec.isCurrent = e.isCurrent ?? false;
 
-    c.experiences.add(
-      ExperienceController(),
-    );
+  c.experiences.add(ec);
+}
 
 /// -------- LEADERSHIP EXPERIENCES --------
 /// -------- LEADERSHIP EXPERIENCES --------
@@ -337,11 +339,6 @@ ec.organization.text = e.organization ?? '';
   c.internationalExperiences.add(ec);
 }
 
-if (c.internationalExperiences.isEmpty) {
-  c.internationalExperiences.add(
-    InternationalExperienceController(),
-  );
-}
 
 
     /// -------- ACHIEVEMENTS --------
@@ -356,9 +353,7 @@ if (c.internationalExperiences.isEmpty) {
       c.achievements.add(ac);
     }
 
-    c.achievements.add(
-      AchievementController(),
-    );
+   
 
     /// -------- AWARDS --------
     for (final a in user.awards ?? []) {
@@ -381,9 +376,7 @@ if (c.internationalExperiences.isEmpty) {
       c.awards.add(aw);
     }
 
-    c.awards.add(
-      AwardController(),
-    );
+   
 
     /// -------- PUBLICATIONS --------
     for (final p in user.publications ?? []) {
@@ -396,9 +389,6 @@ if (c.internationalExperiences.isEmpty) {
       c.publications.add(pc);
     }
 
-    c.publications.add(
-      PublicationController(),
-    );
 
     notifyListeners();
   }

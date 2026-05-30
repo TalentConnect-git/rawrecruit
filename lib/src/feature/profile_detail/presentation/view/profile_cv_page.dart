@@ -322,9 +322,10 @@ body: RefreshIndicator(
        
 
                   /// ABOUT
-                  _modernSection(
-                    title: "About",
-                    icon: Icons.person_outline,
+             _modernSection(
+  title: "About",
+  icon: Icons.person_outline,
+  iconColor: Colors.lightBlueAccent,
 
                     child: Text(
                       user.about ?? "-",
@@ -426,23 +427,23 @@ body: RefreshIndicator(
                   SizedBox(height: 18),
 
                   /// DETAILS GRID
-                  _modernSection(
-                    title: "Personal Information",
-                    icon: Icons.badge_outlined,
+                _modernSection(
+  title: "Personal Information",
+  icon: Icons.badge_outlined,
+  iconColor: Colors.orangeAccent,
 
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
 
                       children: [
-                        _detailTile(
-                          "Specialization",
-                          currentEducation?.specialization,
-                        ),
-
+                        
                         _detailTile("Phone", user.phone),
                         _detailTile("Ethnicity", user.ethnicity),
                         _detailTile("Visa Status", user.visaStatus),
                         _detailTile("Gender", user.gender),
+                                                _detailTile("D.O.B", user.dob),
+                                                _detailTile("Marital Status", user.maritalStatus),
+
                         if ((user.languagesKnown ?? []).isNotEmpty)
   _detailTile(
     "Languages Known",
@@ -455,9 +456,10 @@ body: RefreshIndicator(
                   const SizedBox(height: 18),
 
                   /// SKILLS
-                  _modernSection(
-                    title: "Skills",
-                    icon: Icons.code,
+              _modernSection(
+  title: "Skills",
+  icon: Icons.code,
+  iconColor: Colors.greenAccent,
 
                     child: Wrap(
                       spacing: 8,
@@ -490,12 +492,14 @@ body: RefreshIndicator(
                           .toList(),
                     ),
                   ),
-
+         SizedBox(height: 18),
                   if ((user.languagesKnown ?? []).isNotEmpty)
+                                    const SizedBox(height: 18),
+
                     _modernSection(
                       title: "Languages",
                       icon: Icons.language,
-
+iconColor: Colors.tealAccent,
                       child: Wrap(
                         spacing: 8,
                         runSpacing: 8,
@@ -511,7 +515,7 @@ body: RefreshIndicator(
                     _modernSection(
                       title: "Domain Knowledge",
                       icon: Icons.psychology,
-
+iconColor: Colors.purpleAccent,
                       child: Wrap(
                         spacing: 8,
                         runSpacing: 8,
@@ -527,7 +531,7 @@ body: RefreshIndicator(
                     _modernSection(
                       title: "Tools & Platforms",
                       icon: Icons.build,
-
+iconColor: Colors.blueAccent,
                       child: Wrap(
                         spacing: 8,
                         runSpacing: 8,
@@ -544,7 +548,7 @@ body: RefreshIndicator(
                     _modernSection(
                       title: "Industries",
                       icon: Icons.business_outlined,
-
+iconColor: Colors.indigoAccent,
                       child: Wrap(
                         spacing: 10,
                         runSpacing: 10,
@@ -815,7 +819,7 @@ children: (user.educations ?? [])
 
                               style: const TextStyle(
                                 color: Colors.white,
-                                fontSize: 18,
+                                fontSize: 15,
                                 fontWeight: FontWeight.w700,
                               ),
                             ),
@@ -1008,7 +1012,7 @@ children: (user.educations ?? [])
 
                   style: TextStyle(
                     color: AppColors.kGreen,
-                    fontSize: 22,
+                    fontSize: 18,
                     fontWeight: FontWeight.w800,
                   ),
                 ),
@@ -1031,7 +1035,7 @@ children: (user.educations ?? [])
 
                             style: const TextStyle(
                               color: Colors.white,
-                              fontSize: 19,
+                              fontSize: 16,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
@@ -1077,7 +1081,7 @@ children: (user.educations ?? [])
 
                       style: const TextStyle(
                         color: Colors.white70,
-                        fontSize: 15,
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
                     ),
@@ -1633,192 +1637,82 @@ children: (user.educations ?? [])
       ),
     );
   }
+Widget _modernSection({
+  required String title,
+  required IconData icon,
+  required Widget child,
+  Color iconColor = Colors.greenAccent,
+}) {
+  return TweenAnimationBuilder<double>(
+    tween: Tween(begin: 0, end: 1),
+    duration: const Duration(milliseconds: 500),
+    curve: Curves.easeOut,
+    builder: (context, value, widget) {
+      return Transform.translate(
+        offset: Offset(0, 20 * (1 - value)),
+        child: Opacity(
+          opacity: value,
+          child: widget,
+        ),
+      );
+    },
+    child: Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
 
-  Widget _modernSection({
-    required String title,
-    required IconData icon,
-    required Widget child,
-  }) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0, end: 1),
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeOut,
-      builder: (context, value, widget) {
-        return Transform.translate(
-          offset: Offset(0, 20 * (1 - value)),
-          child: Opacity(opacity: value, child: widget),
-        );
-      },
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
 
-      child: Container(
-        width: double.infinity,
+        borderRadius: BorderRadius.circular(16),
 
-        padding: const EdgeInsets.all(18),
+        border: Border.all(
+          color: Colors.white.withOpacity(.06),
+        ),
+      ),
 
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(26),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          /// HEADER
+          Row(
+            children: [
+              Icon(
+                icon,
+                size: 18,
+                color: iconColor,
+              ),
 
-          gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-            colors: [
-              Colors.white.withOpacity(.06),
-              Colors.white.withOpacity(.03),
+              const SizedBox(width: 8),
+
+              Expanded(
+                child: Text(
+                  title,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 15,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
             ],
           ),
 
-          border: Border.all(color: Colors.white.withOpacity(.07)),
+          const SizedBox(height: 14),
 
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(.22),
-              blurRadius: 24,
-              offset: const Offset(0, 14),
-            ),
-          ],
-        ),
+          Container(
+            height: 1,
+            color: Colors.white.withOpacity(.06),
+          ),
 
-        child: Stack(
-          children: [
-            /// BACKGROUND GLOW
-         
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          const SizedBox(height: 14),
 
-              children: [
-                /// PREMIUM HEADER
-                Row(
-                  children: [
-                    AnimatedContainer(
-                      duration: const Duration(milliseconds: 300),
-
-                      padding: const EdgeInsets.all(12),
-
-                      decoration: BoxDecoration(
-                        gradient: LinearGradient(
-                          colors: [
-                            AppColors.kGreen,
-                            AppColors.kGreen.withOpacity(.7),
-                          ],
-                        ),
-
-                        borderRadius: BorderRadius.circular(18),
-
-                        boxShadow: [
-                          BoxShadow(
-                            color: AppColors.kGreen.withOpacity(.30),
-                            blurRadius: 16,
-                            offset: const Offset(0, 8),
-                          ),
-                        ],
-                      ),
-
-                      child: Icon(icon, color: Colors.black, size: 18),
-                    ),
-
-                    const SizedBox(width: 14),
-
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-
-                        children: [
-                          Text(
-                            title,
-
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w800,
-                              letterSpacing: -.4,
-                            ),
-                          ),
-
-                          const SizedBox(height: 4),
-
-                          Text(
-                            "Professional profile information",
-
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(.45),
-                              fontSize: 11,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(.05),
-
-                        borderRadius: BorderRadius.circular(30),
-
-                        border: Border.all(
-                          color: Colors.white.withOpacity(.05),
-                        ),
-                      ),
-
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Container(
-                            height: 7,
-                            width: 7,
-                            decoration: BoxDecoration(
-                              color: AppColors.kGreen,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-
-                          const SizedBox(width: 6),
-
-                          const Text(
-                            "Active",
-                            style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-
-                Container(
-                  margin: const EdgeInsets.symmetric(vertical: 18),
-
-                  height: 1,
-
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      colors: [
-                        Colors.transparent,
-                        Colors.white.withOpacity(.08),
-                        Colors.transparent,
-                      ],
-                    ),
-                  ),
-                ),
-
-                /// SECTION CONTENT
-                child,
-              ],
-            ),
-          ],
-        ),
+          /// CONTENT
+          child,
+        ],
       ),
-    );
-  }
-
+    ),
+  );
+}
   Widget _smallInfoCard(String title, String value, IconData icon) {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 14),
@@ -1915,24 +1809,15 @@ Widget _premiumHeader(User user, dynamic currentEducation) {
 
       padding: const EdgeInsets.all(22),
 
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(32),
+    decoration: BoxDecoration(
+  color: AppColors.kCard,
 
-    color: const Color(0xff050505),
+  borderRadius: BorderRadius.circular(24),
 
-        // border: Border.all(
-        //   color: AppColors.kGreen.withOpacity(.18),
-        // ),
-
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.kGreen.withOpacity(.12),
-            blurRadius: 35,
-            spreadRadius: 1,
-            offset: const Offset(0, 20),
-          ),
-        ],
-      ),
+  border: Border.all(
+    color: Colors.white.withOpacity(.06),
+  ),
+),
 
       child: Stack(
         children: [
@@ -2032,11 +1917,7 @@ Widget _premiumHeader(User user, dynamic currentEducation) {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
 
-                      border: Border.all(
-                        color: AppColors.kGreen,
-                        width: 2,
-                      ),
-
+                 
                     ),
                   ),
 
@@ -2406,16 +2287,15 @@ Widget _premiumStatCard({
       vertical: 14,
     ),
 
-    decoration: BoxDecoration(
-      color: const Color(0xff0B0B0B),
+   decoration: BoxDecoration(
+  color: AppColors.kCard,
 
-      borderRadius: BorderRadius.circular(18),
+  borderRadius: BorderRadius.circular(24),
 
-      border: Border.all(
-        color: Colors.white.withOpacity(.05),
-      ),
-    ),
-
+  border: Border.all(
+    color: Colors.white.withOpacity(.06),
+  ),
+),
     child: Row(
       children: [
         /// ICON
@@ -2452,7 +2332,7 @@ Widget _premiumStatCard({
 
                 style: const TextStyle(
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: 15,
                   fontWeight: FontWeight.bold,
                 ),
               ),

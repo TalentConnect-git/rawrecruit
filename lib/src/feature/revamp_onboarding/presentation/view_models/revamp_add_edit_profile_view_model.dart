@@ -257,29 +257,27 @@ c.servingNoticePeriod =
     );
 
     /// -------- EXPERIENCES --------
+for (final e in user.experiences ?? []) {
+  final isEmpty =
+      (e.company ?? '').trim().isEmpty &&
+      (e.role ?? '').trim().isEmpty &&
+      (e.startDate ?? '').trim().isEmpty &&
+      (e.endDate ?? '').trim().isEmpty &&
+      (e.description ?? '').trim().isEmpty;
 
-    for (final e in user.experiences ?? []) {
-      final ec = ExperienceController();
+  if (isEmpty) continue;
 
-      ec.company.text =
-          e.company ?? '';
+  final ec = ExperienceController();
 
-      ec.role.text = e.role ?? '';
+  ec.company.text = e.company ?? '';
+  ec.role.text = e.role ?? '';
+  ec.startDate.text = e.startDate ?? '';
+  ec.endDate.text = e.endDate ?? '';
+  ec.description.text = e.description ?? '';
+  ec.isCurrent = e.isCurrent ?? false;
 
-      ec.startDate.text =
-          e.startDate ?? '';
-
-      ec.endDate.text =
-          e.endDate ?? '';
-
-      ec.description.text =
-          e.description ?? '';
-
-      ec.isCurrent =
-          e.isCurrent ?? false;
-
-      c.experiences.add(ec);
-    }
+  c.experiences.add(ec);
+}
 
     c.experiences.add(
       ExperienceController(),
