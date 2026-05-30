@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/core/index.dart';
 
 enum UserType { student, fresher, professional }
 
@@ -15,6 +16,28 @@ extension UserTypeExt on UserType {
         return 'Fresher';
       case UserType.professional:
         return 'Professional';
+    }
+  }
+
+  String get desc {
+    switch (this) {
+      case UserType.student:
+        return 'Let others find and refer you';
+      case UserType.fresher:
+        return 'Let others find and refer you';
+      case UserType.professional:
+        return 'Help candidates land roles at your company';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case UserType.student:
+        return Icons.person_add_alt_1;
+      case UserType.fresher:
+        return Icons.group;
+      case UserType.professional:
+        return Icons.work_outline;
     }
   }
 
@@ -95,29 +118,32 @@ extension UserStatusExt on UserStatus {
   }
 }
 
-enum NavItem { home, jobs, applications, shortlist, profile, chat }
+enum NavItem { home, jobs, referrals, applications, alumnis, profile }
 
 extension NavItemExt on NavItem {
-  static List<NavItem> get professionals => NavItem.values;
+  static List<NavItem> get professionals => NavItem.values
+      .where((element) => element != NavItem.applications)
+      .toList();
 
   static List<NavItem> get freshers =>
-      NavItem.values.where((element) => element != NavItem.jobs).toList();
+      NavItem.values.where((element) => element != NavItem.referrals).toList();
 
   String get label {
     switch (this) {
       case NavItem.home:
         return 'Home';
+      case NavItem.referrals:
+        return 'Referrer';
       case NavItem.jobs:
-        return 'My Jobs';
-
-      case NavItem.applications:
-        return 'Application';
-      case NavItem.shortlist:
-        return 'Shortlist';
+        return 'Jobs';
+      case NavItem.alumnis:
+        return 'Alumnis';
+      // case NavItem.profile:
+      //   return 'Profile';
       case NavItem.profile:
         return 'Profile';
-      case NavItem.chat:
-        return 'Chat';
+      case NavItem.applications:
+        return 'Applications';
     }
   }
 
@@ -125,17 +151,16 @@ extension NavItemExt on NavItem {
     switch (this) {
       case NavItem.home:
         return Icons.home;
+      case NavItem.jobs:
+        return Icons.work;
+      case NavItem.alumnis:
+        return Icons.group;
+      case NavItem.referrals:
+        return Icons.share;
       case NavItem.applications:
         return Icons.assignment;
-      case NavItem.shortlist:
-        return Icons.bookmark;
-      case NavItem.jobs:
-        return Icons.bookmark_add;
-
       case NavItem.profile:
         return Icons.person;
-      case NavItem.chat:
-        return Icons.chat;
     }
   }
 
@@ -143,16 +168,57 @@ extension NavItemExt on NavItem {
     switch (this) {
       case NavItem.home:
         return Icons.home_outlined;
+      case NavItem.jobs:
+        return Icons.work_outline;
+      case NavItem.alumnis:
+        return Icons.group_outlined;
       case NavItem.applications:
         return Icons.assignment_outlined;
-      case NavItem.shortlist:
-        return Icons.bookmark_outline;
+      case NavItem.referrals:
+        return Icons.share_outlined;
       case NavItem.profile:
         return Icons.person_outline;
-      case NavItem.jobs:
-        return Icons.bookmark_add_outlined;
-      case NavItem.chat:
-        return Icons.chat_outlined;
     }
   }
+
+  String get path {
+    switch (this) {
+      case NavItem.home:
+        return RouteNames.dashboard;
+      case NavItem.jobs:
+        return RouteNames.application;
+      case NavItem.alumnis:
+        return RouteNames.shortlist;
+      case NavItem.applications:
+        return RouteNames.referrer;
+      case NavItem.referrals:
+        return RouteNames.referrer;
+      case NavItem.profile:
+        return RouteNames.myProfile;
+    }
+  }
+}
+
+enum StudentJobType {
+  referral('Referral Jobs'),
+  offCampus('Off-Campus'),
+  internship('Internships'),
+  saved('Saved');
+
+  const StudentJobType(this.label);
+
+  final String label;
+}
+
+enum AlumniType {
+  hiring('Hiring'),
+  college('My College'),
+  company('My Company');
+
+  const AlumniType(this.label);
+
+  final String label;
+
+  static List<AlumniType> get freshers =>
+      AlumniType.values.where((a) => a != AlumniType.company).toList();
 }

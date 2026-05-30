@@ -10,13 +10,17 @@ _ReferralPostModel _$ReferralPostModelFromJson(
   Map<String, dynamic> json,
 ) => _ReferralPostModel(
   id: json['_id'] as String?,
-  jobTitle: json['jobTitle'] as String?,
+  jobTitle: (json['jobTitle'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   description: json['description'] as String?,
   approvalStatus: json['approvalStatus'] as String?,
-  employmentType: const StringOrListConvertor().fromJson(
-    json['employmentType'],
-  ),
-  workMode: const StringOrListConvertor().fromJson(json['workMode']),
+  employmentType: (json['employmentType'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  workMode: (json['workMode'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   broadcastType: json['broadcastType'] as String?,
   jobType: json['jobType'] as String?,
   location: (json['location'] as List<dynamic>?)
@@ -34,6 +38,13 @@ _ReferralPostModel _$ReferralPostModelFromJson(
   tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
   workAuthorization: json['workAuthorization'] as String?,
   yearsOfExperience: json['yearsOfExperience'] as String?,
+  minYearofExperience: json['minYearofExperience'] as String?,
+  rounds: (json['rounds'] as List<dynamic>?)?.map((e) => e as String).toList(),
+  selectionProcess: (json['selectionProcess'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
+  endDate: json['endDate'] as String?,
+  inactive: json['inactive'] as bool?,
   benefits: (json['benefits'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
@@ -41,6 +52,9 @@ _ReferralPostModel _$ReferralPostModelFromJson(
       ?.map((e) => e as String)
       .toList(),
   eligibilityCriteria: json['eligibilityCriteria'] as String?,
+  metrics: json['metrics'] == null
+      ? null
+      : Metrics.fromJson(json['metrics'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
@@ -49,10 +63,8 @@ Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
       'jobTitle': instance.jobTitle,
       'description': instance.description,
       'approvalStatus': instance.approvalStatus,
-      'employmentType': const StringOrListConvertor().toJson(
-        instance.employmentType,
-      ),
-      'workMode': const StringOrListConvertor().toJson(instance.workMode),
+      'employmentType': instance.employmentType,
+      'workMode': instance.workMode,
       'broadcastType': instance.broadcastType,
       'jobType': instance.jobType,
       'location': instance.location,
@@ -64,10 +76,35 @@ Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
       'tags': instance.tags,
       'workAuthorization': instance.workAuthorization,
       'yearsOfExperience': instance.yearsOfExperience,
+      'minYearofExperience': instance.minYearofExperience,
+      'rounds': instance.rounds,
+      'selectionProcess': instance.selectionProcess,
+      'endDate': instance.endDate,
+      'inactive': instance.inactive,
       'benefits': instance.benefits,
       'certifications': instance.certifications,
       'eligibilityCriteria': instance.eligibilityCriteria,
+      'metrics': instance.metrics,
     };
+
+_Metrics _$MetricsFromJson(Map<String, dynamic> json) => _Metrics(
+  totalApplicationsReceived: (json['totalApplicationsReceived'] as num?)
+      ?.toInt(),
+  totalReferredToCompany: (json['totalReferredToCompany'] as num?)?.toInt(),
+  totalAcceptedByCompany: (json['totalAcceptedByCompany'] as num?)?.toInt(),
+  totalInterviewScheduled: (json['totalInterviewScheduled'] as num?)?.toInt(),
+  responseRate: (json['responseRate'] as num?)?.toInt(),
+  referralSuccessRate: (json['referralSuccessRate'] as num?)?.toInt(),
+);
+
+Map<String, dynamic> _$MetricsToJson(_Metrics instance) => <String, dynamic>{
+  'totalApplicationsReceived': instance.totalApplicationsReceived,
+  'totalReferredToCompany': instance.totalReferredToCompany,
+  'totalAcceptedByCompany': instance.totalAcceptedByCompany,
+  'totalInterviewScheduled': instance.totalInterviewScheduled,
+  'responseRate': instance.responseRate,
+  'referralSuccessRate': instance.referralSuccessRate,
+};
 
 _PackageDetails _$PackageDetailsFromJson(Map<String, dynamic> json) =>
     _PackageDetails(

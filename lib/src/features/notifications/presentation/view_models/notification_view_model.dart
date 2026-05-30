@@ -11,6 +11,8 @@ class NotificationViewModel extends ViewStateProvider {
     notifyListeners();
   }
 
+  bool get hasUnreadNotifications => _notifications.any((e) => e.read == false);
+
   Future<Failure?> getNotifications() async {
     Failure? failure;
 
@@ -24,6 +26,14 @@ class NotificationViewModel extends ViewStateProvider {
       },
       (r) {
         notifications = r;
+        if (r.isNotEmpty) {
+          bool hasUnreadNotifications = r.any((e) => e.read == false);
+          if (hasUnreadNotifications) {
+            getIt<NotificationProvider>().setNewNotificationsAvailable();
+          } else {
+            getIt<NotificationProvider>().clearNewNotificationsAvailable();
+          }
+        }
       },
     );
 

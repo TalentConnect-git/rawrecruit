@@ -70,6 +70,21 @@ extension StringExt on String {
     return this[0].toUpperCase() + substring(1);
   }
 
+  String get getInitials {
+    final words = trim().split(RegExp(r'\s+'));
+
+    if (words.isEmpty || words.first.isEmpty) return '';
+
+    if (words.length > 1) {
+      return (words[0][0] + words[1][0]).toUpperCase();
+    }
+
+    final word = words[0];
+    return word.length >= 2
+        ? (word[0] + word[1]).toUpperCase()
+        : word[0].toUpperCase();
+  }
+
   /// Converts card fee ranges to short display versions
   String get toCardFess {
     switch (this) {

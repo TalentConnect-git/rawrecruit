@@ -5,18 +5,17 @@ class MyProfileViewModel extends ViewStateProvider {
   final OnboardingRepository _onboardingRepository =
       getIt<OnboardingRepository>();
 
-  UserProfile? _userProfile;
-  UserProfile? get userProfile => _userProfile;
-  set userProfile(UserProfile? user) {
-    _userProfile = user;
+  User? _user;
+  User? get user => _user;
+  set user(User? user) {
+    _user = user;
     notifyListeners();
   }
 
   bool get isProfileAvailable =>
-      userProfile?.profileImage != null &&
-      (userProfile?.profileImage?.isNotEmpty ?? false);
+      user?.profileImage != null && (user?.profileImage?.isNotEmpty ?? false);
 
-  bool get canEdit => _userProfile != null;
+  bool get canEdit => _user != null;
 
   bool _isEditing = false;
   bool get isEditing => _isEditing;
@@ -25,19 +24,19 @@ class MyProfileViewModel extends ViewStateProvider {
     notifyListeners();
   }
 
-  Future<Failure?> getUserProfile() async {
+  Future<Failure?> getUser() async {
     Failure? failure;
 
     setViewState(ViewState.busy);
 
-    final result = await _onboardingRepository.getOnboardingUserProfile();
+    final result = await _onboardingRepository.getOnboardingUser();
 
     result.fold(
       (e) {
         failure = APIFailure.fromException(exception: e);
       },
       (r) {
-        userProfile = r;
+        user = r;
       },
     );
 
@@ -46,21 +45,19 @@ class MyProfileViewModel extends ViewStateProvider {
     return failure;
   }
 
-  Future<Failure?> updateUserProfile() async {
+  Future<Failure?> updateUser() async {
     Failure? failure;
 
     setViewState(ViewState.busy);
 
-    final result = await _onboardingRepository.updateOnboardingUserProfile(
-      body: {},
-    );
+    final result = await _onboardingRepository.updateOnboardingUser(body: {});
 
     result.fold(
       (e) {
         failure = APIFailure.fromException(exception: e);
       },
       (r) {
-        userProfile = r;
+        user = r;
       },
     );
 

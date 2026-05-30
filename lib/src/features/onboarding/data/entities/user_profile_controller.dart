@@ -1,11 +1,24 @@
 import 'package:flutter/material.dart';
 
+import '../../../../feature/revamp_onboarding/presentation/steps/education_controller.dart';
 import 'achievement_controller.dart';
 import 'award_controller.dart';
+import 'international.dart';
+import 'leadership_controller.dart';
 import 'publication_controller.dart';
 
-class UserProfileController {
-  UserProfileController()
+class ExperienceController {
+  TextEditingController company = TextEditingController();
+  TextEditingController role = TextEditingController();
+  TextEditingController startDate = TextEditingController();
+  TextEditingController endDate = TextEditingController();
+  TextEditingController description = TextEditingController();
+
+  bool isCurrent = false;
+}
+
+class UserController {
+  UserController()
     : id = TextEditingController(),
       userId = TextEditingController(),
       v = TextEditingController(),
@@ -14,10 +27,7 @@ class UserProfileController {
       resume = TextEditingController(),
       about = TextEditingController(),
       certifications = TextEditingController(),
-      cgpa = TextEditingController(),
-      college = TextEditingController(),
-      degree = TextEditingController(),
-      degreeCertificate = TextEditingController(),
+
       email = TextEditingController(),
       gender = TextEditingController(),
       github = TextEditingController(),
@@ -39,7 +49,12 @@ class UserProfileController {
       expectedSalaryCurrency = TextEditingController(),
       maritalStatus = TextEditingController(),
       visaStatus = TextEditingController(),
-      servingNoticePeriod = TextEditingController();
+      currentCompany = TextEditingController(),
+      noticePeriod = TextEditingController(),
+      totalYearsOfExperience = TextEditingController(),
+
+      companyEmail = TextEditingController(),
+      noticePeriodStartDate = TextEditingController();
 
   /// Basic Fields
   TextEditingController id;
@@ -52,16 +67,18 @@ class UserProfileController {
   /// List<String> fields
   List<TextEditingController> domainKnowledge = [];
   List<TextEditingController> employmentType = [];
-  List<TextEditingController> experiences = [];
+  List<ExperienceController> experiences = [];
+  List<EducationController> educations = [];
   List<TextEditingController> industry = [];
-  List<TextEditingController> internationalExperience = [];
   List<TextEditingController> jobRoles = [];
   List<TextEditingController> languagesKnown = [];
-  List<TextEditingController> leadership = [];
   List<TextEditingController> locations = [];
   List<TextEditingController> lookingFor = [];
   List<TextEditingController> skills = [];
   List<TextEditingController> toolsAndPlatforms = [];
+  List<LeadershipExperienceController> leadershipExperiences = [];
+
+  List<InternationalExperienceController> internationalExperiences = [];
 
   /// Nested Controllers
   List<AchievementController> achievements = [];
@@ -72,10 +89,7 @@ class UserProfileController {
   TextEditingController resume;
   TextEditingController about;
   TextEditingController certifications;
-  TextEditingController cgpa;
-  TextEditingController college;
-  TextEditingController degree;
-  TextEditingController degreeCertificate;
+
   TextEditingController email;
   TextEditingController gender;
   TextEditingController github;
@@ -97,8 +111,13 @@ class UserProfileController {
   TextEditingController expectedSalaryCurrency;
   TextEditingController maritalStatus;
   TextEditingController visaStatus;
-  TextEditingController servingNoticePeriod;
+  bool servingNoticePeriod = false;
+  TextEditingController currentCompany;
+  TextEditingController totalYearsOfExperience;
 
+  TextEditingController noticePeriod;
+  TextEditingController companyEmail;
+  TextEditingController noticePeriodStartDate;
   Map<String, dynamic> toMap() {
     String? clean(String? v) => v == null || v.trim().isEmpty ? null : v.trim();
 
@@ -113,8 +132,13 @@ class UserProfileController {
     Map<String, dynamic> cleanMap(Map<String, dynamic> map) {
       map.removeWhere((key, value) {
         if (value == null) return true;
-        if (value is String && value.isEmpty) return true;
-        if (value is List && value.isEmpty) return true;
+    if (value is String &&
+    value.isEmpty &&
+    key != 'currentCompany') {
+  return true;
+}
+ /// KEEP EMPTY LISTS SO BACKEND CLEARS DATA
+if (value is List) return false;
         if (value is Map && value.isEmpty) return true;
         return false;
       });
@@ -132,16 +156,17 @@ class UserProfileController {
       'resume': clean(resume.text),
       'about': clean(about.text),
       'certifications': clean(certifications.text),
-      'cgpa': clean(cgpa.text),
-      'college': clean(college.text),
-      'degree': clean(degree.text),
-      'degreeCertificate': clean(degreeCertificate.text),
+
       'email': clean(email.text),
       'gender': clean(gender.text),
       'github': clean(github.text),
       'linkedin': clean(linkedin.text),
       'name': clean(name.text),
       'openToShift': clean(openToShift.text),
+'currentCompany': currentCompany.text.trim(),      'companyEmail': clean(companyEmail.text),
+      'totalYearsOfExperience': clean(totalYearsOfExperience.text),
+      'noticePeriod': clean(noticePeriod.text),
+      'noticePeriodStartDate': clean(noticePeriodStartDate.text),
       'phone': clean(phone.text),
       'portfolio': clean(portfolio.text),
       'profileType': clean(profileType.text),
@@ -158,18 +183,59 @@ class UserProfileController {
       'maritalStatus': clean(maritalStatus.text),
       'visaStatus': clean(visaStatus.text),
 
-      'servingNoticePeriod': servingNoticePeriod.text.toLowerCase() == 'true',
+      'servingNoticePeriod': servingNoticePeriod,
 
       /// Lists
       'skills': cleanList(skills),
+
       'domainKnowledge': cleanList(domainKnowledge),
       'employmentType': cleanList(employmentType),
-      'experiences': cleanList(experiences),
+   'educations': educations.map(
+  (e) => {
+    'college': e.college.text.trim(),
+    'degree': e.degree.text.trim(),
+    'specialization': e.specialization.text.trim(),
+    'semester': e.semester.text.trim(),
+    'cgpa': e.cgpa.text.trim(),
+    'yearOfGraduation': e.yearOfGraduation.text.trim(),
+    'startDate': e.startDate.text.trim(),
+    'endDate': e.endDate.text.trim(),
+    'educationType': e.educationType,
+    'isCurrent': e.isCurrent,
+  },
+).toList(),
+   'experiences': experiences.map(
+  (e) => {
+    'company': e.company.text.trim(),
+    'role': e.role.text.trim(),
+    'isCurrent': e.isCurrent,
+    'startDate': e.startDate.text.trim(),
+    'endDate': e.endDate.text.trim(),
+    'description': e.description.text.trim(),
+  },
+).toList(),
       'industry': cleanList(industry),
-      'internationalExperience': cleanList(internationalExperience),
       'jobRoles': cleanList(jobRoles),
       'languagesKnown': cleanList(languagesKnown),
-      'leadership': cleanList(leadership),
+   'leadership': leadershipExperiences.map(
+  (e) => {
+    'organization': e.organization.text.trim(),
+    'role': e.role.text.trim(),
+    'startDate': e.startDate.text.trim(),
+    'endDate': e.endDate.text.trim(),
+    'description': e.description.text.trim(),
+  },
+).toList(),
+  'internationalExperience': internationalExperiences.map(
+  (e) => {
+    'country': e.country.text.trim(),
+    'organization': e.organization.text.trim(),
+    'role': e.role.text.trim(),
+    'startDate': e.startDate.text.trim(),
+    'endDate': e.endDate.text.trim(),
+    'description': e.description.text.trim(),
+  },
+).toList(),
       'locations': cleanList(locations),
       'lookingFor': cleanList(lookingFor),
       'toolsAndPlatforms': cleanList(toolsAndPlatforms),
@@ -240,10 +306,7 @@ class UserProfileController {
     resume.dispose();
     about.dispose();
     certifications.dispose();
-    cgpa.dispose();
-    college.dispose();
-    degree.dispose();
-    degreeCertificate.dispose();
+
     email.dispose();
     gender.dispose();
     github.dispose();
@@ -265,22 +328,65 @@ class UserProfileController {
     expectedSalaryCurrency.dispose();
     maritalStatus.dispose();
     visaStatus.dispose();
-    servingNoticePeriod.dispose();
+    noticePeriodStartDate.dispose();
+    currentCompany.dispose();
+    totalYearsOfExperience.dispose();
+    for (final e in educations) {
+      e.college.dispose();
 
+      e.degree.dispose();
+
+      e.specialization.dispose();
+
+      e.semester.dispose();
+
+      e.cgpa.dispose();
+
+      e.yearOfGraduation.dispose();
+
+      e.startDate.dispose();
+
+      e.endDate.dispose();
+    }
+    companyEmail.dispose();
+    noticePeriod.dispose();
     for (final controller in domainKnowledge) {
       controller.dispose();
     }
     for (final controller in employmentType) {
       controller.dispose();
     }
-    for (final controller in experiences) {
-      controller.dispose();
+    for (final e in experiences) {
+      e.company.dispose();
+      e.role.dispose();
+      e.startDate.dispose();
+      e.endDate.dispose();
+      e.description.dispose();
     }
     for (final controller in industry) {
       controller.dispose();
     }
-    for (final controller in internationalExperience) {
-      controller.dispose();
+    for (final e in leadershipExperiences) {
+      e.organization.dispose();
+
+      e.role.dispose();
+
+      e.startDate.dispose();
+
+      e.endDate.dispose();
+
+      e.description.dispose();
+    }
+    for (final e in internationalExperiences) {
+      e.country.dispose();
+
+      e.role.dispose();
+
+      e.startDate.dispose();
+
+      e.endDate.dispose();
+
+      e.description.dispose();
     }
     for (final controller in jobRoles) {
       controller.dispose();
@@ -288,9 +394,7 @@ class UserProfileController {
     for (final controller in languagesKnown) {
       controller.dispose();
     }
-    for (final controller in leadership) {
-      controller.dispose();
-    }
+
     for (final controller in locations) {
       controller.dispose();
     }

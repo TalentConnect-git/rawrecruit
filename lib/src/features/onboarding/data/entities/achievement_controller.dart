@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 class AchievementController {
@@ -14,7 +12,7 @@ class AchievementController {
   TextEditingController event;
   TextEditingController date;
 
-  void dispose(){
+  void dispose() {
     id.dispose();
     title.dispose();
     event.dispose();

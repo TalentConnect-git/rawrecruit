@@ -16,4 +16,13 @@ abstract class ReferralPostRepository {
     required String applicationId,
     required String status,
   });
+
+  ResultFuture<List<Job>> getOffCampusJobs();
+ResultFuture<void> deleteReferralJob({
+  required String jobId,
+});
+
+ResultFuture<void> toggleReferralJobStatus({
+  required String jobId,
+});
 }

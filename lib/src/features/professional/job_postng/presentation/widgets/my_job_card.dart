@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
-
 import '../../../../../common/index.dart';
-import '../../../../../core/index.dart';
-
 class MyJobCard extends StatelessWidget {
   final ReferralPostModel job;
   final VoidCallback? onTap;
@@ -13,100 +9,88 @@ class MyJobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+final title = job.jobTitle is List
+    ? (job.jobTitle as List).join(", ")
+    : job.jobTitle?.toString() ?? "Frontend Engineer";    final location = job.location?.firstOrNull ?? "India";
+    final workMode = job.workMode ?? "Remote";
+
+    final salary = _formatSalary(job.packageDetails?.totalCTC);
+
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(16),
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: AppColors.background,
-          borderRadius: BorderRadius.circular(16),
+          color: AppColors.kTile,
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(color: AppColors.border),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// 🔹 Title + Bookmark
+
+            /// 🔥 TITLE + STATUS CHIP
             Row(
               children: [
                 Expanded(
                   child: Text(
-                    job.jobTitle ?? '-',
-                    style: AppTextStyles.s18W600.copyWith(
-                      color: AppColors.text,
+                    title,
+                    style: AppTextStyles.s16W600.copyWith(
+                      color: AppColors.white,
                     ),
                   ),
                 ),
 
-                _chip(job.approvalStatus ?? '-'),
+                _statusChip(job.approvalStatus),
+              ],
+            ),
+
+            const SizedBox(height: 6),
+
+            /// 🔹 COMPANY + LOCATION + MODE
+            Text(
+              " $location • $workMode",
+              style: AppTextStyles.s12W400.copyWith(
+                color: AppColors.white.withOpacity(0.6),
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            /// 🔹 STATS ROW
+            Row(
+              children: [
+                _iconText(Icons.group_outlined, "0 candidates"),
+                const SizedBox(width: 12),
+
+                _iconText(Icons.send_outlined, "0 referred"),
+                const SizedBox(width: 12),
+
+                Row(
+                  children: [
+                     Icon(Icons.school,
+                        size: 14, color: AppColors.kGreen),
+                    const SizedBox(width: 4),
+                    Text(
+                      "0 alumni",
+                      style: AppTextStyles.s12W600.copyWith(
+                        color: AppColors.kGreen,
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
 
             const SizedBox(height: 8),
 
-            Row(
-              children: [
-                _chip("YOE : ${job.yearsOfExperience}"),
-                const SizedBox(width: 8),
-                Text(job.workMode ?? '-', style: AppTextStyles.s12W400),
-              ],
-            ),
-
-            const SizedBox(height: 10),
-
-            Wrap(
-              spacing: 8,
-              runSpacing: 6,
-              children: (job.skills ?? []).map((e) => _skillChip(e)).toList(),
-            ),
-
-            const SizedBox(height: 10),
-
+            /// 🔹 SALARY
             Text(
-              job.description ?? '-',
-              style: AppTextStyles.s12W400,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-
-            const SizedBox(height: 14),
-
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        const Icon(Icons.location_on, size: 16),
-                        const SizedBox(width: 4),
-                        Text(
-                          job.location?.firstOrNull ?? '-',
-                          style: AppTextStyles.s12W400,
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text("Package", style: AppTextStyles.s12W400),
-                    Text(
-                      job.packageDetails?.fixedPay.toString() ?? '-',
-                      style: AppTextStyles.s14W600,
-                    ),
-                  ],
-                ),
-
-                if (job.approvalStatus == 'Approved')
-                  ElevatedButton(
-                    onPressed: () {
-                      context.pushNamed(
-                        RouteNames.postedJobApplication,
-                        extra: job.id,
-                      );
-                    },
-                    child: Text('View Applications'),
-                  ),
-              ],
+              salary,
+              style: AppTextStyles.s12W600.copyWith(
+                color: AppColors.white,
+              ),
             ),
           ],
         ),
@@ -114,31 +98,50 @@ class MyJobCard extends StatelessWidget {
     );
   }
 
-  Widget _chip(String text) {
+  /// 🔥 STATUS CHIP (LIVE / PENDING / APPROVED)
+  Widget _statusChip(String? status) {
+    final isLive = status?.toLowerCase() == "approved";
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: AppColors.primary,
+        color: isLive
+            ? AppColors.kGreen.withOpacity(0.15)
+            : Colors.orange.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        text,
-        style: AppTextStyles.s12W600.copyWith(color: Colors.white),
+        isLive ? "live" : (status ?? "pending"),
+        style: AppTextStyles.s12W600.copyWith(
+          color: isLive ? AppColors.kGreen : Colors.orange,
+        ),
       ),
     );
   }
 
-  Widget _skillChip(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-      ),
-      child: Text(
-        text,
-        style: AppTextStyles.s12W600.copyWith(color: AppColors.primary),
-      ),
+  Widget _iconText(IconData icon, String text) {
+    return Row(
+      children: [
+        Icon(icon, size: 14, color: AppColors.white.withOpacity(0.6)),
+        const SizedBox(width: 4),
+        Text(
+          text,
+          style: AppTextStyles.s12W400.copyWith(
+            color: AppColors.white.withOpacity(0.6),
+          ),
+        ),
+      ],
     );
+  }
+
+  String _formatSalary(int? ctc) {
+    if (ctc == null) return "Not disclosed";
+
+    if (ctc < 100000) {
+      return "₹$ctc / month";
+    }
+
+    final lpa = (ctc / 100000).toStringAsFixed(0);
+    return "₹$lpa LPA";
   }
 }

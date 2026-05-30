@@ -7,11 +7,13 @@ class AppTextFields extends StatefulWidget {
     this.hint,
     this.prefixIcon,
     this.suffixIcon,
+    this.helperText,
     this.enable = true,
     this.readOnly = false,
     this.validator,
     this.onChanged,
     this.keyboardType,
+    this.maxLines = 1,
     this.autoValidateMode = AutovalidateMode.onUserInteraction,
     super.key,
   }) : _isPassword = false;
@@ -27,6 +29,8 @@ class AppTextFields extends StatefulWidget {
     this.validator,
     this.onChanged,
     this.keyboardType,
+    this.helperText,
+    this.maxLines = 1,
     super.key,
   }) : _isPassword = true;
 
@@ -39,6 +43,9 @@ class AppTextFields extends StatefulWidget {
   final TextInputType? keyboardType;
   final Widget? prefixIcon;
   final Widget? suffixIcon;
+  final String? helperText;
+  final int maxLines;
+
   final AutovalidateMode autoValidateMode;
   final String? Function(String? val)? validator;
   final void Function(String? val)? onChanged;
@@ -64,43 +71,66 @@ class _AppTextFieldsState extends State<AppTextFields> {
             obscureText: widget._isPassword && !visible,
             obscuringCharacter: '*',
             autovalidateMode: widget.autoValidateMode,
+            keyboardType: widget.keyboardType,
+            validator: widget.validator,
+            maxLines: widget._isPassword ? 1 : widget.maxLines,
+
+            onChanged: widget.onChanged,
+
             onTapOutside: (_) {
               FocusManager.instance.primaryFocus?.unfocus();
             },
-            onTap: () {},
-            keyboardType: widget.keyboardType,
-            validator: widget.validator,
+
             decoration: InputDecoration(
               border: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.text),
+                borderSide: BorderSide(color: AppColors.border),
                 borderRadius: BorderRadius.circular(8),
               ),
+
               focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primary),
+                borderSide: BorderSide(color: AppColors.kGreen),
                 borderRadius: BorderRadius.circular(8),
               ),
+
               enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.text),
+                borderSide: BorderSide(color: AppColors.white),
                 borderRadius: BorderRadius.circular(8),
               ),
+
               errorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.text),
+                borderSide: BorderSide(color: AppColors.errorBorder),
                 borderRadius: BorderRadius.circular(8),
               ),
+
               focusedErrorBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: AppColors.primary),
+                borderSide: BorderSide(color: AppColors.kGreen),
                 borderRadius: BorderRadius.circular(8),
               ),
+
               labelText: widget.hint ?? '',
+
               labelStyle: AppTextStyles.s16W500.copyWith(
-                color: AppColors.secText,
+                color: AppColors.white,
               ),
+
               floatingLabelStyle: AppTextStyles.s16W400.copyWith(
-                color: AppColors.primary,
+                color: AppColors.white,
               ),
-              errorStyle: AppTextStyles.s12W600.copyWith(color: Colors.red),
+
+              helperText: widget.helperText,
+
+              helperStyle: AppTextStyles.s12W400.copyWith(
+                color: Colors.grey,
+              ),
+
+              errorStyle: AppTextStyles.s12W600.copyWith(
+                color: Colors.red,
+              ),
+
               isDense: true,
+
               prefixIcon: widget.prefixIcon,
+
               suffixIcon: widget._isPassword
                   ? GestureDetector(
                       onTap: () {
@@ -112,14 +142,19 @@ class _AppTextFieldsState extends State<AppTextFields> {
                           visible
                               ? Icons.remove_red_eye
                               : Icons.remove_red_eye_outlined,
-                          color: visible ? AppColors.primary : AppColors.text,
+                          color: visible
+                              ? AppColors.kGreen
+                              : AppColors.text,
                           size: 24,
                         ),
                       ),
                     )
                   : widget.suffixIcon,
             ),
-            style: AppTextStyles.s16W400.copyWith(color: AppColors.text),
+
+            style: AppTextStyles.s16W400.copyWith(
+              color: AppColors.white,
+            ),
           );
         },
       ),

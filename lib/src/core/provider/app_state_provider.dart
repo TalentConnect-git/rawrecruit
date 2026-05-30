@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:rawrecruit/src/core/index.dart'
     show
+        User,
         Auth,
         ViewStateProvider,
         Failure,
@@ -12,32 +13,49 @@ import 'package:rawrecruit/src/core/index.dart'
         UserType;
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
-    show OnboardingRepository, UserProfile;
+    show OnboardingRepository;
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import '../network/socket_service.dart';
 
 class AppStateProvider extends ViewStateProvider {
   String get userEmail => auth?.email ?? '';
-String get userId => auth?.id ?? '';
+  String get userId => auth?.id ?? '';
   UserType? get userType => auth?.userType;
 
   bool get isProfessional => userType == UserType.professional;
 
   Auth? _auth;
+  UserType? _selectedUserType;
+  UserType? get selectedUserType => _selectedUserType;
+
+  set selectedUserType(UserType? type) {
+    _selectedUserType = type;
+    notifyListeners();
+  }
+
   Auth? get auth => _auth;
   set auth(Auth? auth) {
     _auth = auth;
     if (auth != null && auth.id != null) {
-    SocketService().connect(auth.id!);
-  }
+      SocketService().connect(auth.id!);
+    }
 
     notifyListeners();
   }
 
-  UserProfile? _user;
-  UserProfile? get user => _user;
-  set user(UserProfile? user) {
+  User? _user;
+  User? get user => _user;
+  set user(User? user) {
     _user = user;
+    notifyListeners();
+  }
+
+  User? _onboardingData;
+  User? get data => _onboardingData;
+  set data(User? data) {
+    _onboardingData = data;
     notifyListeners();
   }
 
@@ -48,8 +66,14 @@ String get userId => auth?.id ?? '';
     notifyListeners();
   }
 
-  bool get isProfileComplete => user != null;
+  bool get isProfileComplete {
+    if (user == null) return false;
+    if (user?.name == null || user!.name!.isEmpty) return false;
+    if (user?.email == null || user!.email!.isEmpty) return false;
+    return true;
+  }
 
+  //&& (user?.onboardingCompleted ?? false)
   bool get isAuthComplete => auth != null;
 
   bool get isProfileRemaining => !isProfileComplete;
@@ -62,6 +86,20 @@ String get userId => auth?.id ?? '';
     }
 
     return false;
+  }
+
+  bool _newInterviewsAvailable = false;
+
+  bool get hasNewInterviews => _newInterviewsAvailable;
+
+  void setNewInterviewsAvailable() {
+    _newInterviewsAvailable = true;
+    notifyListeners();
+  }
+
+  void clearNewInterviewsAvailable() {
+    _newInterviewsAvailable = false;
+    notifyListeners();
   }
 
   Future<Failure?> getAuthDetails() async {
@@ -92,8 +130,7 @@ String get userId => auth?.id ?? '';
     final token = await SecretRepo.getString('auth_token');
     log(token ?? '', name: 'OnboardingToken');
 
-    final result = await getIt<OnboardingRepository>()
-        .getOnboardingUserProfile();
+    final result = await getIt<OnboardingRepository>().getOnboardingUser();
 
     result.fold(
       (exception) {
@@ -121,7 +158,12 @@ String get userId => auth?.id ?? '';
       },
       (res) async {
         await SecretRepo.clearAll();
+        await getIt<OnboardingLocalService>().clear();
 
+        final prefs = await SharedPreferences.getInstance();
+
+        await prefs.remove("referral_post_draft");
+        await prefs.remove("experience");
         final token = await SecretRepo.getString('auth_token');
         log(token ?? '', name: 'token');
 

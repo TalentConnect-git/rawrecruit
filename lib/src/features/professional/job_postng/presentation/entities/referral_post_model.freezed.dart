@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReferralPostModel {
 
-@JsonKey(name: '_id') String? get id; String? get jobTitle; String? get description; String? get approvalStatus;@StringOrListConvertor() String? get employmentType;@StringOrListConvertor() String? get workMode; String? get broadcastType; String? get jobType; List<String>? get location; String? get minEducation; int? get numberOfOpenings; PackageDetails? get packageDetails; List<String>? get skills; List<String>? get studentStreams; List<String>? get tags; String? get workAuthorization; String? get yearsOfExperience; List<String>? get benefits; List<String>? get certifications; String? get eligibilityCriteria;
+@JsonKey(name: '_id') String? get id; List<String>? get jobTitle; String? get description; String? get approvalStatus; List<String>? get employmentType; List<String>? get workMode; String? get broadcastType; String? get jobType; List<String>? get location; String? get minEducation; int? get numberOfOpenings; PackageDetails? get packageDetails; List<String>? get skills; List<String>? get studentStreams; List<String>? get tags; String? get workAuthorization; String? get yearsOfExperience; String? get minYearofExperience; List<String>? get rounds; List<String>? get selectionProcess; String? get endDate; bool? get inactive; List<String>? get benefits; List<String>? get certifications; String? get eligibilityCriteria; Metrics? get metrics;
 /// Create a copy of ReferralPostModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ReferralPostModelCopyWith<ReferralPostModel> get copyWith => _$ReferralPostMode
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferralPostModel&&(identical(other.id, id) || other.id == id)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&(identical(other.description, description) || other.description == description)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&(identical(other.employmentType, employmentType) || other.employmentType == employmentType)&&(identical(other.workMode, workMode) || other.workMode == workMode)&&(identical(other.broadcastType, broadcastType) || other.broadcastType == broadcastType)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other.location, location)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&const DeepCollectionEquality().equals(other.skills, skills)&&const DeepCollectionEquality().equals(other.studentStreams, studentStreams)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.workAuthorization, workAuthorization) || other.workAuthorization == workAuthorization)&&(identical(other.yearsOfExperience, yearsOfExperience) || other.yearsOfExperience == yearsOfExperience)&&const DeepCollectionEquality().equals(other.benefits, benefits)&&const DeepCollectionEquality().equals(other.certifications, certifications)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferralPostModel&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other.jobTitle, jobTitle)&&(identical(other.description, description) || other.description == description)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&const DeepCollectionEquality().equals(other.employmentType, employmentType)&&const DeepCollectionEquality().equals(other.workMode, workMode)&&(identical(other.broadcastType, broadcastType) || other.broadcastType == broadcastType)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other.location, location)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&const DeepCollectionEquality().equals(other.skills, skills)&&const DeepCollectionEquality().equals(other.studentStreams, studentStreams)&&const DeepCollectionEquality().equals(other.tags, tags)&&(identical(other.workAuthorization, workAuthorization) || other.workAuthorization == workAuthorization)&&(identical(other.yearsOfExperience, yearsOfExperience) || other.yearsOfExperience == yearsOfExperience)&&(identical(other.minYearofExperience, minYearofExperience) || other.minYearofExperience == minYearofExperience)&&const DeepCollectionEquality().equals(other.rounds, rounds)&&const DeepCollectionEquality().equals(other.selectionProcess, selectionProcess)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.inactive, inactive) || other.inactive == inactive)&&const DeepCollectionEquality().equals(other.benefits, benefits)&&const DeepCollectionEquality().equals(other.certifications, certifications)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria)&&(identical(other.metrics, metrics) || other.metrics == metrics));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,jobTitle,description,approvalStatus,employmentType,workMode,broadcastType,jobType,const DeepCollectionEquality().hash(location),minEducation,numberOfOpenings,packageDetails,const DeepCollectionEquality().hash(skills),const DeepCollectionEquality().hash(studentStreams),const DeepCollectionEquality().hash(tags),workAuthorization,yearsOfExperience,const DeepCollectionEquality().hash(benefits),const DeepCollectionEquality().hash(certifications),eligibilityCriteria]);
+int get hashCode => Object.hashAll([runtimeType,id,const DeepCollectionEquality().hash(jobTitle),description,approvalStatus,const DeepCollectionEquality().hash(employmentType),const DeepCollectionEquality().hash(workMode),broadcastType,jobType,const DeepCollectionEquality().hash(location),minEducation,numberOfOpenings,packageDetails,const DeepCollectionEquality().hash(skills),const DeepCollectionEquality().hash(studentStreams),const DeepCollectionEquality().hash(tags),workAuthorization,yearsOfExperience,minYearofExperience,const DeepCollectionEquality().hash(rounds),const DeepCollectionEquality().hash(selectionProcess),endDate,inactive,const DeepCollectionEquality().hash(benefits),const DeepCollectionEquality().hash(certifications),eligibilityCriteria,metrics]);
 
 @override
 String toString() {
-  return 'ReferralPostModel(id: $id, jobTitle: $jobTitle, description: $description, approvalStatus: $approvalStatus, employmentType: $employmentType, workMode: $workMode, broadcastType: $broadcastType, jobType: $jobType, location: $location, minEducation: $minEducation, numberOfOpenings: $numberOfOpenings, packageDetails: $packageDetails, skills: $skills, studentStreams: $studentStreams, tags: $tags, workAuthorization: $workAuthorization, yearsOfExperience: $yearsOfExperience, benefits: $benefits, certifications: $certifications, eligibilityCriteria: $eligibilityCriteria)';
+  return 'ReferralPostModel(id: $id, jobTitle: $jobTitle, description: $description, approvalStatus: $approvalStatus, employmentType: $employmentType, workMode: $workMode, broadcastType: $broadcastType, jobType: $jobType, location: $location, minEducation: $minEducation, numberOfOpenings: $numberOfOpenings, packageDetails: $packageDetails, skills: $skills, studentStreams: $studentStreams, tags: $tags, workAuthorization: $workAuthorization, yearsOfExperience: $yearsOfExperience, minYearofExperience: $minYearofExperience, rounds: $rounds, selectionProcess: $selectionProcess, endDate: $endDate, inactive: $inactive, benefits: $benefits, certifications: $certifications, eligibilityCriteria: $eligibilityCriteria, metrics: $metrics)';
 }
 
 
@@ -48,11 +48,11 @@ abstract mixin class $ReferralPostModelCopyWith<$Res>  {
   factory $ReferralPostModelCopyWith(ReferralPostModel value, $Res Function(ReferralPostModel) _then) = _$ReferralPostModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? approvalStatus,@StringOrListConvertor() String? employmentType,@StringOrListConvertor() String? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria
+@JsonKey(name: '_id') String? id, List<String>? jobTitle, String? description, String? approvalStatus, List<String>? employmentType, List<String>? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, String? minYearofExperience, List<String>? rounds, List<String>? selectionProcess, String? endDate, bool? inactive, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria, Metrics? metrics
 });
 
 
-$PackageDetailsCopyWith<$Res>? get packageDetails;
+$PackageDetailsCopyWith<$Res>? get packageDetails;$MetricsCopyWith<$Res>? get metrics;
 
 }
 /// @nodoc
@@ -65,15 +65,15 @@ class _$ReferralPostModelCopyWithImpl<$Res>
 
 /// Create a copy of ReferralPostModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? jobTitle = freezed,Object? description = freezed,Object? approvalStatus = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? broadcastType = freezed,Object? jobType = freezed,Object? location = freezed,Object? minEducation = freezed,Object? numberOfOpenings = freezed,Object? packageDetails = freezed,Object? skills = freezed,Object? studentStreams = freezed,Object? tags = freezed,Object? workAuthorization = freezed,Object? yearsOfExperience = freezed,Object? benefits = freezed,Object? certifications = freezed,Object? eligibilityCriteria = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? jobTitle = freezed,Object? description = freezed,Object? approvalStatus = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? broadcastType = freezed,Object? jobType = freezed,Object? location = freezed,Object? minEducation = freezed,Object? numberOfOpenings = freezed,Object? packageDetails = freezed,Object? skills = freezed,Object? studentStreams = freezed,Object? tags = freezed,Object? workAuthorization = freezed,Object? yearsOfExperience = freezed,Object? minYearofExperience = freezed,Object? rounds = freezed,Object? selectionProcess = freezed,Object? endDate = freezed,Object? inactive = freezed,Object? benefits = freezed,Object? certifications = freezed,Object? eligibilityCriteria = freezed,Object? metrics = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
-as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as List<String>?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,approvalStatus: freezed == approvalStatus ? _self.approvalStatus : approvalStatus // ignore: cast_nullable_to_non_nullable
 as String?,employmentType: freezed == employmentType ? _self.employmentType : employmentType // ignore: cast_nullable_to_non_nullable
-as String?,workMode: freezed == workMode ? _self.workMode : workMode // ignore: cast_nullable_to_non_nullable
-as String?,broadcastType: freezed == broadcastType ? _self.broadcastType : broadcastType // ignore: cast_nullable_to_non_nullable
+as List<String>?,workMode: freezed == workMode ? _self.workMode : workMode // ignore: cast_nullable_to_non_nullable
+as List<String>?,broadcastType: freezed == broadcastType ? _self.broadcastType : broadcastType // ignore: cast_nullable_to_non_nullable
 as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
 as String?,location: freezed == location ? _self.location : location // ignore: cast_nullable_to_non_nullable
 as List<String>?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
@@ -84,10 +84,16 @@ as List<String>?,studentStreams: freezed == studentStreams ? _self.studentStream
 as List<String>?,tags: freezed == tags ? _self.tags : tags // ignore: cast_nullable_to_non_nullable
 as List<String>?,workAuthorization: freezed == workAuthorization ? _self.workAuthorization : workAuthorization // ignore: cast_nullable_to_non_nullable
 as String?,yearsOfExperience: freezed == yearsOfExperience ? _self.yearsOfExperience : yearsOfExperience // ignore: cast_nullable_to_non_nullable
-as String?,benefits: freezed == benefits ? _self.benefits : benefits // ignore: cast_nullable_to_non_nullable
+as String?,minYearofExperience: freezed == minYearofExperience ? _self.minYearofExperience : minYearofExperience // ignore: cast_nullable_to_non_nullable
+as String?,rounds: freezed == rounds ? _self.rounds : rounds // ignore: cast_nullable_to_non_nullable
+as List<String>?,selectionProcess: freezed == selectionProcess ? _self.selectionProcess : selectionProcess // ignore: cast_nullable_to_non_nullable
+as List<String>?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as String?,inactive: freezed == inactive ? _self.inactive : inactive // ignore: cast_nullable_to_non_nullable
+as bool?,benefits: freezed == benefits ? _self.benefits : benefits // ignore: cast_nullable_to_non_nullable
 as List<String>?,certifications: freezed == certifications ? _self.certifications : certifications // ignore: cast_nullable_to_non_nullable
 as List<String>?,eligibilityCriteria: freezed == eligibilityCriteria ? _self.eligibilityCriteria : eligibilityCriteria // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,metrics: freezed == metrics ? _self.metrics : metrics // ignore: cast_nullable_to_non_nullable
+as Metrics?,
   ));
 }
 /// Create a copy of ReferralPostModel
@@ -101,6 +107,18 @@ $PackageDetailsCopyWith<$Res>? get packageDetails {
 
   return $PackageDetailsCopyWith<$Res>(_self.packageDetails!, (value) {
     return _then(_self.copyWith(packageDetails: value));
+  });
+}/// Create a copy of ReferralPostModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MetricsCopyWith<$Res>? get metrics {
+    if (_self.metrics == null) {
+    return null;
+  }
+
+  return $MetricsCopyWith<$Res>(_self.metrics!, (value) {
+    return _then(_self.copyWith(metrics: value));
   });
 }
 }
@@ -184,10 +202,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus, @StringOrListConvertor()  String? employmentType, @StringOrListConvertor()  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  List<String>? jobTitle,  String? description,  String? approvalStatus,  List<String>? employmentType,  List<String>? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  String? minYearofExperience,  List<String>? rounds,  List<String>? selectionProcess,  String? endDate,  bool? inactive,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria,  Metrics? metrics)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReferralPostModel() when $default != null:
-return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.benefits,_that.certifications,_that.eligibilityCriteria);case _:
+return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.minYearofExperience,_that.rounds,_that.selectionProcess,_that.endDate,_that.inactive,_that.benefits,_that.certifications,_that.eligibilityCriteria,_that.metrics);case _:
   return orElse();
 
 }
@@ -205,10 +223,10 @@ return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus, @StringOrListConvertor()  String? employmentType, @StringOrListConvertor()  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  List<String>? jobTitle,  String? description,  String? approvalStatus,  List<String>? employmentType,  List<String>? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  String? minYearofExperience,  List<String>? rounds,  List<String>? selectionProcess,  String? endDate,  bool? inactive,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria,  Metrics? metrics)  $default,) {final _that = this;
 switch (_that) {
 case _ReferralPostModel():
-return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.benefits,_that.certifications,_that.eligibilityCriteria);case _:
+return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.minYearofExperience,_that.rounds,_that.selectionProcess,_that.endDate,_that.inactive,_that.benefits,_that.certifications,_that.eligibilityCriteria,_that.metrics);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -225,10 +243,10 @@ return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? jobTitle,  String? description,  String? approvalStatus, @StringOrListConvertor()  String? employmentType, @StringOrListConvertor()  String? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  List<String>? jobTitle,  String? description,  String? approvalStatus,  List<String>? employmentType,  List<String>? workMode,  String? broadcastType,  String? jobType,  List<String>? location,  String? minEducation,  int? numberOfOpenings,  PackageDetails? packageDetails,  List<String>? skills,  List<String>? studentStreams,  List<String>? tags,  String? workAuthorization,  String? yearsOfExperience,  String? minYearofExperience,  List<String>? rounds,  List<String>? selectionProcess,  String? endDate,  bool? inactive,  List<String>? benefits,  List<String>? certifications,  String? eligibilityCriteria,  Metrics? metrics)?  $default,) {final _that = this;
 switch (_that) {
 case _ReferralPostModel() when $default != null:
-return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.benefits,_that.certifications,_that.eligibilityCriteria);case _:
+return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_that.employmentType,_that.workMode,_that.broadcastType,_that.jobType,_that.location,_that.minEducation,_that.numberOfOpenings,_that.packageDetails,_that.skills,_that.studentStreams,_that.tags,_that.workAuthorization,_that.yearsOfExperience,_that.minYearofExperience,_that.rounds,_that.selectionProcess,_that.endDate,_that.inactive,_that.benefits,_that.certifications,_that.eligibilityCriteria,_that.metrics);case _:
   return null;
 
 }
@@ -240,15 +258,39 @@ return $default(_that.id,_that.jobTitle,_that.description,_that.approvalStatus,_
 @JsonSerializable()
 
 class _ReferralPostModel implements ReferralPostModel {
-  const _ReferralPostModel({@JsonKey(name: '_id') this.id, this.jobTitle, this.description, this.approvalStatus, @StringOrListConvertor() this.employmentType, @StringOrListConvertor() this.workMode, this.broadcastType, this.jobType, final  List<String>? location, this.minEducation, this.numberOfOpenings, this.packageDetails, final  List<String>? skills, final  List<String>? studentStreams, final  List<String>? tags, this.workAuthorization, this.yearsOfExperience, final  List<String>? benefits, final  List<String>? certifications, this.eligibilityCriteria}): _location = location,_skills = skills,_studentStreams = studentStreams,_tags = tags,_benefits = benefits,_certifications = certifications;
+  const _ReferralPostModel({@JsonKey(name: '_id') this.id, final  List<String>? jobTitle, this.description, this.approvalStatus, final  List<String>? employmentType, final  List<String>? workMode, this.broadcastType, this.jobType, final  List<String>? location, this.minEducation, this.numberOfOpenings, this.packageDetails, final  List<String>? skills, final  List<String>? studentStreams, final  List<String>? tags, this.workAuthorization, this.yearsOfExperience, this.minYearofExperience, final  List<String>? rounds, final  List<String>? selectionProcess, this.endDate, this.inactive, final  List<String>? benefits, final  List<String>? certifications, this.eligibilityCriteria, this.metrics}): _jobTitle = jobTitle,_employmentType = employmentType,_workMode = workMode,_location = location,_skills = skills,_studentStreams = studentStreams,_tags = tags,_rounds = rounds,_selectionProcess = selectionProcess,_benefits = benefits,_certifications = certifications;
   factory _ReferralPostModel.fromJson(Map<String, dynamic> json) => _$ReferralPostModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
-@override final  String? jobTitle;
+ final  List<String>? _jobTitle;
+@override List<String>? get jobTitle {
+  final value = _jobTitle;
+  if (value == null) return null;
+  if (_jobTitle is EqualUnmodifiableListView) return _jobTitle;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 @override final  String? description;
 @override final  String? approvalStatus;
-@override@StringOrListConvertor() final  String? employmentType;
-@override@StringOrListConvertor() final  String? workMode;
+ final  List<String>? _employmentType;
+@override List<String>? get employmentType {
+  final value = _employmentType;
+  if (value == null) return null;
+  if (_employmentType is EqualUnmodifiableListView) return _employmentType;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _workMode;
+@override List<String>? get workMode {
+  final value = _workMode;
+  if (value == null) return null;
+  if (_workMode is EqualUnmodifiableListView) return _workMode;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 @override final  String? broadcastType;
 @override final  String? jobType;
  final  List<String>? _location;
@@ -292,6 +334,27 @@ class _ReferralPostModel implements ReferralPostModel {
 
 @override final  String? workAuthorization;
 @override final  String? yearsOfExperience;
+@override final  String? minYearofExperience;
+ final  List<String>? _rounds;
+@override List<String>? get rounds {
+  final value = _rounds;
+  if (value == null) return null;
+  if (_rounds is EqualUnmodifiableListView) return _rounds;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+ final  List<String>? _selectionProcess;
+@override List<String>? get selectionProcess {
+  final value = _selectionProcess;
+  if (value == null) return null;
+  if (_selectionProcess is EqualUnmodifiableListView) return _selectionProcess;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
+@override final  String? endDate;
+@override final  bool? inactive;
  final  List<String>? _benefits;
 @override List<String>? get benefits {
   final value = _benefits;
@@ -311,6 +374,7 @@ class _ReferralPostModel implements ReferralPostModel {
 }
 
 @override final  String? eligibilityCriteria;
+@override final  Metrics? metrics;
 
 /// Create a copy of ReferralPostModel
 /// with the given fields replaced by the non-null parameter values.
@@ -325,16 +389,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferralPostModel&&(identical(other.id, id) || other.id == id)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&(identical(other.description, description) || other.description == description)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&(identical(other.employmentType, employmentType) || other.employmentType == employmentType)&&(identical(other.workMode, workMode) || other.workMode == workMode)&&(identical(other.broadcastType, broadcastType) || other.broadcastType == broadcastType)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other._location, _location)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&const DeepCollectionEquality().equals(other._skills, _skills)&&const DeepCollectionEquality().equals(other._studentStreams, _studentStreams)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.workAuthorization, workAuthorization) || other.workAuthorization == workAuthorization)&&(identical(other.yearsOfExperience, yearsOfExperience) || other.yearsOfExperience == yearsOfExperience)&&const DeepCollectionEquality().equals(other._benefits, _benefits)&&const DeepCollectionEquality().equals(other._certifications, _certifications)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferralPostModel&&(identical(other.id, id) || other.id == id)&&const DeepCollectionEquality().equals(other._jobTitle, _jobTitle)&&(identical(other.description, description) || other.description == description)&&(identical(other.approvalStatus, approvalStatus) || other.approvalStatus == approvalStatus)&&const DeepCollectionEquality().equals(other._employmentType, _employmentType)&&const DeepCollectionEquality().equals(other._workMode, _workMode)&&(identical(other.broadcastType, broadcastType) || other.broadcastType == broadcastType)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other._location, _location)&&(identical(other.minEducation, minEducation) || other.minEducation == minEducation)&&(identical(other.numberOfOpenings, numberOfOpenings) || other.numberOfOpenings == numberOfOpenings)&&(identical(other.packageDetails, packageDetails) || other.packageDetails == packageDetails)&&const DeepCollectionEquality().equals(other._skills, _skills)&&const DeepCollectionEquality().equals(other._studentStreams, _studentStreams)&&const DeepCollectionEquality().equals(other._tags, _tags)&&(identical(other.workAuthorization, workAuthorization) || other.workAuthorization == workAuthorization)&&(identical(other.yearsOfExperience, yearsOfExperience) || other.yearsOfExperience == yearsOfExperience)&&(identical(other.minYearofExperience, minYearofExperience) || other.minYearofExperience == minYearofExperience)&&const DeepCollectionEquality().equals(other._rounds, _rounds)&&const DeepCollectionEquality().equals(other._selectionProcess, _selectionProcess)&&(identical(other.endDate, endDate) || other.endDate == endDate)&&(identical(other.inactive, inactive) || other.inactive == inactive)&&const DeepCollectionEquality().equals(other._benefits, _benefits)&&const DeepCollectionEquality().equals(other._certifications, _certifications)&&(identical(other.eligibilityCriteria, eligibilityCriteria) || other.eligibilityCriteria == eligibilityCriteria)&&(identical(other.metrics, metrics) || other.metrics == metrics));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,jobTitle,description,approvalStatus,employmentType,workMode,broadcastType,jobType,const DeepCollectionEquality().hash(_location),minEducation,numberOfOpenings,packageDetails,const DeepCollectionEquality().hash(_skills),const DeepCollectionEquality().hash(_studentStreams),const DeepCollectionEquality().hash(_tags),workAuthorization,yearsOfExperience,const DeepCollectionEquality().hash(_benefits),const DeepCollectionEquality().hash(_certifications),eligibilityCriteria]);
+int get hashCode => Object.hashAll([runtimeType,id,const DeepCollectionEquality().hash(_jobTitle),description,approvalStatus,const DeepCollectionEquality().hash(_employmentType),const DeepCollectionEquality().hash(_workMode),broadcastType,jobType,const DeepCollectionEquality().hash(_location),minEducation,numberOfOpenings,packageDetails,const DeepCollectionEquality().hash(_skills),const DeepCollectionEquality().hash(_studentStreams),const DeepCollectionEquality().hash(_tags),workAuthorization,yearsOfExperience,minYearofExperience,const DeepCollectionEquality().hash(_rounds),const DeepCollectionEquality().hash(_selectionProcess),endDate,inactive,const DeepCollectionEquality().hash(_benefits),const DeepCollectionEquality().hash(_certifications),eligibilityCriteria,metrics]);
 
 @override
 String toString() {
-  return 'ReferralPostModel(id: $id, jobTitle: $jobTitle, description: $description, approvalStatus: $approvalStatus, employmentType: $employmentType, workMode: $workMode, broadcastType: $broadcastType, jobType: $jobType, location: $location, minEducation: $minEducation, numberOfOpenings: $numberOfOpenings, packageDetails: $packageDetails, skills: $skills, studentStreams: $studentStreams, tags: $tags, workAuthorization: $workAuthorization, yearsOfExperience: $yearsOfExperience, benefits: $benefits, certifications: $certifications, eligibilityCriteria: $eligibilityCriteria)';
+  return 'ReferralPostModel(id: $id, jobTitle: $jobTitle, description: $description, approvalStatus: $approvalStatus, employmentType: $employmentType, workMode: $workMode, broadcastType: $broadcastType, jobType: $jobType, location: $location, minEducation: $minEducation, numberOfOpenings: $numberOfOpenings, packageDetails: $packageDetails, skills: $skills, studentStreams: $studentStreams, tags: $tags, workAuthorization: $workAuthorization, yearsOfExperience: $yearsOfExperience, minYearofExperience: $minYearofExperience, rounds: $rounds, selectionProcess: $selectionProcess, endDate: $endDate, inactive: $inactive, benefits: $benefits, certifications: $certifications, eligibilityCriteria: $eligibilityCriteria, metrics: $metrics)';
 }
 
 
@@ -345,11 +409,11 @@ abstract mixin class _$ReferralPostModelCopyWith<$Res> implements $ReferralPostM
   factory _$ReferralPostModelCopyWith(_ReferralPostModel value, $Res Function(_ReferralPostModel) _then) = __$ReferralPostModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? jobTitle, String? description, String? approvalStatus,@StringOrListConvertor() String? employmentType,@StringOrListConvertor() String? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria
+@JsonKey(name: '_id') String? id, List<String>? jobTitle, String? description, String? approvalStatus, List<String>? employmentType, List<String>? workMode, String? broadcastType, String? jobType, List<String>? location, String? minEducation, int? numberOfOpenings, PackageDetails? packageDetails, List<String>? skills, List<String>? studentStreams, List<String>? tags, String? workAuthorization, String? yearsOfExperience, String? minYearofExperience, List<String>? rounds, List<String>? selectionProcess, String? endDate, bool? inactive, List<String>? benefits, List<String>? certifications, String? eligibilityCriteria, Metrics? metrics
 });
 
 
-@override $PackageDetailsCopyWith<$Res>? get packageDetails;
+@override $PackageDetailsCopyWith<$Res>? get packageDetails;@override $MetricsCopyWith<$Res>? get metrics;
 
 }
 /// @nodoc
@@ -362,15 +426,15 @@ class __$ReferralPostModelCopyWithImpl<$Res>
 
 /// Create a copy of ReferralPostModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? jobTitle = freezed,Object? description = freezed,Object? approvalStatus = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? broadcastType = freezed,Object? jobType = freezed,Object? location = freezed,Object? minEducation = freezed,Object? numberOfOpenings = freezed,Object? packageDetails = freezed,Object? skills = freezed,Object? studentStreams = freezed,Object? tags = freezed,Object? workAuthorization = freezed,Object? yearsOfExperience = freezed,Object? benefits = freezed,Object? certifications = freezed,Object? eligibilityCriteria = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? jobTitle = freezed,Object? description = freezed,Object? approvalStatus = freezed,Object? employmentType = freezed,Object? workMode = freezed,Object? broadcastType = freezed,Object? jobType = freezed,Object? location = freezed,Object? minEducation = freezed,Object? numberOfOpenings = freezed,Object? packageDetails = freezed,Object? skills = freezed,Object? studentStreams = freezed,Object? tags = freezed,Object? workAuthorization = freezed,Object? yearsOfExperience = freezed,Object? minYearofExperience = freezed,Object? rounds = freezed,Object? selectionProcess = freezed,Object? endDate = freezed,Object? inactive = freezed,Object? benefits = freezed,Object? certifications = freezed,Object? eligibilityCriteria = freezed,Object? metrics = freezed,}) {
   return _then(_ReferralPostModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
-as String?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as String?,jobTitle: freezed == jobTitle ? _self._jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
+as List<String>?,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,approvalStatus: freezed == approvalStatus ? _self.approvalStatus : approvalStatus // ignore: cast_nullable_to_non_nullable
-as String?,employmentType: freezed == employmentType ? _self.employmentType : employmentType // ignore: cast_nullable_to_non_nullable
-as String?,workMode: freezed == workMode ? _self.workMode : workMode // ignore: cast_nullable_to_non_nullable
-as String?,broadcastType: freezed == broadcastType ? _self.broadcastType : broadcastType // ignore: cast_nullable_to_non_nullable
+as String?,employmentType: freezed == employmentType ? _self._employmentType : employmentType // ignore: cast_nullable_to_non_nullable
+as List<String>?,workMode: freezed == workMode ? _self._workMode : workMode // ignore: cast_nullable_to_non_nullable
+as List<String>?,broadcastType: freezed == broadcastType ? _self.broadcastType : broadcastType // ignore: cast_nullable_to_non_nullable
 as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
 as String?,location: freezed == location ? _self._location : location // ignore: cast_nullable_to_non_nullable
 as List<String>?,minEducation: freezed == minEducation ? _self.minEducation : minEducation // ignore: cast_nullable_to_non_nullable
@@ -381,10 +445,16 @@ as List<String>?,studentStreams: freezed == studentStreams ? _self._studentStrea
 as List<String>?,tags: freezed == tags ? _self._tags : tags // ignore: cast_nullable_to_non_nullable
 as List<String>?,workAuthorization: freezed == workAuthorization ? _self.workAuthorization : workAuthorization // ignore: cast_nullable_to_non_nullable
 as String?,yearsOfExperience: freezed == yearsOfExperience ? _self.yearsOfExperience : yearsOfExperience // ignore: cast_nullable_to_non_nullable
-as String?,benefits: freezed == benefits ? _self._benefits : benefits // ignore: cast_nullable_to_non_nullable
+as String?,minYearofExperience: freezed == minYearofExperience ? _self.minYearofExperience : minYearofExperience // ignore: cast_nullable_to_non_nullable
+as String?,rounds: freezed == rounds ? _self._rounds : rounds // ignore: cast_nullable_to_non_nullable
+as List<String>?,selectionProcess: freezed == selectionProcess ? _self._selectionProcess : selectionProcess // ignore: cast_nullable_to_non_nullable
+as List<String>?,endDate: freezed == endDate ? _self.endDate : endDate // ignore: cast_nullable_to_non_nullable
+as String?,inactive: freezed == inactive ? _self.inactive : inactive // ignore: cast_nullable_to_non_nullable
+as bool?,benefits: freezed == benefits ? _self._benefits : benefits // ignore: cast_nullable_to_non_nullable
 as List<String>?,certifications: freezed == certifications ? _self._certifications : certifications // ignore: cast_nullable_to_non_nullable
 as List<String>?,eligibilityCriteria: freezed == eligibilityCriteria ? _self.eligibilityCriteria : eligibilityCriteria // ignore: cast_nullable_to_non_nullable
-as String?,
+as String?,metrics: freezed == metrics ? _self.metrics : metrics // ignore: cast_nullable_to_non_nullable
+as Metrics?,
   ));
 }
 
@@ -400,7 +470,297 @@ $PackageDetailsCopyWith<$Res>? get packageDetails {
   return $PackageDetailsCopyWith<$Res>(_self.packageDetails!, (value) {
     return _then(_self.copyWith(packageDetails: value));
   });
+}/// Create a copy of ReferralPostModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$MetricsCopyWith<$Res>? get metrics {
+    if (_self.metrics == null) {
+    return null;
+  }
+
+  return $MetricsCopyWith<$Res>(_self.metrics!, (value) {
+    return _then(_self.copyWith(metrics: value));
+  });
 }
+}
+
+
+/// @nodoc
+mixin _$Metrics {
+
+ int? get totalApplicationsReceived; int? get totalReferredToCompany; int? get totalAcceptedByCompany; int? get totalInterviewScheduled; int? get responseRate; int? get referralSuccessRate;
+/// Create a copy of Metrics
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MetricsCopyWith<Metrics> get copyWith => _$MetricsCopyWithImpl<Metrics>(this as Metrics, _$identity);
+
+  /// Serializes this Metrics to a JSON map.
+  Map<String, dynamic> toJson();
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Metrics&&(identical(other.totalApplicationsReceived, totalApplicationsReceived) || other.totalApplicationsReceived == totalApplicationsReceived)&&(identical(other.totalReferredToCompany, totalReferredToCompany) || other.totalReferredToCompany == totalReferredToCompany)&&(identical(other.totalAcceptedByCompany, totalAcceptedByCompany) || other.totalAcceptedByCompany == totalAcceptedByCompany)&&(identical(other.totalInterviewScheduled, totalInterviewScheduled) || other.totalInterviewScheduled == totalInterviewScheduled)&&(identical(other.responseRate, responseRate) || other.responseRate == responseRate)&&(identical(other.referralSuccessRate, referralSuccessRate) || other.referralSuccessRate == referralSuccessRate));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,totalApplicationsReceived,totalReferredToCompany,totalAcceptedByCompany,totalInterviewScheduled,responseRate,referralSuccessRate);
+
+@override
+String toString() {
+  return 'Metrics(totalApplicationsReceived: $totalApplicationsReceived, totalReferredToCompany: $totalReferredToCompany, totalAcceptedByCompany: $totalAcceptedByCompany, totalInterviewScheduled: $totalInterviewScheduled, responseRate: $responseRate, referralSuccessRate: $referralSuccessRate)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MetricsCopyWith<$Res>  {
+  factory $MetricsCopyWith(Metrics value, $Res Function(Metrics) _then) = _$MetricsCopyWithImpl;
+@useResult
+$Res call({
+ int? totalApplicationsReceived, int? totalReferredToCompany, int? totalAcceptedByCompany, int? totalInterviewScheduled, int? responseRate, int? referralSuccessRate
+});
+
+
+
+
+}
+/// @nodoc
+class _$MetricsCopyWithImpl<$Res>
+    implements $MetricsCopyWith<$Res> {
+  _$MetricsCopyWithImpl(this._self, this._then);
+
+  final Metrics _self;
+  final $Res Function(Metrics) _then;
+
+/// Create a copy of Metrics
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? totalApplicationsReceived = freezed,Object? totalReferredToCompany = freezed,Object? totalAcceptedByCompany = freezed,Object? totalInterviewScheduled = freezed,Object? responseRate = freezed,Object? referralSuccessRate = freezed,}) {
+  return _then(_self.copyWith(
+totalApplicationsReceived: freezed == totalApplicationsReceived ? _self.totalApplicationsReceived : totalApplicationsReceived // ignore: cast_nullable_to_non_nullable
+as int?,totalReferredToCompany: freezed == totalReferredToCompany ? _self.totalReferredToCompany : totalReferredToCompany // ignore: cast_nullable_to_non_nullable
+as int?,totalAcceptedByCompany: freezed == totalAcceptedByCompany ? _self.totalAcceptedByCompany : totalAcceptedByCompany // ignore: cast_nullable_to_non_nullable
+as int?,totalInterviewScheduled: freezed == totalInterviewScheduled ? _self.totalInterviewScheduled : totalInterviewScheduled // ignore: cast_nullable_to_non_nullable
+as int?,responseRate: freezed == responseRate ? _self.responseRate : responseRate // ignore: cast_nullable_to_non_nullable
+as int?,referralSuccessRate: freezed == referralSuccessRate ? _self.referralSuccessRate : referralSuccessRate // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [Metrics].
+extension MetricsPatterns on Metrics {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Metrics value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Metrics() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Metrics value)  $default,){
+final _that = this;
+switch (_that) {
+case _Metrics():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Metrics value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Metrics() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int? totalApplicationsReceived,  int? totalReferredToCompany,  int? totalAcceptedByCompany,  int? totalInterviewScheduled,  int? responseRate,  int? referralSuccessRate)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Metrics() when $default != null:
+return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_that.totalAcceptedByCompany,_that.totalInterviewScheduled,_that.responseRate,_that.referralSuccessRate);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int? totalApplicationsReceived,  int? totalReferredToCompany,  int? totalAcceptedByCompany,  int? totalInterviewScheduled,  int? responseRate,  int? referralSuccessRate)  $default,) {final _that = this;
+switch (_that) {
+case _Metrics():
+return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_that.totalAcceptedByCompany,_that.totalInterviewScheduled,_that.responseRate,_that.referralSuccessRate);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int? totalApplicationsReceived,  int? totalReferredToCompany,  int? totalAcceptedByCompany,  int? totalInterviewScheduled,  int? responseRate,  int? referralSuccessRate)?  $default,) {final _that = this;
+switch (_that) {
+case _Metrics() when $default != null:
+return $default(_that.totalApplicationsReceived,_that.totalReferredToCompany,_that.totalAcceptedByCompany,_that.totalInterviewScheduled,_that.responseRate,_that.referralSuccessRate);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+@JsonSerializable()
+
+class _Metrics implements Metrics {
+  const _Metrics({this.totalApplicationsReceived, this.totalReferredToCompany, this.totalAcceptedByCompany, this.totalInterviewScheduled, this.responseRate, this.referralSuccessRate});
+  factory _Metrics.fromJson(Map<String, dynamic> json) => _$MetricsFromJson(json);
+
+@override final  int? totalApplicationsReceived;
+@override final  int? totalReferredToCompany;
+@override final  int? totalAcceptedByCompany;
+@override final  int? totalInterviewScheduled;
+@override final  int? responseRate;
+@override final  int? referralSuccessRate;
+
+/// Create a copy of Metrics
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MetricsCopyWith<_Metrics> get copyWith => __$MetricsCopyWithImpl<_Metrics>(this, _$identity);
+
+@override
+Map<String, dynamic> toJson() {
+  return _$MetricsToJson(this, );
+}
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Metrics&&(identical(other.totalApplicationsReceived, totalApplicationsReceived) || other.totalApplicationsReceived == totalApplicationsReceived)&&(identical(other.totalReferredToCompany, totalReferredToCompany) || other.totalReferredToCompany == totalReferredToCompany)&&(identical(other.totalAcceptedByCompany, totalAcceptedByCompany) || other.totalAcceptedByCompany == totalAcceptedByCompany)&&(identical(other.totalInterviewScheduled, totalInterviewScheduled) || other.totalInterviewScheduled == totalInterviewScheduled)&&(identical(other.responseRate, responseRate) || other.responseRate == responseRate)&&(identical(other.referralSuccessRate, referralSuccessRate) || other.referralSuccessRate == referralSuccessRate));
+}
+
+@JsonKey(includeFromJson: false, includeToJson: false)
+@override
+int get hashCode => Object.hash(runtimeType,totalApplicationsReceived,totalReferredToCompany,totalAcceptedByCompany,totalInterviewScheduled,responseRate,referralSuccessRate);
+
+@override
+String toString() {
+  return 'Metrics(totalApplicationsReceived: $totalApplicationsReceived, totalReferredToCompany: $totalReferredToCompany, totalAcceptedByCompany: $totalAcceptedByCompany, totalInterviewScheduled: $totalInterviewScheduled, responseRate: $responseRate, referralSuccessRate: $referralSuccessRate)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MetricsCopyWith<$Res> implements $MetricsCopyWith<$Res> {
+  factory _$MetricsCopyWith(_Metrics value, $Res Function(_Metrics) _then) = __$MetricsCopyWithImpl;
+@override @useResult
+$Res call({
+ int? totalApplicationsReceived, int? totalReferredToCompany, int? totalAcceptedByCompany, int? totalInterviewScheduled, int? responseRate, int? referralSuccessRate
+});
+
+
+
+
+}
+/// @nodoc
+class __$MetricsCopyWithImpl<$Res>
+    implements _$MetricsCopyWith<$Res> {
+  __$MetricsCopyWithImpl(this._self, this._then);
+
+  final _Metrics _self;
+  final $Res Function(_Metrics) _then;
+
+/// Create a copy of Metrics
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? totalApplicationsReceived = freezed,Object? totalReferredToCompany = freezed,Object? totalAcceptedByCompany = freezed,Object? totalInterviewScheduled = freezed,Object? responseRate = freezed,Object? referralSuccessRate = freezed,}) {
+  return _then(_Metrics(
+totalApplicationsReceived: freezed == totalApplicationsReceived ? _self.totalApplicationsReceived : totalApplicationsReceived // ignore: cast_nullable_to_non_nullable
+as int?,totalReferredToCompany: freezed == totalReferredToCompany ? _self.totalReferredToCompany : totalReferredToCompany // ignore: cast_nullable_to_non_nullable
+as int?,totalAcceptedByCompany: freezed == totalAcceptedByCompany ? _self.totalAcceptedByCompany : totalAcceptedByCompany // ignore: cast_nullable_to_non_nullable
+as int?,totalInterviewScheduled: freezed == totalInterviewScheduled ? _self.totalInterviewScheduled : totalInterviewScheduled // ignore: cast_nullable_to_non_nullable
+as int?,responseRate: freezed == responseRate ? _self.responseRate : responseRate // ignore: cast_nullable_to_non_nullable
+as int?,referralSuccessRate: freezed == referralSuccessRate ? _self.referralSuccessRate : referralSuccessRate // ignore: cast_nullable_to_non_nullable
+as int?,
+  ));
+}
+
+
 }
 
 

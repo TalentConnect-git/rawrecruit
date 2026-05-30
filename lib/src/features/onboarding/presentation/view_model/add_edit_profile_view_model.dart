@@ -5,12 +5,15 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 
+import '../../../../feature/revamp_onboarding/presentation/steps/education_controller.dart';
+import '../../data/entities/international.dart';
+import '../../data/entities/leadership_controller.dart';
+
 class AddEditProfileViewModel extends ViewStateProvider {
   final OnboardingRepository _onboardingRepository = getIt();
 
-  final UserProfileController userProfileController = UserProfileController();
+  final UserController userController = UserController();
 
-  // ← store the picked file here
   File? pickedResumeFile;
 
   XFile? pickedImage;
@@ -19,9 +22,23 @@ class AddEditProfileViewModel extends ViewStateProvider {
     Failure? failure;
 
     setViewState(ViewState.busy);
+/// HANDLE CURRENT COMPANY
+final currentExperience = userController.experiences.where(
+  (e) => e.isCurrent,
+);
 
-    final result = await _onboardingRepository.updateOnboardingUserProfile(
-      body: userProfileController.toMap(),
+if (currentExperience.isEmpty) {
+  userController.currentCompany.text = '';
+} else {
+  userController.currentCompany.text =
+      currentExperience.first.company.text;
+}
+
+debugPrint(
+  'FINAL currentCompany => ${userController.currentCompany.text}',
+);
+    final result = await _onboardingRepository.updateOnboardingUser(
+      body: userController.toMap(),
       resume: pickedResumeFile,
       image: pickedImage,
     );
@@ -35,49 +52,113 @@ class AddEditProfileViewModel extends ViewStateProvider {
     return failure;
   }
 
-  void setUserProfileController(UserProfile? userProfile) {
-    if (userProfile == null) return;
+  void setUserController(User? user) {
+    if (user == null) return;
 
-    final c = userProfileController;
+    final c = userController;
 
     /// -------- BASIC --------
-    c.id.text = userProfile.id ?? '';
-    c.userId.text = userProfile.userId ?? '';
-    c.v.text = userProfile.v?.toString() ?? '';
+    c.id.text = user.id ?? '';
+    c.userId.text = user.userId ?? '';
+    c.v.text = user.v?.toString() ?? '';
 
-    c.createdAt.text = userProfile.createdAt ?? '';
-    c.updatedAt.text = userProfile.updatedAt ?? '';
+    c.createdAt.text = user.createdAt ?? '';
+    c.updatedAt.text = user.updatedAt ?? '';
 
-    c.resume.text = userProfile.resume ?? '';
-    c.about.text = userProfile.about ?? '';
-    c.certifications.text = userProfile.certifications ?? '';
-    c.cgpa.text = userProfile.cgpa ?? '';
-    c.college.text = userProfile.college ?? '';
-    c.degree.text = userProfile.degree ?? '';
-    c.degreeCertificate.text = userProfile.degreeCertificate ?? '';
-    c.email.text = userProfile.email ?? '';
-    c.gender.text = userProfile.gender ?? '';
-    c.github.text = userProfile.github ?? '';
-    c.linkedin.text = userProfile.linkedin ?? '';
-    c.name.text = userProfile.name ?? '';
-    c.openToShift.text = userProfile.openToShift ?? '';
-    c.phone.text = userProfile.phone ?? '';
-    c.portfolio.text = userProfile.portfolio ?? '';
-    c.profileType.text = userProfile.profileType ?? '';
-    c.referralSource.text = userProfile.referralSource ?? '';
-    c.semester.text = userProfile.semester ?? '';
-    c.specialization.text = userProfile.specialization ?? '';
-    c.yearOfGraduation.text = userProfile.yearOfGraduation ?? '';
-    c.currentSalaryAmount.text = userProfile.currentSalaryAmount ?? '';
-    c.currentSalaryCurrency.text = userProfile.currentSalaryCurrency ?? '';
-    c.dob.text = userProfile.dob ?? '';
-    c.ethnicity.text = userProfile.ethnicity ?? '';
-    c.expectedSalaryAmount.text = userProfile.expectedSalaryAmount ?? '';
-    c.expectedSalaryCurrency.text = userProfile.expectedSalaryCurrency ?? '';
-    c.maritalStatus.text = userProfile.maritalStatus ?? '';
-    c.visaStatus.text = userProfile.visaStatus ?? '';
+    c.resume.text = user.resume ?? '';
+    c.about.text = user.about ?? '';
+    c.certifications.text = user.certifications ?? '';
+   
+    c.email.text = user.email ?? '';
+    c.gender.text = user.gender ?? '';
+    c.github.text = user.github ?? '';
+    c.linkedin.text = user.linkedin ?? '';
+    c.name.text = user.name ?? '';
+    c.openToShift.text = user.openToShift ?? '';
+c.totalYearsOfExperience.text = user.totalYearsOfExperience ?? '' ;
+    c.currentCompany.text =
+        user.currentCompany ?? '';
+c.companyEmail.text =
+    user.companyEmail ?? '';
+    c.noticePeriod.text =
+        user.noticePeriod ?? '';
+c.noticePeriodStartDate.text =
+    user.noticePeriodStartDate ?? '';
+    c.phone.text = user.phone ?? '';
+    c.portfolio.text = user.portfolio ?? '';
+    c.profileType.text = user.profileType ?? '';
+    c.referralSource.text = user.referralSource ?? '';
+   /// -------- EDUCATIONS --------
+c.educations.clear();
 
-    c.servingNoticePeriod.text = userProfile.servingNoticePeriod.toString();
+for (final e
+    in user.educations ?? []) {
+
+  final ec =
+      EducationController();
+
+  ec.college.text =
+      e.college ?? '';
+
+  ec.degree.text =
+      e.degree ?? '';
+
+  ec.specialization.text =
+      e.specialization ?? '';
+
+  ec.semester.text =
+      e.semester ?? '';
+
+  ec.cgpa.text =
+      e.cgpa ?? '';
+
+  ec.yearOfGraduation.text =
+      e.yearOfGraduation ?? '';
+
+  ec.startDate.text =
+      e.startDate ?? '';
+
+  ec.endDate.text =
+      e.endDate ?? '';
+
+  ec.educationType =
+      e.educationType ??
+          "bachelors";
+
+  ec.isCurrent =
+      e.isCurrent ?? false;
+
+  c.educations.add(ec);
+}
+
+if (c.educations.isEmpty) {
+
+  c.educations.add(
+    EducationController(),
+  );
+}
+    c.currentSalaryAmount.text =
+        user.currentSalaryAmount ?? '';
+
+    c.currentSalaryCurrency.text =
+        user.currentSalaryCurrency ?? '';
+
+    c.dob.text = user.dob ?? '';
+    c.ethnicity.text = user.ethnicity ?? '';
+
+    c.expectedSalaryAmount.text =
+        user.expectedSalaryAmount ?? '';
+
+    c.expectedSalaryCurrency.text =
+        user.expectedSalaryCurrency ?? '';
+
+    c.maritalStatus.text =
+        user.maritalStatus ?? '';
+
+    c.visaStatus.text = user.visaStatus ?? '';
+
+c.servingNoticePeriod =
+    user.servingNoticePeriod ?? false;
 
     /// -------- CLEAR LISTS --------
     c.skills.clear();
@@ -85,11 +166,12 @@ class AddEditProfileViewModel extends ViewStateProvider {
     c.employmentType.clear();
     c.experiences.clear();
     c.industry.clear();
-    c.internationalExperience.clear();
     c.jobRoles.clear();
     c.languagesKnown.clear();
-    c.leadership.clear();
     c.locations.clear();
+    c.leadershipExperiences.clear();
+
+c.internationalExperiences.clear();
     c.lookingFor.clear();
     c.toolsAndPlatforms.clear();
 
@@ -97,100 +179,216 @@ class AddEditProfileViewModel extends ViewStateProvider {
     c.awards.clear();
     c.publications.clear();
 
-    /// -------- STRING LISTS --------
-    for (final e in userProfile.skills ?? []) {
-      c.skills.add(TextEditingController(text: e));
-    }
-    c.skills.add(TextEditingController());
+    /// -------- CHIP FIELDS --------
 
-    for (final e in userProfile.domainKnowledge ?? []) {
-      c.domainKnowledge.add(TextEditingController(text: e));
-    }
-    c.domainKnowledge.add(TextEditingController());
+    c.skills.add(
+      TextEditingController(
+        text: (user.skills ?? []).join(', '),
+      ),
+    );
 
-    for (final e in userProfile.employmentType ?? []) {
-      c.employmentType.add(TextEditingController(text: e));
-    }
-    c.employmentType.add(TextEditingController());
+    c.domainKnowledge.add(
+      TextEditingController(
+        text:
+            (user.domainKnowledge ?? [])
+                .join(', '),
+      ),
+    );
 
-    for (final e in userProfile.experiences ?? []) {
-      c.experiences.add(TextEditingController(text: e));
-    }
-    c.experiences.add(TextEditingController());
+    c.employmentType.add(
+      TextEditingController(
+        text:
+            (user.employmentType ?? [])
+                .join(', '),
+      ),
+    );
 
-    for (final e in userProfile.industry ?? []) {
-      c.industry.add(TextEditingController(text: e));
-    }
-    c.industry.add(TextEditingController());
+    c.industry.add(
+      TextEditingController(
+        text:
+            (user.industry ?? [])
+                .join(', '),
+      ),
+    );
 
-    for (final e in userProfile.internationalExperience ?? []) {
-      c.internationalExperience.add(TextEditingController(text: e));
-    }
-    c.internationalExperience.add(TextEditingController());
+    
+    c.jobRoles.add(
+      TextEditingController(
+        text:
+            (user.jobRoles ?? [])
+                .join(', '),
+      ),
+    );
 
-    for (final e in userProfile.jobRoles ?? []) {
-      c.jobRoles.add(TextEditingController(text: e));
-    }
-    c.jobRoles.add(TextEditingController());
+    c.languagesKnown.add(
+      TextEditingController(
+        text:
+            (user.languagesKnown ?? [])
+                .join(', '),
+      ),
+    );
 
-    for (final e in userProfile.languagesKnown ?? []) {
-      c.languagesKnown.add(TextEditingController(text: e));
-    }
-    c.languagesKnown.add(TextEditingController());
 
-    for (final e in userProfile.leadership ?? []) {
-      c.leadership.add(TextEditingController(text: e));
-    }
-    c.leadership.add(TextEditingController());
+    c.lookingFor.add(
+      TextEditingController(
+        text:
+            (user.lookingFor ?? [])
+                .join(', '),
+      ),
+    );
 
-    for (final e in userProfile.locations ?? []) {
-      c.locations.add(TextEditingController(text: e));
+    c.toolsAndPlatforms.add(
+      TextEditingController(
+        text:
+            (user.toolsAndPlatforms ?? [])
+                .join(', '),
+      ),
+    );
+
+    /// -------- LOCATIONS --------
+    for (final e in user.locations ?? []) {
+      c.locations.add(
+        TextEditingController(text: e),
+      );
     }
+
     c.locations.add(TextEditingController());
 
-    for (final e in userProfile.lookingFor ?? []) {
-      c.lookingFor.add(TextEditingController(text: e));
-    }
-    c.lookingFor.add(TextEditingController());
+    /// -------- EXPERIENCES --------
+  for (final e in user.experiences ?? []) {
+  final isEmpty =
+      (e.company ?? '').trim().isEmpty &&
+      (e.role ?? '').trim().isEmpty &&
+      (e.startDate ?? '').trim().isEmpty &&
+      (e.endDate ?? '').trim().isEmpty &&
+      (e.description ?? '').trim().isEmpty;
 
-    for (final e in userProfile.toolsAndPlatforms ?? []) {
-      c.toolsAndPlatforms.add(TextEditingController(text: e));
-    }
-    c.toolsAndPlatforms.add(TextEditingController());
+  if (isEmpty) continue;
+
+  final ec = ExperienceController();
+
+  ec.company.text = e.company ?? '';
+  ec.role.text = e.role ?? '';
+  ec.startDate.text = e.startDate ?? '';
+  ec.endDate.text = e.endDate ?? '';
+  ec.description.text = e.description ?? '';
+  ec.isCurrent = e.isCurrent ?? false;
+
+  c.experiences.add(ec);
+}
+
+/// -------- LEADERSHIP EXPERIENCES --------
+/// -------- LEADERSHIP EXPERIENCES --------
+for (final e
+    in user.leadershipExperiences ?? []) {
+
+  final ec =
+      LeadershipExperienceController();
+
+  ec.organization.text =
+      e.organization ?? '';
+
+  ec.role.text =
+      e.role ?? '';
+
+  ec.startDate.text =
+      e.startDate ?? '';
+
+  ec.endDate.text =
+      e.endDate ?? '';
+
+  ec.description.text =
+      e.description ?? '';
+
+  c.leadershipExperiences.add(ec);
+}
+
+if (c.leadershipExperiences.isEmpty) {
+  c.leadershipExperiences.add(
+    LeadershipExperienceController(),
+  );
+}
+
+/// -------- INTERNATIONAL EXPERIENCES --------
+/// -------- INTERNATIONAL EXPERIENCES --------
+for (final e
+    in user.internationalExperiences ??
+        []) {
+
+  final ec =
+      InternationalExperienceController();
+
+  ec.country.text =
+      e.country ?? '';
+
+ec.organization.text =
+    e.organization ?? '';
+ec.organization.text = e.organization ?? '';
+  ec.role.text =
+      e.role ?? '';
+
+  ec.startDate.text =
+      e.startDate ?? '';
+
+  ec.endDate.text =
+      e.endDate ?? '';
+
+  ec.description.text =
+      e.description ?? '';
+
+  c.internationalExperiences.add(ec);
+}
+
+
 
     /// -------- ACHIEVEMENTS --------
-    for (final a in userProfile.achievements ?? []) {
+    for (final a in user.achievements ?? []) {
       final ac = AchievementController();
+
       ac.id.text = a.id ?? '';
       ac.title.text = a.title ?? '';
       ac.event.text = a.event ?? '';
       ac.date.text = a.date ?? '';
+
       c.achievements.add(ac);
     }
-    c.achievements.add(AchievementController());
+
+   
 
     /// -------- AWARDS --------
-    for (final a in userProfile.awards ?? []) {
+    for (final a in user.awards ?? []) {
       final aw = AwardController();
+
       aw.id.text = a.id ?? '';
       aw.title.text = a.title ?? '';
-      aw.organization.text = a.organization ?? '';
-      aw.startDate.text = a.startDate ?? '';
-      aw.endDate.text = a.endDate ?? '';
-      aw.description.text = a.description ?? '';
+      aw.organization.text =
+          a.organization ?? '';
+
+      aw.startDate.text =
+          a.startDate ?? '';
+
+      aw.endDate.text =
+          a.endDate ?? '';
+
+      aw.description.text =
+          a.description ?? '';
+
       c.awards.add(aw);
     }
-    c.awards.add(AwardController());
+
+   
 
     /// -------- PUBLICATIONS --------
-    for (final p in userProfile.publications ?? []) {
+    for (final p in user.publications ?? []) {
       final pc = PublicationController();
+
       pc.id.text = p.id ?? '';
       pc.title.text = p.title ?? '';
       pc.url.text = p.url ?? '';
+
       c.publications.add(pc);
     }
-    c.publications.add(PublicationController());
+
 
     notifyListeners();
   }

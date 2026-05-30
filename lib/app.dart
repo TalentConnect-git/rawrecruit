@@ -8,7 +8,7 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       debugShowCheckedModeBanner: false,
-      routerConfig: AppRouter().router,
+      routerConfig: appRouter,
       theme: Theme.of(
         context,
       ).copyWith(scaffoldBackgroundColor: Color(0xfffafafa)),

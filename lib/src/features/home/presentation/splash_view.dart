@@ -4,6 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show RouteNames, getIt, AppStateProvider, SecretRepo;
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
+
+import '../../../feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -37,8 +40,12 @@ class _SplashViewState extends State<SplashView> {
         await appStateProvider.getAuthDetails();
         await appStateProvider.getUserDetails();
         if (appStateProvider.isAuthComplete) {
-          if (appStateProvider.isProfileRemaining) {
-            next = RouteNames.addEditProfileView;
+          final onboardingService = getIt<OnboardingLocalService>();
+
+          final completed = await onboardingService.isCompleted();
+
+          if (!appStateProvider.isProfileComplete) {
+            next = 'onboarding_flow';
           } else {
             next = RouteNames.dashboard;
           }
@@ -54,20 +61,23 @@ class _SplashViewState extends State<SplashView> {
 
     if (!mounted) return;
 
-    context.pushReplacementNamed(next, extra: appStateProvider.userType);
+    if (next == 'onboarding_flow') {
+    context.pushReplacementNamed(
+  RouteNames.onboarding,
+);
+    } else {
+      context.pushReplacementNamed(
+        next,
+        extra: {'userType': appStateProvider.userType},
+      );
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: Image.network(
-            'https://rawrecruit.in/assets/RR-Tagline-CmOUAebu.png',
-          ),
-        ),
-      ),
+      backgroundColor: Colors.black,
+      body: Image.asset('assets/images/splash-screen.png', fit: BoxFit.cover),
     );
   }
 }

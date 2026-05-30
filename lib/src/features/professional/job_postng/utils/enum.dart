@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 
 enum ApplicationStatus {
   pending('Pending', 'Pending', Icons.question_mark, Colors.black, Colors.grey),
-  accepted('Accept', 'Accepted', Icons.check, Colors.white, Colors.green),
-  rejected('Reject', 'Rejected', Icons.close, Colors.white, Colors.red),
+  accepted('Accepted', 'Accepted', Icons.check, Colors.white, Colors.green),
+  rejected('Rejected', 'Rejected', Icons.close, Colors.white, Colors.red),
   referred(
-    'Refer To Company',
+    'Referred To Company',
     'Referred To Company',
     Icons.link,
     Colors.white,

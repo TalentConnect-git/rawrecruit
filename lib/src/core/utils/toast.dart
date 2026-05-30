@@ -27,7 +27,9 @@ class Toasts {
     final overlayEntry = OverlayEntry(
       builder: (context) {
         return Positioned(
-          top: MediaQuery.of(context).padding.top, // below status bar
+          bottom:
+              MediaQuery.of(context).padding.bottom +
+              kToolbarHeight, // below status bar
           left: 16,
           right: 16,
           child: Material(
@@ -38,7 +40,7 @@ class Toasts {
                     CurvedAnimation(parent: controller, curve: Curves.easeOut),
                   ),
               child: Container(
-                padding: EdgeInsets.all(16),
+                padding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
                 decoration: BoxDecoration(
                   color: backgroundClr,
                   borderRadius: BorderRadius.circular(8),
@@ -46,13 +48,13 @@ class Toasts {
                 ),
                 child: Row(
                   children: [
-                    Icon(icon, size: 32, color: Colors.black),
+                    Icon(icon, size: 32, color: Colors.white),
                     SizedBox(width: 12),
                     Expanded(
                       child: Text(
                         message,
-                        style: AppTextStyles.s14W400.copyWith(
-                          color: Colors.black,
+                        style: AppTextStyles.s16W600.copyWith(
+                          color: Colors.white,
                         ),
                         maxLines: 2,
                       ),
@@ -91,8 +93,8 @@ class Toasts {
     _showToast(
       context,
       message: message,
-      backgroundClr: Colors.yellow.shade100,
-      border: Border.all(color: Colors.orange, width: 1.5),
+      backgroundClr: Colors.orange.shade400,
+      border: Border.all(color: Colors.orange.shade900, width: 1.5),
       icon: Icons.info_outline,
       trailing: trailing,
     );
@@ -129,8 +131,8 @@ class Toasts {
     _showToast(
       context,
       message: message,
-      backgroundClr: Colors.pink.shade100,
-      border: Border.all(color: Colors.red, width: 2),
+      backgroundClr: Colors.red.shade400,
+      border: Border.all(color: Colors.red.shade900, width: 2),
       icon: Icons.error_outline,
     );
   }
@@ -142,8 +144,8 @@ class Toasts {
     _showToast(
       context,
       message: message,
-      backgroundClr: Colors.green.shade100,
-      border: Border.all(color: Colors.green.shade700, width: 2),
+      backgroundClr: Color(0xff222222),
+      border: Border.all(color: Color(0xff444444), width: 2),
       icon: Icons.check,
     );
   }

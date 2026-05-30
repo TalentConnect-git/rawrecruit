@@ -9,25 +9,29 @@ import 'job_posting_data_source.dart';
 
 class ReferralPostDataSourceImpl implements ReferralPostDataSource {
   final NetworkService _networkService = NetworkService();
+@override
+ResultFuture<void> postReferralJob(
+  ReferralPostModel model,
+) async {
 
-  @override
-  ResultFuture<void> postReferralJob(ReferralPostModel model) async {
+  final body = model.toJson();
 
-    final request = Request(
-      method: RequestMethod.post,
-      endpoint: "/api/hiring-channels/referral-posting",
-      body: model.toJson(),
-      isSafeRoute: true,
-    );
-    
+  body.remove('_id');
 
-    try {
-      await _networkService.request(request);
-      return const Right(null);
-    } catch (e) {
-      return Left(APIException.from(e));
-    }
+  final request = Request(
+    method: RequestMethod.post,
+    endpoint: "/api/hiring-channels/referral-posting",
+    body: body,
+    isSafeRoute: true,
+  );
+
+  try {
+    await _networkService.request(request);
+    return const Right(null);
+  } catch (e) {
+    return Left(APIException.from(e));
   }
+}
 
   @override
   ResultFuture<List<ReferralApplication>> getApplicationByReferralJobId({
@@ -115,4 +119,73 @@ class ReferralPostDataSourceImpl implements ReferralPostDataSource {
     }
     return const Right(null);
   }
+
+  
+  @override
+  ResultFuture<List<Job>> getOffCampusJobs() async {
+    final Request request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.referalListing,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      final List data = response['data'] ?? [];
+
+final jobs = data
+    .map((e) {
+      try {
+        return Job.fromJson(e);
+      } catch (err) {
+        print("PARSE ERROR: $err");
+        return null;
+      }
+    })
+    .whereType<Job>()
+    .toList();
+    print("FINAL JOBS COUNT: ${jobs.length}");
+      return Right(jobs);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+ResultFuture<void> deleteReferralJob({
+  required String jobId,
+}) async {
+  final request = Request(
+    method: RequestMethod.delete,
+    endpoint: '/api/delete-job/$jobId',
+    isSafeRoute: true,
+  );
+
+  try {
+    await _networkService.request(request);
+    return const Right(null);
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
+
+@override
+ResultFuture<void> toggleReferralJobStatus({
+  required String jobId,
+}) async {
+  final request = Request(
+    method: RequestMethod.patch,
+    endpoint: '/company/jobmanagement/referral/$jobId',
+    isSafeRoute: true,
+  );
+
+  try {
+    await _networkService.request(request);
+    return const Right(null);
+  } catch (e) {
+    return Left(APIException.from(e));
+  }
+}
 }

@@ -1,4 +1,3 @@
-
 import '../../../../core/index.dart';
 import '../../data/entity/interview_model.dart';
 import '../../data/repository/scheduled_interview_repo.dart';
@@ -8,7 +7,7 @@ class InterviewViewModel extends ViewStateProvider {
 
   List<InterviewModel> interviews = [];
   InterviewModel? selectedInterview;
- 
+
   Future<Failure?> getInterviews() async {
     Failure? failure;
 
@@ -22,20 +21,25 @@ class InterviewViewModel extends ViewStateProvider {
       },
       (data) {
         interviews = data;
+        if (data.isNotEmpty) {
+          getIt<AppStateProvider>().setNewInterviewsAvailable();
+        } else {
+          getIt<AppStateProvider>().clearNewInterviewsAvailable();
+        }
       },
     );
 
     setViewState(ViewState.complete);
     return failure;
   }
-  
+
   Future<Failure?> getInterviewById(String interviewId) async {
     Failure? failure;
- 
+
     setViewState(ViewState.busy);
- 
+
     final result = await _repository.getInterviewById(interviewId);
- 
+
     result.fold(
       (exception) {
         failure = APIFailure.fromException(exception: exception);
@@ -44,7 +48,7 @@ class InterviewViewModel extends ViewStateProvider {
         selectedInterview = data;
       },
     );
- 
+
     setViewState(ViewState.complete);
     return failure;
   }

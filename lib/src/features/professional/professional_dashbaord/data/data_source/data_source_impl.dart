@@ -57,10 +57,8 @@ Endpoints.referalListing,
       return Left(APIException.from(e));
     }
   }
-
-  @override
+@override
 ResultFuture<ReferralJobModel> getReferralJobDetails(String id) async {
-
   final request = Request(
     method: RequestMethod.get,
     endpoint: "/jobs/jobDetails/referral/$id",
@@ -71,13 +69,13 @@ ResultFuture<ReferralJobModel> getReferralJobDetails(String id) async {
     final result =
         await _networkService.request(request);
 
-    final data =
-        (result.data as List).first;
+    final data = result.data;
 
     return Right(
       ReferralJobModel.fromJson(data),
     );
   } catch (e) {
+    print("DETAIL ERROR: $e");
     return Left(APIException.from(e));
   }
 }

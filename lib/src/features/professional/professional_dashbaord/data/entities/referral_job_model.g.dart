@@ -15,9 +15,11 @@ _ReferralJobModel _$ReferralJobModelFromJson(
       : CandidatePosted.fromJson(
           json['candidatePosted'] as Map<String, dynamic>,
         ),
-  jobTitle: json['jobTitle'] as String?,
+  jobTitle: _jobTitleFromJson(json['jobTitle']),
   description: json['description'] as String?,
   jobStatus: json['jobStatus'] as String?,
+  company: json['company'] as String?,
+  currentCompany: json['currentCompany'] as String?,
   approvalStatus: json['approvalStatus'] as String?,
   jobType: json['jobType'] as String?,
   visibleTo: json['visibleTo'] as String?,
@@ -82,6 +84,10 @@ _ReferralJobModel _$ReferralJobModelFromJson(
   packageDetails: json['packageDetails'] == null
       ? null
       : PackageDetails.fromJson(json['packageDetails'] as Map<String, dynamic>),
+  endDate: json['endDate'] == null
+      ? null
+      : DateTime.parse(json['endDate'] as String),
+  matchScore: (json['matchScore'] as num?)?.toInt(),
   expireAt: json['expireAt'] == null
       ? null
       : DateTime.parse(json['expireAt'] as String),
@@ -100,6 +106,8 @@ Map<String, dynamic> _$ReferralJobModelToJson(_ReferralJobModel instance) =>
       'jobTitle': instance.jobTitle,
       'description': instance.description,
       'jobStatus': instance.jobStatus,
+      'company': instance.company,
+      'currentCompany': instance.currentCompany,
       'approvalStatus': instance.approvalStatus,
       'jobType': instance.jobType,
       'visibleTo': instance.visibleTo,
@@ -132,6 +140,8 @@ Map<String, dynamic> _$ReferralJobModelToJson(_ReferralJobModel instance) =>
       'workLocation': instance.workLocation,
       'numberOfStudent': instance.numberOfStudent,
       'packageDetails': instance.packageDetails,
+      'endDate': instance.endDate?.toIso8601String(),
+      'matchScore': instance.matchScore,
       'expireAt': instance.expireAt?.toIso8601String(),
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
@@ -140,6 +150,7 @@ Map<String, dynamic> _$ReferralJobModelToJson(_ReferralJobModel instance) =>
 _CandidatePosted _$CandidatePostedFromJson(Map<String, dynamic> json) =>
     _CandidatePosted(
       id: json['_id'] as String?,
+      userId: json['userId'] as String?,
       name: json['name'] as String?,
       email: json['email'] as String?,
       phone: json['phone'] as String?,
@@ -190,6 +201,7 @@ _CandidatePosted _$CandidatePostedFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$CandidatePostedToJson(_CandidatePosted instance) =>
     <String, dynamic>{
       '_id': instance.id,
+      'userId': instance.userId,
       'name': instance.name,
       'email': instance.email,
       'phone': instance.phone,

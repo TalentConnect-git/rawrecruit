@@ -3,9 +3,13 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import 'package:rawrecruit/src/features/home/presentation/widgets/app_bottom_nav.dart';
+import 'package:rawrecruit/src/features/notifications/index.dart';
 
+import '../../../feature/revamp_onboarding/presentation/flow_controller.dart';
 import '../../chat/index.dart';
+import '../../scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({required this.navigationShell, super.key});
@@ -19,53 +23,61 @@ class HomeView extends StatefulWidget {
 class _HomeViewState extends State<HomeView> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final appStateProvider = getIt<AppStateProvider>();
-
+  final notificationVm = getIt<NotificationViewModel>();
+  final interviewViewModel = getIt<InterviewViewModel>();
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final chatVm = context.read<ChatViewModel>();
       chatVm.fetchUnreadCounts();
-
       if (!appStateProvider.isAuthComplete) {
         final failure = await appStateProvider.getAuthDetails();
         failure?.showError(context);
+
+        await notificationVm.getNotifications();
+
+        final failure2 = await interviewViewModel.getInterviews();
+        failure2?.showError(context);
       }
 
       if (appStateProvider.isProfileRemaining) {
-        final failure = await appStateProvider.getUserDetails();
-        Toasts.showSuccessOrFailureToast(
-          context,
-          failure: failure,
-          hideSuccess: true,
-          popOnSuccess: false,
-        );
-        if (appStateProvider.isProfileRemaining) {
-          context.goNamed(RouteNames.addEditProfileView);
+        final onboardingService = getIt<OnboardingLocalService>();
+
+        final completed = await onboardingService.isCompleted();
+
+        if (!completed) {
+         context.pushReplacementNamed(
+  RouteNames.onboarding,
+);
+
+          return;
         }
       }
     });
+
     super.initState();
   }
 
   int _calculateIndex(BuildContext context) {
     final location = GoRouterState.of(context).uri.toString();
 
-    if (location.startsWith('/jobPosted')) return 1;
-
     if (location.startsWith('/application')) {
-      return appStateProvider.isProfessional ? 2 : 1;
-    }
-    if (location.startsWith('/shortlist')) {
-      return appStateProvider.isProfessional ? 3 : 2;
-    }
-    if (location.startsWith('/my-profile')) {
-      return appStateProvider.isProfessional ? 4 : 3;
-    }
-    if (location.startsWith('/chatUsers')) {
-      return appStateProvider.isProfessional ? 5 : 4;
+      return 1; // ✅ Jobs
     }
 
-    return 0;
+    if (location.startsWith('/referrer')) {
+      return 2; // ✅ Referrer
+    }
+
+    if (location.startsWith('/shortlist')) {
+      return 3; // ✅ Alumnis
+    }
+
+    if (location.startsWith('/my-profile')) {
+      return 4; // ✅ Chat
+    }
+
+    return 0; // ✅ Home
   }
 
   @override
@@ -86,88 +98,110 @@ class _HomeViewState extends State<HomeView> {
           );
         }
       },
-      child: Scaffold(
-        key: _scaffoldKey,
-        appBar: RAppBar(
-          title: Text('RawRecruit'),
-          actions: [
-            IconButton(
-              onPressed: () {
-                context.pushNamed(RouteNames.scheduledInterviews);
-              },
-              icon: const Icon(Icons.calendar_month_outlined),
-              tooltip: 'Scheduled Interviews',
+      child: ChangeNotifierProvider.value(
+        value: interviewViewModel,
+        child: Scaffold(
+          key: _scaffoldKey,
+          appBar: RAppBar(
+            title: Text(
+              'RawRecruit',
+              style: AppTextStyles.s24W600.copyWith(color: AppColors.kGreen),
             ),
-            IconButton(
-              onPressed: () async {
-                context.pushNamed(RouteNames.notification);
-              },
-              icon: Icon(Icons.notifications),
-            ),
-            IconButton(
-              onPressed: () async {
-                final failure = await getIt<AppStateProvider>().logout();
-                Toasts.showSuccessOrFailureToast(
-                  context,
-                  failure: failure,
-                  popOnSuccess: false,
-                  successMsg: 'Logout Successful!',
-                  successCallback: () {
-                    context.goNamed(RouteNames.login);
+            actions: [
+              Selector<AppStateProvider, bool>(
+                selector: (_, vm) => vm.hasNewInterviews,
+                builder: (_, hasInterviews, _) => IconButton(
+                  onPressed: () {
+                    context.pushNamed(RouteNames.scheduledInterviews);
                   },
-                );
-              },
-              icon: Icon(Icons.logout),
-            ),
-          ],
-        ),
-        body: widget.navigationShell,
-        bottomNavigationBar: AppBottomNav(
-          currentIndex: currentIndex,
-          hasUnread: chatVm.totalUnreadCount > 0,
-          onTap: (index) {
-            switch (index) {
-              case 0:
-                context.goNamed(
-                  RouteNames.dashboard,
-                  extra: appStateProvider.userType,
-                );
-                break;
-              case 1:
-                if (appStateProvider.isProfessional) {
-                  context.goNamed(RouteNames.jobPosted);
-                } else {
-                  context.goNamed(RouteNames.application);
-                }
-                break;
-              case 2:
-                if (appStateProvider.isProfessional) {
-                  context.goNamed(
-                    RouteNames.application,
-                    extra: appStateProvider.userType,
+                  icon: Stack(
+                    clipBehavior: Clip.none,
+                    children: [
+                      const Icon(Icons.calendar_month_outlined),
+                      if (hasInterviews)
+                        Positioned(
+                          right: -1,
+                          top: -1,
+
+                          child: Container(
+                            width: 10,
+                            height: 10,
+
+                            decoration: const BoxDecoration(
+                              color: Colors.red,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                  color: Colors.white,
+                  tooltip: 'Scheduled Interviews',
+                ),
+              ),
+              Selector<NotificationProvider, bool>(
+                builder: (_, available, _) {
+                  return IconButton(
+                    onPressed: () async {
+                      await context.pushNamed(RouteNames.notification);
+
+                      if (context.mounted) {
+                        await notificationVm.getNotifications();
+                      }
+                    },
+
+                    icon: Stack(
+                      clipBehavior: Clip.none,
+
+                      children: [
+                        const Icon(Icons.notifications),
+
+                        if (available)
+                          Positioned(
+                            right: -1,
+                            top: -1,
+
+                            child: Container(
+                              width: 10,
+                              height: 10,
+
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    color: Colors.white,
                   );
-                } else {
-                  context.goNamed(RouteNames.shortlist);
-                }
-                break;
-              case 3:
-                if (appStateProvider.isProfessional) {
-                  context.goNamed(RouteNames.shortlist);
-                } else {
-                  context.goNamed(RouteNames.myProfile);
-                }
-                break;
-              case 4:
-                if (appStateProvider.isProfessional) {
-                  context.goNamed(RouteNames.myProfile);
-                } else {
-                  context.goNamed(RouteNames.chatUserList);
-                }
-                break;
-              case 5:
-                context.goNamed(RouteNames.chatUserList);
-            }
-          },
+                },
+                selector: (_, vm) => vm.hasNewNotifications,
+              ),
+              IconButton(
+                onPressed: () {
+                  context.pushNamed(RouteNames.chatUserList);
+                },
+                icon: Image.asset(
+                  'assets/images/chat.png',
+                  height: 24,
+                  width: 24,
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          body: widget.navigationShell,
+          bottomNavigationBar: AppBottomNav(
+            currentIndex: currentIndex,
+            hasUnread: chatVm.totalUnreadCount > 0,
+            onTap: (tab) {
+              final extra = {'userType': appStateProvider.userType};
+
+              context.goNamed(tab.path, extra: extra);
+            },
+          ),
         ),
       ),
     );

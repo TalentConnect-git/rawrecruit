@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/application/presentation/view_model/application_view_model.dart';
-import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';
+import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 class ShortlistView extends StatefulWidget {
@@ -48,6 +49,7 @@ class _ShortlistViewState extends State<ShortlistView> {
           final applicationVM = context.watch<ApplicationViewModel>();
 
           return Scaffold(
+            backgroundColor: AppColors.secBorder,
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -57,11 +59,12 @@ class _ShortlistViewState extends State<ShortlistView> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "Saved Opportunities",
                       style: TextStyle(
                         fontSize: 22,
                         fontWeight: FontWeight.w700,
+                        color: AppColors.white,
                       ),
                     ),
 
@@ -88,29 +91,7 @@ class _ShortlistViewState extends State<ShortlistView> {
                                 );
 
                                 return JobCard(
-                                  jobId: job.id ?? '',
-                                  companyName: job.companyName ?? '',
-
-                                  /// 🔥 SAME AS INTERNSHIP VIEW
-                                  title: job.jobRoles?.isNotEmpty == true
-                                      ? job.jobRoles!.first
-                                      : job.jobTitle ?? '-',
-
-                                  workMode: job.workMode?.isNotEmpty == true
-                                      ? job.workMode!.first
-                                      : '',
-
-                                  location: job.location?.isNotEmpty == true
-                                      ? job.location!.first
-                                      : '',
-
-                                  yoe: 0,
-
-                                  package:
-                                      "₹${job.packageDetails?.totalCTC ?? 0}",
-
-                                  skills: job.skills ?? [],
-                                  description: job.description ?? '',
+                                  job: job,
 
                                   /// Bookmark
                                   isSaved: isSaved,
@@ -124,9 +105,12 @@ class _ShortlistViewState extends State<ShortlistView> {
 
                                   /// Apply
                                   isApplied: isApplied,
-                                  onApply: () async {
-                                    await applicationVM.apply(job.id ?? '');
-                                  },
+                                  onApply: () => applicationVM.apply(
+                                    jobId: job.id ?? '',
+                                    jobType:
+                                        item.jobType ?? '', // or pass manually
+                                    companyName: job.companyName ?? '',
+                                  ),
 
                                   onTap: () {
                                     context.pushNamed(

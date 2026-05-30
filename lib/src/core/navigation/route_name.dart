@@ -1,6 +1,7 @@
 class RouteNames {
   static final login = 'login';
   static final register = 'register';
+  static final forgotPassword = 'forgot-password';
   static final splash = 'splash';
   static final dashboard = 'dashboard';
   static final shortlist = 'shortlist';
@@ -19,8 +20,22 @@ class RouteNames {
   static final professionalAppliedJobs = 'professionalAppliedJobs';
   static final professionalAppliedJobsDetail = 'professionalAppliedJobsDetail';
   static final referralPostDetail = 'referralPostDetail';
+
+  static final chatUser = 'chat-user';
   static final chatUserList = 'chatUserList';
   static final notification = 'notification';
   static const String scheduledInterviews = 'scheduledInterviews';
   static const String interviewDetail = 'interviewDetail';
+  static const String userType = 'userType';
+  static const String onboarding = 'onboarding';
+  static const String referrer = 'referrer';
+  static const String referrerDetail = 'referrer-detail';
+  static const String alumniDetail = 'alumniDetail';
+  
+  static const profileDetail =
+    'profileDetail';
+    static final referralApplicationDetail =
+    'referralApplicationDetail';
+    static const referredCandidateDetail =
+    'referredCandidateDetail';
 }
