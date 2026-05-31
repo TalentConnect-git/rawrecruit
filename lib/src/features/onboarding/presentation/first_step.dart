@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/input_widgets.dart';
+import 'package:rawrecruit/src/features/onboarding/index.dart' show AppHeader;
 
 import '../../../core/index.dart';
-import '../../../core/utils/enums.dart';
 
 class PreferencesPage extends StatefulWidget {
   const PreferencesPage({super.key});
