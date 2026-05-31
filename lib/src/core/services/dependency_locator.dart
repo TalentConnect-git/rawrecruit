@@ -1,24 +1,48 @@
 import 'package:get_it/get_it.dart';
-import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/dashboard/data/data_source/dashboard_data_source_impl.dart';
-import 'package:rawrecruit/src/features/dashboard/data/data_source/dashbooard_data_source.dart';
-import 'package:rawrecruit/src/features/dashboard/data/repository/dashbard_repository_impl.dart';
-import 'package:rawrecruit/src/features/dashboard/data/repository/dashboard_repository.dart';
+import 'package:rawrecruit/src/core/index.dart'
+    show
+        NetworkService,
+        NavigationRepository,
+        AppStateProvider,
+        NotificationProvider;
 import 'package:rawrecruit/src/features/application/index.dart'
     show
         ApplicationDataSource,
         ApplicationRepository,
         ApplicationDataSourceImpl,
-        ApplicationRepositoryImpl;
-import 'package:rawrecruit/src/features/onboarding/presentation/index.dart';
-import 'package:rawrecruit/src/features/auth/index.dart';
-import 'package:rawrecruit/src/features/notifications/index.dart';
+        ApplicationRepositoryImpl,
+        ApplicationViewModel;
+import 'package:rawrecruit/src/features/auth/index.dart'
+    show AuthDataSource, AuthRepository, AuthDataSourceImpl, AuthRepositoryImpl;
+import 'package:rawrecruit/src/features/chat/index.dart'
+    show
+        ChatDataSource,
+        ChatRepository,
+        ChatViewModel,
+        ChatDataSourceImpl,
+        ChatRepositoryImpl;
+import 'package:rawrecruit/src/features/dashboard/index.dart'
+    show
+        DashboardDataSource,
+        DashboardRepository,
+        DashboardDataSourceImpl,
+        DashboardRepositoryImpl,
+        DashboardViewModel;
+import 'package:rawrecruit/src/features/notifications/index.dart'
+    show
+        NotificationDataSource,
+        NotificationRepository,
+        NotificationViewModel,
+        NotificationDataSourceImpl,
+        NotificationRepositoryImpl;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show
         OnboardingDataSource,
         OnboardingDataSourceImpl,
         OnboardingRepository,
-        OnboardingRepositoryImpl;
+        OnboardingRepositoryImpl,
+        OnboardingLocalService,
+        MyProfileViewModel;
 import 'package:rawrecruit/src/features/professional/application_listing/data/data_source/application_data_source.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/data/data_source/application_data_source_impl.dart';
 import 'package:rawrecruit/src/features/professional/application_listing/data/repository/application_repo.dart';
@@ -28,11 +52,9 @@ import 'package:rawrecruit/src/features/referral/data/repository/referral_reposi
 import 'package:rawrecruit/src/features/scheduled_interviews/data/repository/scheduled_interview_repo.dart';
 import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/data/shortlist_data_source_impl.dart';
-import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository_impl.dart';
 
-import '../../features/chat/index.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source_impl.dart';
 import '../../features/professional/job_postng/data/repository/job_posting_repo.dart';
@@ -47,6 +69,8 @@ import '../../features/scheduled_interviews/data/data_source/scheduled_data_sour
 import '../../features/scheduled_interviews/data/data_source/scheduled_data_source_impl.dart';
 import '../../features/scheduled_interviews/data/repository/scheduled_interview_repo_impl.dart';
 import '../../features/shortlist/data/shortlist_data_source.dart';
+import '../../features/shortlist/presentation/view_model/shortlist_view_model.dart'
+    show ShortlistViewModel;
 
 GetIt getIt = GetIt.instance;
 
@@ -113,6 +137,8 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<DashboardRepository>(
       () => DashboardRepositoryImpl(dataSource: getIt<DashboardDataSource>()),
     )
+    ..registerLazySingleton<DashboardViewModel>(() => DashboardViewModel())
+    ..registerLazySingleton<ApplicationViewModel>(() => ApplicationViewModel())
     ..registerLazySingleton<ShortlistViewModel>(() => ShortlistViewModel())
     ..registerLazySingleton<ChatDataSource>(() => ChatDataSourceImpl())
     ..registerLazySingleton<ChatRepository>(

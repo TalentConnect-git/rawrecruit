@@ -1,51 +1,47 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show RouteNames, User, UserType, Job, StudentJobType, NavigationRepository;
-import 'package:rawrecruit/src/features/application/index.dart'
-    show ApplicationViewModel, ApplicationDetailView, ApplicationModel;
-import 'package:rawrecruit/src/features/profile/presentation/profile_cv_page.dart';
+import 'package:rawrecruit/src/core/navigation/not_found_view.dart';
 import 'package:rawrecruit/src/features/alumni/presentation/alumni_tab.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationDetailView, ApplicationModel;
+import 'package:rawrecruit/src/features/auth/index.dart'
+    show LoginView, RegisterView, ForgotPasswordView;
+import 'package:rawrecruit/src/features/chat/presentation/chat_detail_view.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/alumni_detail_view.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/dashboard_view.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/internship_detail_page.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/job_detail_page.dart';
-import 'package:rawrecruit/src/features/dashboard/presentation/view_model/dashboard_view_model.dart';
+import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/jobs/presentation/student_jobs_tab.dart';
 import 'package:rawrecruit/src/features/jobs/utils/enums.dart';
+import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/first_step.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/flow_controller.dart';
-import 'package:rawrecruit/src/features/referrer/presentation/professional_referrer_tab.dart';
-import 'package:rawrecruit/src/features/referrer/student_referrer_tab.dart';
-import 'package:rawrecruit/src/features/referrer/utils/enums.dart';
-import 'package:rawrecruit/src/features/auth/index.dart'
-    show LoginView, RegisterView, ForgotPasswordView;
-import 'package:rawrecruit/src/features/chat/presentation/chat_detail_view.dart';
-import 'package:rawrecruit/src/features/home/presentation/index.dart';
-import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/applicant_detail_screen.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/posted_job_application_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/referral_post_detail_view.dart';
-import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
+import 'package:rawrecruit/src/features/profile/presentation/profile_cv_page.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
+import 'package:rawrecruit/src/features/referrer/presentation/professional_referrer_tab.dart';
+import 'package:rawrecruit/src/features/referrer/student_referrer_tab.dart';
+import 'package:rawrecruit/src/features/referrer/utils/enums.dart';
 import 'package:rawrecruit/src/features/scheduled_interviews/presentation/interview_screen.dart';
-import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
-import '../../features/jobs/presentation/professional_jobs_tab.dart';
-import '../../features/profile/presentation/modern_profile_page.dart';
 import '../../features/chat/index.dart';
-import '../../features/profile/presentation/add_edit_profile_view.dart';
+import '../../features/jobs/presentation/professional_jobs_tab.dart';
 import '../../features/professional/application_listing/presentation/application_detail_view.dart';
 import '../../features/professional/job_postng/presentation/referral_detail_page.dart';
 import '../../features/professional/job_postng/presentation/referred_detail_page.dart';
+import '../../features/profile/presentation/add_edit_profile_view.dart';
+import '../../features/profile/presentation/modern_profile_page.dart';
 import '../../features/scheduled_interviews/presentation/interview_detail_screen.dart';
-import '../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 import '../services/dependency_locator.dart';
 
 GoRouter appRouter = GoRouter(
@@ -102,20 +98,7 @@ GoRouter appRouter = GoRouter(
           companyName = extra["companyName"];
         }
 
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => DashboardViewModel()..getAlumniData(),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => ApplicationViewModel()..fetchApplications(),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => ShortlistViewModel()..fetchSaved(),
-            ),
-          ],
-          child: ReferralDetailView(jobId: jobId, companyName: companyName),
-        );
+        return ReferralDetailView(jobId: jobId, companyName: companyName);
       },
     ),
     GoRoute(
@@ -143,12 +126,7 @@ GoRouter appRouter = GoRouter(
     GoRoute(
       name: RouteNames.referralPost,
       path: '/referralPost',
-      builder: (context, state) {
-        return ChangeNotifierProvider(
-          create: (_) => ReferralPostViewModel(),
-          child: const ReferralPostView(),
-        );
-      },
+      builder: (context, state) => ReferralPostView(),
     ),
 
     GoRoute(
@@ -179,20 +157,7 @@ GoRouter appRouter = GoRouter(
       path: '/jobDetail',
       builder: (context, state) {
         final job = state.extra as Job;
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => ShortlistViewModel()..fetchSaved(),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => ApplicationViewModel()..fetchApplications(),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => DashboardViewModel()..getAlumniData(),
-            ),
-          ],
-          child: JobDetailView(job: job),
-        );
+        return JobDetailView(job: job);
       },
     ),
     GoRoute(
@@ -200,20 +165,7 @@ GoRouter appRouter = GoRouter(
       path: '/internshipDetail',
       builder: (context, state) {
         final internship = state.extra as Job;
-        return MultiProvider(
-          providers: [
-            ChangeNotifierProvider(
-              create: (_) => ShortlistViewModel()..fetchSaved(),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => ApplicationViewModel()..fetchApplications(),
-            ),
-            ChangeNotifierProvider(
-              create: (_) => DashboardViewModel()..getAlumniData(),
-            ),
-          ],
-          child: InternshipDetailView(internship: internship),
-        );
+        return InternshipDetailView(internship: internship);
       },
     ),
     GoRoute(
@@ -279,10 +231,7 @@ GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/scheduled-interviews',
       name: RouteNames.scheduledInterviews,
-      builder: (_, __) => ChangeNotifierProvider.value(
-        value: getIt<InterviewViewModel>(),
-        child: const InterviewsScreen(),
-      ),
+      builder: (_, __) => const InterviewsScreen(),
     ),
     GoRoute(
       path: "/interviewDetail",
@@ -323,10 +272,7 @@ GoRouter appRouter = GoRouter(
 
     ShellRoute(
       builder: (context, state, navigationShell) {
-        return ChangeNotifierProvider.value(
-          value: getIt<ChatViewModel>(),
-          child: HomeView(navigationShell: navigationShell),
-        );
+        return HomeView(navigationShell: navigationShell);
       },
       routes: [
         GoRoute(
@@ -411,5 +357,5 @@ GoRouter appRouter = GoRouter(
       ],
     ),
   ],
-  errorBuilder: (_, _) => Scaffold(),
+  errorBuilder: (_, _) => NotFoundView(),
 );

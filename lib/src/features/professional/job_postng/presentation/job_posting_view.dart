@@ -18,41 +18,47 @@ class ReferralPostView extends StatefulWidget {
 }
 
 class _ReferralPostViewState extends State<ReferralPostView> {
+  final ReferralPostViewModel referralPostViewModel = ReferralPostViewModel();
   final _formKey = GlobalKey<FormState>();
   static const draftKey = "referral_post_draft";
-List<String> skillOptionsApi = [];
-Future<void> fetchSkills() async {
-  final response = await getIt<NetworkService>().request(
-    Request(
-      method: RequestMethod.get,
-      endpoint: "api/meta/get-skills",
-      isSafeRoute: true,
-    ),
-  );
+  List<String> skillOptionsApi = [];
 
-  final data =
-      List<Map<String, dynamic>>.from(response.data);
-
-  skillOptionsApi = [
-    ...data.map(
-      (e) => e['skills'].toString(),
-    ),
-    "Others",
-  ];
-
-  setState(() {});
-}
-int get maxSelectionProcessCount {
-  final roundsText = roundsController.text;
-
-  final match = RegExp(r'\d+').firstMatch(roundsText);
-
-  if (match == null) {
-    return 999;
+  @override
+  void initState() {
+    super.initState();
+    fetchStates();
+    fetchSkills();
+    loadDraft();
   }
 
-  return int.tryParse(match.group(0) ?? '') ?? 999;
-}
+  Future<void> fetchSkills() async {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
+        endpoint: "api/meta/get-skills",
+        isSafeRoute: true,
+      ),
+    );
+
+    final data = List<Map<String, dynamic>>.from(response.data);
+
+    skillOptionsApi = [...data.map((e) => e['skills'].toString()), "Others"];
+
+    setState(() {});
+  }
+
+  int get maxSelectionProcessCount {
+    final roundsText = roundsController.text;
+
+    final match = RegExp(r'\d+').firstMatch(roundsText);
+
+    if (match == null) {
+      return 999;
+    }
+
+    return int.tryParse(match.group(0) ?? '') ?? 999;
+  }
+
   // Text controllers
   final titleController = TextEditingController();
   final descriptionController = TextEditingController();
@@ -73,12 +79,12 @@ int get maxSelectionProcessCount {
 
   // Dropdowns
   // String selectedJobTitle = "Software Developer";
-String? employmentType;
-String? workMode;
-String? broadcastType;
-String? minEducation;
-String? workAuthorization;
-String? experienceRange;
+  String? employmentType;
+  String? workMode;
+  String? broadcastType;
+  String? minEducation;
+  String? workAuthorization;
+  String? experienceRange;
   String selectedState = "";
   String selectedCity = "";
 
@@ -92,222 +98,189 @@ String? experienceRange;
 
   final PageController _pageController = PageController();
 
-int currentStep = 0;
+  int currentStep = 0;
 
-final int totalSteps = 9;
+  final int totalSteps = 9;
 
-void nextStep() {
-  if (currentStep < totalSteps - 1) {
-    _pageController.nextPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  }
-}
-Future<void> saveDraft() async {
-  final prefs = await SharedPreferences.getInstance();
-
-  final data = {
-    "title": titleController.text,
-    "description": descriptionController.text,
-    "eligibility": eligibilityController.text,
-    "openings": openingsController.text,
-    "skills": skillsController.text,
-    "certifications": certificationsController.text,
-    "benefits": benefitsController.text,
-    "stream": fieldOfStudyController.text,
-    "currency": currencyController.text,
-    "totalCTC": totalCTCController.text,
-    "fixedPay": fixedPayController.text,
-    "bonus": joiningBonusController.text,
-    "employmentType": employmentType,
-    "workMode": workMode,
-    "broadcastType": broadcastType,
-    "minEducation": minEducation,
-    "workAuthorization": workAuthorization,
-    "experienceRange": experienceRange,
-    "selectedState": selectedState,
-    "selectedCity": selectedCity,
-    "rounds": roundsController.text,
-    "selectionProcess": selectionProcessController.text,
-    "endDate": endDateController.text,
-    "minExperience": minExperienceController.text,
-    "tags": selectedTags.toList(),
-    "currentStep": currentStep,
-  };
-
-  await prefs.setString(
-    draftKey,
-    jsonEncode(data),
-  );
-}
-Future<void> loadDraft() async {
-  final prefs = await SharedPreferences.getInstance();
-
-  final raw = prefs.getString(draftKey);
-
-  if (raw == null) return;
-
-  final data = jsonDecode(raw);
-
-  titleController.text = data["title"] ?? "";
-  descriptionController.text = data["description"] ?? "";
-  eligibilityController.text = data["eligibility"] ?? "";
-  openingsController.text = data["openings"] ?? "";
-  skillsController.text = data["skills"] ?? "";
-  certificationsController.text = data["certifications"] ?? "";
-  benefitsController.text = data["benefits"] ?? "";
-  fieldOfStudyController.text = data["stream"] ?? "";
-  currencyController.text = data["currency"] ?? "INR";
-  totalCTCController.text = data["totalCTC"] ?? "";
-  fixedPayController.text = data["fixedPay"] ?? "";
-  joiningBonusController.text = data["bonus"] ?? "";
-  roundsController.text = data["rounds"] ?? "";
-  selectionProcessController.text =
-      data["selectionProcess"] ?? "";
-  endDateController.text = data["endDate"] ?? "";
-  minExperienceController.text =
-      data["minExperience"] ?? "";
-employmentType =
-    data["employmentType"];
-
-workMode =
-    data["workMode"];
-
-broadcastType =
-    data["broadcastType"];
-
-minEducation =
-    data["minEducation"];
-
-workAuthorization =
-    data["workAuthorization"];
-
-experienceRange =
-    data["experienceRange"];
-
-
-  selectedState =
-      data["selectedState"] ?? "";
-
-  selectedCity =
-      data["selectedCity"] ?? "";
-
-  currentStep =
-      data["currentStep"] ?? 0;
-
-  final tags =
-      List<String>.from(data["tags"] ?? []);
-
-  selectedTags.clear();
-  selectedTags.addAll(tags);
-
-  setState(() {});
-
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    _pageController.jumpToPage(currentStep);
-  });
-}
-Future<void> addSkillIfNeeded(
-  String value,
-) async {
-
-  final exists = skillOptionsApi.any(
-    (e) =>
-        e.toLowerCase().trim() ==
-        value.toLowerCase().trim(),
-  );
-
-  if (exists) return;
-
-  await getIt<NetworkService>().request(
-    Request(
-      method: RequestMethod.post,
-      endpoint: "/api/meta/add-skill",
-      isSafeRoute: true,
-      body: {
-        "skills": value,
-      },
-    ),
-  );
-
-  await fetchSkills();
-}
-void previousStep() async {
-  await saveDraft();
-
-  if (currentStep > 0) {
-    _pageController.previousPage(
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeInOut,
-    );
-  } else {
-    Navigator.pop(context);
-  }
-}
- Future<void> fetchStates() async {
-  try {
-    setState(() => isLoadingStates = true);
-
-    final res = await Dio().get(
-      "https://countriesnow.space/api/v0.1/countries/states/q",
-      queryParameters: {
-        "country": "india",
-      },
-    );
-
-    print("STATE DATA: ${res.data}");
-
-    if (res.statusCode == 200 &&
-        res.data["data"] != null &&
-        res.data["data"]["states"] is List) {
-
-      final List stateList = res.data["data"]["states"];
-
-      states = stateList
-          .map((e) => e["name"].toString())
-          .toList();
+  void nextStep() {
+    if (currentStep < totalSteps - 1) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
     }
-  } catch (e) {
-    print("STATE API ERROR: $e");
-  } finally {
-    setState(() => isLoadingStates = false);
   }
-}
-Future<void> fetchCities(String state) async {
-  try {
-    setState(() {
-      isLoadingCities = true;
-      cities = [];
-      selectedCity = "";
+
+  Future<void> saveDraft() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final data = {
+      "title": titleController.text,
+      "description": descriptionController.text,
+      "eligibility": eligibilityController.text,
+      "openings": openingsController.text,
+      "skills": skillsController.text,
+      "certifications": certificationsController.text,
+      "benefits": benefitsController.text,
+      "stream": fieldOfStudyController.text,
+      "currency": currencyController.text,
+      "totalCTC": totalCTCController.text,
+      "fixedPay": fixedPayController.text,
+      "bonus": joiningBonusController.text,
+      "employmentType": employmentType,
+      "workMode": workMode,
+      "broadcastType": broadcastType,
+      "minEducation": minEducation,
+      "workAuthorization": workAuthorization,
+      "experienceRange": experienceRange,
+      "selectedState": selectedState,
+      "selectedCity": selectedCity,
+      "rounds": roundsController.text,
+      "selectionProcess": selectionProcessController.text,
+      "endDate": endDateController.text,
+      "minExperience": minExperienceController.text,
+      "tags": selectedTags.toList(),
+      "currentStep": currentStep,
+    };
+
+    await prefs.setString(draftKey, jsonEncode(data));
+  }
+
+  Future<void> loadDraft() async {
+    final prefs = await SharedPreferences.getInstance();
+
+    final raw = prefs.getString(draftKey);
+
+    if (raw == null) return;
+
+    final data = jsonDecode(raw);
+
+    titleController.text = data["title"] ?? "";
+    descriptionController.text = data["description"] ?? "";
+    eligibilityController.text = data["eligibility"] ?? "";
+    openingsController.text = data["openings"] ?? "";
+    skillsController.text = data["skills"] ?? "";
+    certificationsController.text = data["certifications"] ?? "";
+    benefitsController.text = data["benefits"] ?? "";
+    fieldOfStudyController.text = data["stream"] ?? "";
+    currencyController.text = data["currency"] ?? "INR";
+    totalCTCController.text = data["totalCTC"] ?? "";
+    fixedPayController.text = data["fixedPay"] ?? "";
+    joiningBonusController.text = data["bonus"] ?? "";
+    roundsController.text = data["rounds"] ?? "";
+    selectionProcessController.text = data["selectionProcess"] ?? "";
+    endDateController.text = data["endDate"] ?? "";
+    minExperienceController.text = data["minExperience"] ?? "";
+    employmentType = data["employmentType"];
+
+    workMode = data["workMode"];
+
+    broadcastType = data["broadcastType"];
+
+    minEducation = data["minEducation"];
+
+    workAuthorization = data["workAuthorization"];
+
+    experienceRange = data["experienceRange"];
+
+    selectedState = data["selectedState"] ?? "";
+
+    selectedCity = data["selectedCity"] ?? "";
+
+    currentStep = data["currentStep"] ?? 0;
+
+    final tags = List<String>.from(data["tags"] ?? []);
+
+    selectedTags.clear();
+    selectedTags.addAll(tags);
+
+    setState(() {});
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _pageController.jumpToPage(currentStep);
     });
+  }
 
-    final res = await Dio().get(
-      "https://countriesnow.space/api/v0.1/countries/state/cities/q",
-      queryParameters: {
-        "country": "india",
-        "state": state.toLowerCase(),
-      },
+  Future<void> addSkillIfNeeded(String value) async {
+    final exists = skillOptionsApi.any(
+      (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
     );
 
-    print("CITY DATA: ${res.data}");
+    if (exists) return;
 
-    if (res.statusCode == 200 && res.data["data"] is List) {
-      cities = List<String>.from(res.data["data"]);
-    }
-  } catch (e) {
-    print("CITY API ERROR: $e");
-  } finally {
-    setState(() => isLoadingCities = false);
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+        endpoint: "/api/meta/add-skill",
+        isSafeRoute: true,
+        body: {"skills": value},
+      ),
+    );
+
+    await fetchSkills();
   }
-}
-  @override
-  void initState() {
-    super.initState();
-    fetchStates(); // 🔥 ADD THIS
-    fetchSkills();
-      loadDraft();
 
+  void previousStep() async {
+    await saveDraft();
+
+    if (currentStep > 0) {
+      _pageController.previousPage(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeInOut,
+      );
+    } else {
+      Navigator.pop(context);
+    }
+  }
+
+  Future<void> fetchStates() async {
+    try {
+      setState(() => isLoadingStates = true);
+
+      final res = await Dio().get(
+        "https://countriesnow.space/api/v0.1/countries/states/q",
+        queryParameters: {"country": "india"},
+      );
+
+      print("STATE DATA: ${res.data}");
+
+      if (res.statusCode == 200 &&
+          res.data["data"] != null &&
+          res.data["data"]["states"] is List) {
+        final List stateList = res.data["data"]["states"];
+
+        states = stateList.map((e) => e["name"].toString()).toList();
+      }
+    } catch (e) {
+      print("STATE API ERROR: $e");
+    } finally {
+      setState(() => isLoadingStates = false);
+    }
+  }
+
+  Future<void> fetchCities(String state) async {
+    try {
+      setState(() {
+        isLoadingCities = true;
+        cities = [];
+        selectedCity = "";
+      });
+
+      final res = await Dio().get(
+        "https://countriesnow.space/api/v0.1/countries/state/cities/q",
+        queryParameters: {"country": "india", "state": state.toLowerCase()},
+      );
+
+      print("CITY DATA: ${res.data}");
+
+      if (res.statusCode == 200 && res.data["data"] is List) {
+        cities = List<String>.from(res.data["data"]);
+      }
+    } catch (e) {
+      print("CITY API ERROR: $e");
+    } finally {
+      setState(() => isLoadingCities = false);
+    }
   }
 
   // ── Enum options ────────────────────────────────────────────────────────────
@@ -334,7 +307,6 @@ Future<void> fetchCities(String state) async {
     "Marketing Specialist",
     "Sales Executive",
     "Finance Analyst",
-
   ];
 
   final List<String> skillOptions = [
@@ -419,13 +391,7 @@ Future<void> fetchCities(String state) async {
         ];
 
       case "B.Com":
-        return [
-          'Accounting',
-          'Finance',
-          'Banking',
-          'Taxation',
-          'Economics',
-        ];
+        return ['Accounting', 'Finance', 'Banking', 'Taxation', 'Economics'];
 
       case "B.A":
         return [
@@ -469,13 +435,7 @@ Future<void> fetchCities(String state) async {
         ];
 
       case "M.Com":
-        return [
-          'Accounting',
-          'Finance',
-          'Banking',
-          'Economics',
-          'Taxation',
-        ];
+        return ['Accounting', 'Finance', 'Banking', 'Economics', 'Taxation'];
 
       case "MBA":
         return [
@@ -576,42 +536,38 @@ Future<void> fetchCities(String state) async {
     "PhD",
     "Postgraduate Diploma",
   ];
-final roundsController =
-    TextEditingController();
+  final roundsController = TextEditingController();
 
-final selectionProcessController =
-    TextEditingController();
+  final selectionProcessController = TextEditingController();
 
-final endDateController =
-    TextEditingController();
+  final endDateController = TextEditingController();
 
-final minExperienceController =
-    TextEditingController();
+  final minExperienceController = TextEditingController();
   final List<String> experienceOptions = [
     "0-1 years",
     "1-3 years",
     "3-5 years",
     "5-10 years",
   ];
-final List<String> roundsOptions = [
-  "1 Round",
-  "2 Rounds",
-  "3 Rounds",
-  "4 Rounds",
-  "5 Rounds",
-  "6 Rounds",
-  "7+ Rounds",
-];
-final List<String> selectionProcessOptions = [
-  "Aptitude Test 1",
-  "Case Study 1",
-  "Coding Test 1",
-  "Group Discussion 1",
-  "HR Interview 1",
-  "Online Test 1",
-  "Presentation 1",
-  "Technical Interview 1",
-];
+  final List<String> roundsOptions = [
+    "1 Round",
+    "2 Rounds",
+    "3 Rounds",
+    "4 Rounds",
+    "5 Rounds",
+    "6 Rounds",
+    "7+ Rounds",
+  ];
+  final List<String> selectionProcessOptions = [
+    "Aptitude Test 1",
+    "Case Study 1",
+    "Coding Test 1",
+    "Group Discussion 1",
+    "HR Interview 1",
+    "Online Test 1",
+    "Presentation 1",
+    "Technical Interview 1",
+  ];
 
   Widget _chipMultiSelectField(
     String label,
@@ -626,23 +582,24 @@ final List<String> selectionProcessOptions = [
     );
   }
 
-Future<void> pickEndDate() async {
-  final picked = await showDatePicker(
-    context: context,
-    initialDate: DateTime.now(),
-    firstDate: DateTime.now(),
-    lastDate: DateTime(2100),
-  );
+  Future<void> pickEndDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
 
-  if (picked != null) {
-endDateController.text =
-    "${picked.year}-"
-    "${picked.month.toString().padLeft(2, '0')}-"
-    "${picked.day.toString().padLeft(2, '0')}";
-        
-    setState(() {});
+    if (picked != null) {
+      endDateController.text =
+          "${picked.year}-"
+          "${picked.month.toString().padLeft(2, '0')}-"
+          "${picked.day.toString().padLeft(2, '0')}";
+
+      setState(() {});
+    }
   }
-}
+
   final List<String> workAuthorizationOptions = [
     "Citizens Only",
     "Permanent Residents",
@@ -666,692 +623,686 @@ endDateController.text =
     totalCTCController.dispose();
     fixedPayController.dispose();
     roundsController.dispose();
-selectionProcessController.dispose();
-endDateController.dispose();
-minExperienceController.dispose();
+    selectionProcessController.dispose();
+    endDateController.dispose();
+    minExperienceController.dispose();
     joiningBonusController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final vm = context.watch<ReferralPostViewModel>();
+    return ChangeNotifierProvider.value(
+      value: referralPostViewModel,
+      child: Scaffold(
+        backgroundColor: AppColors.kBg,
+        appBar: AppBar(
+          backgroundColor: AppColors.kCard,
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: const Text(
+            "Post Referral",
+            style: TextStyle(color: Colors.white),
+          ),
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () async {
+              await saveDraft();
 
-    return Scaffold(
-      backgroundColor: AppColors.kBg,
-      appBar: AppBar(
-        backgroundColor: AppColors.kCard,
-        iconTheme: const IconThemeData(color: Colors.white),
-        title: const Text(
-          "Post Referral",
-          style: TextStyle(color: Colors.white),
-        ),
-        leading: IconButton(
-  icon: const Icon(Icons.arrow_back),
-  onPressed: () async {
-    await saveDraft();
-
-    if (mounted) {
-      Navigator.pop(context);
-    }
-  },
-),
-      ),
-   body: SafeArea(
-  child: Column(
-    children: [
-      /// 🔥 PROGRESS BAR
-      Padding(
-        padding: const EdgeInsets.all(16),
-        child: LinearProgressIndicator(
-          value: (currentStep + 1) / totalSteps,
-          backgroundColor: Colors.grey.shade800,
-          color: AppColors.kGreen,
-          minHeight: 8,
-          borderRadius: BorderRadius.circular(20),
-        ),
-      ),
-
-      Expanded(
-        child: Form(
-          key: _formKey,
-          child: PageView(
-            controller: _pageController,
-            physics: const NeverScrollableScrollPhysics(),
-            onPageChanged: (i) {
-              setState(() {
-                currentStep = i;
-              });
+              if (mounted) {
+                Navigator.pop(context);
+              }
             },
+          ),
+        ),
+        body: SafeArea(
+          child: Column(
             children: [
-              /// STEP 1 — JOB INFO
-              SingleChildScrollView(
+              /// 🔥 PROGRESS BAR
+              Padding(
                 padding: const EdgeInsets.all(16),
-                child: _card(
-                  title: "Job Info",
-                  children: [
-                   MultiSelectDropdownChips(
-  key: const ValueKey('jobTitle'),
-  label: "Job Title",
-  controller: titleController,
-  options: jobTitleOptions,
-),
-SizedBox(height: 10),
-                    _fieldDark(
-                      "Description",
-                      controller: descriptionController,
-                      maxLines: 3,
-                    ),
-
-                    _fieldDark(
-                      "Eligibility Criteria",
-                      controller: eligibilityController,
-                      maxLines: 3,
-                    ),
-//                     const SizedBox(height: 12),
-
-// _fieldDark(
-//   "Minimum Experience",
-//   controller: minExperienceController,
-//   keyboardType: TextInputType.number,
-// ),
-                  ],
+                child: LinearProgressIndicator(
+                  value: (currentStep + 1) / totalSteps,
+                  backgroundColor: Colors.grey.shade800,
+                  color: AppColors.kGreen,
+                  minHeight: 8,
+                  borderRadius: BorderRadius.circular(20),
                 ),
               ),
 
-              /// STEP 2 — LOCATION
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: _card(
-                  title: "Location & Work",
-                  children: [
-                    isLoadingStates
-                        ? const CircularProgressIndicator()
-                        : _dropdownDark(
-                            "State",
-                            selectedState.isEmpty
-                                ? null
-                                : selectedState,
-                            states,
-                            (val) {
-                              setState(() {
-                                selectedState = val!;
-                              });
+              Expanded(
+                child: Form(
+                  key: _formKey,
+                  child: PageView(
+                    controller: _pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    onPageChanged: (i) {
+                      setState(() {
+                        currentStep = i;
+                      });
+                    },
+                    children: [
+                      /// STEP 1 — JOB INFO
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: _card(
+                          title: "Job Info",
+                          children: [
+                            MultiSelectDropdownChips(
+                              key: const ValueKey('jobTitle'),
+                              label: "Job Title",
+                              controller: titleController,
+                              options: jobTitleOptions,
+                            ),
+                            SizedBox(height: 10),
+                            _fieldDark(
+                              "Description",
+                              controller: descriptionController,
+                              maxLines: 3,
+                            ),
 
-                              fetchCities(val!);
-                            },
-                          ),
+                            _fieldDark(
+                              "Eligibility Criteria",
+                              controller: eligibilityController,
+                              maxLines: 3,
+                            ),
+                            //                     const SizedBox(height: 12),
 
-                    if (selectedState.isNotEmpty)
-                      isLoadingCities
-                          ? const CircularProgressIndicator()
-                          : _dropdownDark(
-                              "City",
-                              selectedCity.isEmpty
-                                  ? null
-                                  : selectedCity,
-                              cities,
-                              (val) => setState(
-                                () => selectedCity = val!,
+                            // _fieldDark(
+                            //   "Minimum Experience",
+                            //   controller: minExperienceController,
+                            //   keyboardType: TextInputType.number,
+                            // ),
+                          ],
+                        ),
+                      ),
+
+                      /// STEP 2 — LOCATION
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: _card(
+                          title: "Location & Work",
+                          children: [
+                            isLoadingStates
+                                ? const CircularProgressIndicator()
+                                : _dropdownDark(
+                                    "State",
+                                    selectedState.isEmpty
+                                        ? null
+                                        : selectedState,
+                                    states,
+                                    (val) {
+                                      setState(() {
+                                        selectedState = val!;
+                                      });
+
+                                      fetchCities(val!);
+                                    },
+                                  ),
+
+                            if (selectedState.isNotEmpty)
+                              isLoadingCities
+                                  ? const CircularProgressIndicator()
+                                  : _dropdownDark(
+                                      "City",
+                                      selectedCity.isEmpty
+                                          ? null
+                                          : selectedCity,
+                                      cities,
+                                      (val) =>
+                                          setState(() => selectedCity = val!),
+                                    ),
+                            _dropdownDark(
+                              "Broadcast Type",
+                              broadcastType,
+                              ["Everyone", "Location"],
+                              (val) => setState(() => broadcastType = val!),
+                            ),
+                            _dropdownDark(
+                              "Employment Type",
+                              employmentType,
+                              ["Full-time", "Part-time", "Contract"],
+                              (val) => setState(() => employmentType = val!),
+                            ),
+
+                            _dropdownDark(
+                              "Work Mode",
+                              workMode,
+                              ["On-site", "Remote", "Hybrid"],
+                              (val) => setState(() => workMode = val!),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// STEP 3 — EDUCATION
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: _card(
+                          title: "Education & Experience",
+                          children: [
+                            _dropdownDark(
+                              "Minimum Education",
+                              minEducation,
+                              educationOptions,
+                              (val) => setState(() {
+                                minEducation = val!;
+                                fieldOfStudyController.clear();
+                              }),
+                            ),
+
+                            SearchableChipField(
+                              label: "Stream",
+                              controller: fieldOfStudyController,
+                              options: fieldOfStudyOptions,
+                            ),
+
+                            // _fieldDark(
+                            //   "Minimum Experience",
+                            //   controller:
+                            //       minExperienceController,
+                            //   keyboardType:
+                            //       TextInputType.number,
+                            // ),
+
+                            // MultiSelectDropdownChips(
+                            //   key: ValueKey(
+                            //     'fieldOfStudy_$minEducation',
+                            //   ),
+                            //   label: "Preferred Field of Study",
+                            //   controller: fieldOfStudyController,
+                            //   options: fieldOfStudyOptions,
+                            // ),
+                            const SizedBox(height: 14),
+
+                            _dropdownDark(
+                              "Experience Range",
+                              experienceRange,
+                              experienceOptions,
+                              (val) => setState(() => experienceRange = val!),
+                            ),
+
+                            _fieldDark(
+                              "No. of Openings",
+                              controller: openingsController,
+                              keyboardType: TextInputType.number,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// STEP 4 — HIRING PROCESS
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+
+                        child: _card(
+                          title: "Hiring Process",
+
+                          children: [
+                            _ChipMultiSelectField(
+                              label: "Rounds",
+                              controller: roundsController,
+                              options: roundsOptions,
+                              singleSelect: true,
+
+                              onChanged: () {
+                                final match = RegExp(
+                                  r'\d+',
+                                ).firstMatch(roundsController.text);
+
+                                final maxRounds =
+                                    int.tryParse(match?.group(0) ?? '') ?? 0;
+
+                                final currentProcesses =
+                                    selectionProcessController.text
+                                        .split(',')
+                                        .map((e) => e.trim())
+                                        .where((e) => e.isNotEmpty)
+                                        .toList();
+
+                                /// REMOVE EXTRA ITEMS
+                                if (currentProcesses.length > maxRounds) {
+                                  final trimmed = currentProcesses
+                                      .take(maxRounds)
+                                      .toList();
+
+                                  selectionProcessController.text = trimmed
+                                      .join(', ');
+
+                                  setState(() {});
+                                }
+                              },
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            _chipMultiSelectField(
+                              "Selection Process",
+                              selectionProcessController,
+                              selectionProcessOptions,
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            GestureDetector(
+                              onTap: pickEndDate,
+
+                              child: AbsorbPointer(
+                                child: _fieldDark(
+                                  "Application Deadline",
+                                  controller: endDateController,
+                                ),
                               ),
                             ),
-_dropdownDark(
-  "Broadcast Type",
-  broadcastType,
-  ["Everyone", "Location"],
-  (val) => setState(
-    () => broadcastType = val!,
-  ),
-),
-                    _dropdownDark(
-                      "Employment Type",
-                      employmentType,
-                   ["Full-time", "Part-time", "Contract"],
-                      (val) =>
-                          setState(() => employmentType = val!),
-                    ),
-
-                    _dropdownDark(
-                      "Work Mode",
-                      workMode,
-                      ["On-site", "Remote", "Hybrid"],
-                      (val) => setState(() => workMode = val!),
-                    ),
-                  ],
-                ),
-              ),
-
-              /// STEP 3 — EDUCATION
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: _card(
-                  title: "Education & Experience",
-                  children: [
-                    _dropdownDark(
-                      "Minimum Education",
-                      minEducation,
-                      educationOptions,
-                      (val) => setState(() {
-                        minEducation = val!;
-                        fieldOfStudyController.clear();
-                      }),
-                    ),
-
-SearchableChipField(
-  label: "Stream",
-  controller: fieldOfStudyController,
-  options: fieldOfStudyOptions,
-),
-
-// _fieldDark(
-//   "Minimum Experience",
-//   controller:
-//       minExperienceController,
-//   keyboardType:
-//       TextInputType.number,
-// ),
-
-                    // MultiSelectDropdownChips(
-                    //   key: ValueKey(
-                    //     'fieldOfStudy_$minEducation',
-                    //   ),
-                    //   label: "Preferred Field of Study",
-                    //   controller: fieldOfStudyController,
-                    //   options: fieldOfStudyOptions,
-                    // ),
-
-                     const SizedBox(height: 14),
-
-                    _dropdownDark(
-                      "Experience Range",
-                      experienceRange,
-                      experienceOptions,
-                      (val) => setState(
-                        () => experienceRange = val!,
+                          ],
+                        ),
                       ),
-                    ),
 
-                    _fieldDark(
-                      "No. of Openings",
-                      controller: openingsController,
-                      keyboardType: TextInputType.number,
-                    ),
-                  ],
-                ),
-              ),
-/// STEP 4 — HIRING PROCESS
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
-
-  child: _card(
-    title: "Hiring Process",
-
-    children: [
-_ChipMultiSelectField(
-  label: "Rounds",
-  controller: roundsController,
-  options: roundsOptions,
-  singleSelect: true,
-
-  onChanged: () {
-    final match = RegExp(r'\d+').firstMatch(
-      roundsController.text,
-    );
-
-    final maxRounds = int.tryParse(
-          match?.group(0) ?? '',
-        ) ??
-        0;
-
-    final currentProcesses =
-        selectionProcessController.text
-            .split(',')
-            .map((e) => e.trim())
-            .where((e) => e.isNotEmpty)
-            .toList();
-
-    /// REMOVE EXTRA ITEMS
-    if (currentProcesses.length > maxRounds) {
-      final trimmed =
-          currentProcesses.take(maxRounds).toList();
-
-      selectionProcessController.text =
-          trimmed.join(', ');
-
-      setState(() {});
-    }
-  },
-),
-
-      const SizedBox(height: 16),
-
-      _chipMultiSelectField(
-        "Selection Process",
-        selectionProcessController,
-        selectionProcessOptions,
-      ),
-
-      const SizedBox(height: 16),
-
-      GestureDetector(
-        onTap: pickEndDate,
-
-        child: AbsorbPointer(
-          child: _fieldDark(
-            "Application Deadline",
-            controller:
-                endDateController,
-          ),
-        ),
-      ),
-    ],
-  ),
-),
-              /// STEP 4 — PACKAGE
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: _card(
-                  title: "Package Details",
-                  children: [
-                    _dropdownDark(
-                      "Currency",
-                      currencyController.text,
-                      currencyOptions,
-                      (val) => setState(
-                        () => currencyController.text = val!,
-                      ),
-                    ),
-
-                    _fieldDark(
-                      "Total CTC",
-                      controller: totalCTCController,
-                      keyboardType: TextInputType.number,
-                    ),
-
-                    _fieldDark(
-                      "Fixed Pay",
-                      controller: fixedPayController,
-                      keyboardType: TextInputType.number,
-                    ),
-
-                    _fieldDark(
-                      "Variable Pay",
-                      controller: joiningBonusController,
-                      keyboardType: TextInputType.number,
-                    ),
-                  ],
-                ),
-              ),
-/// STEP 9 — BENEFITS & STUDIES
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
-
-  child: _card(
-    title:
-        "Benefits & Studies",
-
-    children: [
-
-      // SearchableChipField(
-      //   label:
-      //       "Preferred Field of Study",
-
-      //   controller:
-      //       fieldOfStudyController,
-
-      //   options:
-      //       fieldOfStudyOptions,
-      // ),
-
-      // const SizedBox(height: 16),
-
-      SearchableChipField(
-        label: "Benefits",
-
-        controller:
-            benefitsController,
-
-        options:
-            benefitOptions,
-      ),
-
-      const SizedBox(height: 16),
-
-      _dropdownDark(
-        "Work Authorization",
-
-        workAuthorization,
-
-        workAuthorizationOptions,
-
-        (val) => setState(
-          () =>
-              workAuthorization =
-                  val!,
-        ),
-      ),
-    ],
-  ),
-),
-              /// STEP 5 — TAGS
-              SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: _card(
-                  title: "Tags",
-                  children: [_tagsEnumField()],
-                ),
-              ),
-/// STEP 6 — SKILLS
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
-
-  child: _card(
-    title: "Skills",
-
-    children: [
-
-      _ChipMultiSelectField(
-  label: "Skills",
-  controller: skillsController,
-  options: skillOptionsApi,
-),
-    ],
-  ),
-),/// STEP 7 — CERTIFICATIONS
-/// STEP 7 — CERTIFICATIONS
-SingleChildScrollView(
-  padding: const EdgeInsets.all(16),
-
-  child: _card(
-    title: "Certifications",
-
-    children: [
-
-      SearchableChipField(
-        label: "Certifications",
-        controller:
-            certificationsController,
-
-        options:
-            certificationOptions,
-      ),
-    ],
-  ),
-),
-               ],
-          ),
-        ),
-      ),           /// STEP 6 — SKILLS
-             
-      /// 🔥 BOTTOM BUTTONS
-      Padding(
-        padding: const EdgeInsets.all(16),
-        child: Row(
-          children: [
-           Expanded(
-        child: SizedBox(
-          height: 56,
-          child: OutlinedButton(
-            style: OutlinedButton.styleFrom(
-              side: BorderSide(color: AppColors.kGreen),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onPressed: previousStep,
-            child: const Text(
-              "Back",
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-      ),
-            const SizedBox(width: 12),
-
-         
-      Expanded(
-        child: SizedBox(
-          height: 56,
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.kGreen,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(12),
-              ),
-            ),
-            onPressed: currentStep == totalSteps - 1
-                ? () async {
-                        final model = ReferralPostModel(
-                         jobTitle: _splitController(titleController),
-                                  inactive: false,
-                          description:
-                              descriptionController.text.trim(),
-              workMode: workMode != null ? [workMode!] : [],
-employmentType: employmentType != null ? [employmentType!] : [],
-                          broadcastType: broadcastType,
-                          jobType: "Referral",
-                          location: [selectedCity],
-                          minEducation: minEducation,
-                          numberOfOpenings:
-                              int.tryParse(
-                                openingsController.text,
-                              ) ??
-                              0,
-                              
-                          packageDetails: PackageDetails(
-                            currency:
-                                currencyController.text.trim(),
-                            totalCTC:
-                                int.tryParse(
-                                  totalCTCController.text,
-                                ) ??
-                                0,
-                            fixedPay:
-                                int.tryParse(
-                                  fixedPayController.text,
-                                ) ??
-                                0,
-                            joiningBonus:
-                                int.tryParse(
-                                  joiningBonusController.text,
-                                ) ??
-                                0,
-                          ),
-                          skills: _splitController(
-                            skillsController,
-                          ),
-                          rounds: _splitController(
-  roundsController,
-),
-
-selectionProcess:
-    _splitController(
-  selectionProcessController,
-),
-
-endDate:
-    endDateController.text,
-
-minYearofExperience:
-    minExperienceController.text,
-                          studentStreams:
-                              _splitController(
-                                fieldOfStudyController,
+                      /// STEP 4 — PACKAGE
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: _card(
+                          title: "Package Details",
+                          children: [
+                            _dropdownDark(
+                              "Currency",
+                              currencyController.text,
+                              currencyOptions,
+                              (val) => setState(
+                                () => currencyController.text = val!,
                               ),
-                          tags: selectedTags.toList(),
-                          workAuthorization:
+                            ),
+
+                            _fieldDark(
+                              "Total CTC",
+                              controller: totalCTCController,
+                              keyboardType: TextInputType.number,
+                            ),
+
+                            _fieldDark(
+                              "Fixed Pay",
+                              controller: fixedPayController,
+                              keyboardType: TextInputType.number,
+                            ),
+
+                            _fieldDark(
+                              "Variable Pay",
+                              controller: joiningBonusController,
+                              keyboardType: TextInputType.number,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// STEP 9 — BENEFITS & STUDIES
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+
+                        child: _card(
+                          title: "Benefits & Studies",
+
+                          children: [
+                            // SearchableChipField(
+                            //   label:
+                            //       "Preferred Field of Study",
+
+                            //   controller:
+                            //       fieldOfStudyController,
+
+                            //   options:
+                            //       fieldOfStudyOptions,
+                            // ),
+
+                            // const SizedBox(height: 16),
+                            SearchableChipField(
+                              label: "Benefits",
+
+                              controller: benefitsController,
+
+                              options: benefitOptions,
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            _dropdownDark(
+                              "Work Authorization",
+
                               workAuthorization,
-                          yearsOfExperience:
-                              experienceRange,
-                          benefits: _splitController(
-                            benefitsController,
+
+                              workAuthorizationOptions,
+
+                              (val) => setState(() => workAuthorization = val!),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// STEP 5 — TAGS
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+                        child: _card(
+                          title: "Tags",
+                          children: [_tagsEnumField()],
+                        ),
+                      ),
+
+                      /// STEP 6 — SKILLS
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+
+                        child: _card(
+                          title: "Skills",
+
+                          children: [
+                            _ChipMultiSelectField(
+                              label: "Skills",
+                              controller: skillsController,
+                              options: skillOptionsApi,
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      /// STEP 7 — CERTIFICATIONS
+                      /// STEP 7 — CERTIFICATIONS
+                      SingleChildScrollView(
+                        padding: const EdgeInsets.all(16),
+
+                        child: _card(
+                          title: "Certifications",
+
+                          children: [
+                            SearchableChipField(
+                              label: "Certifications",
+                              controller: certificationsController,
+
+                              options: certificationOptions,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              /// STEP 6 — SKILLS
+
+              /// 🔥 BOTTOM BUTTONS
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: SizedBox(
+                        height: 56,
+                        child: OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            side: BorderSide(color: AppColors.kGreen),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                          certifications:
-                              _splitController(
-                                certificationsController,
-                              ),
-                          eligibilityCriteria:
-                              eligibilityController.text
-                                  .trim(),
-                          approvalStatus: 'Pending',
-                        );
+                          onPressed: previousStep,
+                          child: const Text(
+                            "Back",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
 
-                        final success =
-                            await vm.postJob(model);
+                    Expanded(
+                      child: SizedBox(
+                        height: 56,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.kGreen,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          onPressed: currentStep == totalSteps - 1
+                              ? () async {
+                                  final model = ReferralPostModel(
+                                    jobTitle: _splitController(titleController),
+                                    inactive: false,
+                                    description: descriptionController.text
+                                        .trim(),
+                                    workMode: workMode != null
+                                        ? [workMode!]
+                                        : [],
+                                    employmentType: employmentType != null
+                                        ? [employmentType!]
+                                        : [],
+                                    broadcastType: broadcastType,
+                                    jobType: "Referral",
+                                    location: [selectedCity],
+                                    minEducation: minEducation,
+                                    numberOfOpenings:
+                                        int.tryParse(openingsController.text) ??
+                                        0,
 
-                       if (success && mounted) {
+                                    packageDetails: PackageDetails(
+                                      currency: currencyController.text.trim(),
+                                      totalCTC:
+                                          int.tryParse(
+                                            totalCTCController.text,
+                                          ) ??
+                                          0,
+                                      fixedPay:
+                                          int.tryParse(
+                                            fixedPayController.text,
+                                          ) ??
+                                          0,
+                                      joiningBonus:
+                                          int.tryParse(
+                                            joiningBonusController.text,
+                                          ) ??
+                                          0,
+                                    ),
+                                    skills: _splitController(skillsController),
+                                    rounds: _splitController(roundsController),
 
-  final prefs =
-      await SharedPreferences.getInstance();
+                                    selectionProcess: _splitController(
+                                      selectionProcessController,
+                                    ),
 
-  await prefs.remove(draftKey);
+                                    endDate: endDateController.text,
 
-  if (!mounted) return;
-await showDialog(
-  context: context,
-  barrierDismissible: false,
+                                    minYearofExperience:
+                                        minExperienceController.text,
+                                    studentStreams: _splitController(
+                                      fieldOfStudyController,
+                                    ),
+                                    tags: selectedTags.toList(),
+                                    workAuthorization: workAuthorization,
+                                    yearsOfExperience: experienceRange,
+                                    benefits: _splitController(
+                                      benefitsController,
+                                    ),
+                                    certifications: _splitController(
+                                      certificationsController,
+                                    ),
+                                    eligibilityCriteria: eligibilityController
+                                        .text
+                                        .trim(),
+                                    approvalStatus: 'Pending',
+                                  );
 
-  // Very light overlay instead of heavy dark background
-  barrierColor: Colors.black.withOpacity(0.12),
+                                  final success = await referralPostViewModel
+                                      .postJob(model);
 
-  builder: (_) {
-    return Dialog(
-      elevation: 0,
-      backgroundColor: Colors.transparent,
-      insetPadding: const EdgeInsets.symmetric(
-        horizontal: 24,
-      ),
+                                  if (success && mounted) {
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
 
-      child: Container(
-        padding: const EdgeInsets.all(24),
+                                    await prefs.remove(draftKey);
 
-        decoration: BoxDecoration(
-          color: AppColors.kCard,
-          borderRadius: BorderRadius.circular(24),
+                                    if (!mounted) return;
+                                    await showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
 
-          border: Border.all(
-            color: AppColors.kGreen.withOpacity(.25),
+                                      // Very light overlay instead of heavy dark background
+                                      barrierColor: Colors.black.withOpacity(
+                                        0.12,
+                                      ),
+
+                                      builder: (_) {
+                                        return Dialog(
+                                          elevation: 0,
+                                          backgroundColor: Colors.transparent,
+                                          insetPadding:
+                                              const EdgeInsets.symmetric(
+                                                horizontal: 24,
+                                              ),
+
+                                          child: Container(
+                                            padding: const EdgeInsets.all(24),
+
+                                            decoration: BoxDecoration(
+                                              color: AppColors.kCard,
+                                              borderRadius:
+                                                  BorderRadius.circular(24),
+
+                                              border: Border.all(
+                                                color: AppColors.kGreen
+                                                    .withOpacity(.25),
+                                              ),
+
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(.15),
+                                                  blurRadius: 25,
+                                                  offset: const Offset(0, 8),
+                                                ),
+                                              ],
+                                            ),
+
+                                            child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+
+                                              children: [
+                                                Container(
+                                                  height: 72,
+                                                  width: 72,
+
+                                                  decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    color: AppColors.kGreen
+                                                        .withOpacity(.12),
+                                                  ),
+
+                                                  child: Icon(
+                                                    Icons.check_circle,
+                                                    color: AppColors.kGreen,
+                                                    size: 52,
+                                                  ),
+                                                ),
+
+                                                const SizedBox(height: 18),
+
+                                                const Text(
+                                                  "Referral Added Successfully",
+                                                  textAlign: TextAlign.center,
+
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w700,
+                                                  ),
+                                                ),
+
+                                                const SizedBox(height: 10),
+
+                                                const Text(
+                                                  "Please wait for admin approval of your posted job.",
+                                                  textAlign: TextAlign.center,
+
+                                                  style: TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 13,
+                                                    height: 1.5,
+                                                  ),
+                                                ),
+
+                                                const SizedBox(height: 22),
+
+                                                SizedBox(
+                                                  width: double.infinity,
+
+                                                  child: ElevatedButton(
+                                                    style: ElevatedButton.styleFrom(
+                                                      backgroundColor:
+                                                          AppColors.kGreen,
+
+                                                      padding:
+                                                          const EdgeInsets.symmetric(
+                                                            vertical: 14,
+                                                          ),
+
+                                                      shape: RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              14,
+                                                            ),
+                                                      ),
+                                                    ),
+
+                                                    onPressed: () {
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop(); // close dialog
+                                                      Navigator.of(
+                                                        context,
+                                                      ).pop(); // close page
+                                                    },
+
+                                                    child: const Text(
+                                                      "Done",
+                                                      style: TextStyle(
+                                                        color: Colors.white,
+                                                        fontWeight:
+                                                            FontWeight.w600,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  }
+                                }
+                              : nextStep,
+                          child: Text(
+                            currentStep == totalSteps - 1
+                                ? "Post Job"
+                                : "Continue",
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 16,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
-
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(.15),
-              blurRadius: 25,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-
-          children: [
-            Container(
-              height: 72,
-              width: 72,
-
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColors.kGreen.withOpacity(.12),
-              ),
-
-              child: Icon(
-                Icons.check_circle,
-                color: AppColors.kGreen,
-                size: 52,
-              ),
-            ),
-
-            const SizedBox(height: 18),
-
-            const Text(
-              "Referral Added Successfully",
-              textAlign: TextAlign.center,
-
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 18,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            const Text(
-              "Please wait for admin approval of your posted job.",
-              textAlign: TextAlign.center,
-
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 13,
-                height: 1.5,
-              ),
-            ),
-
-            const SizedBox(height: 22),
-
-            SizedBox(
-              width: double.infinity,
-
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.kGreen,
-
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 14,
-                  ),
-
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-
-                onPressed: () {
-                  Navigator.of(context).pop(); // close dialog
-                  Navigator.of(context).pop(); // close page
-                },
-
-                child: const Text(
-                  "Done",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-          ],
         ),
       ),
-    );
-  },
-);
-
-                        }
-                      }
-                    : nextStep,
-              child: Text(
-  currentStep == totalSteps - 1
-      ? "Post Job"
-      : "Continue",
-  style: const TextStyle(
-    color: Colors.white,
-    fontWeight: FontWeight.bold,
-    fontSize: 16,
-  ),
-),
-              ),
-            ),
-         ) ],
-        ),
-      ),
-    ],
-  ),
-),
     );
   }
 
@@ -1574,26 +1525,27 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
         Text(widget.label, style: const TextStyle(color: Colors.white)),
 
         const SizedBox(height: 8),
-/// 🔥 Chips moved ABOVE
-if (selected.isNotEmpty)
-  Wrap(
-    spacing: 8,
-    runSpacing: 6,
-    children: selected.map((item) {
-      return Chip(
-        label: Text(item),
-        onDeleted: () {
-          setState(() {
-            selected.remove(item);
-            _updateController();
-          });
-        },
-      );
-    }).toList(),
-  ),
 
-if (selected.isNotEmpty)
-  const SizedBox(height: 10),
+        /// 🔥 Chips moved ABOVE
+        if (selected.isNotEmpty)
+          Wrap(
+            spacing: 8,
+            runSpacing: 6,
+            children: selected.map((item) {
+              return Chip(
+                label: Text(item),
+                onDeleted: () {
+                  setState(() {
+                    selected.remove(item);
+                    _updateController();
+                  });
+                },
+              );
+            }).toList(),
+          ),
+
+        if (selected.isNotEmpty) const SizedBox(height: 10),
+
         /// 🔥 Dropdown-like UI
         PopupMenuButton(
           color: AppColors.kCard,
@@ -1603,52 +1555,52 @@ if (selected.isNotEmpty)
             return [
               PopupMenuItem(
                 enabled: false,
-               child: StatefulBuilder(
-  builder: (context, setStatePopup) {
-    return SizedBox(
-      height: widget.options.length > 6 ? 300 : null,
-      width: 300,
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-                        ...widget.options.map((item) {
-                          final isSelected = selected.contains(item);
+                child: StatefulBuilder(
+                  builder: (context, setStatePopup) {
+                    return SizedBox(
+                      height: widget.options.length > 6 ? 300 : null,
+                      width: 300,
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            ...widget.options.map((item) {
+                              final isSelected = selected.contains(item);
 
-                         return ListTile(
-  dense: true,
-  title: Text(
-    item,
-    style: const TextStyle(color: Colors.white),
-  ),
-  onTap: () {
-    setStatePopup(() {
-      _toggleItem(item);
-    });
-  },
-);
-                        }),
+                              return ListTile(
+                                dense: true,
+                                title: Text(
+                                  item,
+                                  style: const TextStyle(color: Colors.white),
+                                ),
+                                onTap: () {
+                                  setStatePopup(() {
+                                    _toggleItem(item);
+                                  });
+                                },
+                              );
+                            }),
 
-                        /// 🔥 Others input
-                        if (selected.contains("Others")) ...[
-                          TextField(
-                            controller: customController,
-                            style: const TextStyle(color: Colors.white),
-                            decoration: const InputDecoration(
-                              hintText: "Add custom",
-                              hintStyle: TextStyle(color: Colors.grey),
-                            ),
-                            onSubmitted: (_) {
-                              _addCustom();
-                              setStatePopup(() {});
-                            },
-                          ),
-                        ],
-                                          ],
-                    ),
-                  ),
-                );
-              },
-            ),
+                            /// 🔥 Others input
+                            if (selected.contains("Others")) ...[
+                              TextField(
+                                controller: customController,
+                                style: const TextStyle(color: Colors.white),
+                                decoration: const InputDecoration(
+                                  hintText: "Add custom",
+                                  hintStyle: TextStyle(color: Colors.grey),
+                                ),
+                                onSubmitted: (_) {
+                                  _addCustom();
+                                  setStatePopup(() {});
+                                },
+                              ),
+                            ],
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
               ),
             ];
           },
@@ -1674,40 +1626,30 @@ if (selected.isNotEmpty)
             ),
           ),
         ),
-        
-
       ],
     );
   }
-  
 }
-class SearchableChipField
-    extends StatefulWidget {
 
+class SearchableChipField extends StatefulWidget {
   const SearchableChipField({
     super.key,
     required this.label,
     required this.options,
     required this.controller,
-      this.onChanged,
-
+    this.onChanged,
   });
 
   final String label;
   final List<String> options;
   final TextEditingController controller;
-final Function(String value)? onChanged;
+  final Function(String value)? onChanged;
   @override
-  State<SearchableChipField>
-      createState() =>
-          _SearchableChipFieldState();
+  State<SearchableChipField> createState() => _SearchableChipFieldState();
 }
-class _SearchableChipFieldState
-    extends State<SearchableChipField> {
 
-  final TextEditingController
-      searchController =
-          TextEditingController();
+class _SearchableChipFieldState extends State<SearchableChipField> {
+  final TextEditingController searchController = TextEditingController();
 
   List<String> selected = [];
 
@@ -1715,61 +1657,39 @@ class _SearchableChipFieldState
   void initState() {
     super.initState();
 
-    selected =
-        widget.controller.text.isEmpty
-            ? []
-            : widget.controller.text
-                .split(',')
-                .map((e) => e.trim())
-                .toList();
+    selected = widget.controller.text.isEmpty
+        ? []
+        : widget.controller.text.split(',').map((e) => e.trim()).toList();
   }
 
   void _updateController() {
-    widget.controller.text =
-        selected.join(', ');
+    widget.controller.text = selected.join(', ');
 
-    widget.onChanged?.call(
-      widget.controller.text,
-    );
+    widget.onChanged?.call(widget.controller.text);
   }
 
   @override
   Widget build(BuildContext context) {
+    final query = searchController.text.trim().toLowerCase();
 
-    final query =
-        searchController.text
-            .trim()
-            .toLowerCase();
-
-    final suggestions =
-        widget.options.where((e) {
-
-      final alreadySelected =
-          selected.any(
-        (s) =>
-            s.toLowerCase() ==
-            e.toLowerCase(),
+    final suggestions = widget.options.where((e) {
+      final alreadySelected = selected.any(
+        (s) => s.toLowerCase() == e.toLowerCase(),
       );
 
-      return e
-              .toLowerCase()
-              .contains(query) &&
-          !alreadySelected;
+      return e.toLowerCase().contains(query) && !alreadySelected;
     }).toList();
 
     return Column(
-      crossAxisAlignment:
-          CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
 
       children: [
-
         Text(
           widget.label,
 
           style: const TextStyle(
             color: Colors.white,
-            fontWeight:
-                FontWeight.w600,
+            fontWeight: FontWeight.w600,
           ),
         ),
 
@@ -1781,9 +1701,7 @@ class _SearchableChipFieldState
             spacing: 8,
             runSpacing: 8,
 
-            children:
-                selected.map((item) {
-
+            children: selected.map((item) {
               return Chip(
                 label: Text(item),
 
@@ -1797,39 +1715,27 @@ class _SearchableChipFieldState
             }).toList(),
           ),
 
-        if (selected.isNotEmpty)
-          const SizedBox(height: 12),
+        if (selected.isNotEmpty) const SizedBox(height: 12),
 
         /// SEARCH FIELD
         TextField(
           controller: searchController,
 
-          style: const TextStyle(
-            color: Colors.white,
-          ),
+          style: const TextStyle(color: Colors.white),
 
           decoration: InputDecoration(
-            hintText:
-                "Search or add",
+            hintText: "Search or add",
 
-            hintStyle:
-                const TextStyle(
-              color: Colors.grey,
-            ),
+            hintStyle: const TextStyle(color: Colors.grey),
 
             filled: true,
 
-            fillColor:
-                AppColors.kCard,
+            fillColor: AppColors.kCard,
 
-            border:
-                OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(
-                      12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
 
-              borderSide:
-                  BorderSide.none,
+              borderSide: BorderSide.none,
             ),
           ),
 
@@ -1846,9 +1752,7 @@ class _SearchableChipFieldState
             !widget.options.any(
               (e) =>
                   e.toLowerCase().trim() ==
-                  searchController.text
-                      .toLowerCase()
-                      .trim(),
+                  searchController.text.toLowerCase().trim(),
             ))
           Container(
             margin: const EdgeInsets.only(top: 8),
@@ -1859,22 +1763,16 @@ class _SearchableChipFieldState
             ),
 
             child: ListTile(
-              leading: const Icon(
-                Icons.add,
-                color: Color(0xFF22C55E),
-              ),
+              leading: const Icon(Icons.add, color: Color(0xFF22C55E)),
 
               title: Text(
                 'Create "${searchController.text.trim()}"',
 
-                style: const TextStyle(
-                  color: Colors.white,
-                ),
+                style: const TextStyle(color: Colors.white),
               ),
 
               onTap: () async {
-                final value =
-                    searchController.text.trim();
+                final value = searchController.text.trim();
 
                 setState(() {
                   selected.add(value);
@@ -1882,12 +1780,10 @@ class _SearchableChipFieldState
                 });
 
                 final parentState = context
-                    .findAncestorStateOfType<
-                        _ReferralPostViewState>();
+                    .findAncestorStateOfType<_ReferralPostViewState>();
 
                 if (widget.label == 'Skills') {
-                  await parentState
-                      ?.addSkillIfNeeded(value);
+                  await parentState?.addSkillIfNeeded(value);
                 }
 
                 searchController.clear();
@@ -1903,64 +1799,44 @@ class _SearchableChipFieldState
             spacing: 8,
             runSpacing: 8,
 
-            children:
-                suggestions.take(12).map(
-              (item) {
+            children: suggestions.take(12).map((item) {
+              return GestureDetector(
+                onTap: () {
+                  setState(() {
+                    selected.add(item);
+                    _updateController();
+                    searchController.clear();
+                  });
+                },
 
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      selected.add(item);
-                      _updateController();
-                      searchController
-                          .clear();
-                    });
-                  },
-
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(
-                      horizontal: 12,
-                      vertical: 8,
-                    ),
-
-                    decoration:
-                        BoxDecoration(
-                      color: AppColors
-                          .kCard,
-
-                      borderRadius:
-                          BorderRadius.circular(
-                              30),
-
-                      border: Border.all(
-                        color:
-                            Colors.white
-                                .withOpacity(
-                          .08,
-                        ),
-                      ),
-                    ),
-
-                    child: Text(
-                      item,
-
-                      style:
-                          const TextStyle(
-                        color:
-                            Colors.white,
-                        fontSize: 12,
-                      ),
-                    ),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 12,
+                    vertical: 8,
                   ),
-                );
-              },
-            ).toList(),
+
+                  decoration: BoxDecoration(
+                    color: AppColors.kCard,
+
+                    borderRadius: BorderRadius.circular(30),
+
+                    border: Border.all(color: Colors.white.withOpacity(.08)),
+                  ),
+
+                  child: Text(
+                    item,
+
+                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                  ),
+                ),
+              );
+            }).toList(),
           ),
       ],
     );
   }
 }
+
 class _ChipMultiSelectField extends StatefulWidget {
   const _ChipMultiSelectField({
     required this.label,
@@ -2004,88 +1880,85 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
     widget.onChanged?.call();
   }
-void _addItem(String value) {
-  final trimmed = value.trim();
 
-  if (trimmed.isEmpty) {
-    return;
-  }
+  void _addItem(String value) {
+    final trimmed = value.trim();
 
-  final current = _selectedItems;
-
-  /// 🔥 LIMIT SELECTION PROCESS COUNT
-  if (widget.label == 'Selection Process') {
-    final parentState = context
-        .findAncestorStateOfType<_ReferralPostViewState>();
-
-    final maxAllowed =
-        parentState?.maxSelectionProcessCount ?? 999;
-
-    if (current.length >= maxAllowed) {
-     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(
-    content: Text(
-      'Only $maxAllowed selection process steps allowed',
-    ),
-    behavior: SnackBarBehavior.floating,
-    backgroundColor: Colors.orange,
-    margin: const EdgeInsets.all(16),
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(14),
-    ),
-    duration: const Duration(seconds: 2),
-  ),
-);
-
+    if (trimmed.isEmpty) {
       return;
     }
-  }
 
-  /// 🔥 normalize
-  final normalizedInput =
-      trimmed.toLowerCase().replaceAll(' ', '');
+    final current = _selectedItems;
 
-  /// 🔥 find matching option from API
-  String? matchedOption;
+    /// 🔥 LIMIT SELECTION PROCESS COUNT
+    if (widget.label == 'Selection Process') {
+      final parentState = context
+          .findAncestorStateOfType<_ReferralPostViewState>();
 
-  for (final option in widget.options) {
-    final normalizedOption =
-        option.toLowerCase().replaceAll(' ', '');
+      final maxAllowed = parentState?.maxSelectionProcessCount ?? 999;
 
-    if (normalizedOption == normalizedInput) {
-      matchedOption = option;
-      break;
-    }
-  }
+      if (current.length >= maxAllowed) {
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
-  /// 🔥 use API option if exists
-  final finalValue = matchedOption ?? trimmed;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Only $maxAllowed selection process steps allowed'),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Colors.orange,
+            margin: const EdgeInsets.all(16),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
+            ),
+            duration: const Duration(seconds: 2),
+          ),
+        );
 
-  /// 🔥 avoid duplicate after normalization
-  final alreadyExists = current.any(
-    (e) =>
-        e.toLowerCase().replaceAll(' ', '') ==
-        finalValue.toLowerCase().replaceAll(' ', ''),
-  );
-
-  if (!alreadyExists) {
-    if (widget.singleSelect) {
-      current.clear();
+        return;
+      }
     }
 
-    current.add(finalValue);
+    /// 🔥 normalize
+    final normalizedInput = trimmed.toLowerCase().replaceAll(' ', '');
 
-    _sync(current);
+    /// 🔥 find matching option from API
+    String? matchedOption;
+
+    for (final option in widget.options) {
+      final normalizedOption = option.toLowerCase().replaceAll(' ', '');
+
+      if (normalizedOption == normalizedInput) {
+        matchedOption = option;
+        break;
+      }
+    }
+
+    /// 🔥 use API option if exists
+    final finalValue = matchedOption ?? trimmed;
+
+    /// 🔥 avoid duplicate after normalization
+    final alreadyExists = current.any(
+      (e) =>
+          e.toLowerCase().replaceAll(' ', '') ==
+          finalValue.toLowerCase().replaceAll(' ', ''),
+    );
+
+    if (!alreadyExists) {
+      if (widget.singleSelect) {
+        current.clear();
+      }
+
+      current.add(finalValue);
+
+      _sync(current);
+    }
+
+    _textController.clear();
+
+    _focusNode.requestFocus();
+
+    setState(() {});
   }
 
-  _textController.clear();
-
-  _focusNode.requestFocus();
-
-  setState(() {});
-}
   void _removeItem(String value) {
     final current = _selectedItems..remove(value);
 
@@ -2132,27 +2005,29 @@ ScaffoldMessenger.of(context).showSnackBar(
 
     super.dispose();
   }
-List<String> get _filteredSuggestions {
-  final query = _textController.text.trim().toLowerCase();
 
-  if (query.isEmpty) {
-    return [];
+  List<String> get _filteredSuggestions {
+    final query = _textController.text.trim().toLowerCase();
+
+    if (query.isEmpty) {
+      return [];
+    }
+
+    final selectedNormalized = _selectedItems
+        .map((e) => e.toLowerCase().replaceAll(' ', ''))
+        .toSet();
+
+    return widget.options
+        .where((option) {
+          final normalized = option.toLowerCase().replaceAll(' ', '');
+
+          return option.toLowerCase().contains(query) &&
+              !selectedNormalized.contains(normalized);
+        })
+        .take(8)
+        .toList();
   }
 
-  final selectedNormalized = _selectedItems
-      .map(
-        (e) => e.toLowerCase().replaceAll(' ', ''),
-      )
-      .toSet();
-
-  return widget.options.where((option) {
-    final normalized =
-        option.toLowerCase().replaceAll(' ', '');
-
-    return option.toLowerCase().contains(query) &&
-        !selectedNormalized.contains(normalized);
-  }).take(8).toList();
-}
   @override
   Widget build(BuildContext context) {
     final selected = _selectedItems;
@@ -2199,14 +2074,13 @@ List<String> get _filteredSuggestions {
                 ),
               ),
 
-          if (_textController.text.trim().isNotEmpty &&
-    _filteredSuggestions.isEmpty &&
+              if (_textController.text.trim().isNotEmpty &&
+                  _filteredSuggestions.isEmpty &&
                   !widget.options.any(
                     (e) =>
                         e.toLowerCase().trim() ==
                         _textController.text.toLowerCase().trim(),
                   ))
-                  
                 Container(
                   margin: const EdgeInsets.only(top: 8),
 
@@ -2229,14 +2103,13 @@ List<String> get _filteredSuggestions {
 
                       _addItem(value);
 
-                final parentState = context
-    .findAncestorStateOfType<_ReferralPostViewState>();
+                      final parentState = context
+                          .findAncestorStateOfType<_ReferralPostViewState>();
 
                       if (widget.label == 'Skills') {
                         await parentState?.addSkillIfNeeded(value);
                       }
 
-                  
                       _textController.clear();
 
                       setState(() {});
@@ -2328,5 +2201,4 @@ List<String> get _filteredSuggestions {
       ],
     );
   }
-  
 }

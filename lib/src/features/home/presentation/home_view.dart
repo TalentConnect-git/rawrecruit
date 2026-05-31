@@ -34,11 +34,12 @@ class _HomeViewState extends State<HomeView> {
   final appStateProvider = getIt<AppStateProvider>();
   final notificationVm = getIt<NotificationViewModel>();
   final interviewViewModel = getIt<InterviewViewModel>();
+  final chatViewModel = getIt<ChatViewModel>();
+
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final chatVm = context.read<ChatViewModel>();
-      chatVm.fetchUnreadCounts();
+      chatViewModel.fetchUnreadCounts();
       if (!appStateProvider.isAuthComplete) {
         final failure = await appStateProvider.getAuthDetails();
         failure?.showError(context);
@@ -90,7 +91,6 @@ class _HomeViewState extends State<HomeView> {
   @override
   Widget build(BuildContext context) {
     final currentIndex = _calculateIndex(context);
-    final chatVm = context.watch<ChatViewModel>();
     return PopScope(
       canPop: currentIndex == 0,
       onPopInvokedWithResult: (bool didPop, _) async {
@@ -105,8 +105,11 @@ class _HomeViewState extends State<HomeView> {
           );
         }
       },
-      child: ChangeNotifierProvider.value(
-        value: interviewViewModel,
+      child: MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ChatViewModel>.value(value: chatViewModel),
+          ChangeNotifierProvider.value(value: interviewViewModel),
+        ],
         child: Scaffold(
           key: _scaffoldKey,
           appBar: RAppBar(
@@ -202,7 +205,7 @@ class _HomeViewState extends State<HomeView> {
           body: widget.navigationShell,
           bottomNavigationBar: AppBottomNav(
             currentIndex: currentIndex,
-            hasUnread: chatVm.totalUnreadCount > 0,
+            hasUnread: chatViewModel.totalUnreadCount > 0,
             onTap: (tab) {
               final extra = {'userType': appStateProvider.userType};
 

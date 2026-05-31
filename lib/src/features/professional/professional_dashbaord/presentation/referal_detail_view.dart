@@ -6,9 +6,12 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/alumni/presentation/widgets/alumni_hiring_card.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
     show ApplicationViewModel;
+import 'package:rawrecruit/src/features/dashboard/index.dart'
+    show DashboardViewModel;
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:share_plus/share_plus.dart';
+
 import '../../../../common/index.dart';
 import 'view_model/prof_dashboard_view_model.dart';
 
@@ -24,12 +27,15 @@ class ReferralDetailView extends StatefulWidget {
 class _ReferralDetailViewState extends State<ReferralDetailView> {
   final viewModel = ProfessionalViewModel();
   final shortlistVm = getIt<ShortlistViewModel>();
+  final dashboardViewModel = getIt<DashboardViewModel>();
+  final applicationViewModel = getIt<ApplicationViewModel>();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       viewModel.fetchReferralJobDetails(widget.jobId);
+      applicationViewModel.fetchApplications();
       shortlistVm.fetchSaved();
     });
   }
@@ -38,11 +44,10 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: viewModel),
+        ChangeNotifierProvider.value(value: dashboardViewModel),
         ChangeNotifierProvider.value(value: shortlistVm),
-        ChangeNotifierProvider(
-          create: (_) => ApplicationViewModel()..fetchApplications(),
-        ),
+        ChangeNotifierProvider.value(value: viewModel),
+        ChangeNotifierProvider.value(value: applicationViewModel),
       ],
       child: Consumer<ProfessionalViewModel>(
         builder: (context, vm, _) {

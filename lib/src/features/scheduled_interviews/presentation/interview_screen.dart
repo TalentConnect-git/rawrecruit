@@ -15,51 +15,55 @@ class InterviewsScreen extends StatefulWidget {
 }
 
 class _InterviewsScreenState extends State<InterviewsScreen> {
+  final InterviewViewModel interviewViewModel = getIt<InterviewViewModel>();
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      final failure = await context.read<InterviewViewModel>().getInterviews();
+      final failure = await interviewViewModel.getInterviews();
       if (mounted) failure?.showError(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.secBorder,
+    return ChangeNotifierProvider.value(
+      value: interviewViewModel,
+      child: Scaffold(
+        backgroundColor: AppColors.secBorder,
 
-      appBar: RAppBar(
-        title: const Text(
-          'Scheduled Interviews',
-          style: TextStyle(color: Colors.white),
+        appBar: RAppBar(
+          title: const Text(
+            'Scheduled Interviews',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
-      ),
 
-      body: Consumer<InterviewViewModel>(
-        builder: (context, vm, _) {
-          if (vm.viewState == ViewState.busy) {
-            return const Center(child: CircularProgressIndicator());
-          }
+        body: Consumer<InterviewViewModel>(
+          builder: (context, vm, _) {
+            if (vm.viewState == ViewState.busy) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (vm.interviews.isEmpty) {
-            return const Center(
-              child: Text(
-                'No scheduled interviews found.',
-                style: TextStyle(color: Colors.white),
-              ),
+            if (vm.interviews.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No scheduled interviews found.',
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            }
+
+            return ListView.separated(
+              padding: const EdgeInsets.all(16),
+              itemCount: vm.interviews.length,
+              separatorBuilder: (_, __) => const SizedBox(height: 12),
+              itemBuilder: (context, index) {
+                return InterviewCard(interview: vm.interviews[index]);
+              },
             );
-          }
-
-          return ListView.separated(
-            padding: const EdgeInsets.all(16),
-            itemCount: vm.interviews.length,
-            separatorBuilder: (_, __) => const SizedBox(height: 12),
-            itemBuilder: (context, index) {
-              return InterviewCard(interview: vm.interviews[index]);
-            },
-          );
-        },
+          },
+        ),
       ),
     );
   }

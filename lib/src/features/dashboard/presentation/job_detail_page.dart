@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/core/navigation/routes_index.dart';
 import 'package:rawrecruit/src/features/alumni/presentation/widgets/alumni_hiring_card.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
     show ApplicationViewModel;
 import 'package:rawrecruit/src/features/dashboard/presentation/view_model/internship_detail_view_model.dart';
-import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../../common/index.dart';
 import '../../../core/index.dart';
@@ -25,13 +25,20 @@ class _JobDetailViewState extends State<JobDetailView> {
     return "${date.day}/${date.month}/${date.year}";
   }
 
-  InternshipDetailViewModel internshipDetailViewModel =
+  final InternshipDetailViewModel internshipDetailViewModel =
       InternshipDetailViewModel();
+  final ShortlistViewModel shortlistViewModel = getIt<ShortlistViewModel>();
+  final ApplicationViewModel applicationViewModel =
+      getIt<ApplicationViewModel>();
+  final DashboardViewModel dashboardViewModel = getIt<DashboardViewModel>();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      shortlistViewModel.fetchSaved();
+      applicationViewModel.fetchApplications();
+      dashboardViewModel.getAlumniData();
       await internshipDetailViewModel.fetchCompanyAlumni(
         companyName: widget.job.candidatePosted?.currentCompany ?? '',
         userId: widget.job.candidatePosted?.userId ?? '',
@@ -43,19 +50,21 @@ class _JobDetailViewState extends State<JobDetailView> {
   Widget build(BuildContext context) {
     final jobId = widget.job.id ?? '';
 
-    final shortlistVM = context.watch<ShortlistViewModel>();
-    final applicationVM = context.watch<ApplicationViewModel>();
-
-    final isSaved = shortlistVM.savedJobIds.contains(jobId);
-    final isApplied = applicationVM.isApplied(jobId);
+    final isSaved = shortlistViewModel.savedJobIds.contains(jobId);
+    final isApplied = applicationViewModel.isApplied(jobId);
 
     final pkg = widget.job.packageDetails;
     final company = widget.job.companyPosted?.companyDetails;
     final employer = widget.job.companyPosted?.employerDetails;
     final contact = widget.job.contactPerson;
 
-    return ChangeNotifierProvider.value(
-      value: internshipDetailViewModel,
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider.value(value: shortlistViewModel),
+        ChangeNotifierProvider.value(value: applicationViewModel),
+        ChangeNotifierProvider.value(value: dashboardViewModel),
+        ChangeNotifierProvider.value(value: internshipDetailViewModel),
+      ],
       child: Scaffold(
         backgroundColor: AppColors.secBorder,
 
@@ -74,7 +83,7 @@ class _JobDetailViewState extends State<JobDetailView> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                  onPressed: () => shortlistVM.toggleSave(
+                  onPressed: () => shortlistViewModel.toggleSave(
                     jobId: jobId,
                     jobType: 'Off-campus',
                     isSaved: isSaved,
@@ -91,7 +100,7 @@ class _JobDetailViewState extends State<JobDetailView> {
                 child: ElevatedButton(
                   onPressed: isApplied
                       ? null
-                      : () => applicationVM.apply(
+                      : () => applicationViewModel.apply(
                           jobId: jobId,
                           jobType: "Off-campus",
                           companyName: widget.job.companyName ?? '',
