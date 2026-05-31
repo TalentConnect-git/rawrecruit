@@ -16,5 +16,7 @@ abstract class AuthRepository {
 
   ResultFuture<String?> logout();
 
-  ResultFuture<Auth?> googleLogin();
+  ResultFuture<Auth?> googleLogin({required UserType userType});
+
+  ResultFuture<String?> forgotPassword({required String email});
 }

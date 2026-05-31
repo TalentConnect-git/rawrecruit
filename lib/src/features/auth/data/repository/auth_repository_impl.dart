@@ -1,8 +1,9 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/auth/data/data_source/auth_data_source.dart';
-
+import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -41,42 +42,56 @@ class AuthRepositoryImpl implements AuthRepository {
   ResultFuture<String?> logout() => _authDataSource.logout();
 
   @override
-  ResultFuture<Auth?> googleLogin() async {
-    GoogleSignIn googleSignIn = GoogleSignIn.instance;
+  ResultFuture<String?> forgotPassword({required String email}) =>
+      _authDataSource.forgotPassword(email: email);
 
-    await googleSignIn.signOut();
-    await googleSignIn.disconnect();
+  @override
+  ResultFuture<Auth?> googleLogin({required UserType userType}) async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
-    await googleSignIn.initialize(
-      serverClientId:
-          '532797617580-jd8i8njg4kub2fkrp5qr4ha1395db36d.apps.googleusercontent.com',
-    );
+      try {
+        await googleSignIn.signOut();
+      } catch (_) {}
 
-    final GoogleSignInAccount? googleUser = await googleSignIn.authenticate(
-      scopeHint: ['email'],
-    );
-
-    if (googleUser == null) {
-      return Left(
-        APIException(message: 'Sign in aborted by user', statusCode: 500),
+      final GoogleSignInAccount googleUser = await googleSignIn.authenticate(
+        scopeHint: ['email'],
       );
-    }
 
-    final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      // if (googleUser == null) {
+      //   return Left(
+      //     APIException(message: 'Sign in aborted by user', statusCode: 500),
+      //   );
+      // }
 
-    final idToken = googleAuth.idToken;
+      final idToken = googleUser.authentication.idToken;
 
-    if (idToken == null) {
+      if (idToken == null) {
+        return Left(
+          APIException(
+            message: 'Something went wrong, Try again later.',
+            statusCode: 500,
+          ),
+        );
+      }
+
+      return await _authDataSource.googleLogin(
+        token: idToken,
+        userType: userType,
+      );
+    } on GoogleSignInException catch (e, s) {
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        log('Error: $e\n\n$s');
+        return Left(
+          APIException(message: 'Sign in aborted by user', statusCode: 499),
+        );
+      }
       return Left(
         APIException(
-          message: 'Something went wrong, Try again later.',
+          message: e.description ?? 'Google sign in failed',
           statusCode: 500,
         ),
       );
     }
-
-    final auth = await _authDataSource.googleLogin(token: idToken);
-
-    return auth;
   }
 }

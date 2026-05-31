@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rawrecruit/src/feature/revamp_auth/presentation/index.dart';
-
-import '../../../common/index.dart';
-import '../../../core/index.dart';
+import 'package:rawrecruit/src/common/index.dart'
+    show AppTextFields, AppColors, RAppBar, AppButton;
+import 'package:rawrecruit/src/core/index.dart' show Toasts;
+import 'package:rawrecruit/src/features/auth/index.dart'
+    show ForgotPasswordViewModel;
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});

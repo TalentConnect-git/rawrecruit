@@ -4,7 +4,6 @@ import 'package:rawrecruit/src/feature/revamp_application/data/application_data_
 import 'package:rawrecruit/src/feature/revamp_application/data/application_data_source_impl.dart';
 import 'package:rawrecruit/src/feature/revamp_application/repository/application_repository.dart';
 import 'package:rawrecruit/src/feature/revamp_application/repository/application_repository_impl.dart';
-import 'package:rawrecruit/src/feature/revamp_auth/data/index.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashboard_data_source_impl.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashbooard_data_source.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashbard_repository_impl.dart';
@@ -60,12 +59,6 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<AuthDataSource>(() => AuthDataSourceImpl())
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(authDataSource: getIt()),
-    )
-    ..registerLazySingleton<RevampAuthDataSource>(
-      () => RevampAuthDataSourceImpl(),
-    )
-    ..registerLazySingleton<RevampAuthRepository>(
-      () => RevampAuthRepositoryImpl(authDataSource: getIt()),
     )
     ..registerLazySingleton<ProfessionalDataSource>(
       () => ProfessionalDataSourceImpl(),

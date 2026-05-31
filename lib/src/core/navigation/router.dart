@@ -19,6 +19,8 @@ import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_contr
 import 'package:rawrecruit/src/feature/revamp_referrer/presentation/professional_referrer_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_referrer/student_referrer_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_referrer/utils/enums.dart';
+import 'package:rawrecruit/src/features/auth/index.dart'
+    show LoginView, RegisterView, ForgotPasswordView;
 import 'package:rawrecruit/src/features/chat/presentation/chat_detail_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
@@ -37,7 +39,6 @@ import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view/i
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../feature/revamp_application/entities/application_model.dart';
-import '../../feature/revamp_auth/index.dart';
 import '../../feature/revamp_jobs/presentation/professional_jobs_tab.dart';
 import '../../feature/revamp_profile/presentation/modern_profile_page.dart';
 import '../../features/chat/index.dart';
@@ -61,12 +62,12 @@ GoRouter appRouter = GoRouter(
     GoRoute(
       name: RouteNames.login,
       path: '/login',
-      builder: (_, _) => RevampLoginView(),
+      builder: (_, _) => LoginView(),
     ),
     GoRoute(
       name: RouteNames.register,
       path: '/register',
-      builder: (_, _) => RevampRegisterView(),
+      builder: (_, _) => RegisterView(),
     ),
     GoRoute(
       name: RouteNames.forgotPassword,
@@ -280,10 +281,10 @@ GoRouter appRouter = GoRouter(
     GoRoute(
       path: '/scheduled-interviews',
       name: RouteNames.scheduledInterviews,
-     builder: (_, __) => ChangeNotifierProvider.value(
-  value: getIt<InterviewViewModel>(),
-  child: const InterviewsScreen(),
-),
+      builder: (_, __) => ChangeNotifierProvider.value(
+        value: getIt<InterviewViewModel>(),
+        child: const InterviewsScreen(),
+      ),
     ),
     GoRoute(
       path: "/interviewDetail",

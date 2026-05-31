@@ -1,8 +1,8 @@
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_auth/data/repository/index.dart';
+import 'package:rawrecruit/src/features/auth/index.dart' show AuthRepository;
 
 class ForgotPasswordViewModel extends ViewStateProvider {
-  final _authRepository = getIt<RevampAuthRepository>();
+  final _authRepository = getIt<AuthRepository>();
 
   Future<Failure?> sendResetLink({required String email}) async {
     Failure? failure;

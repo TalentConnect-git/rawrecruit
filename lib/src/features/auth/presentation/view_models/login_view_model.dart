@@ -1,5 +1,5 @@
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/auth/index.dart';
+import 'package:rawrecruit/src/features/auth/index.dart' show AuthRepository;
 
 class LoginViewModel extends ViewStateProvider {
   final _authRepository = getIt<AuthRepository>();
@@ -31,12 +31,12 @@ class LoginViewModel extends ViewStateProvider {
     return failure;
   }
 
-  Future<Failure?> google() async {
+  Future<Failure?> google({required UserType userType}) async {
     Failure? failure;
 
     setViewState(ViewState.busy);
 
-    final result = await _authRepository.googleLogin();
+    final result = await _authRepository.googleLogin(userType: userType);
 
     result.fold(
       (exception) {

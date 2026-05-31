@@ -3,23 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart'
-    show
-        AppTextStyles,
-        AppColors,
-        AppTextFields,
-        AppButton,
-        AppLoadingIndicator;
+    show AppTextStyles, AppColors, AppTextFields, AppButton;
 import 'package:rawrecruit/src/core/index.dart'
-    show
-        UserType,
-        Failure,
-        Toasts,
-        RouteNames,
-        FailureExt,
-        getIt,
-        AppStateProvider;
+    show Failure, Toasts, RouteNames, FailureExt, getIt, AppStateProvider, User;
+import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import 'package:rawrecruit/src/features/auth/index.dart'
-    show AuthCard, UserTypeCard, RegisterViewModel;
+    show RegisterViewModel, AuthCard;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterView extends StatefulWidget {
   const RegisterView({super.key});
@@ -40,224 +30,249 @@ class _RegisterViewState extends State<RegisterView> {
     text: kDebugMode ? 'Test@123' : null,
   );
   final otpController = TextEditingController();
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (getIt<AppStateProvider>().selectedUserType == null) {
+        context.goNamed(RouteNames.userType);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: registerViewModel,
       child: Scaffold(
-        body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: MediaQuery.of(context).size.height * 0.15,
-          ),
-          child: Form(
-            key: _formKey,
-            child: AuthCard(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 36),
-                    child: Image.network(
-                      'https://rawrecruit.in/assets/RR-Tagline-CmOUAebu.png',
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Text(
-                    'Welcome User,',
-                    style: AppTextStyles.s22W600.copyWith(
-                      color: AppColors.text,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Enter your detail to create an account.',
-                    style: AppTextStyles.s14W400,
-                  ),
-                  const SizedBox(height: 20),
-                  Text(
-                    'Select User Type',
-                    style: AppTextStyles.s16W600.copyWith(
-                      color: AppColors.text,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Selector<RegisterViewModel, UserType>(
-                    selector: (_, vm) => vm.userType,
-                    builder: (_, selectedType, _) => Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        ...UserType.values.map(
-                          (userType) => GestureDetector(
-                            onTap: () {
-                              registerViewModel.userType = userType;
-                            },
-                            child: UserTypeCard(
-                              userType: userType,
-                              isSelected: selectedType == userType,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  AppTextFields(
-                    controller: emailController,
-                    hint: 'Email Address',
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Email address is required';
-                      }
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(
+              horizontal: 20,
+              vertical: MediaQuery.of(context).size.height * 0.15,
+            ),
+            child: Form(
+              key: _formKey,
 
-                      return null;
-                    },
-                  ),
-                  const SizedBox(height: 16),
-                  AppTextFields.password(
-                    controller: passController,
-                    hint: 'Password',
-                    keyboardType: TextInputType.visiblePassword,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Password is required';
-                      }
+              /// ✅ USING UPDATED AUTH CARD (IMPORTANT)
+              child: AuthCard(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    /// 🔹 LOGO
+                    Center(
+                      child: Image.network(
+                        'https://rawrecruit.in/assets/RR-Tagline-CmOUAebu.png',
+                        height: 40,
+                      ),
+                    ),
 
-                      return null;
-                    },
-                  ),
-                  Selector<RegisterViewModel, bool>(
-                    selector: (_, vm) => vm.isOtpSent,
-                    builder: (_, isOtpSent, _) {
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          if (isOtpSent) ...[
-                            const SizedBox(height: 16),
-                            AppTextFields(
-                              controller: otpController,
-                              hint: 'Enter OTP',
-                              keyboardType: TextInputType.number,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'OTP is required';
+                    const SizedBox(height: 20),
+
+                    /// 🔹 TITLE
+                    Text(
+                      'Create Account',
+                      style: AppTextStyles.s22W600.copyWith(
+                        color: Colors.white,
+                      ),
+                    ),
+
+                    const SizedBox(height: 4),
+
+                    const Text(
+                      'Enter your details to get started',
+                      style: TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    /// 🔹 EMAIL
+                    AppTextFields(
+                      controller: emailController,
+                      hint: 'Email Address',
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    /// 🔹 PASSWORD
+                    AppTextFields.password(
+                      controller: passController,
+                      hint: 'Password',
+                    ),
+
+                    /// 🔹 OTP
+                    Selector<RegisterViewModel, bool>(
+                      selector: (_, vm) => vm.isOtpSent,
+                      builder: (_, isOtpSent, _) {
+                        return Column(
+                          children: [
+                            if (isOtpSent) ...[
+                              const SizedBox(height: 16),
+                              AppTextFields(
+                                controller: otpController,
+                                hint: 'Enter OTP',
+                              ),
+                            ],
+
+                            const SizedBox(height: 20),
+
+                            Selector<RegisterViewModel, bool>(
+                              selector: (_, vm) => vm.isLoadingForOtp,
+                              builder: (_, isLoading, _) {
+                                if (isLoading) {
+                                  return const Center(
+                                    child: CircularProgressIndicator(),
+                                  );
                                 }
 
-                                final isNotValid =
-                                    (int.tryParse(value)) == null;
+                                return SizedBox(
+                                  width: double.infinity,
+                                  child: AppButton(
+                                    onPressed: () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        Failure? failure;
 
-                                if (isNotValid) {
-                                  return 'Enter valid OTP';
-                                }
+                                        if (isOtpSent) {
+                                          failure = await registerViewModel
+                                              .register(
+                                                email: emailController.text
+                                                    .trim(),
+                                                password: passController.text
+                                                    .trim(),
+                                                otp: otpController.text.trim(),
+                                              );
 
-                                return null;
+                                          Toasts.showSuccessOrFailureToast(
+                                            context,
+                                            failure: failure,
+                                            successMsg: 'Register Successful!',
+                                            popOnSuccess: false,
+                                            successCallback: () async {
+                                              final onboardingService =
+                                                  getIt<
+                                                    OnboardingLocalService
+                                                  >();
+
+                                              await onboardingService.clear();
+
+                                              final prefs =
+                                                  await SharedPreferences.getInstance();
+
+                                              await prefs.setBool(
+                                                'onboarding_completed',
+                                                false,
+                                              );
+                                              final email = emailController.text
+                                                  .trim();
+
+                                              getIt<AppStateProvider>().data =
+                                                  User(email: email);
+                                              context.pushReplacementNamed(
+                                                RouteNames.onboarding,
+                                              );
+                                            },
+                                          );
+                                        } else {
+                                          failure = await registerViewModel
+                                              .sendOtp(
+                                                email: emailController.text
+                                                    .trim(),
+                                              );
+
+                                          failure?.showError(context);
+                                        }
+                                      }
+                                    },
+                                    backgroundColor: AppColors.kGreen,
+                                    foregroundColor: Colors.black,
+                                    label: isOtpSent ? 'Register' : 'Send OTP',
+                                  ),
+                                );
                               },
                             ),
                           ],
-                          const SizedBox(height: 20),
-                          Selector<RegisterViewModel, bool>(
-                            selector: (_, vm) => vm.isLoadingForOtp,
-                            builder: (_, isLoading, _) {
-                              if (isLoading) return AppLoadingIndicator();
+                        );
+                      },
+                    ),
 
-                              return AppButton(
-                                onPressed: () async {
-                                  if (_formKey.currentState!.validate()) {
-                                    Failure? failure;
-                                    if (isOtpSent) {
-                                      failure = await registerViewModel
-                                          .register(
-                                            email: emailController.text.trim(),
-                                            password: passController.text
-                                                .trim(),
-                                            otp: otpController.text.trim(),
-                                          );
+                    const SizedBox(height: 20),
 
-                                      Toasts.showSuccessOrFailureToast(
-                                        context,
-                                        failure: failure,
-                                        successMsg: 'Register Successful!',
-                                        popOnSuccess: false,
-                                        successCallback: () {
-                                          context.pushReplacementNamed(
-                                            RouteNames.dashboard,
-                                            extra: getIt<AppStateProvider>()
-                                                .userType,
-                                          );
-                                        },
-                                      );
-                                    } else {
-                                      failure = await registerViewModel.sendOtp(
-                                        email: emailController.text.trim(),
-                                      );
-
-                                      failure?.showError(context);
-                                    }
-                                  }
-                                },
-                                foregroundColor: AppColors.background,
-                                backgroundColor: AppColors.primary,
-                                label: isOtpSent ? 'Register' : 'Send OTP',
-                              );
-                            },
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisSize: MainAxisSize.max,
-                    spacing: 16,
-                    children: [
-                      Expanded(child: Divider()),
-                      Text('Or Continue with'),
-                      Expanded(child: Divider()),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                  AppButton.outlined(
-                    onPressed: () {},
-                    foregroundColor: AppColors.background,
-                    backgroundColor: AppColors.text,
-                    label: 'Register with Google',
-                  ),
-                  const SizedBox(height: 12),
-                  AppButton.outlined(
-                    onPressed: () {},
-                    foregroundColor: AppColors.background,
-                    backgroundColor: AppColors.text,
-                    label: 'Register with LinkedIn',
-                  ),
-                  const SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () {
-                      context.pushReplacementNamed(RouteNames.login);
-                    },
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
+                    /// 🔹 DIVIDER
+                    Row(
                       children: [
-                        Text(
-                          'Already have an account? ',
-                          style: AppTextStyles.s14W400,
+                        Expanded(
+                          child: Divider(color: Colors.grey.withOpacity(0.3)),
                         ),
-                        Text(
-                          "Login",
-                          style: AppTextStyles.s14W600.copyWith(
-                            color: AppColors.primary,
-                            decorationColor: AppColors.primary,
+                        const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            'Or Continue with',
+                            style: TextStyle(color: Colors.grey),
                           ),
+                        ),
+                        Expanded(
+                          child: Divider(color: Colors.grey.withOpacity(0.3)),
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                ],
+
+                    const SizedBox(height: 20),
+
+                    /// 🔹 SOCIAL BUTTONS
+                    Column(
+                      children: [
+                        _socialButton(
+                          icon: Image.network(
+                            'https://cdn-icons-png.flaticon.com/512/2991/2991148.png',
+                            height: 18,
+                          ),
+                          text: "Continue with Google",
+                          onTap: () {},
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        _socialButton(
+                          icon: const Icon(
+                            Icons.business,
+                            color: Colors.blue,
+                            size: 18,
+                          ),
+                          text: "Continue with LinkedIn",
+                          onTap: () {},
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 20),
+
+                    /// 🔹 LOGIN
+                    Center(
+                      child: GestureDetector(
+                        onTap: () {
+                          context.pushReplacementNamed(RouteNames.login);
+                        },
+                        child: RichText(
+                          text: const TextSpan(
+                            text: 'Already have an account? ',
+                            style: TextStyle(color: Colors.grey),
+                            children: [
+                              TextSpan(
+                                text: 'Login',
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
@@ -265,4 +280,50 @@ class _RegisterViewState extends State<RegisterView> {
       ),
     );
   }
+}
+
+Widget _socialButton({
+  required Widget icon,
+  required String text,
+  required VoidCallback onTap,
+}) {
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
+        borderRadius: BorderRadius.circular(14),
+
+        /// 🔥 subtle border
+        border: Border.all(color: AppColors.kBorder),
+
+        /// 🔥 soft glow
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.3),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          icon,
+          const SizedBox(width: 10),
+
+          Text(
+            text,
+            style: const TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
 }
