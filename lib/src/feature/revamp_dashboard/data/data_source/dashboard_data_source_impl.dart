@@ -2,9 +2,10 @@ import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/data/data_source/dashbooard_data_source.dart';
+import 'package:rawrecruit/src/features/alumni/index.dart'
+    show CompanyAlumniResponse;
 
 import '../../../../core/index.dart';
-import '../../../revamp_alumni/data/company_alumni_response.dart';
 
 class DashboardDataSourceImpl implements DashboardDataSource {
   final NetworkService _networkService = NetworkService();

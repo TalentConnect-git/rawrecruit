@@ -1,5 +1,7 @@
+import 'package:rawrecruit/src/features/alumni/index.dart'
+    show CompanyAlumniResponse;
+
 import '../../../../core/index.dart';
-import '../../../revamp_alumni/data/company_alumni_response.dart';
 
 abstract class DashboardDataSource {
   ResultFuture<List<Job>> getOffCampusJobs();

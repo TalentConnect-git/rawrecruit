@@ -6,7 +6,7 @@ import 'package:rawrecruit/src/feature/revamp_application/presentation/view_mode
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../../common/index.dart';
-import '../../revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
+import '../../../features/alumni/presentation/widgets/alumni_hiring_card.dart';
 import 'view_model/internship_detail_view_model.dart';
 
 class InternshipDetailView extends StatefulWidget {

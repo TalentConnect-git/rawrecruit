@@ -3,8 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show RouteNames, User, UserType, Job, StudentJobType, NavigationRepository;
-import 'package:rawrecruit/src/feature/profile_detail/presentation/view/profile_cv_page.dart';
-import 'package:rawrecruit/src/feature/revamp_alumni/presentation/alumni_tab.dart';
+import 'package:rawrecruit/src/features/profile/presentation/profile_cv_page.dart';
+import 'package:rawrecruit/src/features/alumni/presentation/alumni_tab.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/application_detail_view.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/alumni_detail_view.dart';
@@ -16,13 +16,12 @@ import 'package:rawrecruit/src/feature/revamp_jobs/presentation/student_jobs_tab
 import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/first_step.dart';
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
-import 'package:rawrecruit/src/feature/revamp_referrer/presentation/professional_referrer_tab.dart';
-import 'package:rawrecruit/src/feature/revamp_referrer/student_referrer_tab.dart';
-import 'package:rawrecruit/src/feature/revamp_referrer/utils/enums.dart';
+import 'package:rawrecruit/src/features/referrer/presentation/professional_referrer_tab.dart';
+import 'package:rawrecruit/src/features/referrer/student_referrer_tab.dart';
+import 'package:rawrecruit/src/features/referrer/utils/enums.dart';
 import 'package:rawrecruit/src/features/auth/index.dart'
     show LoginView, RegisterView, ForgotPasswordView;
 import 'package:rawrecruit/src/features/chat/presentation/chat_detail_view.dart';
-import 'package:rawrecruit/src/features/home/presentation/home_view.dart';
 import 'package:rawrecruit/src/features/home/presentation/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/applicant_detail_screen.dart';
@@ -35,18 +34,18 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/vie
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_job_listing.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
-import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view/interview_screen.dart';
+import 'package:rawrecruit/src/features/scheduled_interviews/presentation/interview_screen.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 import '../../feature/revamp_application/entities/application_model.dart';
 import '../../feature/revamp_jobs/presentation/professional_jobs_tab.dart';
-import '../../feature/revamp_profile/presentation/modern_profile_page.dart';
+import '../../features/profile/presentation/modern_profile_page.dart';
 import '../../features/chat/index.dart';
-import '../../features/onboarding/presentation/add_edit_profile_view.dart';
+import '../../features/profile/presentation/add_edit_profile_view.dart';
 import '../../features/professional/application_listing/presentation/application_detail_view.dart';
 import '../../features/professional/job_postng/presentation/referral_detail_page.dart';
 import '../../features/professional/job_postng/presentation/referred_detail_page.dart';
-import '../../features/scheduled_interviews/presentation/view/interview_detail_screen.dart';
+import '../../features/scheduled_interviews/presentation/interview_detail_screen.dart';
 import '../../features/scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
 import '../services/dependency_locator.dart';
 

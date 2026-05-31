@@ -4,9 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show RouteNames, getIt, AppStateProvider, SecretRepo;
-import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/flow_controller.dart';
-
-import '../../../feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -40,10 +37,6 @@ class _SplashViewState extends State<SplashView> {
         await appStateProvider.getAuthDetails();
         await appStateProvider.getUserDetails();
         if (appStateProvider.isAuthComplete) {
-          final onboardingService = getIt<OnboardingLocalService>();
-
-          final completed = await onboardingService.isCompleted();
-
           if (!appStateProvider.isProfileComplete) {
             next = 'onboarding_flow';
           } else {
@@ -62,9 +55,7 @@ class _SplashViewState extends State<SplashView> {
     if (!mounted) return;
 
     if (next == 'onboarding_flow') {
-    context.pushReplacementNamed(
-  RouteNames.onboarding,
-);
+      context.pushReplacementNamed(RouteNames.onboarding);
     } else {
       context.pushReplacementNamed(
         next,

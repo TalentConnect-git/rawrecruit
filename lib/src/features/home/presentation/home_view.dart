@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/common/index.dart'
+    show AppTextStyles, AppColors, RAppBar;
+import 'package:rawrecruit/src/core/index.dart'
+    show
+        AppStateProvider,
+        NotificationProvider,
+        getIt,
+        RouteNames,
+        NavItemExt,
+        FailureExt;
 import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
-import 'package:rawrecruit/src/features/home/presentation/widgets/app_bottom_nav.dart';
-import 'package:rawrecruit/src/features/notifications/index.dart';
-
-import '../../../feature/revamp_onboarding/presentation/flow_controller.dart';
-import '../../chat/index.dart';
-import '../../scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart';
+import 'package:rawrecruit/src/features/chat/index.dart' show ChatViewModel;
+import 'package:rawrecruit/src/features/home/index.dart' show AppBottomNav;
+import 'package:rawrecruit/src/features/notifications/index.dart'
+    show NotificationViewModel;
+import 'package:rawrecruit/src/features/scheduled_interviews/index.dart'
+    show InterviewViewModel;
 
 class HomeView extends StatefulWidget {
   const HomeView({required this.navigationShell, super.key});
@@ -46,9 +54,7 @@ class _HomeViewState extends State<HomeView> {
         final completed = await onboardingService.isCompleted();
 
         if (!completed) {
-         context.pushReplacementNamed(
-  RouteNames.onboarding,
-);
+          context.pushReplacementNamed(RouteNames.onboarding);
 
           return;
         }

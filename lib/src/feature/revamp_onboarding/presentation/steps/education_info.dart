@@ -6,7 +6,7 @@ import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/wr
 
 import '../../../../common/index.dart';
 import '../../../../core/models/education.dart';
-import '../../../revamp_profile/presentation/widgets/auto_complete_field.dart';
+import '../../../../features/profile/presentation/widgets/auto_complete_field.dart';
 import '../../data/index.dart';
 import '../index.dart';
 import '../widgets/onboarding_local_service.dart';

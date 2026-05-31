@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
+import 'package:rawrecruit/src/features/alumni/presentation/widgets/alumni_hiring_card.dart';
 import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
@@ -93,28 +93,29 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                   ),
                 ),
                 GestureDetector(
-                onTap: () async {
-  final company =
-      widget.companyName ??
-      referral?.candidatePosted?.currentCompany ??
-      job.candidatePosted?.currentCompany ??
-      "Company";
+                  onTap: () async {
+                    final company =
+                        widget.companyName ??
+                        referral?.candidatePosted?.currentCompany ??
+                        job.candidatePosted?.currentCompany ??
+                        "Company";
 
-  final role = job.jobTitle ?? "Job Opportunity";
+                    final role = job.jobTitle ?? "Job Opportunity";
 
-  final package = job.packageDetails?.totalCTC != null
-      ? "₹${job.packageDetails!.totalCTC}"
-      : "Not Disclosed";
+                    final package = job.packageDetails?.totalCTC != null
+                        ? "₹${job.packageDetails!.totalCTC}"
+                        : "Not Disclosed";
 
-  final location = (job.location?.isNotEmpty ?? false)
-      ? job.location!.join(", ")
-      : "Not Mentioned";
+                    final location = (job.location?.isNotEmpty ?? false)
+                        ? job.location!.join(", ")
+                        : "Not Mentioned";
 
-  final mode = (job.workMode?.isNotEmpty ?? false)
-      ? job.workMode!.join(", ")
-      : "Not Mentioned";
+                    final mode = (job.workMode?.isNotEmpty ?? false)
+                        ? job.workMode!.join(", ")
+                        : "Not Mentioned";
 
-  final shareText = '''
+                    final shareText =
+                        '''
 🚀 Referral Opportunity
 
 💼 Role: $role
@@ -127,8 +128,8 @@ Apply here:
 https://rawrecruit.in/professional-dashboard/Referral/
 ''';
 
-  await Share.share(shareText);
-},
+                    await Share.share(shareText);
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: Icon(Icons.share, color: AppColors.kGreen),
@@ -809,8 +810,6 @@ https://rawrecruit.in/professional-dashboard/Referral/
                       "Selection Rounds",
                       rounds,
                     ),
-
-                  
                   ],
                 ),
               ),
@@ -821,61 +820,58 @@ https://rawrecruit.in/professional-dashboard/Referral/
           ),
           const SizedBox(height: 18),
 
-Container(
-  width: double.infinity,
-  padding: const EdgeInsets.all(14),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
 
-  decoration: BoxDecoration(
-    color: Colors.white.withOpacity(.03),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(.03),
 
-    borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12),
 
-    border: Border.all(
-      color: Colors.white.withOpacity(.05),
-    ),
-  ),
+              border: Border.all(color: Colors.white.withOpacity(.05)),
+            ),
 
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
 
-    children: [
+              children: [
+                Row(
+                  children: const [
+                    Icon(
+                      Icons.account_tree_outlined,
+                      size: 16,
+                      color: Colors.orangeAccent,
+                    ),
 
-      Row(
-        children: const [
-          Icon(
-            Icons.account_tree_outlined,
-            size: 16,
-            color: Colors.orangeAccent,
-          ),
+                    SizedBox(width: 8),
 
-          SizedBox(width: 8),
+                    Text(
+                      "Selection Process",
 
-          Text(
-            "Selection Process",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
 
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+                const SizedBox(height: 12),
+
+                Text(
+                  process,
+
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 13,
+                    height: 1.5,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-
-      const SizedBox(height: 12),
-
-      Text(
-        process,
-
-        style: const TextStyle(
-          color: Colors.grey,
-          fontSize: 13,
-          height: 1.5,
-        ),
-      ),
-    ],
-  ),
-),
         ],
       ),
     );
@@ -979,8 +975,7 @@ Container(
     final exp = job.yearsOfExperience != null
         ? "${job.yearsOfExperience}"
         : "—";
- final education =
-    (job.minEducation?.trim().isNotEmpty ?? false)
+    final education = (job.minEducation?.trim().isNotEmpty ?? false)
         ? job.minEducation!
         : "Not Specified";
     final openings = job.numberOfOpenings?.toString() ?? "—";
@@ -1021,28 +1016,22 @@ Container(
           const SizedBox(height: 14),
           Row(
             children: [
-          Expanded(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
-    children: [
+                  children: [
+                    _detailRow("Minimum Education", education),
 
-      _detailRow(
-        "Minimum Education",
-        education,
-      ),
+                    if (job.studentStreams?.isNotEmpty ?? false) ...[
+                      const SizedBox(height: 12),
 
-      if (job.studentStreams?.isNotEmpty ?? false) ...[
-        const SizedBox(height: 12),
-
-        _detailRow(
-          "Streams",
-          job.studentStreams!.join(", "),
-        ),
-      ],
-    ],
-  ),
-),    ],
+                      _detailRow("Streams", job.studentStreams!.join(", ")),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           ),
           // const SizedBox(height: 14),
           // Row(
