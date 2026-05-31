@@ -8,13 +8,11 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/profile/presentation/widgets/auto_complete_field.dart';
-import 'package:rawrecruit/src/features/onboarding/data/entities/leadership_controller.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_edit_profile_view_model.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
 
-import '../../../feature/revamp_onboarding/presentation/steps/education_controller.dart';
-import '../../onboarding/data/entities/international.dart';
+import '../../onboarding/steps/education_controller.dart';
 
 class AddEditProfileView extends StatefulWidget {
   const AddEditProfileView({

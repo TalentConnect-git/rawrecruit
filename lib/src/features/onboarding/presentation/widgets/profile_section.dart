@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
-import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/common/index.dart';
 
 class ProfileSection extends StatefulWidget {
   const ProfileSection({
@@ -20,21 +18,17 @@ class ProfileSection extends StatefulWidget {
   final bool initiallyExpanded;
 
   @override
-  State<ProfileSection> createState() =>
-      _ProfileSectionState();
+  State<ProfileSection> createState() => _ProfileSectionState();
 }
 
-class _ProfileSectionState
-    extends State<ProfileSection> {
-
+class _ProfileSectionState extends State<ProfileSection> {
   late bool isExpanded;
 
   @override
   void initState() {
     super.initState();
 
-    isExpanded =
-        widget.initiallyExpanded;
+    isExpanded = widget.initiallyExpanded;
   }
 
   @override
@@ -45,45 +39,34 @@ class _ProfileSectionState
       decoration: BoxDecoration(
         color: AppColors.kCard,
 
-        borderRadius:
-            BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12),
 
         boxShadow: [
-          BoxShadow(
-            color: AppColors.shadow,
-            blurRadius: 1,
-            spreadRadius: 1,
-          ),
+          BoxShadow(color: AppColors.shadow, blurRadius: 1, spreadRadius: 1),
         ],
       ),
 
       child: Column(
         mainAxisSize: MainAxisSize.min,
 
-        crossAxisAlignment:
-            CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
 
         spacing: widget.spacing,
 
         children: [
-
           GestureDetector(
             onTap: () {
               setState(() {
-                isExpanded =
-                    !isExpanded;
+                isExpanded = !isExpanded;
               });
             },
 
             child: Row(
-              mainAxisAlignment:
-                  MainAxisAlignment.spaceBetween,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
               children: [
-
                 Row(
                   children: [
-
                     Icon(
                       isExpanded
                           ? Icons.keyboard_arrow_down
@@ -97,22 +80,19 @@ class _ProfileSectionState
                     Text(
                       widget.label,
 
-                      style: AppTextStyles.s18W600
-                          .copyWith(
+                      style: AppTextStyles.s18W600.copyWith(
                         color: Colors.white,
                       ),
                     ),
                   ],
                 ),
 
-                widget.trailing ??
-                    const SizedBox(),
+                widget.trailing ?? const SizedBox(),
               ],
             ),
           ),
 
-          if (isExpanded)
-            ...widget.children,
+          if (isExpanded) ...widget.children,
         ],
       ),
     );

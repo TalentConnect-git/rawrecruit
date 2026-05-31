@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationModel;
 
 import '../../../../common/index.dart';
 
 class ReferralApplicationDetailScreen extends StatelessWidget {
   final ApplicationModel application;
 
-  const ReferralApplicationDetailScreen({
-    super.key,
-    required this.application,
-  });
+  const ReferralApplicationDetailScreen({super.key, required this.application});
 
   Color _statusColor(String? status) {
     final value = status?.toLowerCase() ?? "";
@@ -30,32 +28,28 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: const Color(0xffF7F8FA),
       appBar: AppBar(
-        title:  Text("Application Details",style: TextStyle(color :AppColors.white),),
+        title: Text(
+          "Application Details",
+          style: TextStyle(color: AppColors.white),
+        ),
         elevation: 0,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-
           /// -----------------------
           /// Job Title Section
           /// -----------------------
           Text(
             job?.jobTitle ?? "",
-            style: const TextStyle(
-              fontSize: 22,
-              fontWeight: FontWeight.w700,
-            ),
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
           ),
 
           const SizedBox(height: 12),
 
           Wrap(
             spacing: 8,
-            children: [
-              _buildStatusChip(application.currentStatus),
-            
-            ],
+            children: [_buildStatusChip(application.currentStatus)],
           ),
 
           const SizedBox(height: 20),
@@ -67,7 +61,6 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 _buildInfoRow(
                   Icons.location_on_outlined,
                   job?.location?.join(", ") ?? "N/A",
@@ -111,10 +104,7 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
               children: [
                 const Text(
                   "Job Description",
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
+                  style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                 ),
                 const SizedBox(height: 10),
                 Text(
@@ -141,10 +131,7 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
                 children: [
                   const Text(
                     "Skills Required",
-                    style: TextStyle(
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
+                    style: TextStyle(fontWeight: FontWeight.w600, fontSize: 16),
                   ),
                   const SizedBox(height: 10),
                   Wrap(
@@ -154,11 +141,12 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
                         .map(
                           (skill) => Container(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 12, vertical: 6),
+                              horizontal: 12,
+                              vertical: 6,
+                            ),
                             decoration: BoxDecoration(
                               color: Colors.blue.withOpacity(0.08),
-                              borderRadius:
-                                  BorderRadius.circular(30),
+                              borderRadius: BorderRadius.circular(30),
                             ),
                             child: Text(
                               skill,
@@ -193,7 +181,7 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
             color: Colors.black.withOpacity(0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
-          )
+          ),
         ],
       ),
       child: child,
@@ -211,10 +199,7 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
         Expanded(
           child: Text(
             text,
-            style: const TextStyle(
-              fontSize: 14,
-              color: Colors.black87,
-            ),
+            style: const TextStyle(fontSize: 14, color: Colors.black87),
           ),
         ),
       ],
@@ -228,15 +213,11 @@ class ReferralApplicationDetailScreen extends StatelessWidget {
     final color = _statusColor(label);
 
     return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: color.withOpacity(0.12),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: color.withOpacity(0.4),
-          width: 0.6,
-        ),
+        border: Border.all(color: color.withOpacity(0.4), width: 0.6),
       ),
       child: Text(
         label ?? "Unknown",

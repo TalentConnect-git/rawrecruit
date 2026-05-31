@@ -11,12 +11,11 @@ part 'user.g.dart';
 
 @freezed
 abstract class User with _$User {
-  @JsonSerializable(explicitToJson: true)
   const factory User({
     @JsonKey(name: '_id') String? id,
     String? userId,
     @JsonKey(name: '__v') int? v,
-String? companyEmail,
+    String? companyEmail,
     List<Achievement>? achievements,
     List<Award>? awards,
     List<Publication>? publications,
@@ -26,23 +25,22 @@ String? companyEmail,
 
     String? profileImage,
     String? currentCompany,
-    
-    @JsonKey(name: 'totalYearsOfExperience')
-    String? totalYearsOfExperience,
+
+    @JsonKey(name: 'totalYearsOfExperience') String? totalYearsOfExperience,
     String? noticePeriod,
-String? noticePeriodStartDate,
-bool? servingNoticePeriod,
+    String? noticePeriodStartDate,
+    bool? servingNoticePeriod,
     List<String>? domainKnowledge,
     List<String>? employmentType,
     List<Experience>? experiences,
     List<String>? industry,
-   @JsonKey(name: 'leadership')
-List<LeadershipExperience>? leadershipExperiences,
+    @JsonKey(name: 'leadership')
+    List<LeadershipExperience>? leadershipExperiences,
 
-@JsonKey(name: 'internationalExperience')
-List<InternationalExperience>? internationalExperiences,
+    @JsonKey(name: 'internationalExperience')
+    List<InternationalExperience>? internationalExperiences,
 
-List<Education>? educations,
+    List<Education>? educations,
     List<String>? jobRoles,
     List<String>? languagesKnown,
     List<String>? locations,
@@ -54,7 +52,7 @@ List<Education>? educations,
 
     String? about,
     String? certifications,
-  
+
     String? degreeCertificate,
     String? email,
     bool? emailVerified,
@@ -70,7 +68,6 @@ List<Education>? educations,
     String? profileType,
     bool? onboardingCompleted,
     String? referralSource,
-  
 
     String? currentSalaryAmount,
     String? currentSalaryCurrency,

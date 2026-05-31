@@ -3,7 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
+import 'package:rawrecruit/src/features/jobs/utils/enums.dart';
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show MyProfileViewModel;
 import 'package:rawrecruit/src/features/profile/presentation/support_page.dart';
 import 'package:rawrecruit/src/features/profile/presentation/add_edit_profile_view.dart';
 import 'package:rawrecruit/src/features/profile/presentation/edit_profile_sections_page.dart';
@@ -14,7 +16,6 @@ import '../../../core/models/education.dart';
 import '../../../core/models/experience.dart';
 import '../../scheduled_interviews/presentation/view_model/scheduled_interview_view_model.dart'
     show InterviewViewModel;
-import '../../../feature/revamp_onboarding/presentation/index.dart';
 import 'career_insight_page.dart';
 import 'resume_view_page.dart';
 

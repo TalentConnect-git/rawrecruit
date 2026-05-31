@@ -1,17 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:rawrecruit/src/feature/revamp_application/entities/application_model.dart';
-import 'package:rawrecruit/src/features/professional/application_listing/presentation/application_detail_view.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationModel;
 
 import '../../../../../core/index.dart';
 
 class ReferralApplicationCard extends StatelessWidget {
   final ApplicationModel application;
 
-  const ReferralApplicationCard({
-    super.key,
-    required this.application,
-  });
+  const ReferralApplicationCard({super.key, required this.application});
 
   /// Improved status color logic
   Color _statusColor(String? status) {
@@ -30,13 +27,12 @@ class ReferralApplicationCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final job = application.jobDetails;
 
-
     return GestureDetector(
       onTap: () {
-       context.pushNamed(
-  RouteNames.referralApplicationDetail,
-  extra: application,
-);
+        context.pushNamed(
+          RouteNames.referralApplicationDetail,
+          extra: application,
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -55,14 +51,10 @@ class ReferralApplicationCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             /// Job Title
             Text(
               job?.jobTitle ?? "No Title",
-              style: const TextStyle(
-                fontSize: 17,
-                fontWeight: FontWeight.w600,
-              ),
+              style: const TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
             ),
 
             const SizedBox(height: 6),
@@ -70,16 +62,16 @@ class ReferralApplicationCard extends StatelessWidget {
             /// Location
             Row(
               children: [
-                const Icon(Icons.location_on_outlined,
-                    size: 16, color: Colors.grey),
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 16,
+                  color: Colors.grey,
+                ),
                 const SizedBox(width: 4),
                 Expanded(
                   child: Text(
                     job?.location?.join(", ") ?? "N/A",
-                    style: const TextStyle(
-                      fontSize: 13,
-                      color: Colors.grey,
-                    ),
+                    style: const TextStyle(fontSize: 13, color: Colors.grey),
                   ),
                 ),
               ],
@@ -90,15 +82,11 @@ class ReferralApplicationCard extends StatelessWidget {
             /// Employment Type
             Row(
               children: [
-                const Icon(Icons.work_outline,
-                    size: 16, color: Colors.grey),
+                const Icon(Icons.work_outline, size: 16, color: Colors.grey),
                 const SizedBox(width: 4),
                 Text(
                   job?.employmentType?.join(", ") ?? "N/A",
-                  style: const TextStyle(
-                    fontSize: 13,
-                    color: Colors.grey,
-                  ),
+                  style: const TextStyle(fontSize: 13, color: Colors.grey),
                 ),
               ],
             ),
@@ -114,13 +102,8 @@ class ReferralApplicationCard extends StatelessWidget {
             Wrap(
               spacing: 8,
               children: [
-
                 /// Application Status
-                _buildStatusChip(
-                  label: application.currentStatus,
-                ),
-
-             
+                _buildStatusChip(label: application.currentStatus),
               ],
             ),
           ],
@@ -133,15 +116,11 @@ class ReferralApplicationCard extends StatelessWidget {
     final color = _statusColor(label);
 
     return Container(
-      padding:
-          const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: color.withOpacity(0.12),
         borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: color.withOpacity(0.4),
-          width: 0.6,
-        ),
+        border: Border.all(color: color.withOpacity(0.4), width: 0.6),
       ),
       child: Text(
         label ?? "Unknown",

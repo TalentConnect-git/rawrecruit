@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
-
-import '../../../feature/revamp_onboarding/presentation/index.dart';
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show MyProfileViewModel;
 
 class CareerInsightsPage extends StatefulWidget {
   const CareerInsightsPage({super.key});

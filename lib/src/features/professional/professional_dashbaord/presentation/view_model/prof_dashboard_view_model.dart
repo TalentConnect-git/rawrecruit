@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:get_it/get_it.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
+import 'package:rawrecruit/src/features/dashboard/data/repository/dashboard_repository.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/professional_metrics_model.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 

@@ -6,9 +6,10 @@ import 'package:rawrecruit/src/common/index.dart'
     show AppTextStyles, AppColors, AppTextFields, AppButton;
 import 'package:rawrecruit/src/core/index.dart'
     show Failure, Toasts, RouteNames, FailureExt, getIt, AppStateProvider, User;
-import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import 'package:rawrecruit/src/features/auth/index.dart'
     show RegisterViewModel, AuthCard;
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show OnboardingLocalService;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterView extends StatefulWidget {

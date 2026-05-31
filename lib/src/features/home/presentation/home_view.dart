@@ -11,11 +11,12 @@ import 'package:rawrecruit/src/core/index.dart'
         RouteNames,
         NavItemExt,
         FailureExt;
-import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import 'package:rawrecruit/src/features/chat/index.dart' show ChatViewModel;
 import 'package:rawrecruit/src/features/home/index.dart' show AppBottomNav;
 import 'package:rawrecruit/src/features/notifications/index.dart'
     show NotificationViewModel;
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show OnboardingLocalService;
 import 'package:rawrecruit/src/features/scheduled_interviews/index.dart'
     show InterviewViewModel;
 

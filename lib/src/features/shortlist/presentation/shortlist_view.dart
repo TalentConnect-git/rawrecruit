@@ -3,8 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
+import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationViewModel;
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 
 class ShortlistView extends StatefulWidget {

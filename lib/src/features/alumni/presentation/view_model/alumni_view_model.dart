@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/core/models/experience.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/data/repository/dashboard_repository.dart';
+import 'package:rawrecruit/src/features/dashboard/data/repository/dashboard_repository.dart';
 
 class AlumniViewModel extends ChangeNotifier {
   final _repo = getIt<DashboardRepository>();

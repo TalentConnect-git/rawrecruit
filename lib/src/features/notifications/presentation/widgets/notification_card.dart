@@ -2,7 +2,7 @@ import 'package:flutter/material.dart' hide Notification;
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
+import 'package:rawrecruit/src/features/jobs/utils/enums.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart'
     show Notification, NotificationMeta;
 

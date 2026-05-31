@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/widget/application_card.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationViewModel, ApplicationCard;
 
 class StudentApplicationsView extends StatefulWidget {
   const StudentApplicationsView({super.key});
@@ -13,8 +13,7 @@ class StudentApplicationsView extends StatefulWidget {
       _StudentApplicationsViewState();
 }
 
-class _StudentApplicationsViewState
-    extends State<StudentApplicationsView> {
+class _StudentApplicationsViewState extends State<StudentApplicationsView> {
   int selectedTab = 0;
 
   @override
@@ -23,7 +22,6 @@ class _StudentApplicationsViewState
       create: (_) => ApplicationViewModel(),
       child: Builder(
         builder: (context) {
-
           /// 🔥 LOAD ONLY ONCE
           WidgetsBinding.instance.addPostFrameCallback((_) {
             context.read<ApplicationViewModel>().fetchApplications();
@@ -38,23 +36,23 @@ class _StudentApplicationsViewState
                   _buildTabs(),
                   const SizedBox(height: 10),
 
-              Expanded(
-  child: Builder(
-    builder: (context) {
-      return RefreshIndicator(
-        color: AppColors.kGreen,
+                  Expanded(
+                    child: Builder(
+                      builder: (context) {
+                        return RefreshIndicator(
+                          color: AppColors.kGreen,
 
-        onRefresh: () async {
-          await context
-              .read<ApplicationViewModel>()
-              .fetchApplications();
-        },
+                          onRefresh: () async {
+                            await context
+                                .read<ApplicationViewModel>()
+                                .fetchApplications();
+                          },
 
-        child: _buildBody(),
-      );
-    },
-  ),
-),
+                          child: _buildBody(),
+                        );
+                      },
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -90,22 +88,22 @@ class _StudentApplicationsViewState
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
-         child: FittedBox(
-  fit: BoxFit.scaleDown,
-  child: FittedBox(
-  fit: BoxFit.scaleDown,
-  child: Text(
-    title,
-    maxLines: 1,
-    overflow: TextOverflow.ellipsis,
-    style: TextStyle(
-      color: isSelected ? Colors.black : Colors.white,
-      fontSize: 12,
-      fontWeight: FontWeight.w600,
-    ),
-  ),
-),
-),
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                    color: isSelected ? Colors.black : Colors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -125,48 +123,42 @@ class _StudentApplicationsViewState
         /// 🔥 FILTER LOGIC
         List filtered = [];
 
-       switch (selectedTab) {
-  case 0:
-    filtered = all;
-    break;
+        switch (selectedTab) {
+          case 0:
+            filtered = all;
+            break;
 
-  case 1:
-    filtered = all
-        .where((e) => e.jobType == "Referral")
-        .toList();
-    break;
+          case 1:
+            filtered = all.where((e) => e.jobType == "Referral").toList();
+            break;
 
-  case 2:
-    filtered = all
-        .where((e) => e.jobType == "Internship")
-        .toList();
-    break;
+          case 2:
+            filtered = all.where((e) => e.jobType == "Internship").toList();
+            break;
 
-  case 3:
-    filtered = all
-        .where((e) => e.jobType == "Off-campus")
-        .toList();
-    break;
-}
+          case 3:
+            filtered = all.where((e) => e.jobType == "Off-campus").toList();
+            break;
+        }
         if (filtered.isEmpty) {
-        return ListView(
-  physics: const AlwaysScrollableScrollPhysics(),
+          return ListView(
+            physics: const AlwaysScrollableScrollPhysics(),
 
-  children: const [
-    SizedBox(height: 250),
+            children: const [
+              SizedBox(height: 250),
 
-    Center(
-      child: Text(
-        "No applications found",
-        style: TextStyle(color: Colors.grey),
-      ),
-    ),
-  ],
-);
+              Center(
+                child: Text(
+                  "No applications found",
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ),
+            ],
+          );
         }
 
         return ListView(
-            physics: const AlwaysScrollableScrollPhysics(),
+          physics: const AlwaysScrollableScrollPhysics(),
           children: filtered.map((item) {
             return ApplicationCard(model: item); // ✅ reuse
           }).toList(),

@@ -1,0 +1,9 @@
+export 'basic_info.dart';
+export 'career_page.dart';
+export 'education_controller.dart';
+export 'education_info.dart';
+export 'links_info.dart';
+export 'onboarding_complete_page.dart';
+export 'resume_upload_page.dart';
+export 'skills_info.dart';
+export 'work_info.dart';

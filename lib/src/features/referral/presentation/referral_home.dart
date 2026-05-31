@@ -4,13 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/view_model/dashboard_view_model.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/alumni_card.dart';
-import 'package:rawrecruit/src/feature/revamp_dashboard/presentation/widgets/job_card.dart';
-import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
-import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
+import 'package:rawrecruit/src/features/dashboard/presentation/view_model/dashboard_view_model.dart';
+import 'package:rawrecruit/src/features/dashboard/presentation/widgets/alumni_card.dart';
+import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';
+import 'package:rawrecruit/src/features/jobs/utils/enums.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationViewModel;
 import 'package:rawrecruit/src/features/notifications/index.dart';
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show MyProfileViewModel;
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/my_job_card.dart';
 import 'package:rawrecruit/src/features/referral/presentation/index.dart';
 import 'package:rawrecruit/src/features/referral/presentation/widgets/incoming_request_card.dart';

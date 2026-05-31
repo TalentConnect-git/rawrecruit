@@ -4,11 +4,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/alumni/presentation/widgets/alumni_hiring_card.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationViewModel;
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../../../common/index.dart';
 import 'view_model/prof_dashboard_view_model.dart';
 

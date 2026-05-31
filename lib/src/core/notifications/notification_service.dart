@@ -5,7 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart'
+import 'package:rawrecruit/src/features/jobs/utils/enums.dart'
     show ProfessionalJobType;
 
 class NotificationService {

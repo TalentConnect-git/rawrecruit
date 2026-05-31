@@ -3,10 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/features/application/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
-
-import '../referred_detail_page.dart';
 
 class ReferredApplicantCard extends StatelessWidget {
   final ReferralApplication application;
@@ -24,7 +22,6 @@ class ReferredApplicantCard extends StatelessWidget {
 
     /// ✅ NAME
     final name = user.name ?? "Candidate";
-    
 
     /// ✅ MATCH SCORE
     final match = application.matchScore ?? 0;
@@ -37,14 +34,14 @@ class ReferredApplicantCard extends StatelessWidget {
 
       /// 🔥 NAVIGATION
       onTap: () {
-      context.pushNamed(
-  RouteNames.referredCandidateDetail,
+        context.pushNamed(
+          RouteNames.referredCandidateDetail,
 
-  extra: {
-    'application': application,
-    'showStatusActions': showStatusActions,
-  },
-);
+          extra: {
+            'application': application,
+            'showStatusActions': showStatusActions,
+          },
+        );
       },
 
       child: Container(
@@ -78,9 +75,7 @@ class ReferredApplicantCard extends StatelessWidget {
                   /// ✅ NAME
                   Text(
                     name,
-                    style: AppTextStyles.s16W600.copyWith(
-                      color: Colors.white,
-                    ),
+                    style: AppTextStyles.s16W600.copyWith(color: Colors.white),
                   ),
 
                   const SizedBox(height: 6),
@@ -136,7 +131,8 @@ class ReferredApplicantCard extends StatelessWidget {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-application.currentStatus?.toString() ?? "Pending",                        style: AppTextStyles.s12W600.copyWith(
+                        application.currentStatus?.toString() ?? "Pending",
+                        style: AppTextStyles.s12W600.copyWith(
                           color: AppColors.kGreen,
                         ),
                       ),
@@ -147,9 +143,7 @@ application.currentStatus?.toString() ?? "Pending",                        style
                   /// ✅ TIME
                   Text(
                     _timeAgo(application.createdAt),
-                    style: AppTextStyles.s12W400.copyWith(
-                      color: Colors.grey,
-                    ),
+                    style: AppTextStyles.s12W400.copyWith(color: Colors.grey),
                   ),
                 ],
               ),
@@ -159,106 +153,91 @@ application.currentStatus?.toString() ?? "Pending",                        style
 
             /// 🔥 RIGHT ACTIONS
             if (showStatusActions)
-           PopupMenuButton<String>(
-  color: Colors.white,
-  onSelected: (value) {
-    _changeStatus(
-      context,
-      status: value,
-    );
-  },
-  itemBuilder: (_) => const [
-    PopupMenuItem(
-      value: "Shortlisted",
-      child: Text(
-        "Shortlist",
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
-    PopupMenuItem(
-      value: "Interview Scheduled",
-      child: Text(
-        "Interview Scheduled",
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
-    PopupMenuItem(
-      value: "Offer Extended",
-      child: Text(
-        "Extend Offer",
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
-    PopupMenuItem(
-      value: "Accepted",
-      child: Text(
-        "Accept",
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
-    PopupMenuItem(
-      value: "Rejected",
-      child: Text(
-        "Reject",
-        style: TextStyle(color: Colors.black),
-      ),
-    ),
-  ],
-  child: Container(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 10,
-      vertical: 7,
-    ),
-    decoration: BoxDecoration(
-      color: AppColors.kGreen,
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: const Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          Icons.sync,
-          size: 14,
-          color: Colors.black,
-        ),
-        SizedBox(width: 5),
-        Text(
-          "Update",
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    ),
-  
+              PopupMenuButton<String>(
+                color: Colors.white,
+                onSelected: (value) {
+                  _changeStatus(context, status: value);
+                },
+                itemBuilder: (_) => const [
+                  PopupMenuItem(
+                    value: "Shortlisted",
+                    child: Text(
+                      "Shortlist",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: "Interview Scheduled",
+                    child: Text(
+                      "Interview Scheduled",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: "Offer Extended",
+                    child: Text(
+                      "Extend Offer",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: "Accepted",
+                    child: Text(
+                      "Accept",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  PopupMenuItem(
+                    value: "Rejected",
+                    child: Text(
+                      "Reject",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                ],
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 7,
+                  ),
+                  decoration: BoxDecoration(
+                    color: AppColors.kGreen,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.sync, size: 14, color: Colors.black),
+                      SizedBox(width: 5),
+                      Text(
+                        "Update",
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               )
             else
-              const Icon(
-                Icons.arrow_forward_ios,
-                size: 14,
-                color: Colors.grey,
-              ),
+              const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
           ],
         ),
       ),
     );
   }
 
-  void _changeStatus(
-    BuildContext context, {
-    required String status,
-  }) async {
+  void _changeStatus(BuildContext context, {required String status}) async {
     final vm = context.read<ApplicationViewModel>();
 
-  await vm.updateReferralStatus(
-  context: context,
-  applicationId: application.id ?? "",
-  status: status,
-  jobRole: application.jobTitle ?? "",
-);
+    await vm.updateReferralStatus(
+      context: context,
+      applicationId: application.id ?? "",
+      status: status,
+      jobRole: application.jobTitle ?? "",
+    );
   }
 
   String _initials(String name) {

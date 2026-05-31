@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/widget/application_card.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationViewModel, ApplicationCard;
 import 'package:rawrecruit/src/features/referrer/utils/enums.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/applicant_card.dart';
 
