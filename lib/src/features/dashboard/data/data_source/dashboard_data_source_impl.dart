@@ -132,7 +132,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
     try {
       final result = await _networkService.request(request);
 
-      final List list = result.data['alumni'] ?? []; // ✅ IMPORTANT
+     final List list = result.data['data'] ?? [];// ✅ IMPORTANT
 
       final alumniList = list.map((e) => User.fromJson(e)).toList();
 
@@ -178,7 +178,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
     try {
       final result = await _networkService.request(request);
 
-      final List list = result.data['alumni'] ?? []; // ✅ IMPORTANT
+    final List list = result.data['data'] ?? [];// ✅ IMPORTANT
 
       final alumniList = list.map((e) => User.fromJson(e)).toList();
 
@@ -205,7 +205,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
     try {
       final result = await _networkService.request(request);
 
-      final List list = result.data['alumni'] ?? []; // ✅ IMPORTANT
+     final List list = result.data['data'] ?? [];// ✅ IMPORTANT
 
       final alumniList = list.map((e) => User.fromJson(e)).toList();
 

@@ -50,7 +50,12 @@ class AlumniViewModel extends ChangeNotifier {
 
       grouped[id]!.add(Job(candidatePosted: user));
     }
+log("GROUP USERS COUNT => ${users.length}");
 
+for (final user in users) {
+  log("USER ID => ${user.id}");
+  log("USER NAME => ${user.name}");
+}
     return grouped;
   }
 
@@ -80,6 +85,9 @@ class AlumniViewModel extends ChangeNotifier {
         filtered = List.from(_collegeSource);
 
         collegeAlumni = _groupUsers(filtered);
+        log("COLLEGE SOURCE => ${_collegeSource.length}");
+log("FILTERED => ${filtered.length}");
+log("GROUPED => ${collegeAlumni.length}");
       },
     );
 
