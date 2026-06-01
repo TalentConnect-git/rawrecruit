@@ -11,7 +11,7 @@ class ApplicationDetailView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final job = model;
-
+print("DETAIL ADMIN COMMENT => ${model?.adminComment}");
     /// 🔥 RAW + NORMALIZED STATUS
     final rawStatus = job?.status ?? "";
     final status = _normalizeStatus(rawStatus);
@@ -117,6 +117,109 @@ class ApplicationDetailView extends StatelessWidget {
               ),
             ),
 
+            const SizedBox(height: 30),
+const SizedBox(height: 10),
+
+/// 🔥 ADMIN COMMENT
+Container(
+  width: double.infinity,
+  padding: const EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    color: Colors.blue.withOpacity(.08),
+    borderRadius: BorderRadius.circular(12),
+    border: Border.all(
+      color: Colors.blue.withOpacity(.3),
+    ),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Row(
+        children: [
+          Icon(
+            Icons.admin_panel_settings,
+            color: Colors.blue,
+            size: 18,
+          ),
+          SizedBox(width: 8),
+          Text(
+            "Admin Comment",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 10),
+
+      Text(
+        (job?.adminComment ?? '').trim().isEmpty
+            ? "-"
+            : job!.adminComment!,
+        style: const TextStyle(
+          color: Colors.white70,
+          height: 1.4,
+        ),
+      ),
+    ],
+  ),
+),
+
+const SizedBox(height: 16),
+
+/// 🔥 RATING
+Container(
+  width: double.infinity,
+  padding: const EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    color: Colors.amber.withOpacity(.08),
+    borderRadius: BorderRadius.circular(12),
+    border: Border.all(
+      color: Colors.amber.withOpacity(.3),
+    ),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      const Row(
+        children: [
+          Icon(
+            Icons.star,
+            color: Colors.amber,
+            size: 18,
+          ),
+          SizedBox(width: 8),
+          Text(
+            "Rating",
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        ],
+      ),
+
+      const SizedBox(height: 10),
+
+      Row(
+        children: List.generate(
+          5,
+          (index) => Icon(
+            index < (job?.rating ?? 0)
+                ? Icons.star
+                : Icons.star_border,
+            color: Colors.amber,
+            size: 20,
+          ),
+        ),
+      ),
+    ],
+  ),
+),
+
+const SizedBox(height: 10),
             const SizedBox(height: 30),
 
             /// 🔥 TIMELINE TITLE

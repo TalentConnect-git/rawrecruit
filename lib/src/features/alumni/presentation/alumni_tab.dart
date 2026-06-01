@@ -168,6 +168,8 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
         final groupedList = vm.jobs(type);
 
         if (groupedList.isEmpty) {
+          debugPrint("GROUPED LIST COUNT => ${groupedList.length}");
+debugPrint("FIRST ITEM => ${groupedList.firstOrNull}");
           return ListView(
             physics: const AlwaysScrollableScrollPhysics(),
 

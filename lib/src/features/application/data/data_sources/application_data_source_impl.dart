@@ -18,10 +18,11 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       "referralCompany": e['referralCompany'],
 
       /// 🔥 prevent parsing crash
-      "companyPosted": null,
+      "companyPosted": e['companyPosted'],
       "jobCompanyPosted": null,
       "candidatePosted": null,
-      "contactPerson": null,
+      "rating": e["rating"], "contactPerson": null,
+      "adminComment": e["adminComment"],
 
       /// ✅ company name safe
       "companyName": company?['companyDetails']?['companyName'] ?? "-",

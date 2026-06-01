@@ -884,7 +884,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                                 Icon(
                                                   Icons.school_outlined,
                                                   size: 15,
-                                                  color: AppColors.kGreen,
+                                                  color: AppColors.white,
                                                 ),
 
                                                 const SizedBox(width: 6),
