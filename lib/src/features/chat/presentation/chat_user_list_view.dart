@@ -126,7 +126,7 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: Text(
-                    user.profileType?.toCapitalise ?? "-",
+                    user.profileType?.toCapitalise ?? "message",
                     style: AppTextStyles.s12W400.copyWith(color: Colors.white),
                   ),
                   onTap: () async {

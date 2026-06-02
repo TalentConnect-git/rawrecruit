@@ -326,21 +326,21 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
       child: Stack(
         children: [
           /// GLOW EFFECT
-          Positioned(
-            top: -30,
-            right: -20,
+          // Positioned(
+          //   top: -30,
+          //   right: -20,
 
-            child: Container(
-              height: 120,
-              width: 120,
+          //   child: Container(
+          //     height: 120,
+          //     width: 120,
 
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
+          //     decoration: BoxDecoration(
+          //       shape: BoxShape.circle,
 
-                color: AppColors.kGreen.withOpacity(.08),
-              ),
-            ),
-          ),
+          //       color: AppColors.kGreen.withOpacity(.08),
+          //     ),
+          //   ),
+          // ),
 
           Padding(
             padding: const EdgeInsets.all(22),

@@ -254,6 +254,11 @@ https://rawrecruit.in/professional-dashboard/Referral/
                   _matchInsightsSection(job),
                   const SizedBox(height: 16),
 
+
+_referralMetricsSection(referral),
+
+                  const SizedBox(height: 16),
+
                   _roleOverviewSection(job),
                   const SizedBox(height: 16),
 
@@ -766,9 +771,146 @@ https://rawrecruit.in/professional-dashboard/Referral/
     );
   }
 
-  // ============================================================
-  // MATCH INSIGHTS (no "Why you're a good fit", keep score + improve)
-  // ============================================================
+  Widget _referralMetricsSection(dynamic referral) {
+  final metrics = referral?.metrics;
+
+  final applications =
+      metrics?.totalApplicationsReceived ?? 0;
+
+  final referred =
+      metrics?.totalReferredToCompany ?? 0;
+
+  final interviews =
+      metrics?.totalInterviewScheduled ?? 0;
+
+  final accepted =
+      metrics?.totalAcceptedByCompany ?? 0;
+
+  final responseRate =
+      metrics?.responseRate ?? 0;
+
+  final successRate =
+      metrics?.referralSuccessRate ?? 0;
+
+  return _cardContainer(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: const [
+            Icon(
+              Icons.analytics_outlined,
+              color: Colors.orangeAccent,
+              size: 18,
+            ),
+            SizedBox(width: 8),
+            Text(
+              "Referral Metrics",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 16),
+
+        Row(
+          children: [
+            Expanded(
+              child: _metricCard(
+                "Applications",
+                applications.toString(),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _metricCard(
+                "Referred",
+                referred.toString(),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 10),
+
+        Row(
+          children: [
+            Expanded(
+              child: _metricCard(
+                "Interviews",
+                interviews.toString(),
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _metricCard(
+                "Accepted",
+                accepted.toString(),
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 10),
+
+        Row(
+          children: [
+            Expanded(
+              child: _metricCard(
+                "Response Rate",
+                "$responseRate%",
+              ),
+            ),
+            const SizedBox(width: 10),
+            Expanded(
+              child: _metricCard(
+                "Success Rate",
+                "$successRate%",
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+Widget _metricCard(String title, String value) {
+  return Container(
+    padding: const EdgeInsets.all(12),
+    decoration: BoxDecoration(
+      color: Colors.white.withOpacity(.03),
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(
+        color: Colors.white.withOpacity(.05),
+      ),
+    ),
+    child: Column(
+      children: [
+        Text(
+          value,
+          style: TextStyle(
+            color: AppColors.kGreen,
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        const SizedBox(height: 4),
+        Text(
+          title,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+            color: Colors.grey,
+            fontSize: 11,
+          ),
+        ),
+      ],
+    ),
+  );
+}
   // ============================================================
   // MATCH INSIGHTS — score circle + real job stats on the left
   // ============================================================

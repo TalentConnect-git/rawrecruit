@@ -485,6 +485,7 @@ class _ReferralJobModel extends ReferralJobModel {
 }
 
 @override final  PackageDetails? packageDetails;
+@override final  ReferralMetrics? metrics;
 @override final  DateTime? endDate;
 // ✅ ADD THIS
 @override final  bool? inactive;

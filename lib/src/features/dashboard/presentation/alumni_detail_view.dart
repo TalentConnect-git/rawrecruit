@@ -756,13 +756,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
   Widget _jobTile(BuildContext context, Job job) {
     final title = job.jobTitle ?? "Role";
-
-    final company = job.companyName?.isNotEmpty == true
-        ? job.companyName!
-        : job.candidatePosted?.currentCompany?.isNotEmpty == true
-        ? job.candidatePosted!.currentCompany!
-        : "Company";
-
+final company = jobs.first.candidatePosted?.currentCompany ?? "Company";
+        
     final pkg = job.packageDetails;
 
     String salary = "";

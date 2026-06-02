@@ -19,9 +19,6 @@ class ReferralTile extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: AppColors.kGreen.withOpacity(0.4),
-              blurRadius: 12,
-              spreadRadius: 1,
-              offset: const Offset(0, 4),
             ),
           ],
         ),

@@ -25,6 +25,7 @@ abstract class User with _$User {
 
     String? profileImage,
     String? currentCompany,
+    int? responseRate,
 
     @JsonKey(name: 'totalYearsOfExperience') String? totalYearsOfExperience,
     String? noticePeriod,
