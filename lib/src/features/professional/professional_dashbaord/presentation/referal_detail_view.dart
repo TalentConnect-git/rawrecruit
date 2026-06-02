@@ -254,8 +254,7 @@ https://rawrecruit.in/professional-dashboard/Referral/
                   _matchInsightsSection(job),
                   const SizedBox(height: 16),
 
-
-_referralMetricsSection(referral),
+                  _referralMetricsSection(referral),
 
                   const SizedBox(height: 16),
 
@@ -420,11 +419,7 @@ _referralMetricsSection(referral),
                 ),
               ),
               _vDivider(),
-               Image.asset(
-                          "assets/images/calendar.png",
-                          width: 15,
-                          height: 15,
-                        ),
+              Image.asset("assets/images/calendar.png", width: 15, height: 15),
 
               const SizedBox(width: 4),
               Flexible(
@@ -773,155 +768,137 @@ _referralMetricsSection(referral),
   }
 
   Widget _referralMetricsSection(dynamic referral) {
-  final metrics = referral?.metrics;
+    final metrics = referral?.metrics;
 
-  final applications =
-      metrics?.totalApplicationsReceived ?? 0;
+    final applications = metrics?.totalApplicationsReceived ?? 0;
 
-  final referred =
-      metrics?.totalReferredToCompany ?? 0;
+    final referred = metrics?.totalReferredToCompany ?? 0;
 
-  final interviews =
-      metrics?.totalInterviewScheduled ?? 0;
+    final interviews = metrics?.totalInterviewScheduled ?? 0;
 
-  final accepted =
-      metrics?.totalAcceptedByCompany ?? 0;
+    final accepted = metrics?.totalAcceptedByCompany ?? 0;
 
-  final responseRate =
-      metrics?.responseRate ?? 0;
+    final responseRate = metrics?.responseRate ?? 0;
 
-  final successRate =
-      metrics?.referralSuccessRate ?? 0;
+    final successRate = metrics?.referralSuccessRate ?? 0;
 
-  return _cardContainer(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: const [
-            Icon(
-              Icons.analytics_outlined,
-              color: Colors.orangeAccent,
-              size: 18,
-            ),
-            SizedBox(width: 8),
-            Text(
-              "Referral Metrics",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(
+                Icons.analytics_outlined,
+                color: Colors.orangeAccent,
+                size: 18,
               ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 16),
-
-        Row(
-          children: [
-            Expanded(
-              child: _metricCard(
-                "Applications",
-                applications.toString(),
+              SizedBox(width: 8),
+              Text(
+                "Referral Metrics",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _metricCard(
-                "Referred",
-                referred.toString(),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          Row(
+            children: [
+              Expanded(
+                child: _metricCard("Applications", applications.toString()),
               ),
-            ),
-          ],
-        ),
+              const SizedBox(width: 10),
+              Expanded(child: _metricCard("Referred", referred.toString())),
+            ],
+          ),
 
-        // const SizedBox(height: 10),
+          // const SizedBox(height: 10),
 
-        // Row(
-        //   children: [
-        //     Expanded(
-        //       child: _metricCard(
-        //         "Interviews",
-        //         interviews.toString(),
-        //       ),
-        //     ),
-        //     const SizedBox(width: 10),
-        //     Expanded(
-        //       child: _metricCard(
-        //         "Accepted",
-        //         accepted.toString(),
-        //       ),
-        //     ),
-        //   ],
-        // ),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Interviews",
+          //         interviews.toString(),
+          //       ),
+          //     ),
+          //     const SizedBox(width: 10),
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Accepted",
+          //         accepted.toString(),
+          //       ),
+          //     ),
+          //   ],
+          // ),
 
-        // const SizedBox(height: 10),
+          // const SizedBox(height: 10),
 
-        // Row(
-        //   children: [
-        //     Expanded(
-        //       child: _metricCard(
-        //         "Response Rate",
-        //         "$responseRate%",
-        //       ),
-        //     ),
-        //     const SizedBox(width: 10),
-        //     Expanded(
-        //       child: _metricCard(
-        //         "Success Rate",
-        //         "$successRate%",
-        //       ),
-        //     ),
-        //   ],
-        // ),
-      ],
-    ),
-  );
-}
-Widget _metricCard(String title, String value) {
-  return Container(
-    padding: const EdgeInsets.all(12),
-    decoration: BoxDecoration(
-      color: Colors.white.withOpacity(.03),
-      borderRadius: BorderRadius.circular(12),
-      border: Border.all(
-        color: Colors.white.withOpacity(.05),
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Response Rate",
+          //         "$responseRate%",
+          //       ),
+          //     ),
+          //     const SizedBox(width: 10),
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Success Rate",
+          //         "$successRate%",
+          //       ),
+          //     ),
+          //   ],
+          // ),
+        ],
       ),
-    ),
-    child: Column(
-      children: [
-        Text(
-          value,
-          style: TextStyle(
-            color: AppColors.kGreen,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+    );
+  }
+
+  Widget _metricCard(String title, String value) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(.03),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withOpacity(.05)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              color: AppColors.kGreen,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          title,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            color: Colors.grey,
-            fontSize: 11,
+          const SizedBox(height: 4),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.grey, fontSize: 11),
           ),
-        ),
-      ],
-    ),
-  );
-}
+        ],
+      ),
+    );
+  }
+
   // ============================================================
   // MATCH INSIGHTS — score circle + real job stats on the left
   // ============================================================
   Widget _matchInsightsSection(Job job) {
     final openings = job.numberOfOpenings?.toString() ?? "—";
-  final rounds = (job.rounds?.isNotEmpty ?? false)
-    ? job.rounds!.join(", ")
-    : "—";
+    final rounds = (job.rounds?.isNotEmpty ?? false)
+        ? job.rounds!.join(", ")
+        : "—";
 
-    
     final process = (job.selectionProcess?.isNotEmpty ?? false)
         ? job.selectionProcess!.join(", ")
         : "—";
@@ -1231,47 +1208,47 @@ Widget _metricCard(String title, String value) {
   // SKILLS REQUIRED - chip tags
   // ============================================================
   Widget _skillsSection(Job job) {
-  final skills = job.skills ?? [];
+    final skills = job.skills ?? [];
 
-  return _cardContainer(
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: const [
-            Icon(Icons.code, size: 18, color: Colors.greenAccent),
-            SizedBox(width: 8),
-            Text(
-              "Skills Required",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 15,
-                fontWeight: FontWeight.w600,
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.code, size: 18, color: Colors.greenAccent),
+              SizedBox(width: 8),
+              Text(
+                "Skills Required",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 12),
-
-        if (skills.isEmpty)
-          const Text(
-            "No skills specified",
-            style: TextStyle(color: Colors.grey),
-          )
-        else
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: skills
-                .where((s) => s.trim().isNotEmpty)
-                .map((s) => _skillChip(s))
-                .toList(),
+            ],
           ),
-      ],
-    ),
-  );
-}
+
+          const SizedBox(height: 12),
+
+          if (skills.isEmpty)
+            const Text(
+              "No skills specified",
+              style: TextStyle(color: Colors.grey),
+            )
+          else
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: skills
+                  .where((s) => s.trim().isNotEmpty)
+                  .map((s) => _skillChip(s))
+                  .toList(),
+            ),
+        ],
+      ),
+    );
+  }
 
   Widget _skillChip(String text) {
     return Container(
@@ -1486,7 +1463,7 @@ Widget _metricCard(String title, String value) {
       candidatePosted: User(
         id: r.candidatePosted?.userId,
         name: r.candidatePosted?.name,
-        
+
         currentCompany: r.candidatePosted?.currentCompany,
         email: r.candidatePosted?.email,
         phone: r.candidatePosted?.phone,

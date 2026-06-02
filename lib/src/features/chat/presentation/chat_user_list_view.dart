@@ -126,15 +126,13 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                     overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: Text(
-  user.lastMessage?.isNotEmpty == true
-      ? user.lastMessage!
-      : "No messages yet",
-  style: AppTextStyles.s12W400.copyWith(
-    color: Colors.white,
-  ),
-  maxLines: 1,
-  overflow: TextOverflow.ellipsis,
-),
+                    user.lastMessage?.isNotEmpty == true
+                        ? user.lastMessage!
+                        : "No messages yet",
+                    style: AppTextStyles.s12W400.copyWith(color: Colors.white),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
                   onTap: () async {
                     final vm = context.read<ChatViewModel>();
 

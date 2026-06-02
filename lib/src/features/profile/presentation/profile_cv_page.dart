@@ -458,120 +458,119 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       ),
                     ),
                     const SizedBox(height: 18),
-/// SKILLS
-if ((user.skills ?? []).isNotEmpty) ...[
-  _modernSection(
-    title: "Skills",
-    icon: Icons.code,
-    iconColor: Colors.greenAccent,
-    child: Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: (user.skills ?? [])
-          .map(
-            (e) => Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 12,
-                vertical: 8,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.white.withOpacity(.06),
-                borderRadius: BorderRadius.circular(30),
-              ),
-              child: Text(
-                e,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                ),
-              ),
-            ),
-          )
-          .toList(),
-    ),
-  ),
-  const SizedBox(height: 18),
-],
 
-/// LANGUAGES
-if ((user.languagesKnown ?? []).isNotEmpty) ...[
-  _modernSection(
-    title: "Languages",
-    assetIcon: "assets/images/globe.png",
-    child: Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: (user.languagesKnown ?? [])
-          .map((e) => _chip(e))
-          .toList(),
-    ),
-  ),
-  const SizedBox(height: 18),
-],
+                    /// SKILLS
+                    if ((user.skills ?? []).isNotEmpty) ...[
+                      _modernSection(
+                        title: "Skills",
+                        icon: Icons.code,
+                        iconColor: Colors.greenAccent,
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: (user.skills ?? [])
+                              .map(
+                                (e) => Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(.06),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    e,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                    ),
+                                  ),
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                    ],
 
-/// DOMAIN KNOWLEDGE
-if ((user.domainKnowledge ?? []).isNotEmpty) ...[
-  _modernSection(
-    title: "Domain Knowledge",
-    icon: Icons.psychology,
-    iconColor: Colors.purpleAccent,
-    child: Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: (user.domainKnowledge ?? [])
-          .map((e) => _chip(e))
-          .toList(),
-    ),
-  ),
-  const SizedBox(height: 18),
-],
+                    /// LANGUAGES
+                    if ((user.languagesKnown ?? []).isNotEmpty) ...[
+                      _modernSection(
+                        title: "Languages",
+                        assetIcon: "assets/images/globe.png",
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: (user.languagesKnown ?? [])
+                              .map((e) => _chip(e))
+                              .toList(),
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                    ],
 
-/// TOOLS & PLATFORMS
-if ((user.toolsAndPlatforms ?? []).isNotEmpty) ...[
-  _modernSection(
-    title: "Tools & Platforms",
-    icon: Icons.build,
-    iconColor: Colors.blueAccent,
-    child: Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: (user.toolsAndPlatforms ?? [])
-          .map((e) => _chip(e))
-          .toList(),
-    ),
-  ),
-    const SizedBox(height: 18),
+                    /// DOMAIN KNOWLEDGE
+                    if ((user.domainKnowledge ?? []).isNotEmpty) ...[
+                      _modernSection(
+                        title: "Domain Knowledge",
+                        icon: Icons.psychology,
+                        iconColor: Colors.purpleAccent,
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: (user.domainKnowledge ?? [])
+                              .map((e) => _chip(e))
+                              .toList(),
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                    ],
 
-],
+                    /// TOOLS & PLATFORMS
+                    if ((user.toolsAndPlatforms ?? []).isNotEmpty) ...[
+                      _modernSection(
+                        title: "Tools & Platforms",
+                        icon: Icons.build,
+                        iconColor: Colors.blueAccent,
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: (user.toolsAndPlatforms ?? [])
+                              .map((e) => _chip(e))
+                              .toList(),
+                        ),
+                      ),
+                      const SizedBox(height: 18),
+                    ],
 
-if ((user.industry ?? []).isNotEmpty) ...[
-
-  _modernSection(
-    title: "Industries",
-    icon: Icons.business_outlined,
-    iconColor: Colors.indigoAccent,
-    child: Wrap(
-      spacing: 10,
-      runSpacing: 10,
-      children: (user.industry ?? [])
-          .map(
-            (e) => _premiumChip(
-              e,
-              color: const Color(0xff5B8CFF),
-              icon: Icons.business_center,
-            ),
-          )
-          .toList(),
-    ),
-  ),
-],
-if ((user.industry ?? []).isNotEmpty ||
-    (user.locations ?? []).isNotEmpty ||
-    (user.lookingFor ?? []).isNotEmpty ||
-    (user.employmentType ?? []).isNotEmpty ||
-    (user.jobRoles ?? []).isNotEmpty ||
-    (user.certifications?.isNotEmpty ?? false))
-  const SizedBox(height: 18),
+                    if ((user.industry ?? []).isNotEmpty) ...[
+                      _modernSection(
+                        title: "Industries",
+                        icon: Icons.business_outlined,
+                        iconColor: Colors.indigoAccent,
+                        child: Wrap(
+                          spacing: 10,
+                          runSpacing: 10,
+                          children: (user.industry ?? [])
+                              .map(
+                                (e) => _premiumChip(
+                                  e,
+                                  color: const Color(0xff5B8CFF),
+                                  icon: Icons.business_center,
+                                ),
+                              )
+                              .toList(),
+                        ),
+                      ),
+                    ],
+                    if ((user.industry ?? []).isNotEmpty ||
+                        (user.locations ?? []).isNotEmpty ||
+                        (user.lookingFor ?? []).isNotEmpty ||
+                        (user.employmentType ?? []).isNotEmpty ||
+                        (user.jobRoles ?? []).isNotEmpty ||
+                        (user.certifications?.isNotEmpty ?? false))
+                      const SizedBox(height: 18),
 
                     /// PROFESSIONAL DETAILS
                     if ((user.locations ?? []).isNotEmpty ||
@@ -583,8 +582,8 @@ if ((user.industry ?? []).isNotEmpty ||
                         (user.openToShift?.isNotEmpty ?? false))
                       _modernSection(
                         title: "Job Preferences",
-                      assetIcon: "assets/images/pref.png",
-                      
+                        assetIcon: "assets/images/pref.png",
+
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
 
