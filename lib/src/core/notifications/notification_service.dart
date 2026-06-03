@@ -5,8 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/jobs/utils/enums.dart'
-    show ProfessionalJobType;
 
 class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
@@ -111,10 +109,10 @@ class NotificationService {
             if (jobId == null) return;
 
             state?.context.goNamed(
-              RouteNames.application,
+              RouteNames.referralDetail,
               extra: {
-                'jobType': ProfessionalJobType.posted,
-                'userType': UserType.professional,
+                'id': jobId,
+                // 'userType': UserType.professional,
               },
             );
             break;

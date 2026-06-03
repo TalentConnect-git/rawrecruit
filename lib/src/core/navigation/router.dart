@@ -148,8 +148,9 @@ GoRouter appRouter = GoRouter(
       name: RouteNames.applicationDetail,
       path: '/applicationDetail',
       builder: (context, state) {
-        final model = state.extra as Job?;
-        return ApplicationDetailView(model: model);
+        final applicationId = state.extra as String?;
+        if (applicationId == null) return NotFoundView();
+        return ApplicationDetailView(applicationId: applicationId);
       },
     ),
     GoRoute(

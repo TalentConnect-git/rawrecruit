@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
-    show ApplicationViewModel, ApplicationCard;
+    show ApplicationViewModel, ApplicationCard, ApplicationModel;
 
 class StudentApplicationsView extends StatefulWidget {
   const StudentApplicationsView({super.key});
@@ -121,7 +121,7 @@ class _StudentApplicationsViewState extends State<StudentApplicationsView> {
         final all = vm.appliedApplications;
 
         /// 🔥 FILTER LOGIC
-        List filtered = [];
+        List<ApplicationModel> filtered = [];
 
         switch (selectedTab) {
           case 0:
@@ -160,7 +160,7 @@ class _StudentApplicationsViewState extends State<StudentApplicationsView> {
         return ListView(
           physics: const AlwaysScrollableScrollPhysics(),
           children: filtered.map((item) {
-            return ApplicationCard(model: item); // ✅ reuse
+            return ApplicationCard(application: item); // ✅ reuse
           }).toList(),
         );
       },

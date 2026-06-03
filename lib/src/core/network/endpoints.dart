@@ -8,6 +8,8 @@ class Endpoints {
   static String apiAuthForgotPassword = 'api/auth/forgot-password';
   static String apiAuthGoogle = 'api/auth/google';
 
+  static String apiStudentDashboardJob = 'api/student-dashboard/job';
+  static String applicationDetails = 'application/details';
   static String apiOffCampusJobs = 'api/student-dashboard/off-campus';
   static String apiInternshipPostings =
       'api/student-dashboard/internship-postings';

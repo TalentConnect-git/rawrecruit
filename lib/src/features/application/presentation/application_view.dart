@@ -51,7 +51,10 @@ class _ApplicationsViewState extends State<ApplicationsView> {
                               itemBuilder: (context, index) {
                                 final item = vm.appliedApplications[index];
 
-                                return ApplicationCard(model: item);
+                                return ApplicationCard(
+                                  application: item,
+                                  applicationId: item.id ?? '',
+                                );
                               },
                             ),
                     ),

@@ -1,14 +1,18 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/application/data/entities/application_model.dart';
 
 class ApplicationCard extends StatelessWidget {
-  final Job model;
+  final ApplicationModel? application;
+  final String? applicationId;
 
-  const ApplicationCard({super.key, required this.model});
+  const ApplicationCard({
+    super.key,
+    required this.application,
+    this.applicationId,
+  });
 
   /// 🔥 TOTAL STEPS
   static const int totalSteps = 7;
@@ -59,18 +63,16 @@ class ApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final title = (model.jobRoles?.isNotEmpty == true)
-        ? model.jobRoles!.first
-        : (model.jobTitle?.isNotEmpty == true ? model.jobTitle! : "-");
+    final model = application?.job;
+    final title = (model?.jobRoles?.isNotEmpty == true)
+        ? model?.jobRoles!.first
+        : (model?.jobTitle?.isNotEmpty == true ? model?.jobTitle! : "-");
 
-    final company = (model.referralCompany != null)
-        ? model.referralCompany
-        : (model.jobType == "Referral" ? "Referral" : "-");
+    final company = (application?.referralCompany != null)
+        ? application?.referralCompany
+        : (model?.jobType == "Referral" ? "Referral" : "-");
 
-    log('Referral Company: ${model.referralCompany}');
-    log(' Company: ${company}');
-
-    final status = model.status ?? "pending";
+    final status = application?.currentStatus ?? "pending";
 
     final step = _getStep(status);
 
@@ -83,7 +85,10 @@ class ApplicationCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: () {
-        context.pushNamed(RouteNames.applicationDetail, extra: model);
+        context.pushNamed(
+          RouteNames.applicationDetail,
+          extra: applicationId ?? application?.id,
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
@@ -102,7 +107,7 @@ class ApplicationCard extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    title,
+                    title ?? '',
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,

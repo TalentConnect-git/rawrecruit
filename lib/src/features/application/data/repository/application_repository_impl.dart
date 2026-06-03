@@ -1,3 +1,4 @@
+import 'package:rawrecruit/src/features/application/data/entities/application_model.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
     show ApplicationDataSource, ApplicationRepository;
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
@@ -29,7 +30,7 @@ class ApplicationRepositoryImpl implements ApplicationRepository {
   }
 
   @override
-  ResultFuture<List<Job>> fetchAppliedJobs() {
+  ResultFuture<List<ApplicationModel>> fetchAppliedJobs() {
     return _dataSource.fetchAppliedJobs();
   }
 
@@ -44,12 +45,12 @@ class ApplicationRepositoryImpl implements ApplicationRepository {
   }
 
   @override
-  ResultFuture<List<Job>> fetchReferralAppliedJobs() {
+  ResultFuture<List<ApplicationModel>> fetchReferralAppliedJobs() {
     return _dataSource.fetchReferralAppliedJobs();
   }
 
   @override
-  ResultFuture<List<Job>> fetchInternshipAppliedJobs() {
+  ResultFuture<List<ApplicationModel>> fetchInternshipAppliedJobs() {
     return _dataSource.fetchInternshipAppliedJobs();
   }
 
@@ -65,4 +66,9 @@ class ApplicationRepositoryImpl implements ApplicationRepository {
       jobRole: jobRole,
     );
   }
+
+  @override
+  ResultFuture<ApplicationModel?> getApplicationById({
+    required String applicationId,
+  }) => _dataSource.getApplicationById(applicationId: applicationId);
 }

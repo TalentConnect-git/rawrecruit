@@ -4,6 +4,8 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/application/data/index.dart'
+    show ApplicationModel;
 import 'package:rawrecruit/src/features/application/index.dart'
     show ApplicationRepository;
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
@@ -16,7 +18,7 @@ class ApplicationViewModel extends ViewStateProvider {
   List<ReferralApplication> referredByMe = [];
 
   /// 🔹 Full list (for Applications screen)
-  List<Job> appliedApplications = [];
+  List<ApplicationModel> appliedApplications = [];
 
   /// 🔹 Only IDs (for dashboard Apply button state)
   final Set<String> appliedJobIds = {};
@@ -100,7 +102,7 @@ class ApplicationViewModel extends ViewStateProvider {
     final referral = await _repository.fetchReferralAppliedJobs();
     final internship = await _repository.fetchInternshipAppliedJobs();
 
-    List<Job> all = [];
+    List<ApplicationModel> all = [];
 
     offCampus.fold((_) {}, (data) => all.addAll(data));
     referral.fold((_) {}, (data) => all.addAll(data));

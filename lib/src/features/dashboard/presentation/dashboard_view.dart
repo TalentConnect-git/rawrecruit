@@ -217,7 +217,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                 )
               else
                 ...mixed.map((job) {
-                  return ApplicationCard(model: job);
+                  return ApplicationCard(application: job);
                 }),
               _SectionHeader(
                 title: "Alumni Hiring Network",

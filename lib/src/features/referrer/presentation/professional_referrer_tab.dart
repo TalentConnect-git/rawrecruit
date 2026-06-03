@@ -247,7 +247,7 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
           itemCount: vm.appliedApplications.length,
           itemBuilder: (context, index) {
             final job = vm.appliedApplications[index];
-            return ApplicationCard(model: job);
+            return ApplicationCard(application: job);
           },
         );
       },

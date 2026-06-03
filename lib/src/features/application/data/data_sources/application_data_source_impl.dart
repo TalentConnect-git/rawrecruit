@@ -1,5 +1,6 @@
 import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/application/data/entities/application_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 
 import 'application_data_source.dart';
@@ -7,33 +8,33 @@ import 'application_data_source.dart';
 class ApplicationDataSourceImpl implements ApplicationDataSource {
   final NetworkService _networkService = NetworkService();
 
-  /// 🔥 COMMON SAFE MAPPER (MOST IMPORTANT FIX)
-  Job _mapToJob(Map<String, dynamic> e, String type) {
-    final job = e['jobDetails'];
-    final company = e['companyProfile'];
+  // /// 🔥 COMMON SAFE MAPPER (MOST IMPORTANT FIX)
+  // Job _mapToJob(Map<String, dynamic> e, String type) {
+  //   final job = e['jobDetails'];
+  //   final company = e['companyProfile'];
 
-    return Job.fromJson({
-      ...(job ?? {}),
+  //   return Job.fromJson({
+  //     ...(job ?? {}),
 
-      "referralCompany": e['referralCompany'],
+  //     "referralCompany": e['referralCompany'],
 
-      /// 🔥 prevent parsing crash
-      "companyPosted": e['companyPosted'],
-      "jobCompanyPosted": null,
-      "candidatePosted": null,
-      "rating": e["rating"], "contactPerson": null,
-      "adminComment": e["adminComment"],
+  //     /// 🔥 prevent parsing crash
+  //     "companyPosted": e['companyPosted'],
+  //     "jobCompanyPosted": null,
+  //     "candidatePosted": null,
+  //     "rating": e["rating"], "contactPerson": null,
+  //     "adminComment": e["adminComment"],
 
-      /// ✅ company name safe
-      "companyName": company?['companyDetails']?['companyName'] ?? "-",
+  //     /// ✅ company name safe
+  //     "companyName": company?['companyDetails']?['companyName'] ?? "-",
 
-      /// ✅ status
-      "status": e["currentStatus"] ?? "pending",
+  //     /// ✅ status
+  //     "status": e["currentStatus"] ?? "pending",
 
-      /// ✅ VERY IMPORTANT (for filtering)
-      "jobType": type,
-    });
-  }
+  //     /// ✅ VERY IMPORTANT (for filtering)
+  //     "jobType": type,
+  //   });
+  // }
 
   /// 🔹 APPLY OFF-CAMPUS
   @override
@@ -99,7 +100,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
   /// 🔹 FETCH OFF-CAMPUS APPLICATIONS
   @override
-  ResultFuture<List<Job>> fetchAppliedJobs() async {
+  ResultFuture<List<ApplicationModel>> fetchAppliedJobs() async {
     final request = Request(
       method: RequestMethod.get,
       endpoint: Endpoints.applicationStatus,
@@ -112,7 +113,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
       final body = result.data as Map<String, dynamic>;
       final List data = body['data'];
 
-      final list = data.map((e) => _mapToJob(e, "Off-campus")).toList();
+      final list = data.map((e) => ApplicationModel.fromJson(e)).toList();
 
       return Right(list);
     } catch (e) {
@@ -122,7 +123,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
   /// 🔹 FETCH REFERRAL APPLICATIONS (FOR STUDENT)
   @override
-  ResultFuture<List<Job>> fetchReferralAppliedJobs() async {
+  ResultFuture<List<ApplicationModel>> fetchReferralAppliedJobs() async {
     final request = Request(
       method: RequestMethod.get,
       endpoint: "application/status/candidate/Referral",
@@ -134,7 +135,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
       final List data = result.data['data'];
 
-      final list = data.map((e) => _mapToJob(e, "Referral")).toList();
+      final list = data.map((e) => ApplicationModel.fromJson(e)).toList();
 
       return Right(list);
     } catch (e) {
@@ -144,7 +145,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
   /// 🔹 FETCH INTERNSHIP APPLICATIONS
   @override
-  ResultFuture<List<Job>> fetchInternshipAppliedJobs() async {
+  ResultFuture<List<ApplicationModel>> fetchInternshipAppliedJobs() async {
     final request = Request(
       method: RequestMethod.get,
       endpoint: "application/status/candidate/Internship",
@@ -156,7 +157,7 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
 
       final List data = result.data['data'];
 
-      final list = data.map((e) => _mapToJob(e, "Internship")).toList();
+      final list = data.map((e) => ApplicationModel.fromJson(e)).toList();
 
       return Right(list);
     } catch (e) {
@@ -234,6 +235,28 @@ class ApplicationDataSourceImpl implements ApplicationDataSource {
     try {
       await _networkService.request(request);
       return const Right(null);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  ResultFuture<ApplicationModel?> getApplicationById({
+    required String applicationId,
+  }) async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: "${Endpoints.applicationDetails}/$applicationId",
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+
+      final body = result.data as Map<String, dynamic>;
+      final data = body['data'] as Map<String, dynamic>;
+
+      return Right(ApplicationModel.fromJson(data));
     } catch (e) {
       return Left(APIException.from(e));
     }

@@ -1,12 +1,14 @@
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationModel;
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 
 abstract class ApplicationDataSource {
   ResultFuture<void> applyOffCampus({required String jobId});
 
-  ResultFuture<List<Job>> fetchAppliedJobs();
-  ResultFuture<List<Job>> fetchReferralAppliedJobs();
-  ResultFuture<List<Job>> fetchInternshipAppliedJobs();
+  ResultFuture<List<ApplicationModel>> fetchAppliedJobs();
+  ResultFuture<List<ApplicationModel>> fetchReferralAppliedJobs();
+  ResultFuture<List<ApplicationModel>> fetchInternshipAppliedJobs();
   ResultFuture<void> applyReferral(
     String referralId,
     int? matchScore,
@@ -19,5 +21,9 @@ abstract class ApplicationDataSource {
     required String applicationId,
     required String status,
     required String jobRole,
+  });
+
+  ResultFuture<ApplicationModel?> getApplicationById({
+    required String applicationId,
   });
 }
