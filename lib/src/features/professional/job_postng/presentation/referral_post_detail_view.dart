@@ -134,14 +134,14 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.08),
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
                   child: Text(
                     company.isNotEmpty ? company[0] : "G",
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

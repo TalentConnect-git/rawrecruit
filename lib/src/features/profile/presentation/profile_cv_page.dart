@@ -457,122 +457,121 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 18),
+/// SKILLS
+if ((user.skills ?? []).isNotEmpty) ...[
+  _modernSection(
+    title: "Skills",
+    icon: Icons.code,
+    iconColor: Colors.greenAccent,
+    child: Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: (user.skills ?? [])
+          .map(
+            (e) => Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 12,
+                vertical: 8,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(.06),
+                borderRadius: BorderRadius.circular(30),
+              ),
+              child: Text(
+                e,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 11,
+                ),
+              ),
+            ),
+          )
+          .toList(),
+    ),
+  ),
+  const SizedBox(height: 18),
+],
 
-                    /// SKILLS
-                    _modernSection(
-                      title: "Skills",
-                      icon: Icons.code,
-                      iconColor: Colors.greenAccent,
+/// LANGUAGES
+if ((user.languagesKnown ?? []).isNotEmpty) ...[
+  _modernSection(
+    title: "Languages",
+    assetIcon: "assets/images/globe.png",
+    child: Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: (user.languagesKnown ?? [])
+          .map((e) => _chip(e))
+          .toList(),
+    ),
+  ),
+  const SizedBox(height: 18),
+],
 
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
+/// DOMAIN KNOWLEDGE
+if ((user.domainKnowledge ?? []).isNotEmpty) ...[
+  _modernSection(
+    title: "Domain Knowledge",
+    icon: Icons.psychology,
+    iconColor: Colors.purpleAccent,
+    child: Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: (user.domainKnowledge ?? [])
+          .map((e) => _chip(e))
+          .toList(),
+    ),
+  ),
+  const SizedBox(height: 18),
+],
 
-                        children: (user.skills ?? [])
-                            .map(
-                              (e) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
+/// TOOLS & PLATFORMS
+if ((user.toolsAndPlatforms ?? []).isNotEmpty) ...[
+  _modernSection(
+    title: "Tools & Platforms",
+    icon: Icons.build,
+    iconColor: Colors.blueAccent,
+    child: Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: (user.toolsAndPlatforms ?? [])
+          .map((e) => _chip(e))
+          .toList(),
+    ),
+  ),
+    const SizedBox(height: 18),
 
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(.06),
+],
 
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
+if ((user.industry ?? []).isNotEmpty) ...[
 
-                                child: Text(
-                                  e,
-
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
-                                  ),
-                                ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                    ),
-                    SizedBox(height: 18),
-                    if ((user.languagesKnown ?? []).isNotEmpty)
-                      const SizedBox(height: 18),
-
-                    _modernSection(
-                      title: "Languages",
-                      icon: Icons.language,
-                      iconColor: Colors.tealAccent,
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-
-                        children: (user.languagesKnown ?? [])
-                            .map((e) => _chip(e))
-                            .toList(),
-                      ),
-                    ),
-                    const SizedBox(height: 18),
-
-                    if ((user.domainKnowledge ?? []).isNotEmpty)
-                      _modernSection(
-                        title: "Domain Knowledge",
-                        icon: Icons.psychology,
-                        iconColor: Colors.purpleAccent,
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-
-                          children: (user.domainKnowledge ?? [])
-                              .map((e) => _chip(e))
-                              .toList(),
-                        ),
-                      ),
-                    const SizedBox(height: 18),
-
-                    if ((user.toolsAndPlatforms ?? []).isNotEmpty)
-                      _modernSection(
-                        title: "Tools & Platforms",
-                        icon: Icons.build,
-                        iconColor: Colors.blueAccent,
-                        child: Wrap(
-                          spacing: 8,
-                          runSpacing: 8,
-
-                          children: (user.toolsAndPlatforms ?? [])
-                              .map((e) => _chip(e))
-                              .toList(),
-                        ),
-                      ),
-                    const SizedBox(height: 18),
-
-                    /// INDUSTRIES + ROLES
-                    /// INDUSTRIES
-                    if ((user.industry ?? []).isNotEmpty)
-                      _modernSection(
-                        title: "Industries",
-                        icon: Icons.business_outlined,
-                        iconColor: Colors.indigoAccent,
-                        child: Wrap(
-                          spacing: 10,
-                          runSpacing: 10,
-
-                          children: (user.industry ?? [])
-                              .map(
-                                (e) => _premiumChip(
-                                  e,
-                                  color: const Color(0xff5B8CFF),
-                                  icon: Icons.business_center,
-                                ),
-                              )
-                              .toList(),
-                        ),
-                      ),
-
-                    /// ROLES
-                    const SizedBox(height: 18),
+  _modernSection(
+    title: "Industries",
+    icon: Icons.business_outlined,
+    iconColor: Colors.indigoAccent,
+    child: Wrap(
+      spacing: 10,
+      runSpacing: 10,
+      children: (user.industry ?? [])
+          .map(
+            (e) => _premiumChip(
+              e,
+              color: const Color(0xff5B8CFF),
+              icon: Icons.business_center,
+            ),
+          )
+          .toList(),
+    ),
+  ),
+],
+if ((user.industry ?? []).isNotEmpty ||
+    (user.locations ?? []).isNotEmpty ||
+    (user.lookingFor ?? []).isNotEmpty ||
+    (user.employmentType ?? []).isNotEmpty ||
+    (user.jobRoles ?? []).isNotEmpty ||
+    (user.certifications?.isNotEmpty ?? false))
+  const SizedBox(height: 18),
 
                     /// PROFESSIONAL DETAILS
                     if ((user.locations ?? []).isNotEmpty ||
@@ -584,8 +583,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         (user.openToShift?.isNotEmpty ?? false))
                       _modernSection(
                         title: "Job Preferences",
-                        icon: Icons.workspace_premium_outlined,
-                        iconColor: AppColors.primary,
+                      assetIcon: "assets/images/pref.png",
+                      
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
 
@@ -752,13 +751,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                           ],
                         ),
                       ),
-
-                    SizedBox(height: 10),
+                    SizedBox(height: 18),
 
                     _modernSection(
                       title: "Education",
-                      icon: Icons.school_outlined,
-iconColor: AppColors.primary,
+                      assetIcon: "assets/images/edu_cap.png",
+                      iconColor: AppColors.primary,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: (user.educations ?? []).asMap().entries.map((
@@ -771,8 +769,7 @@ iconColor: AppColors.primary,
 
                           return IntrinsicHeight(
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 /// TIMELINE
                                 Column(
@@ -780,9 +777,9 @@ iconColor: AppColors.primary,
                                     Container(
                                       width: 11,
                                       height: 11,
-
+                                      margin: const EdgeInsets.only(top: 6),
                                       decoration: BoxDecoration(
-                                        color: AppColors.kGreen,
+                                        color: AppColors.primary,
                                         shape: BoxShape.circle,
                                       ),
                                     ),
@@ -806,11 +803,9 @@ iconColor: AppColors.primary,
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 24),
-
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-
                                       children: [
                                         /// DEGREE
                                         Row(
@@ -818,7 +813,6 @@ iconColor: AppColors.primary,
                                             Expanded(
                                               child: Text(
                                                 e.degree ?? "",
-
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 15,
@@ -834,18 +828,14 @@ iconColor: AppColors.primary,
                                                       horizontal: 10,
                                                       vertical: 5,
                                                     ),
-
                                                 decoration: BoxDecoration(
                                                   color: AppColors.kGreen
                                                       .withOpacity(.12),
-
                                                   borderRadius:
                                                       BorderRadius.circular(30),
                                                 ),
-
                                                 child: Text(
-                                                  "Current",
-
+                                                  "Current ",
                                                   style: TextStyle(
                                                     color: AppColors.kGreen,
                                                     fontSize: 10,
@@ -858,12 +848,10 @@ iconColor: AppColors.primary,
 
                                         const SizedBox(height: 5),
 
-                                        /// SPECIALIZATION
                                         if ((e.specialization?.isNotEmpty ??
                                             false))
                                           Text(
                                             e.specialization!,
-
                                             style: const TextStyle(
                                               color: Colors.white70,
                                               fontSize: 14,
@@ -872,29 +860,25 @@ iconColor: AppColors.primary,
 
                                         const SizedBox(height: 10),
 
-                                        /// COLLEGE + YEAR
                                         Wrap(
                                           spacing: 14,
                                           runSpacing: 10,
-
                                           children: [
                                             Row(
                                               mainAxisSize: MainAxisSize.min,
-
                                               children: [
-                                                Icon(
-                                                  Icons.school_outlined,
-                                                  size: 15,
-                                                  color: AppColors.secBorder,
+                                                Image.asset(
+                                                  "assets/images/edu_cap.png",
+                                                  width: 15,
+                                                  height: 15,
                                                 ),
 
                                                 const SizedBox(width: 6),
 
                                                 Text(
                                                   e.college ?? "",
-
                                                   style: TextStyle(
-                                                    color: AppColors.kGreen,
+                                                    color: AppColors.primary,
                                                     fontSize: 12,
                                                   ),
                                                 ),
@@ -907,19 +891,17 @@ iconColor: AppColors.primary,
                                                 false))
                                               Row(
                                                 mainAxisSize: MainAxisSize.min,
-
                                                 children: [
-                                                  const Icon(
-                                                    Icons.calendar_month,
-                                                    size: 15,
-                                                    color: Colors.grey,
+                                                  Image.asset(
+                                                    "assets/images/calendar.png",
+                                                    width: 15,
+                                                    height: 15,
                                                   ),
 
                                                   const SizedBox(width: 6),
 
                                                   Text(
                                                     e.yearOfGraduation!,
-
                                                     style: const TextStyle(
                                                       color: Colors.white70,
                                                       fontSize: 12,
@@ -935,7 +917,6 @@ iconColor: AppColors.primary,
 
                                           Text(
                                             "CGPA: ${e.cgpa}",
-
                                             style: TextStyle(
                                               color: AppColors.white,
                                               fontSize: 12,
@@ -954,13 +935,13 @@ iconColor: AppColors.primary,
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    SizedBox(height: 18),
 
                     /// EXPERIENCE
                     _modernSection(
                       title: "Experience",
-                      icon: Icons.work_history,
-
+                      assetIcon: "assets/images/experience.png",
+                      iconColor: Colors.purple,
                       child: Column(
                         children: (user.experiences ?? [])
                             .where(
@@ -984,14 +965,12 @@ iconColor: AppColors.primary,
                                       alignment: Alignment.center,
 
                                       decoration: BoxDecoration(
-                                        color: AppColors.kGreen.withOpacity(
-                                          .14,
-                                        ),
+                                        color: AppColors.white,
 
                                         borderRadius: BorderRadius.circular(14),
 
                                         border: Border.all(
-                                          color: AppColors.kGreen.withOpacity(
+                                          color: AppColors.white.withOpacity(
                                             .18,
                                           ),
                                         ),
@@ -1006,7 +985,7 @@ iconColor: AppColors.primary,
                                             : "C",
 
                                         style: TextStyle(
-                                          color: AppColors.kGreen,
+                                          color: AppColors.secBorder,
                                           fontSize: 18,
                                           fontWeight: FontWeight.w800,
                                         ),
@@ -1028,7 +1007,6 @@ iconColor: AppColors.primary,
                                               Expanded(
                                                 child: Text(
                                                   e.company ?? "",
-
                                                   style: const TextStyle(
                                                     color: Colors.white,
                                                     fontSize: 15,
@@ -1036,7 +1014,6 @@ iconColor: AppColors.primary,
                                                   ),
                                                 ),
                                               ),
-
                                               if (e.isCurrent == true)
                                                 Container(
                                                   padding:
@@ -1044,26 +1021,43 @@ iconColor: AppColors.primary,
                                                         horizontal: 12,
                                                         vertical: 6,
                                                       ),
-
                                                   decoration: BoxDecoration(
                                                     color: AppColors.kGreen
                                                         .withOpacity(.12),
-
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           30,
                                                         ),
                                                   ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Container(
+                                                        width: 8,
+                                                        height: 8,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                              color:
+                                                                  Colors.green,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                      ),
 
-                                                  child: Text(
-                                                    "Current",
+                                                      const SizedBox(width: 6),
 
-                                                    style: TextStyle(
-                                                      color: AppColors.kGreen,
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
+                                                      Text(
+                                                        "Current",
+                                                        style: TextStyle(
+                                                          color:
+                                                              AppColors.kGreen,
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                             ],
@@ -1087,10 +1081,10 @@ iconColor: AppColors.primary,
                                           /// DATE
                                           Row(
                                             children: [
-                                              Icon(
-                                                Icons.calendar_month_outlined,
-                                                size: 15,
-                                                color: AppColors.secBorder,
+                                              Image.asset(
+                                                "assets/images/calendar.png",
+                                                width: 15,
+                                                height: 15,
                                               ),
 
                                               const SizedBox(width: 7),
@@ -1182,7 +1176,7 @@ iconColor: AppColors.primary,
                                       Text(
                                         e.organization ?? '-',
 
-                                        style:  TextStyle(
+                                        style: TextStyle(
                                           color: AppColors.kGreen,
                                           fontSize: 13,
                                         ),
@@ -1265,7 +1259,7 @@ iconColor: AppColors.primary,
                                       Text(
                                         e.country ?? '-',
 
-                                        style:  TextStyle(
+                                        style: TextStyle(
                                           color: AppColors.kGreen,
                                           fontSize: 13,
                                         ),
@@ -1306,8 +1300,8 @@ iconColor: AppColors.primary,
 
                       _modernSection(
                         title: "Achievements",
-                        icon: Icons.emoji_events_outlined,
-
+                        assetIcon: "assets/images/achievements.png",
+                        // iconColor: Colors.yellow,
                         child: Column(
                           children: (user.achievements ?? [])
                               .map(
@@ -1335,14 +1329,13 @@ iconColor: AppColors.primary,
                                     children: [
                                       Row(
                                         children: [
-                                          const Icon(
-                                            Icons.star,
-                                            color: Colors.amber,
-                                            size: 18,
-                                          ),
+                                          // const Icon(
+                                          //   Icons.star,
+                                          //   color: Colors.amber,
+                                          //   size: 18,
+                                          // ),
 
-                                          const SizedBox(width: 8),
-
+                                          // const SizedBox(width: 8),
                                           Expanded(
                                             child: Text(
                                               e.title ?? '-',
@@ -1390,8 +1383,8 @@ iconColor: AppColors.primary,
 
                       _modernSection(
                         title: "Awards",
-                        icon: Icons.workspace_premium_outlined,
-
+                        assetIcon: "assets/images/awards.png",
+                        // iconColor: Colors.orangeAccent,
                         child: Column(
                           children: (user.awards ?? [])
                               .map(
@@ -1417,28 +1410,27 @@ iconColor: AppColors.primary,
                                         CrossAxisAlignment.start,
 
                                     children: [
-                                   Row(
-  children: [
-    const Icon(
-      Icons.star,
-      color: Colors.amber,
-      size: 18,
-    ),
+                                      Row(
+                                        children: [
+                                          // const Icon(
+                                          //   Icons.star,
+                                          //   color: Colors.amber,
+                                          //   size: 18,
+                                          // ),
 
-    const SizedBox(width: 8),
-
-    Expanded(
-      child: Text(
-        e.title ?? '-',
-        style: TextStyle(
-          color: AppColors.kGreen,
-          fontSize: 15,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    ),
-  ],
-),
+                                          // const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              e.title ?? '-',
+                                              style: TextStyle(
+                                                color: AppColors.kGreen,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
                                       const SizedBox(height: 6),
 
                                       Text(
@@ -1664,7 +1656,8 @@ iconColor: AppColors.primary,
 
   Widget _modernSection({
     required String title,
-    required IconData icon,
+    IconData? icon,
+    String? assetIcon,
     required Widget child,
     Color iconColor = Colors.greenAccent,
   }) {
@@ -1696,7 +1689,9 @@ iconColor: AppColors.primary,
             /// HEADER
             Row(
               children: [
-                Icon(icon, size: 18, color: iconColor),
+                assetIcon != null
+                    ? Image.asset(assetIcon, width: 18, height: 18)
+                    : Icon(icon, size: 18, color: iconColor),
 
                 const SizedBox(width: 8),
 
@@ -2125,7 +2120,9 @@ iconColor: AppColors.primary,
                       width: 85,
                       child: _premiumStatCard(
                         title: "Response",
-                        value: "${user.responseRate ?? 0}%",
+                        value: user.responseRate != null
+                            ? "${user.responseRate}%"
+                            : "NA",
                         icon: Icons.trending_up,
                         gradient: const [Color(0xff0E1B12), Color(0xff101A13)],
                       ),

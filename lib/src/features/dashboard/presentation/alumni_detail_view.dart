@@ -66,32 +66,47 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                 ? currentExperience!.role!
                 : "-";
 
-            final company =
-                (currentExperience?.company ?? '').toString().trim().isNotEmpty
-                ? currentExperience!.company!
-                : "-";
-            final referrals = vm.alumni?.referralJobs ?? [];
+            /// COMPANY
+            final company = (currentExperience?.company ?? '').trim().isNotEmpty
+                ? currentExperience!.company!.trim()
+                : (first.candidatePosted?.currentCompany ?? '')
+                      .trim()
+                      .isNotEmpty
+                ? first.candidatePosted!.currentCompany!.trim()
+                : (fallbackExperience?.company ?? '').trim();
+
+            /// ROLE + COMPANY TEXT
+            final roleCompanyText = role.isNotEmpty && company.isNotEmpty
+                ? "$role @ $company"
+                : role.isNotEmpty
+                ? role
+                : company;
+
+            final referrals = first.candidatePosted?.referralJobs ?? [];
 
             final currentReferral = referrals.isNotEmpty
                 ? referrals.first
                 : null;
 
-            final location = (currentReferral?.location?.isNotEmpty ?? false)
-                ? currentReferral!.location!.join(", ")
-                : (vm.alumni?.locations?.isNotEmpty ?? false)
-                ? vm.alumni?.locations!.join(", ")
-                : "-";
-
+            /// LOCATION
+            final location =
+                (first.candidatePosted?.locations?.isNotEmpty ?? false)
+                ? first.candidatePosted!.locations!
+                      .where((e) => e.trim().isNotEmpty)
+                      .join(", ")
+                : '';
             final isHiring = referrals.isNotEmpty;
 
-            return RefreshIndicator(
-              onRefresh: () async {
-                final failure = await alumniDetailViewModel.getAlumniByid(
-                  widget.alumniId,
-                );
-                failure?.showError(context);
-              },
-              child: SingleChildScrollView(
+            return Scaffold(
+              backgroundColor: Colors.black,
+
+              appBar: AppBar(
+                backgroundColor: Colors.black,
+                elevation: 0,
+                title: const Text("", style: TextStyle(color: Colors.white)),
+              ),
+
+              body: SingleChildScrollView(
                 padding: const EdgeInsets.all(16),
                 child: Column(
                   children: [
@@ -176,90 +191,91 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
                                       children: [
                                         /// LOCATION
-                                        Row(
-                                          children: [
-                                            const Icon(
-                                              Icons.location_on_outlined,
-                                              size: 14,
-                                              color: Colors.grey,
-                                            ),
+                                        if (location.isNotEmpty)
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.location_on_outlined,
+                                                size: 14,
+                                                color: Colors.grey,
+                                              ),
 
-                                            const SizedBox(width: 6),
+                                              const SizedBox(width: 6),
 
-                                            Expanded(
-                                              child: Text(
-                                                location ?? '',
-                                                style: const TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 15,
+                                              Expanded(
+                                                child: Text(
+                                                  location ?? '',
+                                                  style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 15,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          ],
-                                        ),
+                                            ],
+                                          ),
 
                                         const SizedBox(height: 6),
 
-                                        // /// COLLEGE
-                                        // Row(
-                                        //   children: [
+                                        /// COLLEGE
+                                        if (college.isNotEmpty)
+                                          Row(
+                                            children: [
+                                              const Icon(
+                                                Icons.school_outlined,
+                                                size: 14,
+                                                color: Colors.grey,
+                                              ),
+                                              const SizedBox(width: 6),
+                                              Expanded(
+                                                child: Text(
+                                                  college,
+                                                  style: const TextStyle(
+                                                    color: Colors.grey,
+                                                    fontSize: 13,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
 
-                                        //     const Icon(
-                                        //       Icons.school_outlined,
-                                        //       size: 14,
-                                        //       color: Colors.grey,
-                                        //     ),
-
-                                        //     const SizedBox(width: 6),
-
-                                        //     // Expanded(
-                                        //     //   child: Text(
-                                        //     //     college,
-                                        //     //     style: const TextStyle(
-                                        //     //       color: Colors.grey,
-                                        //     //       fontSize: 13,
-                                        //     //     ),
-                                        //     //   ),
-                                        //     // ),
-                                        //   ],
-                                        // ),
                                         const SizedBox(height: 6),
 
                                         /// COMPANY
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child:
-                                                  /// ROLE + COMPANY
-                                                  Row(
-                                                    children: [
-                                                      const Icon(
-                                                        Icons.work_outline,
-                                                        size: 14,
-                                                        color: Colors.grey,
-                                                      ),
-
-                                                      const SizedBox(width: 6),
-
-                                                      Expanded(
-                                                        child: Text(
-                                                          role.isNotEmpty
-                                                              ? "$role @ $company"
-                                                              : company,
-
-                                                          style:
-                                                              const TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 13,
-                                                              ),
+                                        if (roleCompanyText.isNotEmpty)
+                                          Row(
+                                            children: [
+                                              Expanded(
+                                                child:
+                                                    /// ROLE + COMPANY
+                                                    Row(
+                                                      children: [
+                                                        const Icon(
+                                                          Icons.work_outline,
+                                                          size: 14,
+                                                          color: Colors.grey,
                                                         ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                            ),
-                                          ],
-                                        ),
+
+                                                        const SizedBox(
+                                                          width: 6,
+                                                        ),
+
+                                                        Expanded(
+                                                          child: Text(
+                                                            roleCompanyText,
+
+                                                            style:
+                                                                const TextStyle(
+                                                                  color: Colors
+                                                                      .grey,
+                                                                  fontSize: 13,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                              ),
+                                            ],
+                                          ),
 
                                         const SizedBox(height: 6),
 
@@ -510,7 +526,6 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                     ),
 
                     const SizedBox(height: 18),
-                    const SizedBox(height: 18),
 
                     _modernCard(
                       title: "Professional Links",
@@ -756,8 +771,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
   Widget _jobTile(BuildContext context, Job job) {
     final title = job.jobTitle ?? "Role";
-final company = jobs.first.candidatePosted?.currentCompany ?? "Company";
-        
+    final company = jobs.first.candidatePosted?.currentCompany ?? "Company";
+
     final pkg = job.packageDetails;
 
     String salary = "";

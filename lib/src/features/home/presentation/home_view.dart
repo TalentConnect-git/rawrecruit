@@ -127,7 +127,11 @@ class _HomeViewState extends State<HomeView> {
                   icon: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      const Icon(Icons.calendar_month_outlined),
+                    const Icon(
+                  Icons.calendar_today_outlined,
+                  size: 20,
+                  color: Colors.grey,
+                ),
                       if (hasInterviews)
                         Positioned(
                           right: -1,

@@ -420,11 +420,12 @@ _referralMetricsSection(referral),
                 ),
               ),
               _vDivider(),
-              const Icon(
-                Icons.calendar_today_outlined,
-                size: 12,
-                color: Colors.grey,
-              ),
+               Image.asset(
+                          "assets/images/calendar.png",
+                          width: 15,
+                          height: 15,
+                        ),
+
               const SizedBox(width: 4),
               Flexible(
                 child: RichText(
@@ -835,45 +836,45 @@ _referralMetricsSection(referral),
           ],
         ),
 
-        const SizedBox(height: 10),
+        // const SizedBox(height: 10),
 
-        Row(
-          children: [
-            Expanded(
-              child: _metricCard(
-                "Interviews",
-                interviews.toString(),
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _metricCard(
-                "Accepted",
-                accepted.toString(),
-              ),
-            ),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     Expanded(
+        //       child: _metricCard(
+        //         "Interviews",
+        //         interviews.toString(),
+        //       ),
+        //     ),
+        //     const SizedBox(width: 10),
+        //     Expanded(
+        //       child: _metricCard(
+        //         "Accepted",
+        //         accepted.toString(),
+        //       ),
+        //     ),
+        //   ],
+        // ),
 
-        const SizedBox(height: 10),
+        // const SizedBox(height: 10),
 
-        Row(
-          children: [
-            Expanded(
-              child: _metricCard(
-                "Response Rate",
-                "$responseRate%",
-              ),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: _metricCard(
-                "Success Rate",
-                "$successRate%",
-              ),
-            ),
-          ],
-        ),
+        // Row(
+        //   children: [
+        //     Expanded(
+        //       child: _metricCard(
+        //         "Response Rate",
+        //         "$responseRate%",
+        //       ),
+        //     ),
+        //     const SizedBox(width: 10),
+        //     Expanded(
+        //       child: _metricCard(
+        //         "Success Rate",
+        //         "$successRate%",
+        //       ),
+        //     ),
+        //   ],
+        // ),
       ],
     ),
   );
@@ -916,8 +917,11 @@ Widget _metricCard(String title, String value) {
   // ============================================================
   Widget _matchInsightsSection(Job job) {
     final openings = job.numberOfOpenings?.toString() ?? "—";
-    final rounds = (job.rounds?.length ?? 0).toString();
+  final rounds = (job.rounds?.isNotEmpty ?? false)
+    ? job.rounds!.join(", ")
+    : "—";
 
+    
     final process = (job.selectionProcess?.isNotEmpty ?? false)
         ? job.selectionProcess!.join(", ")
         : "—";
@@ -1227,55 +1231,47 @@ Widget _metricCard(String title, String value) {
   // SKILLS REQUIRED - chip tags
   // ============================================================
   Widget _skillsSection(Job job) {
-    final skills = job.skills ?? [];
-    final visible = skills.take(6).toList();
-    final extra = skills.length - visible.length;
+  final skills = job.skills ?? [];
 
-    return _cardContainer(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: const [
-              Icon(Icons.code, size: 18, color: Colors.greenAccent),
-              SizedBox(width: 8),
-              Text(
-                "Skills Required",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 15,
-                  fontWeight: FontWeight.w600,
-                ),
+  return _cardContainer(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: const [
+            Icon(Icons.code, size: 18, color: Colors.greenAccent),
+            SizedBox(width: 8),
+            Text(
+              "Skills Required",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 15,
+                fontWeight: FontWeight.w600,
               ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          if (visible.isEmpty)
-            const Text("—", style: TextStyle(color: Colors.grey))
-          else
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                ...visible.map((s) => _skillChip(s)),
-                if (extra > 0)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      "+$extra more",
-                      style: TextStyle(
-                        color: AppColors.kGreen,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-              ],
             ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        if (skills.isEmpty)
+          const Text(
+            "No skills specified",
+            style: TextStyle(color: Colors.grey),
+          )
+        else
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: skills
+                .where((s) => s.trim().isNotEmpty)
+                .map((s) => _skillChip(s))
+                .toList(),
+          ),
+      ],
+    ),
+  );
+}
 
   Widget _skillChip(String text) {
     return Container(
@@ -1459,6 +1455,7 @@ Widget _metricCard(String title, String value) {
     return Job(
       id: r.id,
       jobTitle: r.jobTitle,
+      rounds: r.rounds,
       endDate: r.endDate,
       description: r.description,
       jobType: r.jobType,
@@ -1489,6 +1486,7 @@ Widget _metricCard(String title, String value) {
       candidatePosted: User(
         id: r.candidatePosted?.userId,
         name: r.candidatePosted?.name,
+        
         currentCompany: r.candidatePosted?.currentCompany,
         email: r.candidatePosted?.email,
         phone: r.candidatePosted?.phone,
