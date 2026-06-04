@@ -121,15 +121,28 @@ class UserController {
   TextEditingController noticePeriodStartDate;
   Map<String, dynamic> toMap() {
     String? clean(String? v) => v == null || v.trim().isEmpty ? null : v.trim();
+List<String>? cleanList(List<TextEditingController> list) {
+  final values = <String>[];
 
-    List<String>? cleanList(List<TextEditingController> list) {
-      final values = list
-          .map((e) => clean(e.text))
-          .whereType<String>()
-          .toList();
-      return values.isEmpty ? null : values;
-    }
+  for (final controller in list) {
+    final text = controller.text.trim();
 
+    debugPrint("CHIP VALUE => $text");
+
+    if (text.isEmpty) continue;
+
+    values.addAll(
+      text
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty),
+    );
+  }
+
+  debugPrint("FINAL VALUES => $values");
+
+  return values.isEmpty ? null : values;
+}
     Map<String, dynamic> cleanMap(Map<String, dynamic> map) {
       map.removeWhere((key, value) {
         if (value == null) return true;

@@ -261,10 +261,10 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                                     /// GRADUATION
                                                     Row(
                                                       children: [
-                                                        const Icon(
-                                                          Icons.calendar_month,
-                                                          size: 14,
-                                                          color: Colors.grey,
+                                                        Image.asset(
+                                                          "assets/images/calendar.png",
+                                                          width: 15,
+                                                          height: 15,
                                                         ),
 
                                                         const SizedBox(

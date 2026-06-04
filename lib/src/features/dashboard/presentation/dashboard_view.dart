@@ -87,7 +87,7 @@ class _DashboardBody extends StatelessWidget {
 
                         InfoChip(
                           text:
-                              "${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni hiring in your network",
+                              "${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni in your network",
                         ),
 
                         const SizedBox(width: 8),

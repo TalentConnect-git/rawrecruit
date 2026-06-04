@@ -141,7 +141,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                   child: Text(
                     company.isNotEmpty ? company[0] : "G",
                     style: const TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontWeight: FontWeight.bold,
                     ),
                   ),

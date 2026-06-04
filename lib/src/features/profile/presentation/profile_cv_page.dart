@@ -457,66 +457,61 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         ],
                       ),
                     ),
-
                     const SizedBox(height: 18),
 
                     /// SKILLS
-                    _modernSection(
-                      title: "Skills",
-                      icon: Icons.code,
-                      iconColor: Colors.greenAccent,
-
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-
-                        children: (user.skills ?? [])
-                            .map(
-                              (e) => Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 12,
-                                  vertical: 8,
-                                ),
-
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(.06),
-
-                                  borderRadius: BorderRadius.circular(30),
-                                ),
-
-                                child: Text(
-                                  e,
-
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 11,
+                    if ((user.skills ?? []).isNotEmpty) ...[
+                      _modernSection(
+                        title: "Skills",
+                        icon: Icons.code,
+                        iconColor: Colors.greenAccent,
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: (user.skills ?? [])
+                              .map(
+                                (e) => Container(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                  decoration: BoxDecoration(
+                                    color: Colors.white.withOpacity(.06),
+                                    borderRadius: BorderRadius.circular(30),
+                                  ),
+                                  child: Text(
+                                    e,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 11,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                            .toList(),
+                              )
+                              .toList(),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 18),
-                    if ((user.languagesKnown ?? []).isNotEmpty)
                       const SizedBox(height: 18),
+                    ],
 
-                    _modernSection(
-                      title: "Languages",
-                      icon: Icons.language,
-                      iconColor: Colors.tealAccent,
-                      child: Wrap(
-                        spacing: 8,
-                        runSpacing: 8,
-
-                        children: (user.languagesKnown ?? [])
-                            .map((e) => _chip(e))
-                            .toList(),
+                    /// LANGUAGES
+                    if ((user.languagesKnown ?? []).isNotEmpty) ...[
+                      _modernSection(
+                        title: "Languages",
+                        assetIcon: "assets/images/globe.png",
+                        child: Wrap(
+                          spacing: 8,
+                          runSpacing: 8,
+                          children: (user.languagesKnown ?? [])
+                              .map((e) => _chip(e))
+                              .toList(),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 18),
+                      const SizedBox(height: 18),
+                    ],
 
-                    if ((user.domainKnowledge ?? []).isNotEmpty)
+                    /// DOMAIN KNOWLEDGE
+                    if ((user.domainKnowledge ?? []).isNotEmpty) ...[
                       _modernSection(
                         title: "Domain Knowledge",
                         icon: Icons.psychology,
@@ -524,15 +519,16 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         child: Wrap(
                           spacing: 8,
                           runSpacing: 8,
-
                           children: (user.domainKnowledge ?? [])
                               .map((e) => _chip(e))
                               .toList(),
                         ),
                       ),
-                    const SizedBox(height: 18),
+                      const SizedBox(height: 18),
+                    ],
 
-                    if ((user.toolsAndPlatforms ?? []).isNotEmpty)
+                    /// TOOLS & PLATFORMS
+                    if ((user.toolsAndPlatforms ?? []).isNotEmpty) ...[
                       _modernSection(
                         title: "Tools & Platforms",
                         icon: Icons.build,
@@ -540,16 +536,15 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         child: Wrap(
                           spacing: 8,
                           runSpacing: 8,
-
                           children: (user.toolsAndPlatforms ?? [])
                               .map((e) => _chip(e))
                               .toList(),
                         ),
                       ),
+                      const SizedBox(height: 18),
+                    ],
 
-                    /// INDUSTRIES + ROLES
-                    /// INDUSTRIES
-                    if ((user.industry ?? []).isNotEmpty)
+                    if ((user.industry ?? []).isNotEmpty) ...[
                       _modernSection(
                         title: "Industries",
                         icon: Icons.business_outlined,
@@ -557,7 +552,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         child: Wrap(
                           spacing: 10,
                           runSpacing: 10,
-
                           children: (user.industry ?? [])
                               .map(
                                 (e) => _premiumChip(
@@ -569,9 +563,14 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                               .toList(),
                         ),
                       ),
-
-                    /// ROLES
-                    const SizedBox(height: 18),
+                    ],
+                    if ((user.industry ?? []).isNotEmpty ||
+                        (user.locations ?? []).isNotEmpty ||
+                        (user.lookingFor ?? []).isNotEmpty ||
+                        (user.employmentType ?? []).isNotEmpty ||
+                        (user.jobRoles ?? []).isNotEmpty ||
+                        (user.certifications?.isNotEmpty ?? false))
+                      const SizedBox(height: 18),
 
                     /// PROFESSIONAL DETAILS
                     if ((user.locations ?? []).isNotEmpty ||
@@ -583,7 +582,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         (user.openToShift?.isNotEmpty ?? false))
                       _modernSection(
                         title: "Job Preferences",
-                        icon: Icons.workspace_premium_outlined,
+                        assetIcon: "assets/images/pref.png",
 
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -751,13 +750,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                           ],
                         ),
                       ),
-
-                    SizedBox(height: 10),
+                    SizedBox(height: 18),
 
                     _modernSection(
                       title: "Education",
-                      icon: Icons.school_outlined,
-
+                      assetIcon: "assets/images/edu_cap.png",
+                      iconColor: AppColors.primary,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: (user.educations ?? []).asMap().entries.map((
@@ -770,8 +768,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                           return IntrinsicHeight(
                             child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
                                 /// TIMELINE
                                 Column(
@@ -779,9 +776,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                     Container(
                                       width: 11,
                                       height: 11,
-
+                                      margin: const EdgeInsets.only(top: 6),
                                       decoration: BoxDecoration(
-                                        color: AppColors.kGreen,
+                                        color: AppColors.primary,
                                         shape: BoxShape.circle,
                                       ),
                                     ),
@@ -805,11 +802,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                 Expanded(
                                   child: Padding(
                                     padding: const EdgeInsets.only(bottom: 24),
-
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-
                                       children: [
                                         /// DEGREE
                                         Row(
@@ -817,7 +812,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                             Expanded(
                                               child: Text(
                                                 e.degree ?? "",
-
                                                 style: const TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 15,
@@ -833,18 +827,14 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                                       horizontal: 10,
                                                       vertical: 5,
                                                     ),
-
                                                 decoration: BoxDecoration(
                                                   color: AppColors.kGreen
                                                       .withOpacity(.12),
-
                                                   borderRadius:
                                                       BorderRadius.circular(30),
                                                 ),
-
                                                 child: Text(
-                                                  "Current",
-
+                                                  "Current ",
                                                   style: TextStyle(
                                                     color: AppColors.kGreen,
                                                     fontSize: 10,
@@ -857,12 +847,10 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                                         const SizedBox(height: 5),
 
-                                        /// SPECIALIZATION
                                         if ((e.specialization?.isNotEmpty ??
                                             false))
                                           Text(
                                             e.specialization!,
-
                                             style: const TextStyle(
                                               color: Colors.white70,
                                               fontSize: 14,
@@ -871,29 +859,25 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                                         const SizedBox(height: 10),
 
-                                        /// COLLEGE + YEAR
                                         Wrap(
                                           spacing: 14,
                                           runSpacing: 10,
-
                                           children: [
                                             Row(
                                               mainAxisSize: MainAxisSize.min,
-
                                               children: [
-                                                Icon(
-                                                  Icons.school_outlined,
-                                                  size: 15,
-                                                  color: AppColors.white,
+                                                Image.asset(
+                                                  "assets/images/edu_cap.png",
+                                                  width: 15,
+                                                  height: 15,
                                                 ),
 
                                                 const SizedBox(width: 6),
 
                                                 Text(
                                                   e.college ?? "",
-
                                                   style: TextStyle(
-                                                    color: AppColors.kGreen,
+                                                    color: AppColors.primary,
                                                     fontSize: 12,
                                                   ),
                                                 ),
@@ -906,19 +890,17 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                                 false))
                                               Row(
                                                 mainAxisSize: MainAxisSize.min,
-
                                                 children: [
-                                                  const Icon(
-                                                    Icons.calendar_month,
-                                                    size: 15,
-                                                    color: Colors.grey,
+                                                  Image.asset(
+                                                    "assets/images/calendar.png",
+                                                    width: 15,
+                                                    height: 15,
                                                   ),
 
                                                   const SizedBox(width: 6),
 
                                                   Text(
                                                     e.yearOfGraduation!,
-
                                                     style: const TextStyle(
                                                       color: Colors.white70,
                                                       fontSize: 12,
@@ -934,7 +916,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                                           Text(
                                             "CGPA: ${e.cgpa}",
-
                                             style: TextStyle(
                                               color: AppColors.white,
                                               fontSize: 12,
@@ -953,13 +934,13 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       ),
                     ),
 
-                    SizedBox(height: 10),
+                    SizedBox(height: 18),
 
                     /// EXPERIENCE
                     _modernSection(
                       title: "Experience",
-                      icon: Icons.work_history,
-
+                      assetIcon: "assets/images/experience.png",
+                      iconColor: Colors.purple,
                       child: Column(
                         children: (user.experiences ?? [])
                             .where(
@@ -983,14 +964,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       alignment: Alignment.center,
 
                                       decoration: BoxDecoration(
-                                        color: AppColors.kGreen.withOpacity(
-                                          .14,
-                                        ),
+                                        color: AppColors.white,
 
                                         borderRadius: BorderRadius.circular(14),
 
                                         border: Border.all(
-                                          color: AppColors.kGreen.withOpacity(
+                                          color: AppColors.white.withOpacity(
                                             .18,
                                           ),
                                         ),
@@ -1005,7 +984,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                             : "C",
 
                                         style: TextStyle(
-                                          color: AppColors.kGreen,
+                                          color: AppColors.secBorder,
                                           fontSize: 18,
                                           fontWeight: FontWeight.w800,
                                         ),
@@ -1027,15 +1006,13 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                               Expanded(
                                                 child: Text(
                                                   e.company ?? "",
-
                                                   style: const TextStyle(
                                                     color: Colors.white,
-                                                    fontSize: 16,
+                                                    fontSize: 15,
                                                     fontWeight: FontWeight.w700,
                                                   ),
                                                 ),
                                               ),
-
                                               if (e.isCurrent == true)
                                                 Container(
                                                   padding:
@@ -1043,26 +1020,43 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                                         horizontal: 12,
                                                         vertical: 6,
                                                       ),
-
                                                   decoration: BoxDecoration(
                                                     color: AppColors.kGreen
                                                         .withOpacity(.12),
-
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                           30,
                                                         ),
                                                   ),
+                                                  child: Row(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    children: [
+                                                      Container(
+                                                        width: 8,
+                                                        height: 8,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                              color:
+                                                                  Colors.green,
+                                                              shape: BoxShape
+                                                                  .circle,
+                                                            ),
+                                                      ),
 
-                                                  child: Text(
-                                                    "Current",
+                                                      const SizedBox(width: 6),
 
-                                                    style: TextStyle(
-                                                      color: AppColors.kGreen,
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.w700,
-                                                    ),
+                                                      Text(
+                                                        "Current",
+                                                        style: TextStyle(
+                                                          color:
+                                                              AppColors.kGreen,
+                                                          fontSize: 11,
+                                                          fontWeight:
+                                                              FontWeight.w700,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ),
                                             ],
@@ -1086,10 +1080,10 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                           /// DATE
                                           Row(
                                             children: [
-                                              const Icon(
-                                                Icons.calendar_month_outlined,
-                                                size: 15,
-                                                color: Colors.grey,
+                                              Image.asset(
+                                                "assets/images/calendar.png",
+                                                width: 15,
+                                                height: 15,
                                               ),
 
                                               const SizedBox(width: 7),
@@ -1181,8 +1175,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.organization ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.grey,
+                                        style: TextStyle(
+                                          color: AppColors.kGreen,
                                           fontSize: 13,
                                         ),
                                       ),
@@ -1223,7 +1217,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       _modernSection(
                         title: "International Experience",
                         icon: Icons.public,
-
+                        iconColor: AppColors.primary,
                         child: Column(
                           children: (user.internationalExperiences ?? [])
                               .map(
@@ -1264,8 +1258,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.country ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.grey,
+                                        style: TextStyle(
+                                          color: AppColors.kGreen,
                                           fontSize: 13,
                                         ),
                                       ),
@@ -1305,8 +1299,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                       _modernSection(
                         title: "Achievements",
-                        icon: Icons.emoji_events_outlined,
-
+                        assetIcon: "assets/images/achievements.png",
+                        // iconColor: Colors.yellow,
                         child: Column(
                           children: (user.achievements ?? [])
                               .map(
@@ -1332,16 +1326,27 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                         CrossAxisAlignment.start,
 
                                     children: [
-                                      Text(
-                                        e.title ?? '-',
+                                      Row(
+                                        children: [
+                                          // const Icon(
+                                          //   Icons.star,
+                                          //   color: Colors.amber,
+                                          //   size: 18,
+                                          // ),
 
-                                        style: TextStyle(
-                                          color: AppColors.kGreen,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                          // const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              e.title ?? '-',
+                                              style: TextStyle(
+                                                color: AppColors.kGreen,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-
                                       const SizedBox(height: 6),
 
                                       Text(
@@ -1377,8 +1382,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                       _modernSection(
                         title: "Awards",
-                        icon: Icons.workspace_premium_outlined,
-
+                        assetIcon: "assets/images/awards.png",
+                        // iconColor: Colors.orangeAccent,
                         child: Column(
                           children: (user.awards ?? [])
                               .map(
@@ -1404,16 +1409,27 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                         CrossAxisAlignment.start,
 
                                     children: [
-                                      Text(
-                                        e.title ?? '-',
+                                      Row(
+                                        children: [
+                                          // const Icon(
+                                          //   Icons.star,
+                                          //   color: Colors.amber,
+                                          //   size: 18,
+                                          // ),
 
-                                        style: TextStyle(
-                                          color: AppColors.kGreen,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w700,
-                                        ),
+                                          // const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              e.title ?? '-',
+                                              style: TextStyle(
+                                                color: AppColors.kGreen,
+                                                fontSize: 15,
+                                                fontWeight: FontWeight.w700,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
-
                                       const SizedBox(height: 6),
 
                                       Text(
@@ -1639,7 +1655,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
   Widget _modernSection({
     required String title,
-    required IconData icon,
+    IconData? icon,
+    String? assetIcon,
     required Widget child,
     Color iconColor = Colors.greenAccent,
   }) {
@@ -1671,7 +1688,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
             /// HEADER
             Row(
               children: [
-                Icon(icon, size: 18, color: iconColor),
+                assetIcon != null
+                    ? Image.asset(assetIcon, width: 18, height: 18)
+                    : Icon(icon, size: 18, color: iconColor),
 
                 const SizedBox(width: 8),
 
@@ -1795,7 +1814,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       child: Container(
         width: double.infinity,
 
-        padding: const EdgeInsets.all(22),
+        padding: const EdgeInsets.all(16),
 
         decoration: BoxDecoration(
           color: AppColors.kCard,
@@ -1927,35 +1946,35 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                     ),
 
                     /// VERIFIED TICK
-                    Positioned(
-                      bottom: 10,
-                      right: 6,
+                    // Positioned(
+                    //   bottom: 10,
+                    //   right: 6,
 
-                      child: Container(
-                        height: 24,
-                        width: 24,
+                    //   child: Container(
+                    //     height: 24,
+                    //     width: 24,
 
-                        decoration: BoxDecoration(
-                          color: AppColors.kGreen,
-                          shape: BoxShape.circle,
+                    //     decoration: BoxDecoration(
+                    //       color: AppColors.kGreen,
+                    //       shape: BoxShape.circle,
 
-                          border: Border.all(color: Colors.black, width: 3),
+                    //       border: Border.all(color: Colors.black, width: 3),
 
-                          boxShadow: [
-                            BoxShadow(
-                              color: AppColors.kGreen.withOpacity(.5),
-                              blurRadius: 12,
-                            ),
-                          ],
-                        ),
+                    //       boxShadow: [
+                    //         BoxShadow(
+                    //           color: AppColors.kGreen.withOpacity(.5),
+                    //           blurRadius: 12,
+                    //         ),
+                    //       ],
+                    //     ),
 
-                        child: const Icon(
-                          Icons.check,
-                          size: 14,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
+                    //     child: const Icon(
+                    //       Icons.check,
+                    //       size: 14,
+                    //       color: Colors.black,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
 
@@ -2024,7 +2043,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         Icon(
                           Icons.location_on_outlined,
                           size: 15,
-                          color: AppColors.kGreen,
+                          color: AppColors.white,
                         ),
 
                         const SizedBox(width: 5),
@@ -2069,33 +2088,46 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                 const SizedBox(height: 24),
 
-                /// STATS
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Expanded(
+                    SizedBox(
+                      width: 85,
                       child: _premiumStatCard(
                         title: "YOE",
                         value: totalExperience,
                         icon: Icons.work_outline,
-
                         gradient: const [Color(0xff0E1B12), Color(0xff101A13)],
                       ),
                     ),
 
-                    const SizedBox(width: 14),
+                    const SizedBox(width: 6),
 
-                    Expanded(
+                    SizedBox(
+                      width: 85,
                       child: _premiumStatCard(
                         title: "Skills",
                         value: "${user.skills?.length ?? 0}",
                         icon: Icons.star_border,
+                        gradient: const [Color(0xff0E1B12), Color(0xff101A13)],
+                      ),
+                    ),
 
+                    const SizedBox(width: 6),
+
+                    SizedBox(
+                      width: 85,
+                      child: _premiumStatCard(
+                        title: "Response",
+                        value: user.responseRate != null
+                            ? "${user.responseRate}%"
+                            : "NA",
+                        icon: Icons.trending_up,
                         gradient: const [Color(0xff0E1B12), Color(0xff101A13)],
                       ),
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 18),
 
                 /// BUTTONS
@@ -2241,7 +2273,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
   //     color: Colors.white.withOpacity(.12),
   //   );
   // }
-
   Widget _premiumStatCard({
     required String title,
     required String value,
@@ -2249,67 +2280,38 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
     required List<Color> gradient,
   }) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-
+      height: 75,
+      padding: const EdgeInsets.symmetric(horizontal: 2, vertical: 6),
       decoration: BoxDecoration(
         color: AppColors.kCard,
-
-        borderRadius: BorderRadius.circular(24),
-
+        borderRadius: BorderRadius.circular(14),
         border: Border.all(color: Colors.white.withOpacity(.06)),
       ),
-      child: Row(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          /// ICON
-          Container(
-            padding: const EdgeInsets.all(10),
+          Icon(icon, color: AppColors.kGreen, size: 14),
 
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
+          const SizedBox(height: 4),
 
-              color: AppColors.kGreen.withOpacity(.08),
-
-              border: Border.all(color: AppColors.kGreen.withOpacity(.18)),
+          Text(
+            value,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
             ),
-
-            child: Icon(icon, color: AppColors.kGreen, size: 18),
           ),
 
-          const SizedBox(width: 12),
-
-          /// TEXT
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-
-              children: [
-                Text(
-                  value,
-
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 15,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-
-                const SizedBox(height: 2),
-
-                Text(
-                  title,
-
-                  maxLines: 2,
-
-                  overflow: TextOverflow.ellipsis,
-
-                  style: const TextStyle(
-                    color: Colors.white70,
-                    fontSize: 11,
-                    height: 1.3,
-                  ),
-                ),
-              ],
-            ),
+          Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.white70, fontSize: 8),
           ),
         ],
       ),

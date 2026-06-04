@@ -20,10 +20,15 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
   publications: (json['publications'] as List<dynamic>?)
       ?.map((e) => Publication.fromJson(e as Map<String, dynamic>))
       .toList(),
+  lastMessage: json['last_message'] as String?,
   createdAt: json['createdAt'] as String?,
   updatedAt: json['updatedAt'] as String?,
+  colleges: (json['colleges'] as List<dynamic>?)
+      ?.map((e) => e as String)
+      .toList(),
   profileImage: json['profileImage'] as String?,
   currentCompany: json['currentCompany'] as String?,
+  responseRate: (json['responseRate'] as num?)?.toInt(),
   totalYearsOfExperience: json['totalYearsOfExperience'] as String?,
   noticePeriod: json['noticePeriod'] as String?,
   noticePeriodStartDate: json['noticePeriodStartDate'] as String?,
@@ -104,10 +109,13 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'achievements': instance.achievements,
   'awards': instance.awards,
   'publications': instance.publications,
+  'last_message': instance.lastMessage,
   'createdAt': instance.createdAt,
   'updatedAt': instance.updatedAt,
+  'colleges': instance.colleges,
   'profileImage': instance.profileImage,
   'currentCompany': instance.currentCompany,
+  'responseRate': instance.responseRate,
   'totalYearsOfExperience': instance.totalYearsOfExperience,
   'noticePeriod': instance.noticePeriod,
   'noticePeriodStartDate': instance.noticePeriodStartDate,

@@ -144,11 +144,11 @@ class InterviewCard extends StatelessWidget {
             /// 🔹 DATE + TIME
             Row(
               children: [
-                const Icon(
-                  Icons.calendar_today_outlined,
-                  size: 16,
-                  color: Colors.grey,
-                ),
+                Image.asset(
+                          "assets/images/calendar.png",
+                          width: 15,
+                          height: 15,
+                        ),
                 const SizedBox(width: 6),
                 Text(
                   interview.date ?? '—',

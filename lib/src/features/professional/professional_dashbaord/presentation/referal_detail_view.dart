@@ -254,6 +254,10 @@ https://rawrecruit.in/professional-dashboard/Referral/
                   _matchInsightsSection(job),
                   const SizedBox(height: 16),
 
+                  _referralMetricsSection(referral),
+
+                  const SizedBox(height: 16),
+
                   _roleOverviewSection(job),
                   const SizedBox(height: 16),
 
@@ -415,11 +419,8 @@ https://rawrecruit.in/professional-dashboard/Referral/
                 ),
               ),
               _vDivider(),
-              const Icon(
-                Icons.calendar_today_outlined,
-                size: 12,
-                color: Colors.grey,
-              ),
+              Image.asset("assets/images/calendar.png", width: 15, height: 15),
+
               const SizedBox(width: 4),
               Flexible(
                 child: RichText(
@@ -766,15 +767,137 @@ https://rawrecruit.in/professional-dashboard/Referral/
     );
   }
 
-  // ============================================================
-  // MATCH INSIGHTS (no "Why you're a good fit", keep score + improve)
-  // ============================================================
+  Widget _referralMetricsSection(dynamic referral) {
+    final metrics = referral?.metrics;
+
+    final applications = metrics?.totalApplicationsReceived ?? 0;
+
+    final referred = metrics?.totalReferredToCompany ?? 0;
+
+    final interviews = metrics?.totalInterviewScheduled ?? 0;
+
+    final accepted = metrics?.totalAcceptedByCompany ?? 0;
+
+    final responseRate = metrics?.responseRate ?? 0;
+
+    final successRate = metrics?.referralSuccessRate ?? 0;
+
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(
+                Icons.analytics_outlined,
+                color: Colors.orangeAccent,
+                size: 18,
+              ),
+              SizedBox(width: 8),
+              Text(
+                "Referral Metrics",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          Row(
+            children: [
+              Expanded(
+                child: _metricCard("Applications", applications.toString()),
+              ),
+              const SizedBox(width: 10),
+              Expanded(child: _metricCard("Referred", referred.toString())),
+            ],
+          ),
+
+          // const SizedBox(height: 10),
+
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Interviews",
+          //         interviews.toString(),
+          //       ),
+          //     ),
+          //     const SizedBox(width: 10),
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Accepted",
+          //         accepted.toString(),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+
+          // const SizedBox(height: 10),
+
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Response Rate",
+          //         "$responseRate%",
+          //       ),
+          //     ),
+          //     const SizedBox(width: 10),
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Success Rate",
+          //         "$successRate%",
+          //       ),
+          //     ),
+          //   ],
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget _metricCard(String title, String value) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(.03),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withOpacity(.05)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              color: AppColors.kGreen,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.grey, fontSize: 11),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ============================================================
   // MATCH INSIGHTS — score circle + real job stats on the left
   // ============================================================
   Widget _matchInsightsSection(Job job) {
     final openings = job.numberOfOpenings?.toString() ?? "—";
-    final rounds = (job.rounds?.length ?? 0).toString();
+    final rounds = (job.rounds?.isNotEmpty ?? false)
+        ? job.rounds!.join(", ")
+        : "—";
 
     final process = (job.selectionProcess?.isNotEmpty ?? false)
         ? job.selectionProcess!.join(", ")
@@ -1086,8 +1209,6 @@ https://rawrecruit.in/professional-dashboard/Referral/
   // ============================================================
   Widget _skillsSection(Job job) {
     final skills = job.skills ?? [];
-    final visible = skills.take(6).toList();
-    final extra = skills.length - visible.length;
 
     return _cardContainer(
       child: Column(
@@ -1107,28 +1228,22 @@ https://rawrecruit.in/professional-dashboard/Referral/
               ),
             ],
           ),
+
           const SizedBox(height: 12),
-          if (visible.isEmpty)
-            const Text("—", style: TextStyle(color: Colors.grey))
+
+          if (skills.isEmpty)
+            const Text(
+              "No skills specified",
+              style: TextStyle(color: Colors.grey),
+            )
           else
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: [
-                ...visible.map((s) => _skillChip(s)),
-                if (extra > 0)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      "+$extra more",
-                      style: TextStyle(
-                        color: AppColors.kGreen,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-              ],
+              children: skills
+                  .where((s) => s.trim().isNotEmpty)
+                  .map((s) => _skillChip(s))
+                  .toList(),
             ),
         ],
       ),
@@ -1317,6 +1432,7 @@ https://rawrecruit.in/professional-dashboard/Referral/
     return Job(
       id: r.id,
       jobTitle: r.jobTitle,
+      rounds: r.rounds,
       endDate: r.endDate,
       description: r.description,
       jobType: r.jobType,
@@ -1347,6 +1463,7 @@ https://rawrecruit.in/professional-dashboard/Referral/
       candidatePosted: User(
         id: r.candidatePosted?.userId,
         name: r.candidatePosted?.name,
+
         currentCompany: r.candidatePosted?.currentCompany,
         email: r.candidatePosted?.email,
         phone: r.candidatePosted?.phone,

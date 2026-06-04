@@ -84,6 +84,11 @@ _ReferralJobModel _$ReferralJobModelFromJson(
   packageDetails: json['packageDetails'] == null
       ? null
       : PackageDetails.fromJson(json['packageDetails'] as Map<String, dynamic>),
+  referralMetrics: json['referralMetrics'] == null
+      ? null
+      : ReferralMetrics.fromJson(
+          json['referralMetrics'] as Map<String, dynamic>,
+        ),
   endDate: json['endDate'] == null
       ? null
       : DateTime.parse(json['endDate'] as String),
@@ -144,6 +149,7 @@ Map<String, dynamic> _$ReferralJobModelToJson(_ReferralJobModel instance) =>
       'workLocation': instance.workLocation,
       'numberOfStudent': instance.numberOfStudent,
       'packageDetails': instance.packageDetails,
+      'referralMetrics': instance.referralMetrics,
       'endDate': instance.endDate?.toIso8601String(),
       'inactive': instance.inactive,
       'matchScore': instance.matchScore,
@@ -151,6 +157,28 @@ Map<String, dynamic> _$ReferralJobModelToJson(_ReferralJobModel instance) =>
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
       'metrics': instance.metrics,
+    };
+
+_ReferralMetrics _$ReferralMetricsFromJson(Map<String, dynamic> json) =>
+    _ReferralMetrics(
+      totalApplicationsReceived: (json['totalApplicationsReceived'] as num?)
+          ?.toInt(),
+      totalReferredToCompany: (json['totalReferredToCompany'] as num?)?.toInt(),
+      totalInterviewScheduled: (json['totalInterviewScheduled'] as num?)
+          ?.toInt(),
+      totalAcceptedByCompany: (json['totalAcceptedByCompany'] as num?)?.toInt(),
+      responseRate: (json['responseRate'] as num?)?.toInt(),
+      referralSuccessRate: (json['referralSuccessRate'] as num?)?.toInt(),
+    );
+
+Map<String, dynamic> _$ReferralMetricsToJson(_ReferralMetrics instance) =>
+    <String, dynamic>{
+      'totalApplicationsReceived': instance.totalApplicationsReceived,
+      'totalReferredToCompany': instance.totalReferredToCompany,
+      'totalInterviewScheduled': instance.totalInterviewScheduled,
+      'totalAcceptedByCompany': instance.totalAcceptedByCompany,
+      'responseRate': instance.responseRate,
+      'referralSuccessRate': instance.referralSuccessRate,
     };
 
 _CandidatePosted _$CandidatePostedFromJson(Map<String, dynamic> json) =>

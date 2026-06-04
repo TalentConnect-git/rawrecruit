@@ -19,12 +19,15 @@ abstract class User with _$User {
     List<Achievement>? achievements,
     List<Award>? awards,
     List<Publication>? publications,
-
+@JsonKey(name: 'last_message')
+String? lastMessage,
     String? createdAt,
     String? updatedAt,
+  List<String>? colleges,
 
     String? profileImage,
     String? currentCompany,
+    int? responseRate,
 
     @JsonKey(name: 'totalYearsOfExperience') String? totalYearsOfExperience,
     String? noticePeriod,

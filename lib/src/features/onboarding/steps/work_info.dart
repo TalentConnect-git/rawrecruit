@@ -542,9 +542,8 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
                   setState(() {
                     selectedState = val;
 
-                    selectedCities.clear();
                     cities.clear();
-                    locationCtrl.clear();
+                    
                   });
 
                   saveData();
