@@ -2,7 +2,6 @@ import 'package:flutter/material.dart' hide Notification;
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/jobs/utils/enums.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart'
     show Notification, NotificationMeta;
 
@@ -148,13 +147,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
             if (jobId == null) return;
 
-            context.goNamed(
-              RouteNames.application,
-              extra: {
-                'jobType': ProfessionalJobType.posted,
-                'userType': UserType.professional,
-              },
-            );
+            context.goNamed(RouteNames.referralPostDetail, extra: jobId);
             break;
 
           case 'JobDetail':
@@ -162,10 +155,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
             if (jobId == null) return;
 
-            // context.pushNamed(
-            //   RouteNames.jobDetail,
-            //   extra: {'jobId': jobId},
-            // );
+            context.goNamed(RouteNames.referralDetail, extra: jobId);
             break;
         }
         break;
@@ -178,13 +168,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
             if (jobId == null || applicationId == null) return;
 
-            // context.pushNamed(
-            //   RouteNames.jobCandidates,
-            //   extra: {
-            //     'jobId': jobId,
-            //     'applicationId': applicationId,
-            //   },
-            // );
+            context.pushNamed(RouteNames.referrerDetail, extra: applicationId);
             break;
         }
         break;
@@ -202,14 +186,11 @@ class _NotificationCardState extends State<NotificationCard> {
         switch (subtopic) {
           case 'Applied By Me':
             final applicationId = body?['applicationId'];
-            final jobId = body?['jobId'];
+            // final jobId = notificationData['jobId'];
 
             if (applicationId == null) return;
 
-            context.goNamed(
-              RouteNames.referrer,
-              extra: {'userType': UserType.professional},
-            );
+            context.goNamed(RouteNames.applicationDetail, extra: applicationId);
             break;
         }
 
@@ -217,18 +198,29 @@ class _NotificationCardState extends State<NotificationCard> {
 
       case 'Chat':
         final senderId = body?['senderId'];
-        final referenceId = body?['referenceId'];
+        // final referenceId = notificationData['referenceId'];
 
-        if (senderId == null || referenceId == null) return;
+        // if (senderId == null || referenceId == null) return;
 
-        context.pushNamed(
-          RouteNames.chatUserList,
-          // extra: {
-          //   'senderId': senderId,
-          //   'referenceId': referenceId,
-          // },
+        context.goNamed(
+          RouteNames.chatUser,
+          extra: {
+            'senderId': senderId,
+            // 'referenceId': referenceId,
+          },
         );
         break;
+
+      case 'Alumni Network':
+        switch (subtopic) {
+          case 'Alumni Detail':
+            final userId = body?['userId'];
+
+            if (userId == null) return;
+
+            context.goNamed(RouteNames.alumniDetail, extra: userId);
+            break;
+        }
     }
   }
 }

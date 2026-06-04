@@ -98,7 +98,7 @@ class NotificationService {
 
     final topic = notificationData['topic'];
     final subtopic = notificationData['subtopic'];
-    final idFromPushNotification = notificationData['id'] as String?;
+    // final idFromPushNotification = notificationData['id'] as String?;
 
     switch (topic) {
       case 'Jobs':
@@ -108,13 +108,7 @@ class NotificationService {
 
             if (jobId == null) return;
 
-            state?.context.goNamed(
-              RouteNames.referralDetail,
-              extra: {
-                'id': jobId,
-                // 'userType': UserType.professional,
-              },
-            );
+            state?.context.goNamed(RouteNames.referralPostDetail, extra: jobId);
             break;
 
           case 'JobDetail':
@@ -122,10 +116,7 @@ class NotificationService {
 
             if (jobId == null) return;
 
-            // context.pushNamed(
-            //   RouteNames.jobDetail,
-            //   extra: {'jobId': jobId},
-            // );
+            state?.context.goNamed(RouteNames.referralDetail, extra: jobId);
             break;
         }
         break;
@@ -138,13 +129,10 @@ class NotificationService {
 
             if (jobId == null || applicationId == null) return;
 
-            // context.pushNamed(
-            //   RouteNames.jobCandidates,
-            //   extra: {
-            //     'jobId': jobId,
-            //     'applicationId': applicationId,
-            //   },
-            // );
+            state?.context.pushNamed(
+              RouteNames.referrerDetail,
+              extra: applicationId,
+            );
             break;
         }
         break;
@@ -162,13 +150,13 @@ class NotificationService {
         switch (subtopic) {
           case 'Applied By Me':
             final applicationId = notificationData['applicationId'];
-            final jobId = notificationData['jobId'];
+            // final jobId = notificationData['jobId'];
 
             if (applicationId == null) return;
 
             state?.context.goNamed(
-              RouteNames.referrer,
-              extra: {'userType': UserType.professional},
+              RouteNames.applicationDetail,
+              extra: applicationId,
             );
             break;
         }
@@ -177,18 +165,29 @@ class NotificationService {
 
       case 'Chat':
         final senderId = notificationData['senderId'];
-        final referenceId = notificationData['referenceId'];
+        // final referenceId = notificationData['referenceId'];
 
         // if (senderId == null || referenceId == null) return;
 
         state?.context.goNamed(
-          RouteNames.chatUserList,
-          // extra: {
-          //   'senderId': senderId,
-          //   'referenceId': referenceId,
-          // },
+          RouteNames.chatUser,
+          extra: {
+            'senderId': senderId,
+            // 'referenceId': referenceId,
+          },
         );
         break;
+
+      case 'Alumni Network':
+        switch (subtopic) {
+          case 'Alumni Detail':
+            final userId = notificationData['userId'];
+
+            if (userId == null) return;
+
+            state?.context.goNamed(RouteNames.alumniDetail, extra: userId);
+            break;
+        }
     }
   }
 }
