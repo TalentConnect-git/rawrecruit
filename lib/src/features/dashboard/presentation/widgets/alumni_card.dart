@@ -50,7 +50,7 @@ class AlumniCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: () {
-        context.pushNamed("alumniDetail", extra: jobs);
+        context.pushNamed("alumniDetail", extra: jobs.firstOrNull?.id);
       },
       child: Container(
         margin: const EdgeInsets.only(right: 14),
@@ -120,36 +120,36 @@ class AlumniCard extends StatelessWidget {
                 /// DESIGNATION + COMPANY
 
                 /// COMPANY
-             Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-    const Icon(
-      Icons.business_center_outlined,
-      size: 14,
-      color: Colors.white70,
-    ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(
+                      Icons.business_center_outlined,
+                      size: 14,
+                      color: Colors.white70,
+                    ),
 
-    const SizedBox(width: 4),
+                    const SizedBox(width: 4),
 
-    Flexible(
-      child: Text(
-        currentExperience?.company?.isNotEmpty == true
-            ? currentExperience!.company!
-            : "-",
+                    Flexible(
+                      child: Text(
+                        currentExperience?.company?.isNotEmpty == true
+                            ? currentExperience!.company!
+                            : "-",
 
-        textAlign: TextAlign.center,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
 
-        style: const TextStyle(
-          color: Colors.white,
-          fontWeight: FontWeight.w700,
-          fontSize: 13,
-        ),
-      ),
-    ),
-  ],
-),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
 
                 const SizedBox(height: 4),
 
@@ -170,35 +170,35 @@ class AlumniCard extends StatelessWidget {
 
                 /// COLLEGE
                 Row(
-  mainAxisAlignment: MainAxisAlignment.center,
-  children: [
-     Icon(
-      Icons.school_outlined,
-      size: 14,
-      color:  AppColors.kGreen,
-    ),
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.school_outlined,
+                      size: 14,
+                      color: AppColors.kGreen,
+                    ),
 
-    const SizedBox(width: 4),
+                    const SizedBox(width: 4),
 
-    Flexible(
-      child: Text(
-        currentEducation?.college?.isNotEmpty == true
-            ? currentEducation!.college!
-            : "-",
+                    Flexible(
+                      child: Text(
+                        currentEducation?.college?.isNotEmpty == true
+                            ? currentEducation!.college!
+                            : "-",
 
-        textAlign: TextAlign.center,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
 
-        style:  TextStyle(
-          color: AppColors.kGreen,
-          fontSize: 12,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    ),
-  ],
-),
+                        style: TextStyle(
+                          color: AppColors.kGreen,
+                          fontSize: 12,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 8),
 
                 /// 🔹 HIRING STATUS
@@ -236,7 +236,7 @@ class AlumniCard extends StatelessWidget {
               behavior: HitTestBehavior.opaque,
               onTap: () {
                 if (candidate != null) {
-                  context.pushNamed(RouteNames.chatUser, extra: candidate);
+                  context.pushNamed(RouteNames.chatUser, extra: candidate.id);
                 }
               },
               child: Container(

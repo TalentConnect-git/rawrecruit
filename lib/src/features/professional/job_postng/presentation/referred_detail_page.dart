@@ -213,7 +213,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
           onPressed: () {
             context.pushNamed(
               RouteNames.chatUser,
-              extra: application.applicant,
+              extra: application.applicant?.id,
             );
           },
           child: Text(

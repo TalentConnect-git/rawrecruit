@@ -258,7 +258,10 @@ class _JobDetailViewState extends State<JobDetailView> {
                             phone: employer?.mobile,
                           );
 
-                          context.pushNamed(RouteNames.chatUser, extra: user);
+                          context.pushNamed(
+                            RouteNames.chatUser,
+                            extra: user.id,
+                          );
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(

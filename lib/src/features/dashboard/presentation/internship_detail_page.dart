@@ -243,7 +243,7 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
 
                         final user = User(id: userId);
 
-                        context.pushNamed(RouteNames.chatUser, extra: user);
+                        context.pushNamed(RouteNames.chatUser, extra: user.id);
                       },
 
                       child: Container(

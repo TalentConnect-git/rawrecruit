@@ -118,8 +118,10 @@ GoRouter appRouter = GoRouter(
       name: RouteNames.alumniDetail,
       path: "/alumni-detail",
       builder: (context, state) {
-        final jobs = state.extra as List<Job>;
-        return AlumniDetailView(jobs: jobs);
+        final alumniId = state.extra as String?;
+
+        if (alumniId == null) return NotFoundView();
+        return AlumniDetailView(alumniId: alumniId);
       },
     ),
 
@@ -253,9 +255,9 @@ GoRouter appRouter = GoRouter(
       name: RouteNames.chatUser,
       path: '/chat-user',
       builder: (context, state) {
-        User? user = state.extra as User?;
-        if (user == null) return Scaffold();
-        return ChatDetailView(user: user);
+        String? user = state.extra as String?;
+        if (user == null) return NotFoundView();
+        return ChatDetailView(userId: user);
       },
     ),
 

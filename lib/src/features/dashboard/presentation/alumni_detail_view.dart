@@ -1,60 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/dashboard/presentation/view_model/alumni_detail_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AlumniDetailView extends StatelessWidget {
-  final List<Job> jobs;
+class AlumniDetailView extends StatefulWidget {
+  final String alumniId;
 
-  const AlumniDetailView({super.key, required this.jobs});
+  const AlumniDetailView({super.key, required this.alumniId});
+
+  @override
+  State<AlumniDetailView> createState() => _AlumniDetailViewState();
+}
+
+class _AlumniDetailViewState extends State<AlumniDetailView> {
+  AlumniDetailViewModel alumniDetailViewModel = AlumniDetailViewModel();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final failure = await alumniDetailViewModel.getAlumniByid(
+        widget.alumniId,
+      );
+      failure?.showError(context);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    if (jobs.isEmpty) {
-      return const Scaffold(
-        backgroundColor: Colors.black,
-        body: Center(
-          child: Text("No data", style: TextStyle(color: Colors.white)),
-        ),
-      );
-    }
-
-    final first = jobs.first;
-
-    final name = first.candidatePosted?.name ?? "User";
-
-final currentExperience = first.candidatePosted?.experiences
-    ?.where((e) => e.isCurrent == true)
-    .cast<dynamic?>()
-    .firstOrNull;
-
-final role =
-    (currentExperience?.role ?? '').toString().trim().isNotEmpty
-        ? currentExperience!.role!
-        : "-";
-
-final company =
-    (currentExperience?.company ?? '').toString().trim().isNotEmpty
-        ? currentExperience!.company!
-        : "-";
-            final referrals = first.candidatePosted?.referralJobs ?? [];
-
-final currentReferral = referrals.isNotEmpty
-    ? referrals.first
-    : null;
-
-final location =
-    (currentReferral?.location?.isNotEmpty ?? false)
-        ? currentReferral!.location!.join(", ")
-        : (first.candidatePosted?.locations?.isNotEmpty ?? false)
-            ? first.candidatePosted!.locations!.join(", ")
-            : "-";
-
-    final isHiring = referrals.isNotEmpty;
-
-
     return Scaffold(
       backgroundColor: Colors.black,
 
@@ -67,498 +44,532 @@ final location =
         ),
       ),
 
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            /// 🔥 COMPACT HEADER
-            Container(
+      body: Consumer<AlumniDetailViewModel>(
+        builder: (vmContext, vm, _) {
+          if (vm.alumni == null) {
+            return Center(
+              child: Text("No data", style: TextStyle(color: Colors.white)),
+            );
+          }
+
+          final name = vm.alumni?.name ?? "User";
+
+          final currentExperience = vm.alumni?.experiences
+              ?.where((e) => e.isCurrent == true)
+              .cast<dynamic?>()
+              .firstOrNull;
+
+          final role =
+              (currentExperience?.role ?? '').toString().trim().isNotEmpty
+              ? currentExperience!.role!
+              : "-";
+
+          final company =
+              (currentExperience?.company ?? '').toString().trim().isNotEmpty
+              ? currentExperience!.company!
+              : "-";
+          final referrals = vm.alumni?.referralJobs ?? [];
+
+          final currentReferral = referrals.isNotEmpty ? referrals.first : null;
+
+          final location = (currentReferral?.location?.isNotEmpty ?? false)
+              ? currentReferral!.location!.join(", ")
+              : (vm.alumni?.locations?.isNotEmpty ?? false)
+              ? vm.alumni?.locations!.join(", ")
+              : "-";
+
+          final isHiring = referrals.isNotEmpty;
+
+          return RefreshIndicator(
+            onRefresh: () async {
+              final failure = await alumniDetailViewModel.getAlumniByid(
+                widget.alumniId,
+              );
+              failure?.showError(context);
+            },
+            child: SingleChildScrollView(
               padding: const EdgeInsets.all(16),
-              decoration: BoxDecoration(
-                color: AppColors.kCard,
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.white.withOpacity(.06)),
-              ),
               child: Column(
                 children: [
-                  /// TOP
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      /// AVATAR
-                 CircleAvatar(
-  radius: 32,
-  backgroundColor: AppColors.kGreen,
-
-  backgroundImage:
-      (first.candidatePosted?.profileImage ??
-                  '')
-              .isNotEmpty
-          ? NetworkImage(
-              first.candidatePosted!
-                  .profileImage!,
-            )
-          : null,
-
-  child:
-      (first.candidatePosted?.profileImage ??
-                  '')
-              .isEmpty
-          ? Text(
-              name.getInitials,
-              style: const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            )
-          : null,
-),
-
-                      const SizedBox(width: 14),
-
-                      /// INFO
-                      Expanded(
-                        child: Column(
+                  /// 🔥 COMPACT HEADER
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AppColors.kCard,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.white.withOpacity(.06)),
+                    ),
+                    child: Column(
+                      children: [
+                        /// TOP
+                        Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                          Row(
-  mainAxisSize: MainAxisSize.min,
-  children: [
-    Flexible(
-      child: Text(
-        name,
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-        style: const TextStyle(
-          color: Colors.white,
-          fontSize: 24,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    ),
+                            /// AVATAR
+                            CircleAvatar(
+                              radius: 32,
+                              backgroundColor: AppColors.kGreen,
 
-    const SizedBox(width: 6),
+                              backgroundImage:
+                                  (vm.alumni?.profileImage ?? '').isNotEmpty
+                                  ? NetworkImage(vm.alumni?.profileImage ?? '')
+                                  : null,
 
-    Icon(
-      Icons.verified,
-      color: AppColors.kGreen,
-      size: 18,
-    ),
-  ],
-),
+                              child: (vm.alumni?.profileImage ?? '').isEmpty
+                                  ? Text(
+                                      name.getInitials,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                      ),
+                                    )
+                                  : null,
+                            ),
 
-                            const SizedBox(height: 4),
+                            const SizedBox(width: 14),
 
-                        Column(
-  crossAxisAlignment:
-      CrossAxisAlignment.start,
+                            /// INFO
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Flexible(
+                                        child: Text(
+                                          name,
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 24,
+                                            fontWeight: FontWeight.w700,
+                                          ),
+                                        ),
+                                      ),
 
-  children: [
+                                      const SizedBox(width: 6),
 
-    /// LOCATION
-    Row(
-      children: [
+                                      Icon(
+                                        Icons.verified,
+                                        color: AppColors.kGreen,
+                                        size: 18,
+                                      ),
+                                    ],
+                                  ),
 
-        const Icon(
-          Icons.location_on_outlined,
-          size: 14,
-          color: Colors.grey,
-        ),
+                                  const SizedBox(height: 4),
 
-        const SizedBox(width: 6),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
 
-        Expanded(
-          child: Text(
-            location,
-            style: const TextStyle(
-              color: Colors.grey,
-              fontSize: 15,
-            ),
-          ),
-        ),
-      ],
-    ),
+                                    children: [
+                                      /// LOCATION
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.location_on_outlined,
+                                            size: 14,
+                                            color: Colors.grey,
+                                          ),
 
-    const SizedBox(height: 6),
+                                          const SizedBox(width: 6),
 
-    // /// COLLEGE
-    // Row(
-    //   children: [
+                                          Expanded(
+                                            child: Text(
+                                              location ?? '',
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 15,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
 
-    //     const Icon(
-    //       Icons.school_outlined,
-    //       size: 14,
-    //       color: Colors.grey,
-    //     ),
+                                      const SizedBox(height: 6),
 
-    //     const SizedBox(width: 6),
+                                      // /// COLLEGE
+                                      // Row(
+                                      //   children: [
 
-    //     // Expanded(
-    //     //   child: Text(
-    //     //     college,
-    //     //     style: const TextStyle(
-    //     //       color: Colors.grey,
-    //     //       fontSize: 13,
-    //     //     ),
-    //     //   ),
-    //     // ),
-    //   ],
-    // ),
+                                      //     const Icon(
+                                      //       Icons.school_outlined,
+                                      //       size: 14,
+                                      //       color: Colors.grey,
+                                      //     ),
 
-    const SizedBox(height: 6),
+                                      //     const SizedBox(width: 6),
 
-    /// COMPANY
-    Row(
-      children: [
+                                      //     // Expanded(
+                                      //     //   child: Text(
+                                      //     //     college,
+                                      //     //     style: const TextStyle(
+                                      //     //       color: Colors.grey,
+                                      //     //       fontSize: 13,
+                                      //     //     ),
+                                      //     //   ),
+                                      //     // ),
+                                      //   ],
+                                      // ),
+                                      const SizedBox(height: 6),
 
-    
+                                      /// COMPANY
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            child:
+                                                /// ROLE + COMPANY
+                                                Row(
+                                                  children: [
+                                                    const Icon(
+                                                      Icons.work_outline,
+                                                      size: 14,
+                                                      color: Colors.grey,
+                                                    ),
 
-        Expanded(
-          child: /// ROLE + COMPANY
-Row(
-  children: [
+                                                    const SizedBox(width: 6),
 
-    const Icon(
-      Icons.work_outline,
-      size: 14,
-      color: Colors.grey,
-    ),
+                                                    Expanded(
+                                                      child: Text(
+                                                        role.isNotEmpty
+                                                            ? "$role @ $company"
+                                                            : company,
 
-    const SizedBox(width: 6),
+                                                        style: const TextStyle(
+                                                          color: Colors.grey,
+                                                          fontSize: 13,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                          ),
+                                        ],
+                                      ),
 
-    Expanded(
-      child: Text(
-        role.isNotEmpty
-            ? "$role @ $company"
-            : company,
+                                      const SizedBox(height: 6),
 
-        style: const TextStyle(
-          color: Colors.grey,
-          fontSize: 13,
-        ),
-      ),
-    ),
-  ],
-),
-        ),
-      ],
-    ),
+                                      /// EXPERIENCE
+                                      if ((vm.alumni?.totalYearsOfExperience ??
+                                              '')
+                                          .isNotEmpty)
+                                        Row(
+                                          children: [
+                                            const Icon(
+                                              Icons.work_history_outlined,
+                                              size: 14,
+                                              color: Colors.grey,
+                                            ),
 
-    const SizedBox(height: 6),
+                                            const SizedBox(width: 6),
 
-    /// EXPERIENCE
-    if ((first.candidatePosted
-                ?.totalYearsOfExperience ??
-            '')
-        .isNotEmpty)
-      Row(
-        children: [
+                                            Expanded(
+                                              child: Text(
+                                                "${vm.alumni?.totalYearsOfExperience} years experience",
 
-          const Icon(
-            Icons.work_history_outlined,
-            size: 14,
-            color: Colors.grey,
-          ),
+                                                style: const TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 13,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                    ],
+                                  ),
 
-          const SizedBox(width: 6),
+                                  const SizedBox(height: 10),
 
-          Expanded(
-            child: Text(
-              "${first.candidatePosted?.totalYearsOfExperience} years experience",
+                                  // Row(
+                                  //   children: [
+                                  //     Icon(
+                                  //       Icons.location_on_outlined,
+                                  //       size: 14,
+                                  //       color: Colors.grey,
+                                  //     ),
 
-              style: const TextStyle(
-                color: Colors.grey,
-                fontSize: 13,
-              ),
-            ),
-          ),
-        ],
-      ),
-  ],
-),
+                                  //     const SizedBox(width: 6),
 
-                            const SizedBox(height: 10),
+                                  //     Expanded(
+                                  //       child: Text(
+                                  //         location,
+                                  //         style: const TextStyle(
+                                  //           color: Colors.white70,
+                                  //           fontSize: 12,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
 
-                            // Row(
-                            //   children: [
-                            //     Icon(
-                            //       Icons.location_on_outlined,
-                            //       size: 14,
-                            //       color: Colors.grey,
-                            //     ),
+                                  // const SizedBox(height: 6),
 
-                            //     const SizedBox(width: 6),
+                                  // Row(
+                                  //   children: [
+                                  //     Icon(
+                                  //       Icons.business_outlined,
+                                  //       size: 14,
+                                  //       color: Colors.grey,
+                                  //     ),
 
-                            //     Expanded(
-                            //       child: Text(
-                            //         location,
-                            //         style: const TextStyle(
-                            //           color: Colors.white70,
-                            //           fontSize: 12,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
+                                  //     const SizedBox(width: 6),
 
-                            // const SizedBox(height: 6),
-
-                            // Row(
-                            //   children: [
-                            //     Icon(
-                            //       Icons.business_outlined,
-                            //       size: 14,
-                            //       color: Colors.grey,
-                            //     ),
-
-                            //     const SizedBox(width: 6),
-
-                            //     Expanded(
-                            //       child: Text(
-                            //         company,
-                            //         style: const TextStyle(
-                            //           color: Colors.white70,
-                            //           fontSize: 12,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
+                                  //     Expanded(
+                                  //       child: Text(
+                                  //         company,
+                                  //         style: const TextStyle(
+                                  //           color: Colors.white70,
+                                  //           fontSize: 12,
+                                  //         ),
+                                  //       ),
+                                  //     ),
+                                  //   ],
+                                  // ),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
-                      ),
-                    ],
-                  ),
 
-                  const SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
-                  /// MESSAGE BUTTON
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: AppColors.kGreen,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                      onPressed: () {
-                        context.pushNamed(
-                          RouteNames.chatUser,
-                          extra: first.candidatePosted,
-                        );
-                      },
-                      icon: const Icon(Icons.message, color: Colors.white),
-                      label: const Text(
-                        "Message",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  SizedBox(
-                    width: double.infinity,
-
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        final userId =
-                            first.candidatePosted?.userId ??
-                            first.candidatePosted?.id;
-
-                        if (userId == null) return;
-
-                        context.pushNamed(
-                          RouteNames.profileDetail,
-                          extra: userId,
-                        );
-                      },
-
-                      icon: Icon(
-                        Icons.person_outline,
-                        size: 18,
-                        color: AppColors.kGreen,
-                      ),
-
-                      label: Text(
-                        "Show Profile",
-                        style: TextStyle(
-                          color: AppColors.kGreen,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-
-                      style: OutlinedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 14),
-
-                        side: BorderSide(
-                          color: AppColors.kGreen.withOpacity(.5),
-                        ),
-
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 18),
-
-            /// EDUCATION + METRICS
-            /// METRICS
-            /// METRICS
-            _modernCard(
-              title: "Metrics",
-              icon: Icons.analytics_outlined,
-
-              child: Column(
-                children: [
-                  _metricRow("Open Jobs", "${referrals.length}"),
-
-                  const SizedBox(height: 10),
-
-                  Row(
-                    children: [
-                      const Text(
-                        "Status",
-                        style: TextStyle(color: Colors.grey, fontSize: 12),
-                      ),
-
-                      const Spacer(),
-
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            isHiring ? "Hiring" : "Inactive",
-                            style: TextStyle(
-                              color: isHiring ? Colors.green : Colors.red,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
+                        /// MESSAGE BUTTON
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.kGreen,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
+                            ),
+                            onPressed: () {
+                              context.pushNamed(
+                                RouteNames.chatUser,
+                                extra: widget.alumniId,
+                              );
+                            },
+                            icon: const Icon(
+                              Icons.message,
+                              color: Colors.white,
+                            ),
+                            label: const Text(
+                              "Message",
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
-                          const SizedBox(width: 6),
+                        ),
+                        const SizedBox(height: 10),
 
-                          Container(
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              color: isHiring ? Colors.green : Colors.red,
-                              shape: BoxShape.circle,
+                        SizedBox(
+                          width: double.infinity,
+
+                          child: OutlinedButton.icon(
+                            onPressed: () {
+                              final userId = vm.alumni?.userId ?? vm.alumni?.id;
+
+                              if (userId == null) return;
+
+                              context.pushNamed(
+                                RouteNames.profileDetail,
+                                extra: userId,
+                              );
+                            },
+
+                            icon: Icon(
+                              Icons.person_outline,
+                              size: 18,
+                              color: AppColors.kGreen,
+                            ),
+
+                            label: Text(
+                              "Show Profile",
+                              style: TextStyle(
+                                color: AppColors.kGreen,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+
+                            style: OutlinedButton.styleFrom(
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+
+                              side: BorderSide(
+                                color: AppColors.kGreen.withOpacity(.5),
+                              ),
+
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(14),
+                              ),
                             ),
                           ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
+
+                  const SizedBox(height: 18),
+
+                  /// EDUCATION + METRICS
+                  /// METRICS
+                  /// METRICS
+                  _modernCard(
+                    title: "Metrics",
+                    icon: Icons.analytics_outlined,
+
+                    child: Column(
+                      children: [
+                        _metricRow("Open Jobs", "${referrals.length}"),
+
+                        const SizedBox(height: 10),
+
+                        Row(
+                          children: [
+                            const Text(
+                              "Status",
+                              style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
+                            ),
+
+                            const Spacer(),
+
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  isHiring ? "Hiring" : "Inactive",
+                                  style: TextStyle(
+                                    color: isHiring ? Colors.green : Colors.red,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: isHiring ? Colors.green : Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  /// ABOUT
+                  _modernCard(
+                    title: "About",
+                    icon: Icons.person_outline,
+                    child: Text(
+                      vm.alumni?.about ?? '-',
+                      style: const TextStyle(
+                        color: Colors.grey,
+                        fontSize: 14,
+                        height: 1.5,
+                      ),
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+                  const SizedBox(height: 18),
+
+                  _modernCard(
+                    title: "Professional Links",
+                    icon: Icons.link,
+                    child: Column(
+                      children: [
+                        if ((vm.alumni?.linkedin ?? '').isNotEmpty)
+                          _linkTile(
+                            context: context,
+
+                            image: "assets/images/linkedin.png",
+
+                            title: "LinkedIn",
+                            value: vm.alumni?.linkedin ?? '',
+                          ),
+                        if ((vm.alumni?.email ?? '').isNotEmpty)
+                          _linkTile(
+                            context: context,
+
+                            image: "assets/images/mail.png",
+                            title: "Email",
+                            value: vm.alumni?.email ?? '',
+                          ),
+                        if ((vm.alumni?.github ?? '').isNotEmpty)
+                          _linkTile(
+                            context: context,
+
+                            image: "assets/images/github.png",
+                            title: "GitHub",
+                            value: vm.alumni?.github ?? '',
+                          ),
+
+                        if ((vm.alumni?.portfolio ?? '').isNotEmpty)
+                          _linkTile(
+                            context: context,
+                            image: "assets/images/portfolio.png",
+
+                            title: "Portfolio",
+                            value: vm.alumni?.portfolio ?? '',
+                          ),
+
+                        if ((vm.alumni?.resume ?? '').isNotEmpty)
+                          _linkTile(
+                            context: context,
+
+                            image: "assets/images/cv.png",
+                            title: "Resume",
+                            value: vm.alumni?.resume ?? '',
+                          ),
+                      ],
+                    ),
+                  ),
+
+                  //             const SizedBox(height: 18),
+                  const SizedBox(height: 18),
+
+                  /// OPEN POSITIONS
+                  _modernCard(
+                    title: "Open Positions",
+                    icon: Icons.work_outline,
+                    child: Column(
+                      children: referrals
+                          .map((job) => _jobTile(context, job))
+                          .toList(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
                 ],
               ),
             ),
-
-            const SizedBox(height: 18),
-
-            /// ABOUT
-            _modernCard(
-              title: "About",
-              icon: Icons.person_outline,
-              child: Text(
-                first.candidatePosted?.about ?? '-',
-                style: const TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14,
-                  height: 1.5,
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 18),
-            const SizedBox(height: 18),
-
-            _modernCard(
-              title: "Professional Links",
-              icon: Icons.link,
-              child: Column(
-                children: [
-                  if ((first.candidatePosted?.linkedin ?? '').isNotEmpty)
-                    _linkTile(
-                      context: context,
-
-  image: "assets/images/linkedin.png",
-
-                      title: "LinkedIn",
-                      value: first.candidatePosted!.linkedin!,
-                    ),
-                  if ((first.candidatePosted?.email ?? '').isNotEmpty)
-                    _linkTile(
-                      context: context,
-
-                      image: "assets/images/mail.png",
-                      title: "Email",
-                      value: first.candidatePosted!.email!,
-                    ),
-                  if ((first.candidatePosted?.github ?? '').isNotEmpty)
-                    _linkTile(
-                      context: context,
-
-                        image: "assets/images/github.png",
-                      title: "GitHub",
-                      value: first.candidatePosted!.github!,
-                    ),
-
-                  if ((first.candidatePosted?.portfolio ?? '').isNotEmpty)
-                    _linkTile(
-                      context: context,
-  image: "assets/images/portfolio.png",
-
-                      title: "Portfolio",
-                      value: first.candidatePosted!.portfolio!,
-                    ),
-
-                  if ((first.candidatePosted?.resume ?? '').isNotEmpty)
-                    _linkTile(
-                      context: context,
-
-  image: "assets/images/cv.png",
-                      title: "Resume",
-                      value: first.candidatePosted!.resume!,
-                    ),
-                ],
-              ),
-            ),
-
-            //             const SizedBox(height: 18),
-            const SizedBox(height: 18),
-
-            /// OPEN POSITIONS
-            _modernCard(
-              title: "Open Positions",
-              icon: Icons.work_outline,
-              child: Column(
-                children: referrals
-                    .map((job) => _jobTile(context, job))
-                    .toList(),
-              ),
-            ),
-
-            const SizedBox(height: 40),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
 
   Widget _linkTile({
     required BuildContext context,
-required String image,
+    required String image,
     required String title,
     required String value,
   }) {
@@ -614,11 +625,7 @@ required String image,
 
         child: Row(
           children: [
-          Image.asset(
-  image,
-  height: 22,
-  width: 22,
-),
+            Image.asset(image, height: 22, width: 22),
 
             const SizedBox(width: 12),
 

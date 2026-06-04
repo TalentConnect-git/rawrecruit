@@ -703,7 +703,7 @@ https://rawrecruit.in/professional-dashboard/Referral/
                   phone: c.phone ?? "",
                 );
 
-                context.pushNamed(RouteNames.chatUser, extra: user);
+                context.pushNamed(RouteNames.chatUser, extra: user.id);
               },
               icon: const Icon(Icons.message_outlined, size: 18),
               label: const Text(

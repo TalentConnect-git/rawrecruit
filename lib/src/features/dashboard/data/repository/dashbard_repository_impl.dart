@@ -1,7 +1,7 @@
-import 'package:rawrecruit/src/features/dashboard/data/data_source/dashbooard_data_source.dart';
-import 'package:rawrecruit/src/features/dashboard/data/repository/dashboard_repository.dart';
 import 'package:rawrecruit/src/features/alumni/index.dart'
     show CompanyAlumniResponse;
+import 'package:rawrecruit/src/features/dashboard/data/data_source/dashbooard_data_source.dart';
+import 'package:rawrecruit/src/features/dashboard/data/repository/dashboard_repository.dart';
 
 import '../../../../core/index.dart';
 
@@ -49,4 +49,8 @@ class DashboardRepositoryImpl implements DashboardRepository {
   @override
   ResultFuture<List<User>> getHiringAlumni({required bool onlyPostedJob}) =>
       _dataSource.getHiringAlumni(onlyPostedJob: onlyPostedJob);
+
+  @override
+  ResultFuture<User?> getUserById({required String userId}) =>
+      _dataSource.getUserById(userId: userId);
 }

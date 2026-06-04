@@ -70,7 +70,7 @@ class AlumniHiringCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(18),
 
       onTap: () {
-        context.pushNamed("alumniDetail", extra: jobs);
+        context.pushNamed(RouteNames.alumniDetail, extra: jobs.firstOrNull?.id);
       },
 
       child: Container(
@@ -211,7 +211,7 @@ class AlumniHiringCard extends StatelessWidget {
                           context.pushNamed(
                             RouteNames.chatUser,
 
-                            extra: candidate,
+                            extra: candidate.userId,
                           );
                         },
 

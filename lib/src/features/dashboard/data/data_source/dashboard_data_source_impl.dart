@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
-import 'package:rawrecruit/src/features/dashboard/data/data_source/dashbooard_data_source.dart';
 import 'package:rawrecruit/src/features/alumni/index.dart'
     show CompanyAlumniResponse;
+import 'package:rawrecruit/src/features/dashboard/data/data_source/dashbooard_data_source.dart';
 
 import '../../../../core/index.dart';
 
@@ -132,7 +132,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
     try {
       final result = await _networkService.request(request);
 
-     final List list = result.data['data'] ?? [];// ✅ IMPORTANT
+      final List list = result.data['data'] ?? []; // ✅ IMPORTANT
 
       final alumniList = list.map((e) => User.fromJson(e)).toList();
 
@@ -178,7 +178,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
     try {
       final result = await _networkService.request(request);
 
-    final List list = result.data['data'] ?? [];// ✅ IMPORTANT
+      final List list = result.data['data'] ?? []; // ✅ IMPORTANT
 
       final alumniList = list.map((e) => User.fromJson(e)).toList();
 
@@ -205,7 +205,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
     try {
       final result = await _networkService.request(request);
 
-     final List list = result.data['data'] ?? [];// ✅ IMPORTANT
+      final List list = result.data['data'] ?? []; // ✅ IMPORTANT
 
       final alumniList = list.map((e) => User.fromJson(e)).toList();
 
@@ -214,5 +214,28 @@ class DashboardDataSourceImpl implements DashboardDataSource {
       log('$e\n\n$s');
       return Left(APIException.from(e));
     }
+  }
+
+  @override
+  ResultFuture<User?> getUserById({required String userId}) async {
+    final Request request = Request(
+      method: RequestMethod.get,
+      endpoint: '${Endpoints.apiOnboardingGetDetails}/$userId',
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final profile = User.fromJson(response);
+        return Right(profile);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
   }
 }

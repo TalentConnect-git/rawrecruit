@@ -18,4 +18,6 @@ abstract class DashboardDataSource {
     required String companyName,
     required String userId,
   });
+
+  ResultFuture<User?> getUserById({required String userId});
 }

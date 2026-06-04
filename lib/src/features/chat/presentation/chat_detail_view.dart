@@ -8,9 +8,9 @@ import '../../../core/index.dart';
 import '../index.dart';
 
 class ChatDetailView extends StatefulWidget {
-  final User user;
+  final String userId;
 
-  const ChatDetailView({super.key, required this.user});
+  const ChatDetailView({super.key, required this.userId});
 
   @override
   State<ChatDetailView> createState() => _ChatDetailViewState();
@@ -23,9 +23,12 @@ class _ChatDetailViewState extends State<ChatDetailView> {
   @override
   void initState() {
     super.initState();
-
-    vm.activeChatUserId = widget.user.id!;
-    vm.fetchMessages(widget.user.id!);
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      vm.activeChatUserId = widget.userId;
+      vm.fetchMessages(widget.userId);
+      final failure = await vm.getAlumniById(widget.userId);
+      failure?.showError(context);
+    });
   }
 
   @override
@@ -54,79 +57,85 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                   border: Border(bottom: BorderSide(color: Colors.white12)),
                 ),
 
-                child: Row(
-                  spacing: 4,
-                  children: [
-                    GestureDetector(
-                      onTap: context.pop,
-                      child: Icon(
-                        Icons.keyboard_arrow_left,
-                        color: Colors.white,
+                child: Selector<ChatViewModel, User?>(
+                  selector: (_, vm) => vm.user,
+                  builder: (_, user, _) => Row(
+                    spacing: 4,
+                    children: [
+                      GestureDetector(
+                        onTap: context.pop,
+                        child: Icon(
+                          Icons.keyboard_arrow_left,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
 
-                    Stack(
-                      children: [
-                        CircleAvatar(
-                          backgroundColor: AppColors.kGreen,
-                          backgroundImage:
-                              (widget.user.profileImage != null &&
-                                  widget.user.profileImage!.isNotEmpty)
-                              ? NetworkImage(widget.user.profileImage!)
-                              : null,
-                          child:
-                              (widget.user.profileImage == null ||
-                                  widget.user.profileImage!.isEmpty)
-                              ? Text(
-                                  name(widget.user).getInitials,
-                                  style: AppTextStyles.s18W600.copyWith(
-                                    color: AppColors.kBg,
-                                  ),
-                                )
-                              : null,
-                        ),
-
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
-                          child: Container(
-                            height: 12,
-                            width: 12,
-                            decoration: BoxDecoration(
-                              color: vm.onlineUsers.contains(widget.user.id)
-                                  ? Colors.green
-                                  : Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                              border: Border.all(color: Colors.grey, width: 2),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    const SizedBox(width: 4),
-
-                    Flexible(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Stack(
                         children: [
-                          Flexible(
-                            child: Text(
-                              name(widget.user),
-                              style: AppTextStyles.s16W400.copyWith(
-                                overflow: TextOverflow.ellipsis,
-                                color: Colors.white,
+                          CircleAvatar(
+                            backgroundColor: AppColors.kGreen,
+                            backgroundImage:
+                                (user?.profileImage != null &&
+                                    user!.profileImage!.isNotEmpty)
+                                ? NetworkImage(user.profileImage!)
+                                : null,
+                            child:
+                                (user?.profileImage == null ||
+                                    user!.profileImage!.isEmpty)
+                                ? Text(
+                                    name(user).getInitials,
+                                    style: AppTextStyles.s18W600.copyWith(
+                                      color: AppColors.kBg,
+                                    ),
+                                  )
+                                : null,
+                          ),
+
+                          Positioned(
+                            bottom: 0,
+                            right: 0,
+                            child: Container(
+                              height: 12,
+                              width: 12,
+                              decoration: BoxDecoration(
+                                color: vm.onlineUsers.contains(user?.id)
+                                    ? Colors.green
+                                    : Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                  color: Colors.grey,
+                                  width: 2,
+                                ),
                               ),
-                              maxLines: 1,
                             ),
                           ),
                         ],
                       ),
-                    ),
 
-                    const SizedBox(width: 8),
-                  ],
+                      const SizedBox(width: 4),
+
+                      Flexible(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Flexible(
+                              child: Text(
+                                name(user),
+                                style: AppTextStyles.s16W400.copyWith(
+                                  overflow: TextOverflow.ellipsis,
+                                  color: Colors.white,
+                                ),
+                                maxLines: 1,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(width: 8),
+                    ],
+                  ),
                 ),
               ),
               Expanded(
@@ -182,7 +191,7 @@ class _ChatDetailViewState extends State<ChatDetailView> {
 
                             if (text.isEmpty) return;
 
-                            vm.sendMessage(widget.user.id!, text);
+                            vm.sendMessage(widget.userId, text);
 
                             controller.clear();
                           },
@@ -199,7 +208,8 @@ class _ChatDetailViewState extends State<ChatDetailView> {
     );
   }
 
-  String name(User user) {
+  String name(User? user) {
+    if (user == null) return "Anonymous User";
     if (user.name != null && user.name!.trim().isNotEmpty) {
       return user.name!;
     }
