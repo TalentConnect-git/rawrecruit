@@ -229,7 +229,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final profile = User.fromJson(response);
+        final profile = User.fromJson(response['data'] as Map<String, dynamic>);
         return Right(profile);
       }
     } catch (e) {

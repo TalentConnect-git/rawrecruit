@@ -290,7 +290,7 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
             return MyJobCard(
               job: job,
               onTap: () {
-                context.pushNamed(RouteNames.referralPostDetail, extra: job);
+                context.pushNamed(RouteNames.referralPostDetail, extra: job.id);
               },
             );
           },

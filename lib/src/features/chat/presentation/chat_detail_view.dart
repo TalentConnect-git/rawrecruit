@@ -48,160 +48,175 @@ class _ChatDetailViewState extends State<ChatDetailView> {
         child: Scaffold(
           backgroundColor: AppColors.kBg,
 
-          body: Column(
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 20),
-                decoration: BoxDecoration(
-                  color: AppColors.kBg,
-                  border: Border(bottom: BorderSide(color: Colors.white12)),
-                ),
-
-                child: Selector<ChatViewModel, User?>(
-                  selector: (_, vm) => vm.user,
-                  builder: (_, user, _) => Row(
-                    spacing: 4,
+          body: Selector<ChatViewModel, bool>(
+            selector: (_, vm) => vm.isLoading,
+            builder: (_, isLoading, _) => isLoading
+                ? AppLoadingIndicator()
+                : Column(
                     children: [
-                      GestureDetector(
-                        onTap: context.pop,
-                        child: Icon(
-                          Icons.keyboard_arrow_left,
-                          color: Colors.white,
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 20,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AppColors.kBg,
+                          border: Border(
+                            bottom: BorderSide(color: Colors.white12),
+                          ),
+                        ),
+
+                        child: Selector<ChatViewModel, User?>(
+                          selector: (_, vm) => vm.user,
+                          builder: (_, user, _) => Row(
+                            spacing: 4,
+                            children: [
+                              GestureDetector(
+                                onTap: context.pop,
+                                child: Icon(
+                                  Icons.keyboard_arrow_left,
+                                  color: Colors.white,
+                                ),
+                              ),
+
+                              Stack(
+                                children: [
+                                  CircleAvatar(
+                                    backgroundColor: AppColors.kGreen,
+                                    backgroundImage:
+                                        (user?.profileImage != null &&
+                                            user!.profileImage!.isNotEmpty)
+                                        ? NetworkImage(user.profileImage!)
+                                        : null,
+                                    child:
+                                        (user?.profileImage == null ||
+                                            user!.profileImage!.isEmpty)
+                                        ? Text(
+                                            name(user).getInitials,
+                                            style: AppTextStyles.s18W600
+                                                .copyWith(color: AppColors.kBg),
+                                          )
+                                        : null,
+                                  ),
+
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      height: 12,
+                                      width: 12,
+                                      decoration: BoxDecoration(
+                                        color: vm.onlineUsers.contains(user?.id)
+                                            ? Colors.green
+                                            : Colors.white,
+                                        borderRadius: BorderRadius.circular(10),
+                                        border: Border.all(
+                                          color: Colors.grey,
+                                          width: 2,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+
+                              const SizedBox(width: 4),
+
+                              Flexible(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Flexible(
+                                      child: Text(
+                                        name(user),
+                                        style: AppTextStyles.s16W400.copyWith(
+                                          overflow: TextOverflow.ellipsis,
+                                          color: Colors.white,
+                                        ),
+                                        maxLines: 1,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+
+                              const SizedBox(width: 8),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Selector<ChatViewModel, List<MessageModel>>(
+                          selector: (_, vm) => vm.messages,
+                          builder: (_, messages, _) => ListView.builder(
+                            padding: EdgeInsets.all(20),
+                            itemCount: messages.length,
+                            itemBuilder: (_, index) {
+                              final msg = messages[index];
+
+                              final isMe =
+                                  msg.senderId ==
+                                  getIt<AppStateProvider>().userId;
+
+                              return Align(
+                                alignment: isMe
+                                    ? Alignment.centerRight
+                                    : Alignment.centerLeft,
+                                child: Container(
+                                  padding: const EdgeInsets.all(10),
+                                  margin: const EdgeInsets.all(6),
+                                  decoration: BoxDecoration(
+                                    color: isMe
+                                        ? AppColors.kGreen.withValues(
+                                            alpha: 0.5,
+                                          )
+                                        : Colors.grey.shade300,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: Text(
+                                    msg.message ?? "",
+                                    style: TextStyle(
+                                      color: isMe ? Colors.white : Colors.black,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ),
                       ),
 
-                      Stack(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: AppColors.kGreen,
-                            backgroundImage:
-                                (user?.profileImage != null &&
-                                    user!.profileImage!.isNotEmpty)
-                                ? NetworkImage(user.profileImage!)
-                                : null,
-                            child:
-                                (user?.profileImage == null ||
-                                    user!.profileImage!.isEmpty)
-                                ? Text(
-                                    name(user).getInitials,
-                                    style: AppTextStyles.s18W600.copyWith(
-                                      color: AppColors.kBg,
-                                    ),
-                                  )
-                                : null,
-                          ),
-
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              height: 12,
-                              width: 12,
-                              decoration: BoxDecoration(
-                                color: vm.onlineUsers.contains(user?.id)
-                                    ? Colors.green
-                                    : Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(width: 4),
-
-                      Flexible(
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Row(
                           children: [
-                            Flexible(
-                              child: Text(
-                                name(user),
-                                style: AppTextStyles.s16W400.copyWith(
-                                  overflow: TextOverflow.ellipsis,
-                                  color: Colors.white,
+                            Expanded(
+                              child: AppTextFields(
+                                controller: controller,
+                                hint: 'Type message',
+                                suffixIcon: IconButton(
+                                  icon: Icon(
+                                    Icons.send,
+                                    color: AppColors.kGreen,
+                                  ),
+                                  onPressed: () {
+                                    final text = controller.text;
+
+                                    if (text.isEmpty) return;
+
+                                    vm.sendMessage(widget.userId, text);
+
+                                    controller.clear();
+                                  },
                                 ),
-                                maxLines: 1,
                               ),
                             ),
                           ],
                         ),
                       ),
-
-                      const SizedBox(width: 8),
                     ],
                   ),
-                ),
-              ),
-              Expanded(
-                child: Selector<ChatViewModel, List<MessageModel>>(
-                  selector: (_, vm) => vm.messages,
-                  builder: (_, messages, _) => ListView.builder(
-                    padding: EdgeInsets.all(20),
-                    itemCount: messages.length,
-                    itemBuilder: (_, index) {
-                      final msg = messages[index];
-
-                      final isMe =
-                          msg.senderId == getIt<AppStateProvider>().userId;
-
-                      return Align(
-                        alignment: isMe
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Container(
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.all(6),
-                          decoration: BoxDecoration(
-                            color: isMe
-                                ? AppColors.kGreen.withValues(alpha: 0.5)
-                                : Colors.grey.shade300,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Text(
-                            msg.message ?? "",
-                            style: TextStyle(
-                              color: isMe ? Colors.white : Colors.black,
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-              ),
-
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: AppTextFields(
-                        controller: controller,
-                        hint: 'Type message',
-                        suffixIcon: IconButton(
-                          icon: Icon(Icons.send, color: AppColors.kGreen),
-                          onPressed: () {
-                            final text = controller.text;
-
-                            if (text.isEmpty) return;
-
-                            vm.sendMessage(widget.userId, text);
-
-                            controller.clear();
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
           ),
         ),
       ),
@@ -209,12 +224,11 @@ class _ChatDetailViewState extends State<ChatDetailView> {
   }
 
   String name(User? user) {
-    if (user == null) return "Anonymous User";
-    if (user.name != null && user.name!.trim().isNotEmpty) {
+    if (user?.name != null && user!.name!.trim().isNotEmpty) {
       return user.name!;
     }
 
-    if (user.email != null && user.email!.trim().isNotEmpty) {
+    if (user?.email != null && user!.email!.trim().isNotEmpty) {
       return user.email!;
     }
 

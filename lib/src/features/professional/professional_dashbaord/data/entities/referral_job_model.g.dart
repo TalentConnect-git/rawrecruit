@@ -87,6 +87,7 @@ _ReferralJobModel _$ReferralJobModelFromJson(
   endDate: json['endDate'] == null
       ? null
       : DateTime.parse(json['endDate'] as String),
+  inactive: json['inactive'] as bool?,
   matchScore: (json['matchScore'] as num?)?.toInt(),
   expireAt: json['expireAt'] == null
       ? null
@@ -97,6 +98,9 @@ _ReferralJobModel _$ReferralJobModelFromJson(
   updatedAt: json['updatedAt'] == null
       ? null
       : DateTime.parse(json['updatedAt'] as String),
+  metrics: json['metrics'] == null
+      ? null
+      : Metrics.fromJson(json['metrics'] as Map<String, dynamic>),
 );
 
 Map<String, dynamic> _$ReferralJobModelToJson(_ReferralJobModel instance) =>
@@ -141,10 +145,12 @@ Map<String, dynamic> _$ReferralJobModelToJson(_ReferralJobModel instance) =>
       'numberOfStudent': instance.numberOfStudent,
       'packageDetails': instance.packageDetails,
       'endDate': instance.endDate?.toIso8601String(),
+      'inactive': instance.inactive,
       'matchScore': instance.matchScore,
       'expireAt': instance.expireAt?.toIso8601String(),
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'metrics': instance.metrics,
     };
 
 _CandidatePosted _$CandidatePostedFromJson(Map<String, dynamic> json) =>

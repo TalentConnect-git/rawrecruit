@@ -47,15 +47,16 @@ class _PostedJobViewState extends State<PostedJobView> {
               child: ListView.separated(
                 itemBuilder: (_, index) {
                   final job = vm.jobs[index];
-return MyJobCard(
-  job: job,
-  onTap: () {
-    context.pushNamed(
-      RouteNames.referralPostDetail,
-      extra: job, // passing full object
-    );
-  },
-);                },
+                  return MyJobCard(
+                    job: job,
+                    onTap: () {
+                      context.pushNamed(
+                        RouteNames.referralPostDetail,
+                        extra: job.id,
+                      );
+                    },
+                  );
+                },
                 separatorBuilder: (_, _) => SizedBox(height: 4),
                 itemCount: vm.jobs.length,
               ),

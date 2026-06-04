@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get_it/get_it.dart';
 
 import '../../../../core/index.dart';
@@ -159,6 +161,7 @@ class ChatViewModel extends ViewStateProvider {
         failure = APIFailure.fromException(exception: exception);
       },
       (res) {
+        log(res?.toJson().toString() ?? '');
         user = res;
       },
     );

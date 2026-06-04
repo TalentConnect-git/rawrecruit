@@ -4,12 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationViewModel;
 import 'package:rawrecruit/src/features/dashboard/presentation/view_model/dashboard_view_model.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/widgets/alumni_card.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/widgets/job_card.dart';
 import 'package:rawrecruit/src/features/jobs/utils/enums.dart';
-import 'package:rawrecruit/src/features/application/index.dart'
-    show ApplicationViewModel;
 import 'package:rawrecruit/src/features/notifications/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileViewModel;
@@ -18,9 +18,9 @@ import 'package:rawrecruit/src/features/referral/presentation/index.dart';
 import 'package:rawrecruit/src/features/referral/presentation/widgets/incoming_request_card.dart';
 
 import '../../../core/index.dart';
-import '../../referrer/utils/enums.dart';
 import '../../professional/job_postng/presentation/entities/referral_application.dart';
 import '../../professional/job_postng/presentation/view_model/posted_job_view_model.dart';
+import '../../referrer/utils/enums.dart';
 import '../../shortlist/presentation/view_model/shortlist_view_model.dart';
 
 class ReferralHome extends StatefulWidget {
@@ -476,7 +476,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                               onTap: () {
                                 context.pushNamed(
                                   RouteNames.referralPostDetail,
-                                  extra: job,
+                                  extra: job.id,
                                 );
                               },
                             );

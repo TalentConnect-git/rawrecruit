@@ -21,7 +21,6 @@ import 'package:rawrecruit/src/features/onboarding/presentation/first_step.dart'
 import 'package:rawrecruit/src/features/onboarding/presentation/flow_controller.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/applicant_detail_screen.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
-import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/job_posting_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/posted_job_application_view.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/referral_post_detail_view.dart';
@@ -72,8 +71,9 @@ GoRouter appRouter = GoRouter(
       name: RouteNames.referralPostDetail,
       path: '/referral-post-detail',
       builder: (context, state) {
-        final job = state.extra as ReferralPostModel;
-        return ReferralPostDetailView(job: job);
+        final jobId = state.extra as String?;
+        if (jobId == null) return NotFoundView();
+        return ReferralPostDetailView(jobId: jobId);
       },
     ),
     GoRoute(
@@ -265,11 +265,11 @@ GoRouter appRouter = GoRouter(
       name: RouteNames.referrerDetail,
       path: '/referrer-detail',
       builder: (context, state) {
-        ReferralApplication? args = state.extra as ReferralApplication?;
+        String? id = state.extra as String?;
 
-        if (args == null) return Scaffold();
+        if (id == null) return NotFoundView();
 
-        return ReferralDetailPage(application: args);
+        return ReferralDetailPage(applicationId: id);
       },
     ),
 
