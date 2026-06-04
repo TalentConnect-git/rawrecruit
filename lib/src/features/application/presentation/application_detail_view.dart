@@ -33,14 +33,42 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
   @override
   Widget build(BuildContext context) {
     /// 🔥 RAW + NORMALIZED STATUS
-    final rawStatus = job?.status ?? "";
-    final status = _normalizeStatus(rawStatus);
-    final currentExp = job?.candidatePosted?.experiences?.isNotEmpty == true
-        ? job!.candidatePosted!.experiences!.firstWhere(
-            (e) => e.isCurrent == true,
-            orElse: () => job.candidatePosted!.experiences!.first,
-          )
-        : null;
+
+    return ChangeNotifierProvider.value(
+      value: applicationDetailViewModel,
+      child: Scaffold(
+        backgroundColor: AppColors.secBorder,
+        appBar: RAppBar(
+          leading: IconButton(
+            onPressed: () => context.pop(),
+            icon: const Icon(Icons.keyboard_arrow_left),
+          ),
+          title: Selector<ApplicationDetailViewModel, ApplicationModel?>(
+            selector: (_, vm) => vm.application,
+            builder: (_, application, _) => Text(
+              application?.displayCompanyName ?? '',
+              style: const TextStyle(color: Colors.white),
+            ),
+          ),
+        ),
+        body: Selector<ApplicationDetailViewModel, bool>(
+          selector: (_, vm) => vm.isLoading,
+          builder: (_, isLoading, _) => isLoading
+              ? Center(child: AppLoadingIndicator())
+              : Selector<ApplicationDetailViewModel, ApplicationModel?>(
+                  selector: (_, vm) => vm.application,
+                  builder: (_, application, _) {
+                    final job = application?.job;
+                    final rawStatus = application?.currentStatus ?? "";
+                    final status = _normalizeStatus(rawStatus);
+                    final currentExp =
+                        job?.candidatePosted?.experiences?.isNotEmpty == true
+                        ? job!.candidatePosted!.experiences!.firstWhere(
+                            (e) => e.isCurrent == true,
+                            orElse: () =>
+                                job.candidatePosted!.experiences!.first,
+                          )
+                        : null;
 
                     final jobTitle = currentExp?.role ?? (job?.jobTitle ?? "-");
 

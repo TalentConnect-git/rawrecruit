@@ -84,9 +84,11 @@ _ReferralJobModel _$ReferralJobModelFromJson(
   packageDetails: json['packageDetails'] == null
       ? null
       : PackageDetails.fromJson(json['packageDetails'] as Map<String, dynamic>),
-  metrics: json['metrics'] == null
+  referralMetrics: json['referralMetrics'] == null
       ? null
-      : ReferralMetrics.fromJson(json['metrics'] as Map<String, dynamic>),
+      : ReferralMetrics.fromJson(
+          json['referralMetrics'] as Map<String, dynamic>,
+        ),
   endDate: json['endDate'] == null
       ? null
       : DateTime.parse(json['endDate'] as String),
@@ -147,7 +149,7 @@ Map<String, dynamic> _$ReferralJobModelToJson(_ReferralJobModel instance) =>
       'workLocation': instance.workLocation,
       'numberOfStudent': instance.numberOfStudent,
       'packageDetails': instance.packageDetails,
-      'metrics': instance.metrics,
+      'referralMetrics': instance.referralMetrics,
       'endDate': instance.endDate?.toIso8601String(),
       'inactive': instance.inactive,
       'matchScore': instance.matchScore,

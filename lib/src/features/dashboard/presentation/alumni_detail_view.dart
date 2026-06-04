@@ -56,23 +56,21 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
             final name = vm.alumni?.name ?? "User";
 
-            final currentExperience = vm.alumni?.experiences
-                ?.where((e) => e.isCurrent == true)
-                .cast<dynamic?>()
-                .firstOrNull;
-
             final currentExperience =
-                experiences.where((e) => e.isCurrent == true).isNotEmpty
-                ? experiences.firstWhere((e) => e.isCurrent == true)
+                (vm.alumni?.experiences ?? [])
+                    .where((e) => e.isCurrent == true)
+                    .isNotEmpty
+                ? vm.alumni?.experiences?.firstWhere((e) => e.isCurrent == true)
                 : null;
 
-            final college =
-                (first.candidatePosted?.colleges?.isNotEmpty ?? false)
-                ? first.candidatePosted!.colleges!.join(", ")
+            final college = (vm.alumni?.colleges?.isNotEmpty ?? false)
+                ? vm.alumni?.colleges!.join(", ")
                 : '';
             final fallbackExperience =
                 currentExperience ??
-                (experiences.isNotEmpty ? experiences.first : null);
+                ((vm.alumni?.experiences ?? []).isNotEmpty
+                    ? vm.alumni?.experiences?.first
+                    : null);
 
             /// ROLE
             final role = (currentExperience?.role ?? '').trim().isNotEmpty
@@ -82,10 +80,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
             /// COMPANY
             final company = (currentExperience?.company ?? '').trim().isNotEmpty
                 ? currentExperience!.company!.trim()
-                : (first.candidatePosted?.currentCompany ?? '')
-                      .trim()
-                      .isNotEmpty
-                ? first.candidatePosted!.currentCompany!.trim()
+                : (vm.alumni?.currentCompany ?? '').trim().isNotEmpty
+                ? vm.alumni!.currentCompany!.trim()
                 : (fallbackExperience?.company ?? '').trim();
 
             /// ROLE + COMPANY TEXT
@@ -102,13 +98,12 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                 : null;
 
             /// LOCATION
-            final location =
-                (first.candidatePosted?.locations?.isNotEmpty ?? false)
-                ? first.candidatePosted!.locations!
+            final location = (vm.alumni?.locations?.isNotEmpty ?? false)
+                ? vm.alumni!.locations!
                       .where((e) => e.trim().isNotEmpty)
                       .join(", ")
                 : '';
-            final isHiring = referrals.isNotEmpty;
+            final isHiring = vm.alumni?.referralJobs?.isNotEmpty ?? false;
 
             return Scaffold(
               backgroundColor: Colors.black,
@@ -230,7 +225,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                         const SizedBox(height: 6),
 
                                         /// COLLEGE
-                                        if (college.isNotEmpty)
+                                        if ((college ?? '').isNotEmpty)
                                           Row(
                                             children: [
                                               const Icon(
@@ -241,7 +236,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                               const SizedBox(width: 6),
                                               Expanded(
                                                 child: Text(
-                                                  college,
+                                                  college ?? '',
                                                   style: const TextStyle(
                                                     color: Colors.grey,
                                                     fontSize: 13,
@@ -473,7 +468,10 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
                       child: Column(
                         children: [
-                          _metricRow("Open Jobs", "${referrals.length}"),
+                          _metricRow(
+                            "Open Jobs?",
+                            "${vm.alumni?.referralJobs?.length ?? 0}",
+                          ),
 
                           const SizedBox(height: 10),
 
@@ -600,8 +598,14 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                       title: "Open Positions",
                       icon: Icons.work_outline,
                       child: Column(
-                        children: referrals
-                            .map((job) => _jobTile(context, job))
+                        children: (vm.alumni?.referralJobs ?? [])
+                            .map(
+                              (job) => _jobTile(
+                                context,
+                                job,
+                                vm.alumni?.currentCompany,
+                              ),
+                            )
                             .toList(),
                       ),
                     ),
@@ -782,9 +786,9 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
     );
   }
 
-  Widget _jobTile(BuildContext context, Job job) {
+  Widget _jobTile(BuildContext context, Job job, String? companyName) {
     final title = job.jobTitle ?? "Role";
-    final company = jobs.first.candidatePosted?.currentCompany ?? "Company";
+    final company = companyName ?? "Company";
 
     final pkg = job.packageDetails;
 

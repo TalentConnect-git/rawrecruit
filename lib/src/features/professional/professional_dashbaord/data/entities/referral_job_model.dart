@@ -53,7 +53,7 @@ abstract class ReferralJobModel with _$ReferralJobModel {
     List<String>? numberOfStudent,
 
     PackageDetails? packageDetails,
-    ReferralMetrics? metrics,
+    ReferralMetrics? referralMetrics,
     DateTime? endDate, // ✅ ADD THIS
     bool? inactive,
     int? matchScore,
@@ -76,6 +76,7 @@ String? _jobTitleFromJson(dynamic value) {
 
   return value?.toString();
 }
+
 @freezed
 abstract class ReferralMetrics with _$ReferralMetrics {
   const factory ReferralMetrics({
@@ -90,6 +91,7 @@ abstract class ReferralMetrics with _$ReferralMetrics {
   factory ReferralMetrics.fromJson(Map<String, dynamic> json) =>
       _$ReferralMetricsFromJson(json);
 }
+
 @freezed
 abstract class CandidatePosted with _$CandidatePosted {
   const factory CandidatePosted({
