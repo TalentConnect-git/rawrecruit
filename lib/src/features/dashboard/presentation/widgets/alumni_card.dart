@@ -50,7 +50,10 @@ class AlumniCard extends StatelessWidget {
     return InkWell(
       borderRadius: BorderRadius.circular(18),
       onTap: () {
-        context.pushNamed("alumniDetail", extra: jobs.firstOrNull?.id);
+        context.pushNamed(
+          RouteNames.alumniDetail,
+          extra: jobs.firstOrNull?.candidatePosted?.userId,
+        );
       },
       child: Container(
         margin: const EdgeInsets.only(right: 14),
@@ -236,7 +239,10 @@ class AlumniCard extends StatelessWidget {
               behavior: HitTestBehavior.opaque,
               onTap: () {
                 if (candidate != null) {
-                  context.pushNamed(RouteNames.chatUser, extra: candidate.id);
+                  context.pushNamed(
+                    RouteNames.chatUser,
+                    extra: candidate.userId,
+                  );
                 }
               },
               child: Container(
