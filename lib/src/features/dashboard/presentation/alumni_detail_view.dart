@@ -91,12 +91,6 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                 ? role
                 : company;
 
-            final referrals = first.candidatePosted?.referralJobs ?? [];
-
-            final currentReferral = referrals.isNotEmpty
-                ? referrals.first
-                : null;
-
             /// LOCATION
             final location = (vm.alumni?.locations?.isNotEmpty ?? false)
                 ? vm.alumni!.locations!
