@@ -134,7 +134,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: Colors.white.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
