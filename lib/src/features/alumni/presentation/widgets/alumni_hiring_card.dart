@@ -72,7 +72,7 @@ class AlumniHiringCard extends StatelessWidget {
       onTap: () {
         context.pushNamed(
           RouteNames.alumniDetail,
-          extra: jobs.firstOrNull?.candidatePosted?.id,
+          extra: jobs.firstOrNull?.candidatePosted?.userId,
         );
       },
 
