@@ -61,10 +61,23 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                 .cast<dynamic?>()
                 .firstOrNull;
 
-            final role =
-                (currentExperience?.role ?? '').toString().trim().isNotEmpty
-                ? currentExperience!.role!
-                : "-";
+            final currentExperience =
+                experiences.where((e) => e.isCurrent == true).isNotEmpty
+                ? experiences.firstWhere((e) => e.isCurrent == true)
+                : null;
+
+            final college =
+                (first.candidatePosted?.colleges?.isNotEmpty ?? false)
+                ? first.candidatePosted!.colleges!.join(", ")
+                : '';
+            final fallbackExperience =
+                currentExperience ??
+                (experiences.isNotEmpty ? experiences.first : null);
+
+            /// ROLE
+            final role = (currentExperience?.role ?? '').trim().isNotEmpty
+                ? currentExperience!.role!.trim()
+                : (fallbackExperience?.role ?? '').trim();
 
             /// COMPANY
             final company = (currentExperience?.company ?? '').trim().isNotEmpty
