@@ -28,46 +28,70 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
   }) async {
     final Map<String, dynamic> formMap = {};
 
-    body.forEach((key, value) {
-      if (value is List) {
-        if (value.isEmpty) return;
+  body.forEach((key, value) {
+  if (value is List) {
+    if (value.isEmpty) return;
 
-        /// ✅ Nested objects (List<Map>)
-        if (value.first is Map) {
-          final cleanedList = value
-              .map((e) {
-                final map = Map<String, dynamic>.from(e);
+    /// ✅ Nested objects already converted to Map
+    if (value.first is Map) {
+      final cleanedList = value
+          .map((e) {
+            final map = Map<String, dynamic>.from(e);
 
-                map.removeWhere(
-                  (k, v) => v == null || v.toString().trim().isEmpty,
-                );
+            map.removeWhere(
+              (k, v) => v == null || v.toString().trim().isEmpty,
+            );
 
-                return map;
-              })
-              .where((e) => e.isNotEmpty)
-              .toList();
+            return map;
+          })
+          .where((e) => e.isNotEmpty)
+          .toList();
 
-          if (cleanedList.isNotEmpty) {
-            formMap[key] = jsonEncode(cleanedList);
-          }
-        }
-        /// ✅ Simple list (List<String>)
-        else {
-          final cleanedList = value
-              .map((e) => e.toString().trim())
-              .where((e) => e.isNotEmpty)
-              .toList();
-
-          if (cleanedList.isNotEmpty) {
-            formMap[key] = jsonEncode(cleanedList); // 🔥 FIX
-          }
-        }
+      if (cleanedList.isNotEmpty) {
+     formMap[key] = cleanedList;
       }
-      /// ✅ Normal fields
-      else if (value != null && value.toString().isNotEmpty) {
-        formMap[key] = value.toString();
+    }
+
+    /// ✅ Freezed models (Experience, Education, etc.)
+    else if (value.first.runtimeType.toString().startsWith('_')) {
+      final cleanedList = value
+          .map((e) {
+            final map = Map<String, dynamic>.from(
+              (e as dynamic).toJson(),
+            );
+
+            map.removeWhere(
+              (k, v) => v == null || v.toString().trim().isEmpty,
+            );
+
+            return map;
+          })
+          .where((e) => e.isNotEmpty)
+          .toList();
+
+      if (cleanedList.isNotEmpty) {
+   formMap[key] = cleanedList;
       }
-    });
+    }
+
+    /// ✅ Simple list (List<String>)
+    else {
+      final cleanedList = value
+          .map((e) => e.toString().trim())
+          .where((e) => e.isNotEmpty)
+          .toList();
+
+      if (cleanedList.isNotEmpty) {
+       formMap[key] = cleanedList;
+      }
+    }
+  }
+
+  /// ✅ Normal fields
+  else if (value != null && value.toString().isNotEmpty) {
+    formMap[key] = value.toString();
+  }
+});
 
     /// ✅ Files
     if (resume != null) {
