@@ -108,7 +108,10 @@ class NotificationService {
 
             if (jobId == null) return;
 
-            state?.context.goNamed(RouteNames.referralPostDetail, extra: jobId);
+            state?.context.pushNamed(
+              RouteNames.referralPostDetail,
+              extra: jobId,
+            );
             break;
 
           case 'JobDetail':
@@ -116,7 +119,7 @@ class NotificationService {
 
             if (jobId == null) return;
 
-            state?.context.goNamed(RouteNames.referralDetail, extra: jobId);
+            state?.context.pushNamed(RouteNames.referralDetail, extra: jobId);
             break;
         }
         break;
@@ -154,7 +157,7 @@ class NotificationService {
 
             if (applicationId == null) return;
 
-            state?.context.goNamed(
+            state?.context.pushNamed(
               RouteNames.applicationDetail,
               extra: applicationId,
             );
@@ -169,7 +172,7 @@ class NotificationService {
 
         // if (senderId == null || referenceId == null) return;
 
-        state?.context.goNamed(
+        state?.context.pushNamed(
           RouteNames.chatUser,
           extra: {
             'senderId': senderId,
@@ -185,7 +188,7 @@ class NotificationService {
 
             if (userId == null) return;
 
-            state?.context.goNamed(RouteNames.alumniDetail, extra: userId);
+            state?.context.pushNamed(RouteNames.alumniDetail, extra: userId);
             break;
         }
     }

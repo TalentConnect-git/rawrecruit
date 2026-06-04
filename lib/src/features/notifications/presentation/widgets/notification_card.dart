@@ -147,7 +147,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
             if (jobId == null) return;
 
-            context.goNamed(RouteNames.referralPostDetail, extra: jobId);
+            context.pushNamed(RouteNames.referralPostDetail, extra: jobId);
             break;
 
           case 'JobDetail':
@@ -155,7 +155,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
             if (jobId == null) return;
 
-            context.goNamed(RouteNames.referralDetail, extra: jobId);
+            context.pushNamed(RouteNames.referralDetail, extra: jobId);
             break;
         }
         break;
@@ -190,7 +190,10 @@ class _NotificationCardState extends State<NotificationCard> {
 
             if (applicationId == null) return;
 
-            context.goNamed(RouteNames.applicationDetail, extra: applicationId);
+            context.pushNamed(
+              RouteNames.applicationDetail,
+              extra: applicationId,
+            );
             break;
         }
 

@@ -170,6 +170,29 @@ enum NotificationType {
     backgroundColor: Color(0xFFDBEAFE),
     icon: Icons.person_add_alt_1_outlined,
   ),
+  @JsonValue('NEW_MATCHING_REFERRAL_JOB')
+  newMatchingReferralJob(
+    label: 'New Matching Referral Job',
+    textColor: Color(0xFF0284C7),
+    backgroundColor: Color(0xFFE0F2FE),
+    icon: Icons.recommend_outlined,
+  ),
+
+  @JsonValue('NEW_ALUMNI_JOINED_NETWORK')
+  newAlumniJoinedNetwork(
+    label: 'New Alumni Joined',
+    textColor: Color(0xFF7C3AED),
+    backgroundColor: Color(0xFFEDE9FE),
+    icon: Icons.people_outline,
+  ),
+
+  @JsonValue('REFERRAL_MILESTONE_REACHED')
+  referralMilestoneReached(
+    label: 'Referral Milestone Reached',
+    textColor: Color(0xFFD97706),
+    backgroundColor: Color(0xFFFEF3C7),
+    icon: Icons.emoji_events_outlined,
+  ),
   @JsonValue('NEW_CHAT_MESSAGE')
   newChatMessage(
     label: 'New Chat Message',
