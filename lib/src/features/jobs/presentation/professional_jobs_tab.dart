@@ -300,9 +300,14 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
   }
 
   /// 🔥 SAVED TAB
-  Widget _savedJobs() {
-    return Consumer<ShortlistViewModel>(
-      builder: (context, vm, _) {
+Widget _savedJobs() {
+  debugPrint("SAVED TAB OPENED");
+
+  return Consumer<ShortlistViewModel>(
+    builder: (context, vm, _) {
+      debugPrint("Consumer rebuilt");
+      debugPrint("Saved count = ${vm.saved.length}");
+      debugPrint("ViewState = ${vm.viewState}");
         final applicationVM = context.watch<ApplicationViewModel>();
 
         if (vm.viewState == ViewState.busy) {
@@ -332,14 +337,21 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
           itemBuilder: (_, index) {
             final item = vm.saved[index];
             final job = item.job;
-
+debugPrint("-------------------------SAVED ITEM => ${item.toJson()}");
+debugPrint("---------------------JOB => $job");
+debugPrint("-------------------------JOB ID => ${job?.id}");
             if (job == null) return const SizedBox();
 
             final isSaved = vm.savedJobIds.contains(job.id);
             final isApplied = applicationVM.isApplied(job.id ?? '');
 
+final patchedJob = job.copyWith(
+  matchScore: item.matchScore,
+  alumniCount: item.alumniCount,
+);
             return JobCard(
-              job: job,
+     job: patchedJob,
+
               isSaved: isSaved,
               isApplied: isApplied,
               onApply: () => applicationVM.apply(

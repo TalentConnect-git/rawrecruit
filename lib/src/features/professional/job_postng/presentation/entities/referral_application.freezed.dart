@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReferralApplication {
 
- String? get id; User? get applicant; String? get applicantType; String? get adminApprovalStatus; ReferralPostModel? get job; String? get statusText; String? get currentStatus; DateTime? get createdAt; int? get matchScore; String? get jobTitle; List<String>? get skills;
+ String? get id; User? get applicant; String? get applicantType; String? get adminApprovalStatus; ReferralPostModel? get job; String? get statusText; String? get currentStatus; String? get referralCompany; DateTime? get createdAt; int? get matchScore; String? get jobTitle; List<String>? get skills;
 /// Create a copy of ReferralApplication
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ReferralApplicationCopyWith<ReferralApplication> get copyWith => _$ReferralAppl
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferralApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.job, job) || other.job == job)&&(identical(other.statusText, statusText) || other.statusText == statusText)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&const DeepCollectionEquality().equals(other.skills, skills));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferralApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.job, job) || other.job == job)&&(identical(other.statusText, statusText) || other.statusText == statusText)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.referralCompany, referralCompany) || other.referralCompany == referralCompany)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&const DeepCollectionEquality().equals(other.skills, skills));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,applicant,applicantType,adminApprovalStatus,job,statusText,currentStatus,createdAt,matchScore,jobTitle,const DeepCollectionEquality().hash(skills));
+int get hashCode => Object.hash(runtimeType,id,applicant,applicantType,adminApprovalStatus,job,statusText,currentStatus,referralCompany,createdAt,matchScore,jobTitle,const DeepCollectionEquality().hash(skills));
 
 @override
 String toString() {
-  return 'ReferralApplication(id: $id, applicant: $applicant, applicantType: $applicantType, adminApprovalStatus: $adminApprovalStatus, job: $job, statusText: $statusText, currentStatus: $currentStatus, createdAt: $createdAt, matchScore: $matchScore, jobTitle: $jobTitle, skills: $skills)';
+  return 'ReferralApplication(id: $id, applicant: $applicant, applicantType: $applicantType, adminApprovalStatus: $adminApprovalStatus, job: $job, statusText: $statusText, currentStatus: $currentStatus, referralCompany: $referralCompany, createdAt: $createdAt, matchScore: $matchScore, jobTitle: $jobTitle, skills: $skills)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ReferralApplicationCopyWith<$Res>  {
   factory $ReferralApplicationCopyWith(ReferralApplication value, $Res Function(ReferralApplication) _then) = _$ReferralApplicationCopyWithImpl;
 @useResult
 $Res call({
- String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job, String? statusText, String? currentStatus, DateTime? createdAt, int? matchScore, String? jobTitle, List<String>? skills
+ String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job, String? statusText, String? currentStatus, String? referralCompany, DateTime? createdAt, int? matchScore, String? jobTitle, List<String>? skills
 });
 
 
@@ -62,7 +62,7 @@ class _$ReferralApplicationCopyWithImpl<$Res>
 
 /// Create a copy of ReferralApplication
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? applicant = freezed,Object? applicantType = freezed,Object? adminApprovalStatus = freezed,Object? job = freezed,Object? statusText = freezed,Object? currentStatus = freezed,Object? createdAt = freezed,Object? matchScore = freezed,Object? jobTitle = freezed,Object? skills = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? applicant = freezed,Object? applicantType = freezed,Object? adminApprovalStatus = freezed,Object? job = freezed,Object? statusText = freezed,Object? currentStatus = freezed,Object? referralCompany = freezed,Object? createdAt = freezed,Object? matchScore = freezed,Object? jobTitle = freezed,Object? skills = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,applicant: freezed == applicant ? _self.applicant : applicant // ignore: cast_nullable_to_non_nullable
@@ -71,6 +71,7 @@ as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminAppr
 as String?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
 as ReferralPostModel?,statusText: freezed == statusText ? _self.statusText : statusText // ignore: cast_nullable_to_non_nullable
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
+as String?,referralCompany: freezed == referralCompany ? _self.referralCompany : referralCompany // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,matchScore: freezed == matchScore ? _self.matchScore : matchScore // ignore: cast_nullable_to_non_nullable
 as int?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
@@ -184,10 +185,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText,  String? currentStatus,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText,  String? currentStatus,  String? referralCompany,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReferralApplication() when $default != null:
-return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.statusText,_that.currentStatus,_that.createdAt,_that.matchScore,_that.jobTitle,_that.skills);case _:
+return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.statusText,_that.currentStatus,_that.referralCompany,_that.createdAt,_that.matchScore,_that.jobTitle,_that.skills);case _:
   return orElse();
 
 }
@@ -205,10 +206,10 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApproval
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText,  String? currentStatus,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText,  String? currentStatus,  String? referralCompany,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)  $default,) {final _that = this;
 switch (_that) {
 case _ReferralApplication():
-return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.statusText,_that.currentStatus,_that.createdAt,_that.matchScore,_that.jobTitle,_that.skills);case _:
+return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.statusText,_that.currentStatus,_that.referralCompany,_that.createdAt,_that.matchScore,_that.jobTitle,_that.skills);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -225,10 +226,10 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApproval
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText,  String? currentStatus,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? id,  User? applicant,  String? applicantType,  String? adminApprovalStatus,  ReferralPostModel? job,  String? statusText,  String? currentStatus,  String? referralCompany,  DateTime? createdAt,  int? matchScore,  String? jobTitle,  List<String>? skills)?  $default,) {final _that = this;
 switch (_that) {
 case _ReferralApplication() when $default != null:
-return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.statusText,_that.currentStatus,_that.createdAt,_that.matchScore,_that.jobTitle,_that.skills);case _:
+return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApprovalStatus,_that.job,_that.statusText,_that.currentStatus,_that.referralCompany,_that.createdAt,_that.matchScore,_that.jobTitle,_that.skills);case _:
   return null;
 
 }
@@ -240,7 +241,7 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.adminApproval
 
 
 class _ReferralApplication implements ReferralApplication {
-  const _ReferralApplication({this.id, this.applicant, this.applicantType, this.adminApprovalStatus, this.job, this.statusText, this.currentStatus, this.createdAt, this.matchScore, this.jobTitle, final  List<String>? skills}): _skills = skills;
+  const _ReferralApplication({this.id, this.applicant, this.applicantType, this.adminApprovalStatus, this.job, this.statusText, this.currentStatus, this.referralCompany, this.createdAt, this.matchScore, this.jobTitle, final  List<String>? skills}): _skills = skills;
   
 
 @override final  String? id;
@@ -250,6 +251,7 @@ class _ReferralApplication implements ReferralApplication {
 @override final  ReferralPostModel? job;
 @override final  String? statusText;
 @override final  String? currentStatus;
+@override final  String? referralCompany;
 @override final  DateTime? createdAt;
 @override final  int? matchScore;
 @override final  String? jobTitle;
@@ -273,16 +275,16 @@ _$ReferralApplicationCopyWith<_ReferralApplication> get copyWith => __$ReferralA
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferralApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.job, job) || other.job == job)&&(identical(other.statusText, statusText) || other.statusText == statusText)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&const DeepCollectionEquality().equals(other._skills, _skills));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferralApplication&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.job, job) || other.job == job)&&(identical(other.statusText, statusText) || other.statusText == statusText)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.referralCompany, referralCompany) || other.referralCompany == referralCompany)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&const DeepCollectionEquality().equals(other._skills, _skills));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,applicant,applicantType,adminApprovalStatus,job,statusText,currentStatus,createdAt,matchScore,jobTitle,const DeepCollectionEquality().hash(_skills));
+int get hashCode => Object.hash(runtimeType,id,applicant,applicantType,adminApprovalStatus,job,statusText,currentStatus,referralCompany,createdAt,matchScore,jobTitle,const DeepCollectionEquality().hash(_skills));
 
 @override
 String toString() {
-  return 'ReferralApplication(id: $id, applicant: $applicant, applicantType: $applicantType, adminApprovalStatus: $adminApprovalStatus, job: $job, statusText: $statusText, currentStatus: $currentStatus, createdAt: $createdAt, matchScore: $matchScore, jobTitle: $jobTitle, skills: $skills)';
+  return 'ReferralApplication(id: $id, applicant: $applicant, applicantType: $applicantType, adminApprovalStatus: $adminApprovalStatus, job: $job, statusText: $statusText, currentStatus: $currentStatus, referralCompany: $referralCompany, createdAt: $createdAt, matchScore: $matchScore, jobTitle: $jobTitle, skills: $skills)';
 }
 
 
@@ -293,7 +295,7 @@ abstract mixin class _$ReferralApplicationCopyWith<$Res> implements $ReferralApp
   factory _$ReferralApplicationCopyWith(_ReferralApplication value, $Res Function(_ReferralApplication) _then) = __$ReferralApplicationCopyWithImpl;
 @override @useResult
 $Res call({
- String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job, String? statusText, String? currentStatus, DateTime? createdAt, int? matchScore, String? jobTitle, List<String>? skills
+ String? id, User? applicant, String? applicantType, String? adminApprovalStatus, ReferralPostModel? job, String? statusText, String? currentStatus, String? referralCompany, DateTime? createdAt, int? matchScore, String? jobTitle, List<String>? skills
 });
 
 
@@ -310,7 +312,7 @@ class __$ReferralApplicationCopyWithImpl<$Res>
 
 /// Create a copy of ReferralApplication
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? applicant = freezed,Object? applicantType = freezed,Object? adminApprovalStatus = freezed,Object? job = freezed,Object? statusText = freezed,Object? currentStatus = freezed,Object? createdAt = freezed,Object? matchScore = freezed,Object? jobTitle = freezed,Object? skills = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? applicant = freezed,Object? applicantType = freezed,Object? adminApprovalStatus = freezed,Object? job = freezed,Object? statusText = freezed,Object? currentStatus = freezed,Object? referralCompany = freezed,Object? createdAt = freezed,Object? matchScore = freezed,Object? jobTitle = freezed,Object? skills = freezed,}) {
   return _then(_ReferralApplication(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,applicant: freezed == applicant ? _self.applicant : applicant // ignore: cast_nullable_to_non_nullable
@@ -319,6 +321,7 @@ as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminAppr
 as String?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
 as ReferralPostModel?,statusText: freezed == statusText ? _self.statusText : statusText // ignore: cast_nullable_to_non_nullable
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
+as String?,referralCompany: freezed == referralCompany ? _self.referralCompany : referralCompany // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,matchScore: freezed == matchScore ? _self.matchScore : matchScore // ignore: cast_nullable_to_non_nullable
 as int?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable

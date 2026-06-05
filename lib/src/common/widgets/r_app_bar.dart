@@ -9,17 +9,20 @@ class RAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.leading,
     this.title,
     this.actions,
+    this.iconTheme,
   });
 
   final String? label;
   final Widget? title;
   final Widget? leading;
   final List<Widget>? actions;
+  final IconThemeData? iconTheme;
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
       leading: leading,
+      iconTheme: iconTheme,
       title:
           title ??
           Text(
@@ -30,17 +33,9 @@ class RAppBar extends StatelessWidget implements PreferredSizeWidget {
       scrolledUnderElevation: 0,
       titleSpacing: leading != null ? 0 : null,
       actions: actions,
-      // bottom: PreferredSize(
-      //   preferredSize: Size.fromHeight(0.25),
-      //   child: Container(
-      //     color: Colors.black,
-      //     width: double.maxFinite,
-      //     height: 0.25,
-      //   ),
-      // ),
     );
   }
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

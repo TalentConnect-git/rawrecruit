@@ -38,7 +38,9 @@ class _InterviewDetailScreenState extends State<InterviewDetailScreen> {
           title: const Text(
             'Interview Details',
             style: TextStyle(color: Colors.white),
-          ),
+          ),   iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
         ),
 
         body: Consumer<InterviewViewModel>(

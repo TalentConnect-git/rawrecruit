@@ -14,6 +14,8 @@ _ShortlistModel _$ShortlistModelFromJson(Map<String, dynamic> json) =>
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
+      matchScore: (json['matchScore'] as num?)?.toInt(),
+      alumniCount: (json['alumniCount'] as num?)?.toInt(),
       job: _jobFromJson(json['job'] as Map<String, dynamic>?),
     );
 
@@ -23,5 +25,7 @@ Map<String, dynamic> _$ShortlistModelToJson(_ShortlistModel instance) =>
       'jobType': instance.jobType,
       'currentStatus': instance.currentStatus,
       'createdAt': instance.createdAt?.toIso8601String(),
+      'matchScore': instance.matchScore,
+      'alumniCount': instance.alumniCount,
       'job': _jobToJson(instance.job),
     };

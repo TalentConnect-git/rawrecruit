@@ -15,43 +15,37 @@ class ApplicationCard extends StatelessWidget {
   });
 
   /// 🔥 TOTAL STEPS
-  static const int totalSteps = 7;
+static const int totalSteps = 9;
 
   /// 🔥 STEP MAPPING
-  int _getStep(String status) {
-    final s = status.toLowerCase();
+ int _getStep(String status) {
+  final s = status.toLowerCase();
 
-    if (s.contains("pending")) {
-      return 0;
-    }
+  if (s.contains("applied")) return 0;
 
-    if (s.contains("application sent")) {
-      return 1;
-    }
+  if (s.contains("application sent")) return 1;
 
-    if (s.contains("referred")) {
-      return 2;
-    }
+  if (s.contains("referred")) return 2;
 
-    if (s.contains("shortlist")) {
-      return 3;
-    }
+  if (s.contains("shortlist")) return 3;
 
-    if (s.contains("interview")) {
-      return 4;
-    }
+  if (s.contains("interview")) return 4;
 
-    if (s.contains("offer")) {
-      return 5;
-    }
+  if (s.contains("offer extended")) return 5;
 
-    if (s.contains("accepted") || s.contains("rejected")) {
-      return 6;
-    }
+  if (s == "accepted" || s.contains("accepted")) return 6;
 
-    return 0;
+  if (s.contains("offer accepted") ||
+      s.contains("offer rejected")) {
+    return 7;
   }
 
+  if (s.contains("joined")) {
+    return 8;
+  }
+
+  return 0;
+}
   /// 🔥 PROGRESS
   double _getProgress(String status) {
     return (_getStep(status) + 1) / totalSteps;
@@ -63,8 +57,7 @@ class ApplicationCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final model = application?.job;
-    final title = (model?.jobRoles?.isNotEmpty == true)
+final model = application?.jobDetails ?? application?.job;    final title = (model?.jobRoles?.isNotEmpty == true)
         ? model?.jobRoles!.first
         : (model?.jobTitle?.isNotEmpty == true ? model?.jobTitle! : "-");
 

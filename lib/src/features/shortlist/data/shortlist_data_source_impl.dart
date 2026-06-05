@@ -56,7 +56,7 @@ class ShortlistDataSourceImpl implements ShortlistDataSource {
     try {
       final result = await _networkService.request(request);
 
-      final data = result.data as List;
+      final data = result.data['data'] as List;
 
       final list = data.map((e) => ShortlistModel.fromJson(e)).toList();
 

@@ -43,14 +43,15 @@ class _LoginViewState extends State<LoginView> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   /// 🔹 LOGO
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 36),
-                    child: Image.network(
-                      'https://rawrecruit.in/assets/rawrecruit_transparent-D7ZCwQ3O.png',
-                    ),
-                  ),
+//                   Padding(
+//   padding: const EdgeInsets.symmetric(horizontal: 80),
+//   child: Image.asset(
+//     'assets/images/img.png',
+//     fit: BoxFit.cover,
+//   ),
+// ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 30),
 
                   /// 🔹 TITLE
                   Text(
@@ -60,7 +61,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
 
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 2),
 
                   Text(
                     'Login to continue your journey.',
@@ -69,7 +70,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  const SizedBox(height: 40),
 
                   /// 🔹 EMAIL
                   AppTextFields(
@@ -102,7 +103,7 @@ class _LoginViewState extends State<LoginView> {
                     ),
                   ),
 
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 25),
 
                   /// 🔹 LOGIN BUTTON
                   AppButton(

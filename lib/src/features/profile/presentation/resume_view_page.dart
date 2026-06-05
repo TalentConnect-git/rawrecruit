@@ -18,6 +18,9 @@ class ResumeViewerPage extends StatelessWidget {
     log('Resume Url $url');
     return Scaffold(
       appBar: RAppBar(
+          iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
         title: Text(
           "Resume",
           style: AppTextStyles.s16W400.copyWith(color: AppColors.white),
