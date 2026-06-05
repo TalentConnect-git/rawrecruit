@@ -123,85 +123,74 @@ class AlumniCard extends StatelessWidget {
                 /// DESIGNATION + COMPANY
 
                 /// COMPANY
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Icon(
-                      Icons.business_center_outlined,
-                      size: 14,
-                      color: Colors.white70,
-                    ),
-
-                    const SizedBox(width: 4),
-
-                    Flexible(
-                      child: Text(
-                        currentExperience?.company?.isNotEmpty == true
-                            ? currentExperience!.company!
-                            : "-",
-
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w700,
-                          fontSize: 13,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+             if (currentExperience?.company?.isNotEmpty == true)
+  Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      const Icon(
+        Icons.business_center_outlined,
+        size: 14,
+        color: Colors.white70,
+      ),
+      const SizedBox(width: 4),
+      Flexible(
+        child: Text(
+          currentExperience!.company!,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: const TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w700,
+            fontSize: 13,
+          ),
+        ),
+      ),
+    ],
+  ),
 
                 const SizedBox(height: 4),
 
                 /// ROLE
-                Text(
-                  currentExperience?.role?.isNotEmpty == true
-                      ? currentExperience!.role!
-                      : "-",
-
-                  textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-
+            if (currentExperience?.role?.isNotEmpty == true)
+  Text(
+    currentExperience!.role!,
+    textAlign: TextAlign.center,
+    maxLines: 1,
+    overflow: TextOverflow.ellipsis,
+    style: const TextStyle(
+      color: Colors.grey,
+      fontSize: 12,
+    ),
+  ),
                 const SizedBox(height: 6),
 
                 /// COLLEGE
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.school_outlined,
-                      size: 14,
-                      color: AppColors.kGreen,
-                    ),
-
-                    const SizedBox(width: 4),
-
-                    Flexible(
-                      child: Text(
-                        currentEducation?.college?.isNotEmpty == true
-                            ? currentEducation!.college!
-                            : "-",
-
-                        textAlign: TextAlign.center,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-
-                        style: TextStyle(
-                          color: AppColors.kGreen,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+               if (currentEducation?.college?.isNotEmpty == true)
+  Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      Icon(
+        Icons.school_outlined,
+        size: 14,
+        color: AppColors.kGreen,
+      ),
+      const SizedBox(width: 4),
+      Flexible(
+        child: Text(
+          currentEducation!.college!,
+          textAlign: TextAlign.center,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: AppColors.kGreen,
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    ],
+  ),
                 const SizedBox(height: 8),
 
                 /// 🔹 HIRING STATUS

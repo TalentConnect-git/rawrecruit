@@ -39,10 +39,6 @@ class AlumniHiringCard extends StatelessWidget {
           )
         : null;
 
-    final college = currentEducation?.college ?? "College : ";
-
-    final year = currentEducation?.yearOfGraduation ?? '';
-
     Experience? currentExp;
 
     if (candidate.experiences?.isNotEmpty ?? false) {
@@ -51,11 +47,11 @@ class AlumniHiringCard extends StatelessWidget {
         orElse: () => candidate.experiences!.first,
       );
     }
+    final college = currentEducation?.college;
+    final year = currentEducation?.yearOfGraduation;
 
-    final designation = currentExp?.role ?? "Role";
-    final company = (candidate.currentCompany?.isNotEmpty ?? false)
-        ? candidate.currentCompany!
-        : "Company";
+    final designation = currentExp?.role;
+    final company = candidate.currentCompany;
 
     final initials = name.isNotEmpty
         ? name
@@ -158,29 +154,33 @@ class AlumniHiringCard extends StatelessWidget {
                   const SizedBox(height: 6),
 
                   /// DESIGNATION + COMPANY
-                  Text(
-                    "$designation at $company",
-
-                    maxLines: 2,
-
-                    overflow: TextOverflow.ellipsis,
-
-                    style: const TextStyle(color: Colors.grey, fontSize: 13),
-                  ),
+                  if ((designation?.isNotEmpty ?? false) ||
+                      (company?.isNotEmpty ?? false))
+                    Text(
+                      [
+                        if (designation?.isNotEmpty ?? false) designation,
+                        if (company?.isNotEmpty ?? false) company,
+                      ].join(' at '),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey, fontSize: 13),
+                    ),
 
                   const SizedBox(height: 6),
 
                   /// COLLEGE + YEAR
-                  Text(
-                    "$college • $year",
-
-                    maxLines: 1,
-
-                    overflow: TextOverflow.ellipsis,
-
-                    style: const TextStyle(color: Colors.grey, fontSize: 13),
-                  ),
-
+                  if ((college?.isNotEmpty ?? false) ||
+                      (year?.toString().isNotEmpty ?? false))
+                    Text(
+                      [
+                        if (college?.isNotEmpty ?? false) college,
+                        if (year?.toString().isNotEmpty ?? false)
+                          year.toString(),
+                      ].join(' • '),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey, fontSize: 13),
+                    ),
                   const SizedBox(height: 10),
 
                   /// BOTTOM ROW

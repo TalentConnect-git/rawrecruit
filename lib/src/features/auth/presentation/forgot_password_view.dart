@@ -32,6 +32,9 @@ class _LoginViewState extends State<ForgotPasswordView> {
         backgroundColor: Colors.black, // ✅ FIX
 
         appBar: RAppBar(
+            iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
           label: 'Forgot Password',
           leading: InkWell(
             onTap: () {

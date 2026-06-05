@@ -214,7 +214,7 @@ https://rawrecruit.in/professional-dashboard/Referral/
                         ),
 
                         label: Text(
-                          isApplied ? "Applied" : "Apply Now",
+                          isApplied ? "Applied" : "Request Referral",
 
                           style: const TextStyle(fontWeight: FontWeight.w600),
                         ),
@@ -1511,6 +1511,8 @@ class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
 
   @override
   Widget build(BuildContext context) {
+      print("ANIMATED SCORE = ${widget.score}");
+
     return AnimatedBuilder(
       animation: _anim,
       builder: (context, _) {

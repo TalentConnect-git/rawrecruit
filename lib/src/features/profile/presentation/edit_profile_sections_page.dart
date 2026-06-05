@@ -50,6 +50,9 @@ class _EditProfileSectionsPageState extends State<EditProfileSectionsPage> {
         backgroundColor: AppColors.kBg,
 
         appBar: RAppBar(
+            iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
 

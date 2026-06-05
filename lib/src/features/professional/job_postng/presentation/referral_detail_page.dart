@@ -62,6 +62,7 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
         backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: AppColors.kCard,
+           iconTheme: const IconThemeData(color: Colors.white),
           title: Text(
             "Candidate Profile",
             style: TextStyle(color: AppColors.white),
@@ -93,6 +94,7 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                     child: Column(
                       children: [
                         /// HEADER
+                        /// 
                         _candidateHeader(context, vm, vM, status),
 
                         const SizedBox(height: 18),
@@ -555,8 +557,10 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
     final company = safe(currentExp?.company);
 
     final experience = safe(user.totalYearsOfExperience);
-    final match = vM.application?.matchScore ?? 0;
-
+    print("MATCH SCORE FROM API = ${vM.application?.matchScore}");
+print("APPLICATION ID = ${vM.application?.id}");
+   final match = vM.application?.matchScore ?? 9;
+print("MATCH VARIABLE = $match");
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -703,7 +707,10 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
               const SizedBox(width: 10),
 
               /// ANIMATED SCORE
-              AnimatedMatchScore(score: match),
+             AnimatedMatchScore(
+  key: ValueKey(match),
+  score: match,
+),
             ],
           ),
 

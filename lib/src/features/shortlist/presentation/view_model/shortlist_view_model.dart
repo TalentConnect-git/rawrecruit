@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/shortlist/entities/shortlist_model.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
@@ -20,17 +21,28 @@ class ShortlistViewModel extends ViewStateProvider {
       jobType: '', // 🔥 no filtering
     );
 
-    result.fold((failure) {}, (data) {
-      saved = data;
+  result.fold(
+  (failure) {
+    debugPrint("FETCH SAVED FAILED: $failure");
+  },
+  (data) {
+    debugPrint("FETCH SAVED SUCCESS");
+    debugPrint("PARSED COUNT = ${data.length}");
 
-      savedJobIds.clear();
+    saved = data;
 
-      for (final item in data) {
-        if (item.job?.id != null) {
-          savedJobIds.add(item.job!.id!);
-        }
+    savedJobIds.clear();
+
+    for (final item in data) {
+      debugPrint("ITEM JOB = ${item.job}");
+      debugPrint("ITEM JOB ID = ${item.job?.id}");
+
+      if (item.job?.id != null) {
+        savedJobIds.add(item.job!.id!);
       }
-    });
+    }
+  },
+);
 
     setViewState(ViewState.complete);
   }

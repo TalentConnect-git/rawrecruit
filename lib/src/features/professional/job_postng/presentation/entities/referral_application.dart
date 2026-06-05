@@ -14,6 +14,7 @@ abstract class ReferralApplication with _$ReferralApplication {
     ReferralPostModel? job,
     String? statusText,
     String? currentStatus,
+    String? referralCompany,
     DateTime? createdAt,
     int? matchScore,
     String? jobTitle,
@@ -72,6 +73,7 @@ abstract class ReferralApplication with _$ReferralApplication {
           json['skills'] is List
               ? List<String>.from(json['skills'])
               : [],
+              referralCompany: json['referralCompany']?.toString(),
     );
   }
 }

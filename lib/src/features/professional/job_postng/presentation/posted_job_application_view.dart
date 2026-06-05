@@ -36,6 +36,9 @@ class _PostedJobApplicationViewState extends State<PostedJobApplicationView> {
       value: postedJobApplicationViewModel,
       child: Scaffold(
         appBar: RAppBar(
+            iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
           label: 'Applications',
           leading: IconButton(
             onPressed: () {

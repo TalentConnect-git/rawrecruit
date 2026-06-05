@@ -553,14 +553,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                           spacing: 10,
                           runSpacing: 10,
                           children: (user.industry ?? [])
-                              .map(
-                                (e) => _premiumChip(
-                                  e,
-                                  color: const Color(0xff5B8CFF),
-                                  icon: Icons.business_center,
-                                ),
-                              )
-                              .toList(),
+    .map((e) => _chip(e))
+    .toList(),
                         ),
                       ),
                     ],

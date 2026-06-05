@@ -153,7 +153,7 @@ class ReferralJobCard extends StatelessWidget {
 
                 ElevatedButton(
                   onPressed: isApplied ? null : onApply,
-                  child: Text(isApplied ? "Applied" : "Apply"),
+                  child: Text(isApplied ? "Applied" : "Request Referral"),
                 ),
               ],
             ),

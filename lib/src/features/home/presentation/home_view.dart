@@ -113,6 +113,7 @@ class _HomeViewState extends State<HomeView> {
         child: Scaffold(
           key: _scaffoldKey,
           appBar: RAppBar(
+            
             title: Text(
               'RawRecruit',
               style: AppTextStyles.s24W600.copyWith(color: AppColors.kGreen),

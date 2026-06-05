@@ -11,9 +11,10 @@ abstract class ShortlistModel with _$ShortlistModel {
     String? jobType,
     String? currentStatus,
     DateTime? createdAt,
+    int? matchScore,
+    int? alumniCount,
 
-    @JsonKey(fromJson: _jobFromJson, toJson: _jobToJson)
-    Job? job,
+    @JsonKey(fromJson: _jobFromJson, toJson: _jobToJson) Job? job,
   }) = _ShortlistModel;
 
   factory ShortlistModel.fromJson(Map<String, dynamic> json) =>
@@ -21,10 +22,15 @@ abstract class ShortlistModel with _$ShortlistModel {
 }
 
 /// 🔥 ADD THESE BELOW (OUTSIDE CLASS)
-
 Job? _jobFromJson(Map<String, dynamic>? json) {
   if (json == null) return null;
-  return Job.fromJson(json);
+
+  final jobJson = Map<String, dynamic>.from(json);
+
+  // Saved jobs API doesn't send companyName
+  jobJson['companyName'] ??= jobJson['candidatePosted']?['currentCompany'];
+
+  return Job.fromJson(jobJson);
 }
 
 Map<String, dynamic>? _jobToJson(Job? job) {

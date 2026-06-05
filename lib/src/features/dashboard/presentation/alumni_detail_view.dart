@@ -37,14 +37,17 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
       child: Scaffold(
         backgroundColor: Colors.black,
 
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          elevation: 0,
-          title: const Text(
-            "Alumni Profile",
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
+      appBar: AppBar(
+  backgroundColor: Colors.black,
+  elevation: 0,
+  iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
+  title: const Text(
+    "Alumni Profile",
+    style: TextStyle(color: Colors.white),
+  ),
+),
 
         body: Consumer<AlumniDetailViewModel>(
           builder: (vmContext, vm, _) {
@@ -441,7 +444,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                     child: Column(
                       children: [
                         _metricRow(
-                          "Open Jobs?",
+                          "Open Jobs",
                           "${vm.alumni?.referralJobs?.length ?? 0}",
                         ),
 
@@ -463,9 +466,9 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 Text(
-                                  isHiring ? "Hiring" : "Inactive",
+                                  isHiring ? "Hiring" : "Not Hiring",
                                   style: TextStyle(
-                                    color: isHiring ? Colors.green : Colors.red,
+                                    color: isHiring ? Colors.green : Colors.grey,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -476,7 +479,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color: isHiring ? Colors.green : Colors.red,
+                                    color: isHiring ? Colors.green : Colors.grey,
                                     shape: BoxShape.circle,
                                   ),
                                 ),

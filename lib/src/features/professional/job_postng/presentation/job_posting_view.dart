@@ -22,11 +22,66 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   final _formKey = GlobalKey<FormState>();
   static const draftKey = "referral_post_draft";
   List<String> skillOptionsApi = [];
+List<String> jobRoleOptions = [];
+Future<void> fetchJobRoles() async {
+  final response = await getIt<NetworkService>().request(
+    Request(
+      method: RequestMethod.get,
+      endpoint: "api/company-master-data?type=JOB_ROLE",
+      isSafeRoute: true,
+    ),
+  );
 
+  final data =
+      List<Map<String, dynamic>>.from(
+        response.data['data'] ?? [],
+      );
+
+  jobRoleOptions =
+      data
+          .map((e) => e['value'].toString().trim())
+          .where((e) => e.isNotEmpty)
+          .toSet()
+          .toList()
+        ..sort();
+
+  if (!jobRoleOptions.contains("Others")) {
+    jobRoleOptions.add("Others");
+  }
+
+  setState(() {});
+}
+Future<void> addJobRoleIfNeeded(String value) async {
+  final exists = jobRoleOptions.any(
+    (e) => e.toLowerCase().trim() ==
+        value.toLowerCase().trim(),
+  );
+
+  if (exists) return;
+
+  await getIt<NetworkService>().request(
+    Request(
+      method: RequestMethod.post,
+      endpoint: "/api/company-master-data",
+      isSafeRoute: true,
+      body: {
+        "type": "JOB_ROLE",
+        "value": value,
+        "parent": null,
+      },
+    ),
+  );
+
+  setState(() {
+    jobRoleOptions.add(value);
+  });
+}
   @override
   void initState() {
     super.initState();
     fetchStates();
+      fetchJobRoles();
+
     fetchSkills();
     loadDraft();
   }
@@ -284,30 +339,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   }
 
   // ── Enum options ────────────────────────────────────────────────────────────
-
-  final List<String> jobTitleOptions = [
-    "Software Developer",
-    "Frontend Developer",
-    "Backend Developer",
-    "Full Stack Developer",
-    "Mobile App Developer",
-    "UI/UX Designer",
-    "Data Analyst",
-    "Data Scientist",
-    "Machine Learning Engineer",
-    "DevOps Engineer",
-    "Cloud Architect",
-    "QA Engineer",
-    "Cyber Security Specialist",
-    "Network Engineer",
-    "Business Analyst",
-    "Product Manager",
-    "Project Manager",
-    "HR Recruiter",
-    "Marketing Specialist",
-    "Sales Executive",
-    "Finance Analyst",
-  ];
+late TextEditingController _jobRoleController;
 
   final List<String> skillOptions = [
     'Flutter',
@@ -548,6 +580,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     "1-3 years",
     "3-5 years",
     "5-10 years",
+    "10+ years"
   ];
   final List<String> roundsOptions = [
     "1 Round",
@@ -687,12 +720,217 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                         child: _card(
                           title: "Job Info",
                           children: [
-                            MultiSelectDropdownChips(
-                              key: const ValueKey('jobTitle'),
-                              label: "Job Title",
-                              controller: titleController,
-                              options: jobTitleOptions,
-                            ),
+                          Column(
+  crossAxisAlignment: CrossAxisAlignment.start,
+  children: [
+    const Text(
+      "Job Title",
+      style: TextStyle(
+        color: Colors.white,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+
+    const SizedBox(height: 10),
+
+    /// SELECTED JOB TITLES
+    Wrap(
+      spacing: 8,
+      runSpacing: 8,
+      children: titleController.text
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty)
+          .map(
+            (role) => Chip(
+              label: Text(role),
+              onDeleted: () {
+                final roles = titleController.text
+                    .split(',')
+                    .map((e) => e.trim())
+                    .where((e) => e.isNotEmpty)
+                    .toList();
+
+                roles.remove(role);
+
+                setState(() {
+                  titleController.text = roles.join(', ');
+                });
+              },
+            ),
+          )
+          .toList(),
+    ),
+
+    const SizedBox(height: 10),
+
+    Autocomplete<String>(
+      optionsBuilder: (textEditingValue) {
+        final query = textEditingValue.text.trim();
+
+        final filtered = jobRoleOptions.where(
+          (option) =>
+              option.toLowerCase().contains(
+                query.toLowerCase(),
+              ) &&
+              !titleController.text
+                  .toLowerCase()
+                  .contains(option.toLowerCase()),
+        );
+
+        final exists = jobRoleOptions.any(
+          (e) =>
+              e.toLowerCase().trim() ==
+              query.toLowerCase().trim(),
+        );
+
+        if (query.isNotEmpty && !exists) {
+          return [
+            ...filtered,
+            'Create "$query"',
+          ];
+        }
+
+        return filtered;
+      },
+
+      onSelected: (value) async {
+        final actualValue = value.startsWith('Create "')
+            ? value
+                .replaceAll('Create "', '')
+                .replaceAll('"', '')
+            : value;
+
+        await addJobRoleIfNeeded(actualValue);
+
+        final currentRoles = titleController.text
+            .split(',')
+            .map((e) => e.trim())
+            .where((e) => e.isNotEmpty)
+            .toList();
+
+        if (!currentRoles.contains(actualValue)) {
+          currentRoles.add(actualValue);
+
+          setState(() {
+            titleController.text =
+                currentRoles.join(', ');
+          });
+        }
+        _jobRoleController.clear();
+      },
+
+      fieldViewBuilder: (
+        context,
+        controller,
+        focusNode,
+        onFieldSubmitted,
+      ) {
+          _jobRoleController = controller;
+
+        return TextField(
+          controller: controller,
+          focusNode: focusNode,
+          style: const TextStyle(
+            color: Colors.white,
+          ),
+          decoration: InputDecoration(
+            hintText: "Search Job Role",
+            hintStyle: const TextStyle(
+              color: Colors.grey,
+            ),
+            filled: true,
+            fillColor: Colors.black,
+            border: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(12),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.border,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius:
+                  BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: AppColors.kGreen,
+              ),
+            ),
+          ),
+        );
+      },
+
+      optionsViewBuilder: (
+        context,
+        onSelected,
+        options,
+      ) {
+        return Material(
+          color: Colors.black,
+          child: Container(
+            width:
+                MediaQuery.of(context).size.width -
+                32,
+            constraints: const BoxConstraints(
+              maxHeight: 220,
+            ),
+            child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: options.length,
+              itemBuilder: (context, index) {
+                final option =
+                    options.elementAt(index);
+
+                final isCreate =
+                    option.startsWith(
+                      'Create "',
+                    );
+
+                return ListTile(
+                  title: Row(
+                    children: [
+                      if (isCreate)
+                        Icon(
+                          Icons.add,
+                          color:
+                              AppColors.kGreen,
+                          size: 18,
+                        ),
+
+                      if (isCreate)
+                        const SizedBox(
+                          width: 8,
+                        ),
+
+                      Expanded(
+                        child: Text(
+                          option,
+                          style: TextStyle(
+                            color: isCreate
+                                ? AppColors.kGreen
+                                : Colors.white,
+                            fontWeight: isCreate
+                                ? FontWeight.w600
+                                : FontWeight.normal,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  onTap: () =>
+                      onSelected(option),
+                );
+              },
+            ),
+          ),
+        );
+      },
+    ),
+  ],
+),
                             SizedBox(height: 10),
                             _fieldDark(
                               "Description",

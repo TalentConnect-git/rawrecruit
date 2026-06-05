@@ -45,6 +45,9 @@ class _ChatUserListViewState extends State<ChatUserListView> {
       child: Scaffold(
         backgroundColor: AppColors.kBg,
         appBar: RAppBar(
+            iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
           leading: IconButton(
             onPressed: context.pop,
             icon: Icon(Icons.keyboard_arrow_left, color: AppColors.white),

@@ -32,12 +32,15 @@ class _InterviewsScreenState extends State<InterviewsScreen> {
       child: Scaffold(
         backgroundColor: AppColors.secBorder,
 
-        appBar: RAppBar(
-          title: const Text(
-            'Scheduled Interviews',
-            style: TextStyle(color: Colors.white),
-          ),
-        ),
+       appBar: RAppBar(
+  iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
+  title: const Text(
+    'Scheduled Interviews',
+    style: TextStyle(color: Colors.white),
+  ),
+),
 
         body: Consumer<InterviewViewModel>(
           builder: (context, vm, _) {

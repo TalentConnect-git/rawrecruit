@@ -517,6 +517,63 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     "Two or More Races",
     "Prefer not to say",
   ];
+  String selectedState = "";
+
+List<String> states = [];
+List<String> cities = [];
+List<String> selectedCities = [];
+
+bool isLoadingStates = false;
+bool isLoadingCities = false;
+Future<void> fetchStates() async {
+  try {
+    setState(() => isLoadingStates = true);
+
+    final res = await Dio().get(
+      "https://countriesnow.space/api/v0.1/countries/states/q",
+      queryParameters: {"country": "india"},
+    );
+
+    if (res.statusCode == 200 &&
+        res.data["data"] != null &&
+        res.data["data"]["states"] is List) {
+      final List stateList = res.data["data"]["states"];
+
+      setState(() {
+        states = stateList
+            .map<String>((e) => e["name"].toString())
+            .toList();
+      });
+    }
+  } finally {
+    setState(() => isLoadingStates = false);
+  }
+}
+
+Future<void> fetchCities(String state) async {
+  try {
+    setState(() {
+      isLoadingCities = true;
+      cities = [];
+    });
+
+    final res = await Dio().get(
+      "https://countriesnow.space/api/v0.1/countries/state/cities/q",
+      queryParameters: {
+        "country": "india",
+        "state": state.toLowerCase(),
+      },
+    );
+
+    if (res.statusCode == 200 && res.data["data"] is List) {
+      setState(() {
+        cities = List<String>.from(res.data["data"]);
+      });
+    }
+  } finally {
+    setState(() => isLoadingCities = false);
+  }
+}
 
   final visaStatusOptions = [
     "Citizen",
@@ -650,7 +707,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       _pageController.jumpToPage(currentStep);
     });
     fetchColleges();
-
+fetchStates();
     fetchDegrees();
 
     fetchCompanies();
@@ -658,6 +715,10 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     fetchSkills();
     fetchJobRoles();
     addEditProfileViewModel.setUserController(widget.user);
+    selectedCities = controller.locations
+    .map((e) => e.text)
+    .where((e) => e.isNotEmpty)
+    .toList();
     // if (controller.experiences.isEmpty) {
     //   controller.experiences.add(ExperienceController());
     // }
@@ -1334,10 +1395,80 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                 const SizedBox(height: 20),
 
-                                _profileListSection(
-                                  'Locations',
-                                  controller.locations,
-                                ),
+                              isLoadingStates
+    ? const CircularProgressIndicator()
+    : AppDropdown(
+        hint: "Select State",
+        options: states,
+        value: selectedState.isEmpty ? null : selectedState,
+        onChanged: (val) {
+          if (val == null) return;
+
+          setState(() {
+            selectedState = val;
+            cities.clear();
+          });
+
+          fetchCities(val);
+        },
+      ),
+
+const SizedBox(height: 12),
+
+if (selectedState.isNotEmpty)
+  isLoadingCities
+      ? const CircularProgressIndicator()
+      : AppDropdown(
+          hint: "Select City",
+          options: cities,
+          value: null,
+          onChanged: (val) {
+            if (val == null) return;
+
+            setState(() {
+              if (!selectedCities.contains(val)) {
+                selectedCities.add(val);
+              }
+            });
+
+            controller.locations.clear();
+
+            for (final city in selectedCities) {
+              controller.locations.add(
+                TextEditingController(text: city),
+              );
+            }
+
+            markChanged();
+          },
+        ),
+
+const SizedBox(height: 12),
+
+Wrap(
+  spacing: 8,
+  runSpacing: 8,
+  children: selectedCities.map((city) {
+    return Chip(
+      label: Text(city),
+      onDeleted: () {
+        setState(() {
+          selectedCities.remove(city);
+        });
+
+        controller.locations.clear();
+
+        for (final city in selectedCities) {
+          controller.locations.add(
+            TextEditingController(text: city),
+          );
+        }
+
+        markChanged();
+      },
+    );
+  }).toList(),
+),
 
                                 const SizedBox(height: 20),
 

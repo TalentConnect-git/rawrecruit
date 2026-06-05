@@ -35,15 +35,17 @@ class ApplicationDetailsView extends StatelessWidget {
         : null;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          "Application Details",
-
-          style: TextStyle(
-            color: AppColors.white,
-          ),
-        ),
-      ),
+   appBar: AppBar(
+  backgroundColor: Colors.black,
+  elevation: 0,
+  iconTheme: const IconThemeData(
+    color: Colors.white,
+  ),
+  title: const Text(
+    "Applicanttion Details",
+    style: TextStyle(color: Colors.white),
+  ),
+),
 
       body: SingleChildScrollView(
         padding:
