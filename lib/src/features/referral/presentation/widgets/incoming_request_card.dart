@@ -14,7 +14,7 @@ class IncomingRequestCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.pushNamed(RouteNames.referrerDetail, extra: request);
+        context.pushNamed(RouteNames.referrerDetail, extra: request.id);
       },
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

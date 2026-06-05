@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show EducationController;
 
-import '../../../../feature/revamp_onboarding/presentation/steps/education_controller.dart';
 import 'achievement_controller.dart';
 import 'award_controller.dart';
 import 'international.dart';
@@ -120,25 +121,37 @@ class UserController {
   TextEditingController noticePeriodStartDate;
   Map<String, dynamic> toMap() {
     String? clean(String? v) => v == null || v.trim().isEmpty ? null : v.trim();
+List<String>? cleanList(List<TextEditingController> list) {
+  final values = <String>[];
 
-    List<String>? cleanList(List<TextEditingController> list) {
-      final values = list
-          .map((e) => clean(e.text))
-          .whereType<String>()
-          .toList();
-      return values.isEmpty ? null : values;
-    }
+  for (final controller in list) {
+    final text = controller.text.trim();
 
+    debugPrint("CHIP VALUE => $text");
+
+    if (text.isEmpty) continue;
+
+    values.addAll(
+      text
+          .split(',')
+          .map((e) => e.trim())
+          .where((e) => e.isNotEmpty),
+    );
+  }
+
+  debugPrint("FINAL VALUES => $values");
+
+  return values.isEmpty ? null : values;
+}
     Map<String, dynamic> cleanMap(Map<String, dynamic> map) {
       map.removeWhere((key, value) {
         if (value == null) return true;
-    if (value is String &&
-    value.isEmpty &&
-    key != 'currentCompany') {
-  return true;
-}
- /// KEEP EMPTY LISTS SO BACKEND CLEARS DATA
-if (value is List) return false;
+        if (value is String && value.isEmpty && key != 'currentCompany') {
+          return true;
+        }
+
+        /// KEEP EMPTY LISTS SO BACKEND CLEARS DATA
+        if (value is List) return false;
         if (value is Map && value.isEmpty) return true;
         return false;
       });
@@ -163,7 +176,8 @@ if (value is List) return false;
       'linkedin': clean(linkedin.text),
       'name': clean(name.text),
       'openToShift': clean(openToShift.text),
-'currentCompany': currentCompany.text.trim(),      'companyEmail': clean(companyEmail.text),
+      'currentCompany': currentCompany.text.trim(),
+      'companyEmail': clean(companyEmail.text),
       'totalYearsOfExperience': clean(totalYearsOfExperience.text),
       'noticePeriod': clean(noticePeriod.text),
       'noticePeriodStartDate': clean(noticePeriodStartDate.text),
@@ -190,52 +204,60 @@ if (value is List) return false;
 
       'domainKnowledge': cleanList(domainKnowledge),
       'employmentType': cleanList(employmentType),
-   'educations': educations.map(
-  (e) => {
-    'college': e.college.text.trim(),
-    'degree': e.degree.text.trim(),
-    'specialization': e.specialization.text.trim(),
-    'semester': e.semester.text.trim(),
-    'cgpa': e.cgpa.text.trim(),
-    'yearOfGraduation': e.yearOfGraduation.text.trim(),
-    'startDate': e.startDate.text.trim(),
-    'endDate': e.endDate.text.trim(),
-    'educationType': e.educationType,
-    'isCurrent': e.isCurrent,
-  },
-).toList(),
-   'experiences': experiences.map(
-  (e) => {
-    'company': e.company.text.trim(),
-    'role': e.role.text.trim(),
-    'isCurrent': e.isCurrent,
-    'startDate': e.startDate.text.trim(),
-    'endDate': e.endDate.text.trim(),
-    'description': e.description.text.trim(),
-  },
-).toList(),
+      'educations': educations
+          .map(
+            (e) => {
+              'college': e.college.text.trim(),
+              'degree': e.degree.text.trim(),
+              'specialization': e.specialization.text.trim(),
+              'semester': e.semester.text.trim(),
+              'cgpa': e.cgpa.text.trim(),
+              'yearOfGraduation': e.yearOfGraduation.text.trim(),
+              'startDate': e.startDate.text.trim(),
+              'endDate': e.endDate.text.trim(),
+              'educationType': e.educationType,
+              'isCurrent': e.isCurrent,
+            },
+          )
+          .toList(),
+      'experiences': experiences
+          .map(
+            (e) => {
+              'company': e.company.text.trim(),
+              'role': e.role.text.trim(),
+              'isCurrent': e.isCurrent,
+              'startDate': e.startDate.text.trim(),
+              'endDate': e.endDate.text.trim(),
+              'description': e.description.text.trim(),
+            },
+          )
+          .toList(),
       'industry': cleanList(industry),
       'jobRoles': cleanList(jobRoles),
       'languagesKnown': cleanList(languagesKnown),
-   'leadership': leadershipExperiences.map(
-  (e) => {
-    'organization': e.organization.text.trim(),
-    'role': e.role.text.trim(),
-    'startDate': e.startDate.text.trim(),
-    'endDate': e.endDate.text.trim(),
-    'description': e.description.text.trim(),
-  },
-).toList(),
-  'internationalExperience': internationalExperiences.map(
-  (e) => {
-    'country': e.country.text.trim(),
-    'organization': e.organization.text.trim(),
-    'role': e.role.text.trim(),
-    'startDate': e.startDate.text.trim(),
-    'endDate': e.endDate.text.trim(),
-    'description': e.description.text.trim(),
-  },
-).toList(),
+      'leadership': leadershipExperiences
+          .map(
+            (e) => {
+              'organization': e.organization.text.trim(),
+              'role': e.role.text.trim(),
+              'startDate': e.startDate.text.trim(),
+              'endDate': e.endDate.text.trim(),
+              'description': e.description.text.trim(),
+            },
+          )
+          .toList(),
+      'internationalExperience': internationalExperiences
+          .map(
+            (e) => {
+              'country': e.country.text.trim(),
+              'organization': e.organization.text.trim(),
+              'role': e.role.text.trim(),
+              'startDate': e.startDate.text.trim(),
+              'endDate': e.endDate.text.trim(),
+              'description': e.description.text.trim(),
+            },
+          )
+          .toList(),
       'locations': cleanList(locations),
       'lookingFor': cleanList(lookingFor),
       'toolsAndPlatforms': cleanList(toolsAndPlatforms),

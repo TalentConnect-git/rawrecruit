@@ -8,6 +8,8 @@ class Endpoints {
   static String apiAuthForgotPassword = 'api/auth/forgot-password';
   static String apiAuthGoogle = 'api/auth/google';
 
+  static String apiStudentDashboardJob = 'api/student-dashboard/job';
+  static String applicationDetails = 'application/details';
   static String apiOffCampusJobs = 'api/student-dashboard/off-campus';
   static String apiInternshipPostings =
       'api/student-dashboard/internship-postings';
@@ -20,6 +22,7 @@ class Endpoints {
   static const apiOnboarding = 'api/onboarding';
   static const apiOnboardingMe = 'api/onboarding/me';
   static const apiOnboardingUpdate = 'api/onboarding/update';
+  static const apiOnboardingGetDetails = 'api/onboarding/get-details';
 
   static const String referalListing = "api/student-dashboard/referral-jobs";
   static const String applicationAllReferrals = "/application/all-referrals";

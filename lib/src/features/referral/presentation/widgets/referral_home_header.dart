@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart';
-import 'package:rawrecruit/src/feature/revamp_onboarding/presentation/index.dart';
-import 'package:rawrecruit/src/feature/revamp_referrer/utils/enums.dart';
+import 'package:rawrecruit/src/features/jobs/utils/enums.dart';
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show MyProfileViewModel;
+import 'package:rawrecruit/src/features/referrer/utils/enums.dart';
 
 class ReferralHomeHeader extends StatelessWidget {
   final MyProfileViewModel vm;

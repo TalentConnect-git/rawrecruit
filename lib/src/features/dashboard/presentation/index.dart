@@ -1,0 +1,9 @@
+export 'alumni_detail_view.dart';
+export 'dashboard_view.dart';
+export 'internship_detail_page.dart';
+export 'internship_view.dart';
+export 'job_detail_page.dart';
+export 'job_view.dart';
+export 'referral_job_view.dart';
+export 'view_model/index.dart';
+export 'widgets/index.dart';

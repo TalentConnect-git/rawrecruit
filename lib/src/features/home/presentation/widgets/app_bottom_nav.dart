@@ -47,19 +47,19 @@ class AppBottomNav extends StatelessWidget {
                   color: isSelected ? AppColors.kGreen : AppColors.secText,
                 ),
 
-                if (item == NavItem.profile && hasUnread)
-                  Positioned(
-                    right: -2,
-                    top: -2,
-                    child: Container(
-                      width: 8,
-                      height: 8,
-                      decoration: const BoxDecoration(
-                        color: Colors.red,
-                        shape: BoxShape.circle,
-                      ),
-                    ),
-                  ),
+                // if (item == NavItem.profile && hasUnread)
+                //   Positioned(
+                //     right: -2,
+                //     top: -2,
+                //     child: Container(
+                //       width: 8,
+                //       height: 8,
+                //       decoration: const BoxDecoration(
+                //         color: Colors.red,
+                //         shape: BoxShape.circle,
+                //       ),
+                //     ),
+                //   ),
               ],
             );
 

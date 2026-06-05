@@ -3,12 +3,15 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_alumni/presentation/widgets/alumni_hiring_card.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/features/alumni/presentation/widgets/alumni_hiring_card.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationViewModel;
+import 'package:rawrecruit/src/features/dashboard/index.dart'
+    show DashboardViewModel;
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/data/entities/referral_job_model.dart';
 import 'package:rawrecruit/src/features/shortlist/presentation/view_model/shortlist_view_model.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import '../../../../common/index.dart';
 import 'view_model/prof_dashboard_view_model.dart';
 
@@ -24,12 +27,15 @@ class ReferralDetailView extends StatefulWidget {
 class _ReferralDetailViewState extends State<ReferralDetailView> {
   final viewModel = ProfessionalViewModel();
   final shortlistVm = getIt<ShortlistViewModel>();
+  final dashboardViewModel = getIt<DashboardViewModel>();
+  final applicationViewModel = getIt<ApplicationViewModel>();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       viewModel.fetchReferralJobDetails(widget.jobId);
+      applicationViewModel.fetchApplications();
       shortlistVm.fetchSaved();
     });
   }
@@ -38,11 +44,10 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider.value(value: viewModel),
+        ChangeNotifierProvider.value(value: dashboardViewModel),
         ChangeNotifierProvider.value(value: shortlistVm),
-        ChangeNotifierProvider(
-          create: (_) => ApplicationViewModel()..fetchApplications(),
-        ),
+        ChangeNotifierProvider.value(value: viewModel),
+        ChangeNotifierProvider.value(value: applicationViewModel),
       ],
       child: Consumer<ProfessionalViewModel>(
         builder: (context, vm, _) {
@@ -93,28 +98,29 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                   ),
                 ),
                 GestureDetector(
-                onTap: () async {
-  final company =
-      widget.companyName ??
-      referral?.candidatePosted?.currentCompany ??
-      job.candidatePosted?.currentCompany ??
-      "Company";
+                  onTap: () async {
+                    final company =
+                        widget.companyName ??
+                        referral?.candidatePosted?.currentCompany ??
+                        job.candidatePosted?.currentCompany ??
+                        "Company";
 
-  final role = job.jobTitle ?? "Job Opportunity";
+                    final role = job.jobTitle ?? "Job Opportunity";
 
-  final package = job.packageDetails?.totalCTC != null
-      ? "₹${job.packageDetails!.totalCTC}"
-      : "Not Disclosed";
+                    final package = job.packageDetails?.totalCTC != null
+                        ? "₹${job.packageDetails!.totalCTC}"
+                        : "Not Disclosed";
 
-  final location = (job.location?.isNotEmpty ?? false)
-      ? job.location!.join(", ")
-      : "Not Mentioned";
+                    final location = (job.location?.isNotEmpty ?? false)
+                        ? job.location!.join(", ")
+                        : "Not Mentioned";
 
-  final mode = (job.workMode?.isNotEmpty ?? false)
-      ? job.workMode!.join(", ")
-      : "Not Mentioned";
+                    final mode = (job.workMode?.isNotEmpty ?? false)
+                        ? job.workMode!.join(", ")
+                        : "Not Mentioned";
 
-  final shareText = '''
+                    final shareText =
+                        '''
 🚀 Referral Opportunity
 
 💼 Role: $role
@@ -127,8 +133,8 @@ Apply here:
 https://rawrecruit.in/professional-dashboard/Referral/
 ''';
 
-  await Share.share(shareText);
-},
+                    await Share.share(shareText);
+                  },
                   child: Padding(
                     padding: const EdgeInsets.only(right: 16),
                     child: Icon(Icons.share, color: AppColors.kGreen),
@@ -246,6 +252,10 @@ https://rawrecruit.in/professional-dashboard/Referral/
                   const SizedBox(height: 16),
 
                   _matchInsightsSection(job),
+                  const SizedBox(height: 16),
+
+                  _referralMetricsSection(referral),
+
                   const SizedBox(height: 16),
 
                   _roleOverviewSection(job),
@@ -409,11 +419,8 @@ https://rawrecruit.in/professional-dashboard/Referral/
                 ),
               ),
               _vDivider(),
-              const Icon(
-                Icons.calendar_today_outlined,
-                size: 12,
-                color: Colors.grey,
-              ),
+              Image.asset("assets/images/calendar.png", width: 15, height: 15),
+
               const SizedBox(width: 4),
               Flexible(
                 child: RichText(
@@ -697,7 +704,7 @@ https://rawrecruit.in/professional-dashboard/Referral/
                   phone: c.phone ?? "",
                 );
 
-                context.pushNamed(RouteNames.chatUser, extra: user);
+                context.pushNamed(RouteNames.chatUser, extra: user.id);
               },
               icon: const Icon(Icons.message_outlined, size: 18),
               label: const Text(
@@ -760,15 +767,137 @@ https://rawrecruit.in/professional-dashboard/Referral/
     );
   }
 
-  // ============================================================
-  // MATCH INSIGHTS (no "Why you're a good fit", keep score + improve)
-  // ============================================================
+  Widget _referralMetricsSection(dynamic referral) {
+    final metrics = referral?.metrics;
+
+    final applications = metrics?.totalApplicationsReceived ?? 0;
+
+    final referred = metrics?.totalReferredToCompany ?? 0;
+
+    final interviews = metrics?.totalInterviewScheduled ?? 0;
+
+    final accepted = metrics?.totalAcceptedByCompany ?? 0;
+
+    final responseRate = metrics?.responseRate ?? 0;
+
+    final successRate = metrics?.referralSuccessRate ?? 0;
+
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(
+                Icons.analytics_outlined,
+                color: Colors.orangeAccent,
+                size: 18,
+              ),
+              SizedBox(width: 8),
+              Text(
+                "Referral Metrics",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          Row(
+            children: [
+              Expanded(
+                child: _metricCard("Applications", applications.toString()),
+              ),
+              const SizedBox(width: 10),
+              Expanded(child: _metricCard("Referred", referred.toString())),
+            ],
+          ),
+
+          // const SizedBox(height: 10),
+
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Interviews",
+          //         interviews.toString(),
+          //       ),
+          //     ),
+          //     const SizedBox(width: 10),
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Accepted",
+          //         accepted.toString(),
+          //       ),
+          //     ),
+          //   ],
+          // ),
+
+          // const SizedBox(height: 10),
+
+          // Row(
+          //   children: [
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Response Rate",
+          //         "$responseRate%",
+          //       ),
+          //     ),
+          //     const SizedBox(width: 10),
+          //     Expanded(
+          //       child: _metricCard(
+          //         "Success Rate",
+          //         "$successRate%",
+          //       ),
+          //     ),
+          //   ],
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget _metricCard(String title, String value) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(.03),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: Colors.white.withOpacity(.05)),
+      ),
+      child: Column(
+        children: [
+          Text(
+            value,
+            style: TextStyle(
+              color: AppColors.kGreen,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            textAlign: TextAlign.center,
+            style: const TextStyle(color: Colors.grey, fontSize: 11),
+          ),
+        ],
+      ),
+    );
+  }
+
   // ============================================================
   // MATCH INSIGHTS — score circle + real job stats on the left
   // ============================================================
   Widget _matchInsightsSection(Job job) {
     final openings = job.numberOfOpenings?.toString() ?? "—";
-    final rounds = (job.rounds?.length ?? 0).toString();
+    final rounds = (job.rounds?.isNotEmpty ?? false)
+        ? job.rounds!.join(", ")
+        : "—";
 
     final process = (job.selectionProcess?.isNotEmpty ?? false)
         ? job.selectionProcess!.join(", ")
@@ -809,8 +938,6 @@ https://rawrecruit.in/professional-dashboard/Referral/
                       "Selection Rounds",
                       rounds,
                     ),
-
-                  
                   ],
                 ),
               ),
@@ -821,61 +948,58 @@ https://rawrecruit.in/professional-dashboard/Referral/
           ),
           const SizedBox(height: 18),
 
-Container(
-  width: double.infinity,
-  padding: const EdgeInsets.all(14),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(14),
 
-  decoration: BoxDecoration(
-    color: Colors.white.withOpacity(.03),
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(.03),
 
-    borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(12),
 
-    border: Border.all(
-      color: Colors.white.withOpacity(.05),
-    ),
-  ),
+              border: Border.all(color: Colors.white.withOpacity(.05)),
+            ),
 
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
 
-    children: [
+              children: [
+                Row(
+                  children: const [
+                    Icon(
+                      Icons.account_tree_outlined,
+                      size: 16,
+                      color: Colors.orangeAccent,
+                    ),
 
-      Row(
-        children: const [
-          Icon(
-            Icons.account_tree_outlined,
-            size: 16,
-            color: Colors.orangeAccent,
-          ),
+                    SizedBox(width: 8),
 
-          SizedBox(width: 8),
+                    Text(
+                      "Selection Process",
 
-          Text(
-            "Selection Process",
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
 
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
+                const SizedBox(height: 12),
+
+                Text(
+                  process,
+
+                  style: const TextStyle(
+                    color: Colors.grey,
+                    fontSize: 13,
+                    height: 1.5,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-      ),
-
-      const SizedBox(height: 12),
-
-      Text(
-        process,
-
-        style: const TextStyle(
-          color: Colors.grey,
-          fontSize: 13,
-          height: 1.5,
-        ),
-      ),
-    ],
-  ),
-),
         ],
       ),
     );
@@ -979,8 +1103,7 @@ Container(
     final exp = job.yearsOfExperience != null
         ? "${job.yearsOfExperience}"
         : "—";
- final education =
-    (job.minEducation?.trim().isNotEmpty ?? false)
+    final education = (job.minEducation?.trim().isNotEmpty ?? false)
         ? job.minEducation!
         : "Not Specified";
     final openings = job.numberOfOpenings?.toString() ?? "—";
@@ -1021,28 +1144,22 @@ Container(
           const SizedBox(height: 14),
           Row(
             children: [
-          Expanded(
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.start,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
 
-    children: [
+                  children: [
+                    _detailRow("Minimum Education", education),
 
-      _detailRow(
-        "Minimum Education",
-        education,
-      ),
+                    if (job.studentStreams?.isNotEmpty ?? false) ...[
+                      const SizedBox(height: 12),
 
-      if (job.studentStreams?.isNotEmpty ?? false) ...[
-        const SizedBox(height: 12),
-
-        _detailRow(
-          "Streams",
-          job.studentStreams!.join(", "),
-        ),
-      ],
-    ],
-  ),
-),    ],
+                      _detailRow("Streams", job.studentStreams!.join(", ")),
+                    ],
+                  ],
+                ),
+              ),
+            ],
           ),
           // const SizedBox(height: 14),
           // Row(
@@ -1092,8 +1209,6 @@ Container(
   // ============================================================
   Widget _skillsSection(Job job) {
     final skills = job.skills ?? [];
-    final visible = skills.take(6).toList();
-    final extra = skills.length - visible.length;
 
     return _cardContainer(
       child: Column(
@@ -1113,28 +1228,22 @@ Container(
               ),
             ],
           ),
+
           const SizedBox(height: 12),
-          if (visible.isEmpty)
-            const Text("—", style: TextStyle(color: Colors.grey))
+
+          if (skills.isEmpty)
+            const Text(
+              "No skills specified",
+              style: TextStyle(color: Colors.grey),
+            )
           else
             Wrap(
               spacing: 8,
               runSpacing: 8,
-              children: [
-                ...visible.map((s) => _skillChip(s)),
-                if (extra > 0)
-                  Padding(
-                    padding: const EdgeInsets.only(top: 6),
-                    child: Text(
-                      "+$extra more",
-                      style: TextStyle(
-                        color: AppColors.kGreen,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-              ],
+              children: skills
+                  .where((s) => s.trim().isNotEmpty)
+                  .map((s) => _skillChip(s))
+                  .toList(),
             ),
         ],
       ),
@@ -1323,6 +1432,7 @@ Container(
     return Job(
       id: r.id,
       jobTitle: r.jobTitle,
+      rounds: r.rounds,
       endDate: r.endDate,
       description: r.description,
       jobType: r.jobType,
@@ -1353,6 +1463,7 @@ Container(
       candidatePosted: User(
         id: r.candidatePosted?.userId,
         name: r.candidatePosted?.name,
+
         currentCompany: r.candidatePosted?.currentCompany,
         email: r.candidatePosted?.email,
         phone: r.candidatePosted?.phone,

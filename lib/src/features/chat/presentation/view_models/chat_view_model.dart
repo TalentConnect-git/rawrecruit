@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:get_it/get_it.dart';
 
 import '../../../../core/index.dart';
 import '../../../../core/network/socket_service.dart';
+import '../../../dashboard/data/index.dart';
 import '../../data/entities/chat_unread_model.dart';
 import '../../data/entities/message_model.dart';
 import '../../data/index.dart';
@@ -138,6 +141,34 @@ class ChatViewModel extends ViewStateProvider {
 
       safeNotify();
     });
+  }
+
+  User? _user;
+  User? get user => _user;
+  set user(User? value) {
+    _user = value;
+    notifyListeners();
+  }
+
+  Future<Failure?> getAlumniById(String id) async {
+    setViewState(ViewState.busy);
+
+    Failure? failure;
+
+    final result = await getIt<DashboardRepository>().getUserById(userId: id);
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) {
+        log(res?.toJson().toString() ?? '');
+        user = res;
+      },
+    );
+
+    setViewState(ViewState.complete);
+
+    return failure;
   }
 
   /// ---------- START CONVERSATION ----------

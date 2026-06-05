@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../job_postng/presentation/entities/referral_post_model.dart';
+
 part 'referral_job_model.freezed.dart';
 part 'referral_job_model.g.dart';
 
@@ -51,11 +53,14 @@ abstract class ReferralJobModel with _$ReferralJobModel {
     List<String>? numberOfStudent,
 
     PackageDetails? packageDetails,
+    ReferralMetrics? referralMetrics,
     DateTime? endDate, // ✅ ADD THIS
-int? matchScore,
+    bool? inactive,
+    int? matchScore,
     DateTime? expireAt,
     DateTime? createdAt,
     DateTime? updatedAt,
+    Metrics? metrics,
   }) = _ReferralJobModel;
 
   factory ReferralJobModel.fromJson(Map<String, dynamic> json) =>
@@ -70,6 +75,21 @@ String? _jobTitleFromJson(dynamic value) {
   }
 
   return value?.toString();
+}
+
+@freezed
+abstract class ReferralMetrics with _$ReferralMetrics {
+  const factory ReferralMetrics({
+    int? totalApplicationsReceived,
+    int? totalReferredToCompany,
+    int? totalInterviewScheduled,
+    int? totalAcceptedByCompany,
+    int? responseRate,
+    int? referralSuccessRate,
+  }) = _ReferralMetrics;
+
+  factory ReferralMetrics.fromJson(Map<String, dynamic> json) =>
+      _$ReferralMetricsFromJson(json);
 }
 
 @freezed

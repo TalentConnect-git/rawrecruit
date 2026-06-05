@@ -13,10 +13,9 @@ import 'package:rawrecruit/src/core/index.dart'
         UserType;
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
 import 'package:rawrecruit/src/features/onboarding/index.dart'
-    show OnboardingRepository;
+    show OnboardingRepository, OnboardingLocalService;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../feature/revamp_onboarding/presentation/widgets/onboarding_local_service.dart';
 import '../network/socket_service.dart';
 
 class AppStateProvider extends ViewStateProvider {

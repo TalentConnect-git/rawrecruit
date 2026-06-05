@@ -5,10 +5,6 @@ import 'package:image_picker/image_picker.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 
-import '../../../../feature/revamp_onboarding/presentation/steps/education_controller.dart';
-import '../../data/entities/international.dart';
-import '../../data/entities/leadership_controller.dart';
-
 class AddEditProfileViewModel extends ViewStateProvider {
   final OnboardingRepository _onboardingRepository = getIt();
 
@@ -22,21 +18,7 @@ class AddEditProfileViewModel extends ViewStateProvider {
     Failure? failure;
 
     setViewState(ViewState.busy);
-/// HANDLE CURRENT COMPANY
-final currentExperience = userController.experiences.where(
-  (e) => e.isCurrent,
-);
 
-if (currentExperience.isEmpty) {
-  userController.currentCompany.text = '';
-} else {
-  userController.currentCompany.text =
-      currentExperience.first.company.text;
-}
-
-debugPrint(
-  'FINAL currentCompany => ${userController.currentCompany.text}',
-);
     final result = await _onboardingRepository.updateOnboardingUser(
       body: userController.toMap(),
       resume: pickedResumeFile,
@@ -68,99 +50,78 @@ debugPrint(
     c.resume.text = user.resume ?? '';
     c.about.text = user.about ?? '';
     c.certifications.text = user.certifications ?? '';
-   
+
+    /// -------- EDUCATIONS --------
+
+    c.educations.clear();
+
+    for (final e in user.educations ?? []) {
+      final ec = EducationController();
+
+      ec.college.text = e.college ?? '';
+
+      ec.degree.text = e.degree ?? '';
+
+      ec.specialization.text = e.specialization ?? '';
+
+      ec.semester.text = e.semester ?? '';
+
+      ec.cgpa.text = e.cgpa ?? '';
+
+      ec.yearOfGraduation.text = e.yearOfGraduation ?? '';
+
+      ec.startDate.text = e.startDate ?? '';
+
+      ec.endDate.text = e.endDate ?? '';
+
+      ec.educationType = e.educationType ?? "bachelors";
+
+      ec.isCurrent = e.isCurrent ?? false;
+
+      c.educations.add(ec);
+    }
+
+    if (c.educations.isEmpty) {
+      c.educations.add(EducationController());
+    }
+
     c.email.text = user.email ?? '';
     c.gender.text = user.gender ?? '';
     c.github.text = user.github ?? '';
     c.linkedin.text = user.linkedin ?? '';
     c.name.text = user.name ?? '';
     c.openToShift.text = user.openToShift ?? '';
-c.totalYearsOfExperience.text = user.totalYearsOfExperience ?? '' ;
-    c.currentCompany.text =
-        user.currentCompany ?? '';
-c.companyEmail.text =
-    user.companyEmail ?? '';
-    c.noticePeriod.text =
-        user.noticePeriod ?? '';
-c.noticePeriodStartDate.text =
-    user.noticePeriodStartDate ?? '';
+
+    c.currentCompany.text = user.currentCompany ?? '';
+    c.totalYearsOfExperience.text = user.totalYearsOfExperience ?? '';
+    c.noticePeriod.text = user.noticePeriod ?? '';
+    c.noticePeriodStartDate.text = user.noticePeriodStartDate ?? '';
     c.phone.text = user.phone ?? '';
     c.portfolio.text = user.portfolio ?? '';
+
     c.profileType.text = user.profileType ?? '';
+
     c.referralSource.text = user.referralSource ?? '';
-   /// -------- EDUCATIONS --------
-c.educations.clear();
 
-for (final e
-    in user.educations ?? []) {
+    c.currentSalaryAmount.text = user.currentSalaryAmount ?? '';
 
-  final ec =
-      EducationController();
-
-  ec.college.text =
-      e.college ?? '';
-
-  ec.degree.text =
-      e.degree ?? '';
-
-  ec.specialization.text =
-      e.specialization ?? '';
-
-  ec.semester.text =
-      e.semester ?? '';
-
-  ec.cgpa.text =
-      e.cgpa ?? '';
-
-  ec.yearOfGraduation.text =
-      e.yearOfGraduation ?? '';
-
-  ec.startDate.text =
-      e.startDate ?? '';
-
-  ec.endDate.text =
-      e.endDate ?? '';
-
-  ec.educationType =
-      e.educationType ??
-          "bachelors";
-
-  ec.isCurrent =
-      e.isCurrent ?? false;
-
-  c.educations.add(ec);
-}
-
-if (c.educations.isEmpty) {
-
-  c.educations.add(
-    EducationController(),
-  );
-}
-    c.currentSalaryAmount.text =
-        user.currentSalaryAmount ?? '';
-
-    c.currentSalaryCurrency.text =
-        user.currentSalaryCurrency ?? '';
+    c.currentSalaryCurrency.text = user.currentSalaryCurrency ?? '';
 
     c.dob.text = user.dob ?? '';
+
     c.ethnicity.text = user.ethnicity ?? '';
 
-    c.expectedSalaryAmount.text =
-        user.expectedSalaryAmount ?? '';
+    c.expectedSalaryAmount.text = user.expectedSalaryAmount ?? '';
 
-    c.expectedSalaryCurrency.text =
-        user.expectedSalaryCurrency ?? '';
+    c.expectedSalaryCurrency.text = user.expectedSalaryCurrency ?? '';
 
-    c.maritalStatus.text =
-        user.maritalStatus ?? '';
+    c.maritalStatus.text = user.maritalStatus ?? '';
 
     c.visaStatus.text = user.visaStatus ?? '';
-
-c.servingNoticePeriod =
-    user.servingNoticePeriod ?? false;
+    c.servingNoticePeriod = user.servingNoticePeriod ?? false;
 
     /// -------- CLEAR LISTS --------
+
     c.skills.clear();
     c.domainKnowledge.clear();
     c.employmentType.clear();
@@ -169,9 +130,6 @@ c.servingNoticePeriod =
     c.jobRoles.clear();
     c.languagesKnown.clear();
     c.locations.clear();
-    c.leadershipExperiences.clear();
-
-c.internationalExperiences.clear();
     c.lookingFor.clear();
     c.toolsAndPlatforms.clear();
 
@@ -179,169 +137,120 @@ c.internationalExperiences.clear();
     c.awards.clear();
     c.publications.clear();
 
+    c.leadershipExperiences.clear();
+    c.internationalExperiences.clear();
+
     /// -------- CHIP FIELDS --------
 
-    c.skills.add(
-      TextEditingController(
-        text: (user.skills ?? []).join(', '),
-      ),
-    );
+    c.skills.add(TextEditingController(text: (user.skills ?? []).join(', ')));
 
     c.domainKnowledge.add(
-      TextEditingController(
-        text:
-            (user.domainKnowledge ?? [])
-                .join(', '),
-      ),
+      TextEditingController(text: (user.domainKnowledge ?? []).join(', ')),
     );
 
     c.employmentType.add(
-      TextEditingController(
-        text:
-            (user.employmentType ?? [])
-                .join(', '),
-      ),
+      TextEditingController(text: (user.employmentType ?? []).join(', ')),
     );
 
     c.industry.add(
-      TextEditingController(
-        text:
-            (user.industry ?? [])
-                .join(', '),
-      ),
+      TextEditingController(text: (user.industry ?? []).join(', ')),
     );
 
-    
     c.jobRoles.add(
-      TextEditingController(
-        text:
-            (user.jobRoles ?? [])
-                .join(', '),
-      ),
+      TextEditingController(text: (user.jobRoles ?? []).join(', ')),
     );
 
     c.languagesKnown.add(
-      TextEditingController(
-        text:
-            (user.languagesKnown ?? [])
-                .join(', '),
-      ),
+      TextEditingController(text: (user.languagesKnown ?? []).join(', ')),
     );
 
-
     c.lookingFor.add(
-      TextEditingController(
-        text:
-            (user.lookingFor ?? [])
-                .join(', '),
-      ),
+      TextEditingController(text: (user.lookingFor ?? []).join(', ')),
     );
 
     c.toolsAndPlatforms.add(
-      TextEditingController(
-        text:
-            (user.toolsAndPlatforms ?? [])
-                .join(', '),
-      ),
+      TextEditingController(text: (user.toolsAndPlatforms ?? []).join(', ')),
     );
 
     /// -------- LOCATIONS --------
+
     for (final e in user.locations ?? []) {
-      c.locations.add(
-        TextEditingController(text: e),
-      );
+      c.locations.add(TextEditingController(text: e));
     }
 
     c.locations.add(TextEditingController());
 
     /// -------- EXPERIENCES --------
-  for (final e in user.experiences ?? []) {
-  final isEmpty =
-      (e.company ?? '').trim().isEmpty &&
-      (e.role ?? '').trim().isEmpty &&
-      (e.startDate ?? '').trim().isEmpty &&
-      (e.endDate ?? '').trim().isEmpty &&
-      (e.description ?? '').trim().isEmpty;
+    for (final e in user.experiences ?? []) {
+      final isEmpty =
+          (e.company ?? '').trim().isEmpty &&
+          (e.role ?? '').trim().isEmpty &&
+          (e.startDate ?? '').trim().isEmpty &&
+          (e.endDate ?? '').trim().isEmpty &&
+          (e.description ?? '').trim().isEmpty;
 
-  if (isEmpty) continue;
+      if (isEmpty) continue;
 
-  final ec = ExperienceController();
+      final ec = ExperienceController();
 
-  ec.company.text = e.company ?? '';
-  ec.role.text = e.role ?? '';
-  ec.startDate.text = e.startDate ?? '';
-  ec.endDate.text = e.endDate ?? '';
-  ec.description.text = e.description ?? '';
-  ec.isCurrent = e.isCurrent ?? false;
+      ec.company.text = e.company ?? '';
+      ec.role.text = e.role ?? '';
+      ec.startDate.text = e.startDate ?? '';
+      ec.endDate.text = e.endDate ?? '';
+      ec.description.text = e.description ?? '';
+      ec.isCurrent = e.isCurrent ?? false;
 
-  c.experiences.add(ec);
-}
+      c.experiences.add(ec);
+    }
 
-/// -------- LEADERSHIP EXPERIENCES --------
-/// -------- LEADERSHIP EXPERIENCES --------
-for (final e
-    in user.leadershipExperiences ?? []) {
+    c.experiences.add(ExperienceController());
 
-  final ec =
-      LeadershipExperienceController();
+    /// -------- LEADERSHIP EXPERIENCES --------
+    /// -------- LEADERSHIP EXPERIENCES --------
 
-  ec.organization.text =
-      e.organization ?? '';
+    for (final e in user.leadershipExperiences ?? []) {
+      final ec = LeadershipExperienceController();
 
-  ec.role.text =
-      e.role ?? '';
+      ec.organization.text = e.organization ?? '';
 
-  ec.startDate.text =
-      e.startDate ?? '';
+      ec.role.text = e.role ?? '';
 
-  ec.endDate.text =
-      e.endDate ?? '';
+      ec.startDate.text = e.startDate ?? '';
 
-  ec.description.text =
-      e.description ?? '';
+      ec.endDate.text = e.endDate ?? '';
 
-  c.leadershipExperiences.add(ec);
-}
+      ec.description.text = e.description ?? '';
 
-if (c.leadershipExperiences.isEmpty) {
-  c.leadershipExperiences.add(
-    LeadershipExperienceController(),
-  );
-}
+      c.leadershipExperiences.add(ec);
+    }
 
-/// -------- INTERNATIONAL EXPERIENCES --------
-/// -------- INTERNATIONAL EXPERIENCES --------
-for (final e
-    in user.internationalExperiences ??
-        []) {
+    c.leadershipExperiences.add(LeadershipExperienceController());
 
-  final ec =
-      InternationalExperienceController();
+    /// -------- INTERNATIONAL EXPERIENCES --------
+    /// -------- INTERNATIONAL EXPERIENCES --------
 
-  ec.country.text =
-      e.country ?? '';
+    for (final e in user.internationalExperiences ?? []) {
+      final ec = InternationalExperienceController();
 
-ec.organization.text =
-    e.organization ?? '';
-ec.organization.text = e.organization ?? '';
-  ec.role.text =
-      e.role ?? '';
+      ec.country.text = e.country ?? '';
 
-  ec.startDate.text =
-      e.startDate ?? '';
+      ec.organization.text = e.organization ?? '';
+      ec.organization.text = e.organization ?? '';
+      ec.role.text = e.role ?? '';
 
-  ec.endDate.text =
-      e.endDate ?? '';
+      ec.startDate.text = e.startDate ?? '';
 
-  ec.description.text =
-      e.description ?? '';
+      ec.endDate.text = e.endDate ?? '';
 
-  c.internationalExperiences.add(ec);
-}
+      ec.description.text = e.description ?? '';
 
+      c.internationalExperiences.add(ec);
+    }
 
+    c.internationalExperiences.add(InternationalExperienceController());
 
     /// -------- ACHIEVEMENTS --------
+
     for (final a in user.achievements ?? []) {
       final ac = AchievementController();
 
@@ -353,32 +262,27 @@ ec.organization.text = e.organization ?? '';
       c.achievements.add(ac);
     }
 
-   
-
     /// -------- AWARDS --------
+
     for (final a in user.awards ?? []) {
       final aw = AwardController();
 
       aw.id.text = a.id ?? '';
       aw.title.text = a.title ?? '';
-      aw.organization.text =
-          a.organization ?? '';
 
-      aw.startDate.text =
-          a.startDate ?? '';
+      aw.organization.text = a.organization ?? '';
 
-      aw.endDate.text =
-          a.endDate ?? '';
+      aw.startDate.text = a.startDate ?? '';
 
-      aw.description.text =
-          a.description ?? '';
+      aw.endDate.text = a.endDate ?? '';
+
+      aw.description.text = a.description ?? '';
 
       c.awards.add(aw);
     }
 
-   
-
     /// -------- PUBLICATIONS --------
+
     for (final p in user.publications ?? []) {
       final pc = PublicationController();
 
@@ -388,7 +292,6 @@ ec.organization.text = e.organization ?? '';
 
       c.publications.add(pc);
     }
-
 
     notifyListeners();
   }

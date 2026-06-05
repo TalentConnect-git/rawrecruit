@@ -5,8 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_jobs/utils/enums.dart'
-    show ProfessionalJobType;
 
 class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
@@ -100,7 +98,7 @@ class NotificationService {
 
     final topic = notificationData['topic'];
     final subtopic = notificationData['subtopic'];
-    final idFromPushNotification = notificationData['id'] as String?;
+    // final idFromPushNotification = notificationData['id'] as String?;
 
     switch (topic) {
       case 'Jobs':
@@ -110,12 +108,9 @@ class NotificationService {
 
             if (jobId == null) return;
 
-            state?.context.goNamed(
-              RouteNames.application,
-              extra: {
-                'jobType': ProfessionalJobType.posted,
-                'userType': UserType.professional,
-              },
+            state?.context.pushNamed(
+              RouteNames.referralPostDetail,
+              extra: jobId,
             );
             break;
 
@@ -124,10 +119,7 @@ class NotificationService {
 
             if (jobId == null) return;
 
-            // context.pushNamed(
-            //   RouteNames.jobDetail,
-            //   extra: {'jobId': jobId},
-            // );
+            state?.context.pushNamed(RouteNames.referralDetail, extra: jobId);
             break;
         }
         break;
@@ -140,13 +132,10 @@ class NotificationService {
 
             if (jobId == null || applicationId == null) return;
 
-            // context.pushNamed(
-            //   RouteNames.jobCandidates,
-            //   extra: {
-            //     'jobId': jobId,
-            //     'applicationId': applicationId,
-            //   },
-            // );
+            state?.context.pushNamed(
+              RouteNames.referrerDetail,
+              extra: applicationId,
+            );
             break;
         }
         break;
@@ -164,13 +153,13 @@ class NotificationService {
         switch (subtopic) {
           case 'Applied By Me':
             final applicationId = notificationData['applicationId'];
-            final jobId = notificationData['jobId'];
+            // final jobId = notificationData['jobId'];
 
             if (applicationId == null) return;
 
-            state?.context.goNamed(
-              RouteNames.referrer,
-              extra: {'userType': UserType.professional},
+            state?.context.pushNamed(
+              RouteNames.applicationDetail,
+              extra: applicationId,
             );
             break;
         }
@@ -179,18 +168,29 @@ class NotificationService {
 
       case 'Chat':
         final senderId = notificationData['senderId'];
-        final referenceId = notificationData['referenceId'];
+        // final referenceId = notificationData['referenceId'];
 
         // if (senderId == null || referenceId == null) return;
 
-        state?.context.goNamed(
-          RouteNames.chatUserList,
-          // extra: {
-          //   'senderId': senderId,
-          //   'referenceId': referenceId,
-          // },
+        state?.context.pushNamed(
+          RouteNames.chatUser,
+          extra: {
+            'senderId': senderId,
+            // 'referenceId': referenceId,
+          },
         );
         break;
+
+      case 'Alumni Network':
+        switch (subtopic) {
+          case 'Alumni Detail':
+            final userId = notificationData['userId'];
+
+            if (userId == null) return;
+
+            state?.context.pushNamed(RouteNames.alumniDetail, extra: userId);
+            break;
+        }
     }
   }
 }

@@ -1,15 +1,8 @@
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/auth/index.dart';
+import 'package:rawrecruit/src/features/auth/index.dart' show AuthRepository;
 
 class RegisterViewModel extends ViewStateProvider {
   final _authRepository = getIt<AuthRepository>();
-
-  UserType _userType = UserType.student;
-  UserType get userType => _userType;
-  set userType(UserType type) {
-    _userType = type;
-    notifyListeners();
-  }
 
   bool _isOtpSent = false;
   bool get isOtpSent => _isOtpSent;
@@ -58,7 +51,10 @@ class RegisterViewModel extends ViewStateProvider {
     final result = await _authRepository.register(
       email: email,
       password: password,
-      userType: userType,
+
+      /// 🔥 USE STORED TYPE
+      userType: getIt<AppStateProvider>().selectedUserType!,
+
       otp: otp,
     );
 
@@ -67,7 +63,12 @@ class RegisterViewModel extends ViewStateProvider {
         failure = APIFailure.fromException(exception: exception);
       },
       (res) async {
-        getIt<AppStateProvider>().auth = res;
+        getIt<AppStateProvider>().auth = res?.copyWith(email: email);
+        print(res);
+        print(res?.email);
+
+        /// ✅ OPTIONAL CLEANUP
+        getIt<AppStateProvider>().selectedUserType = null;
       },
     );
 

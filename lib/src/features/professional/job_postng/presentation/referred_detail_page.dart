@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/presentation/view_model/application_view_model.dart';
+import 'package:rawrecruit/src/features/application/index.dart'
+    show ApplicationViewModel;
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 
 class ReferredCandidateDetailPage extends StatelessWidget {
@@ -212,7 +213,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
           onPressed: () {
             context.pushNamed(
               RouteNames.chatUser,
-              extra: application.applicant,
+              extra: application.applicant?.id,
             );
           },
           child: Text(
@@ -260,10 +261,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
               ),
               PopupMenuItem(
                 value: "Accepted",
-                child: Text(
-                  "Refer",
-                  style: TextStyle(color: Colors.black),
-                ),
+                child: Text("Refer", style: TextStyle(color: Colors.black)),
               ),
               PopupMenuItem(
                 value: "Rejected",

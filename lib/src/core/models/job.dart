@@ -33,6 +33,8 @@ abstract class Job with _$Job {
     int? numberOfOpenings,
     int? views,
     int? matchScore,
+    String? adminComment,
+    int? rating,
     int? alumniCount,
     // Lists - Roles & Skills
     @JsonKey(fromJson: _safeList) List<String>? jobRoles,

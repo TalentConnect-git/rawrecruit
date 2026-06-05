@@ -1,7 +1,15 @@
 import 'package:dartz/dartz.dart';
+import 'package:rawrecruit/src/core/index.dart'
+    show
+        NetworkService,
+        ResultFuture,
+        Request,
+        RequestMethod,
+        Endpoints,
+        APIException;
+import 'package:rawrecruit/src/features/scheduled_interviews/index.dart'
+    show InterviewModel;
 
-import '../../../../core/index.dart';
-import '../entity/interview_model.dart';
 import 'scheduled_data_source.dart';
 
 class InterviewDataSourceImpl implements InterviewDataSource {
@@ -28,7 +36,7 @@ class InterviewDataSourceImpl implements InterviewDataSource {
       return Left(APIException.from(e));
     }
   }
-  
+
   @override
   ResultFuture<InterviewModel> getInterviewById(String interviewId) async {
     final Request request = Request(
@@ -36,15 +44,15 @@ class InterviewDataSourceImpl implements InterviewDataSource {
       endpoint: '${Endpoints.apiInterviews}/$interviewId',
       isSafeRoute: true,
     );
- 
+
     try {
       final result = await _networkService.request(request);
       final response = result.data as Map<String, dynamic>;
- 
+
       final interview = InterviewModel.fromJson(
         response['data'] as Map<String, dynamic>,
       );
- 
+
       return Right(interview);
     } catch (e) {
       return Left(APIException.from(e));

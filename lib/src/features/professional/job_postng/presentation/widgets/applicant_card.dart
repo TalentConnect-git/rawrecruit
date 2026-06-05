@@ -20,14 +20,15 @@ class ApplicantCard extends StatelessWidget {
     final match = application.matchScore ?? 0;
 
     /// ✅ COLLEGE
-final jobTitle = application.job?.jobTitle is List
-    ? (application.job!.jobTitle as List).join(", ")
-    : application.job?.jobTitle?.toString() ?? "-";    return InkWell(
+    final jobTitle = application.job?.jobTitle is List
+        ? (application.job!.jobTitle as List).join(", ")
+        : application.job?.jobTitle?.toString() ?? "-";
+    return InkWell(
       borderRadius: BorderRadius.circular(12),
 
       /// 🔥 NAVIGATION TO DETAIL PAGE
       onTap: () {
-        context.pushNamed(RouteNames.referrerDetail, extra: application);
+        context.pushNamed(RouteNames.referrerDetail, extra: application.id);
       },
 
       child: Container(
@@ -41,31 +42,23 @@ final jobTitle = application.job?.jobTitle is List
         child: Row(
           children: [
             /// 🔥 AVATAR
-        CircleAvatar(
-  radius: 22,
+            CircleAvatar(
+              radius: 22,
 
-  backgroundColor: AppColors.kGreen,
+              backgroundColor: AppColors.kGreen,
 
-  backgroundImage:
-      (user.profileImage ?? '')
-              .isNotEmpty
-          ? NetworkImage(
-              user.profileImage!,
-            )
-          : null,
+              backgroundImage: (user.profileImage ?? '').isNotEmpty
+                  ? NetworkImage(user.profileImage!)
+                  : null,
 
-  child:
-      (user.profileImage ?? '')
-              .isEmpty
-          ? Text(
-              _initials(name),
+              child: (user.profileImage ?? '').isEmpty
+                  ? Text(
+                      _initials(name),
 
-              style: const TextStyle(
-                color: Colors.black,
-              ),
-            )
-          : null,
-),
+                      style: const TextStyle(color: Colors.black),
+                    )
+                  : null,
+            ),
 
             const SizedBox(width: 12),
 

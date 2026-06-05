@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/feature/revamp_application/repository/application_repository.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/data/repository/job_posting_repo.dart';
-import 'package:rawrecruit/src/features/professional/job_postng/data/repository/job_posting_repo_impl.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
 
 import '../../../../core/index.dart';
@@ -18,8 +16,7 @@ class ReferralApplicationsView extends StatefulWidget {
       _ReferralApplicationsViewState();
 }
 
-class _ReferralApplicationsViewState
-    extends State<ReferralApplicationsView> {
+class _ReferralApplicationsViewState extends State<ReferralApplicationsView> {
   List<ReferralApplication> applications = [];
   bool isLoading = true;
 
@@ -29,25 +26,25 @@ class _ReferralApplicationsViewState
     _fetchApplications();
   }
 
- Future<void> _fetchApplications() async {
-  final result = await getIt<ReferralPostRepository>()
-      .getApplicationByReferralJobId(jobId: widget.jobId);
+  Future<void> _fetchApplications() async {
+    final result = await getIt<ReferralPostRepository>()
+        .getApplicationByReferralJobId(jobId: widget.jobId);
 
-  result.fold(
-    (failure) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(failure.message ?? "Error")),
-      );
-    },
-    (data) {
-      applications = data;
-    },
-  );
+    result.fold(
+      (failure) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text(failure.message ?? "Error")));
+      },
+      (data) {
+        applications = data;
+      },
+    );
 
-  if (mounted) {
-    setState(() => isLoading = false);
+    if (mounted) {
+      setState(() => isLoading = false);
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
@@ -55,8 +52,10 @@ class _ReferralApplicationsViewState
       backgroundColor: AppColors.kBg,
       appBar: AppBar(
         backgroundColor: AppColors.kCard,
-        title: const Text("Applications",
-            style: TextStyle(color: Colors.white)),
+        title: const Text(
+          "Applications",
+          style: TextStyle(color: Colors.white),
+        ),
       ),
       body: isLoading
           ? const Center(child: AppLoadingIndicator())
@@ -64,9 +63,7 @@ class _ReferralApplicationsViewState
               padding: const EdgeInsets.all(16),
               itemCount: applications.length,
               itemBuilder: (_, index) {
-                return ApplicantCard(
-                  application: applications[index],
-                );
+                return ApplicantCard(application: applications[index]);
               },
             ),
     );
