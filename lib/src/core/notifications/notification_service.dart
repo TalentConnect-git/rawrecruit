@@ -51,6 +51,7 @@ class NotificationService {
           iOS: DarwinNotificationDetails(),
         ),
         id: message.hashCode,
+        payload: jsonEncode(message.data),
       );
 
       getIt<NotificationProvider>().setNewNotificationsAvailable();
@@ -73,10 +74,10 @@ class NotificationService {
     NotificationResponse notificationResponse,
   ) async {
     print('NotificationResponse: ${notificationResponse.payload}');
-    final payload = notificationResponse.data;
+    final payload = notificationResponse.payload;
     print('onNotificationClick: $payload');
-    if (payload.isNotEmpty) {
-      unawaited(_handlePushNotificationData(payload));
+    if (payload != null && payload.isNotEmpty) {
+      await _handlePushNotificationData(payload);
     }
   }
 
