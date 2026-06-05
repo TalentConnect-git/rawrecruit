@@ -205,13 +205,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
         // if (senderId == null || referenceId == null) return;
 
-        context.goNamed(
-          RouteNames.chatUser,
-          extra: {
-            'senderId': senderId,
-            // 'referenceId': referenceId,
-          },
-        );
+        context.pushNamed(RouteNames.chatUser, extra: senderId);
         break;
 
       case 'Alumni Network':
@@ -221,7 +215,7 @@ class _NotificationCardState extends State<NotificationCard> {
 
             if (userId == null) return;
 
-            context.goNamed(RouteNames.alumniDetail, extra: userId);
+            context.pushNamed(RouteNames.alumniDetail, extra: userId);
             break;
         }
     }

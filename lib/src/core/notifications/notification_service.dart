@@ -172,13 +172,7 @@ class NotificationService {
 
         // if (senderId == null || referenceId == null) return;
 
-        state?.context.pushNamed(
-          RouteNames.chatUser,
-          extra: {
-            'senderId': senderId,
-            // 'referenceId': referenceId,
-          },
-        );
+        state?.context.pushNamed(RouteNames.chatUser, extra: senderId);
         break;
 
       case 'Alumni Network':
