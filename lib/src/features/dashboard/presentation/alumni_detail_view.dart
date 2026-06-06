@@ -51,12 +51,20 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
         body: Consumer<AlumniDetailViewModel>(
           builder: (vmContext, vm, _) {
-            if (vm.alumni == null) {
-              return Center(
-                child: Text("No data", style: TextStyle(color: Colors.white)),
-              );
-            }
+           if (vm.viewState == ViewState.busy) {
+  return const Center(
+    child: CircularProgressIndicator(),
+  );
+}
 
+if (vm.alumni == null) {
+  return const Center(
+    child: Text(
+      "No data found",
+      style: TextStyle(color: Colors.white),
+    ),
+  );
+}
             final name = vm.alumni?.name ?? "User";
 
             final currentExperience =
@@ -65,10 +73,14 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                     .isNotEmpty
                 ? vm.alumni?.experiences?.firstWhere((e) => e.isCurrent == true)
                 : null;
+final currentEducation =
+    (vm.alumni?.educations ?? []).where((e) => e.isCurrent == true).isNotEmpty
+        ? vm.alumni!.educations!.firstWhere((e) => e.isCurrent == true)
+        : ((vm.alumni?.educations ?? []).isNotEmpty
+            ? vm.alumni!.educations!.first
+            : null);
 
-            final college = (vm.alumni?.colleges?.isNotEmpty ?? false)
-                ? vm.alumni?.colleges!.join(", ")
-                : '';
+final college = currentEducation?.college ?? '';
             final fallbackExperience =
                 currentExperience ??
                 ((vm.alumni?.experiences ?? []).isNotEmpty
@@ -376,6 +388,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                               color: Colors.white,
                             ),
                             label: const Text(
+                              
                               "Message",
                               style: TextStyle(
                                 color: Colors.white,

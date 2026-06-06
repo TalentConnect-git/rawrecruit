@@ -128,6 +128,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
             user?.noticePeriodStartDate,
             user?.noticePeriod,
           );
+      
           if (user == null) {
             return const Scaffold(
               body: Center(child: Text("No profile found")),
@@ -952,8 +953,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   children: [
                                     /// COMPANY BOX
                                     Container(
-                                      height: 54,
-                                      width: 54,
+                                      height: 46,
+                                      width: 46,
 
                                       alignment: Alignment.center,
 
@@ -1785,7 +1786,11 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
     final location = (user.locations?.isNotEmpty ?? false)
         ? user.locations!.first
         : "India";
-
+    final companyCount =
+    user.experiences
+        ?.where((e) => (e.company?.trim().isNotEmpty ?? false))
+        .length ??
+    0;
     if (user.experiences?.isNotEmpty ?? false) {
       currentExp = user.experiences!.firstWhere(
         (e) => e.isCurrent == true,
@@ -2068,7 +2073,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         const SizedBox(width: 5),
 
                         Text(
-                          "Worked at ${user.experiences?.length ?? 0} Companies",
+                        "Worked at $companyCount Companies",
 
                           style: const TextStyle(
                             color: Colors.white70,
