@@ -22,6 +22,8 @@ class _InterviewsScreenState extends State<InterviewsScreen> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final failure = await interviewViewModel.getInterviews();
       if (mounted) failure?.showError(context);
+
+      getIt<AppStateProvider>().clearNewInterviewsAvailable();
     });
   }
 
@@ -32,15 +34,13 @@ class _InterviewsScreenState extends State<InterviewsScreen> {
       child: Scaffold(
         backgroundColor: AppColors.secBorder,
 
-       appBar: RAppBar(
-  iconTheme: const IconThemeData(
-    color: Colors.white,
-  ),
-  title: const Text(
-    'Scheduled Interviews',
-    style: TextStyle(color: Colors.white),
-  ),
-),
+        appBar: RAppBar(
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: const Text(
+            'Scheduled Interviews',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
 
         body: Consumer<InterviewViewModel>(
           builder: (context, vm, _) {
@@ -148,10 +148,10 @@ class InterviewCard extends StatelessWidget {
             Row(
               children: [
                 Image.asset(
-                          "assets/images/calendar.png",
-                          width: 15,
-                          height: 15,
-                        ),
+                  "assets/images/calendar.png",
+                  width: 15,
+                  height: 15,
+                ),
                 const SizedBox(width: 6),
                 Text(
                   interview.date ?? '—',

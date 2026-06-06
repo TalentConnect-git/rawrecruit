@@ -43,7 +43,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     /// HEADER
                     AppHeader(
                       title: "How do you want to",
-                      highlight: "use RawRecruit?",
+                      highlight: "use Referd?",
                       //  onBack: () => {},
                     ),
 

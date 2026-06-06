@@ -113,9 +113,8 @@ class _HomeViewState extends State<HomeView> {
         child: Scaffold(
           key: _scaffoldKey,
           appBar: RAppBar(
-            
             title: Text(
-              'RawRecruit',
+              'Referd',
               style: AppTextStyles.s24W600.copyWith(color: AppColors.kGreen),
             ),
             actions: [
@@ -128,11 +127,11 @@ class _HomeViewState extends State<HomeView> {
                   icon: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                    const Icon(
-                  Icons.calendar_today_outlined,
-                  size: 20,
-                  color: Colors.grey,
-                ),
+                      const Icon(
+                        Icons.calendar_today_outlined,
+                        size: 20,
+                        color: Colors.grey,
+                      ),
                       if (hasInterviews)
                         Positioned(
                           right: -1,
