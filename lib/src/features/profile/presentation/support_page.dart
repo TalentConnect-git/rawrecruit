@@ -276,7 +276,7 @@ class SupportPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "About RawRecruit",
+                    "About Referd",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 22,

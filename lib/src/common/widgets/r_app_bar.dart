@@ -26,7 +26,7 @@ class RAppBar extends StatelessWidget implements PreferredSizeWidget {
       title:
           title ??
           Text(
-            label ?? 'RawRecruit',
+            label ?? 'Referd',
             style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
           ),
       backgroundColor: AppColors.kBg,

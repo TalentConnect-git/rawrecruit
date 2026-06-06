@@ -21,9 +21,7 @@ class InterviewViewModel extends ViewStateProvider {
       },
       (data) {
         interviews = data;
-        if (data.isNotEmpty) {
-          getIt<AppStateProvider>().setNewInterviewsAvailable();
-        } else {
+        if (data.isEmpty) {
           getIt<AppStateProvider>().clearNewInterviewsAvailable();
         }
       },

@@ -54,7 +54,12 @@ class NotificationService {
         payload: jsonEncode(message.data),
       );
 
-      getIt<NotificationProvider>().setNewNotificationsAvailable();
+      if (message.data.isNotEmpty &&
+          message.data['topic'] == 'Scheduled Interviews') {
+        getIt<AppStateProvider>().setNewInterviewsAvailable();
+      } else {
+        getIt<NotificationProvider>().setNewNotificationsAvailable();
+      }
     });
 
     // When opened from background
