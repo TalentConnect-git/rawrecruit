@@ -758,37 +758,46 @@ print("MATCH VARIABLE = $match");
               const SizedBox(width: 12),
 
               /// REJECT
-              Expanded(
-                child: OutlinedButton.icon(
-                  style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    side: BorderSide(color: Colors.red.withOpacity(.5)),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () async {
-                    await vm.updateApplicationStatus(
-                      id: widget.applicationId,
-                      status: ApplicationStatus.rejected,
-                    );
-                    if (context.mounted) {
-                      showStatusPopup(
-                        context,
-                        "Candidate rejected successfully",
-                        Colors.red,
-                      );
-                    }
-                  },
-                  icon: const Icon(Icons.close, color: Colors.red),
-                  label: const Text(
-                    "Reject",
-                    style: TextStyle(color: Colors.red),
-                  ),
-                ),
-              ),
+             /// MESSAGE
+Expanded(
+  child: OutlinedButton.icon(
+    style: OutlinedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(vertical: 14),
+      side: BorderSide(
+        color: AppColors.kGreen.withOpacity(.5),
+      ),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(12),
+      ),
+    ),
+    onPressed: () {
+      final userId = user.userId;
+
+      if (userId == null || userId.isEmpty) {
+        return;
+      }
+
+      context.pushNamed(
+        RouteNames.chatUser,
+        extra: userId,
+      );
+    },
+    icon: Icon(
+      Icons.message_outlined,
+      color: AppColors.kGreen,
+    ),
+    label: Text(
+      "Message",
+      style: TextStyle(
+        color: AppColors.kGreen,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  ),
+),
             ],
           ),
+
           const SizedBox(height: 12),
 
           SizedBox(
