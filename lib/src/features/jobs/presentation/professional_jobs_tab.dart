@@ -24,11 +24,22 @@ class ProfessionalJobsView extends StatefulWidget {
 class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
   ProfessionalJobType selectedTab = ProfessionalJobType.available;
 
-  @override
-  void initState() {
-    super.initState();
-    selectedTab = widget.selectedType ?? ProfessionalJobType.available;
-  }
+  late final PageController _pageController;
+@override
+void initState() {
+  super.initState();
+
+  selectedTab = widget.selectedType ?? ProfessionalJobType.available;
+
+  _pageController = PageController(
+    initialPage: selectedTab.index,
+  );
+}
+@override
+void dispose() {
+  _pageController.dispose();
+  super.dispose();
+}
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +102,30 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
                                 .fetchApplications();
                           },
 
-                          child: _buildBody(),
+                      child:PageView(
+  controller: _pageController,
+  onPageChanged: (index) {
+    setState(() {
+      selectedTab = ProfessionalJobType.values[index];
+    });
+  },
+  children: [
+   RefreshIndicator(
+  onRefresh: () => _refreshData(context),
+  child: _availableJobs(),
+),
+
+RefreshIndicator(
+  onRefresh: () => _refreshData(context),
+  child: _postedJobs(),
+),
+
+RefreshIndicator(
+  onRefresh: () => _refreshData(context),
+  child: _savedJobs(),
+),
+  ],
+)
                         );
                       },
                     ),
@@ -104,7 +138,29 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
       ),
     );
   }
+Future<void> _refreshData(BuildContext context) async {
+  await context.read<DashboardViewModel>().getJobs();
 
+  await context
+      .read<DashboardViewModel>()
+      .fetchProfessionalData();
+
+  await context
+      .read<PostedJobViewModel>()
+      .getPostedJobs();
+
+  await context
+      .read<PostedJobViewModel>()
+      .getJobs();
+
+  await context
+      .read<ShortlistViewModel>()
+      .fetchSaved();
+
+  await context
+      .read<ApplicationViewModel>()
+      .fetchApplications();
+}
   /// 🔥 TABS
   Widget _buildTabs() {
     return Row(children: [...ProfessionalJobType.values.map((t) => _tab(t))]);
@@ -115,7 +171,15 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() => selectedTab = type),
+    onTap: () {
+  setState(() => selectedTab = type);
+
+  _pageController.animateToPage(
+    type.index,
+    duration: const Duration(milliseconds: 300),
+    curve: Curves.easeInOut,
+  );
+},
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
@@ -136,17 +200,6 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
     );
   }
 
-  /// 🔥 BODY SWITCH
-  Widget _buildBody() {
-    switch (selectedTab) {
-      case ProfessionalJobType.available:
-        return _availableJobs();
-      case ProfessionalJobType.posted:
-        return _postedJobs();
-      case ProfessionalJobType.saved:
-        return _savedJobs();
-    }
-  }
 
   /// 🔥 AVAILABLE TAB (UPDATED)
   Widget _availableJobs() {

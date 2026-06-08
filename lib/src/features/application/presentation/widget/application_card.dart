@@ -15,7 +15,7 @@ class ApplicationCard extends StatelessWidget {
   });
 
   /// 🔥 TOTAL STEPS
-static const int totalSteps = 9;
+static const int totalSteps = 8;
 
   /// 🔥 STEP MAPPING
  int _getStep(String status) {

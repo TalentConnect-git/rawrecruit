@@ -80,17 +80,17 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     ),
                     const SizedBox(height: 16),
 
-                    /// FOOTER TEXT
-                    Row(
-                      children: const [
-                        Icon(Icons.people, color: Colors.green, size: 16),
-                        SizedBox(width: 6),
-                        Text(
-                          "12,400+ professionals joined this month",
-                          style: TextStyle(color: Colors.grey, fontSize: 12),
-                        ),
-                      ],
-                    ),
+                    // /// FOOTER TEXT
+                    // Row(
+                    //   children: const [
+                    //     Icon(Icons.people, color: Colors.green, size: 16),
+                    //     SizedBox(width: 6),
+                    //     Text(
+                    //       "12,400+ professionals joined this month",
+                    //       style: TextStyle(color: Colors.grey, fontSize: 12),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),

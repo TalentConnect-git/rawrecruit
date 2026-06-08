@@ -22,13 +22,22 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
       ProfessionalReferrerApplicationType.appliedByMe;
 
   bool _initialApiCalled = false; // ✅ prevent multiple calls
+late final PageController _pageController;
+ @override
+void initState() {
+  super.initState();
 
-  @override
-  void initState() {
-    super.initState();
-    selectedTab = widget.selectedType ?? selectedTab;
-  }
+  selectedTab = widget.selectedType ?? selectedTab;
 
+  _pageController = PageController(
+    initialPage: selectedTab.index,
+  );
+}
+@override
+void dispose() {
+  _pageController.dispose();
+  super.dispose();
+}
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -62,35 +71,48 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
                 children: [
                   _buildTabs(context),
                   const SizedBox(height: 10),
-                  Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        return RefreshIndicator(
-                          color: AppColors.kGreen,
+                Expanded(
+  child: PageView(
+    controller: _pageController,
+    onPageChanged: (index) {
+      final type =
+          ProfessionalReferrerApplicationType.values[index];
 
-                          onRefresh: () async {
-                            final vm = context.read<ApplicationViewModel>();
+      setState(() => selectedTab = type);
 
-                            await vm.fetchApplications();
+      final vm = context.read<ApplicationViewModel>();
 
-                            if (selectedTab ==
-                                ProfessionalReferrerApplicationType
-                                    .requestsReceived) {
-                              await vm.fetchReferralRequests();
-                            }
+      if (type ==
+              ProfessionalReferrerApplicationType.requestsReceived &&
+          vm.referralApplications.isEmpty) {
+        vm.fetchReferralRequests();
+      }
 
-                            if (selectedTab ==
-                                ProfessionalReferrerApplicationType
-                                    .referredByMe) {
-                              await vm.fetchReferredByMe();
-                            }
-                          },
-
-                          child: _buildBody(),
-                        );
-                      },
-                    ),
-                  ),
+      if (type ==
+              ProfessionalReferrerApplicationType.referredByMe &&
+          vm.referredByMe.isEmpty) {
+        vm.fetchReferredByMe();
+      }
+    },
+    children: [
+      RefreshIndicator(
+        color: AppColors.kGreen,
+        onRefresh: _refresh,
+        child: _appliedByMe(),
+      ),
+      RefreshIndicator(
+        color: AppColors.kGreen,
+        onRefresh: _refresh,
+        child: _requestsReceived(),
+      ),
+      RefreshIndicator(
+        color: AppColors.kGreen,
+        onRefresh: _refresh,
+        child: _referredByMe(),
+      ),
+    ],
+  ),
+),
                 ],
               ),
             ),
@@ -116,22 +138,27 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
 
     return Expanded(
       child: GestureDetector(
-        onTap: () {
-          setState(() => selectedTab = type);
+       onTap: () {
+  setState(() => selectedTab = type);
 
-          final vm = context.read<ApplicationViewModel>();
+  _pageController.animateToPage(
+    type.index,
+    duration: const Duration(milliseconds: 300),
+    curve: Curves.easeInOut,
+  );
 
-          /// ✅ CALL ONLY WHEN NEEDED
-          if (type == ProfessionalReferrerApplicationType.requestsReceived &&
-              vm.referralApplications.isEmpty) {
-            vm.fetchReferralRequests();
-          }
+  final vm = context.read<ApplicationViewModel>();
 
-          if (type == ProfessionalReferrerApplicationType.referredByMe &&
-              vm.referredByMe.isEmpty) {
-            vm.fetchReferredByMe();
-          }
-        },
+  if (type == ProfessionalReferrerApplicationType.requestsReceived &&
+      vm.referralApplications.isEmpty) {
+    vm.fetchReferralRequests();
+  }
+
+  if (type == ProfessionalReferrerApplicationType.referredByMe &&
+      vm.referredByMe.isEmpty) {
+    vm.fetchReferredByMe();
+  }
+},
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -168,17 +195,6 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
     }
   }
 
-  /// 🔥 BODY SWITCH
-  Widget _buildBody() {
-    switch (selectedTab) {
-      case ProfessionalReferrerApplicationType.appliedByMe:
-        return _appliedByMe();
-      case ProfessionalReferrerApplicationType.requestsReceived:
-        return _requestsReceived();
-      case ProfessionalReferrerApplicationType.referredByMe:
-        return _referredByMe();
-    }
-  }
 
   /// ✅ REQUESTS RECEIVED
   Widget _requestsReceived() {

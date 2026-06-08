@@ -171,10 +171,7 @@ class ReferredApplicantCard extends StatelessWidget {
     value: "Offer Extended",
     child: Text("Offer Extended"),
   ),
-  PopupMenuItem(
-    value: "Accepted",
-    child: Text("Accepted"),
-  ),
+  
   PopupMenuItem(
     value: "Offer Accepted",
     child: Text("Offer Accepted"),

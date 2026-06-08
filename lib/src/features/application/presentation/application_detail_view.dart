@@ -249,15 +249,6 @@ _timelineItem(
   ].contains(status),
 ),
 
-_timelineItem(
-  "Accepted",
-  [
-    "accepted",
-    "offer_accepted",
-    "offer_rejected",
-    "joined",
-  ].contains(status),
-),
 
 if (status == "offer_accepted")
   _timelineItem("Offer Accepted", true)
@@ -269,39 +260,9 @@ else
 _timelineItem(
   "Joined the Company",
   status == "joined",
+  isLast: true
 ),
 
-                            // const SizedBox(height: 30),
-
-                            // /// 🔥 BUTTON
-                            // OutlinedButton(
-                            //   onPressed:
-                            //       status == "accepted"
-                            //           ? null
-                            //           : () {},
-                            //   style: OutlinedButton.styleFrom(
-                            //     side: BorderSide(
-                            //       color: status == "accepted"
-                            //           ? Colors.grey
-                            //           : Colors.red,
-                            //     ),
-                            //     shape: RoundedRectangleBorder(
-                            //       borderRadius:
-                            //           BorderRadius.circular(12),
-                            //     ),
-                            //   ),
-                            //   child: Text(
-                            //     status == "accepted"
-                            //         ? "Application Accepted"
-                            //         : "Withdraw Application",
-                            //     style: TextStyle(
-                            //       color: status == "accepted"
-                            //           ? Colors.grey
-                            //           : Colors.red,
-                            //       fontWeight: FontWeight.w600,
-                            //     ),
-                            //   ),
-                            // ),
                           ],
                         ),
                       ),
@@ -439,7 +400,9 @@ Widget _statusBadge(String rawStatus) {
 
 
   /// 🔥 TIMELINE ITEM
-  Widget _timelineItem(String title, bool isDone) {
+  Widget _timelineItem(String title, bool isDone, {
+  bool isLast = false,
+}){
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -451,11 +414,12 @@ Widget _statusBadge(String rawStatus) {
               size: 20,
             ),
 
-            Container(
-              width: 2,
-              height: 30,
-              color: Colors.grey.withOpacity(0.3),
-            ),
+           if (!isLast)
+  Container(
+    width: 2,
+    height: 30,
+    color: Colors.grey.withOpacity(0.3),
+  ),
           ],
         ),
 
