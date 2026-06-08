@@ -637,11 +637,22 @@ final college = currentEducation?.college ?? '';
           }
 
           /// OTHER LINKS
-          final uri = Uri.tryParse(value);
+       String url = value.trim();
 
-          if (uri != null) {
-            await launchUrl(uri, mode: LaunchMode.externalApplication);
-          }
+if (!url.startsWith(RegExp(r'https?://'))) {
+  url = 'https://$url';
+}
+
+final uri = Uri.parse(url);
+
+if (await canLaunchUrl(uri)) {
+  await launchUrl(
+    uri,
+    mode: LaunchMode.externalApplication,
+  );
+} else {
+  debugPrint('Could not launch: $url');
+}
         } catch (e) {
           debugPrint("LINK ERROR: $e");
         }

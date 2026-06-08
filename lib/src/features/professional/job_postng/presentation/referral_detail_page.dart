@@ -27,16 +27,26 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
     if (val.toString() == "null") return "";
     return val.toString();
   }
+Future<void> openUrl(String url) async {
+  if (url == "-" || url.trim().isEmpty) return;
 
-  Future<void> openUrl(String url) async {
-    if (url == "-" || url.isEmpty) return;
+  String normalizedUrl = url.trim();
 
-    final uri = Uri.tryParse(url);
-
-    if (uri != null) {
-      await launchUrl(uri);
-    }
+  if (!normalizedUrl.startsWith(RegExp(r'https?://'))) {
+    normalizedUrl = 'https://$normalizedUrl';
   }
+
+  final uri = Uri.parse(normalizedUrl);
+
+  if (await canLaunchUrl(uri)) {
+    await launchUrl(
+      uri,
+      mode: LaunchMode.externalApplication,
+    );
+  } else {
+    debugPrint('Could not launch: $normalizedUrl');
+  }
+}
 
   ReferralDetailViewModel referralDetailViewModel = ReferralDetailViewModel();
 

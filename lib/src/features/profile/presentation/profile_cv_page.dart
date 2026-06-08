@@ -1529,114 +1529,107 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       ),
                     ],
 
-                    if ((user.github?.isNotEmpty ?? false)) ...[
-                      const SizedBox(height: 12),
+                 const SizedBox(height: 12),
 
-                      SizedBox(
-                        width: double.infinity,
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton.icon(
+    onPressed: (user.github?.isNotEmpty ?? false)
+        ? () async {
+            final uri = Uri.parse(user.github!);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri);
+            }
+          }
+        : null,
+    icon: const Icon(Icons.code),
+    label: const Text("Open GitHub"),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: (user.github?.isNotEmpty ?? false)
+          ? AppColors.kGreen
+          : Colors.white12,
+      foregroundColor: (user.github?.isNotEmpty ?? false)
+          ? Colors.white
+          : Colors.grey,
+      disabledBackgroundColor: Colors.white12,
+      disabledForegroundColor: Colors.grey,
+    ),
+  ),
+),
+              const SizedBox(height: 12),
 
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            final uri = Uri.parse(user.github!);
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton.icon(
+    onPressed: (user.portfolio?.isNotEmpty ?? false)
+        ? () async {
+            final uri = Uri.parse(user.portfolio!);
+            if (await canLaunchUrl(uri)) {
+              await launchUrl(uri);
+            }
+          }
+        : null,
+    icon: const Icon(Icons.web),
+    label: const Text("Open Portfolio"),
+    style: ElevatedButton.styleFrom(
+      backgroundColor: (user.portfolio?.isNotEmpty ?? false)
+          ? AppColors.kGreen
+          : Colors.white12,
+      foregroundColor: (user.portfolio?.isNotEmpty ?? false)
+          ? Colors.white
+          : Colors.grey,
+      disabledBackgroundColor: Colors.white12,
+      disabledForegroundColor: Colors.grey,
+    ),
+  ),
+),
 
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            }
-                          },
+//                     const SizedBox(height: 15),
+          
 
-                          icon: const Icon(Icons.code),
+// SizedBox(
+//   width: double.infinity,
+//   child: ElevatedButton.icon(
+//     onPressed: (user.resume?.isNotEmpty ?? false)
+//         ? () {
+//             final url = user.resume;
 
-                          label: const Text("Open GitHub"),
+//             if (url == null) {
+//               Toasts.showInfoToast(
+//                 context,
+//                 message: 'No Resume Found!',
+//               );
+//               return;
+//             }
 
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white12,
+//             Navigator.push(
+//               context,
+//               MaterialPageRoute(
+//                 builder: (_) => ResumeViewerPage(url: url),
+//               ),
+//             );
+//           }
+//         : null,
+//     icon: const Icon(Icons.picture_as_pdf),
+//     label: const Text("Open Resume"),
+//     style: ElevatedButton.styleFrom(
+//       backgroundColor: (user.resume?.isNotEmpty ?? false)
+//           ? AppColors.kGreen
+//           : Colors.white12,
+//       foregroundColor: (user.resume?.isNotEmpty ?? false)
+//           ? Colors.white
+//           : Colors.grey,
+//       disabledBackgroundColor: Colors.white12,
+//       disabledForegroundColor: Colors.grey,
+//       padding: const EdgeInsets.symmetric(vertical: 14),
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(14),
+//       ),
+//     ),
+//   ),
+// ),
 
-                            foregroundColor: Colors.white,
 
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    if ((user.portfolio?.isNotEmpty ?? false)) ...[
-                      const SizedBox(height: 12),
-
-                      SizedBox(
-                        width: double.infinity,
-
-                        child: ElevatedButton.icon(
-                          onPressed: () async {
-                            final uri = Uri.parse(user.portfolio!);
-
-                            if (await canLaunchUrl(uri)) {
-                              await launchUrl(uri);
-                            }
-                          },
-
-                          icon: const Icon(Icons.web),
-
-                          label: const Text("Open Portfolio"),
-
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white12,
-
-                            foregroundColor: Colors.white,
-
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-
-                    const SizedBox(height: 15),
-                    if ((user.resume?.isNotEmpty ?? false))
-                      SizedBox(
-                        width: double.infinity,
-
-                        child: ElevatedButton.icon(
-                          onPressed: () {
-                            final url = user.resume;
-
-                            if (url == null) {
-                              Toasts.showInfoToast(
-                                context,
-                                message: 'No Resume Found!',
-                              );
-                              return;
-                            }
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => ResumeViewerPage(url: url),
-                              ),
-                            );
-                          },
-
-                          icon: const Icon(Icons.picture_as_pdf),
-
-                          label: const Text("Open Resume"),
-
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.white12,
-
-                            foregroundColor: Colors.white,
-
-                            padding: const EdgeInsets.symmetric(vertical: 14),
-
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(14),
-                            ),
-                          ),
-                        ),
-                      ),
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -2148,15 +2141,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                 );
                               }
                             : null,
-
-                        child: _headerButton(
-                          icon: Icons.picture_as_pdf,
-                          title: "Resume",
-
-                          filled: false,
-
-                          disabled: !(user.resume?.isNotEmpty ?? false),
-                        ),
+child: _headerButton(
+  icon: Icons.picture_as_pdf,
+  title: "Resume",
+  filled: (user.resume?.isNotEmpty ?? false),
+  disabled: !(user.resume?.isNotEmpty ?? false),
+),
                       ),
                     ),
 
@@ -2173,15 +2163,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                 }
                               }
                             : null,
-
-                        child: _headerButton(
-                          icon: Icons.business,
-                          title: "LinkedIn",
-
-                          filled: true,
-
-                          disabled: !(user.linkedin?.isNotEmpty ?? false),
-                        ),
+child: _headerButton(
+  icon: Icons.business,
+  title: "LinkedIn",
+  filled: (user.linkedin?.isNotEmpty ?? false),
+  disabled: !(user.linkedin?.isNotEmpty ?? false),
+),
                       ),
                     ),
                   ],

@@ -15,24 +15,40 @@ class AlumniHiringView extends StatefulWidget {
 
 class _AlumniHiringViewState extends State<AlumniHiringView> {
   AlumniType selectedTab = AlumniType.hiring;
-
+  late final PageController _pageController;
   /// 🔥 TODO: replace with real user type logic
   bool get isProfessional =>
       getIt<AppStateProvider>().userType == UserType.professional;
 
   AlumniViewModel alumniViewModel = AlumniViewModel();
+@override
+void initState() {
+  super.initState();
 
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Future.wait([
-        alumniViewModel.fetchCollegeAlumni(),
-        alumniViewModel.fetchCompanyAlumni(),
-        alumniViewModel.fetchHiringAlumni(),
-      ], eagerError: true);
-    });
-  }
+  _pageController = PageController(
+    initialPage: selectedTab.index,
+  );
+
+  WidgetsBinding.instance.addPostFrameCallback((_) {
+    Future.wait([
+      alumniViewModel.fetchCollegeAlumni(),
+      alumniViewModel.fetchCompanyAlumni(),
+      alumniViewModel.fetchHiringAlumni(),
+    ], eagerError: true);
+  });
+}
+@override
+void dispose() {
+  _pageController.dispose();
+  super.dispose();
+}
+Future<void> _refresh() async {
+  await Future.wait([
+    alumniViewModel.fetchCollegeAlumni(),
+    alumniViewModel.fetchCompanyAlumni(),
+    alumniViewModel.fetchHiringAlumni(),
+  ], eagerError: true);
+}
 
   @override
   Widget build(BuildContext context) {
@@ -75,25 +91,35 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
               const SizedBox(height: 16),
 
               /// 🔥 LIST
-              Expanded(
-                child: Builder(
-                  builder: (context) {
-                    return RefreshIndicator(
-                      color: AppColors.kGreen,
+            Expanded(
+  child: PageView(
+    controller: _pageController,
+    onPageChanged: (index) {
+      setState(() {
+        selectedTab = AlumniType.values[index];
+      });
+    },
+   children: [
+  RefreshIndicator(
+    color: AppColors.kGreen,
+    onRefresh: _refresh,
+    child: _buildList(AlumniType.hiring),
+  ),
+  RefreshIndicator(
+    color: AppColors.kGreen,
+    onRefresh: _refresh,
+    child: _buildList(AlumniType.college),
+  ),
 
-                      onRefresh: () async {
-                        await Future.wait([
-                          alumniViewModel.fetchCollegeAlumni(),
-                          alumniViewModel.fetchCompanyAlumni(),
-                          alumniViewModel.fetchHiringAlumni(),
-                        ], eagerError: true);
-                      },
-
-                      child: _buildBody(),
-                    );
-                  },
-                ),
-              ),
+  if (isProfessional)
+    RefreshIndicator(
+      color: AppColors.kGreen,
+      onRefresh: _refresh,
+      child: _buildList(AlumniType.company),
+    ),
+],
+  ),
+),
             ],
           ),
         ),
@@ -116,7 +142,15 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
           ...tabs.map((t) {
             return Expanded(
               child: GestureDetector(
-                onTap: () => setState(() => selectedTab = t),
+               onTap: () {
+  setState(() => selectedTab = t);
+
+  _pageController.animateToPage(
+    t.index,
+    duration: const Duration(milliseconds: 300),
+    curve: Curves.easeInOut,
+  );
+},
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
                   curve: Curves.easeInOut,
@@ -146,16 +180,6 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
     );
   }
 
-  Widget _buildBody() {
-    switch (selectedTab) {
-      case AlumniType.hiring:
-        return _buildList(AlumniType.hiring);
-      case AlumniType.college:
-        return _buildList(AlumniType.college);
-      case AlumniType.company:
-        return _buildList(AlumniType.company);
-    }
-  }
 
   /// 🔥 LIST BASED ON TAB
   Widget _buildList(AlumniType type) {
