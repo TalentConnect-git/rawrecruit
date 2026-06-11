@@ -145,15 +145,15 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
           children: [
             /// 🔙 HEADER
             AppHeader(
-              title: "Your",
-              highlight: "skills",
+              title: "Skills &",
+              highlight: "Expertise",
               onBack: widget.onBack,
             ),
 
             const SizedBox(height: 10),
 
             const Text(
-              "Select or add your top skills",
+              "Choose the skills that best represents your strength",
               style: TextStyle(color: Colors.grey),
             ),
 

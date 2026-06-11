@@ -81,15 +81,15 @@ class _LinksPageState extends State<LinksPage> {
       title: "Links",
       children: [
         AppHeader(
-          title: "Your professional",
-          highlight: "details",
+          title: "Showcase",
+          highlight: "Your Work",
           onBack: widget.onBack,
         ),
 
         const SizedBox(height: 10),
 
         const Text(
-          "Project links for standing out",
+          "Help referrers understand your background beyond your resume",
           style: TextStyle(color: Colors.grey),
         ),
 

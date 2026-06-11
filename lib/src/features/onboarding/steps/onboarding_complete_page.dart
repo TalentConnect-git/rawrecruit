@@ -58,24 +58,34 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
 
         const SizedBox(height: 20),
 
-        /// 🎉 TITLE
-        const Center(
-          child: Text(
-            "You’re all set 🎉",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
+        Center(
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              style: const TextStyle(
+                fontSize: 28,
+                fontWeight: FontWeight.bold,
+                height: 1.2,
+              ),
+              children: [
+                const TextSpan(
+                  text: "You're Ready to\n",
+                  style: TextStyle(color: Colors.white),
+                ),
+                TextSpan(
+                  text: "Grow Through Referrals",
+                  style: TextStyle(color: AppColors.kGreen),
+                ),
+              ],
             ),
           ),
         ),
-
         const SizedBox(height: 8),
 
         /// SUBTITLE
         const Center(
           child: Text(
-            "Your profile is live. Here's what's waiting for you.",
+            "Your profile is now live on Referd.\nOur AI is already finding:",
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey),
           ),
@@ -87,8 +97,9 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
         _infoCard(
           icon: Icons.people_outline,
           iconColor: Colors.green,
-          title: "see who can refer you",
-          subtitle: "Based on your skills & role",
+          title: "Find Alumni Who Can Refer You",
+          subtitle:
+              "Discover college and company alumni working at your dream organizations.",
         ),
 
         const SizedBox(height: 12),
@@ -97,10 +108,18 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
         _infoCard(
           icon: Icons.work_outline,
           iconColor: Colors.deepPurple,
-          title: "explore to see candidates who match your profile",
-          subtitle: "Start referring today",
+          title: "Explore Referral Jobs",
+          subtitle: "Apply directly to employee-posted referral opportunities.",
         ),
+        const SizedBox(height: 12),
 
+        _infoCard(
+          icon: Icons.notifications_none_rounded,
+          iconColor: Colors.deepPurpleAccent,
+          title: "Get Smart Referral Alerts",
+          subtitle:
+              "Receive notifications when a matching job or alumni connection becomes available.",
+        ),
         const SizedBox(height: 12),
 
         /// ⚡ HIGHLIGHT STRIP
@@ -117,7 +136,7 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  "87% of users get their first referral within 48 hours",
+                  "Most successful referrals happen within the first 72 hours after profile completion.",
                   style: TextStyle(color: Colors.grey, fontSize: 12),
                 ),
               ),

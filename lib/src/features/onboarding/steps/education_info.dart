@@ -236,7 +236,7 @@ class _EducationPageState extends State<EducationPage> {
         const SizedBox(height: 10),
 
         const Text(
-          "What's your qualifications?",
+          "Help alumni from your college discover and support you",
 
           style: TextStyle(color: Colors.grey),
         ),
