@@ -24,6 +24,7 @@ String getGreeting() {
     return 'Good night';
   }
 }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -144,6 +145,7 @@ String getGreeting() {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 🔥 key fix
         children: [
+          
           Icon(icon, color: AppColors.secText, size: 18),
 
           /// VALUE
