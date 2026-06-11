@@ -6,6 +6,7 @@ class RouteNames {
   static final dashboard = 'dashboard';
   static final shortlist = 'shortlist';
   static final myProfile = 'my-profile';
+
   static final addEditProfileView = 'add-edit-profile-view';
   static final jobPosted = 'job-posted';
   static final postedJobApplication = 'posted-job-application';
@@ -31,11 +32,11 @@ class RouteNames {
   static const String referrer = 'referrer';
   static const String referrerDetail = 'referrer-detail';
   static const String alumniDetail = 'alumniDetail';
-  
-  static const profileDetail =
-    'profileDetail';
-    static final referralApplicationDetail =
-    'referralApplicationDetail';
-    static const referredCandidateDetail =
-    'referredCandidateDetail';
+
+  static const profileDetail = 'profileDetail';
+  static final referralApplicationDetail = 'referralApplicationDetail';
+  static const referredCandidateDetail = 'referredCandidateDetail';
+  static const askForReferral = 'askForReferral';
+  static const webJobsList = '/webJobsList';
+  static const webJobDetail = 'webJobDetail';
 }

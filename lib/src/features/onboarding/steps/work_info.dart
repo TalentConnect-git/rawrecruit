@@ -295,31 +295,75 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
       title: "Work Preferences",
       children: [
         AppHeader(
-          title: "Your Work",
-          highlight: "Preferences",
+          title: "What Opportunities",
+          highlight: "Interests You?",
           onBack: widget.onBack,
         ),
 
         const SizedBox(height: 10),
 
         const Text(
-          "Help us know you better",
+          "We'll notify you when matching opportunities becomes available",
           style: TextStyle(color: Colors.grey),
         ),
 
         const SizedBox(height: 20),
 
-        AppDropdown(
-          hint: "Employment Type",
-          options: WorkPrefPage.employmentOptions,
-          value: employmentType,
-          onChanged: (val) {
-            setState(() {
-              employmentType = val;
-            });
+        const Text(
+          "Employment Type",
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+        ),
 
-            saveData();
-          },
+        const SizedBox(height: 12),
+
+        Row(
+          children: [
+            _employmentTile(
+              title: "Full Time",
+              icon: Icons.work_outline,
+              selected: employmentType == "full time",
+              onTap: () {
+                setState(() => employmentType = "full time");
+                saveData();
+              },
+            ),
+
+            const SizedBox(width: 8),
+
+            _employmentTile(
+              title: "Internship",
+              icon: Icons.school_outlined,
+              selected: employmentType == "internship",
+              onTap: () {
+                setState(() => employmentType = "internship");
+                saveData();
+              },
+            ),
+
+            const SizedBox(width: 8),
+
+            _employmentTile(
+              title: "Contract",
+              icon: Icons.assignment_outlined,
+              selected: employmentType == "contract",
+              onTap: () {
+                setState(() => employmentType = "contract");
+                saveData();
+              },
+            ),
+
+            const SizedBox(width: 8),
+
+            _employmentTile(
+              title: "Remote",
+              icon: Icons.laptop_mac_outlined,
+              selected: employmentType == "remote",
+              onTap: () {
+                setState(() => employmentType = "remote");
+                saveData();
+              },
+            ),
+          ],
         ),
 
         const SizedBox(height: 10),
@@ -543,7 +587,6 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
                     selectedState = val;
 
                     cities.clear();
-                    
                   });
 
                   saveData();
@@ -607,6 +650,53 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
 
         const SizedBox(height: 20),
       ],
+    );
+  }
+
+  Widget _employmentTile({
+    required String title,
+    required IconData icon,
+    required bool selected,
+    required VoidCallback onTap,
+  }) {
+    return Expanded(
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(14),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: selected
+                ? AppColors.kGreen.withOpacity(.12)
+                : AppColors.kCard,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(
+              color: selected ? AppColors.kGreen : AppColors.kBorder,
+              width: selected ? 2 : 1,
+            ),
+          ),
+          child: Column(
+            children: [
+              Icon(
+                icon,
+                color: selected ? AppColors.kGreen : Colors.grey,
+                size: 22,
+              ),
+              const SizedBox(height: 6),
+              Text(
+                title,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: selected ? Colors.white : Colors.grey,
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

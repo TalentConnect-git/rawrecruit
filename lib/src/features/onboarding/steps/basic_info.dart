@@ -136,7 +136,7 @@ class _BasicPageState extends State<BasicPage> {
         AppHeader(
           title: "Your Professional",
 
-          highlight: "details",
+          highlight: "Identity",
 
           onBack: widget.onBack,
         ),
@@ -144,7 +144,7 @@ class _BasicPageState extends State<BasicPage> {
         const SizedBox(height: 10),
 
         const Text(
-          "Add your information",
+          "Tell Us Who Your Are",
 
           style: TextStyle(color: Colors.grey),
         ),

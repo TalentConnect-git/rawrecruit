@@ -54,6 +54,7 @@ import 'package:rawrecruit/src/features/scheduled_interviews/presentation/view_m
 import 'package:rawrecruit/src/features/shortlist/data/shortlist_data_source_impl.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository.dart';
 import 'package:rawrecruit/src/features/shortlist/repository/shortlist_repository_impl.dart';
+import 'package:rawrecruit/src/features/web_jobs/presentation/view_models/web_jobs_view_model.dart';
 
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source.dart';
 import '../../features/professional/job_postng/data/data_source/job_posting_data_source_impl.dart';
@@ -71,6 +72,8 @@ import '../../features/scheduled_interviews/data/repository/scheduled_interview_
 import '../../features/shortlist/data/shortlist_data_source.dart';
 import '../../features/shortlist/presentation/view_model/shortlist_view_model.dart'
     show ShortlistViewModel;
+import '../../features/web_jobs/data/data_sources/index.dart';
+import '../../features/web_jobs/data/index.dart';
 
 GetIt getIt = GetIt.instance;
 
@@ -157,5 +160,10 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<ReferralDataSource>(() => ReferralDataSourceImpl())
     ..registerLazySingleton<ReferralRepository>(
       () => ReferralRepositoryImpl(dataSource: getIt<ReferralDataSource>()),
+    )
+    ..registerFactory<WebJobViewModel>(() => WebJobViewModel())
+    ..registerLazySingleton<WebJobDataSource>(() => WebJobDataSourceImpl())
+    ..registerLazySingleton<WebJobRepository>(
+      () => WebJobRepositoryImpl(webJobDataSource: getIt<WebJobDataSource>()),
     );
 }

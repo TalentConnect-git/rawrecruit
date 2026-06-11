@@ -348,7 +348,7 @@ class _CareerPageState extends State<CareerPage> {
         const SizedBox(height: 10),
 
         const Text(
-          "Help us get to know you more",
+          "Your experience helps us match you with the right opportunities and alumni",
           style: TextStyle(color: Colors.grey),
         ),
 

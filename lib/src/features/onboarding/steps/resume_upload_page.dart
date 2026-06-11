@@ -25,7 +25,7 @@ class ResumeUploadPage extends StatelessWidget {
         const SizedBox(height: 10),
 
         const Text(
-          "We'll auto-fill your profile and match you with referrers",
+          "Lets us automatically build your profile and improve job matching accuracy",
           style: TextStyle(color: Colors.grey),
         ),
 
@@ -34,7 +34,60 @@ class ResumeUploadPage extends StatelessWidget {
         /// 📄 UPLOAD BOX
         _uploadBox(context),
 
-        const SizedBox(height: 20),
+        const SizedBox(height: 16),
+
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.kCard,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: AppColors.kBorder),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                "We'll extract:",
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+
+              const SizedBox(height: 12),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: Column(
+                      children: const [
+                        _ResumePoint("Skills"),
+                        SizedBox(height: 10),
+                        _ResumePoint("Experience"),
+                        SizedBox(height: 10),
+                        _ResumePoint("Education"),
+                      ],
+                    ),
+                  ),
+
+                  Expanded(
+                    child: Column(
+                      children: const [
+                        _ResumePoint("Certifications"),
+                        SizedBox(height: 10),
+                        _ResumePoint("Projects"),
+                        SizedBox(height: 10),
+                        _ResumePoint("Resume Score"),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 16),
 
         // /// OR
         // Row(
@@ -82,7 +135,7 @@ class ResumeUploadPage extends StatelessWidget {
           child: TextButton(
             onPressed: onNext, // ✅ JUST MOVE NEXT
             child: const Text(
-              "Skip for now",
+              "Skip and Fill Manually",
               style: TextStyle(color: Colors.grey),
             ),
           ),
@@ -358,4 +411,26 @@ class ResumeUploadPage extends StatelessWidget {
   //     ),
   //   );
   // }
+}
+
+class _ResumePoint extends StatelessWidget {
+  final String title;
+
+  const _ResumePoint(this.title);
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        Icon(Icons.check_circle, color: AppColors.kGreen, size: 18),
+        const SizedBox(width: 8),
+        Expanded(
+          child: Text(
+            title,
+            style: const TextStyle(color: Colors.white, fontSize: 13),
+          ),
+        ),
+      ],
+    );
+  }
 }

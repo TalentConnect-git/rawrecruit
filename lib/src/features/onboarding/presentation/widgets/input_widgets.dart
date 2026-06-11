@@ -365,8 +365,8 @@ class AppHeader extends StatelessWidget {
                 style: const TextStyle(color: Colors.white),
               ),
 
-              const TextSpan(
-                text: "details",
+              TextSpan(
+                text: highlight,
 
                 style: TextStyle(color: Color(0xFF22C55E)),
               ),
