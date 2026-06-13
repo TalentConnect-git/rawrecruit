@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/core/provider/interview_provider.dart';
 
 class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
@@ -38,6 +39,13 @@ class NotificationService {
 
       print('📩 Foreground Notification: ${message.notification?.toMap()}');
 
+      if (message.notification != null &&
+          (message.notification?.toMap())?['title'] == 'INTERVIEW_SCHEDULED') {
+        getIt<InterviewProvider>().setNewInterviewsAvailable();
+      } else {
+        getIt<NotificationProvider>().setNewNotificationsAvailable();
+      }
+
       _flutterLocalNotificationsPlugin.show(
         title: message.notification?.title,
         body: message.notification?.body,
@@ -53,13 +61,6 @@ class NotificationService {
         id: message.hashCode,
         payload: jsonEncode(message.data),
       );
-
-      if (message.data.isNotEmpty &&
-          message.data['topic'] == 'Scheduled Interviews') {
-        getIt<AppStateProvider>().setNewInterviewsAvailable();
-      } else {
-        getIt<NotificationProvider>().setNewNotificationsAvailable();
-      }
     });
 
     // When opened from background

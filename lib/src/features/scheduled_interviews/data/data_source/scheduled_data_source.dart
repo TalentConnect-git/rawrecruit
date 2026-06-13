@@ -5,4 +5,6 @@ import 'package:rawrecruit/src/features/scheduled_interviews/index.dart'
 abstract class InterviewDataSource {
   ResultFuture<List<InterviewModel>> getInterviews();
   ResultFuture<InterviewModel> getInterviewById(String interviewId);
+  ResultFuture<InterviewModel> markInterviewAsRead(String interviewId);
+  ResultFuture<bool> checkForNewInterviews();
 }

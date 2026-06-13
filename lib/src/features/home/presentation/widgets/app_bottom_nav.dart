@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart' show AppColors, AppTextStyles;
 import 'package:rawrecruit/src/core/index.dart'
-    show NavItem, NavItemExt, getIt, AppStateProvider;
+    show NavItem, NavItemExt, getIt, AppStateProvider, NotificationProvider;
+import 'package:rawrecruit/src/core/provider/interview_provider.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
-class AppBottomNav extends StatelessWidget {
+class AppBottomNav extends StatefulWidget {
   const AppBottomNav({
     required this.currentIndex,
     required this.onTap,
@@ -15,6 +16,35 @@ class AppBottomNav extends StatelessWidget {
   final void Function(NavItem index) onTap;
   final int currentIndex;
   final bool hasUnread;
+
+  @override
+  State<AppBottomNav> createState() => _AppBottomNavState();
+}
+
+class _AppBottomNavState extends State<AppBottomNav>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    WidgetsBinding.instance.addObserver(this);
+    getIt<NotificationProvider>().checkForNewNotifications();
+    getIt<InterviewProvider>().checkForNewInterviews();
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
+      getIt<NotificationProvider>().checkForNewNotifications();
+      getIt<InterviewProvider>().checkForNewInterviews();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,12 +62,12 @@ class AppBottomNav extends StatelessWidget {
       //   ),
       // ),
       child: StylishBottomBar(
-        currentIndex: currentIndex,
+        currentIndex: widget.currentIndex,
         backgroundColor: AppColors.kBg,
-        onTap: (index) => onTap(items[index]),
+        onTap: (index) => widget.onTap(items[index]),
         items: [
           ...items.map((item) {
-            final isSelected = items.indexOf(item) == currentIndex;
+            final isSelected = items.indexOf(item) == widget.currentIndex;
 
             Widget iconWidget = Stack(
               clipBehavior: Clip.none,

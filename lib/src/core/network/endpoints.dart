@@ -42,7 +42,9 @@ class Endpoints {
   static const String createConversation = "api/messages/conversation";
 
   static const String apiNotifications = "api/notifications";
+  static const String apiNotificationsUnread = "api/notifications/unread";
   static const String apiInterviews = '/interviews';
+  static const String interviewsUnread = 'interviews/unread';
 
   static const String careerInsights = '/api/career-insights';
   static const String careerRanking = '/api/career-insights/ranking';

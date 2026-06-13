@@ -1,4 +1,5 @@
 import '../../../../core/index.dart';
+import '../../../../core/provider/interview_provider.dart';
 import '../../data/entity/interview_model.dart';
 import '../../data/repository/scheduled_interview_repo.dart';
 
@@ -46,6 +47,28 @@ class InterviewViewModel extends ViewStateProvider {
         selectedInterview = data;
       },
     );
+
+    setViewState(ViewState.complete);
+    return failure;
+  }
+
+  Future<Failure?> markInterviewById(String interviewId) async {
+    Failure? failure;
+
+    setViewState(ViewState.busy);
+
+    final result = await _repository.markInterviewAsRead(interviewId);
+
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (data) {
+        selectedInterview = data;
+      },
+    );
+
+    getIt<InterviewProvider>().checkForNewInterviews();
 
     setViewState(ViewState.complete);
     return failure;

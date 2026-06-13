@@ -11,6 +11,7 @@ import 'package:rawrecruit/src/core/index.dart'
         RouteNames,
         NavItemExt,
         FailureExt;
+import 'package:rawrecruit/src/core/provider/interview_provider.dart';
 import 'package:rawrecruit/src/features/chat/index.dart' show ChatViewModel;
 import 'package:rawrecruit/src/features/home/index.dart' show AppBottomNav;
 import 'package:rawrecruit/src/features/notifications/index.dart'
@@ -118,7 +119,7 @@ class _HomeViewState extends State<HomeView> {
               style: AppTextStyles.s24W600.copyWith(color: AppColors.kGreen),
             ),
             actions: [
-              Selector<AppStateProvider, bool>(
+              Selector<InterviewProvider, bool>(
                 selector: (_, vm) => vm.hasNewInterviews,
                 builder: (_, hasInterviews, _) => IconButton(
                   onPressed: () {

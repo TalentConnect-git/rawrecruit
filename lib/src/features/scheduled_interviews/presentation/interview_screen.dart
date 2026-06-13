@@ -62,7 +62,12 @@ class _InterviewsScreenState extends State<InterviewsScreen> {
               itemCount: vm.interviews.length,
               separatorBuilder: (_, __) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
-                return InterviewCard(interview: vm.interviews[index]);
+                return InterviewCard(
+                  interview: vm.interviews[index],
+                  onTap: () {
+                    vm.markInterviewById(vm.interviews[index].id ?? '');
+                  },
+                );
               },
             );
           },
@@ -75,9 +80,14 @@ class _InterviewsScreenState extends State<InterviewsScreen> {
 /// ─────────────────────────────────────────────
 
 class InterviewCard extends StatelessWidget {
-  const InterviewCard({super.key, required this.interview});
+  const InterviewCard({
+    super.key,
+    required this.interview,
+    required this.onTap,
+  });
 
   final InterviewModel interview;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +96,14 @@ class InterviewCard extends StatelessWidget {
         interview.jobId?.companyName ??
         'Unknown Company';
 
-    final jobTitle = interview.jobId?.jobTitle ?? 'Interview';
+    final jobTitle = interview.jobId?.jobTitle?.join(', ') ?? 'Unknown Job';
     final roles = interview.jobRole?.join(', ') ?? '';
     final status = interview.status ?? 'Scheduled';
 
     return GestureDetector(
       onTap: () {
         if (interview.id != null) {
+          onTap.call();
           context.pushNamed(RouteNames.interviewDetail, extra: interview.id);
         }
       },
@@ -103,7 +114,11 @@ class InterviewCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.kCard,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.kBorder),
+          border: Border.all(
+            color: (interview.readByApplicant ?? false)
+                ? AppColors.kBorder
+                : AppColors.kGreen,
+          ),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

@@ -5,6 +5,7 @@ import 'package:rawrecruit/src/core/index.dart'
         NavigationRepository,
         AppStateProvider,
         NotificationProvider;
+import 'package:rawrecruit/src/core/provider/interview_provider.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
     show
         ApplicationDataSource,
@@ -72,7 +73,6 @@ import '../../features/scheduled_interviews/data/repository/scheduled_interview_
 import '../../features/shortlist/data/shortlist_data_source.dart';
 import '../../features/shortlist/presentation/view_model/shortlist_view_model.dart'
     show ShortlistViewModel;
-import '../../features/web_jobs/data/data_sources/index.dart';
 import '../../features/web_jobs/data/index.dart';
 
 GetIt getIt = GetIt.instance;
@@ -83,6 +83,7 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<NavigationRepository>(NavigationRepository.new)
     ..registerLazySingleton<AppStateProvider>(AppStateProvider.new)
     ..registerLazySingleton<NotificationProvider>(NotificationProvider.new)
+    ..registerLazySingleton<InterviewProvider>(InterviewProvider.new)
     ..registerLazySingleton<OnboardingLocalService>(
       () => OnboardingLocalService(),
     )
