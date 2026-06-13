@@ -32,7 +32,16 @@ import 'package:rawrecruit/src/features/referrer/presentation/professional_refer
 import 'package:rawrecruit/src/features/referrer/student_referrer_tab.dart';
 import 'package:rawrecruit/src/features/referrer/utils/enums.dart';
 import 'package:rawrecruit/src/features/scheduled_interviews/presentation/interview_screen.dart';
-import 'package:rawrecruit/src/features/web_jobs/presentation/web_jobs_list_view.dart';
+import 'package:rawrecruit/src/features/web_jobs/data/entities/company_job.dart'
+    show CompanyJob;
+import 'package:rawrecruit/src/features/web_jobs/data/entities/web_job.dart'
+    show CompanyJobsDiscovery;
+import 'package:rawrecruit/src/features/web_jobs/presentation/web_job_detail_view.dart'
+    show WebJobDetailView;
+import 'package:rawrecruit/src/features/web_jobs/presentation/web_jobs_list_view.dart'
+    show WebJobsListView;
+import 'package:rawrecruit/src/features/web_jobs/presentation/web_jobs_view.dart'
+    show AskForReferralView;
 
 import '../../features/chat/index.dart';
 import '../../features/jobs/presentation/professional_jobs_tab.dart';
@@ -42,10 +51,6 @@ import '../../features/professional/job_postng/presentation/referred_detail_page
 import '../../features/profile/presentation/add_edit_profile_view.dart';
 import '../../features/profile/presentation/modern_profile_page.dart';
 import '../../features/scheduled_interviews/presentation/interview_detail_screen.dart';
-import '../../features/web_jobs/data/entities/company_job.dart';
-import '../../features/web_jobs/data/entities/web_job.dart';
-import '../../features/web_jobs/presentation/web_job_detail_view.dart';
-import '../../features/web_jobs/presentation/web_jobs_view.dart';
 import '../services/dependency_locator.dart';
 
 GoRouter appRouter = GoRouter(
@@ -278,6 +283,30 @@ GoRouter appRouter = GoRouter(
       },
     ),
 
+    GoRoute(
+      path: '/ask-for-referral',
+      name: RouteNames.askForReferral,
+      builder: (context, state) => const AskForReferralView(),
+    ),
+    GoRoute(
+      path: '/web-jobs-list',
+      name: RouteNames.webJobsList,
+      builder: (context, state) {
+        final jobsData = state.extra as CompanyJobsDiscovery;
+
+        return WebJobsListView(jobsData: jobsData);
+      },
+    ),
+    GoRoute(
+      path: '/web-job-detail',
+      name: RouteNames.webJobDetail,
+      builder: (context, state) {
+        final job = state.extra as CompanyJob;
+
+        return WebJobDetailView(job: job);
+      },
+    ),
+
     ShellRoute(
       builder: (context, state, navigationShell) {
         return HomeView(navigationShell: navigationShell);
@@ -330,29 +359,7 @@ GoRouter appRouter = GoRouter(
             }
           },
         ),
-        GoRoute(
-          path: '/ask-for-referral',
-          name: RouteNames.askForReferral,
-          builder: (context, state) => const AskForReferralView(),
-        ),
-        GoRoute(
-          path: '/web-jobs-list',
-          name: RouteNames.webJobsList,
-          builder: (context, state) {
-            final jobsData = state.extra as CompanyJobsDiscovery;
 
-            return WebJobsListView(jobsData: jobsData);
-          },
-        ),
-        GoRoute(
-          path: '/web-job-detail',
-          name: RouteNames.webJobDetail,
-          builder: (context, state) {
-            final job = state.extra as CompanyJob;
-
-            return WebJobDetailView(job: job);
-          },
-        ),
         GoRoute(
           name: RouteNames.shortlist,
           path: '/shortlist',

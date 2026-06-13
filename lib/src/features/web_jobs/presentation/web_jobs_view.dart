@@ -29,14 +29,19 @@ class _AskForReferralViewState extends State<AskForReferralView> {
       create: (_) => getIt<WebJobViewModel>(),
       child: Scaffold(
         backgroundColor: AppColors.kBg,
+        appBar: RAppBar(
+          label: 'Ask For Referral',
+          leading: InkWell(
+            onTap: context.pop,
+            child: Icon(Icons.keyboard_arrow_left, color: Colors.white),
+          ),
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 24),
-
                 Container(
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),

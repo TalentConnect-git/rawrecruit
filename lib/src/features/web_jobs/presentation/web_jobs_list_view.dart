@@ -45,17 +45,18 @@ class WebJobsListView extends StatelessWidget {
     }
     return Scaffold(
       backgroundColor: AppColors.kBg,
+      appBar: RAppBar(
+        label: '${jobsData.companyName ?? ''} Jobs',
+        leading: InkWell(
+          onTap: context.pop,
+          child: Icon(Icons.keyboard_arrow_left, color: Colors.white),
+        ),
+      ),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.all(20),
-              child: Text(
-                '${jobsData.companyName ?? ''} Jobs',
-                style: AppTextStyles.s20W600.copyWith(color: Colors.white),
-              ),
-            ),
+            const SizedBox(height: 8),
 
             Expanded(
               child: ListView.builder(
