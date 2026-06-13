@@ -16,39 +16,40 @@ class AlumniHiringView extends StatefulWidget {
 class _AlumniHiringViewState extends State<AlumniHiringView> {
   AlumniType selectedTab = AlumniType.hiring;
   late final PageController _pageController;
+
   /// 🔥 TODO: replace with real user type logic
   bool get isProfessional =>
       getIt<AppStateProvider>().userType == UserType.professional;
 
   AlumniViewModel alumniViewModel = AlumniViewModel();
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  _pageController = PageController(
-    initialPage: selectedTab.index,
-  );
+    _pageController = PageController(initialPage: selectedTab.index);
 
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    Future.wait([
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Future.wait([
+        alumniViewModel.fetchCollegeAlumni(),
+        alumniViewModel.fetchCompanyAlumni(),
+        alumniViewModel.fetchHiringAlumni(),
+      ], eagerError: true);
+    });
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _refresh() async {
+    await Future.wait([
       alumniViewModel.fetchCollegeAlumni(),
       alumniViewModel.fetchCompanyAlumni(),
       alumniViewModel.fetchHiringAlumni(),
     ], eagerError: true);
-  });
-}
-@override
-void dispose() {
-  _pageController.dispose();
-  super.dispose();
-}
-Future<void> _refresh() async {
-  await Future.wait([
-    alumniViewModel.fetchCollegeAlumni(),
-    alumniViewModel.fetchCompanyAlumni(),
-    alumniViewModel.fetchHiringAlumni(),
-  ], eagerError: true);
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,35 +92,36 @@ Future<void> _refresh() async {
               const SizedBox(height: 16),
 
               /// 🔥 LIST
-            Expanded(
-  child: PageView(
-    controller: _pageController,
-    onPageChanged: (index) {
-      setState(() {
-        selectedTab = AlumniType.values[index];
-      });
-    },
-   children: [
-  RefreshIndicator(
-    color: AppColors.kGreen,
-    onRefresh: _refresh,
-    child: _buildList(AlumniType.hiring),
-  ),
-  RefreshIndicator(
-    color: AppColors.kGreen,
-    onRefresh: _refresh,
-    child: _buildList(AlumniType.college),
-  ),
-
-  if (isProfessional)
-    RefreshIndicator(
-      color: AppColors.kGreen,
-      onRefresh: _refresh,
-      child: _buildList(AlumniType.company),
-    ),
-],
-  ),
-),
+              Expanded(
+                child: ClipRect(
+                  child: PageView(
+                    controller: _pageController,
+                    onPageChanged: (index) {
+                      setState(() {
+                        selectedTab = AlumniType.values[index];
+                      });
+                    },
+                    children: [
+                      RefreshIndicator(
+                        color: AppColors.kGreen,
+                        onRefresh: _refresh,
+                        child: _buildList(AlumniType.hiring),
+                      ),
+                      RefreshIndicator(
+                        color: AppColors.kGreen,
+                        onRefresh: _refresh,
+                        child: _buildList(AlumniType.college),
+                      ),
+                      if (isProfessional)
+                        RefreshIndicator(
+                          color: AppColors.kGreen,
+                          onRefresh: _refresh,
+                          child: _buildList(AlumniType.company),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
@@ -142,15 +144,15 @@ Future<void> _refresh() async {
           ...tabs.map((t) {
             return Expanded(
               child: GestureDetector(
-               onTap: () {
-  setState(() => selectedTab = t);
+                onTap: () {
+                  setState(() => selectedTab = t);
 
-  _pageController.animateToPage(
-    t.index,
-    duration: const Duration(milliseconds: 300),
-    curve: Curves.easeInOut,
-  );
-},
+                  _pageController.animateToPage(
+                    t.index,
+                    duration: const Duration(milliseconds: 300),
+                    curve: Curves.easeInOut,
+                  );
+                },
                 child: AnimatedContainer(
                   duration: const Duration(milliseconds: 250),
                   curve: Curves.easeInOut,
@@ -180,7 +182,6 @@ Future<void> _refresh() async {
     );
   }
 
-
   /// 🔥 LIST BASED ON TAB
   Widget _buildList(AlumniType type) {
     return Consumer<AlumniViewModel>(
@@ -193,8 +194,10 @@ Future<void> _refresh() async {
 
         if (groupedList.isEmpty) {
           debugPrint("GROUPED LIST COUNT => ${groupedList.length}");
-debugPrint("FIRST ITEM => ${groupedList.firstOrNull}");
+          debugPrint("FIRST ITEM => ${groupedList.firstOrNull}");
           return ListView(
+            padding: const EdgeInsets.symmetric(horizontal: 4),
+
             physics: const AlwaysScrollableScrollPhysics(),
 
             children: const [

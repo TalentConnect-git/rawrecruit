@@ -16,9 +16,11 @@ class AskForReferralView extends StatefulWidget {
 
 class _AskForReferralViewState extends State<AskForReferralView> {
   final TextEditingController companyController = TextEditingController();
+  final TextEditingController urlController = TextEditingController();
 
   @override
   void dispose() {
+    urlController.dispose();
     companyController.dispose();
     super.dispose();
   }
@@ -103,6 +105,7 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                   child: Column(
                     children: [
                       TextFormField(
+                        controller: urlController,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: 'Paste Job URL',
@@ -176,15 +179,86 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                               onPressed: vm.viewState == ViewState.busy
                                   ? null
                                   : () async {
-                                      if (companyController.text
-                                          .trim()
-                                          .isEmpty) {
+                                      final url = urlController.text.trim();
+                                      final company = companyController.text
+                                          .trim();
+
+                                      if (url.isEmpty && company.isEmpty) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Please enter a Job URL or Company Name',
+                                            ),
+                                          ),
+                                        );
                                         return;
                                       }
 
+                                      // URL FLOW
+                                      if (url.isNotEmpty) {
+                                        final failure = await vm
+                                            .requestCareerPageReferral(
+                                              careerPageUrl: url,
+                                            );
+
+                                        if (!context.mounted) return;
+
+                                        if (failure != null) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                failure.message ?? 'error',
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        final response =
+                                            vm.careerPageReferralResponse;
+
+                                        if (response != null) {
+                                          final totalSent =
+                                              response
+                                                  .data
+                                                  ?.totalRequestsSent ??
+                                              0;
+
+                                          showDialog(
+                                            context: context,
+                                            builder: (_) {
+                                              return AlertDialog(
+                                                title: const Text(
+                                                  'Referral Request Sent',
+                                                ),
+                                                content: Text(
+                                                  '${response.message}\n\n'
+                                                  'Total Requests Sent: '
+                                                  '$totalSent',
+                                                ),
+                                                actions: [
+                                                  TextButton(
+                                                    onPressed: () {
+                                                      Navigator.pop(context);
+                                                    },
+                                                    child: const Text('OK'),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+
+                                        return;
+                                      }
+
+                                      // COMPANY FLOW
                                       final failure = await vm.discoverJobs(
-                                        companyName: companyController.text
-                                            .trim(),
+                                        companyName: company,
                                       );
 
                                       if (failure == null &&
