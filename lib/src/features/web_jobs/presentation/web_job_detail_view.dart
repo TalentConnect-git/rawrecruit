@@ -1,136 +1,225 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/features/web_jobs/presentation/view_models/web_job_detail_view_model.dart';
+
 import '../../../common/index.dart';
 import '../data/entities/company_job.dart';
 
-class WebJobDetailView extends StatelessWidget {
+class WebJobDetailView extends StatefulWidget {
   final CompanyJob job;
 
   const WebJobDetailView({super.key, required this.job});
 
   @override
+  State<WebJobDetailView> createState() => _WebJobDetailViewState();
+}
+
+class _WebJobDetailViewState extends State<WebJobDetailView> {
+  WebJobDetailViewModel webJobDetailViewModel = WebJobDetailViewModel();
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.kBg,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              InkWell(
-                onTap: () => Navigator.pop(context),
-                child: const Icon(Icons.arrow_back, color: Colors.white),
+    return ChangeNotifierProvider.value(
+      value: webJobDetailViewModel,
+      child: Scaffold(
+        backgroundColor: AppColors.kBg,
+        body: Selector<WebJobDetailViewModel, bool>(
+          selector: (_, vm) => vm.isLoading,
+          builder: (_, isLoading, _) => isLoading
+              ? Center(child: AppLoadingIndicator(color: AppColors.kGreen))
+              : SafeArea(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                          onTap: () => Navigator.pop(context),
+                          child: const Icon(
+                            Icons.arrow_back,
+                            color: Colors.white,
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        Text(
+                          widget.job.title ?? '-',
+                          style: AppTextStyles.s24W600.copyWith(
+                            color: Colors.white,
+                          ),
+                        ),
+
+                        const SizedBox(height: 24),
+
+                        _DetailRow(
+                          label: 'Company Name',
+                          value: widget.job.companyName,
+                        ),
+
+                        _DetailRow(label: 'Title', value: widget.job.title),
+
+                        _DetailRow(label: 'Job URL', value: widget.job.jobUrl),
+
+                        _DetailRow(
+                          label: 'Apply URL',
+                          value: widget.job.applyUrl,
+                        ),
+
+                        _DetailRow(
+                          label: 'Location',
+                          value: widget.job.location,
+                        ),
+
+                        _DetailRow(
+                          label: 'Work Mode',
+                          value: widget.job.workMode,
+                        ),
+
+                        _DetailRow(
+                          label: 'Department',
+                          value: widget.job.department,
+                        ),
+
+                        _DetailRow(
+                          label: 'JD Snippet',
+                          value: widget.job.jdSnippet,
+                        ),
+
+                        _DetailRow(
+                          label: 'Description',
+                          value: widget.job.description,
+                        ),
+
+                        _DetailRow(
+                          label: 'Required Skills',
+                          value: widget.job.requiredSkills?.join(', '),
+                        ),
+
+                        _DetailRow(
+                          label: 'Matched Skills',
+                          value: widget.job.matchedSkills?.join(', '),
+                        ),
+
+                        _DetailRow(
+                          label: 'Missing Skills',
+                          value: widget.job.missingSkills?.join(', '),
+                        ),
+
+                        _DetailRow(
+                          label: 'Experience Required',
+                          value: widget.job.experienceRequired,
+                        ),
+
+                        _DetailRow(
+                          label: 'Salary Range',
+                          value: widget.job.salaryRange,
+                        ),
+
+                        _DetailRow(
+                          label: 'Posted Date',
+                          value: widget.job.postedDate,
+                        ),
+
+                        _DetailRow(
+                          label: 'ATS Source',
+                          value: widget.job.atsSource,
+                        ),
+
+                        _DetailRow(
+                          label: 'Match Score',
+                          value: widget.job.matchScore?.toString(),
+                        ),
+
+                        const SizedBox(height: 12),
+
+                        Text(
+                          'Score Breakdown',
+                          style: AppTextStyles.s18W600.copyWith(
+                            color: AppColors.kGreen,
+                          ),
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        _DetailRow(
+                          label: 'Skills Score',
+                          value: widget.job.scoreBreakdown?.skills?.toString(),
+                        ),
+
+                        _DetailRow(
+                          label: 'Role Score',
+                          value: widget.job.scoreBreakdown?.role?.toString(),
+                        ),
+
+                        _DetailRow(
+                          label: 'Experience Score',
+                          value: widget.job.scoreBreakdown?.experience
+                              ?.toString(),
+                        ),
+
+                        _DetailRow(
+                          label: 'Location Score',
+                          value: widget.job.scoreBreakdown?.location
+                              ?.toString(),
+                        ),
+
+                        _DetailRow(
+                          label: 'Work Mode Score',
+                          value: widget.job.scoreBreakdown?.workMode
+                              ?.toString(),
+                        ),
+
+                        _DetailRow(
+                          label: 'Candidate Type Score',
+                          value: widget.job.scoreBreakdown?.candidateType
+                              ?.toString(),
+                        ),
+
+                        _DetailRow(
+                          label: 'Alumni Count',
+                          value: widget.job.alumniCount?.toString(),
+                        ),
+
+                        _DetailRow(
+                          label: 'Total Employee Count',
+                          value: widget.job.totalEmployeeCount?.toString(),
+                        ),
+
+                        const SizedBox(height: 40),
+                      ],
+                    ),
+                  ),
+                ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+        floatingActionButton: SizedBox(
+          width: MediaQuery.sizeOf(context).width,
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: ElevatedButton(
+              onPressed: () async {
+                final failure = await webJobDetailViewModel.apply(widget.job);
+                Toasts.showSuccessOrFailureToast(
+                  context,
+                  failure: failure,
+                  popOnSuccess: true,
+                  successMsg: 'Applied Successfully',
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                elevation: 0,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                backgroundColor: AppColors.kGreen,
               ),
-
-              const SizedBox(height: 24),
-
-              Text(
-                job.title ?? '-',
-                style: AppTextStyles.s24W600.copyWith(color: Colors.white),
+              child: Text(
+                'Apply',
+                style: AppTextStyles.s18W600.copyWith(color: Colors.white),
               ),
-
-              const SizedBox(height: 24),
-
-              _DetailRow(label: 'Company Name', value: job.companyName),
-
-              _DetailRow(label: 'Title', value: job.title),
-
-              _DetailRow(label: 'Job URL', value: job.jobUrl),
-
-              _DetailRow(label: 'Apply URL', value: job.applyUrl),
-
-              _DetailRow(label: 'Location', value: job.location),
-
-              _DetailRow(label: 'Work Mode', value: job.workMode),
-
-              _DetailRow(label: 'Department', value: job.department),
-
-              _DetailRow(label: 'JD Snippet', value: job.jdSnippet),
-
-              _DetailRow(label: 'Description', value: job.description),
-
-              _DetailRow(
-                label: 'Required Skills',
-                value: job.requiredSkills?.join(', '),
-              ),
-
-              _DetailRow(
-                label: 'Matched Skills',
-                value: job.matchedSkills?.join(', '),
-              ),
-
-              _DetailRow(
-                label: 'Missing Skills',
-                value: job.missingSkills?.join(', '),
-              ),
-
-              _DetailRow(
-                label: 'Experience Required',
-                value: job.experienceRequired,
-              ),
-
-              _DetailRow(label: 'Salary Range', value: job.salaryRange),
-
-              _DetailRow(label: 'Posted Date', value: job.postedDate),
-
-              _DetailRow(label: 'ATS Source', value: job.atsSource),
-
-              _DetailRow(
-                label: 'Match Score',
-                value: job.matchScore?.toString(),
-              ),
-
-              const SizedBox(height: 12),
-
-              Text(
-                'Score Breakdown',
-                style: AppTextStyles.s18W600.copyWith(color: AppColors.kGreen),
-              ),
-
-              const SizedBox(height: 16),
-
-              _DetailRow(
-                label: 'Skills Score',
-                value: job.scoreBreakdown?.skills?.toString(),
-              ),
-
-              _DetailRow(
-                label: 'Role Score',
-                value: job.scoreBreakdown?.role?.toString(),
-              ),
-
-              _DetailRow(
-                label: 'Experience Score',
-                value: job.scoreBreakdown?.experience?.toString(),
-              ),
-
-              _DetailRow(
-                label: 'Location Score',
-                value: job.scoreBreakdown?.location?.toString(),
-              ),
-
-              _DetailRow(
-                label: 'Work Mode Score',
-                value: job.scoreBreakdown?.workMode?.toString(),
-              ),
-
-              _DetailRow(
-                label: 'Candidate Type Score',
-                value: job.scoreBreakdown?.candidateType?.toString(),
-              ),
-
-              _DetailRow(
-                label: 'Alumni Count',
-                value: job.alumniCount?.toString(),
-              ),
-
-              _DetailRow(
-                label: 'Total Employee Count',
-                value: job.totalEmployeeCount?.toString(),
-              ),
-
-              const SizedBox(height: 40),
-            ],
+            ),
           ),
         ),
       ),

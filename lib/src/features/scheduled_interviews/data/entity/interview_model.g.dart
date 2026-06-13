@@ -48,6 +48,7 @@ _InterviewModel _$InterviewModelFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updatedAt'] == null
           ? null
           : DateTime.parse(json['updatedAt'] as String),
+      readByApplicant: json['readByApplicant'] as bool?,
     );
 
 Map<String, dynamic> _$InterviewModelToJson(_InterviewModel instance) =>
@@ -72,13 +73,14 @@ Map<String, dynamic> _$InterviewModelToJson(_InterviewModel instance) =>
       'emailStatus': instance.emailStatus,
       'createdAt': instance.createdAt?.toIso8601String(),
       'updatedAt': instance.updatedAt?.toIso8601String(),
+      'readByApplicant': instance.readByApplicant,
     };
 
 _InterviewJobRef _$InterviewJobRefFromJson(Map<String, dynamic> json) =>
     _InterviewJobRef(
       id: json['_id'] as String?,
       jobType: json['jobType'] as String?,
-      jobTitle: json['jobTitle'] as String?,
+      jobTitle: json['jobTitle'] as List<dynamic>?,
       companyName: json['companyName'] as String?,
     );
 

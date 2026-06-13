@@ -20,7 +20,7 @@ mixin _$InterviewModel {
  String? get companyAuthId; String? get applicantType; String? get applicantAuthId; String? get applicantProfileId;// Snapshots
  InterviewApplicantSnapshot? get applicantSnapshot; InterviewCoordinator? get coordinator; InterviewCompanySnapshot? get companySnapshot;// Details
  List<String>? get jobRole; String? get date; String? get time; String? get meetLink; String? get message; String? get status; String? get emailStatus;// Dates
- DateTime? get createdAt; DateTime? get updatedAt;
+ DateTime? get createdAt; DateTime? get updatedAt; bool? get readByApplicant;
 /// Create a copy of InterviewModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -33,16 +33,16 @@ $InterviewModelCopyWith<InterviewModel> get copyWith => _$InterviewModelCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterviewModel&&(identical(other.id, id) || other.id == id)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.applicationId, applicationId) || other.applicationId == applicationId)&&(identical(other.companyAuthId, companyAuthId) || other.companyAuthId == companyAuthId)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.applicantAuthId, applicantAuthId) || other.applicantAuthId == applicantAuthId)&&(identical(other.applicantProfileId, applicantProfileId) || other.applicantProfileId == applicantProfileId)&&(identical(other.applicantSnapshot, applicantSnapshot) || other.applicantSnapshot == applicantSnapshot)&&(identical(other.coordinator, coordinator) || other.coordinator == coordinator)&&(identical(other.companySnapshot, companySnapshot) || other.companySnapshot == companySnapshot)&&const DeepCollectionEquality().equals(other.jobRole, jobRole)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.message, message) || other.message == message)&&(identical(other.status, status) || other.status == status)&&(identical(other.emailStatus, emailStatus) || other.emailStatus == emailStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterviewModel&&(identical(other.id, id) || other.id == id)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.applicationId, applicationId) || other.applicationId == applicationId)&&(identical(other.companyAuthId, companyAuthId) || other.companyAuthId == companyAuthId)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.applicantAuthId, applicantAuthId) || other.applicantAuthId == applicantAuthId)&&(identical(other.applicantProfileId, applicantProfileId) || other.applicantProfileId == applicantProfileId)&&(identical(other.applicantSnapshot, applicantSnapshot) || other.applicantSnapshot == applicantSnapshot)&&(identical(other.coordinator, coordinator) || other.coordinator == coordinator)&&(identical(other.companySnapshot, companySnapshot) || other.companySnapshot == companySnapshot)&&const DeepCollectionEquality().equals(other.jobRole, jobRole)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.message, message) || other.message == message)&&(identical(other.status, status) || other.status == status)&&(identical(other.emailStatus, emailStatus) || other.emailStatus == emailStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.readByApplicant, readByApplicant) || other.readByApplicant == readByApplicant));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,jobId,jobType,applicationId,companyAuthId,applicantType,applicantAuthId,applicantProfileId,applicantSnapshot,coordinator,companySnapshot,const DeepCollectionEquality().hash(jobRole),date,time,meetLink,message,status,emailStatus,createdAt,updatedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,jobId,jobType,applicationId,companyAuthId,applicantType,applicantAuthId,applicantProfileId,applicantSnapshot,coordinator,companySnapshot,const DeepCollectionEquality().hash(jobRole),date,time,meetLink,message,status,emailStatus,createdAt,updatedAt,readByApplicant]);
 
 @override
 String toString() {
-  return 'InterviewModel(id: $id, jobId: $jobId, jobType: $jobType, applicationId: $applicationId, companyAuthId: $companyAuthId, applicantType: $applicantType, applicantAuthId: $applicantAuthId, applicantProfileId: $applicantProfileId, applicantSnapshot: $applicantSnapshot, coordinator: $coordinator, companySnapshot: $companySnapshot, jobRole: $jobRole, date: $date, time: $time, meetLink: $meetLink, message: $message, status: $status, emailStatus: $emailStatus, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'InterviewModel(id: $id, jobId: $jobId, jobType: $jobType, applicationId: $applicationId, companyAuthId: $companyAuthId, applicantType: $applicantType, applicantAuthId: $applicantAuthId, applicantProfileId: $applicantProfileId, applicantSnapshot: $applicantSnapshot, coordinator: $coordinator, companySnapshot: $companySnapshot, jobRole: $jobRole, date: $date, time: $time, meetLink: $meetLink, message: $message, status: $status, emailStatus: $emailStatus, createdAt: $createdAt, updatedAt: $updatedAt, readByApplicant: $readByApplicant)';
 }
 
 
@@ -53,7 +53,7 @@ abstract mixin class $InterviewModelCopyWith<$Res>  {
   factory $InterviewModelCopyWith(InterviewModel value, $Res Function(InterviewModel) _then) = _$InterviewModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, InterviewJobRef? jobId, String? jobType, String? applicationId, String? companyAuthId, String? applicantType, String? applicantAuthId, String? applicantProfileId, InterviewApplicantSnapshot? applicantSnapshot, InterviewCoordinator? coordinator, InterviewCompanySnapshot? companySnapshot, List<String>? jobRole, String? date, String? time, String? meetLink, String? message, String? status, String? emailStatus, DateTime? createdAt, DateTime? updatedAt
+@JsonKey(name: '_id') String? id, InterviewJobRef? jobId, String? jobType, String? applicationId, String? companyAuthId, String? applicantType, String? applicantAuthId, String? applicantProfileId, InterviewApplicantSnapshot? applicantSnapshot, InterviewCoordinator? coordinator, InterviewCompanySnapshot? companySnapshot, List<String>? jobRole, String? date, String? time, String? meetLink, String? message, String? status, String? emailStatus, DateTime? createdAt, DateTime? updatedAt, bool? readByApplicant
 });
 
 
@@ -70,7 +70,7 @@ class _$InterviewModelCopyWithImpl<$Res>
 
 /// Create a copy of InterviewModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? jobId = freezed,Object? jobType = freezed,Object? applicationId = freezed,Object? companyAuthId = freezed,Object? applicantType = freezed,Object? applicantAuthId = freezed,Object? applicantProfileId = freezed,Object? applicantSnapshot = freezed,Object? coordinator = freezed,Object? companySnapshot = freezed,Object? jobRole = freezed,Object? date = freezed,Object? time = freezed,Object? meetLink = freezed,Object? message = freezed,Object? status = freezed,Object? emailStatus = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? jobId = freezed,Object? jobType = freezed,Object? applicationId = freezed,Object? companyAuthId = freezed,Object? applicantType = freezed,Object? applicantAuthId = freezed,Object? applicantProfileId = freezed,Object? applicantSnapshot = freezed,Object? coordinator = freezed,Object? companySnapshot = freezed,Object? jobRole = freezed,Object? date = freezed,Object? time = freezed,Object? meetLink = freezed,Object? message = freezed,Object? status = freezed,Object? emailStatus = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? readByApplicant = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,jobId: freezed == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
@@ -92,7 +92,8 @@ as String?,status: freezed == status ? _self.status : status // ignore: cast_nul
 as String?,emailStatus: freezed == emailStatus ? _self.emailStatus : emailStatus // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,readByApplicant: freezed == readByApplicant ? _self.readByApplicant : readByApplicant // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 /// Create a copy of InterviewModel
@@ -225,10 +226,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  InterviewJobRef? jobId,  String? jobType,  String? applicationId,  String? companyAuthId,  String? applicantType,  String? applicantAuthId,  String? applicantProfileId,  InterviewApplicantSnapshot? applicantSnapshot,  InterviewCoordinator? coordinator,  InterviewCompanySnapshot? companySnapshot,  List<String>? jobRole,  String? date,  String? time,  String? meetLink,  String? message,  String? status,  String? emailStatus,  DateTime? createdAt,  DateTime? updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  InterviewJobRef? jobId,  String? jobType,  String? applicationId,  String? companyAuthId,  String? applicantType,  String? applicantAuthId,  String? applicantProfileId,  InterviewApplicantSnapshot? applicantSnapshot,  InterviewCoordinator? coordinator,  InterviewCompanySnapshot? companySnapshot,  List<String>? jobRole,  String? date,  String? time,  String? meetLink,  String? message,  String? status,  String? emailStatus,  DateTime? createdAt,  DateTime? updatedAt,  bool? readByApplicant)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InterviewModel() when $default != null:
-return $default(_that.id,_that.jobId,_that.jobType,_that.applicationId,_that.companyAuthId,_that.applicantType,_that.applicantAuthId,_that.applicantProfileId,_that.applicantSnapshot,_that.coordinator,_that.companySnapshot,_that.jobRole,_that.date,_that.time,_that.meetLink,_that.message,_that.status,_that.emailStatus,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.jobId,_that.jobType,_that.applicationId,_that.companyAuthId,_that.applicantType,_that.applicantAuthId,_that.applicantProfileId,_that.applicantSnapshot,_that.coordinator,_that.companySnapshot,_that.jobRole,_that.date,_that.time,_that.meetLink,_that.message,_that.status,_that.emailStatus,_that.createdAt,_that.updatedAt,_that.readByApplicant);case _:
   return orElse();
 
 }
@@ -246,10 +247,10 @@ return $default(_that.id,_that.jobId,_that.jobType,_that.applicationId,_that.com
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  InterviewJobRef? jobId,  String? jobType,  String? applicationId,  String? companyAuthId,  String? applicantType,  String? applicantAuthId,  String? applicantProfileId,  InterviewApplicantSnapshot? applicantSnapshot,  InterviewCoordinator? coordinator,  InterviewCompanySnapshot? companySnapshot,  List<String>? jobRole,  String? date,  String? time,  String? meetLink,  String? message,  String? status,  String? emailStatus,  DateTime? createdAt,  DateTime? updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  InterviewJobRef? jobId,  String? jobType,  String? applicationId,  String? companyAuthId,  String? applicantType,  String? applicantAuthId,  String? applicantProfileId,  InterviewApplicantSnapshot? applicantSnapshot,  InterviewCoordinator? coordinator,  InterviewCompanySnapshot? companySnapshot,  List<String>? jobRole,  String? date,  String? time,  String? meetLink,  String? message,  String? status,  String? emailStatus,  DateTime? createdAt,  DateTime? updatedAt,  bool? readByApplicant)  $default,) {final _that = this;
 switch (_that) {
 case _InterviewModel():
-return $default(_that.id,_that.jobId,_that.jobType,_that.applicationId,_that.companyAuthId,_that.applicantType,_that.applicantAuthId,_that.applicantProfileId,_that.applicantSnapshot,_that.coordinator,_that.companySnapshot,_that.jobRole,_that.date,_that.time,_that.meetLink,_that.message,_that.status,_that.emailStatus,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.jobId,_that.jobType,_that.applicationId,_that.companyAuthId,_that.applicantType,_that.applicantAuthId,_that.applicantProfileId,_that.applicantSnapshot,_that.coordinator,_that.companySnapshot,_that.jobRole,_that.date,_that.time,_that.meetLink,_that.message,_that.status,_that.emailStatus,_that.createdAt,_that.updatedAt,_that.readByApplicant);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -266,10 +267,10 @@ return $default(_that.id,_that.jobId,_that.jobType,_that.applicationId,_that.com
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  InterviewJobRef? jobId,  String? jobType,  String? applicationId,  String? companyAuthId,  String? applicantType,  String? applicantAuthId,  String? applicantProfileId,  InterviewApplicantSnapshot? applicantSnapshot,  InterviewCoordinator? coordinator,  InterviewCompanySnapshot? companySnapshot,  List<String>? jobRole,  String? date,  String? time,  String? meetLink,  String? message,  String? status,  String? emailStatus,  DateTime? createdAt,  DateTime? updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  InterviewJobRef? jobId,  String? jobType,  String? applicationId,  String? companyAuthId,  String? applicantType,  String? applicantAuthId,  String? applicantProfileId,  InterviewApplicantSnapshot? applicantSnapshot,  InterviewCoordinator? coordinator,  InterviewCompanySnapshot? companySnapshot,  List<String>? jobRole,  String? date,  String? time,  String? meetLink,  String? message,  String? status,  String? emailStatus,  DateTime? createdAt,  DateTime? updatedAt,  bool? readByApplicant)?  $default,) {final _that = this;
 switch (_that) {
 case _InterviewModel() when $default != null:
-return $default(_that.id,_that.jobId,_that.jobType,_that.applicationId,_that.companyAuthId,_that.applicantType,_that.applicantAuthId,_that.applicantProfileId,_that.applicantSnapshot,_that.coordinator,_that.companySnapshot,_that.jobRole,_that.date,_that.time,_that.meetLink,_that.message,_that.status,_that.emailStatus,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.jobId,_that.jobType,_that.applicationId,_that.companyAuthId,_that.applicantType,_that.applicantAuthId,_that.applicantProfileId,_that.applicantSnapshot,_that.coordinator,_that.companySnapshot,_that.jobRole,_that.date,_that.time,_that.meetLink,_that.message,_that.status,_that.emailStatus,_that.createdAt,_that.updatedAt,_that.readByApplicant);case _:
   return null;
 
 }
@@ -281,7 +282,7 @@ return $default(_that.id,_that.jobId,_that.jobType,_that.applicationId,_that.com
 @JsonSerializable()
 
 class _InterviewModel implements InterviewModel {
-  const _InterviewModel({@JsonKey(name: '_id') this.id, this.jobId, this.jobType, this.applicationId, this.companyAuthId, this.applicantType, this.applicantAuthId, this.applicantProfileId, this.applicantSnapshot, this.coordinator, this.companySnapshot, final  List<String>? jobRole, this.date, this.time, this.meetLink, this.message, this.status, this.emailStatus, this.createdAt, this.updatedAt}): _jobRole = jobRole;
+  const _InterviewModel({@JsonKey(name: '_id') this.id, this.jobId, this.jobType, this.applicationId, this.companyAuthId, this.applicantType, this.applicantAuthId, this.applicantProfileId, this.applicantSnapshot, this.coordinator, this.companySnapshot, final  List<String>? jobRole, this.date, this.time, this.meetLink, this.message, this.status, this.emailStatus, this.createdAt, this.updatedAt, this.readByApplicant}): _jobRole = jobRole;
   factory _InterviewModel.fromJson(Map<String, dynamic> json) => _$InterviewModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
@@ -318,6 +319,7 @@ class _InterviewModel implements InterviewModel {
 // Dates
 @override final  DateTime? createdAt;
 @override final  DateTime? updatedAt;
+@override final  bool? readByApplicant;
 
 /// Create a copy of InterviewModel
 /// with the given fields replaced by the non-null parameter values.
@@ -332,16 +334,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterviewModel&&(identical(other.id, id) || other.id == id)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.applicationId, applicationId) || other.applicationId == applicationId)&&(identical(other.companyAuthId, companyAuthId) || other.companyAuthId == companyAuthId)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.applicantAuthId, applicantAuthId) || other.applicantAuthId == applicantAuthId)&&(identical(other.applicantProfileId, applicantProfileId) || other.applicantProfileId == applicantProfileId)&&(identical(other.applicantSnapshot, applicantSnapshot) || other.applicantSnapshot == applicantSnapshot)&&(identical(other.coordinator, coordinator) || other.coordinator == coordinator)&&(identical(other.companySnapshot, companySnapshot) || other.companySnapshot == companySnapshot)&&const DeepCollectionEquality().equals(other._jobRole, _jobRole)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.message, message) || other.message == message)&&(identical(other.status, status) || other.status == status)&&(identical(other.emailStatus, emailStatus) || other.emailStatus == emailStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterviewModel&&(identical(other.id, id) || other.id == id)&&(identical(other.jobId, jobId) || other.jobId == jobId)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.applicationId, applicationId) || other.applicationId == applicationId)&&(identical(other.companyAuthId, companyAuthId) || other.companyAuthId == companyAuthId)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.applicantAuthId, applicantAuthId) || other.applicantAuthId == applicantAuthId)&&(identical(other.applicantProfileId, applicantProfileId) || other.applicantProfileId == applicantProfileId)&&(identical(other.applicantSnapshot, applicantSnapshot) || other.applicantSnapshot == applicantSnapshot)&&(identical(other.coordinator, coordinator) || other.coordinator == coordinator)&&(identical(other.companySnapshot, companySnapshot) || other.companySnapshot == companySnapshot)&&const DeepCollectionEquality().equals(other._jobRole, _jobRole)&&(identical(other.date, date) || other.date == date)&&(identical(other.time, time) || other.time == time)&&(identical(other.meetLink, meetLink) || other.meetLink == meetLink)&&(identical(other.message, message) || other.message == message)&&(identical(other.status, status) || other.status == status)&&(identical(other.emailStatus, emailStatus) || other.emailStatus == emailStatus)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.readByApplicant, readByApplicant) || other.readByApplicant == readByApplicant));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,jobId,jobType,applicationId,companyAuthId,applicantType,applicantAuthId,applicantProfileId,applicantSnapshot,coordinator,companySnapshot,const DeepCollectionEquality().hash(_jobRole),date,time,meetLink,message,status,emailStatus,createdAt,updatedAt]);
+int get hashCode => Object.hashAll([runtimeType,id,jobId,jobType,applicationId,companyAuthId,applicantType,applicantAuthId,applicantProfileId,applicantSnapshot,coordinator,companySnapshot,const DeepCollectionEquality().hash(_jobRole),date,time,meetLink,message,status,emailStatus,createdAt,updatedAt,readByApplicant]);
 
 @override
 String toString() {
-  return 'InterviewModel(id: $id, jobId: $jobId, jobType: $jobType, applicationId: $applicationId, companyAuthId: $companyAuthId, applicantType: $applicantType, applicantAuthId: $applicantAuthId, applicantProfileId: $applicantProfileId, applicantSnapshot: $applicantSnapshot, coordinator: $coordinator, companySnapshot: $companySnapshot, jobRole: $jobRole, date: $date, time: $time, meetLink: $meetLink, message: $message, status: $status, emailStatus: $emailStatus, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'InterviewModel(id: $id, jobId: $jobId, jobType: $jobType, applicationId: $applicationId, companyAuthId: $companyAuthId, applicantType: $applicantType, applicantAuthId: $applicantAuthId, applicantProfileId: $applicantProfileId, applicantSnapshot: $applicantSnapshot, coordinator: $coordinator, companySnapshot: $companySnapshot, jobRole: $jobRole, date: $date, time: $time, meetLink: $meetLink, message: $message, status: $status, emailStatus: $emailStatus, createdAt: $createdAt, updatedAt: $updatedAt, readByApplicant: $readByApplicant)';
 }
 
 
@@ -352,7 +354,7 @@ abstract mixin class _$InterviewModelCopyWith<$Res> implements $InterviewModelCo
   factory _$InterviewModelCopyWith(_InterviewModel value, $Res Function(_InterviewModel) _then) = __$InterviewModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, InterviewJobRef? jobId, String? jobType, String? applicationId, String? companyAuthId, String? applicantType, String? applicantAuthId, String? applicantProfileId, InterviewApplicantSnapshot? applicantSnapshot, InterviewCoordinator? coordinator, InterviewCompanySnapshot? companySnapshot, List<String>? jobRole, String? date, String? time, String? meetLink, String? message, String? status, String? emailStatus, DateTime? createdAt, DateTime? updatedAt
+@JsonKey(name: '_id') String? id, InterviewJobRef? jobId, String? jobType, String? applicationId, String? companyAuthId, String? applicantType, String? applicantAuthId, String? applicantProfileId, InterviewApplicantSnapshot? applicantSnapshot, InterviewCoordinator? coordinator, InterviewCompanySnapshot? companySnapshot, List<String>? jobRole, String? date, String? time, String? meetLink, String? message, String? status, String? emailStatus, DateTime? createdAt, DateTime? updatedAt, bool? readByApplicant
 });
 
 
@@ -369,7 +371,7 @@ class __$InterviewModelCopyWithImpl<$Res>
 
 /// Create a copy of InterviewModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? jobId = freezed,Object? jobType = freezed,Object? applicationId = freezed,Object? companyAuthId = freezed,Object? applicantType = freezed,Object? applicantAuthId = freezed,Object? applicantProfileId = freezed,Object? applicantSnapshot = freezed,Object? coordinator = freezed,Object? companySnapshot = freezed,Object? jobRole = freezed,Object? date = freezed,Object? time = freezed,Object? meetLink = freezed,Object? message = freezed,Object? status = freezed,Object? emailStatus = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? jobId = freezed,Object? jobType = freezed,Object? applicationId = freezed,Object? companyAuthId = freezed,Object? applicantType = freezed,Object? applicantAuthId = freezed,Object? applicantProfileId = freezed,Object? applicantSnapshot = freezed,Object? coordinator = freezed,Object? companySnapshot = freezed,Object? jobRole = freezed,Object? date = freezed,Object? time = freezed,Object? meetLink = freezed,Object? message = freezed,Object? status = freezed,Object? emailStatus = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? readByApplicant = freezed,}) {
   return _then(_InterviewModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,jobId: freezed == jobId ? _self.jobId : jobId // ignore: cast_nullable_to_non_nullable
@@ -391,7 +393,8 @@ as String?,status: freezed == status ? _self.status : status // ignore: cast_nul
 as String?,emailStatus: freezed == emailStatus ? _self.emailStatus : emailStatus // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: freezed == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime?,updatedAt: freezed == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
-as DateTime?,
+as DateTime?,readByApplicant: freezed == readByApplicant ? _self.readByApplicant : readByApplicant // ignore: cast_nullable_to_non_nullable
+as bool?,
   ));
 }
 
@@ -450,7 +453,7 @@ $InterviewCompanySnapshotCopyWith<$Res>? get companySnapshot {
 /// @nodoc
 mixin _$InterviewJobRef {
 
-@JsonKey(name: '_id') String? get id; String? get jobType; String? get jobTitle; String? get companyName;
+@JsonKey(name: '_id') String? get id; String? get jobType; List<dynamic>? get jobTitle; String? get companyName;
 /// Create a copy of InterviewJobRef
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -463,12 +466,12 @@ $InterviewJobRefCopyWith<InterviewJobRef> get copyWith => _$InterviewJobRefCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterviewJobRef&&(identical(other.id, id) || other.id == id)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&(identical(other.companyName, companyName) || other.companyName == companyName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InterviewJobRef&&(identical(other.id, id) || other.id == id)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other.jobTitle, jobTitle)&&(identical(other.companyName, companyName) || other.companyName == companyName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,jobType,jobTitle,companyName);
+int get hashCode => Object.hash(runtimeType,id,jobType,const DeepCollectionEquality().hash(jobTitle),companyName);
 
 @override
 String toString() {
@@ -483,7 +486,7 @@ abstract mixin class $InterviewJobRefCopyWith<$Res>  {
   factory $InterviewJobRefCopyWith(InterviewJobRef value, $Res Function(InterviewJobRef) _then) = _$InterviewJobRefCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? jobType, String? jobTitle, String? companyName
+@JsonKey(name: '_id') String? id, String? jobType, List<dynamic>? jobTitle, String? companyName
 });
 
 
@@ -505,7 +508,7 @@ class _$InterviewJobRefCopyWithImpl<$Res>
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
 as String?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
-as String?,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
+as List<dynamic>?,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -591,7 +594,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobType,  String? jobTitle,  String? companyName)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobType,  List<dynamic>? jobTitle,  String? companyName)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _InterviewJobRef() when $default != null:
 return $default(_that.id,_that.jobType,_that.jobTitle,_that.companyName);case _:
@@ -612,7 +615,7 @@ return $default(_that.id,_that.jobType,_that.jobTitle,_that.companyName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobType,  String? jobTitle,  String? companyName)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id,  String? jobType,  List<dynamic>? jobTitle,  String? companyName)  $default,) {final _that = this;
 switch (_that) {
 case _InterviewJobRef():
 return $default(_that.id,_that.jobType,_that.jobTitle,_that.companyName);case _:
@@ -632,7 +635,7 @@ return $default(_that.id,_that.jobType,_that.jobTitle,_that.companyName);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? jobType,  String? jobTitle,  String? companyName)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id,  String? jobType,  List<dynamic>? jobTitle,  String? companyName)?  $default,) {final _that = this;
 switch (_that) {
 case _InterviewJobRef() when $default != null:
 return $default(_that.id,_that.jobType,_that.jobTitle,_that.companyName);case _:
@@ -647,12 +650,20 @@ return $default(_that.id,_that.jobType,_that.jobTitle,_that.companyName);case _:
 @JsonSerializable()
 
 class _InterviewJobRef implements InterviewJobRef {
-  const _InterviewJobRef({@JsonKey(name: '_id') this.id, this.jobType, this.jobTitle, this.companyName});
+  const _InterviewJobRef({@JsonKey(name: '_id') this.id, this.jobType, final  List<dynamic>? jobTitle, this.companyName}): _jobTitle = jobTitle;
   factory _InterviewJobRef.fromJson(Map<String, dynamic> json) => _$InterviewJobRefFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
 @override final  String? jobType;
-@override final  String? jobTitle;
+ final  List<dynamic>? _jobTitle;
+@override List<dynamic>? get jobTitle {
+  final value = _jobTitle;
+  if (value == null) return null;
+  if (_jobTitle is EqualUnmodifiableListView) return _jobTitle;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
+}
+
 @override final  String? companyName;
 
 /// Create a copy of InterviewJobRef
@@ -668,12 +679,12 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterviewJobRef&&(identical(other.id, id) || other.id == id)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.jobTitle, jobTitle) || other.jobTitle == jobTitle)&&(identical(other.companyName, companyName) || other.companyName == companyName));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _InterviewJobRef&&(identical(other.id, id) || other.id == id)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&const DeepCollectionEquality().equals(other._jobTitle, _jobTitle)&&(identical(other.companyName, companyName) || other.companyName == companyName));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,jobType,jobTitle,companyName);
+int get hashCode => Object.hash(runtimeType,id,jobType,const DeepCollectionEquality().hash(_jobTitle),companyName);
 
 @override
 String toString() {
@@ -688,7 +699,7 @@ abstract mixin class _$InterviewJobRefCopyWith<$Res> implements $InterviewJobRef
   factory _$InterviewJobRefCopyWith(_InterviewJobRef value, $Res Function(_InterviewJobRef) _then) = __$InterviewJobRefCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id, String? jobType, String? jobTitle, String? companyName
+@JsonKey(name: '_id') String? id, String? jobType, List<dynamic>? jobTitle, String? companyName
 });
 
 
@@ -709,8 +720,8 @@ class __$InterviewJobRefCopyWithImpl<$Res>
   return _then(_InterviewJobRef(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
-as String?,jobTitle: freezed == jobTitle ? _self.jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
-as String?,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
+as String?,jobTitle: freezed == jobTitle ? _self._jobTitle : jobTitle // ignore: cast_nullable_to_non_nullable
+as List<dynamic>?,companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

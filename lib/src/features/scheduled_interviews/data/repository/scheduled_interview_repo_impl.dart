@@ -17,4 +17,12 @@ class InterviewRepositoryImpl implements InterviewRepository {
   @override
   ResultFuture<InterviewModel> getInterviewById(String interviewId) =>
       _dataSource.getInterviewById(interviewId);
+
+  @override
+  ResultFuture<bool> checkForNewInterviews() =>
+      _dataSource.checkForNewInterviews();
+
+  @override
+  ResultFuture<InterviewModel> markInterviewAsRead(String interviewId) =>
+      _dataSource.markInterviewAsRead(interviewId);
 }

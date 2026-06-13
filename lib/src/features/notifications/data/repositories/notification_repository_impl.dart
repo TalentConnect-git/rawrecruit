@@ -13,4 +13,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
   @override
   ResultFuture<Notification?> markAsRead(String notificationId) =>
       _notificationDataSource.markAsRead(notificationId);
+
+  @override
+  ResultFuture<bool> checkForNotifications() =>
+      _notificationDataSource.checkForNotifications();
 }

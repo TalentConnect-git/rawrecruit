@@ -5,4 +5,6 @@ abstract class NotificationRepository {
   ResultFuture<List<Notification>> getNotifications();
 
   ResultFuture<Notification?> markAsRead(String notificationId);
+
+  ResultFuture<bool> checkForNotifications();
 }

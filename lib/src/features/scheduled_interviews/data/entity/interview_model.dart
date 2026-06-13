@@ -36,6 +36,8 @@ abstract class InterviewModel with _$InterviewModel {
     // Dates
     DateTime? createdAt,
     DateTime? updatedAt,
+
+    bool? readByApplicant,
   }) = _InterviewModel;
 
   factory InterviewModel.fromJson(Map<String, dynamic> json) =>
@@ -49,7 +51,7 @@ abstract class InterviewJobRef with _$InterviewJobRef {
   const factory InterviewJobRef({
     @JsonKey(name: '_id') String? id,
     String? jobType,
-    String? jobTitle,
+    List<dynamic>? jobTitle,
     String? companyName,
   }) = _InterviewJobRef;
 

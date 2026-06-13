@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show
@@ -42,6 +44,49 @@ class InterviewDataSourceImpl implements InterviewDataSource {
     final Request request = Request(
       method: RequestMethod.get,
       endpoint: '${Endpoints.apiInterviews}/$interviewId',
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      final interview = InterviewModel.fromJson(
+        response['data'] as Map<String, dynamic>,
+      );
+
+      return Right(interview);
+    } catch (e, s) {
+      log('$e\n$s');
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  ResultFuture<bool> checkForNewInterviews() async {
+    final Request request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.interviewsUnread,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      final List data = response['data'] ?? [];
+
+      return Right(data.isNotEmpty);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+  }
+
+  @override
+  ResultFuture<InterviewModel> markInterviewAsRead(String interviewId) async {
+    final Request request = Request(
+      method: RequestMethod.patch,
+      endpoint: '${Endpoints.apiInterviews}/$interviewId/mark-read',
       isSafeRoute: true,
     );
 

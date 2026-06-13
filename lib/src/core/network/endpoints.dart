@@ -8,6 +8,7 @@ class Endpoints {
   static String apiAuthForgotPassword = 'api/auth/forgot-password';
   static String apiAuthGoogle = 'api/auth/google';
   static const String apiCompanyJobsDiscover = '/api/company-jobs/discover';
+  static const String apiCompanyJobsSave = 'api/company-jobs/save';
   static String apiStudentDashboardJob = 'api/student-dashboard/job';
   static String applicationDetails = 'application/details';
   static String apiOffCampusJobs = 'api/student-dashboard/off-campus';
@@ -41,7 +42,9 @@ class Endpoints {
   static const String createConversation = "api/messages/conversation";
 
   static const String apiNotifications = "api/notifications";
+  static const String apiNotificationsUnread = "api/notifications/unread";
   static const String apiInterviews = '/interviews';
+  static const String interviewsUnread = 'interviews/unread';
 
   static const String careerInsights = '/api/career-insights';
   static const String careerRanking = '/api/career-insights/ranking';

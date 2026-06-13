@@ -53,4 +53,30 @@ class NotificationDataSourceImpl implements NotificationDataSource {
 
     return Right(null);
   }
+
+  @override
+  ResultFuture<bool> checkForNotifications() async {
+    final request = Request(
+      method: RequestMethod.get,
+      endpoint: Endpoints.apiNotificationsUnread,
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await networkService.request(request);
+      final response = result.data as List<dynamic>;
+
+      if (response.isNotEmpty) {
+        final notifications = response
+            .map((r) => Notification.fromJson(r as Map<String, dynamic>))
+            .toList();
+
+        return Right(notifications.isNotEmpty);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(false);
+  }
 }

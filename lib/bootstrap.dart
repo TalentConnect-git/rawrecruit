@@ -12,6 +12,7 @@ import 'package:rawrecruit/src/core/index.dart'
         NotificationService,
         AppStateProvider,
         NotificationProvider;
+import 'package:rawrecruit/src/core/provider/interview_provider.dart';
 import 'package:rawrecruit/src/core/services/shared_pref_helper.dart';
 
 import 'app.dart';
@@ -30,6 +31,7 @@ Future<void> bootstrap(Flavor flavor) async {
       providers: [
         ChangeNotifierProvider<AppStateProvider>(create: (_) => getIt()),
         ChangeNotifierProvider<NotificationProvider>(create: (_) => getIt()),
+        ChangeNotifierProvider<InterviewProvider>(create: (_) => getIt()),
       ],
       child: const App(),
     ),
