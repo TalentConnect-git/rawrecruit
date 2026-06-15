@@ -33,7 +33,7 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
 
     _pageController = PageController(
       initialPage: selectedTab.index,
-      viewportFraction: 0.98,
+      viewportFraction: 1.0,
     );
   }
 
@@ -114,18 +114,30 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
                                 });
                               },
                               children: [
-                                RefreshIndicator(
-                                  onRefresh: () => _refreshData(context),
-                                  child: _availableJobs(),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: RefreshIndicator(
+                                    onRefresh: () => _refreshData(context),
+                                    child: _availableJobs(),
+                                  ),
                                 ),
 
-                                RefreshIndicator(
-                                  onRefresh: () => _refreshData(context),
-                                  child: _postedJobs(),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: RefreshIndicator(
+                                    onRefresh: () => _refreshData(context),
+                                    child: _postedJobs(),
+                                  ),
                                 ),
 
-                                RefreshIndicator(
-                                  onRefresh: () => _refreshData(context),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
                                   child: _savedJobs(),
                                 ),
                               ],

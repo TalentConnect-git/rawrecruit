@@ -31,7 +31,7 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
 
     _pageController = PageController(
       initialPage: selectedTab.index,
-      viewportFraction: 0.98,
+      viewportFraction: 1.0,
     );
   }
 
@@ -101,20 +101,31 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
                           }
                         },
                         children: [
-                          RefreshIndicator(
-                            color: AppColors.kGreen,
-                            onRefresh: _refresh,
-                            child: _appliedByMe(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: _refresh,
+                              child: _appliedByMe(),
+                            ),
                           ),
-                          RefreshIndicator(
-                            color: AppColors.kGreen,
-                            onRefresh: _refresh,
-                            child: _requestsReceived(),
+
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: _refresh,
+                              child: _requestsReceived(),
+                            ),
                           ),
-                          RefreshIndicator(
-                            color: AppColors.kGreen,
-                            onRefresh: _refresh,
-                            child: _referredByMe(),
+
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: _refresh,
+                              child: _referredByMe(),
+                            ),
                           ),
                         ],
                       ),

@@ -102,21 +102,32 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
                       });
                     },
                     children: [
-                      RefreshIndicator(
-                        color: AppColors.kGreen,
-                        onRefresh: _refresh,
-                        child: _buildList(AlumniType.hiring),
-                      ),
-                      RefreshIndicator(
-                        color: AppColors.kGreen,
-                        onRefresh: _refresh,
-                        child: _buildList(AlumniType.college),
-                      ),
-                      if (isProfessional)
-                        RefreshIndicator(
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: RefreshIndicator(
                           color: AppColors.kGreen,
                           onRefresh: _refresh,
-                          child: _buildList(AlumniType.company),
+                          child: _buildList(AlumniType.hiring),
+                        ),
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: RefreshIndicator(
+                          color: AppColors.kGreen,
+                          onRefresh: _refresh,
+                          child: _buildList(AlumniType.college),
+                        ),
+                      ),
+
+                      if (isProfessional)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: RefreshIndicator(
+                            color: AppColors.kGreen,
+                            onRefresh: _refresh,
+                            child: _buildList(AlumniType.company),
+                          ),
                         ),
                     ],
                   ),
