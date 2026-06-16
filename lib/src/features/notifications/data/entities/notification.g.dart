@@ -81,6 +81,7 @@ const _$NotificationTypeEnumMap = {
   NotificationType.newMatchingReferralJob: 'NEW_MATCHING_REFERRAL_JOB',
   NotificationType.newAlumniJoinedNetwork: 'NEW_ALUMNI_JOINED_NETWORK',
   NotificationType.referralMilestoneReached: 'REFERRAL_MILESTONE_REACHED',
+  NotificationType.newReferralRequest: 'NEW_REFERRAL_REQUEST',
   NotificationType.newChatMessage: 'NEW_CHAT_MESSAGE',
 };
 

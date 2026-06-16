@@ -192,6 +192,22 @@ class NotificationService {
             state?.context.pushNamed(RouteNames.alumniDetail, extra: userId);
             break;
         }
+      case 'Referrals':
+        switch (subtopic) {
+          case 'Received Requests':
+            final userId = notificationData['userId'];
+            final requestId = notificationData['requestId'];
+            final applicationId = notificationData['applicationId'];
+            if (userId == null && requestId == null) return;
+
+            state?.context.pushNamed(
+              RouteNames.referrerDetail,
+              extra: applicationId,
+            );
+            break;
+        }
+
+        break;
     }
   }
 }

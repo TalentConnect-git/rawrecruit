@@ -218,6 +218,19 @@ class _NotificationCardState extends State<NotificationCard> {
             context.pushNamed(RouteNames.alumniDetail, extra: userId);
             break;
         }
+      case 'Referrals':
+        switch (subtopic) {
+          case 'Received Requests':
+            final userId = body?['userId'];
+            final requestId = body?['requestId'];
+            final applicationId = body?['applicationId'];
+            if (userId == null && requestId == null) return;
+
+            context.pushNamed(RouteNames.referrerDetail, extra: applicationId);
+            break;
+        }
+
+        break;
     }
   }
 }

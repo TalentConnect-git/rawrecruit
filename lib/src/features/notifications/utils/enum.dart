@@ -193,6 +193,13 @@ enum NotificationType {
     backgroundColor: Color(0xFFFEF3C7),
     icon: Icons.emoji_events_outlined,
   ),
+  @JsonValue('NEW_REFERRAL_REQUEST')
+  newReferralRequest(
+    label: 'New Referral Request',
+    textColor: Color(0xFF0284C7),
+    backgroundColor: Color(0xFFE0F2FE),
+    icon: Icons.person_add_alt_outlined,
+  ),
   @JsonValue('NEW_CHAT_MESSAGE')
   newChatMessage(
     label: 'New Chat Message',
