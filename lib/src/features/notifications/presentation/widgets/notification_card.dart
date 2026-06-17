@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide Notification;
 import 'package:go_router/go_router.dart';
+import 'package:rawrecruit/app.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart'
