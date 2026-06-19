@@ -72,7 +72,7 @@ class ReferralTile extends StatelessWidget {
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: AppColors.kGreen, width: 1.5),
+                border: Border.all(color: AppColors.white, width: 1.5),
               ),
               child: Row(
                 children: [
@@ -80,12 +80,12 @@ class ReferralTile extends StatelessWidget {
                     height: 25,
                     width: 25,
                     decoration: BoxDecoration(
-                      color: AppColors.kGreen.withOpacity(0.12),
+                      color: AppColors.white.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Icon(
                       Icons.person_search_outlined,
-                      color: AppColors.kGreen,
+                      color: AppColors.white,
                       size: 15,
                     ),
                   ),
@@ -96,14 +96,14 @@ class ReferralTile extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyles.s16W600.copyWith(
-                        color: AppColors.kGreen,
+                        color: AppColors.white,
                       ),
                     ),
                   ),
                   Icon(
                     Icons.arrow_forward_ios_rounded,
                     size: 14,
-                    color: AppColors.kGreen,
+                    color: AppColors.white,
                   ),
                 ],
               ),

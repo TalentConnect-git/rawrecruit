@@ -84,11 +84,11 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: const [
-                      InfoChip(text: "Paste a job URL"),
-                      SizedBox(width: 8),
-                      InfoChip(text: "Search by company"),
-                      SizedBox(width: 8),
-                      InfoChip(text: "Find alumni"),
+                      InfoChip(text: "1.Paste a job URL"),
+                      SizedBox(width: 6),
+                      InfoChip(text: "2.We find the Alumni"),
+                      SizedBox(width: 6),
+                      InfoChip(text: "3.Apply for Referrals"),
                     ],
                   ),
                 ),
