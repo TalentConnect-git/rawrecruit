@@ -127,40 +127,39 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      // const SizedBox(height: 20),
 
-                      Text(
-                        'OR',
-                        style: AppTextStyles.s14W600.copyWith(
-                          color: Colors.white70,
-                        ),
-                      ),
+                      // Text(
+                      //   'OR',
+                      //   style: AppTextStyles.s14W600.copyWith(
+                      //     color: Colors.white70,
+                      //   ),
+                      // ),
 
-                      const SizedBox(height: 20),
+                      // const SizedBox(height: 20),
 
-                      TextFormField(
-                        controller: companyController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: 'Enter Company Name',
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          prefixIcon: const Icon(
-                            Icons.business,
-                            color: Colors.grey,
-                          ),
-                          filled: true,
-                          fillColor: const Color(0xff2C2C2C),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-
+                      // TextFormField(
+                      //   controller: companyController,
+                      //   style: const TextStyle(color: Colors.white),
+                      //   decoration: InputDecoration(
+                      //     hintText: 'Enter Company Name',
+                      //     hintStyle: const TextStyle(color: Colors.grey),
+                      //     prefixIcon: const Icon(
+                      //       Icons.business,
+                      //       color: Colors.grey,
+                      //     ),
+                      //     filled: true,
+                      //     fillColor: const Color(0xff2C2C2C),
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: BorderSide.none,
+                      //     ),
+                      //     enabledBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: BorderSide.none,
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(height: 24),
 
                       Consumer<WebJobViewModel>(
@@ -364,7 +363,7 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                                       ),
                                     )
                                   : Text(
-                                      'Search Referrals',
+                                      'Apply For Referral',
                                       style: AppTextStyles.s16W600.copyWith(
                                         color: Colors.black,
                                       ),
