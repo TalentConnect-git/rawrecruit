@@ -86,6 +86,9 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   candidatePosted: const UserOrStringConvertor().fromJson(
     json['candidatePosted'],
   ),
+  receiverProfile: const UserOrStringConvertor().fromJson(
+    json['receiverProfile'],
+  ),
   companyPosted: json['companyPosted'] == null
       ? null
       : JobPosting.fromJson(json['companyPosted'] as Map<String, dynamic>),
@@ -170,6 +173,9 @@ Map<String, dynamic> _$JobToJson(_Job instance) => <String, dynamic>{
   'interviewWindow': instance.interviewWindow,
   'candidatePosted': const UserOrStringConvertor().toJson(
     instance.candidatePosted,
+  ),
+  'receiverProfile': const UserOrStringConvertor().toJson(
+    instance.receiverProfile,
   ),
   'companyPosted': instance.companyPosted,
   'jobCompanyPosted': instance.jobCompanyPosted,

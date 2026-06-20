@@ -80,6 +80,11 @@ abstract class Job with _$Job {
     @UserOrStringConvertor()
     @JsonKey(name: 'candidatePosted')
     User? candidatePosted,
+
+    @UserOrStringConvertor()
+    @JsonKey(name: 'receiverProfile')
+    User? receiverProfile,
+
     JobPosting? companyPosted,
     JobPosting? jobCompanyPosted,
     String? referralCompany,
