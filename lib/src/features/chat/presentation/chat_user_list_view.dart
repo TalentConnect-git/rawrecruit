@@ -40,14 +40,13 @@ class _ChatUserListViewState extends State<ChatUserListView> {
 
   @override
   Widget build(BuildContext context) {
+    getIt<ChatProvider>().clearNewChatsAvailable();
     return ChangeNotifierProvider.value(
       value: chatViewModel,
       child: Scaffold(
         backgroundColor: AppColors.kBg,
         appBar: RAppBar(
-            iconTheme: const IconThemeData(
-    color: Colors.white,
-  ),
+          iconTheme: const IconThemeData(color: Colors.white),
           leading: IconButton(
             onPressed: context.pop,
             icon: Icon(Icons.keyboard_arrow_left, color: AppColors.white),
