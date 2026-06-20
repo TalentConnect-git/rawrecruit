@@ -8,7 +8,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/vie
 import 'package:rawrecruit/src/features/professional/job_postng/utils/enum.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:ui';
 import '../../../../core/models/experience.dart';
 
 class ReferralDetailPage extends StatefulWidget {
@@ -27,26 +27,24 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
     if (val.toString() == "null") return "";
     return val.toString();
   }
-Future<void> openUrl(String url) async {
-  if (url == "-" || url.trim().isEmpty) return;
 
-  String normalizedUrl = url.trim();
+  Future<void> openUrl(String url) async {
+    if (url == "-" || url.trim().isEmpty) return;
 
-  if (!normalizedUrl.startsWith(RegExp(r'https?://'))) {
-    normalizedUrl = 'https://$normalizedUrl';
+    String normalizedUrl = url.trim();
+
+    if (!normalizedUrl.startsWith(RegExp(r'https?://'))) {
+      normalizedUrl = 'https://$normalizedUrl';
+    }
+
+    final uri = Uri.parse(normalizedUrl);
+
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } else {
+      debugPrint('Could not launch: $normalizedUrl');
+    }
   }
-
-  final uri = Uri.parse(normalizedUrl);
-
-  if (await canLaunchUrl(uri)) {
-    await launchUrl(
-      uri,
-      mode: LaunchMode.externalApplication,
-    );
-  } else {
-    debugPrint('Could not launch: $normalizedUrl');
-  }
-}
 
   ReferralDetailViewModel referralDetailViewModel = ReferralDetailViewModel();
 
@@ -72,7 +70,7 @@ Future<void> openUrl(String url) async {
         backgroundColor: Colors.black,
         appBar: AppBar(
           backgroundColor: AppColors.kCard,
-           iconTheme: const IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
           title: Text(
             "Candidate Profile",
             style: TextStyle(color: AppColors.white),
@@ -92,7 +90,10 @@ Future<void> openUrl(String url) async {
                 final status = safe(vM.application?.currentStatus);
 
                 final skills = user?.skills ?? [];
+                final isAskForReferral =
+                    vM.application?.job?.isAskForReferral ?? false;
 
+                final careerPageUrl = vM.application?.job?.careerPageUrl ?? '';
                 return RefreshIndicator(
                   onRefresh: () async {
                     final failure = await referralDetailViewModel
@@ -104,97 +105,146 @@ Future<void> openUrl(String url) async {
                     child: Column(
                       children: [
                         /// HEADER
-                        /// 
+                        ///
                         _candidateHeader(context, vm, vM, status),
 
                         const SizedBox(height: 18),
 
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: Colors.amber.withOpacity(.08),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: Colors.amber.withOpacity(.3),
-                            ),
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Row(
-                                children: [
-                                  Text(
-                                    "Candidate Assessment",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 15,
+                        isAskForReferral
+                            ? Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: AppColors.kGreen.withOpacity(.08),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: AppColors.kGreen.withOpacity(.3),
+                                  ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Text(
+                                      "Career Page",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 15,
+                                      ),
                                     ),
+                                    const SizedBox(height: 12),
+                                    InkWell(
+                                      onTap: () => openUrl(careerPageUrl),
+                                      child: Row(
+                                        children: [
+                                          Icon(
+                                            Icons.link,
+                                            color: AppColors.kGreen,
+                                          ),
+                                          const SizedBox(width: 8),
+                                          Expanded(
+                                            child: Text(
+                                              careerPageUrl,
+                                              style: TextStyle(
+                                                color: AppColors.kGreen,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                              ),
+                                            ),
+                                          ),
+                                          const Icon(
+                                            Icons.open_in_new,
+                                            color: Colors.white,
+                                            size: 18,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: Colors.amber.withOpacity(.08),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: Colors.amber.withOpacity(.3),
                                   ),
-                                ],
-                              ),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    const Row(
+                                      children: [
+                                        Text(
+                                          "Candidate Assessment",
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 15,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 16),
 
-                              const SizedBox(height: 16),
+                                    const Text(
+                                      "Rating",
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
 
-                              /// RATING
-                              const Text(
-                                "Rating",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
+                                    const SizedBox(height: 8),
+
+                                    Row(
+                                      children: List.generate(
+                                        5,
+                                        (index) => Icon(
+                                          index < (vM.application?.rating ?? 0)
+                                              ? Icons.star
+                                              : Icons.star_border,
+                                          color: Colors.amber,
+                                          size: 20,
+                                        ),
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 16),
+
+                                    Divider(
+                                      color: Colors.white.withOpacity(.08),
+                                      height: 1,
+                                    ),
+
+                                    const SizedBox(height: 16),
+
+                                    const Text(
+                                      "Review",
+                                      style: TextStyle(
+                                        color: Colors.white70,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+
+                                    const SizedBox(height: 8),
+
+                                    Text(
+                                      vM.application?.adminComment ?? '',
+                                      style: const TextStyle(
+                                        color: Colors.white,
+                                        height: 1.5,
+                                        fontSize: 14,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
-
-                              const SizedBox(height: 8),
-
-                              Row(
-                                children: List.generate(
-                                  5,
-                                  (index) => Icon(
-                                    index < (vM.application?.rating ?? 0)
-                                        ? Icons.star
-                                        : Icons.star_border,
-                                    color: Colors.amber,
-                                    size: 20,
-                                  ),
-                                ),
-                              ),
-
-                              const SizedBox(height: 16),
-
-                              Divider(
-                                color: Colors.white.withOpacity(.08),
-                                height: 1,
-                              ),
-
-                              const SizedBox(height: 16),
-
-                              /// REVIEW
-                              const Text(
-                                "Review",
-                                style: TextStyle(
-                                  color: Colors.white70,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-
-                              const SizedBox(height: 8),
-
-                              Text(
-                                vM.application?.adminComment ?? '',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  height: 1.5,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
                         const SizedBox(height: 18),
 
                         /// EDUCATION + SKILLS
@@ -568,9 +618,9 @@ Future<void> openUrl(String url) async {
 
     final experience = safe(user.totalYearsOfExperience);
     print("MATCH SCORE FROM API = ${vM.application?.matchScore}");
-print("APPLICATION ID = ${vM.application?.id}");
-   final match = vM.application?.matchScore ?? 9;
-print("MATCH VARIABLE = $match");
+    print("APPLICATION ID = ${vM.application?.id}");
+    final match = vM.application?.matchScore ?? 9;
+    print("MATCH VARIABLE = $match");
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -717,10 +767,7 @@ print("MATCH VARIABLE = $match");
               const SizedBox(width: 10),
 
               /// ANIMATED SCORE
-             AnimatedMatchScore(
-  key: ValueKey(match),
-  score: match,
-),
+              AnimatedMatchScore(key: ValueKey(match), score: match),
             ],
           ),
 
@@ -768,43 +815,35 @@ print("MATCH VARIABLE = $match");
               const SizedBox(width: 12),
 
               /// REJECT
-             /// MESSAGE
-Expanded(
-  child: OutlinedButton.icon(
-    style: OutlinedButton.styleFrom(
-      padding: const EdgeInsets.symmetric(vertical: 14),
-      side: BorderSide(
-        color: AppColors.kGreen.withOpacity(.5),
-      ),
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-    ),
-    onPressed: () {
-      final userId = user.userId;
+              /// MESSAGE
+              Expanded(
+                child: OutlinedButton.icon(
+                  style: OutlinedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    side: BorderSide(color: AppColors.kGreen.withOpacity(.5)),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () {
+                    final userId = user.userId;
 
-      if (userId == null || userId.isEmpty) {
-        return;
-      }
+                    if (userId == null || userId.isEmpty) {
+                      return;
+                    }
 
-      context.pushNamed(
-        RouteNames.chatUser,
-        extra: userId,
-      );
-    },
-    icon: Icon(
-      Icons.message_outlined,
-      color: AppColors.kGreen,
-    ),
-    label: Text(
-      "Message",
-      style: TextStyle(
-        color: AppColors.kGreen,
-        fontWeight: FontWeight.w600,
-      ),
-    ),
-  ),
-),
+                    context.pushNamed(RouteNames.chatUser, extra: userId);
+                  },
+                  icon: Icon(Icons.message_outlined, color: AppColors.kGreen),
+                  label: Text(
+                    "Message",
+                    style: TextStyle(
+                      color: AppColors.kGreen,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
             ],
           ),
 
@@ -853,39 +892,35 @@ Expanded(
   void showStatusPopup(BuildContext context, String message, Color color) {
     showDialog(
       context: context,
-
+      barrierColor: Colors.black.withOpacity(0.4),
       builder: (_) {
-        return AlertDialog(
-          backgroundColor: AppColors.kCard,
-
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-
-            children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: color.withOpacity(.15),
-
-                child: Icon(Icons.check, color: color, size: 28),
-              ),
-
-              const SizedBox(height: 16),
-
-              Text(
-                message,
-                textAlign: TextAlign.center,
-
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: AlertDialog(
+            backgroundColor: AppColors.kCard,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: color.withOpacity(.15),
+                  child: Icon(Icons.check, color: color, size: 28),
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

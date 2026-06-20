@@ -8,79 +8,109 @@ class ReferralTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-  return Row(
-  children: [
-    Expanded(
-      child: GestureDetector(
-        onTap: () => context.pushNamed(RouteNames.referralPost),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: AppColors.kGreen,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: [
-              BoxShadow(
-                color: AppColors.kGreen.withOpacity(0.4),
+    return Row(
+      children: [
+        Expanded(
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: () => context.pushNamed(RouteNames.referralPost),
+            child: Container(
+              height: 62,
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              decoration: BoxDecoration(
+                color: AppColors.kGreen,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: Colors.black, width: 1),
               ),
-            ],
-          ),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.add,
-                  color: Colors.black,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Post a Referral Job',
-                  style: AppTextStyles.s16W600.copyWith(
-                    color: Colors.black,
+              child: Row(
+                children: [
+                  Container(
+                    height: 36,
+                    width: 36,
+                    decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(color: Colors.black, width: 1),
+                    ),
+                    child: const Icon(
+                      Icons.add_rounded,
+                      color: Colors.black,
+                      size: 20,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Post Job',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.s16W600.copyWith(
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 14,
+                    color: Colors.black54,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    ),
 
-    const SizedBox(width: 12),
+        const SizedBox(width: 12),
 
-    Expanded(
-      child: GestureDetector(
-        onTap: () => context.pushNamed(RouteNames.askForReferral),
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 16),
-          decoration: BoxDecoration(
-            color: AppColors.kGreen,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Center(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Icon(
-                  Icons.search,
-                  color: Colors.white,
-                  size: 20,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Ask for Referral',
-                  style: AppTextStyles.s16W600.copyWith(
-                    color: Colors.white,
+        Expanded(
+          child: InkWell(
+            borderRadius: BorderRadius.circular(14),
+            onTap: () => context.pushNamed(RouteNames.askForReferral),
+            child: Container(
+              height: 62,
+              padding: const EdgeInsets.symmetric(horizontal: 14),
+              decoration: BoxDecoration(
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.white, width: 1.5),
+              ),
+              child: Row(
+                children: [
+                  Container(
+                    height: 25,
+                    width: 25,
+                    decoration: BoxDecoration(
+                      color: AppColors.white.withOpacity(0.12),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Icon(
+                      Icons.person_search_outlined,
+                      color: AppColors.white,
+                      size: 15,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      'Ask Referral',
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: AppTextStyles.s16W600.copyWith(
+                        color: AppColors.white,
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios_rounded,
+                    size: 14,
+                    color: AppColors.white,
+                  ),
+                ],
+              ),
             ),
           ),
         ),
-      ),
-    ),
-  ],
-);
+      ],
+    );
   }
 }

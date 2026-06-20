@@ -1,6 +1,7 @@
 import 'package:rawrecruit/src/features/web_jobs/data/entities/company_job.dart';
 
 import '../../../../core/index.dart';
+import '../entities/career_page_referral_response.dart';
 import '../entities/web_job.dart';
 import '../index.dart';
 
@@ -20,4 +21,13 @@ class WebJobRepositoryImpl implements WebJobRepository {
   @override
   ResultFuture<CompanyJob?> applyToJob({required CompanyJob? job}) =>
       _webJobDataSource.applyToJob(job: job);
+
+  @override
+  ResultFuture<CareerPageReferralResponse?> requestCareerPageReferral({
+    required String careerPageUrl,
+  }) {
+    return _webJobDataSource.requestCareerPageReferral(
+      careerPageUrl: careerPageUrl,
+    );
+  }
 }

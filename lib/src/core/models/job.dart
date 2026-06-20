@@ -84,6 +84,9 @@ abstract class Job with _$Job {
     JobPosting? jobCompanyPosted,
     String? referralCompany,
 
+    String? careerPageUrl,
+    bool? isAskForReferral,
+    String? referralRequestId,
     // Dates
     DateTime? onlineTestDate,
     DateTime? offerRolloutDate,

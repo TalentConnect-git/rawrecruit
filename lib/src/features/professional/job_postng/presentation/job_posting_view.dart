@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -22,65 +23,59 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   final _formKey = GlobalKey<FormState>();
   static const draftKey = "referral_post_draft";
   List<String> skillOptionsApi = [];
-List<String> jobRoleOptions = [];
-Future<void> fetchJobRoles() async {
-  final response = await getIt<NetworkService>().request(
-    Request(
-      method: RequestMethod.get,
-      endpoint: "api/company-master-data?type=JOB_ROLE",
-      isSafeRoute: true,
-    ),
-  );
+  List<String> jobRoleOptions = [];
+  Future<void> fetchJobRoles() async {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
+        endpoint: "api/company-master-data?type=JOB_ROLE",
+        isSafeRoute: true,
+      ),
+    );
 
-  final data =
-      List<Map<String, dynamic>>.from(
-        response.data['data'] ?? [],
-      );
+    final data = List<Map<String, dynamic>>.from(response.data['data'] ?? []);
 
-  jobRoleOptions =
-      data
-          .map((e) => e['value'].toString().trim())
-          .where((e) => e.isNotEmpty)
-          .toSet()
-          .toList()
-        ..sort();
+    jobRoleOptions =
+        data
+            .map((e) => e['value'].toString().trim())
+            .where((e) => e.isNotEmpty)
+            .toSet()
+            .toList()
+          ..sort();
 
-  if (!jobRoleOptions.contains("Others")) {
-    jobRoleOptions.add("Others");
+    if (!jobRoleOptions.contains("Others")) {
+      jobRoleOptions.add("Others");
+    }
+
+    setState(() {});
   }
 
-  setState(() {});
-}
-Future<void> addJobRoleIfNeeded(String value) async {
-  final exists = jobRoleOptions.any(
-    (e) => e.toLowerCase().trim() ==
-        value.toLowerCase().trim(),
-  );
+  Future<void> addJobRoleIfNeeded(String value) async {
+    final exists = jobRoleOptions.any(
+      (e) => e.toLowerCase().trim() == value.toLowerCase().trim(),
+    );
 
-  if (exists) return;
+    if (exists) return;
 
-  await getIt<NetworkService>().request(
-    Request(
-      method: RequestMethod.post,
-      endpoint: "/api/company-master-data",
-      isSafeRoute: true,
-      body: {
-        "type": "JOB_ROLE",
-        "value": value,
-        "parent": null,
-      },
-    ),
-  );
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+        endpoint: "/api/company-master-data",
+        isSafeRoute: true,
+        body: {"type": "JOB_ROLE", "value": value, "parent": null},
+      ),
+    );
 
-  setState(() {
-    jobRoleOptions.add(value);
-  });
-}
+    setState(() {
+      jobRoleOptions.add(value);
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     fetchStates();
-      fetchJobRoles();
+    fetchJobRoles();
 
     fetchSkills();
     loadDraft();
@@ -339,7 +334,7 @@ Future<void> addJobRoleIfNeeded(String value) async {
   }
 
   // ── Enum options ────────────────────────────────────────────────────────────
-late TextEditingController _jobRoleController;
+  late TextEditingController _jobRoleController;
 
   final List<String> skillOptions = [
     'Flutter',
@@ -580,7 +575,7 @@ late TextEditingController _jobRoleController;
     "1-3 years",
     "3-5 years",
     "5-10 years",
-    "10+ years"
+    "10+ years",
   ];
   final List<String> roundsOptions = [
     "1 Round",
@@ -720,217 +715,218 @@ late TextEditingController _jobRoleController;
                         child: _card(
                           title: "Job Info",
                           children: [
-                          Column(
-  crossAxisAlignment: CrossAxisAlignment.start,
-  children: [
-    const Text(
-      "Job Title",
-      style: TextStyle(
-        color: Colors.white,
-        fontWeight: FontWeight.w600,
-      ),
-    ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Job Title",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
 
-    const SizedBox(height: 10),
+                                const SizedBox(height: 10),
 
-    /// SELECTED JOB TITLES
-    Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: titleController.text
-          .split(',')
-          .map((e) => e.trim())
-          .where((e) => e.isNotEmpty)
-          .map(
-            (role) => Chip(
-              label: Text(role),
-              onDeleted: () {
-                final roles = titleController.text
-                    .split(',')
-                    .map((e) => e.trim())
-                    .where((e) => e.isNotEmpty)
-                    .toList();
+                                /// SELECTED JOB TITLES
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: titleController.text
+                                      .split(',')
+                                      .map((e) => e.trim())
+                                      .where((e) => e.isNotEmpty)
+                                      .map(
+                                        (role) => Chip(
+                                          label: Text(role),
+                                          onDeleted: () {
+                                            final roles = titleController.text
+                                                .split(',')
+                                                .map((e) => e.trim())
+                                                .where((e) => e.isNotEmpty)
+                                                .toList();
 
-                roles.remove(role);
+                                            roles.remove(role);
 
-                setState(() {
-                  titleController.text = roles.join(', ');
-                });
-              },
-            ),
-          )
-          .toList(),
-    ),
+                                            setState(() {
+                                              titleController.text = roles.join(
+                                                ', ',
+                                              );
+                                            });
+                                          },
+                                        ),
+                                      )
+                                      .toList(),
+                                ),
 
-    const SizedBox(height: 10),
+                                const SizedBox(height: 10),
 
-    Autocomplete<String>(
-      optionsBuilder: (textEditingValue) {
-        final query = textEditingValue.text.trim();
+                                Autocomplete<String>(
+                                  optionsBuilder: (textEditingValue) {
+                                    final query = textEditingValue.text.trim();
 
-        final filtered = jobRoleOptions.where(
-          (option) =>
-              option.toLowerCase().contains(
-                query.toLowerCase(),
-              ) &&
-              !titleController.text
-                  .toLowerCase()
-                  .contains(option.toLowerCase()),
-        );
+                                    final filtered = jobRoleOptions.where(
+                                      (option) =>
+                                          option.toLowerCase().contains(
+                                            query.toLowerCase(),
+                                          ) &&
+                                          !titleController.text
+                                              .toLowerCase()
+                                              .contains(option.toLowerCase()),
+                                    );
 
-        final exists = jobRoleOptions.any(
-          (e) =>
-              e.toLowerCase().trim() ==
-              query.toLowerCase().trim(),
-        );
+                                    final exists = jobRoleOptions.any(
+                                      (e) =>
+                                          e.toLowerCase().trim() ==
+                                          query.toLowerCase().trim(),
+                                    );
 
-        if (query.isNotEmpty && !exists) {
-          return [
-            ...filtered,
-            'Create "$query"',
-          ];
-        }
+                                    if (query.isNotEmpty && !exists) {
+                                      return [...filtered, 'Create "$query"'];
+                                    }
 
-        return filtered;
-      },
+                                    return filtered;
+                                  },
 
-      onSelected: (value) async {
-        final actualValue = value.startsWith('Create "')
-            ? value
-                .replaceAll('Create "', '')
-                .replaceAll('"', '')
-            : value;
+                                  onSelected: (value) async {
+                                    final actualValue =
+                                        value.startsWith('Create "')
+                                        ? value
+                                              .replaceAll('Create "', '')
+                                              .replaceAll('"', '')
+                                        : value;
 
-        await addJobRoleIfNeeded(actualValue);
+                                    await addJobRoleIfNeeded(actualValue);
 
-        final currentRoles = titleController.text
-            .split(',')
-            .map((e) => e.trim())
-            .where((e) => e.isNotEmpty)
-            .toList();
+                                    final currentRoles = titleController.text
+                                        .split(',')
+                                        .map((e) => e.trim())
+                                        .where((e) => e.isNotEmpty)
+                                        .toList();
 
-        if (!currentRoles.contains(actualValue)) {
-          currentRoles.add(actualValue);
+                                    if (!currentRoles.contains(actualValue)) {
+                                      currentRoles.add(actualValue);
 
-          setState(() {
-            titleController.text =
-                currentRoles.join(', ');
-          });
-        }
-        _jobRoleController.clear();
-      },
+                                      setState(() {
+                                        titleController.text = currentRoles
+                                            .join(', ');
+                                      });
+                                    }
+                                    _jobRoleController.clear();
+                                  },
 
-      fieldViewBuilder: (
-        context,
-        controller,
-        focusNode,
-        onFieldSubmitted,
-      ) {
-          _jobRoleController = controller;
+                                  fieldViewBuilder:
+                                      (
+                                        context,
+                                        controller,
+                                        focusNode,
+                                        onFieldSubmitted,
+                                      ) {
+                                        _jobRoleController = controller;
 
-        return TextField(
-          controller: controller,
-          focusNode: focusNode,
-          style: const TextStyle(
-            color: Colors.white,
-          ),
-          decoration: InputDecoration(
-            hintText: "Search Job Role",
-            hintStyle: const TextStyle(
-              color: Colors.grey,
-            ),
-            filled: true,
-            fillColor: Colors.black,
-            border: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(12),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: AppColors.border,
-              ),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius:
-                  BorderRadius.circular(12),
-              borderSide: BorderSide(
-                color: AppColors.kGreen,
-              ),
-            ),
-          ),
-        );
-      },
+                                        return TextField(
+                                          controller: controller,
+                                          focusNode: focusNode,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: "Search Job Role",
+                                            hintStyle: const TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.black,
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                            enabledBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              borderSide: BorderSide(
+                                                color: AppColors.border,
+                                              ),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              borderSide: BorderSide(
+                                                color: AppColors.kGreen,
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
 
-      optionsViewBuilder: (
-        context,
-        onSelected,
-        options,
-      ) {
-        return Material(
-          color: Colors.black,
-          child: Container(
-            width:
-                MediaQuery.of(context).size.width -
-                32,
-            constraints: const BoxConstraints(
-              maxHeight: 220,
-            ),
-            child: ListView.builder(
-              shrinkWrap: true,
-              itemCount: options.length,
-              itemBuilder: (context, index) {
-                final option =
-                    options.elementAt(index);
+                                  optionsViewBuilder:
+                                      (context, onSelected, options) {
+                                        return Material(
+                                          color: Colors.black,
+                                          child: Container(
+                                            width:
+                                                MediaQuery.of(
+                                                  context,
+                                                ).size.width -
+                                                32,
+                                            constraints: const BoxConstraints(
+                                              maxHeight: 220,
+                                            ),
+                                            child: ListView.builder(
+                                              shrinkWrap: true,
+                                              itemCount: options.length,
+                                              itemBuilder: (context, index) {
+                                                final option = options
+                                                    .elementAt(index);
 
-                final isCreate =
-                    option.startsWith(
-                      'Create "',
-                    );
+                                                final isCreate = option
+                                                    .startsWith('Create "');
 
-                return ListTile(
-                  title: Row(
-                    children: [
-                      if (isCreate)
-                        Icon(
-                          Icons.add,
-                          color:
-                              AppColors.kGreen,
-                          size: 18,
-                        ),
+                                                return ListTile(
+                                                  title: Row(
+                                                    children: [
+                                                      if (isCreate)
+                                                        Icon(
+                                                          Icons.add,
+                                                          color:
+                                                              AppColors.kGreen,
+                                                          size: 18,
+                                                        ),
 
-                      if (isCreate)
-                        const SizedBox(
-                          width: 8,
-                        ),
+                                                      if (isCreate)
+                                                        const SizedBox(
+                                                          width: 8,
+                                                        ),
 
-                      Expanded(
-                        child: Text(
-                          option,
-                          style: TextStyle(
-                            color: isCreate
-                                ? AppColors.kGreen
-                                : Colors.white,
-                            fontWeight: isCreate
-                                ? FontWeight.w600
-                                : FontWeight.normal,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  onTap: () =>
-                      onSelected(option),
-                );
-              },
-            ),
-          ),
-        );
-      },
-    ),
-  ],
-),
+                                                      Expanded(
+                                                        child: Text(
+                                                          option,
+                                                          style: TextStyle(
+                                                            color: isCreate
+                                                                ? AppColors
+                                                                      .kGreen
+                                                                : Colors.white,
+                                                            fontWeight: isCreate
+                                                                ? FontWeight
+                                                                      .w600
+                                                                : FontWeight
+                                                                      .normal,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  onTap: () =>
+                                                      onSelected(option),
+                                                );
+                                              },
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                ),
+                              ],
+                            ),
                             SizedBox(height: 10),
                             _fieldDark(
                               "Description",
@@ -1392,127 +1388,113 @@ late TextEditingController _jobRoleController;
                                       ),
 
                                       builder: (_) {
-                                        return Dialog(
-                                          elevation: 0,
-                                          backgroundColor: Colors.transparent,
-                                          insetPadding:
-                                              const EdgeInsets.symmetric(
-                                                horizontal: 24,
+                                        return BackdropFilter(
+                                          filter: ImageFilter.blur(
+                                            sigmaX: 8,
+                                            sigmaY: 8,
+                                          ),
+                                          child: Dialog(
+                                            elevation: 0,
+                                            backgroundColor: Colors.transparent,
+                                            insetPadding:
+                                                const EdgeInsets.symmetric(
+                                                  horizontal: 24,
+                                                ),
+                                            child: Container(
+                                              padding: const EdgeInsets.all(24),
+                                              decoration: BoxDecoration(
+                                                color: AppColors.kCard,
+                                                borderRadius:
+                                                    BorderRadius.circular(24),
+                                                border: Border.all(
+                                                  color: AppColors.kGreen
+                                                      .withOpacity(.25),
+                                                ),
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: Colors.black
+                                                        .withOpacity(.15),
+                                                    blurRadius: 25,
+                                                    offset: const Offset(0, 8),
+                                                  ),
+                                                ],
                                               ),
-
-                                          child: Container(
-                                            padding: const EdgeInsets.all(24),
-
-                                            decoration: BoxDecoration(
-                                              color: AppColors.kCard,
-                                              borderRadius:
-                                                  BorderRadius.circular(24),
-
-                                              border: Border.all(
-                                                color: AppColors.kGreen
-                                                    .withOpacity(.25),
-                                              ),
-
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.black
-                                                      .withOpacity(.15),
-                                                  blurRadius: 25,
-                                                  offset: const Offset(0, 8),
-                                                ),
-                                              ],
-                                            ),
-
-                                            child: Column(
-                                              mainAxisSize: MainAxisSize.min,
-
-                                              children: [
-                                                Container(
-                                                  height: 72,
-                                                  width: 72,
-
-                                                  decoration: BoxDecoration(
-                                                    shape: BoxShape.circle,
-                                                    color: AppColors.kGreen
-                                                        .withOpacity(.12),
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  Container(
+                                                    height: 72,
+                                                    width: 72,
+                                                    decoration: BoxDecoration(
+                                                      shape: BoxShape.circle,
+                                                      color: AppColors.kGreen
+                                                          .withOpacity(.12),
+                                                    ),
+                                                    child: Icon(
+                                                      Icons.check_circle,
+                                                      color: AppColors.kGreen,
+                                                      size: 52,
+                                                    ),
                                                   ),
-
-                                                  child: Icon(
-                                                    Icons.check_circle,
-                                                    color: AppColors.kGreen,
-                                                    size: 52,
+                                                  const SizedBox(height: 18),
+                                                  const Text(
+                                                    "Referral Added Successfully",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 18,
+                                                      fontWeight:
+                                                          FontWeight.w700,
+                                                    ),
                                                   ),
-                                                ),
-
-                                                const SizedBox(height: 18),
-
-                                                const Text(
-                                                  "Referral Added Successfully",
-                                                  textAlign: TextAlign.center,
-
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 18,
-                                                    fontWeight: FontWeight.w700,
+                                                  const SizedBox(height: 10),
+                                                  const Text(
+                                                    "Please wait for admin approval of your posted job.",
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                      color: Colors.grey,
+                                                      fontSize: 13,
+                                                      height: 1.5,
+                                                    ),
                                                   ),
-                                                ),
-
-                                                const SizedBox(height: 10),
-
-                                                const Text(
-                                                  "Please wait for admin approval of your posted job.",
-                                                  textAlign: TextAlign.center,
-
-                                                  style: TextStyle(
-                                                    color: Colors.grey,
-                                                    fontSize: 13,
-                                                    height: 1.5,
-                                                  ),
-                                                ),
-
-                                                const SizedBox(height: 22),
-
-                                                SizedBox(
-                                                  width: double.infinity,
-
-                                                  child: ElevatedButton(
-                                                    style: ElevatedButton.styleFrom(
-                                                      backgroundColor:
-                                                          AppColors.kGreen,
-
-                                                      padding:
-                                                          const EdgeInsets.symmetric(
-                                                            vertical: 14,
-                                                          ),
-
-                                                      shape: RoundedRectangleBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              14,
+                                                  const SizedBox(height: 22),
+                                                  SizedBox(
+                                                    width: double.infinity,
+                                                    child: ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            AppColors.kGreen,
+                                                        padding:
+                                                            const EdgeInsets.symmetric(
+                                                              vertical: 14,
                                                             ),
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                14,
+                                                              ),
+                                                        ),
                                                       ),
-                                                    ),
-
-                                                    onPressed: () {
-                                                      Navigator.of(
-                                                        context,
-                                                      ).pop(); // close dialog
-                                                      Navigator.of(
-                                                        context,
-                                                      ).pop(); // close page
-                                                    },
-
-                                                    child: const Text(
-                                                      "Done",
-                                                      style: TextStyle(
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600,
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                          context,
+                                                        ).pop(); // close dialog
+                                                        Navigator.of(
+                                                          context,
+                                                        ).pop(); // close page
+                                                      },
+                                                      child: const Text(
+                                                        "Done",
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
-                                                ),
-                                              ],
+                                                ],
+                                              ),
                                             ),
                                           ),
                                         );

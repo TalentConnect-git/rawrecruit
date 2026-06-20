@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ApplicationModel {
 
-@JsonKey(name: '_id') String? get id;@UserOrStringConvertor() User? get applicant; String? get applicantType; String? get appliedForCompany; String? get referralCompany; String? get appliedByType; String? get adminApprovalStatus; String? get currentStatus; String? get jobType; bool? get isVisited;@JobOrStringConvertor() Job? get job; int? get matchScore; String? get adminComment; num? get rating; DateTime? get createdAt; DateTime? get updatedAt; String? get displayCompanyName;@JsonKey(name: 'jobDetails') Job? get jobDetails;@JsonKey(name: 'companyProfile') CompanyDetail? get companyProfile; List<ApplicationStatusHistory>? get statusHistory;
+@JsonKey(name: '_id') String? get id;@UserOrStringConvertor() User? get applicant; String? get applicantType; String? get appliedForCompany; String? get referralCompany; String? get appliedByType; String? get adminApprovalStatus; String? get currentStatus; String? get jobType; bool? get isVisited; bool? get isAskForReferral; String? get careerPageUrl;@JobOrStringConvertor() Job? get job; int? get matchScore; String? get adminComment; num? get rating; DateTime? get createdAt; DateTime? get updatedAt; String? get displayCompanyName;@JsonKey(name: 'jobDetails') Job? get jobDetails;@JsonKey(name: 'companyProfile') CompanyDetail? get companyProfile; List<ApplicationStatusHistory>? get statusHistory;
 /// Create a copy of ApplicationModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ApplicationModelCopyWith<ApplicationModel> get copyWith => _$ApplicationModelCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApplicationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.appliedForCompany, appliedForCompany) || other.appliedForCompany == appliedForCompany)&&(identical(other.referralCompany, referralCompany) || other.referralCompany == referralCompany)&&(identical(other.appliedByType, appliedByType) || other.appliedByType == appliedByType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.isVisited, isVisited) || other.isVisited == isVisited)&&(identical(other.job, job) || other.job == job)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.adminComment, adminComment) || other.adminComment == adminComment)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.displayCompanyName, displayCompanyName) || other.displayCompanyName == displayCompanyName)&&(identical(other.jobDetails, jobDetails) || other.jobDetails == jobDetails)&&(identical(other.companyProfile, companyProfile) || other.companyProfile == companyProfile)&&const DeepCollectionEquality().equals(other.statusHistory, statusHistory));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ApplicationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.appliedForCompany, appliedForCompany) || other.appliedForCompany == appliedForCompany)&&(identical(other.referralCompany, referralCompany) || other.referralCompany == referralCompany)&&(identical(other.appliedByType, appliedByType) || other.appliedByType == appliedByType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.isVisited, isVisited) || other.isVisited == isVisited)&&(identical(other.isAskForReferral, isAskForReferral) || other.isAskForReferral == isAskForReferral)&&(identical(other.careerPageUrl, careerPageUrl) || other.careerPageUrl == careerPageUrl)&&(identical(other.job, job) || other.job == job)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.adminComment, adminComment) || other.adminComment == adminComment)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.displayCompanyName, displayCompanyName) || other.displayCompanyName == displayCompanyName)&&(identical(other.jobDetails, jobDetails) || other.jobDetails == jobDetails)&&(identical(other.companyProfile, companyProfile) || other.companyProfile == companyProfile)&&const DeepCollectionEquality().equals(other.statusHistory, statusHistory));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,applicant,applicantType,appliedForCompany,referralCompany,appliedByType,adminApprovalStatus,currentStatus,jobType,isVisited,job,matchScore,adminComment,rating,createdAt,updatedAt,displayCompanyName,jobDetails,companyProfile,const DeepCollectionEquality().hash(statusHistory)]);
+int get hashCode => Object.hashAll([runtimeType,id,applicant,applicantType,appliedForCompany,referralCompany,appliedByType,adminApprovalStatus,currentStatus,jobType,isVisited,isAskForReferral,careerPageUrl,job,matchScore,adminComment,rating,createdAt,updatedAt,displayCompanyName,jobDetails,companyProfile,const DeepCollectionEquality().hash(statusHistory)]);
 
 @override
 String toString() {
-  return 'ApplicationModel(id: $id, applicant: $applicant, applicantType: $applicantType, appliedForCompany: $appliedForCompany, referralCompany: $referralCompany, appliedByType: $appliedByType, adminApprovalStatus: $adminApprovalStatus, currentStatus: $currentStatus, jobType: $jobType, isVisited: $isVisited, job: $job, matchScore: $matchScore, adminComment: $adminComment, rating: $rating, createdAt: $createdAt, updatedAt: $updatedAt, displayCompanyName: $displayCompanyName, jobDetails: $jobDetails, companyProfile: $companyProfile, statusHistory: $statusHistory)';
+  return 'ApplicationModel(id: $id, applicant: $applicant, applicantType: $applicantType, appliedForCompany: $appliedForCompany, referralCompany: $referralCompany, appliedByType: $appliedByType, adminApprovalStatus: $adminApprovalStatus, currentStatus: $currentStatus, jobType: $jobType, isVisited: $isVisited, isAskForReferral: $isAskForReferral, careerPageUrl: $careerPageUrl, job: $job, matchScore: $matchScore, adminComment: $adminComment, rating: $rating, createdAt: $createdAt, updatedAt: $updatedAt, displayCompanyName: $displayCompanyName, jobDetails: $jobDetails, companyProfile: $companyProfile, statusHistory: $statusHistory)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ApplicationModelCopyWith<$Res>  {
   factory $ApplicationModelCopyWith(ApplicationModel value, $Res Function(ApplicationModel) _then) = _$ApplicationModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id,@UserOrStringConvertor() User? applicant, String? applicantType, String? appliedForCompany, String? referralCompany, String? appliedByType, String? adminApprovalStatus, String? currentStatus, String? jobType, bool? isVisited,@JobOrStringConvertor() Job? job, int? matchScore, String? adminComment, num? rating, DateTime? createdAt, DateTime? updatedAt, String? displayCompanyName,@JsonKey(name: 'jobDetails') Job? jobDetails,@JsonKey(name: 'companyProfile') CompanyDetail? companyProfile, List<ApplicationStatusHistory>? statusHistory
+@JsonKey(name: '_id') String? id,@UserOrStringConvertor() User? applicant, String? applicantType, String? appliedForCompany, String? referralCompany, String? appliedByType, String? adminApprovalStatus, String? currentStatus, String? jobType, bool? isVisited, bool? isAskForReferral, String? careerPageUrl,@JobOrStringConvertor() Job? job, int? matchScore, String? adminComment, num? rating, DateTime? createdAt, DateTime? updatedAt, String? displayCompanyName,@JsonKey(name: 'jobDetails') Job? jobDetails,@JsonKey(name: 'companyProfile') CompanyDetail? companyProfile, List<ApplicationStatusHistory>? statusHistory
 });
 
 
@@ -65,7 +65,7 @@ class _$ApplicationModelCopyWithImpl<$Res>
 
 /// Create a copy of ApplicationModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? applicant = freezed,Object? applicantType = freezed,Object? appliedForCompany = freezed,Object? referralCompany = freezed,Object? appliedByType = freezed,Object? adminApprovalStatus = freezed,Object? currentStatus = freezed,Object? jobType = freezed,Object? isVisited = freezed,Object? job = freezed,Object? matchScore = freezed,Object? adminComment = freezed,Object? rating = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? displayCompanyName = freezed,Object? jobDetails = freezed,Object? companyProfile = freezed,Object? statusHistory = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = freezed,Object? applicant = freezed,Object? applicantType = freezed,Object? appliedForCompany = freezed,Object? referralCompany = freezed,Object? appliedByType = freezed,Object? adminApprovalStatus = freezed,Object? currentStatus = freezed,Object? jobType = freezed,Object? isVisited = freezed,Object? isAskForReferral = freezed,Object? careerPageUrl = freezed,Object? job = freezed,Object? matchScore = freezed,Object? adminComment = freezed,Object? rating = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? displayCompanyName = freezed,Object? jobDetails = freezed,Object? companyProfile = freezed,Object? statusHistory = freezed,}) {
   return _then(_self.copyWith(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,applicant: freezed == applicant ? _self.applicant : applicant // ignore: cast_nullable_to_non_nullable
@@ -77,7 +77,9 @@ as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminAppr
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
 as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
 as String?,isVisited: freezed == isVisited ? _self.isVisited : isVisited // ignore: cast_nullable_to_non_nullable
-as bool?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
+as bool?,isAskForReferral: freezed == isAskForReferral ? _self.isAskForReferral : isAskForReferral // ignore: cast_nullable_to_non_nullable
+as bool?,careerPageUrl: freezed == careerPageUrl ? _self.careerPageUrl : careerPageUrl // ignore: cast_nullable_to_non_nullable
+as String?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
 as Job?,matchScore: freezed == matchScore ? _self.matchScore : matchScore // ignore: cast_nullable_to_non_nullable
 as int?,adminComment: freezed == adminComment ? _self.adminComment : adminComment // ignore: cast_nullable_to_non_nullable
 as String?,rating: freezed == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable
@@ -220,10 +222,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType,  String? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? isVisited, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType,  String? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? isVisited,  bool? isAskForReferral,  String? careerPageUrl, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ApplicationModel() when $default != null:
-return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCompany,_that.referralCompany,_that.appliedByType,_that.adminApprovalStatus,_that.currentStatus,_that.jobType,_that.isVisited,_that.job,_that.matchScore,_that.adminComment,_that.rating,_that.createdAt,_that.updatedAt,_that.displayCompanyName,_that.jobDetails,_that.companyProfile,_that.statusHistory);case _:
+return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCompany,_that.referralCompany,_that.appliedByType,_that.adminApprovalStatus,_that.currentStatus,_that.jobType,_that.isVisited,_that.isAskForReferral,_that.careerPageUrl,_that.job,_that.matchScore,_that.adminComment,_that.rating,_that.createdAt,_that.updatedAt,_that.displayCompanyName,_that.jobDetails,_that.companyProfile,_that.statusHistory);case _:
   return orElse();
 
 }
@@ -241,10 +243,10 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCom
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType,  String? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? isVisited, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType,  String? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? isVisited,  bool? isAskForReferral,  String? careerPageUrl, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)  $default,) {final _that = this;
 switch (_that) {
 case _ApplicationModel():
-return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCompany,_that.referralCompany,_that.appliedByType,_that.adminApprovalStatus,_that.currentStatus,_that.jobType,_that.isVisited,_that.job,_that.matchScore,_that.adminComment,_that.rating,_that.createdAt,_that.updatedAt,_that.displayCompanyName,_that.jobDetails,_that.companyProfile,_that.statusHistory);case _:
+return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCompany,_that.referralCompany,_that.appliedByType,_that.adminApprovalStatus,_that.currentStatus,_that.jobType,_that.isVisited,_that.isAskForReferral,_that.careerPageUrl,_that.job,_that.matchScore,_that.adminComment,_that.rating,_that.createdAt,_that.updatedAt,_that.displayCompanyName,_that.jobDetails,_that.companyProfile,_that.statusHistory);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -261,10 +263,10 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCom
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType,  String? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? isVisited, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType,  String? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? isVisited,  bool? isAskForReferral,  String? careerPageUrl, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)?  $default,) {final _that = this;
 switch (_that) {
 case _ApplicationModel() when $default != null:
-return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCompany,_that.referralCompany,_that.appliedByType,_that.adminApprovalStatus,_that.currentStatus,_that.jobType,_that.isVisited,_that.job,_that.matchScore,_that.adminComment,_that.rating,_that.createdAt,_that.updatedAt,_that.displayCompanyName,_that.jobDetails,_that.companyProfile,_that.statusHistory);case _:
+return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCompany,_that.referralCompany,_that.appliedByType,_that.adminApprovalStatus,_that.currentStatus,_that.jobType,_that.isVisited,_that.isAskForReferral,_that.careerPageUrl,_that.job,_that.matchScore,_that.adminComment,_that.rating,_that.createdAt,_that.updatedAt,_that.displayCompanyName,_that.jobDetails,_that.companyProfile,_that.statusHistory);case _:
   return null;
 
 }
@@ -276,7 +278,7 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCom
 @JsonSerializable()
 
 class _ApplicationModel implements ApplicationModel {
-  const _ApplicationModel({@JsonKey(name: '_id') this.id, @UserOrStringConvertor() this.applicant, this.applicantType, this.appliedForCompany, this.referralCompany, this.appliedByType, this.adminApprovalStatus, this.currentStatus, this.jobType, this.isVisited, @JobOrStringConvertor() this.job, this.matchScore, this.adminComment, this.rating, this.createdAt, this.updatedAt, this.displayCompanyName, @JsonKey(name: 'jobDetails') this.jobDetails, @JsonKey(name: 'companyProfile') this.companyProfile, final  List<ApplicationStatusHistory>? statusHistory}): _statusHistory = statusHistory;
+  const _ApplicationModel({@JsonKey(name: '_id') this.id, @UserOrStringConvertor() this.applicant, this.applicantType, this.appliedForCompany, this.referralCompany, this.appliedByType, this.adminApprovalStatus, this.currentStatus, this.jobType, this.isVisited, this.isAskForReferral, this.careerPageUrl, @JobOrStringConvertor() this.job, this.matchScore, this.adminComment, this.rating, this.createdAt, this.updatedAt, this.displayCompanyName, @JsonKey(name: 'jobDetails') this.jobDetails, @JsonKey(name: 'companyProfile') this.companyProfile, final  List<ApplicationStatusHistory>? statusHistory}): _statusHistory = statusHistory;
   factory _ApplicationModel.fromJson(Map<String, dynamic> json) => _$ApplicationModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
@@ -289,6 +291,8 @@ class _ApplicationModel implements ApplicationModel {
 @override final  String? currentStatus;
 @override final  String? jobType;
 @override final  bool? isVisited;
+@override final  bool? isAskForReferral;
+@override final  String? careerPageUrl;
 @override@JobOrStringConvertor() final  Job? job;
 @override final  int? matchScore;
 @override final  String? adminComment;
@@ -321,16 +325,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApplicationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.appliedForCompany, appliedForCompany) || other.appliedForCompany == appliedForCompany)&&(identical(other.referralCompany, referralCompany) || other.referralCompany == referralCompany)&&(identical(other.appliedByType, appliedByType) || other.appliedByType == appliedByType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.isVisited, isVisited) || other.isVisited == isVisited)&&(identical(other.job, job) || other.job == job)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.adminComment, adminComment) || other.adminComment == adminComment)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.displayCompanyName, displayCompanyName) || other.displayCompanyName == displayCompanyName)&&(identical(other.jobDetails, jobDetails) || other.jobDetails == jobDetails)&&(identical(other.companyProfile, companyProfile) || other.companyProfile == companyProfile)&&const DeepCollectionEquality().equals(other._statusHistory, _statusHistory));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ApplicationModel&&(identical(other.id, id) || other.id == id)&&(identical(other.applicant, applicant) || other.applicant == applicant)&&(identical(other.applicantType, applicantType) || other.applicantType == applicantType)&&(identical(other.appliedForCompany, appliedForCompany) || other.appliedForCompany == appliedForCompany)&&(identical(other.referralCompany, referralCompany) || other.referralCompany == referralCompany)&&(identical(other.appliedByType, appliedByType) || other.appliedByType == appliedByType)&&(identical(other.adminApprovalStatus, adminApprovalStatus) || other.adminApprovalStatus == adminApprovalStatus)&&(identical(other.currentStatus, currentStatus) || other.currentStatus == currentStatus)&&(identical(other.jobType, jobType) || other.jobType == jobType)&&(identical(other.isVisited, isVisited) || other.isVisited == isVisited)&&(identical(other.isAskForReferral, isAskForReferral) || other.isAskForReferral == isAskForReferral)&&(identical(other.careerPageUrl, careerPageUrl) || other.careerPageUrl == careerPageUrl)&&(identical(other.job, job) || other.job == job)&&(identical(other.matchScore, matchScore) || other.matchScore == matchScore)&&(identical(other.adminComment, adminComment) || other.adminComment == adminComment)&&(identical(other.rating, rating) || other.rating == rating)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt)&&(identical(other.displayCompanyName, displayCompanyName) || other.displayCompanyName == displayCompanyName)&&(identical(other.jobDetails, jobDetails) || other.jobDetails == jobDetails)&&(identical(other.companyProfile, companyProfile) || other.companyProfile == companyProfile)&&const DeepCollectionEquality().equals(other._statusHistory, _statusHistory));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hashAll([runtimeType,id,applicant,applicantType,appliedForCompany,referralCompany,appliedByType,adminApprovalStatus,currentStatus,jobType,isVisited,job,matchScore,adminComment,rating,createdAt,updatedAt,displayCompanyName,jobDetails,companyProfile,const DeepCollectionEquality().hash(_statusHistory)]);
+int get hashCode => Object.hashAll([runtimeType,id,applicant,applicantType,appliedForCompany,referralCompany,appliedByType,adminApprovalStatus,currentStatus,jobType,isVisited,isAskForReferral,careerPageUrl,job,matchScore,adminComment,rating,createdAt,updatedAt,displayCompanyName,jobDetails,companyProfile,const DeepCollectionEquality().hash(_statusHistory)]);
 
 @override
 String toString() {
-  return 'ApplicationModel(id: $id, applicant: $applicant, applicantType: $applicantType, appliedForCompany: $appliedForCompany, referralCompany: $referralCompany, appliedByType: $appliedByType, adminApprovalStatus: $adminApprovalStatus, currentStatus: $currentStatus, jobType: $jobType, isVisited: $isVisited, job: $job, matchScore: $matchScore, adminComment: $adminComment, rating: $rating, createdAt: $createdAt, updatedAt: $updatedAt, displayCompanyName: $displayCompanyName, jobDetails: $jobDetails, companyProfile: $companyProfile, statusHistory: $statusHistory)';
+  return 'ApplicationModel(id: $id, applicant: $applicant, applicantType: $applicantType, appliedForCompany: $appliedForCompany, referralCompany: $referralCompany, appliedByType: $appliedByType, adminApprovalStatus: $adminApprovalStatus, currentStatus: $currentStatus, jobType: $jobType, isVisited: $isVisited, isAskForReferral: $isAskForReferral, careerPageUrl: $careerPageUrl, job: $job, matchScore: $matchScore, adminComment: $adminComment, rating: $rating, createdAt: $createdAt, updatedAt: $updatedAt, displayCompanyName: $displayCompanyName, jobDetails: $jobDetails, companyProfile: $companyProfile, statusHistory: $statusHistory)';
 }
 
 
@@ -341,7 +345,7 @@ abstract mixin class _$ApplicationModelCopyWith<$Res> implements $ApplicationMod
   factory _$ApplicationModelCopyWith(_ApplicationModel value, $Res Function(_ApplicationModel) _then) = __$ApplicationModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id,@UserOrStringConvertor() User? applicant, String? applicantType, String? appliedForCompany, String? referralCompany, String? appliedByType, String? adminApprovalStatus, String? currentStatus, String? jobType, bool? isVisited,@JobOrStringConvertor() Job? job, int? matchScore, String? adminComment, num? rating, DateTime? createdAt, DateTime? updatedAt, String? displayCompanyName,@JsonKey(name: 'jobDetails') Job? jobDetails,@JsonKey(name: 'companyProfile') CompanyDetail? companyProfile, List<ApplicationStatusHistory>? statusHistory
+@JsonKey(name: '_id') String? id,@UserOrStringConvertor() User? applicant, String? applicantType, String? appliedForCompany, String? referralCompany, String? appliedByType, String? adminApprovalStatus, String? currentStatus, String? jobType, bool? isVisited, bool? isAskForReferral, String? careerPageUrl,@JobOrStringConvertor() Job? job, int? matchScore, String? adminComment, num? rating, DateTime? createdAt, DateTime? updatedAt, String? displayCompanyName,@JsonKey(name: 'jobDetails') Job? jobDetails,@JsonKey(name: 'companyProfile') CompanyDetail? companyProfile, List<ApplicationStatusHistory>? statusHistory
 });
 
 
@@ -358,7 +362,7 @@ class __$ApplicationModelCopyWithImpl<$Res>
 
 /// Create a copy of ApplicationModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? applicant = freezed,Object? applicantType = freezed,Object? appliedForCompany = freezed,Object? referralCompany = freezed,Object? appliedByType = freezed,Object? adminApprovalStatus = freezed,Object? currentStatus = freezed,Object? jobType = freezed,Object? isVisited = freezed,Object? job = freezed,Object? matchScore = freezed,Object? adminComment = freezed,Object? rating = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? displayCompanyName = freezed,Object? jobDetails = freezed,Object? companyProfile = freezed,Object? statusHistory = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = freezed,Object? applicant = freezed,Object? applicantType = freezed,Object? appliedForCompany = freezed,Object? referralCompany = freezed,Object? appliedByType = freezed,Object? adminApprovalStatus = freezed,Object? currentStatus = freezed,Object? jobType = freezed,Object? isVisited = freezed,Object? isAskForReferral = freezed,Object? careerPageUrl = freezed,Object? job = freezed,Object? matchScore = freezed,Object? adminComment = freezed,Object? rating = freezed,Object? createdAt = freezed,Object? updatedAt = freezed,Object? displayCompanyName = freezed,Object? jobDetails = freezed,Object? companyProfile = freezed,Object? statusHistory = freezed,}) {
   return _then(_ApplicationModel(
 id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,applicant: freezed == applicant ? _self.applicant : applicant // ignore: cast_nullable_to_non_nullable
@@ -370,7 +374,9 @@ as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminAppr
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
 as String?,jobType: freezed == jobType ? _self.jobType : jobType // ignore: cast_nullable_to_non_nullable
 as String?,isVisited: freezed == isVisited ? _self.isVisited : isVisited // ignore: cast_nullable_to_non_nullable
-as bool?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
+as bool?,isAskForReferral: freezed == isAskForReferral ? _self.isAskForReferral : isAskForReferral // ignore: cast_nullable_to_non_nullable
+as bool?,careerPageUrl: freezed == careerPageUrl ? _self.careerPageUrl : careerPageUrl // ignore: cast_nullable_to_non_nullable
+as String?,job: freezed == job ? _self.job : job // ignore: cast_nullable_to_non_nullable
 as Job?,matchScore: freezed == matchScore ? _self.matchScore : matchScore // ignore: cast_nullable_to_non_nullable
 as int?,adminComment: freezed == adminComment ? _self.adminComment : adminComment // ignore: cast_nullable_to_non_nullable
 as String?,rating: freezed == rating ? _self.rating : rating // ignore: cast_nullable_to_non_nullable

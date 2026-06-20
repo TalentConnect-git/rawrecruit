@@ -93,6 +93,9 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
       ? null
       : JobPosting.fromJson(json['jobCompanyPosted'] as Map<String, dynamic>),
   referralCompany: json['referralCompany'] as String?,
+  careerPageUrl: json['careerPageUrl'] as String?,
+  isAskForReferral: json['isAskForReferral'] as bool?,
+  referralRequestId: json['referralRequestId'] as String?,
   onlineTestDate: json['onlineTestDate'] == null
       ? null
       : DateTime.parse(json['onlineTestDate'] as String),
@@ -171,6 +174,9 @@ Map<String, dynamic> _$JobToJson(_Job instance) => <String, dynamic>{
   'companyPosted': instance.companyPosted,
   'jobCompanyPosted': instance.jobCompanyPosted,
   'referralCompany': instance.referralCompany,
+  'careerPageUrl': instance.careerPageUrl,
+  'isAskForReferral': instance.isAskForReferral,
+  'referralRequestId': instance.referralRequestId,
   'onlineTestDate': instance.onlineTestDate?.toIso8601String(),
   'offerRolloutDate': instance.offerRolloutDate?.toIso8601String(),
   'startDate': instance.startDate?.toIso8601String(),

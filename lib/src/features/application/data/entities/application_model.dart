@@ -23,6 +23,8 @@ abstract class ApplicationModel with _$ApplicationModel {
     String? jobType,
 
     bool? isVisited,
+    bool? isAskForReferral,
+    String? careerPageUrl,
 
     @JobOrStringConvertor() Job? job,
 

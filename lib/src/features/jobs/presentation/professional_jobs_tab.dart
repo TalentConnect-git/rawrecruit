@@ -25,21 +25,23 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
   ProfessionalJobType selectedTab = ProfessionalJobType.available;
 
   late final PageController _pageController;
-@override
-void initState() {
-  super.initState();
+  @override
+  void initState() {
+    super.initState();
 
-  selectedTab = widget.selectedType ?? ProfessionalJobType.available;
+    selectedTab = widget.selectedType ?? ProfessionalJobType.available;
 
-  _pageController = PageController(
-    initialPage: selectedTab.index,
-  );
-}
-@override
-void dispose() {
-  _pageController.dispose();
-  super.dispose();
-}
+    _pageController = PageController(
+      initialPage: selectedTab.index,
+      viewportFraction: 1.0,
+    );
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -102,30 +104,45 @@ void dispose() {
                                 .fetchApplications();
                           },
 
-                      child:PageView(
-  controller: _pageController,
-  onPageChanged: (index) {
-    setState(() {
-      selectedTab = ProfessionalJobType.values[index];
-    });
-  },
-  children: [
-   RefreshIndicator(
-  onRefresh: () => _refreshData(context),
-  child: _availableJobs(),
-),
+                          child: ClipRect(
+                            child: PageView(
+                              controller: _pageController,
+                              onPageChanged: (index) {
+                                setState(() {
+                                  selectedTab =
+                                      ProfessionalJobType.values[index];
+                                });
+                              },
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: RefreshIndicator(
+                                    onRefresh: () => _refreshData(context),
+                                    child: _availableJobs(),
+                                  ),
+                                ),
 
-RefreshIndicator(
-  onRefresh: () => _refreshData(context),
-  child: _postedJobs(),
-),
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: RefreshIndicator(
+                                    onRefresh: () => _refreshData(context),
+                                    child: _postedJobs(),
+                                  ),
+                                ),
 
-RefreshIndicator(
-  onRefresh: () => _refreshData(context),
-  child: _savedJobs(),
-),
-  ],
-)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: _savedJobs(),
+                                ),
+                              ],
+                            ),
+                          ),
                         );
                       },
                     ),
@@ -138,29 +155,21 @@ RefreshIndicator(
       ),
     );
   }
-Future<void> _refreshData(BuildContext context) async {
-  await context.read<DashboardViewModel>().getJobs();
 
-  await context
-      .read<DashboardViewModel>()
-      .fetchProfessionalData();
+  Future<void> _refreshData(BuildContext context) async {
+    await context.read<DashboardViewModel>().getJobs();
 
-  await context
-      .read<PostedJobViewModel>()
-      .getPostedJobs();
+    await context.read<DashboardViewModel>().fetchProfessionalData();
 
-  await context
-      .read<PostedJobViewModel>()
-      .getJobs();
+    await context.read<PostedJobViewModel>().getPostedJobs();
 
-  await context
-      .read<ShortlistViewModel>()
-      .fetchSaved();
+    await context.read<PostedJobViewModel>().getJobs();
 
-  await context
-      .read<ApplicationViewModel>()
-      .fetchApplications();
-}
+    await context.read<ShortlistViewModel>().fetchSaved();
+
+    await context.read<ApplicationViewModel>().fetchApplications();
+  }
+
   /// 🔥 TABS
   Widget _buildTabs() {
     return Row(children: [...ProfessionalJobType.values.map((t) => _tab(t))]);
@@ -171,15 +180,15 @@ Future<void> _refreshData(BuildContext context) async {
 
     return Expanded(
       child: GestureDetector(
-    onTap: () {
-  setState(() => selectedTab = type);
+        onTap: () {
+          setState(() => selectedTab = type);
 
-  _pageController.animateToPage(
-    type.index,
-    duration: const Duration(milliseconds: 300),
-    curve: Curves.easeInOut,
-  );
-},
+          _pageController.animateToPage(
+            type.index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
@@ -199,7 +208,6 @@ Future<void> _refreshData(BuildContext context) async {
       ),
     );
   }
-
 
   /// 🔥 AVAILABLE TAB (UPDATED)
   Widget _availableJobs() {
@@ -353,14 +361,14 @@ Future<void> _refreshData(BuildContext context) async {
   }
 
   /// 🔥 SAVED TAB
-Widget _savedJobs() {
-  debugPrint("SAVED TAB OPENED");
+  Widget _savedJobs() {
+    debugPrint("SAVED TAB OPENED");
 
-  return Consumer<ShortlistViewModel>(
-    builder: (context, vm, _) {
-      debugPrint("Consumer rebuilt");
-      debugPrint("Saved count = ${vm.saved.length}");
-      debugPrint("ViewState = ${vm.viewState}");
+    return Consumer<ShortlistViewModel>(
+      builder: (context, vm, _) {
+        debugPrint("Consumer rebuilt");
+        debugPrint("Saved count = ${vm.saved.length}");
+        debugPrint("ViewState = ${vm.viewState}");
         final applicationVM = context.watch<ApplicationViewModel>();
 
         if (vm.viewState == ViewState.busy) {
@@ -390,20 +398,22 @@ Widget _savedJobs() {
           itemBuilder: (_, index) {
             final item = vm.saved[index];
             final job = item.job;
-debugPrint("-------------------------SAVED ITEM => ${item.toJson()}");
-debugPrint("---------------------JOB => $job");
-debugPrint("-------------------------JOB ID => ${job?.id}");
+            debugPrint(
+              "-------------------------SAVED ITEM => ${item.toJson()}",
+            );
+            debugPrint("---------------------JOB => $job");
+            debugPrint("-------------------------JOB ID => ${job?.id}");
             if (job == null) return const SizedBox();
 
             final isSaved = vm.savedJobIds.contains(job.id);
             final isApplied = applicationVM.isApplied(job.id ?? '');
 
-final patchedJob = job.copyWith(
-  matchScore: item.matchScore,
-  alumniCount: item.alumniCount,
-);
+            final patchedJob = job.copyWith(
+              matchScore: item.matchScore,
+              alumniCount: item.alumniCount,
+            );
             return JobCard(
-     job: patchedJob,
+              job: patchedJob,
 
               isSaved: isSaved,
               isApplied: isApplied,

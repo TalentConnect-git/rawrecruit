@@ -62,7 +62,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
     return ChangeNotifierProvider.value(
       value: vm,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.kBg,
         body: SafeArea(
           child: Consumer<MyProfileViewModel>(
             builder: (_, vm, __) {
@@ -312,11 +312,11 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
           ],
         ),
 
-        border: Border.all(color: AppColors.kGreen.withOpacity(.18)),
+        border: Border.all(color: AppColors.kGreen.withOpacity(.15)),
 
         boxShadow: [
           BoxShadow(
-            color: AppColors.kGreen.withOpacity(.08),
+            color: AppColors.kGreen.withOpacity(.02),
             blurRadius: 30,
             spreadRadius: 1,
           ),
@@ -341,7 +341,6 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
           //     ),
           //   ),
           // ),
-
           Padding(
             padding: const EdgeInsets.all(22),
 

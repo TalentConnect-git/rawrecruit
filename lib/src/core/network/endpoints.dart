@@ -59,4 +59,5 @@ class Endpoints {
       'api/candidate/company-alumni';
   static const String apiCandidateHiringNetwork =
       'api/candidate/hiring-network';
+  static const apiCareerPageReferral = 'api/company-jobs/career-page-referral';
 }

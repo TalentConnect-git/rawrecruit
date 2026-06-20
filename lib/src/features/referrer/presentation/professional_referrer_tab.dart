@@ -22,23 +22,25 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
       ProfessionalReferrerApplicationType.appliedByMe;
 
   bool _initialApiCalled = false; // ✅ prevent multiple calls
-late final PageController _pageController;
- @override
-void initState() {
-  super.initState();
+  late final PageController _pageController;
+  @override
+  void initState() {
+    super.initState();
 
-  selectedTab = widget.selectedType ?? selectedTab;
+    selectedTab = widget.selectedType ?? selectedTab;
 
-  _pageController = PageController(
-    initialPage: selectedTab.index,
-  );
-}
+    _pageController = PageController(
+      initialPage: selectedTab.index,
+      viewportFraction: 1.0,
+    );
+  }
 
-@override
-void dispose() {
-  _pageController.dispose();
-  super.dispose();
-}
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
@@ -72,48 +74,63 @@ void dispose() {
                 children: [
                   _buildTabs(context),
                   const SizedBox(height: 10),
-                Expanded(
-  child: PageView(
-    controller: _pageController,
-    onPageChanged: (index) {
-      final type =
-          ProfessionalReferrerApplicationType.values[index];
+                  Expanded(
+                    child: ClipRect(
+                      child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          final type =
+                              ProfessionalReferrerApplicationType.values[index];
 
-      setState(() => selectedTab = type);
+                          setState(() => selectedTab = type);
 
-      final vm = context.read<ApplicationViewModel>();
+                          final vm = context.read<ApplicationViewModel>();
 
-      if (type ==
-              ProfessionalReferrerApplicationType.requestsReceived &&
-          vm.referralApplications.isEmpty) {
-        vm.fetchReferralRequests();
-      }
+                          if (type ==
+                                  ProfessionalReferrerApplicationType
+                                      .requestsReceived &&
+                              vm.referralApplications.isEmpty) {
+                            vm.fetchReferralRequests();
+                          }
 
-      if (type ==
-              ProfessionalReferrerApplicationType.referredByMe &&
-          vm.referredByMe.isEmpty) {
-        vm.fetchReferredByMe();
-      }
-    },
-    children: [
-      RefreshIndicator(
-        color: AppColors.kGreen,
-        onRefresh: _refresh,
-        child: _appliedByMe(),
-      ),
-      RefreshIndicator(
-        color: AppColors.kGreen,
-        onRefresh: _refresh,
-        child: _requestsReceived(),
-      ),
-      RefreshIndicator(
-        color: AppColors.kGreen,
-        onRefresh: _refresh,
-        child: _referredByMe(),
-      ),
-    ],
-  ),
-),
+                          if (type ==
+                                  ProfessionalReferrerApplicationType
+                                      .referredByMe &&
+                              vm.referredByMe.isEmpty) {
+                            vm.fetchReferredByMe();
+                          }
+                        },
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: _refresh,
+                              child: _appliedByMe(),
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: _refresh,
+                              child: _requestsReceived(),
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: _refresh,
+                              child: _referredByMe(),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -139,27 +156,27 @@ void dispose() {
 
     return Expanded(
       child: GestureDetector(
-       onTap: () {
-  setState(() => selectedTab = type);
+        onTap: () {
+          setState(() => selectedTab = type);
 
-  _pageController.animateToPage(
-    type.index,
-    duration: const Duration(milliseconds: 300),
-    curve: Curves.easeInOut,
-  );
+          _pageController.animateToPage(
+            type.index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
 
-  final vm = context.read<ApplicationViewModel>();
+          final vm = context.read<ApplicationViewModel>();
 
-  if (type == ProfessionalReferrerApplicationType.requestsReceived &&
-      vm.referralApplications.isEmpty) {
-    vm.fetchReferralRequests();
-  }
+          if (type == ProfessionalReferrerApplicationType.requestsReceived &&
+              vm.referralApplications.isEmpty) {
+            vm.fetchReferralRequests();
+          }
 
-  if (type == ProfessionalReferrerApplicationType.referredByMe &&
-      vm.referredByMe.isEmpty) {
-    vm.fetchReferredByMe();
-  }
-},
+          if (type == ProfessionalReferrerApplicationType.referredByMe &&
+              vm.referredByMe.isEmpty) {
+            vm.fetchReferredByMe();
+          }
+        },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -195,7 +212,6 @@ void dispose() {
       await vm.fetchReferredByMe();
     }
   }
-
 
   /// ✅ REQUESTS RECEIVED
   Widget _requestsReceived() {

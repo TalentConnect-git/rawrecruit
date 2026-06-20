@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' hide Notification;
 import 'package:go_router/go_router.dart';
+import 'package:rawrecruit/app.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart'
@@ -218,6 +219,19 @@ class _NotificationCardState extends State<NotificationCard> {
             context.pushNamed(RouteNames.alumniDetail, extra: userId);
             break;
         }
+      case 'Referrals':
+        switch (subtopic) {
+          case 'Received Requests':
+            final userId = body?['userId'];
+            final requestId = body?['requestId'];
+            final applicationId = body?['applicationId'];
+            if (userId == null && requestId == null) return;
+
+            context.pushNamed(RouteNames.referrerDetail, extra: applicationId);
+            break;
+        }
+
+        break;
     }
   }
 }

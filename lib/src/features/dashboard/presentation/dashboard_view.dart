@@ -196,6 +196,53 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
             physics: const AlwaysScrollableScrollPhysics(),
 
             children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(14),
+                  onTap: () => context.pushNamed(RouteNames.askForReferral),
+                  child: Container(
+                    height: 60,
+                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(14),
+                      border: Border.all(color: AppColors.kGreen, width: 1.5),
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: 36,
+                          width: 36,
+                          decoration: BoxDecoration(
+                            color: AppColors.kGreen.withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Icon(
+                            Icons.person_search_outlined,
+                            color: AppColors.kGreen,
+                            size: 20,
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'Ask for Referral',
+                            style: AppTextStyles.s16W600.copyWith(
+                              color: AppColors.kGreen,
+                            ),
+                          ),
+                        ),
+                        Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: 14,
+                          color: AppColors.kGreen,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
               /// 🔥 MY APPLICATIONS SECTION
               _SectionHeader(
                 title: "My Applications",

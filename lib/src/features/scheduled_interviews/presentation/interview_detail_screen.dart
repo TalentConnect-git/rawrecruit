@@ -38,9 +38,8 @@ class _InterviewDetailScreenState extends State<InterviewDetailScreen> {
           title: const Text(
             'Interview Details',
             style: TextStyle(color: Colors.white),
-          ),   iconTheme: const IconThemeData(
-    color: Colors.white,
-  ),
+          ),
+          iconTheme: const IconThemeData(color: Colors.white),
         ),
 
         body: Consumer<InterviewViewModel>(
@@ -159,16 +158,16 @@ class _InterviewDetailScreenState extends State<InterviewDetailScreen> {
                           label: 'Scheduled By',
                           value: interview.companySnapshot!.scheduledBy!.name!,
                         ),
-                        _InfoTile(
-                          icon: Icons.work_outline,
-                          label: 'Designation',
-                          value:
-                              interview
-                                  .companySnapshot
-                                  ?.scheduledBy
-                                  ?.designation ??
-                              '—',
-                        ),
+                        // _InfoTile(
+                        //   icon: Icons.work_outline,
+                        //   label: 'Designation',
+                        //   value:
+                        //       interview
+                        //           .companySnapshot
+                        //           ?.scheduledBy
+                        //           ?.designation ??
+                        //       '—',
+                        // ),
                         _InfoTile(
                           icon: Icons.email_outlined,
                           label: 'Email',

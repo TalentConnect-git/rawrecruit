@@ -16,9 +16,11 @@ class AskForReferralView extends StatefulWidget {
 
 class _AskForReferralViewState extends State<AskForReferralView> {
   final TextEditingController companyController = TextEditingController();
+  final TextEditingController urlController = TextEditingController();
 
   @override
   void dispose() {
+    urlController.dispose();
     companyController.dispose();
     super.dispose();
   }
@@ -82,11 +84,11 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     children: const [
-                      InfoChip(text: "Paste a job URL"),
-                      SizedBox(width: 8),
-                      InfoChip(text: "Search by company"),
-                      SizedBox(width: 8),
-                      InfoChip(text: "Find alumni"),
+                      InfoChip(text: "1.Paste a job URL"),
+                      SizedBox(width: 6),
+                      InfoChip(text: "2.We find the Alumni"),
+                      SizedBox(width: 6),
+                      InfoChip(text: "3.Apply for Referrals"),
                     ],
                   ),
                 ),
@@ -103,6 +105,7 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                   child: Column(
                     children: [
                       TextFormField(
+                        controller: urlController,
                         style: const TextStyle(color: Colors.white),
                         decoration: InputDecoration(
                           hintText: 'Paste Job URL',
@@ -124,40 +127,39 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                         ),
                       ),
 
-                      const SizedBox(height: 20),
+                      // const SizedBox(height: 20),
 
-                      Text(
-                        'OR',
-                        style: AppTextStyles.s14W600.copyWith(
-                          color: Colors.white70,
-                        ),
-                      ),
+                      // Text(
+                      //   'OR',
+                      //   style: AppTextStyles.s14W600.copyWith(
+                      //     color: Colors.white70,
+                      //   ),
+                      // ),
 
-                      const SizedBox(height: 20),
+                      // const SizedBox(height: 20),
 
-                      TextFormField(
-                        controller: companyController,
-                        style: const TextStyle(color: Colors.white),
-                        decoration: InputDecoration(
-                          hintText: 'Enter Company Name',
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          prefixIcon: const Icon(
-                            Icons.business,
-                            color: Colors.grey,
-                          ),
-                          filled: true,
-                          fillColor: const Color(0xff2C2C2C),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(12),
-                            borderSide: BorderSide.none,
-                          ),
-                        ),
-                      ),
-
+                      // TextFormField(
+                      //   controller: companyController,
+                      //   style: const TextStyle(color: Colors.white),
+                      //   decoration: InputDecoration(
+                      //     hintText: 'Enter Company Name',
+                      //     hintStyle: const TextStyle(color: Colors.grey),
+                      //     prefixIcon: const Icon(
+                      //       Icons.business,
+                      //       color: Colors.grey,
+                      //     ),
+                      //     filled: true,
+                      //     fillColor: const Color(0xff2C2C2C),
+                      //     border: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: BorderSide.none,
+                      //     ),
+                      //     enabledBorder: OutlineInputBorder(
+                      //       borderRadius: BorderRadius.circular(12),
+                      //       borderSide: BorderSide.none,
+                      //     ),
+                      //   ),
+                      // ),
                       const SizedBox(height: 24),
 
                       Consumer<WebJobViewModel>(
@@ -176,15 +178,170 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                               onPressed: vm.viewState == ViewState.busy
                                   ? null
                                   : () async {
-                                      if (companyController.text
-                                          .trim()
-                                          .isEmpty) {
+                                      final url = urlController.text.trim();
+                                      final company = companyController.text
+                                          .trim();
+
+                                      if (url.isEmpty && company.isEmpty) {
+                                        ScaffoldMessenger.of(
+                                          context,
+                                        ).showSnackBar(
+                                          const SnackBar(
+                                            content: Text(
+                                              'Please enter a Job URL or Company Name',
+                                            ),
+                                          ),
+                                        );
                                         return;
                                       }
 
+                                      // URL FLOW
+                                      if (url.isNotEmpty) {
+                                        final failure = await vm
+                                            .requestCareerPageReferral(
+                                              careerPageUrl: url,
+                                            );
+
+                                        if (!context.mounted) return;
+
+                                        if (failure != null) {
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                failure.message ?? 'error',
+                                              ),
+                                            ),
+                                          );
+                                          return;
+                                        }
+
+                                        final response =
+                                            vm.careerPageReferralResponse;
+
+                                        if (response != null) {
+                                          final totalSent =
+                                              response
+                                                  .data
+                                                  ?.totalRequestsSent ??
+                                              0;
+                                          showDialog(
+                                            context: context,
+                                            barrierDismissible: false,
+                                            builder: (_) {
+                                              return AlertDialog(
+                                                backgroundColor: const Color(
+                                                  0xFF1E1E1E,
+                                                ),
+                                                shape: RoundedRectangleBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  side: BorderSide(
+                                                    color: AppColors.kGreen
+                                                        .withOpacity(0.4),
+                                                  ),
+                                                ),
+                                                title: Row(
+                                                  children: [
+                                                    Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                            8,
+                                                          ),
+                                                      decoration: BoxDecoration(
+                                                        color: AppColors.kGreen
+                                                            .withOpacity(0.15),
+                                                        shape: BoxShape.circle,
+                                                      ),
+                                                      child: Icon(
+                                                        Icons.check_circle,
+                                                        color: AppColors.kGreen,
+                                                        size: 28,
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 12),
+                                                    Expanded(
+                                                      child: Text(
+                                                        'Request Sent',
+                                                        style: AppTextStyles
+                                                            .s18W600
+                                                            .copyWith(
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                                content: Text(
+                                                  '${response.message}\n\n'
+                                                  'Total Requests Sent: $totalSent',
+                                                  style: AppTextStyles.s14W400
+                                                      .copyWith(
+                                                        color: Colors.white70,
+                                                      ),
+                                                ),
+                                                actionsPadding:
+                                                    const EdgeInsets.fromLTRB(
+                                                      20,
+                                                      0,
+                                                      20,
+                                                      20,
+                                                    ),
+                                                actions: [
+                                                  SizedBox(
+                                                    width: double.infinity,
+                                                    child: ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                        backgroundColor:
+                                                            AppColors.kGreen,
+                                                        foregroundColor:
+                                                            Colors.black,
+                                                        elevation: 0,
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius:
+                                                              BorderRadius.circular(
+                                                                12,
+                                                              ),
+                                                        ),
+                                                        minimumSize:
+                                                            const Size.fromHeight(
+                                                              50,
+                                                            ),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(
+                                                          context,
+                                                          rootNavigator: true,
+                                                        ).pop(); // dialog
+
+                                                        if (mounted) {
+                                                          context
+                                                              .pop(); // previous page
+                                                        }
+                                                      },
+                                                      child: const Text(
+                                                        'OK',
+                                                        style: TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.w600,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              );
+                                            },
+                                          );
+                                        }
+
+                                        return;
+                                      }
+
+                                      // COMPANY FLOW
                                       final failure = await vm.discoverJobs(
-                                        companyName: companyController.text
-                                            .trim(),
+                                        companyName: company,
                                       );
 
                                       if (failure == null &&
@@ -206,7 +363,7 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                                       ),
                                     )
                                   : Text(
-                                      'Search Referrals',
+                                      'Apply For Referral',
                                       style: AppTextStyles.s16W600.copyWith(
                                         color: Colors.black,
                                       ),
