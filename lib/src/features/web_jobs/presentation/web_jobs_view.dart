@@ -196,6 +196,7 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                                       }
 
                                       // URL FLOW
+                                      // URL FLOW
                                       if (url.isNotEmpty) {
                                         final failure = await vm
                                             .requestCareerPageReferral(
@@ -221,117 +222,11 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                                             vm.careerPageReferralResponse;
 
                                         if (response != null) {
-                                          final totalSent =
-                                              response
-                                                  .data
-                                                  ?.totalRequestsSent ??
-                                              0;
-                                          showDialog(
-                                            context: context,
-                                            barrierDismissible: false,
-                                            builder: (_) {
-                                              return AlertDialog(
-                                                backgroundColor: const Color(
-                                                  0xFF1E1E1E,
-                                                ),
-                                                shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(20),
-                                                  side: BorderSide(
-                                                    color: AppColors.kGreen
-                                                        .withOpacity(0.4),
-                                                  ),
-                                                ),
-                                                title: Row(
-                                                  children: [
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                            8,
-                                                          ),
-                                                      decoration: BoxDecoration(
-                                                        color: AppColors.kGreen
-                                                            .withOpacity(0.15),
-                                                        shape: BoxShape.circle,
-                                                      ),
-                                                      child: Icon(
-                                                        Icons.check_circle,
-                                                        color: AppColors.kGreen,
-                                                        size: 28,
-                                                      ),
-                                                    ),
-                                                    const SizedBox(width: 12),
-                                                    Expanded(
-                                                      child: Text(
-                                                        'Request Sent',
-                                                        style: AppTextStyles
-                                                            .s18W600
-                                                            .copyWith(
-                                                              color:
-                                                                  Colors.white,
-                                                            ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                content: Text(
-                                                  '${response.message}\n\n'
-                                                  'Total Requests Sent: $totalSent',
-                                                  style: AppTextStyles.s14W400
-                                                      .copyWith(
-                                                        color: Colors.white70,
-                                                      ),
-                                                ),
-                                                actionsPadding:
-                                                    const EdgeInsets.fromLTRB(
-                                                      20,
-                                                      0,
-                                                      20,
-                                                      20,
-                                                    ),
-                                                actions: [
-                                                  SizedBox(
-                                                    width: double.infinity,
-                                                    child: ElevatedButton(
-                                                      style: ElevatedButton.styleFrom(
-                                                        backgroundColor:
-                                                            AppColors.kGreen,
-                                                        foregroundColor:
-                                                            Colors.black,
-                                                        elevation: 0,
-                                                        shape: RoundedRectangleBorder(
-                                                          borderRadius:
-                                                              BorderRadius.circular(
-                                                                12,
-                                                              ),
-                                                        ),
-                                                        minimumSize:
-                                                            const Size.fromHeight(
-                                                              50,
-                                                            ),
-                                                      ),
-                                                      onPressed: () {
-                                                        Navigator.of(
-                                                          context,
-                                                          rootNavigator: true,
-                                                        ).pop(); // dialog
-
-                                                        if (mounted) {
-                                                          context
-                                                              .pop(); // previous page
-                                                        }
-                                                      },
-                                                      child: const Text(
-                                                        'OK',
-                                                        style: TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.w600,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              );
+                                          context.pushNamed(
+                                            RouteNames.careerPageAlumniList,
+                                            extra: {
+                                              'careerPageUrl': url,
+                                              'response': response,
                                             },
                                           );
                                         }

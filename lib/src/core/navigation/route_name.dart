@@ -39,4 +39,5 @@ class RouteNames {
   static const askForReferral = 'askForReferral';
   static const webJobsList = '/webJobsList';
   static const webJobDetail = 'webJobDetail';
+  static const careerPageAlumniList = 'careerPageAlumniList';
 }

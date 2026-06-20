@@ -60,4 +60,6 @@ class Endpoints {
   static const String apiCandidateHiringNetwork =
       'api/candidate/hiring-network';
   static const apiCareerPageReferral = 'api/company-jobs/career-page-referral';
+  static const String apiCareerPageReferralSend =
+      'api/company-jobs/career-page-referral/send';
 }

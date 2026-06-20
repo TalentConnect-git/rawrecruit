@@ -86,7 +86,7 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                     final appliedDate =
                         job?.createdAt?.toLocal().toString().split(' ').first ??
                         "-";
-
+                    final receiver = job?.receiverProfile;
                     return Padding(
                       padding: const EdgeInsets.all(20),
                       child: RefreshIndicator(
@@ -160,9 +160,60 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                                       fontSize: 12,
                                     ),
                                   ),
+                                  if (receiver != null) ...[
+                                    const SizedBox(height: 12),
 
+                                    Row(
+                                      children: [
+                                        CircleAvatar(
+                                          radius: 18,
+                                          backgroundImage:
+                                              receiver
+                                                      .profileImage
+                                                      ?.isNotEmpty ==
+                                                  true
+                                              ? NetworkImage(
+                                                  receiver.profileImage!,
+                                                )
+                                              : null,
+                                          child:
+                                              receiver.profileImage?.isEmpty ??
+                                                  true
+                                              ? const Icon(
+                                                  Icons.person,
+                                                  size: 18,
+                                                )
+                                              : null,
+                                        ),
 
+                                        const SizedBox(width: 10),
 
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              const Text(
+                                                "Referrer",
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 11,
+                                                ),
+                                              ),
+
+                                              Text(
+                                                receiver.name ?? "-",
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
                                 ],
                               ),
                             ),
@@ -181,88 +232,89 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                             const SizedBox(height: 16),
 
                             /// 🔥 TIMELINE
-                          /// 🔥 TIMELINE
-_timelineItem("Applied", true),
+                            /// 🔥 TIMELINE
+                            _timelineItem("Applied", true),
 
-_timelineItem(
-  "Application Sent",
-  [
-    "application_sent",
-    "referred",
-    "shortlisted",
-    "interview",
-    "offer",
-    "accepted",
-    "offer_accepted",
-    "offer_rejected",
-    "joined",
-  ].contains(status),
-),
+                            _timelineItem(
+                              "Application Sent",
+                              [
+                                "application_sent",
+                                "referred",
+                                "shortlisted",
+                                "interview",
+                                "offer",
+                                "accepted",
+                                "offer_accepted",
+                                "offer_rejected",
+                                "joined",
+                              ].contains(status),
+                            ),
 
-_timelineItem(
-  "Referred To Company",
-  [
-    "referred",
-    "shortlisted",
-    "interview",
-    "offer",
-    "accepted",
-    "offer_accepted",
-    "offer_rejected",
-    "joined",
-  ].contains(status),
-),
+                            _timelineItem(
+                              "Referred To Company",
+                              [
+                                "referred",
+                                "shortlisted",
+                                "interview",
+                                "offer",
+                                "accepted",
+                                "offer_accepted",
+                                "offer_rejected",
+                                "joined",
+                              ].contains(status),
+                            ),
 
-_timelineItem(
-  "Shortlisted",
-  [
-    "shortlisted",
-    "interview",
-    "offer",
-    "accepted",
-    "offer_accepted",
-    "offer_rejected",
-    "joined",
-  ].contains(status),
-),
+                            _timelineItem(
+                              "Shortlisted",
+                              [
+                                "shortlisted",
+                                "interview",
+                                "offer",
+                                "accepted",
+                                "offer_accepted",
+                                "offer_rejected",
+                                "joined",
+                              ].contains(status),
+                            ),
 
-_timelineItem(
-  "Interview Scheduled",
-  [
-    "interview",
-    "offer",
-    "accepted",
-    "offer_accepted",
-    "offer_rejected",
-    "joined",
-  ].contains(status),
-),
+                            _timelineItem(
+                              "Interview Scheduled",
+                              [
+                                "interview",
+                                "offer",
+                                "accepted",
+                                "offer_accepted",
+                                "offer_rejected",
+                                "joined",
+                              ].contains(status),
+                            ),
 
-_timelineItem(
-  "Offer Extended",
-  [
-    "offer",
-    "accepted",
-    "offer_accepted",
-    "offer_rejected",
-    "joined",
-  ].contains(status),
-),
+                            _timelineItem(
+                              "Offer Extended",
+                              [
+                                "offer",
+                                "accepted",
+                                "offer_accepted",
+                                "offer_rejected",
+                                "joined",
+                              ].contains(status),
+                            ),
 
+                            if (status == "offer_accepted")
+                              _timelineItem("Offer Accepted", true)
+                            else if (status == "offer_rejected")
+                              _timelineItem("Offer Rejected", true)
+                            else
+                              _timelineItem(
+                                "Offer Accepted / Offer Rejected",
+                                false,
+                              ),
 
-if (status == "offer_accepted")
-  _timelineItem("Offer Accepted", true)
-else if (status == "offer_rejected")
-  _timelineItem("Offer Rejected", true)
-else
-  _timelineItem("Offer Accepted / Offer Rejected", false),
-
-_timelineItem(
-  "Joined the Company",
-  status == "joined",
-  isLast: true
-),
-
+                            _timelineItem(
+                              "Joined the Company",
+                              status == "joined",
+                              isLast: true,
+                            ),
                           ],
                         ),
                       ),
@@ -275,134 +327,129 @@ _timelineItem(
   }
 
   /// 🔥 NORMALIZE STATUS
- /// 🔥 NORMALIZE STATUS
-String _normalizeStatus(String status) {
-  final s = status.toLowerCase();
+  /// 🔥 NORMALIZE STATUS
+  String _normalizeStatus(String status) {
+    final s = status.toLowerCase();
 
-  if (s.contains("pending")) {
+    if (s.contains("pending")) {
+      return "pending";
+    }
+
+    if (s.contains("application sent")) {
+      return "application_sent";
+    }
+
+    if (s.contains("referred")) {
+      return "referred";
+    }
+
+    if (s.contains("shortlist")) {
+      return "shortlisted";
+    }
+
+    if (s.contains("interview")) {
+      return "interview";
+    }
+
+    if (s.contains("joined")) {
+      return "joined";
+    }
+
+    if (s.contains("offer accepted")) {
+      return "offer_accepted";
+    }
+
+    if (s.contains("offer rejected")) {
+      return "offer_rejected";
+    }
+
+    if (s.contains("offer extended")) {
+      return "offer";
+    }
+
+    if (s.contains("accept")) {
+      return "accepted";
+    }
+
+    if (s.contains("reject")) {
+      return "rejected";
+    }
+
     return "pending";
   }
 
-  if (s.contains("application sent")) {
-    return "application_sent";
-  }
-
-  if (s.contains("referred")) {
-    return "referred";
-  }
-
-  if (s.contains("shortlist")) {
-    return "shortlisted";
-  }
-
-  if (s.contains("interview")) {
-    return "interview";
-  }
-
-  if (s.contains("joined")) {
-    return "joined";
-  }
-
-  if (s.contains("offer accepted")) {
-    return "offer_accepted";
-  }
-
-  if (s.contains("offer rejected")) {
-    return "offer_rejected";
-  }
-
-  if (s.contains("offer extended")) {
-    return "offer";
-  }
-
-  if (s.contains("accept")) {
-    return "accepted";
-  }
-
-  if (s.contains("reject")) {
-    return "rejected";
-  }
-
-  return "pending";
-}
   /// 🔥 STATUS BADGE
   /// 🔥 STATUS BADGE
-Widget _statusBadge(String rawStatus) {
-  final status = _normalizeStatus(rawStatus);
+  Widget _statusBadge(String rawStatus) {
+    final status = _normalizeStatus(rawStatus);
 
-  Color textColor = Colors.grey;
+    Color textColor = Colors.grey;
 
-  switch (status) {
-    case "pending":
-      textColor = Colors.grey;
-      break;
+    switch (status) {
+      case "pending":
+        textColor = Colors.grey;
+        break;
 
-    case "application_sent":
-      textColor = Colors.orange;
-      break;
+      case "application_sent":
+        textColor = Colors.orange;
+        break;
 
-    case "referred":
-      textColor = Colors.deepOrange;
-      break;
+      case "referred":
+        textColor = Colors.deepOrange;
+        break;
 
-    case "shortlisted":
-      textColor = Colors.amber;
-      break;
+      case "shortlisted":
+        textColor = Colors.amber;
+        break;
 
-    case "interview":
-      textColor = Colors.blue;
-      break;
+      case "interview":
+        textColor = Colors.blue;
+        break;
 
-    case "offer":
-      textColor = Colors.purple;
-      break;
+      case "offer":
+        textColor = Colors.purple;
+        break;
 
-    case "accepted":
-      textColor = Colors.green;
-      break;
+      case "accepted":
+        textColor = Colors.green;
+        break;
 
-    case "offer_accepted":
-      textColor = Colors.green;
-      break;
+      case "offer_accepted":
+        textColor = Colors.green;
+        break;
 
-    case "offer_rejected":
-      textColor = Colors.red;
-      break;
+      case "offer_rejected":
+        textColor = Colors.red;
+        break;
 
-    case "joined":
-      textColor = Colors.teal;
-      break;
+      case "joined":
+        textColor = Colors.teal;
+        break;
 
-    case "rejected":
-      textColor = Colors.red;
-      break;
-  }
+      case "rejected":
+        textColor = Colors.red;
+        break;
+    }
 
-  return Container(
-    padding: const EdgeInsets.symmetric(
-      horizontal: 10,
-      vertical: 4,
-    ),
-    decoration: BoxDecoration(
-      color: textColor.withOpacity(0.15),
-      borderRadius: BorderRadius.circular(20),
-    ),
-    child: Text(
-      rawStatus.isEmpty ? "Pending" : rawStatus,
-      style: TextStyle(
-        color: textColor,
-        fontSize: 12,
-        fontWeight: FontWeight.w600,
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: textColor.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(20),
       ),
-    ),
-  );
-}
-
+      child: Text(
+        rawStatus.isEmpty ? "Pending" : rawStatus,
+        style: TextStyle(
+          color: textColor,
+          fontSize: 12,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    );
+  }
 
   /// 🔥 TIMELINE ITEM
-  Widget _timelineItem(String title, bool isDone, {
-  bool isLast = false,
-}){
+  Widget _timelineItem(String title, bool isDone, {bool isLast = false}) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -414,12 +461,12 @@ Widget _statusBadge(String rawStatus) {
               size: 20,
             ),
 
-           if (!isLast)
-  Container(
-    width: 2,
-    height: 30,
-    color: Colors.grey.withOpacity(0.3),
-  ),
+            if (!isLast)
+              Container(
+                width: 2,
+                height: 30,
+                color: Colors.grey.withOpacity(0.3),
+              ),
           ],
         ),
 
