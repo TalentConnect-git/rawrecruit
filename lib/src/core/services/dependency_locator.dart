@@ -4,7 +4,8 @@ import 'package:rawrecruit/src/core/index.dart'
         NetworkService,
         NavigationRepository,
         AppStateProvider,
-        NotificationProvider;
+        NotificationProvider,
+        ChatProvider;
 import 'package:rawrecruit/src/core/provider/interview_provider.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
     show
@@ -84,6 +85,7 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<AppStateProvider>(AppStateProvider.new)
     ..registerLazySingleton<NotificationProvider>(NotificationProvider.new)
     ..registerLazySingleton<InterviewProvider>(InterviewProvider.new)
+    ..registerLazySingleton<ChatProvider>(ChatProvider.new)
     ..registerLazySingleton<OnboardingLocalService>(
       () => OnboardingLocalService(),
     )

@@ -10,7 +10,8 @@ import 'package:rawrecruit/src/core/index.dart'
         getIt,
         RouteNames,
         NavItemExt,
-        FailureExt;
+        FailureExt,
+        ChatProvider;
 import 'package:rawrecruit/src/core/provider/interview_provider.dart';
 import 'package:rawrecruit/src/features/chat/index.dart' show ChatViewModel;
 import 'package:rawrecruit/src/features/home/index.dart' show AppBottomNav;
@@ -194,16 +195,46 @@ class _HomeViewState extends State<HomeView> {
                 },
                 selector: (_, vm) => vm.hasNewNotifications,
               ),
-              IconButton(
-                onPressed: () {
-                  context.pushNamed(RouteNames.chatUserList);
+              Selector<ChatProvider, bool>(
+                builder: (_, available, _) {
+                  return IconButton(
+                    onPressed: () async {
+                      context.pushNamed(RouteNames.chatUserList);
+                    },
+
+                    icon: Stack(
+                      clipBehavior: Clip.none,
+
+                      children: [
+                        Image.asset(
+                          'assets/images/chat.png',
+                          height: 24,
+                          width: 24,
+                          color: Colors.white,
+                        ),
+
+                        if (available)
+                          Positioned(
+                            right: -1,
+                            top: -1,
+
+                            child: Container(
+                              width: 10,
+                              height: 10,
+
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    color: Colors.white,
+                  );
                 },
-                icon: Image.asset(
-                  'assets/images/chat.png',
-                  height: 24,
-                  width: 24,
-                  color: Colors.white,
-                ),
+                selector: (_, vm) => vm.hasNewChats,
               ),
             ],
           ),

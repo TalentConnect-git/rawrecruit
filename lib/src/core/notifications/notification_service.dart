@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/core/provider/interview_provider.dart';
 
 class NotificationService {
   final FirebaseMessaging _fcm = FirebaseMessaging.instance;
@@ -42,6 +41,9 @@ class NotificationService {
       if (message.notification != null &&
           (message.notification?.toMap())?['title'] == 'INTERVIEW_SCHEDULED') {
         getIt<InterviewProvider>().setNewInterviewsAvailable();
+      } else if (message.notification != null &&
+          (message.notification?.toMap())?['title'] == 'NEW_CHAT_MESSAGE') {
+        getIt<ChatProvider>().setNewChatsAvailable();
       } else {
         getIt<NotificationProvider>().setNewNotificationsAvailable();
       }
