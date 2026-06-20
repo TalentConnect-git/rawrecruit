@@ -51,6 +51,7 @@ import '../../features/professional/job_postng/presentation/referred_detail_page
 import '../../features/profile/presentation/add_edit_profile_view.dart';
 import '../../features/profile/presentation/modern_profile_page.dart';
 import '../../features/scheduled_interviews/presentation/interview_detail_screen.dart';
+import '../../features/web_jobs/presentation/career_page_alumni_list.dart';
 import '../services/dependency_locator.dart';
 
 GoRouter appRouter = GoRouter(
@@ -287,6 +288,18 @@ GoRouter appRouter = GoRouter(
       path: '/ask-for-referral',
       name: RouteNames.askForReferral,
       builder: (context, state) => const AskForReferralView(),
+    ),
+    GoRoute(
+      path: '/career-page-alumni-list',
+      name: RouteNames.careerPageAlumniList,
+      builder: (context, state) {
+        final data = state.extra as Map<String, dynamic>;
+
+        return CareerPageAlumniListView(
+          careerPageUrl: data['careerPageUrl'],
+          response: data['response'],
+        );
+      },
     ),
     GoRoute(
       path: '/web-jobs-list',

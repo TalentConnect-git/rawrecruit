@@ -3,6 +3,7 @@ import 'package:rawrecruit/src/features/web_jobs/data/entities/company_job.dart'
     show CompanyJob;
 
 import '../entities/career_page_referral_response.dart';
+import '../entities/career_send_model.dart';
 import '../entities/web_job.dart';
 
 abstract class WebJobRepository {
@@ -14,5 +15,10 @@ abstract class WebJobRepository {
 
   ResultFuture<CareerPageReferralResponse?> requestCareerPageReferral({
     required String careerPageUrl,
+  });
+
+  ResultFuture<CareerPageReferralSendResponse?> sendCareerPageReferral({
+    required String careerPageUrl,
+    required List<String> receiverUserIds,
   });
 }
