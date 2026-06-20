@@ -8,7 +8,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/vie
 import 'package:rawrecruit/src/features/professional/job_postng/utils/enum.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:ui';
 import '../../../../core/models/experience.dart';
 
 class ReferralDetailPage extends StatefulWidget {
@@ -892,39 +892,35 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
   void showStatusPopup(BuildContext context, String message, Color color) {
     showDialog(
       context: context,
-
+      barrierColor: Colors.black.withOpacity(0.4),
       builder: (_) {
-        return AlertDialog(
-          backgroundColor: AppColors.kCard,
-
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-
-            children: [
-              CircleAvatar(
-                radius: 28,
-                backgroundColor: color.withOpacity(.15),
-
-                child: Icon(Icons.check, color: color, size: 28),
-              ),
-
-              const SizedBox(height: 16),
-
-              Text(
-                message,
-                textAlign: TextAlign.center,
-
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+        return BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 6, sigmaY: 6),
+          child: AlertDialog(
+            backgroundColor: AppColors.kCard,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                CircleAvatar(
+                  radius: 28,
+                  backgroundColor: color.withOpacity(.15),
+                  child: Icon(Icons.check, color: color, size: 28),
                 ),
-              ),
-            ],
+                const SizedBox(height: 16),
+                Text(
+                  message,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
           ),
         );
       },

@@ -128,7 +128,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
             user?.noticePeriodStartDate,
             user?.noticePeriod,
           );
-      
+
           if (user == null) {
             return const Scaffold(
               body: Center(child: Text("No profile found")),
@@ -420,6 +420,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   ],
                                 ),
                               ),
+                              const SizedBox(width: 12), // <- add this
 
                               const Icon(
                                 Icons.open_in_new,
@@ -554,8 +555,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                           spacing: 10,
                           runSpacing: 10,
                           children: (user.industry ?? [])
-    .map((e) => _chip(e))
-    .toList(),
+                              .map((e) => _chip(e))
+                              .toList(),
                         ),
                       ),
                     ],
@@ -953,8 +954,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   children: [
                                     /// COMPANY BOX
                                     Container(
-                                      height: 46,
-                                      width: 46,
+                                      height: 44,
+                                      width: 44,
 
                                       alignment: Alignment.center,
 
@@ -1529,107 +1530,104 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       ),
                     ],
 
-                 const SizedBox(height: 12),
+                    const SizedBox(height: 12),
 
-SizedBox(
-  width: double.infinity,
-  child: ElevatedButton.icon(
-    onPressed: (user.github?.isNotEmpty ?? false)
-        ? () async {
-            final uri = Uri.parse(user.github!);
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri);
-            }
-          }
-        : null,
-    icon: const Icon(Icons.code),
-    label: const Text("Open GitHub"),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: (user.github?.isNotEmpty ?? false)
-          ? AppColors.kGreen
-          : Colors.white12,
-      foregroundColor: (user.github?.isNotEmpty ?? false)
-          ? Colors.white
-          : Colors.grey,
-      disabledBackgroundColor: Colors.white12,
-      disabledForegroundColor: Colors.grey,
-    ),
-  ),
-),
-              const SizedBox(height: 12),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: (user.github?.isNotEmpty ?? false)
+                            ? () async {
+                                final uri = Uri.parse(user.github!);
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(uri);
+                                }
+                              }
+                            : null,
+                        icon: const Icon(Icons.code),
+                        label: const Text("Open GitHub"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: (user.github?.isNotEmpty ?? false)
+                              ? AppColors.kGreen
+                              : Colors.white12,
+                          foregroundColor: (user.github?.isNotEmpty ?? false)
+                              ? Colors.white
+                              : Colors.grey,
+                          disabledBackgroundColor: Colors.white12,
+                          disabledForegroundColor: Colors.grey,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 12),
 
-SizedBox(
-  width: double.infinity,
-  child: ElevatedButton.icon(
-    onPressed: (user.portfolio?.isNotEmpty ?? false)
-        ? () async {
-            final uri = Uri.parse(user.portfolio!);
-            if (await canLaunchUrl(uri)) {
-              await launchUrl(uri);
-            }
-          }
-        : null,
-    icon: const Icon(Icons.web),
-    label: const Text("Open Portfolio"),
-    style: ElevatedButton.styleFrom(
-      backgroundColor: (user.portfolio?.isNotEmpty ?? false)
-          ? AppColors.kGreen
-          : Colors.white12,
-      foregroundColor: (user.portfolio?.isNotEmpty ?? false)
-          ? Colors.white
-          : Colors.grey,
-      disabledBackgroundColor: Colors.white12,
-      disabledForegroundColor: Colors.grey,
-    ),
-  ),
-),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: (user.portfolio?.isNotEmpty ?? false)
+                            ? () async {
+                                final uri = Uri.parse(user.portfolio!);
+                                if (await canLaunchUrl(uri)) {
+                                  await launchUrl(uri);
+                                }
+                              }
+                            : null,
+                        icon: const Icon(Icons.web),
+                        label: const Text("Open Portfolio"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: (user.portfolio?.isNotEmpty ?? false)
+                              ? AppColors.kGreen
+                              : Colors.white12,
+                          foregroundColor: (user.portfolio?.isNotEmpty ?? false)
+                              ? Colors.white
+                              : Colors.grey,
+                          disabledBackgroundColor: Colors.white12,
+                          disabledForegroundColor: Colors.grey,
+                        ),
+                      ),
+                    ),
 
-//                     const SizedBox(height: 15),
-          
+                    //                     const SizedBox(height: 15),
 
-// SizedBox(
-//   width: double.infinity,
-//   child: ElevatedButton.icon(
-//     onPressed: (user.resume?.isNotEmpty ?? false)
-//         ? () {
-//             final url = user.resume;
+                    // SizedBox(
+                    //   width: double.infinity,
+                    //   child: ElevatedButton.icon(
+                    //     onPressed: (user.resume?.isNotEmpty ?? false)
+                    //         ? () {
+                    //             final url = user.resume;
 
-//             if (url == null) {
-//               Toasts.showInfoToast(
-//                 context,
-//                 message: 'No Resume Found!',
-//               );
-//               return;
-//             }
+                    //             if (url == null) {
+                    //               Toasts.showInfoToast(
+                    //                 context,
+                    //                 message: 'No Resume Found!',
+                    //               );
+                    //               return;
+                    //             }
 
-//             Navigator.push(
-//               context,
-//               MaterialPageRoute(
-//                 builder: (_) => ResumeViewerPage(url: url),
-//               ),
-//             );
-//           }
-//         : null,
-//     icon: const Icon(Icons.picture_as_pdf),
-//     label: const Text("Open Resume"),
-//     style: ElevatedButton.styleFrom(
-//       backgroundColor: (user.resume?.isNotEmpty ?? false)
-//           ? AppColors.kGreen
-//           : Colors.white12,
-//       foregroundColor: (user.resume?.isNotEmpty ?? false)
-//           ? Colors.white
-//           : Colors.grey,
-//       disabledBackgroundColor: Colors.white12,
-//       disabledForegroundColor: Colors.grey,
-//       padding: const EdgeInsets.symmetric(vertical: 14),
-//       shape: RoundedRectangleBorder(
-//         borderRadius: BorderRadius.circular(14),
-//       ),
-//     ),
-//   ),
-// ),
-
-
+                    //             Navigator.push(
+                    //               context,
+                    //               MaterialPageRoute(
+                    //                 builder: (_) => ResumeViewerPage(url: url),
+                    //               ),
+                    //             );
+                    //           }
+                    //         : null,
+                    //     icon: const Icon(Icons.picture_as_pdf),
+                    //     label: const Text("Open Resume"),
+                    //     style: ElevatedButton.styleFrom(
+                    //       backgroundColor: (user.resume?.isNotEmpty ?? false)
+                    //           ? AppColors.kGreen
+                    //           : Colors.white12,
+                    //       foregroundColor: (user.resume?.isNotEmpty ?? false)
+                    //           ? Colors.white
+                    //           : Colors.grey,
+                    //       disabledBackgroundColor: Colors.white12,
+                    //       disabledForegroundColor: Colors.grey,
+                    //       padding: const EdgeInsets.symmetric(vertical: 14),
+                    //       shape: RoundedRectangleBorder(
+                    //         borderRadius: BorderRadius.circular(14),
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -1780,10 +1778,10 @@ SizedBox(
         ? user.locations!.first
         : "India";
     final companyCount =
-    user.experiences
-        ?.where((e) => (e.company?.trim().isNotEmpty ?? false))
-        .length ??
-    0;
+        user.experiences
+            ?.where((e) => (e.company?.trim().isNotEmpty ?? false))
+            .length ??
+        0;
     if (user.experiences?.isNotEmpty ?? false) {
       currentExp = user.experiences!.firstWhere(
         (e) => e.isCurrent == true,
@@ -2066,7 +2064,7 @@ SizedBox(
                         const SizedBox(width: 5),
 
                         Text(
-                        "Worked at $companyCount Companies",
+                          "Worked at $companyCount Companies",
 
                           style: const TextStyle(
                             color: Colors.white70,
@@ -2141,12 +2139,12 @@ SizedBox(
                                 );
                               }
                             : null,
-child: _headerButton(
-  icon: Icons.picture_as_pdf,
-  title: "Resume",
-  filled: (user.resume?.isNotEmpty ?? false),
-  disabled: !(user.resume?.isNotEmpty ?? false),
-),
+                        child: _headerButton(
+                          icon: Icons.picture_as_pdf,
+                          title: "Resume",
+                          filled: (user.resume?.isNotEmpty ?? false),
+                          disabled: !(user.resume?.isNotEmpty ?? false),
+                        ),
                       ),
                     ),
 
@@ -2163,12 +2161,12 @@ child: _headerButton(
                                 }
                               }
                             : null,
-child: _headerButton(
-  icon: Icons.business,
-  title: "LinkedIn",
-  filled: (user.linkedin?.isNotEmpty ?? false),
-  disabled: !(user.linkedin?.isNotEmpty ?? false),
-),
+                        child: _headerButton(
+                          icon: Icons.business,
+                          title: "LinkedIn",
+                          filled: (user.linkedin?.isNotEmpty ?? false),
+                          disabled: !(user.linkedin?.isNotEmpty ?? false),
+                        ),
                       ),
                     ),
                   ],

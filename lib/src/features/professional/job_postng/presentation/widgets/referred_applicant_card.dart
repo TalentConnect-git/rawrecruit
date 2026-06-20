@@ -19,6 +19,7 @@ class ReferredApplicantCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final User user = application.applicant ?? const User();
+    final referralCompany = application.referralCompany ?? '';
 
     /// ✅ NAME
     final name = user.name ?? "Candidate";
@@ -80,43 +81,33 @@ class ReferredApplicantCard extends StatelessWidget {
 
                   const SizedBox(height: 6),
 
-                  /// ✅ MATCH + JOB
+                  /// ✅ MATCH + company
                   Row(
                     children: [
-                      /// MATCH SCORE
+                      if (referralCompany.isNotEmpty) ...[
+                        Icon(Icons.business, size: 14, color: AppColors.kGreen),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            referralCompany,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: AppTextStyles.s12W400.copyWith(
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                      ],
+
                       Text(
                         "$match% match",
                         style: AppTextStyles.s12W600.copyWith(
                           color: AppColors.kGreen,
                         ),
                       ),
-
-                      // const SizedBox(width: 10),
-
-                      // /// JOB TITLE
-                      // Flexible(
-                      //   child: Container(
-                      //     padding: const EdgeInsets.symmetric(
-                      //       horizontal: 8,
-                      //       vertical: 2,
-                      //     ),
-                      //     decoration: BoxDecoration(
-                      //       color: AppColors.kCard,
-                      //       borderRadius: BorderRadius.circular(6),
-                      //     ),
-                      //     child: Text(
-                      //       jobTitle,
-                      //       maxLines: 1,
-                      //       overflow: TextOverflow.ellipsis,
-                      //       style: AppTextStyles.s12W400.copyWith(
-                      //         color: Colors.grey,
-                      //       ),
-                      //     ),
-                      //   ),
-                      // ),
                     ],
                   ),
-
                   const SizedBox(height: 8),
 
                   /// ✅ STATUS
@@ -158,33 +149,33 @@ class ReferredApplicantCard extends StatelessWidget {
                 onSelected: (value) {
                   _changeStatus(context, status: value);
                 },
-              itemBuilder: (_) => const [
-  PopupMenuItem(
-    value: "Shortlisted",
-    child: Text("Shortlisted"),
-  ),
-  PopupMenuItem(
-    value: "Interview Scheduled",
-    child: Text("Interview Scheduled"),
-  ),
-  PopupMenuItem(
-    value: "Offer Extended",
-    child: Text("Offer Extended"),
-  ),
-  
-  PopupMenuItem(
-    value: "Offer Accepted",
-    child: Text("Offer Accepted"),
-  ),
-  PopupMenuItem(
-    value: "Offer Rejected",
-    child: Text("Offer Rejected"),
-  ),
-  PopupMenuItem(
-    value: "Joined the Company",
-    child: Text("Joined the Company"),
-  ),
-],
+                itemBuilder: (_) => const [
+                  PopupMenuItem(
+                    value: "Shortlisted",
+                    child: Text("Shortlisted"),
+                  ),
+                  PopupMenuItem(
+                    value: "Interview Scheduled",
+                    child: Text("Interview Scheduled"),
+                  ),
+                  PopupMenuItem(
+                    value: "Offer Extended",
+                    child: Text("Offer Extended"),
+                  ),
+
+                  PopupMenuItem(
+                    value: "Offer Accepted",
+                    child: Text("Offer Accepted"),
+                  ),
+                  PopupMenuItem(
+                    value: "Offer Rejected",
+                    child: Text("Offer Rejected"),
+                  ),
+                  PopupMenuItem(
+                    value: "Joined the Company",
+                    child: Text("Joined the Company"),
+                  ),
+                ],
                 child: Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 10,
