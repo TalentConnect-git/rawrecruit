@@ -80,7 +80,10 @@ _InterviewJobRef _$InterviewJobRefFromJson(Map<String, dynamic> json) =>
     _InterviewJobRef(
       id: json['_id'] as String?,
       jobType: json['jobType'] as String?,
-      jobTitle: json['jobTitle'] as List<dynamic>?,
+      jobRoles: (json['jobRoles'] as List<dynamic>?)
+          ?.map((e) => e as String)
+          .toList(),
+      title: json['title'] as String?,
       companyName: json['companyName'] as String?,
     );
 
@@ -88,7 +91,8 @@ Map<String, dynamic> _$InterviewJobRefToJson(_InterviewJobRef instance) =>
     <String, dynamic>{
       '_id': instance.id,
       'jobType': instance.jobType,
-      'jobTitle': instance.jobTitle,
+      'jobRoles': instance.jobRoles,
+      'title': instance.title,
       'companyName': instance.companyName,
     };
 
