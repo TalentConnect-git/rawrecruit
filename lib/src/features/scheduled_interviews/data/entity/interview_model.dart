@@ -45,13 +45,13 @@ abstract class InterviewModel with _$InterviewModel {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-
 @freezed
 abstract class InterviewJobRef with _$InterviewJobRef {
   const factory InterviewJobRef({
     @JsonKey(name: '_id') String? id,
     String? jobType,
-    List<dynamic>? jobTitle,
+    List<String>? jobRoles,
+    @JsonKey(name: 'title') String? title,
     String? companyName,
   }) = _InterviewJobRef;
 

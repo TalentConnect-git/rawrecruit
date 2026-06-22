@@ -6,9 +6,10 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/application/index.dart';
 import 'package:rawrecruit/src/features/application/presentation/view_model/application_detail_view_model.dart';
 
+import '../../../core/navigation/routes_index.dart';
+
 class ApplicationDetailView extends StatefulWidget {
   final String applicationId;
-
   const ApplicationDetailView({super.key, required this.applicationId});
 
   @override
@@ -165,25 +166,43 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
 
                                     Row(
                                       children: [
-                                        CircleAvatar(
-                                          radius: 18,
-                                          backgroundImage:
-                                              receiver
-                                                      .profileImage
-                                                      ?.isNotEmpty ==
-                                                  true
-                                              ? NetworkImage(
-                                                  receiver.profileImage!,
-                                                )
-                                              : null,
-                                          child:
-                                              receiver.profileImage?.isEmpty ??
-                                                  true
-                                              ? const Icon(
-                                                  Icons.person,
-                                                  size: 18,
-                                                )
-                                              : null,
+                                        GestureDetector(
+                                          onTap: () {
+                                            if (receiver?.userId == null)
+                                              return;
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (_) =>
+                                                    ProfileDetailView(
+                                                      userId: receiver.userId!,
+                                                    ),
+                                              ),
+                                            );
+                                          },
+                                          child: CircleAvatar(
+                                            radius: 18,
+                                            backgroundImage:
+                                                receiver
+                                                        ?.profileImage
+                                                        ?.isNotEmpty ==
+                                                    true
+                                                ? NetworkImage(
+                                                    receiver!.profileImage!,
+                                                  )
+                                                : null,
+                                            child:
+                                                receiver
+                                                        ?.profileImage
+                                                        ?.isEmpty ??
+                                                    true
+                                                ? const Icon(
+                                                    Icons.person,
+                                                    size: 18,
+                                                  )
+                                                : null,
+                                          ),
                                         ),
 
                                         const SizedBox(width: 10),

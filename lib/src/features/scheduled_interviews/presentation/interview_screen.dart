@@ -96,7 +96,11 @@ class InterviewCard extends StatelessWidget {
         interview.jobId?.companyName ??
         'Unknown Company';
 
-    final jobTitle = interview.jobId?.jobTitle?.join(', ') ?? 'Unknown Job';
+    final jobTitle =
+        interview.jobId?.title ??
+        ((interview.jobId?.jobRoles?.isNotEmpty ?? false)
+            ? interview.jobId!.jobRoles!.first
+            : 'Unknown Job');
     final roles = interview.jobRole?.join(', ') ?? '';
     final status = interview.status ?? 'Scheduled';
 

@@ -134,7 +134,7 @@ class ApplicationCard extends StatelessWidget {
 
                 if (receiverName != null && receiverName.isNotEmpty)
                   Text(
-                    "Referral by $receiverName",
+                    "Referred by $receiverName",
                     style: const TextStyle(color: Colors.white70, fontSize: 12),
                   ),
               ],
