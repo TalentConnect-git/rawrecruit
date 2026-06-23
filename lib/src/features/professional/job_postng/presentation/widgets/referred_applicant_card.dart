@@ -26,7 +26,7 @@ class ReferredApplicantCard extends StatelessWidget {
 
     /// ✅ MATCH SCORE
     final match = application.matchScore ?? 0;
-
+    final imageUrl = application.job?.senderProfile?.profileImage ?? '';
     // /// ✅ JOB TITLE
     // final jobTitle = application.jobTitle ?? "-";
 
@@ -60,12 +60,16 @@ class ReferredApplicantCard extends StatelessWidget {
             CircleAvatar(
               radius: 22,
               backgroundColor: AppColors.kGreen,
-              child: Text(
-                _initials(name),
-                style: const TextStyle(color: Colors.black),
-              ),
+              backgroundImage: imageUrl.isNotEmpty
+                  ? NetworkImage(imageUrl)
+                  : null,
+              child: imageUrl.isEmpty
+                  ? Text(
+                      _initials(name),
+                      style: const TextStyle(color: Colors.black),
+                    )
+                  : null,
             ),
-
             const SizedBox(width: 12),
 
             /// 🔥 CONTENT
@@ -182,18 +186,18 @@ class ReferredApplicantCard extends StatelessWidget {
                     vertical: 7,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.kGreen,
+                    color: AppColors.secBorder,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.sync, size: 14, color: Colors.black),
+                      Icon(Icons.sync, size: 14, color: Colors.white),
                       SizedBox(width: 5),
                       Text(
                         "Update",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),

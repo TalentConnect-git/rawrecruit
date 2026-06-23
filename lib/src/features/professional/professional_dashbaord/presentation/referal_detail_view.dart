@@ -130,7 +130,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 🧑‍💻 Work Mode: $mode
 
 Apply here:
-https://rawrecruit.in/professional-dashboard/Referral/
+https://play.google.com/store/apps/details?id=com.app.rawrecruit
 ''';
 
                     await Share.share(shareText);
@@ -603,15 +603,29 @@ https://rawrecruit.in/professional-dashboard/Referral/
                 children: [
                   CircleAvatar(
                     radius: 28,
-                    backgroundColor: Colors.white.withOpacity(0.08),
-                    child: Text(
-                      name.isNotEmpty ? name[0].toUpperCase() : "R",
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
-                    ),
+                    backgroundColor: AppColors.kGreen,
+                    backgroundImage: (candidate?.profileImage ?? '').isNotEmpty
+                        ? NetworkImage(candidate!.profileImage!)
+                        : null,
+                    child: (candidate?.profileImage ?? '').isEmpty
+                        ? Text(
+                            name.trim().isNotEmpty
+                                ? name
+                                      .trim()
+                                      .split(' ')
+                                      .where((e) => e.isNotEmpty)
+                                      .map((e) => e[0])
+                                      .take(2)
+                                      .join()
+                                      .toUpperCase()
+                                : 'R',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          )
+                        : null,
                   ),
                   Positioned(
                     bottom: 0,
@@ -1511,7 +1525,7 @@ class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
 
   @override
   Widget build(BuildContext context) {
-      print("ANIMATED SCORE = ${widget.score}");
+    print("ANIMATED SCORE = ${widget.score}");
 
     return AnimatedBuilder(
       animation: _anim,

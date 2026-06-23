@@ -173,10 +173,7 @@ class SupportPage extends StatelessWidget {
                         "https://www.instagram.com/referd.d/",
                       );
 
-                      await launchUrl(
-                        uri,
-                        mode: LaunchMode.externalApplication,
-                      );
+                      await launchUrl(uri, mode: LaunchMode.platformDefault);
                     },
                     child: Container(
                       height: 90,
@@ -221,10 +218,7 @@ class SupportPage extends StatelessWidget {
                         "https://www.linkedin.com/company/referd-rawrecruit/",
                       );
 
-                      await launchUrl(
-                        uri,
-                        mode: LaunchMode.externalApplication,
-                      );
+                      await launchUrl(uri, mode: LaunchMode.platformDefault);
                     },
                     child: Container(
                       height: 90,
@@ -301,7 +295,7 @@ class SupportPage extends StatelessWidget {
                     onTap: () {
                       launchUrl(
                         Uri.parse('https://rawrecruit.in/'),
-                        mode: LaunchMode.externalApplication,
+                        mode: LaunchMode.platformDefault,
                       );
                     },
                   ),
@@ -314,7 +308,7 @@ class SupportPage extends StatelessWidget {
                     onTap: () {
                       launchUrl(
                         Uri.parse('https://careerkrafter.in/'),
-                        mode: LaunchMode.externalApplication,
+                        mode: LaunchMode.platformDefault,
                       );
                     },
                   ),

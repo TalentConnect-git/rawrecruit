@@ -116,7 +116,7 @@ abstract class CandidatePosted with _$CandidatePosted {
     String? openToShift,
     String? profileType,
     String? referralSource,
-
+    String? profileImage,
     // Salary
     String? currentSalaryAmount,
     String? expectedSalaryAmount,

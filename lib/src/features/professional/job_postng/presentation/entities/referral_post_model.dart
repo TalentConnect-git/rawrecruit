@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/utils/convertors.dart';
 
+import '../../../../../core/index.dart';
+
 part 'referral_post_model.freezed.dart';
 part 'referral_post_model.g.dart';
 
@@ -8,10 +10,11 @@ part 'referral_post_model.g.dart';
 abstract class ReferralPostModel with _$ReferralPostModel {
   const factory ReferralPostModel({
     @JsonKey(name: '_id') String? id,
-List<String>? jobTitle,   String? description,
+    List<String>? jobTitle,
+    String? description,
     String? approvalStatus,
-List<String>? employmentType,
-List<String>? workMode,
+    List<String>? employmentType,
+    List<String>? workMode,
     String? broadcastType,
     String? jobType,
     List<String>? location,
@@ -25,28 +28,29 @@ List<String>? workMode,
     String? yearsOfExperience,
     String? minYearofExperience,
 
-List<String>? rounds,
-
-List<String>? selectionProcess,
-
-String? endDate,
-  bool? inactive,
+    List<String>? rounds,
+    final User? senderProfile,
+    List<String>? selectionProcess,
+    bool? isAskForReferral,
+    String? endDate,
+    bool? inactive,
     List<String>? benefits,
     List<String>? certifications,
     String? eligibilityCriteria,
-      Metrics? metrics,
+    Metrics? metrics,
   }) = _ReferralPostModel;
 
   factory ReferralPostModel.fromJson(Map<String, dynamic> json) =>
       _$ReferralPostModelFromJson(json);
 }
+
 @freezed
 abstract class Metrics with _$Metrics {
   const factory Metrics({
     int? totalApplicationsReceived,
     int? totalReferredToCompany,
     int? totalAcceptedByCompany,
-        int? totalInterviewScheduled,
+    int? totalInterviewScheduled,
 
     int? responseRate,
     int? referralSuccessRate,
@@ -55,6 +59,7 @@ abstract class Metrics with _$Metrics {
   factory Metrics.fromJson(Map<String, dynamic> json) =>
       _$MetricsFromJson(json);
 }
+
 @freezed
 abstract class PackageDetails with _$PackageDetails {
   const factory PackageDetails({

@@ -37,34 +37,30 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
       child: Scaffold(
         backgroundColor: Colors.black,
 
-      appBar: AppBar(
-  backgroundColor: Colors.black,
-  elevation: 0,
-  iconTheme: const IconThemeData(
-    color: Colors.white,
-  ),
-  title: const Text(
-    "Alumni Profile",
-    style: TextStyle(color: Colors.white),
-  ),
-),
+        appBar: AppBar(
+          backgroundColor: Colors.black,
+          elevation: 0,
+          iconTheme: const IconThemeData(color: Colors.white),
+          title: const Text(
+            "Alumni Profile",
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
 
         body: Consumer<AlumniDetailViewModel>(
           builder: (vmContext, vm, _) {
-           if (vm.viewState == ViewState.busy) {
-  return const Center(
-    child: CircularProgressIndicator(),
-  );
-}
+            if (vm.viewState == ViewState.busy) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-if (vm.alumni == null) {
-  return const Center(
-    child: Text(
-      "No data found",
-      style: TextStyle(color: Colors.white),
-    ),
-  );
-}
+            if (vm.alumni == null) {
+              return const Center(
+                child: Text(
+                  "No data found",
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            }
             final name = vm.alumni?.name ?? "User";
 
             final currentExperience =
@@ -73,14 +69,16 @@ if (vm.alumni == null) {
                     .isNotEmpty
                 ? vm.alumni?.experiences?.firstWhere((e) => e.isCurrent == true)
                 : null;
-final currentEducation =
-    (vm.alumni?.educations ?? []).where((e) => e.isCurrent == true).isNotEmpty
-        ? vm.alumni!.educations!.firstWhere((e) => e.isCurrent == true)
-        : ((vm.alumni?.educations ?? []).isNotEmpty
-            ? vm.alumni!.educations!.first
-            : null);
+            final currentEducation =
+                (vm.alumni?.educations ?? [])
+                    .where((e) => e.isCurrent == true)
+                    .isNotEmpty
+                ? vm.alumni!.educations!.firstWhere((e) => e.isCurrent == true)
+                : ((vm.alumni?.educations ?? []).isNotEmpty
+                      ? vm.alumni!.educations!.first
+                      : null);
 
-final college = currentEducation?.college ?? '';
+            final college = currentEducation?.college ?? '';
             final fallbackExperience =
                 currentExperience ??
                 ((vm.alumni?.experiences ?? []).isNotEmpty
@@ -388,7 +386,6 @@ final college = currentEducation?.college ?? '';
                               color: Colors.white,
                             ),
                             label: const Text(
-                              
                               "Message",
                               style: TextStyle(
                                 color: Colors.white,
@@ -481,7 +478,9 @@ final college = currentEducation?.college ?? '';
                                 Text(
                                   isHiring ? "Hiring" : "Not Hiring",
                                   style: TextStyle(
-                                    color: isHiring ? Colors.green : Colors.grey,
+                                    color: isHiring
+                                        ? Colors.green
+                                        : Colors.grey,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -492,7 +491,9 @@ final college = currentEducation?.college ?? '';
                                   width: 8,
                                   height: 8,
                                   decoration: BoxDecoration(
-                                    color: isHiring ? Colors.green : Colors.grey,
+                                    color: isHiring
+                                        ? Colors.green
+                                        : Colors.grey,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -637,22 +638,20 @@ final college = currentEducation?.college ?? '';
           }
 
           /// OTHER LINKS
-       String url = value.trim();
+          String url = value.trim();
 
-if (!url.startsWith(RegExp(r'https?://'))) {
-  url = 'https://$url';
-}
+          if (!url.startsWith(RegExp(r'https?://'))) {
+            url = 'https://$url';
+          }
 
-final uri = Uri.parse(url);
+          final uri = Uri.parse(url);
 
-if (await canLaunchUrl(uri)) {
-  await launchUrl(
-    uri,
-    mode: LaunchMode.externalApplication,
-  );
-} else {
-  debugPrint('Could not launch: $url');
-}
+          final launched = await launchUrl(
+            uri,
+            mode: LaunchMode.platformDefault,
+          );
+
+          debugPrint('Launch result: $launched');
         } catch (e) {
           debugPrint("LINK ERROR: $e");
         }

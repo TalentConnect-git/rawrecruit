@@ -203,7 +203,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                   onTap: () => context.pushNamed(RouteNames.askForReferral),
                   child: Container(
                     height: 60,
-                    padding: const EdgeInsets.symmetric(horizontal: 14),
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: AppColors.kGreen, width: 1.5),
@@ -227,7 +227,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                         Expanded(
                           child: Text(
                             'Ask for Referral',
-                            style: AppTextStyles.s16W600.copyWith(
+                            style: AppTextStyles.s14W600.copyWith(
                               color: AppColors.kGreen,
                             ),
                           ),

@@ -24,10 +24,9 @@ class ReferredCandidateDetailPage extends StatelessWidget {
     final jobTitle = application.jobTitle ?? "-";
     final status = application.currentStatus ?? "-";
     final createdAt = application.createdAt;
-final company = application.referralCompany ?? "-";
+    final company = application.referralCompany ?? "-";
 
-final location =
-    application.job?.location?.join(", ") ?? "-";
+    final location = application.job?.location?.join(", ") ?? "-";
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -44,17 +43,14 @@ final location =
           child: Column(
             children: [
               /// 🔥 PROFILE CARD
-              _profileCard(name),
-
+              _profileCard(
+                name,
+                application.job?.senderProfile?.profileImage ?? '',
+              ),
               const SizedBox(height: 16),
 
               /// 🔥 JOB CARD
-            _jobCard(
-  jobTitle,
-  company,
-  location,
-  createdAt,
-),
+              _jobCard(jobTitle, company, location, createdAt),
 
               const SizedBox(height: 20),
 
@@ -75,7 +71,7 @@ final location =
   }
 
   /// PROFILE
-  Widget _profileCard(String name) {
+  Widget _profileCard(String name, String imageUrl) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -87,12 +83,16 @@ final location =
           CircleAvatar(
             radius: 24,
             backgroundColor: AppColors.kGreen,
-            child: Text(
-              name.isNotEmpty ? name[0] : "U",
-              style: const TextStyle(color: Colors.black),
-            ),
+            backgroundImage: imageUrl.isNotEmpty
+                ? NetworkImage(imageUrl)
+                : null,
+            child: imageUrl.isEmpty
+                ? Text(
+                    name.isNotEmpty ? name[0].toUpperCase() : "U",
+                    style: const TextStyle(color: Colors.black),
+                  )
+                : null,
           ),
-
           const SizedBox(width: 12),
 
           Expanded(
@@ -107,12 +107,12 @@ final location =
                 ),
 
                 const SizedBox(height: 4),
-Text(
-  application.applicant?.email ?? "-",
-  style: const TextStyle(color: Colors.grey),
-  maxLines: 1,
-  overflow: TextOverflow.ellipsis,
-),
+                Text(
+                  application.applicant?.email ?? "-",
+                  style: const TextStyle(color: Colors.grey),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ],
             ),
           ),
@@ -122,12 +122,12 @@ Text(
   }
 
   /// JOB
- Widget _jobCard(
-  String jobTitle,
-  String company,
-  String location,
-  DateTime? date,
-) {
+  Widget _jobCard(
+    String jobTitle,
+    String company,
+    String location,
+    DateTime? date,
+  ) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
@@ -138,37 +138,32 @@ Text(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-       
+          Text(
+            company,
+            style: const TextStyle(
+              color: Colors.white70,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
 
+          const SizedBox(height: 4),
 
-Text(
-  company,
-  style: const TextStyle(
-    color: Colors.white70,
-    fontWeight: FontWeight.w600,
-  ),
-),
-
-const SizedBox(height: 4),
-
-Row(
-  children: [
-    const Icon(
-      Icons.location_on_outlined,
-      size: 14,
-      color: Colors.grey,
-    ),
-    const SizedBox(width: 4),
-    Expanded(
-      child: Text(
-        location,
-        style: const TextStyle(
-          color: Colors.grey,
-        ),
-      ),
-    ),
-  ],
-),
+          Row(
+            children: [
+              const Icon(
+                Icons.location_on_outlined,
+                size: 14,
+                color: Colors.grey,
+              ),
+              const SizedBox(width: 4),
+              Expanded(
+                child: Text(
+                  location,
+                  style: const TextStyle(color: Colors.grey),
+                ),
+              ),
+            ],
+          ),
           const SizedBox(height: 6),
 
           Text(
@@ -182,24 +177,24 @@ Row(
 
   /// 🔥 PROGRESS
   Widget _progressSection(String status) {
-  final steps = [
-  "Applied",
-  "Application Sent",
-  "Referred To Company",
-  "Shortlisted",
-  "Interview Scheduled",
-  "Offer Extended",
-  "Accepted",
+    final steps = [
+      "Applied",
+      "Application Sent",
+      "Referred To Company",
+      "Shortlisted",
+      "Interview Scheduled",
+      "Offer Extended",
+      "Accepted",
 
-  if (status == "Offer Accepted")
-    "Offer Accepted"
-  else if (status == "Offer Rejected")
-    "Offer Rejected"
-  else
-    "Offer Accepted / Offer Rejected",
+      if (status == "Offer Accepted")
+        "Offer Accepted"
+      else if (status == "Offer Rejected")
+        "Offer Rejected"
+      else
+        "Offer Accepted / Offer Rejected",
 
-  "Joined the Company",
-];
+      "Joined the Company",
+    ];
     final currentIndex = steps.indexOf(status);
 
     return Column(
@@ -288,36 +283,30 @@ Row(
                 jobRole: application.jobTitle ?? "",
               );
             },
-         itemBuilder: (_) => const [
-  PopupMenuItem(
-    value: "Shortlisted",
-    child: Text("Shortlisted"),
-  ),
-  PopupMenuItem(
-    value: "Interview Scheduled",
-    child: Text("Interview Scheduled"),
-  ),
-  PopupMenuItem(
-    value: "Offer Extended",
-    child: Text("Offer Extended"),
-  ),
-  PopupMenuItem(
-    value: "Accepted",
-    child: Text("Accepted"),
-  ),
-  PopupMenuItem(
-    value: "Offer Accepted",
-    child: Text("Offer Accepted"),
-  ),
-  PopupMenuItem(
-    value: "Offer Rejected",
-    child: Text("Offer Rejected"),
-  ),
-  PopupMenuItem(
-    value: "Joined the Company",
-    child: Text("Joined the Company"),
-  ),
-],
+            itemBuilder: (_) => const [
+              PopupMenuItem(value: "Shortlisted", child: Text("Shortlisted")),
+              PopupMenuItem(
+                value: "Interview Scheduled",
+                child: Text("Interview Scheduled"),
+              ),
+              PopupMenuItem(
+                value: "Offer Extended",
+                child: Text("Offer Extended"),
+              ),
+              PopupMenuItem(value: "Accepted", child: Text("Accepted")),
+              PopupMenuItem(
+                value: "Offer Accepted",
+                child: Text("Offer Accepted"),
+              ),
+              PopupMenuItem(
+                value: "Offer Rejected",
+                child: Text("Offer Rejected"),
+              ),
+              PopupMenuItem(
+                value: "Joined the Company",
+                child: Text("Joined the Company"),
+              ),
+            ],
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 14),

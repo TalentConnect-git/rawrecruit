@@ -363,10 +363,33 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                     height: 78,
                     width: 78,
 
-                    child: ProfileImage(
-                      imagePath: p?.profileImage ?? '',
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        ProfileImage(
+                          imagePath: p?.profileImage ?? '',
+                          onImageSelected: (image) async {
+                            final failure = await vm.updateProfileImage(image);
 
-                      onImageSelected: null,
+                            if (failure != null && context.mounted) {
+                              failure.showError(context);
+                            }
+                          },
+                        ),
+
+                        if (vm.isUploadingProfileImage)
+                          Container(
+                            height: 90,
+                            width: 90,
+                            decoration: BoxDecoration(
+                              color: Colors.black.withOpacity(.4),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
                 ),
@@ -589,7 +612,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         await launchUrl(
                           Uri.parse(formatted),
 
-                          mode: LaunchMode.externalApplication,
+                          mode: LaunchMode.platformDefault,
                         );
                       }),
 
@@ -604,7 +627,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         await launchUrl(
                           Uri.parse(formatted),
 
-                          mode: LaunchMode.externalApplication,
+                          mode: LaunchMode.platformDefault,
                         );
                       }),
 

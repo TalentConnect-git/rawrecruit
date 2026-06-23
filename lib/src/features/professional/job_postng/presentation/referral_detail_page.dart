@@ -39,10 +39,12 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
 
     final uri = Uri.parse(normalizedUrl);
 
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      debugPrint('Could not launch: $normalizedUrl');
+    try {
+      final launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
+
+      debugPrint('Launch result: $launched');
+    } catch (e) {
+      debugPrint('Launch error: $e');
     }
   }
 
@@ -81,6 +83,9 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
           builder: (context, vm, _) {
             return Consumer<ReferralDetailViewModel>(
               builder: (_, vM, _) {
+                if (vM.application == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
                 final user = vM.application?.applicant;
 
                 final linkedin = safe(user?.linkedin);
@@ -636,14 +641,55 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
             children: [
               CircleAvatar(
                 radius: 34,
-                backgroundColor: Colors.white12,
-                child: Text(
-                  name.isNotEmpty ? name[0].toUpperCase() : "U",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                  ),
+                backgroundColor: AppColors.kGreen,
+                child: ClipOval(
+                  child: (user.profileImage ?? '').isNotEmpty
+                      ? Image.network(
+                          user.profileImage!,
+                          width: 68,
+                          height: 68,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) {
+                            return Center(
+                              child: Text(
+                                name.isNotEmpty
+                                    ? name
+                                          .trim()
+                                          .split(' ')
+                                          .where((e) => e.isNotEmpty)
+                                          .map((e) => e[0])
+                                          .take(2)
+                                          .join()
+                                          .toUpperCase()
+                                    : 'U',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : Center(
+                          child: Text(
+                            name.isNotEmpty
+                                ? name
+                                      .trim()
+                                      .split(' ')
+                                      .where((e) => e.isNotEmpty)
+                                      .map((e) => e[0])
+                                      .take(2)
+                                      .join()
+                                      .toUpperCase()
+                                : 'U',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                 ),
               ),
 
@@ -767,7 +813,8 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
               const SizedBox(width: 10),
 
               /// ANIMATED SCORE
-              AnimatedMatchScore(key: ValueKey(match), score: match),
+              if (!(vM.application?.isAskForReferral ?? false))
+                AnimatedMatchScore(key: ValueKey(match), score: match),
             ],
           ),
 
