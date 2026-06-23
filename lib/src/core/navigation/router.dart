@@ -95,7 +95,7 @@ GoRouter appRouter = GoRouter(
         String? companyName;
 
         final extra = state.extra;
-
+        bool hideApplyButton = false;
         if (extra is String) {
           if (extra.contains("|||")) {
             final data = extra.split("|||");
@@ -105,11 +105,16 @@ GoRouter appRouter = GoRouter(
             jobId = extra;
           }
         } else if (extra is Map<String, dynamic>) {
-          jobId = extra["id"] ?? "";
+          jobId = extra["jobId"] ?? extra["id"] ?? "";
           companyName = extra["companyName"];
+          hideApplyButton = extra["hideApplyButton"] ?? false;
         }
 
-        return ReferralDetailView(jobId: jobId, companyName: companyName);
+        return ReferralDetailView(
+          jobId: jobId,
+          companyName: companyName,
+          hideApplyButton: hideApplyButton,
+        );
       },
     ),
     GoRoute(

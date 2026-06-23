@@ -153,10 +153,12 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                         borderRadius: BorderRadius.circular(16),
                         onTap: () {
                           if ((job?.id ?? '').isEmpty) return;
-
                           context.pushNamed(
                             RouteNames.referralDetail,
-                            extra: job!.id,
+                            extra: {
+                              "jobId": job!.id,
+                              "hideApplyButton": application?.applied ?? false,
+                            },
                           );
                         },
                         child: headerCard,
