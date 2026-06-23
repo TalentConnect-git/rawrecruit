@@ -1,3 +1,4 @@
+import 'package:image_picker/image_picker.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/data/index.dart';
 
@@ -8,7 +9,10 @@ class MyProfileViewModel extends ViewStateProvider {
   Map<String, dynamic>? careerRanking;
   List<Map<String, dynamic>> degrees = [];
   List<Map<String, dynamic>> streams = [];
+  XFile? pickedImage;
+  bool _isUploadingProfileImage = false;
 
+  bool get isUploadingProfileImage => _isUploadingProfileImage;
   String? selectedDegreeId;
   Future<void> getDegrees() async {
     final result = await _onboardingRepository.getDegrees();
@@ -47,6 +51,32 @@ class MyProfileViewModel extends ViewStateProvider {
 
       notifyListeners();
     });
+  }
+
+  Future<Failure?> updateProfileImage(XFile image) async {
+    Failure? failure;
+
+    _isUploadingProfileImage = true;
+    notifyListeners();
+
+    final result = await _onboardingRepository.updateOnboardingUser(
+      body: {},
+      image: image,
+    );
+
+    result.fold(
+      (e) {
+        failure = APIFailure.fromException(exception: e);
+      },
+      (r) {
+        user = r;
+      },
+    );
+
+    _isUploadingProfileImage = false;
+    notifyListeners();
+
+    return failure;
   }
 
   User? _user;

@@ -182,18 +182,18 @@ class ReferredApplicantCard extends StatelessWidget {
                     vertical: 7,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.kGreen,
+                    color: AppColors.secBorder,
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: const Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.sync, size: 14, color: Colors.black),
+                      Icon(Icons.sync, size: 14, color: Colors.white),
                       SizedBox(width: 5),
                       Text(
                         "Update",
                         style: TextStyle(
-                          color: Colors.black,
+                          color: Colors.white,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),

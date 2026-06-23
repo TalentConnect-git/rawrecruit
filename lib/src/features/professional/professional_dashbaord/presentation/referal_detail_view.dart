@@ -130,7 +130,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
 🧑‍💻 Work Mode: $mode
 
 Apply here:
-https://rawrecruit.in/professional-dashboard/Referral/
+https://play.google.com/store/apps/details?id=com.app.rawrecruit
 ''';
 
                     await Share.share(shareText);
@@ -1511,7 +1511,7 @@ class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
 
   @override
   Widget build(BuildContext context) {
-      print("ANIMATED SCORE = ${widget.score}");
+    print("ANIMATED SCORE = ${widget.score}");
 
     return AnimatedBuilder(
       animation: _anim,

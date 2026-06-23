@@ -43,6 +43,7 @@ _ReferralPostModel _$ReferralPostModelFromJson(
   selectionProcess: (json['selectionProcess'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
+  isAskForReferral: json['isAskForReferral'] as bool?,
   endDate: json['endDate'] as String?,
   inactive: json['inactive'] as bool?,
   benefits: (json['benefits'] as List<dynamic>?)
@@ -79,6 +80,7 @@ Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
       'minYearofExperience': instance.minYearofExperience,
       'rounds': instance.rounds,
       'selectionProcess': instance.selectionProcess,
+      'isAskForReferral': instance.isAskForReferral,
       'endDate': instance.endDate,
       'inactive': instance.inactive,
       'benefits': instance.benefits,

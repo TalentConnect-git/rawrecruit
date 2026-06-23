@@ -88,6 +88,80 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                         job?.createdAt?.toLocal().toString().split(' ').first ??
                         "-";
                     final receiver = job?.receiverProfile;
+                    final isAskForReferral =
+                        application?.isAskForReferral ??
+                        job?.isAskForReferral ??
+                        false;
+
+                    Widget headerCard = Container(
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                        color: AppColors.primary.withValues(alpha: 0.08),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: AppColors.kBorder),
+                      ),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  jobTitle,
+                                  style: AppTextStyles.s22W600.copyWith(
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                              ),
+                              _statusBadge(rawStatus),
+                            ],
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          Row(
+                            children: [
+                              const Icon(
+                                Icons.location_on,
+                                size: 16,
+                                color: Colors.green,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                location ?? "-",
+                                style: const TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 6),
+
+                          Text(
+                            "Applied on $appliedDate",
+                            style: const TextStyle(
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+
+                    if (!isAskForReferral) {
+                      headerCard = InkWell(
+                        borderRadius: BorderRadius.circular(16),
+                        onTap: () {
+                          if ((job?.id ?? '').isEmpty) return;
+
+                          context.pushNamed(
+                            RouteNames.referralDetail,
+                            extra: job!.id,
+                          );
+                        },
+                        child: headerCard,
+                      );
+                    }
                     return Padding(
                       padding: const EdgeInsets.all(20),
                       child: RefreshIndicator(
@@ -99,143 +173,11 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                         child: ListView(
                           children: [
                             /// 🔥 HEADER CARD
-                            Container(
-                              padding: const EdgeInsets.all(18),
-                              decoration: BoxDecoration(
-                                color: AppColors.primary.withValues(
-                                  alpha: 0.08,
-                                ),
-                                borderRadius: BorderRadius.circular(16),
-                                border: Border.all(color: AppColors.kBorder),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  /// TITLE + STATUS BADGE
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          jobTitle,
-                                          style: AppTextStyles.s22W600.copyWith(
-                                            color: AppColors.white,
-                                          ),
-                                        ),
-                                      ),
+                            headerCard,
+                            const SizedBox(height: 12),
 
-                                      _statusBadge(rawStatus),
-                                    ],
-                                  ),
-
-                                  const SizedBox(height: 8),
-
-                                  /// LOCATION
-                                  Row(
-                                    children: [
-                                      const Icon(
-                                        Icons.location_on,
-                                        size: 16,
-                                        color: Colors.green,
-                                      ),
-
-                                      const SizedBox(width: 4),
-
-                                      Text(
-                                        location ?? "-",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-
-                                  const SizedBox(height: 6),
-
-                                  /// APPLIED DATE
-                                  Text(
-                                    "Applied on $appliedDate",
-                                    style: const TextStyle(
-                                      color: Colors.grey,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                  if (receiver != null) ...[
-                                    const SizedBox(height: 12),
-
-                                    Row(
-                                      children: [
-                                        GestureDetector(
-                                          onTap: () {
-                                            if (receiver?.userId == null)
-                                              return;
-
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                builder: (_) =>
-                                                    ProfileDetailView(
-                                                      userId: receiver.userId!,
-                                                    ),
-                                              ),
-                                            );
-                                          },
-                                          child: CircleAvatar(
-                                            radius: 18,
-                                            backgroundImage:
-                                                receiver
-                                                        ?.profileImage
-                                                        ?.isNotEmpty ==
-                                                    true
-                                                ? NetworkImage(
-                                                    receiver!.profileImage!,
-                                                  )
-                                                : null,
-                                            child:
-                                                receiver
-                                                        ?.profileImage
-                                                        ?.isEmpty ??
-                                                    true
-                                                ? const Icon(
-                                                    Icons.person,
-                                                    size: 18,
-                                                  )
-                                                : null,
-                                          ),
-                                        ),
-
-                                        const SizedBox(width: 10),
-
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              const Text(
-                                                "Referrer",
-                                                style: TextStyle(
-                                                  color: Colors.grey,
-                                                  fontSize: 11,
-                                                ),
-                                              ),
-
-                                              Text(
-                                                receiver.name ?? "-",
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
-                                ],
-                              ),
-                            ),
+                            if (receiver != null)
+                              _referrerCard(context, receiver),
 
                             const SizedBox(height: 30),
 
@@ -247,10 +189,8 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            const SizedBox(height: 30),
 
-                            const SizedBox(height: 16),
-
-                            /// 🔥 TIMELINE
                             /// 🔥 TIMELINE
                             _timelineItem("Applied", true),
 
@@ -340,6 +280,123 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                     );
                   },
                 ),
+        ),
+      ),
+    );
+  }
+
+  Widget _referrerCard(BuildContext context, dynamic receiver) {
+    return GestureDetector(
+      onTap: () {
+        if (receiver.userId == null) return;
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ProfileDetailView(userId: receiver.userId!),
+          ),
+        );
+      },
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: AppColors.primary.withValues(alpha: 0.08),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: AppColors.kBorder),
+        ),
+        child: Row(
+          children: [
+            /// Avatar
+            Container(
+              padding: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: Colors.green, width: 2),
+              ),
+              child: CircleAvatar(
+                radius: 24,
+                backgroundImage: receiver.profileImage?.isNotEmpty == true
+                    ? NetworkImage(receiver.profileImage!)
+                    : null,
+                child: receiver.profileImage?.isEmpty ?? true
+                    ? const Icon(Icons.person)
+                    : null,
+              ),
+            ),
+
+            const SizedBox(width: 14),
+
+            /// Details
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Referrer",
+                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                  ),
+
+                  const SizedBox(height: 4),
+
+                  Text(
+                    receiver.name ?? "-",
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+                  ),
+
+                  if ((receiver.currentCompany ?? '').isNotEmpty)
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4),
+                      child: Text(
+                        receiver.currentCompany!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: const TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+
+            const SizedBox(width: 12),
+
+            /// Message Button
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () {
+                context.pushNamed(RouteNames.chatUser, extra: receiver.userId);
+              },
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: AppColors.kGreen.withOpacity(0.15),
+                  borderRadius: BorderRadius.circular(22),
+                ),
+                child: const Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(Icons.message, size: 14, color: Colors.green),
+                    SizedBox(width: 6),
+                    Text(
+                      "Message",
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

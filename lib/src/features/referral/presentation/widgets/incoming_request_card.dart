@@ -76,7 +76,9 @@ class IncomingRequestCard extends StatelessWidget {
                       color: AppColors.secText,
                     ),
                   ),
-                  _percent(request.matchScore ?? 0),
+                  SizedBox(height: 12),
+                  if (!(request.job?.isAskForReferral ?? false))
+                    _percent(request.matchScore ?? 0),
                 ],
               ),
             ),

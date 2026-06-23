@@ -39,10 +39,12 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
 
     final uri = Uri.parse(normalizedUrl);
 
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else {
-      debugPrint('Could not launch: $normalizedUrl');
+    try {
+      final launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
+
+      debugPrint('Launch result: $launched');
+    } catch (e) {
+      debugPrint('Launch error: $e');
     }
   }
 
@@ -81,6 +83,9 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
           builder: (context, vm, _) {
             return Consumer<ReferralDetailViewModel>(
               builder: (_, vM, _) {
+                if (vM.application == null) {
+                  return const Center(child: CircularProgressIndicator());
+                }
                 final user = vM.application?.applicant;
 
                 final linkedin = safe(user?.linkedin);
@@ -767,7 +772,8 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
               const SizedBox(width: 10),
 
               /// ANIMATED SCORE
-              AnimatedMatchScore(key: ValueKey(match), score: match),
+              if (!(vM.application?.isAskForReferral ?? false))
+                AnimatedMatchScore(key: ValueKey(match), score: match),
             ],
           ),
 

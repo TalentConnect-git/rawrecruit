@@ -199,12 +199,23 @@ class InterviewCard extends StatelessWidget {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () async {
-                    final uri = Uri.parse(interview.meetLink!);
-                    if (await canLaunchUrl(uri)) {
-                      await launchUrl(
+                    try {
+                      String url = interview.meetLink!.trim();
+
+                      if (!url.startsWith(RegExp(r'https?://'))) {
+                        url = 'https://$url';
+                      }
+
+                      final uri = Uri.parse(url);
+
+                      final launched = await launchUrl(
                         uri,
-                        mode: LaunchMode.externalApplication,
+                        mode: LaunchMode.platformDefault,
                       );
+
+                      debugPrint('Meet launch result: $launched');
+                    } catch (e) {
+                      debugPrint('Meet launch error: $e');
                     }
                   },
                   icon: const Icon(Icons.videocam_outlined, size: 16),

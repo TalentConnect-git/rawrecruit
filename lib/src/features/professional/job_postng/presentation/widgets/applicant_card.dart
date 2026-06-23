@@ -76,19 +76,20 @@ class ApplicantCard extends StatelessWidget {
                   const SizedBox(height: 6),
 
                   /// ✅ MATCH + COLLEGE
+                  /// ✅ MATCH + COLLEGE
                   Row(
                     children: [
-                      /// MATCH SCORE
-                      Text(
-                        "$match% match",
-                        style: AppTextStyles.s12W600.copyWith(
-                          color: AppColors.kGreen,
+                      if (!(application.job?.isAskForReferral ?? false)) ...[
+                        Text(
+                          "$match% match",
+                          style: AppTextStyles.s12W600.copyWith(
+                            color: AppColors.kGreen,
+                          ),
                         ),
-                      ),
 
-                      const SizedBox(width: 10),
+                        const SizedBox(width: 10),
+                      ],
 
-                      /// COLLEGE (ELLIPSIS FIXED)
                       Flexible(
                         child: Container(
                           padding: const EdgeInsets.symmetric(
