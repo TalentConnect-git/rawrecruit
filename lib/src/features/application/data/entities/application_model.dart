@@ -21,6 +21,7 @@ abstract class ApplicationModel with _$ApplicationModel {
     String? adminApprovalStatus,
     String? currentStatus,
     String? jobType,
+    final bool? applied,
 
     bool? isVisited,
     bool? isAskForReferral,

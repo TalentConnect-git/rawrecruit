@@ -17,8 +17,15 @@ import 'view_model/prof_dashboard_view_model.dart';
 
 class ReferralDetailView extends StatefulWidget {
   final String jobId;
+  final bool hideApplyButton;
+
   final String? companyName;
-  const ReferralDetailView({super.key, required this.jobId, this.companyName});
+  const ReferralDetailView({
+    super.key,
+    required this.jobId,
+    this.companyName,
+    this.hideApplyButton = false,
+  });
 
   @override
   State<ReferralDetailView> createState() => _ReferralDetailViewState();
@@ -195,45 +202,39 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
 
                     const SizedBox(width: 12),
 
-                    Expanded(
-                      flex: 2,
-                      child: ElevatedButton.icon(
-                        onPressed: isApplied
-                            ? null
-                            : () => applicationVM.apply(
-                                jobId: jobId,
-                                jobType: "Referral",
-                                matchScore: job.matchScore,
-                                companyName:
-                                    job.candidatePosted?.currentCompany ?? '',
-                              ),
-
-                        icon: Icon(
-                          isApplied ? Icons.check_circle : Icons.send_rounded,
-                          size: 18,
-                        ),
-
-                        label: Text(
-                          isApplied ? "Applied" : "Request Referral",
-
-                          style: const TextStyle(fontWeight: FontWeight.w600),
-                        ),
-
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isApplied
-                              ? Colors.grey
-                              : AppColors.kGreen,
-
-                          foregroundColor: Colors.white,
-
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                    if (!widget.hideApplyButton)
+                      Expanded(
+                        flex: 2,
+                        child: ElevatedButton.icon(
+                          onPressed: isApplied
+                              ? null
+                              : () => applicationVM.apply(
+                                  jobId: jobId,
+                                  jobType: "Referral",
+                                  matchScore: job.matchScore,
+                                  companyName:
+                                      job.candidatePosted?.currentCompany ?? '',
+                                ),
+                          icon: Icon(
+                            isApplied ? Icons.check_circle : Icons.send_rounded,
+                            size: 18,
+                          ),
+                          label: Text(
+                            isApplied ? "Applied" : "Request Referral",
+                            style: const TextStyle(fontWeight: FontWeight.w600),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: isApplied
+                                ? Colors.grey
+                                : AppColors.kGreen,
+                            foregroundColor: Colors.white,
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
               ),
