@@ -1,6 +1,8 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/utils/convertors.dart';
 
+import '../../../../../core/index.dart';
+
 part 'referral_post_model.freezed.dart';
 part 'referral_post_model.g.dart';
 
@@ -27,7 +29,7 @@ abstract class ReferralPostModel with _$ReferralPostModel {
     String? minYearofExperience,
 
     List<String>? rounds,
-
+    final User? senderProfile,
     List<String>? selectionProcess,
     bool? isAskForReferral,
     String? endDate,

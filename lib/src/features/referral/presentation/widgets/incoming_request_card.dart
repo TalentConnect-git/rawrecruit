@@ -26,15 +26,35 @@ class IncomingRequestCard extends StatelessWidget {
           spacing: 16,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: AppColors.kGreen,
-                shape: BoxShape.circle,
-              ),
-              child: Text(
-                request.applicant?.name?.getInitials ?? '',
-                style: AppTextStyles.s18W600.copyWith(color: AppColors.kBg),
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: AppColors.kGreen,
+              child: ClipOval(
+                child: (request.applicant?.profileImage ?? '').isNotEmpty
+                    ? Image.network(
+                        request.applicant!.profileImage!,
+                        width: 48,
+                        height: 48,
+                        fit: BoxFit.cover,
+                        errorBuilder: (_, __, ___) {
+                          return Center(
+                            child: Text(
+                              request.applicant?.name?.getInitials ?? '',
+                              style: AppTextStyles.s18W600.copyWith(
+                                color: AppColors.kBg,
+                              ),
+                            ),
+                          );
+                        },
+                      )
+                    : Center(
+                        child: Text(
+                          request.applicant?.name?.getInitials ?? '',
+                          style: AppTextStyles.s18W600.copyWith(
+                            color: AppColors.kBg,
+                          ),
+                        ),
+                      ),
               ),
             ),
             Expanded(

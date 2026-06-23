@@ -641,14 +641,55 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
             children: [
               CircleAvatar(
                 radius: 34,
-                backgroundColor: Colors.white12,
-                child: Text(
-                  name.isNotEmpty ? name[0].toUpperCase() : "U",
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 26,
-                    fontWeight: FontWeight.bold,
-                  ),
+                backgroundColor: AppColors.kGreen,
+                child: ClipOval(
+                  child: (user.profileImage ?? '').isNotEmpty
+                      ? Image.network(
+                          user.profileImage!,
+                          width: 68,
+                          height: 68,
+                          fit: BoxFit.cover,
+                          errorBuilder: (_, __, ___) {
+                            return Center(
+                              child: Text(
+                                name.isNotEmpty
+                                    ? name
+                                          .trim()
+                                          .split(' ')
+                                          .where((e) => e.isNotEmpty)
+                                          .map((e) => e[0])
+                                          .take(2)
+                                          .join()
+                                          .toUpperCase()
+                                    : 'U',
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            );
+                          },
+                        )
+                      : Center(
+                          child: Text(
+                            name.isNotEmpty
+                                ? name
+                                      .trim()
+                                      .split(' ')
+                                      .where((e) => e.isNotEmpty)
+                                      .map((e) => e[0])
+                                      .take(2)
+                                      .join()
+                                      .toUpperCase()
+                                : 'U',
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
                 ),
               ),
 

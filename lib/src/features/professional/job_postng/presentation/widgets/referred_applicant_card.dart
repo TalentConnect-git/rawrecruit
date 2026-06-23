@@ -26,7 +26,7 @@ class ReferredApplicantCard extends StatelessWidget {
 
     /// ✅ MATCH SCORE
     final match = application.matchScore ?? 0;
-
+    final imageUrl = application.job?.senderProfile?.profileImage ?? '';
     // /// ✅ JOB TITLE
     // final jobTitle = application.jobTitle ?? "-";
 
@@ -60,12 +60,16 @@ class ReferredApplicantCard extends StatelessWidget {
             CircleAvatar(
               radius: 22,
               backgroundColor: AppColors.kGreen,
-              child: Text(
-                _initials(name),
-                style: const TextStyle(color: Colors.black),
-              ),
+              backgroundImage: imageUrl.isNotEmpty
+                  ? NetworkImage(imageUrl)
+                  : null,
+              child: imageUrl.isEmpty
+                  ? Text(
+                      _initials(name),
+                      style: const TextStyle(color: Colors.black),
+                    )
+                  : null,
             ),
-
             const SizedBox(width: 12),
 
             /// 🔥 CONTENT

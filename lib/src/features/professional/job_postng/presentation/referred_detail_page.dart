@@ -43,8 +43,10 @@ class ReferredCandidateDetailPage extends StatelessWidget {
           child: Column(
             children: [
               /// 🔥 PROFILE CARD
-              _profileCard(name),
-
+              _profileCard(
+                name,
+                application.job?.senderProfile?.profileImage ?? '',
+              ),
               const SizedBox(height: 16),
 
               /// 🔥 JOB CARD
@@ -69,7 +71,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
   }
 
   /// PROFILE
-  Widget _profileCard(String name) {
+  Widget _profileCard(String name, String imageUrl) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -81,12 +83,16 @@ class ReferredCandidateDetailPage extends StatelessWidget {
           CircleAvatar(
             radius: 24,
             backgroundColor: AppColors.kGreen,
-            child: Text(
-              name.isNotEmpty ? name[0] : "U",
-              style: const TextStyle(color: Colors.black),
-            ),
+            backgroundImage: imageUrl.isNotEmpty
+                ? NetworkImage(imageUrl)
+                : null,
+            child: imageUrl.isEmpty
+                ? Text(
+                    name.isNotEmpty ? name[0].toUpperCase() : "U",
+                    style: const TextStyle(color: Colors.black),
+                  )
+                : null,
           ),
-
           const SizedBox(width: 12),
 
           Expanded(

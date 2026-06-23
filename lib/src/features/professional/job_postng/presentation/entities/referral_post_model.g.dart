@@ -40,6 +40,9 @@ _ReferralPostModel _$ReferralPostModelFromJson(
   yearsOfExperience: json['yearsOfExperience'] as String?,
   minYearofExperience: json['minYearofExperience'] as String?,
   rounds: (json['rounds'] as List<dynamic>?)?.map((e) => e as String).toList(),
+  senderProfile: json['senderProfile'] == null
+      ? null
+      : User.fromJson(json['senderProfile'] as Map<String, dynamic>),
   selectionProcess: (json['selectionProcess'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
@@ -79,6 +82,7 @@ Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
       'yearsOfExperience': instance.yearsOfExperience,
       'minYearofExperience': instance.minYearofExperience,
       'rounds': instance.rounds,
+      'senderProfile': instance.senderProfile,
       'selectionProcess': instance.selectionProcess,
       'isAskForReferral': instance.isAskForReferral,
       'endDate': instance.endDate,
