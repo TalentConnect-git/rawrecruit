@@ -164,41 +164,42 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
 
                 child: Row(
                   children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => shortlistVM.toggleSave(
-                          jobId: jobId,
-                          jobType: "Referral",
-                          isSaved: isSaved,
-                        ),
+                    if (!widget.hideApplyButton)
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => shortlistVM.toggleSave(
+                            jobId: jobId,
+                            jobType: "Referral",
+                            isSaved: isSaved,
+                          ),
 
-                        icon: Icon(
-                          isSaved ? Icons.bookmark : Icons.bookmark_border,
-                          color: AppColors.kGreen,
-                          size: 18,
-                        ),
-
-                        label: Text(
-                          isSaved ? "Saved" : "Save",
-                          style: TextStyle(
+                          icon: Icon(
+                            isSaved ? Icons.bookmark : Icons.bookmark_border,
                             color: AppColors.kGreen,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-
-                          side: BorderSide(
-                            color: AppColors.kGreen.withOpacity(.5),
+                            size: 18,
                           ),
 
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                          label: Text(
+                            isSaved ? "Saved" : "Save",
+                            style: TextStyle(
+                              color: AppColors.kGreen,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+
+                            side: BorderSide(
+                              color: AppColors.kGreen.withOpacity(.5),
+                            ),
+
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
                     const SizedBox(width: 12),
 

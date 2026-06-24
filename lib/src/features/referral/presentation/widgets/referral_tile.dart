@@ -68,7 +68,7 @@ class ReferralTile extends StatelessWidget {
             onTap: () => context.pushNamed(RouteNames.askForReferral),
             child: Container(
               height: 62,
-              padding: const EdgeInsets.symmetric(horizontal: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 borderRadius: BorderRadius.circular(14),
@@ -77,8 +77,8 @@ class ReferralTile extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    height: 25,
-                    width: 25,
+                    height: 30,
+                    width: 30,
                     decoration: BoxDecoration(
                       color: AppColors.white.withOpacity(0.12),
                       borderRadius: BorderRadius.circular(10),
@@ -89,20 +89,19 @@ class ReferralTile extends StatelessWidget {
                       size: 15,
                     ),
                   ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'Ask Referral',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.s16W600.copyWith(
-                        color: AppColors.white,
-                      ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Ask Referral',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.s16W600.copyWith(
+                      color: AppColors.white,
                     ),
                   ),
+                  SizedBox(width: 3),
                   Icon(
                     Icons.arrow_forward_ios_rounded,
-                    size: 14,
+                    size: 12,
                     color: AppColors.white,
                   ),
                 ],
