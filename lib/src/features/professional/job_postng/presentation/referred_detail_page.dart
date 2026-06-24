@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
+import 'package:rawrecruit/src/core/navigation/routes_index.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
     show ApplicationViewModel;
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
@@ -43,9 +44,26 @@ class ReferredCandidateDetailPage extends StatelessWidget {
           child: Column(
             children: [
               /// 🔥 PROFILE CARD
-              _profileCard(
-                name,
-                application.job?.senderProfile?.profileImage ?? '',
+              GestureDetector(
+                onTap: () {
+                  final userId = application.applicant?.userId;
+                  debugPrint('Opening profile: $userId');
+
+                  if (userId == null || userId.isEmpty) {
+                    debugPrint('UserId is null');
+                    return;
+                  }
+
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => ProfileDetailView(userId: userId),
+                    ),
+                  );
+                },
+                child: _profileCard(
+                  name,
+                  application.applicant?.profileImage ?? '',
+                ),
               ),
               const SizedBox(height: 16),
 
@@ -80,18 +98,25 @@ class ReferredCandidateDetailPage extends StatelessWidget {
       ),
       child: Row(
         children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: AppColors.kGreen,
-            backgroundImage: imageUrl.isNotEmpty
-                ? NetworkImage(imageUrl)
-                : null,
-            child: imageUrl.isEmpty
-                ? Text(
-                    name.isNotEmpty ? name[0].toUpperCase() : "U",
-                    style: const TextStyle(color: Colors.black),
-                  )
-                : null,
+          Container(
+            padding: const EdgeInsets.all(2),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(color: AppColors.kGreen, width: 2),
+            ),
+            child: CircleAvatar(
+              radius: 24,
+              backgroundColor: AppColors.kGreen,
+              backgroundImage: imageUrl.isNotEmpty
+                  ? NetworkImage(imageUrl)
+                  : null,
+              child: imageUrl.isEmpty
+                  ? Text(
+                      name.isNotEmpty ? name[0].toUpperCase() : "U",
+                      style: const TextStyle(color: Colors.black),
+                    )
+                  : null,
+            ),
           ),
           const SizedBox(width: 12),
 
@@ -256,7 +281,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
           onPressed: () {
             context.pushNamed(
               RouteNames.chatUser,
-              extra: application.applicant?.id,
+              extra: application.applicant?.userId,
             );
           },
           child: Text(

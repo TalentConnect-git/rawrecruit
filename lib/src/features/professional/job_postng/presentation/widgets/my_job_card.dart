@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import '../../../../../common/index.dart';
+
 class MyJobCard extends StatelessWidget {
   final ReferralPostModel job;
   final VoidCallback? onTap;
@@ -9,9 +10,10 @@ class MyJobCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-final title = job.jobTitle is List
-    ? (job.jobTitle as List).join(", ")
-    : job.jobTitle?.toString() ?? "Frontend Engineer";    final location = job.location?.firstOrNull ?? "India";
+    final title = job.jobTitle is List
+        ? (job.jobTitle as List).join(", ")
+        : job.jobTitle?.toString() ?? "Frontend Engineer";
+    final location = job.location?.firstOrNull ?? "India";
     final workMode = job.workMode ?? "Remote";
 
     final salary = _formatSalary(job.packageDetails?.totalCTC);
@@ -29,7 +31,6 @@ final title = job.jobTitle is List
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             /// 🔥 TITLE + STATUS CHIP
             Row(
               children: [
@@ -69,8 +70,7 @@ final title = job.jobTitle is List
 
                 Row(
                   children: [
-                     Icon(Icons.school,
-                        size: 14, color: AppColors.kGreen),
+                    Icon(Icons.school, size: 14, color: AppColors.kGreen),
                     const SizedBox(width: 4),
                     Text(
                       "0 alumni",
@@ -88,9 +88,7 @@ final title = job.jobTitle is List
             /// 🔹 SALARY
             Text(
               salary,
-              style: AppTextStyles.s12W600.copyWith(
-                color: AppColors.white,
-              ),
+              style: AppTextStyles.s12W600.copyWith(color: AppColors.white),
             ),
           ],
         ),
@@ -138,7 +136,7 @@ final title = job.jobTitle is List
     if (ctc == null) return "Not disclosed";
 
     if (ctc < 100000) {
-      return "₹$ctc / month";
+      return "₹$ctc LPA";
     }
 
     final lpa = (ctc / 100000).toStringAsFixed(0);

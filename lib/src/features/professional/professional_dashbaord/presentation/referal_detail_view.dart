@@ -473,7 +473,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                       ),
                       const SizedBox(height: 2),
                       const Text(
-                        "EST. ANNUAL SALARY",
+                        "EST. ANNUAL CTC",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 10,

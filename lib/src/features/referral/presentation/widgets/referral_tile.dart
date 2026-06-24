@@ -16,17 +16,17 @@ class ReferralTile extends StatelessWidget {
             onTap: () => context.pushNamed(RouteNames.referralPost),
             child: Container(
               height: 62,
-              padding: const EdgeInsets.symmetric(horizontal: 14),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 color: AppColors.kGreen,
                 borderRadius: BorderRadius.circular(14),
-                border: Border.all(color: Colors.black, width: 1),
+                border: Border.all(color: Colors.black, width: 1.5),
               ),
               child: Row(
                 children: [
                   Container(
-                    height: 36,
-                    width: 36,
+                    height: 30,
+                    width: 30,
                     decoration: BoxDecoration(
                       color: Colors.black.withOpacity(0.08),
                       borderRadius: BorderRadius.circular(10),
@@ -35,23 +35,20 @@ class ReferralTile extends StatelessWidget {
                     child: const Icon(
                       Icons.add_rounded,
                       color: Colors.black,
-                      size: 20,
+                      size: 15,
                     ),
                   ),
                   const SizedBox(width: 10),
-                  Expanded(
-                    child: Text(
-                      'Post Job',
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: AppTextStyles.s16W600.copyWith(
-                        color: Colors.black,
-                      ),
-                    ),
+                  Text(
+                    'Post Job',
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: AppTextStyles.s16W600.copyWith(color: Colors.black),
                   ),
+                  const SizedBox(width: 8),
                   const Icon(
                     Icons.arrow_forward_ios_rounded,
-                    size: 14,
+                    size: 12,
                     color: Colors.black54,
                   ),
                 ],
