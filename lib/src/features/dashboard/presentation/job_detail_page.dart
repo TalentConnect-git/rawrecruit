@@ -243,60 +243,60 @@ class _JobDetailViewState extends State<JobDetailView> {
                       _highlightInfo("Designation", employer?.designation),
 
                       _highlightInfo("Mobile", contact.mobile),
-                      const SizedBox(height: 16),
+                      // const SizedBox(height: 16),
 
-                      GestureDetector(
-                        onTap: () {
-                          final userId = widget.job.companyPosted?.userId;
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     final userId = widget.job.companyPosted?.userId;
 
-                          if (userId == null || userId.isEmpty) return;
+                      //     if (userId == null || userId.isEmpty) return;
 
-                          final user = User(
-                            id: userId,
-                            name: employer?.name,
-                            email: employer?.email,
-                            phone: employer?.mobile,
-                          );
+                      //     final user = User(
+                      //       id: userId,
+                      //       name: employer?.name,
+                      //       email: employer?.email,
+                      //       phone: employer?.mobile,
+                      //     );
 
-                          context.pushNamed(
-                            RouteNames.chatUser,
-                            extra: user.id,
-                          );
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 10,
-                          ),
-                          decoration: BoxDecoration(
-                            color: AppColors.kGreen.withOpacity(.15),
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              color: AppColors.kGreen.withOpacity(.4),
-                            ),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.message,
-                                size: 18,
-                                color: Colors.green,
-                              ),
+                      //     context.pushNamed(
+                      //       RouteNames.chatUser,
+                      //       extra: user.id,
+                      //     );
+                      //   },
+                      //   child: Container(
+                      //     padding: const EdgeInsets.symmetric(
+                      //       horizontal: 16,
+                      //       vertical: 10,
+                      //     ),
+                      //     decoration: BoxDecoration(
+                      //       color: AppColors.kGreen.withOpacity(.15),
+                      //       borderRadius: BorderRadius.circular(30),
+                      //       border: Border.all(
+                      //         color: AppColors.kGreen.withOpacity(.4),
+                      //       ),
+                      //     ),
+                      //     child: const Row(
+                      //       mainAxisSize: MainAxisSize.min,
+                      //       children: [
+                      //         Icon(
+                      //           Icons.message,
+                      //           size: 18,
+                      //           color: Colors.green,
+                      //         ),
 
-                              SizedBox(width: 8),
+                      //         SizedBox(width: 8),
 
-                              Text(
-                                "Message",
-                                style: TextStyle(
-                                  color: Colors.green,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
+                      //         Text(
+                      //           "Message",
+                      //           style: TextStyle(
+                      //             color: Colors.green,
+                      //             fontWeight: FontWeight.w600,
+                      //           ),
+                      //         ),
+                      //       ],
+                      //     ),
+                      //   ),
+                      // ),
                     ],
                   ],
                 ),
@@ -475,13 +475,12 @@ class _JobDetailViewState extends State<JobDetailView> {
 
               const SizedBox(width: 12),
 
-              Text(
-                "${widget.job.views ?? 0} referrers",
-                style: const TextStyle(color: Colors.grey),
-              ),
+              // Text(
+              //   "${widget.job.views ?? 0} referrers",
+              //   style: const TextStyle(color: Colors.grey),
+              // ),
 
-              const SizedBox(width: 12),
-
+              // const SizedBox(width: 12),
               Text(
                 "${widget.job.numberOfStudent ?? 0} alumni",
                 style: const TextStyle(color: Colors.green),

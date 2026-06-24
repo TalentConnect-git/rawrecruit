@@ -185,12 +185,12 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                 ]),
 
               /// 🔥 COMPANY
-              if (company != null)
-                _sectionInfo("Company Details", [
-                  _info("Name", company.companyName),
-                  _info("Industry", company.industryType),
-                  _info("City", company.city),
-                ]),
+              // if (company != null)
+              //   _sectionInfo("Company Details", [
+              //     _info("Name", company.companyName),
+              //     _info("Industry", company.industryType),
+              //     _info("City", company.city),
+              //   ]),
               _containerSection(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -222,61 +222,61 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                       const SizedBox(height: 20),
                     ],
 
-                    /// EMPLOYER
-                    /// MESSAGE RECRUITER
-                    const Text(
-                      "Connect",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                    // /// EMPLOYER
+                    // /// MESSAGE RECRUITER
+                    // const Text(
+                    //   "Connect",
+                    //   style: TextStyle(
+                    //     color: Colors.white,
+                    //     fontSize: 16,
+                    //     fontWeight: FontWeight.bold,
+                    //   ),
+                    // ),
 
-                    const SizedBox(height: 14),
+                    // const SizedBox(height: 14),
 
-                    GestureDetector(
-                      onTap: () {
-                        final userId = widget.internship.postedByUser;
+                    // GestureDetector(
+                    //   onTap: () {
+                    //     final userId = widget.internship.postedByUser;
 
-                        if (userId == null || userId.isEmpty) return;
+                    //     if (userId == null || userId.isEmpty) return;
 
-                        final user = User(id: userId);
+                    //     final user = User(id: userId);
 
-                        context.pushNamed(RouteNames.chatUser, extra: user.id);
-                      },
+                    //     context.pushNamed(RouteNames.chatUser, extra: user.id);
+                    //   },
 
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 10,
-                        ),
-                        decoration: BoxDecoration(
-                          color: AppColors.kGreen.withOpacity(.15),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: AppColors.kGreen.withOpacity(.4),
-                          ),
-                        ),
+                    //   child: Container(
+                    //     padding: const EdgeInsets.symmetric(
+                    //       horizontal: 16,
+                    //       vertical: 10,
+                    //     ),
+                    //     decoration: BoxDecoration(
+                    //       color: AppColors.kGreen.withOpacity(.15),
+                    //       borderRadius: BorderRadius.circular(30),
+                    //       border: Border.all(
+                    //         color: AppColors.kGreen.withOpacity(.4),
+                    //       ),
+                    //     ),
 
-                        child: const Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.message, size: 18, color: Colors.green),
+                    //     child: const Row(
+                    //       mainAxisSize: MainAxisSize.min,
+                    //       children: [
+                    //         Icon(Icons.message, size: 18, color: Colors.green),
 
-                            SizedBox(width: 8),
+                    //         SizedBox(width: 8),
 
-                            Text(
-                              "Message Recruiter",
-                              style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
+                    //         Text(
+                    //           "Message Recruiter",
+                    //           style: TextStyle(
+                    //             color: Colors.green,
+                    //             fontWeight: FontWeight.w600,
+                    //           ),
+                    //         ),
+                    //       ],
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),
@@ -400,13 +400,12 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
 
               const SizedBox(width: 12),
 
-              Text(
-                "$referrers referrers",
-                style: const TextStyle(color: Colors.grey),
-              ),
+              // Text(
+              //   "$referrers referrers",
+              //   style: const TextStyle(color: Colors.grey),
+              // ),
 
-              const SizedBox(width: 12),
-
+              // const SizedBox(width: 12),
               Text(
                 "$alumni alumni",
                 style: const TextStyle(color: Colors.green),

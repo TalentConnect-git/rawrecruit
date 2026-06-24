@@ -15,17 +15,30 @@ class StudentApplicationsView extends StatefulWidget {
 
 class _StudentApplicationsViewState extends State<StudentApplicationsView> {
   int selectedTab = 0;
+  late final PageController _pageController;
+  @override
+  void initState() {
+    super.initState();
+
+    _pageController = PageController(initialPage: selectedTab);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (_) => ApplicationViewModel(),
+      create: (_) => ApplicationViewModel()..fetchApplications(),
       child: Builder(
         builder: (context) {
-          /// 🔥 LOAD ONLY ONCE
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            context.read<ApplicationViewModel>().fetchApplications();
-          });
+          // /// 🔥 LOAD ONLY ONCE
+          // WidgetsBinding.instance.addPostFrameCallback((_) {
+          //   context.read<ApplicationViewModel>().fetchApplications();
+          // });
 
           return Scaffold(
             backgroundColor: AppColors.kBg,
@@ -37,20 +50,28 @@ class _StudentApplicationsViewState extends State<StudentApplicationsView> {
                   const SizedBox(height: 10),
 
                   Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        return RefreshIndicator(
-                          color: AppColors.kGreen,
-
-                          onRefresh: () async {
-                            await context
-                                .read<ApplicationViewModel>()
-                                .fetchApplications();
-                          },
-
-                          child: _buildBody(),
-                        );
-                      },
+                    child: ClipRect(
+                      child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          setState(() => selectedTab = index);
+                        },
+                        children: List.generate(
+                          4,
+                          (index) => Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: () async {
+                                await context
+                                    .read<ApplicationViewModel>()
+                                    .fetchApplications();
+                              },
+                              child: _buildBody(index),
+                            ),
+                          ),
+                        ),
+                      ),
                     ),
                   ),
                 ],
@@ -79,7 +100,15 @@ class _StudentApplicationsViewState extends State<StudentApplicationsView> {
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() => selectedTab = index),
+        onTap: () {
+          setState(() => selectedTab = index);
+
+          _pageController.animateToPage(
+            index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
         child: Container(
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 10),
@@ -88,20 +117,12 @@ class _StudentApplicationsViewState extends State<StudentApplicationsView> {
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Text(
-                  title,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(
-                    color: isSelected ? Colors.black : Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+            child: Text(
+              title,
+              style: TextStyle(
+                color: isSelected ? Colors.black : Colors.white,
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
               ),
             ),
           ),
@@ -111,7 +132,7 @@ class _StudentApplicationsViewState extends State<StudentApplicationsView> {
   }
 
   /// 🔥 BODY
-  Widget _buildBody() {
+  Widget _buildBody(int tabIndex) {
     return Consumer<ApplicationViewModel>(
       builder: (context, vm, _) {
         if (vm.viewState == ViewState.busy) {
@@ -123,7 +144,7 @@ class _StudentApplicationsViewState extends State<StudentApplicationsView> {
         /// 🔥 FILTER LOGIC
         List<ApplicationModel> filtered = [];
 
-        switch (selectedTab) {
+        switch (tabIndex) {
           case 0:
             filtered = all;
             break;

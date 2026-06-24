@@ -9,29 +9,35 @@ class DashboardCard extends StatelessWidget {
   final MyProfileViewModel vm;
 
   const DashboardCard({super.key, required this.vm});
-String getGreeting() {
-  final hour = DateTime.now().hour;
+  String getGreeting() {
+    final hour = DateTime.now().hour;
 
-  if (hour >= 5 && hour < 12) {
-    return 'Good morning';
-  } else if (hour >= 12 && hour < 17) {
-    return 'Good afternoon';
-  } else if (hour >= 17 && hour < 21) {
-    return 'Good evening';
-  } else {
-    return 'Good night';
+    if (hour >= 5 && hour < 12) {
+      return 'Good morning';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Good afternoon';
+    } else if (hour >= 17 && hour < 21) {
+      return 'Good evening';
+    } else {
+      return 'Good night';
+    }
   }
-}
+
   @override
   Widget build(BuildContext context) {
+    debugPrint("========== DASHBOARD ==========");
+    debugPrint("USER = ${vm.user}");
+    debugPrint("NAME = ${vm.user?.name}");
+    debugPrint("SAVED JOBS = ${vm.savedJobs}");
+    debugPrint("TOTAL APPS = ${vm.totalApps}");
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// Greeting
-    Text(
-  getGreeting(),
-  style: AppTextStyles.s14W400.copyWith(color: AppColors.secText),
-),
+        Text(
+          getGreeting(),
+          style: AppTextStyles.s14W400.copyWith(color: AppColors.secText),
+        ),
         const SizedBox(height: 6),
 
         /// Name + emoji
