@@ -178,7 +178,7 @@ class _LoginViewState extends State<LoginView> {
                         onTap: () async {
                           final failure = await loginViewModel.google();
                           if (failure?.statusCode == 404) {
-                            context.pushNamed(RouteNames.userType);
+                            context.pushNamed(RouteNames.userType, extra: true);
                           } else {
                             failure?.showError(context);
                           }
