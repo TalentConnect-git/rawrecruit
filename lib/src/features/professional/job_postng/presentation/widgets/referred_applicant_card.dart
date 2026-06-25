@@ -26,7 +26,7 @@ class ReferredApplicantCard extends StatelessWidget {
 
     /// ✅ MATCH SCORE
     final match = application.matchScore ?? 0;
-    final imageUrl = application.job?.senderProfile?.profileImage ?? '';
+    final imageUrl = application.applicant?.profileImage ?? '';
     // /// ✅ JOB TITLE
     // final jobTitle = application.jobTitle ?? "-";
 

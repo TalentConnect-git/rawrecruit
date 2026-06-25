@@ -164,41 +164,42 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
 
                 child: Row(
                   children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => shortlistVM.toggleSave(
-                          jobId: jobId,
-                          jobType: "Referral",
-                          isSaved: isSaved,
-                        ),
+                    if (!widget.hideApplyButton)
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => shortlistVM.toggleSave(
+                            jobId: jobId,
+                            jobType: "Referral",
+                            isSaved: isSaved,
+                          ),
 
-                        icon: Icon(
-                          isSaved ? Icons.bookmark : Icons.bookmark_border,
-                          color: AppColors.kGreen,
-                          size: 18,
-                        ),
-
-                        label: Text(
-                          isSaved ? "Saved" : "Save",
-                          style: TextStyle(
+                          icon: Icon(
+                            isSaved ? Icons.bookmark : Icons.bookmark_border,
                             color: AppColors.kGreen,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: 14),
-
-                          side: BorderSide(
-                            color: AppColors.kGreen.withOpacity(.5),
+                            size: 18,
                           ),
 
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                          label: Text(
+                            isSaved ? "Saved" : "Save",
+                            style: TextStyle(
+                              color: AppColors.kGreen,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+
+                            side: BorderSide(
+                              color: AppColors.kGreen.withOpacity(.5),
+                            ),
+
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
                     const SizedBox(width: 12),
 
@@ -395,8 +396,10 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                 size: 13,
                 color: Colors.grey,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 2),
+
               Flexible(
+                flex: 2,
                 child: Text(
                   location,
                   style: const TextStyle(color: Colors.grey, fontSize: 11),
@@ -404,14 +407,18 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+
               _vDivider(),
+
               const Icon(
                 Icons.business_center_outlined,
                 size: 13,
                 color: Colors.grey,
               ),
-              const SizedBox(width: 4),
+              const SizedBox(width: 2),
+
               Flexible(
+                flex: 2,
                 child: Text(
                   mode,
                   style: const TextStyle(color: Colors.grey, fontSize: 11),
@@ -419,29 +426,24 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
+
               _vDivider(),
+
               Image.asset("assets/images/calendar.png", width: 15, height: 15),
 
               const SizedBox(width: 4),
-              Flexible(
-                child: RichText(
-                  maxLines: 2,
 
-                  text: TextSpan(
-                    children: [
-                      const TextSpan(
-                        text: "Deadline: ",
-                        style: TextStyle(color: Colors.grey, fontSize: 11),
-                      ),
-                      TextSpan(
-                        text: deadline,
-                        style: TextStyle(
-                          color: AppColors.kGreen,
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ],
+              Flexible(
+                flex: 4,
+                child: Text(
+                  "Deadline: $deadline",
+                  maxLines: 1,
+                  overflow: TextOverflow.fade,
+                  softWrap: false,
+                  style: TextStyle(
+                    color: AppColors.kGreen,
+                    fontSize: 11,
+                    fontWeight: FontWeight.w600,
                   ),
                 ),
               ),
@@ -472,7 +474,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                       ),
                       const SizedBox(height: 2),
                       const Text(
-                        "EST. ANNUAL SALARY",
+                        "EST. ANNUAL CTC",
                         style: TextStyle(
                           color: Colors.grey,
                           fontSize: 10,
@@ -523,7 +525,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
     return Container(
       height: 12,
       width: 1,
-      margin: const EdgeInsets.symmetric(horizontal: 8),
+      margin: const EdgeInsets.symmetric(horizontal: 4),
       color: Colors.white.withOpacity(0.15),
     );
   }
@@ -1289,11 +1291,22 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
     if (job.eligibilityCriteria != null) {
       if (job.eligibilityCriteria is List) {
         items.addAll(
-          (job.eligibilityCriteria as List).map((e) => e.toString()),
+          (job.eligibilityCriteria as List)
+              .expand(
+                (e) => e
+                    .toString()
+                    .split('.')
+                    .map((x) => x.trim())
+                    .where((x) => x.isNotEmpty),
+              )
+              .toList(),
         );
       } else {
         final s = job.eligibilityCriteria.toString();
-        if (s.isNotEmpty) items.add(s);
+
+        items.addAll(
+          s.split('.').map((e) => e.trim()).where((e) => e.isNotEmpty),
+        );
       }
     }
     if (items.isEmpty) items.add("—");

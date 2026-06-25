@@ -43,14 +43,13 @@ class _LoginViewState extends State<LoginView> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   /// 🔹 LOGO
-//                   Padding(
-//   padding: const EdgeInsets.symmetric(horizontal: 80),
-//   child: Image.asset(
-//     'assets/images/img.png',
-//     fit: BoxFit.cover,
-//   ),
-// ),
-
+                  //                   Padding(
+                  //   padding: const EdgeInsets.symmetric(horizontal: 80),
+                  //   child: Image.asset(
+                  //     'assets/images/img.png',
+                  //     fit: BoxFit.cover,
+                  //   ),
+                  // ),
                   const SizedBox(height: 30),
 
                   /// 🔹 TITLE
@@ -187,10 +186,10 @@ class _LoginViewState extends State<LoginView> {
                       const SizedBox(height: 12),
 
                       _socialButton(
-                        icon: const Icon(
-                          Icons.business,
-                          color: Colors.blue,
-                          size: 18,
+                        icon: Image.asset(
+                          'assets/images/linkedin.png',
+                          height: 18,
+                          width: 18,
                         ),
                         text: "Continue with LinkedIn",
                         onTap: () {},

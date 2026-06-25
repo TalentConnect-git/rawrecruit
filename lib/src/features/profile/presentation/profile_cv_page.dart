@@ -88,6 +88,24 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
     }
   }
 
+  Future<void> openUrl(String url) async {
+    try {
+      String normalizedUrl = url.trim();
+
+      if (!normalizedUrl.startsWith(RegExp(r'https?://'))) {
+        normalizedUrl = 'https://$normalizedUrl';
+      }
+
+      final uri = Uri.parse(normalizedUrl);
+
+      final launched = await launchUrl(uri, mode: LaunchMode.platformDefault);
+
+      debugPrint('Launch result: $launched');
+    } catch (e) {
+      debugPrint('Launch error: $e');
+    }
+  }
+
   final vm = ProfileDetailViewModel();
 
   @override
@@ -1503,13 +1521,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                         const SizedBox(height: 10),
 
                                         GestureDetector(
-                                          onTap: () async {
-                                            final uri = Uri.parse(e.url!);
-
-                                            if (await canLaunchUrl(uri)) {
-                                              await launchUrl(uri);
-                                            }
-                                          },
+                                          onTap: () => openUrl(e.url!),
 
                                           child: Text(
                                             e.url!,
@@ -1536,12 +1548,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: (user.github?.isNotEmpty ?? false)
-                            ? () async {
-                                final uri = Uri.parse(user.github!);
-                                if (await canLaunchUrl(uri)) {
-                                  await launchUrl(uri);
-                                }
-                              }
+                            ? () => openUrl(user.github!)
                             : null,
                         icon: const Icon(Icons.code),
                         label: const Text("Open GitHub"),
@@ -1563,12 +1570,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       width: double.infinity,
                       child: ElevatedButton.icon(
                         onPressed: (user.portfolio?.isNotEmpty ?? false)
-                            ? () async {
-                                final uri = Uri.parse(user.portfolio!);
-                                if (await canLaunchUrl(uri)) {
-                                  await launchUrl(uri);
-                                }
-                              }
+                            ? () => openUrl(user.portfolio!)
                             : null,
                         icon: const Icon(Icons.web),
                         label: const Text("Open Portfolio"),
@@ -2153,13 +2155,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                     Expanded(
                       child: GestureDetector(
                         onTap: (user.linkedin?.isNotEmpty ?? false)
-                            ? () async {
-                                final uri = Uri.parse(user.linkedin!);
-
-                                if (await canLaunchUrl(uri)) {
-                                  await launchUrl(uri);
-                                }
-                              }
+                            ? () => openUrl(user.linkedin!)
                             : null,
                         child: _headerButton(
                           icon: Icons.business,

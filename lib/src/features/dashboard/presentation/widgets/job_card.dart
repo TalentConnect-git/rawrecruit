@@ -66,9 +66,9 @@ class JobCard extends StatelessWidget {
           (j?.workMode?.isNotEmpty == true
                   ? j.workMode.first
                   : (j?["workMode"] is List && j["workMode"].isNotEmpty
-                      ? j["workMode"][0]
-                      : null) ??
-                      "Remote")
+                            ? j["workMode"][0]
+                            : null) ??
+                        "Remote")
               .toString();
 
       /// 🔥 LOCATION
@@ -76,9 +76,9 @@ class JobCard extends StatelessWidget {
           (j?.location?.isNotEmpty == true
                   ? j.location.first
                   : (j?["location"] is List && j["location"].isNotEmpty
-                      ? j["location"][0]
-                      : null) ??
-                      "India")
+                            ? j["location"][0]
+                            : null) ??
+                        "India")
               .toString();
 
       /// 🔥 SALARY (FIXED)
@@ -86,9 +86,7 @@ class JobCard extends StatelessWidget {
           j?.packageDetails?.totalCTC ?? j?["packageDetails"]?["totalCTC"];
 
       if (ctc != null) {
-        salary = ctc < 100000
-            ? "₹$ctc / month"
-            : _formatSalary(ctc);
+        salary = ctc < 100000 ? "₹$ctc LPA" : _formatSalary(ctc);
       }
 
       /// 🔥 MATCH
@@ -112,7 +110,6 @@ class JobCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-
             /// 🔥 TITLE + MATCH %
             Row(
               children: [
@@ -150,19 +147,13 @@ class JobCard extends StatelessWidget {
               children: [
                 Text(
                   salary,
-                  style: AppTextStyles.s12W600.copyWith(
-                    color: AppColors.white,
-                  ),
+                  style: AppTextStyles.s12W600.copyWith(color: AppColors.white),
                 ),
                 const SizedBox(width: 10),
 
-                
-          
-
                 Row(
                   children: [
-                    Icon(Icons.school,
-                        size: 14, color: AppColors.kGreen),
+                    Icon(Icons.school, size: 14, color: AppColors.kGreen),
                     const SizedBox(width: 4),
                     Text(
                       "$alumni alumni",
@@ -180,9 +171,7 @@ class JobCard extends StatelessWidget {
                   child: AnimatedSwitcher(
                     duration: const Duration(milliseconds: 200),
                     child: Icon(
-                      isSaved
-                          ? Icons.bookmark
-                          : Icons.bookmark_border,
+                      isSaved ? Icons.bookmark : Icons.bookmark_border,
                       key: ValueKey(isSaved),
                       color: isSaved
                           ? AppColors.kGreen
@@ -198,14 +187,14 @@ class JobCard extends StatelessWidget {
     );
   }
 
- String _formatSalary(int? ctc) {
-  if (ctc == null) return "Not disclosed";
+  String _formatSalary(int? ctc) {
+    if (ctc == null) return "Not disclosed";
 
-  if (ctc < 100000) {
-    return "₹$ctc / month";
+    if (ctc < 100000) {
+      return "₹$ctc LPA";
+    }
+
+    final lpa = (ctc / 100000).toStringAsFixed(0);
+    return "₹$lpa LPA";
   }
-
-  final lpa = (ctc / 100000).toStringAsFixed(0);
-  return "₹$lpa LPA";
-}
 }

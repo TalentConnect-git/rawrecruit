@@ -34,59 +34,59 @@ class ResumeUploadPage extends StatelessWidget {
         /// 📄 UPLOAD BOX
         _uploadBox(context),
 
-        const SizedBox(height: 16),
+        // const SizedBox(height: 16),
 
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: AppColors.kCard,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: AppColors.kBorder),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                "We'll extract:",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
+        // Container(
+        //   padding: const EdgeInsets.all(16),
+        //   decoration: BoxDecoration(
+        //     color: AppColors.kCard,
+        //     borderRadius: BorderRadius.circular(16),
+        //     border: Border.all(color: AppColors.kBorder),
+        //   ),
+        //   child: Column(
+        //     crossAxisAlignment: CrossAxisAlignment.start,
+        //     children: [
+        //       const Text(
+        //         "We'll extract:",
+        //         style: TextStyle(
+        //           color: Colors.grey,
+        //           fontSize: 13,
+        //           fontWeight: FontWeight.w500,
+        //         ),
+        //       ),
 
-              const SizedBox(height: 12),
+        //       const SizedBox(height: 12),
 
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      children: const [
-                        _ResumePoint("Skills"),
-                        SizedBox(height: 10),
-                        _ResumePoint("Experience"),
-                        SizedBox(height: 10),
-                        _ResumePoint("Education"),
-                      ],
-                    ),
-                  ),
+        //       Row(
+        //         children: [
+        //           Expanded(
+        //             child: Column(
+        //               children: const [
+        //                 _ResumePoint("Skills"),
+        //                 SizedBox(height: 10),
+        //                 _ResumePoint("Experience"),
+        //                 SizedBox(height: 10),
+        //                 _ResumePoint("Education"),
+        //               ],
+        //             ),
+        //           ),
 
-                  Expanded(
-                    child: Column(
-                      children: const [
-                        _ResumePoint("Certifications"),
-                        SizedBox(height: 10),
-                        _ResumePoint("Projects"),
-                        SizedBox(height: 10),
-                        _ResumePoint("Resume Score"),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
+        //           Expanded(
+        //             child: Column(
+        //               children: const [
+        //                 _ResumePoint("Certifications"),
+        //                 SizedBox(height: 10),
+        //                 _ResumePoint("Projects"),
+        //                 SizedBox(height: 10),
+        //                 _ResumePoint("Resume Score"),
+        //               ],
+        //             ),
+        //           ),
+        //         ],
+        //       ),
+        //     ],
+        //   ),
+        // ),
         const SizedBox(height: 16),
 
         // /// OR

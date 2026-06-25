@@ -236,10 +236,10 @@ class _RegisterViewState extends State<RegisterView> {
                         const SizedBox(height: 12),
 
                         _socialButton(
-                          icon: const Icon(
-                            Icons.business,
-                            color: Colors.blue,
-                            size: 18,
+                          icon: Image.asset(
+                            'assets/images/linkedin.png',
+                            height: 18,
+                            width: 18,
                           ),
                           text: "Continue with LinkedIn",
                           onTap: () {},

@@ -28,6 +28,8 @@ class _DashboardViewState extends State<DashboardView> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final results = await Future.wait([
+        myProfileViewModel.getUser(), // <-- ADD THIS
+
         myProfileViewModel.getCandidateStats(),
         myProfileViewModel.getCareerInsights(), // 🔥 THIS WAS MISSING
       ]);
@@ -90,12 +92,12 @@ class _DashboardBody extends StatelessWidget {
                               "${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni in your network",
                         ),
 
-                        const SizedBox(width: 8),
+                        // const SizedBox(width: 8),
 
-                        InfoChip(
-                          text:
-                              "you have ${context.watch<ShortlistViewModel>().savedJobIds.length} saved jobs",
-                        ),
+                        // InfoChip(
+                        //   text:
+                        //       "you have ${context.watch<ShortlistViewModel>().savedJobIds.length} saved jobs",
+                        // ),
                       ],
                     ),
                   ),
@@ -203,41 +205,28 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                   onTap: () => context.pushNamed(RouteNames.askForReferral),
                   child: Container(
                     height: 60,
-                    padding: const EdgeInsets.symmetric(horizontal: 12),
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(14),
                       border: Border.all(color: AppColors.kGreen, width: 1.5),
                     ),
-                    child: Row(
-                      children: [
-                        Container(
-                          height: 36,
-                          width: 36,
-                          decoration: BoxDecoration(
-                            color: AppColors.kGreen.withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Icon(
+                    child: Center(
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
                             Icons.person_search_outlined,
                             color: AppColors.kGreen,
                             size: 20,
                           ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
+                          const SizedBox(width: 8),
+                          Text(
                             'Ask for Referral',
-                            style: AppTextStyles.s14W600.copyWith(
+                            style: AppTextStyles.s16W600.copyWith(
                               color: AppColors.kGreen,
                             ),
                           ),
-                        ),
-                        Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: 14,
-                          color: AppColors.kGreen,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

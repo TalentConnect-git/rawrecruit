@@ -21,7 +21,7 @@ class StudentJobsView extends StatefulWidget {
 
 class _StudentJobsViewState extends State<StudentJobsView> {
   StudentJobType selectedTab = StudentJobType.referral;
-
+  late final PageController _pageController;
   @override
   void initState() {
     super.initState();
@@ -32,6 +32,13 @@ class _StudentJobsViewState extends State<StudentJobsView> {
         }
       });
     });
+    _pageController = PageController(initialPage: selectedTab.index);
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -64,34 +71,52 @@ class _StudentJobsViewState extends State<StudentJobsView> {
                   _buildTabs(),
                   const SizedBox(height: 10),
                   Expanded(
-                    child: Builder(
-                      builder: (context) {
-                        return RefreshIndicator(
-                          color: AppColors.kGreen,
+                    child: ClipRect(
+                      child: PageView(
+                        controller: _pageController,
+                        onPageChanged: (index) {
+                          setState(() {
+                            selectedTab = StudentJobType.values[index];
+                          });
+                        },
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: () => _refreshData(context),
+                              child: _referralJobs(),
+                            ),
+                          ),
 
-                          onRefresh: () async {
-                            await context.read<DashboardViewModel>().getJobs();
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: () => _refreshData(context),
+                              child: _offCampusJobs(),
+                            ),
+                          ),
 
-                            await context
-                                .read<DashboardViewModel>()
-                                .getInternships();
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: () => _refreshData(context),
+                              child: _internships(),
+                            ),
+                          ),
 
-                            await context
-                                .read<DashboardViewModel>()
-                                .fetchProfessionalData();
-
-                            await context
-                                .read<ShortlistViewModel>()
-                                .fetchSaved();
-
-                            await context
-                                .read<ApplicationViewModel>()
-                                .fetchApplications();
-                          },
-
-                          child: _buildBody(),
-                        );
-                      },
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: RefreshIndicator(
+                              color: AppColors.kGreen,
+                              onRefresh: () => _refreshData(context),
+                              child: _savedJobs(),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -112,12 +137,28 @@ class _StudentJobsViewState extends State<StudentJobsView> {
     );
   }
 
+  Future<void> _refreshData(BuildContext context) async {
+    await context.read<DashboardViewModel>().getJobs();
+    await context.read<DashboardViewModel>().getInternships();
+    await context.read<DashboardViewModel>().fetchProfessionalData();
+    await context.read<ShortlistViewModel>().fetchSaved();
+    await context.read<ApplicationViewModel>().fetchApplications();
+  }
+
   Widget _tab(String title, StudentJobType index) {
     final isSelected = selectedTab == index;
 
     return Expanded(
       child: GestureDetector(
-        onTap: () => setState(() => selectedTab = index),
+        onTap: () {
+          setState(() => selectedTab = index);
+
+          _pageController.animateToPage(
+            index.index,
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           margin: const EdgeInsets.symmetric(horizontal: 4),
