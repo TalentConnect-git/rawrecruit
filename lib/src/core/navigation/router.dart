@@ -228,7 +228,8 @@ GoRouter appRouter = GoRouter(
       name: RouteNames.userType,
       path: '/userType',
       builder: (context, state) {
-        return PreferencesPage();
+        final isLoggingIn = state.extra as bool?;
+        return PreferencesPage(isLogging: isLoggingIn ?? false);
       },
     ),
 

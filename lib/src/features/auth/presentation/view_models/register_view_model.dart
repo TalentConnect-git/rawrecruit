@@ -76,4 +76,28 @@ class RegisterViewModel extends ViewStateProvider {
 
     return failure;
   }
+
+  Future<Failure?> googleLogin() async {
+    Failure? failure;
+
+    setViewState(ViewState.busy);
+
+    final result = await _authRepository.googleLogin(
+      userType: getIt<AppStateProvider>().selectedUserType!,
+    );
+
+    result.fold(
+      (exception) {
+        failure = APIFailure.fromException(exception: exception);
+      },
+      (res) async {
+        getIt<AppStateProvider>().auth = res;
+        getIt<AppStateProvider>().selectedUserType = null;
+      },
+    );
+
+    setViewState(ViewState.complete);
+
+    return failure;
+  }
 }

@@ -1,9 +1,6 @@
-import 'dart:developer';
-
-import 'package:dartz/dartz.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/auth/index.dart' show AuthDataSource;
+
 import 'auth_repository.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
@@ -46,52 +43,6 @@ class AuthRepositoryImpl implements AuthRepository {
       _authDataSource.forgotPassword(email: email);
 
   @override
-  ResultFuture<Auth?> googleLogin({required UserType userType}) async {
-    try {
-      final GoogleSignIn googleSignIn = GoogleSignIn.instance;
-
-      try {
-        await googleSignIn.signOut();
-      } catch (_) {}
-
-      final GoogleSignInAccount googleUser = await googleSignIn.authenticate(
-        scopeHint: ['email'],
-      );
-
-      // if (googleUser == null) {
-      //   return Left(
-      //     APIException(message: 'Sign in aborted by user', statusCode: 500),
-      //   );
-      // }
-
-      final idToken = googleUser.authentication.idToken;
-
-      if (idToken == null) {
-        return Left(
-          APIException(
-            message: 'Something went wrong, Try again later.',
-            statusCode: 500,
-          ),
-        );
-      }
-
-      return await _authDataSource.googleLogin(
-        token: idToken,
-        userType: userType,
-      );
-    } on GoogleSignInException catch (e, s) {
-      if (e.code == GoogleSignInExceptionCode.canceled) {
-        log('Error: $e\n\n$s');
-        return Left(
-          APIException(message: 'Sign in aborted by user', statusCode: 499),
-        );
-      }
-      return Left(
-        APIException(
-          message: e.description ?? 'Google sign in failed',
-          statusCode: 500,
-        ),
-      );
-    }
-  }
+  ResultFuture<Auth?> googleLogin({required UserType? userType}) =>
+      _authDataSource.googleLogin(userType: userType);
 }

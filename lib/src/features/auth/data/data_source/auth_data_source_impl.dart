@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rawrecruit/src/core/index.dart';
 
 import 'auth_data_source.dart';
@@ -152,10 +153,64 @@ class AuthDataSourceImpl implements AuthDataSource {
   }
 
   @override
-  ResultFuture<Auth?> googleLogin({
-    required String token,
-    required UserType userType,
-  }) async {
+  ResultFuture<Auth?> googleLogin({required UserType? userType}) async {
+    try {
+      final GoogleSignIn googleSignIn = GoogleSignIn.instance;
+
+      try {
+        await googleSignIn.signOut();
+      } catch (_) {}
+
+      final GoogleSignInAccount googleUser = await googleSignIn.authenticate(
+        scopeHint: ['email'],
+      );
+
+      final idToken = googleUser.authentication.idToken;
+
+      if (idToken == null) {
+        return Left(
+          APIException(
+            message: 'Something went wrong, Try again later.',
+            statusCode: 500,
+          ),
+        );
+      }
+
+      final deviceToken = SharedPrefHelper.getString("deviceToken");
+
+      final request = Request(
+        method: RequestMethod.post,
+        endpoint: Endpoints.apiAuthGoogle,
+        body: {
+          if (userType != null) 'userType': userType.apiLabel,
+          'deviceToken': deviceToken,
+        },
+      );
+
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final auth = Auth.fromJson(response['user']);
+        await SecretRepo.setString('auth_token', response['token']);
+        await SecretRepo.setString('auth_id', auth.id ?? '');
+        return Right(auth);
+      }
+    } on GoogleSignInException catch (e, s) {
+      if (e.code == GoogleSignInExceptionCode.canceled) {
+        log('Error: $e\n\n$s');
+        return Left(
+          APIException(message: 'Sign in aborted by user', statusCode: 499),
+        );
+      }
+      return Left(
+        APIException(
+          message: e.description ?? 'Google sign in failed',
+          statusCode: 500,
+        ),
+      );
+    }
+
     return Right(null);
   }
 
