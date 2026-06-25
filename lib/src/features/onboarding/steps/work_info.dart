@@ -289,6 +289,9 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
     }
   }
 
+  TextEditingController? textController;
+  FocusNode? textFocusNode;
+
   @override
   Widget build(BuildContext context) {
     return Wrapper(
@@ -451,16 +454,21 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
                 if (!jobRoles.contains(actualValue)) {
                   setState(() {
                     jobRoles.add(actualValue);
-
                     jobRolesCtrl.text = jobRoles.join(", ");
                   });
 
                   saveData();
                 }
+
+                // <-- Add these 2 lines
+                textController?.clear();
+                textFocusNode?.unfocus();
               },
 
               fieldViewBuilder:
                   (context, controller, focusNode, onFieldSubmitted) {
+                    textController = controller;
+                    textFocusNode = focusNode;
                     return TextField(
                       controller: controller,
 
