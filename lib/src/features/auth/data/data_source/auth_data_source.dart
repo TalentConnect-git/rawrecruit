@@ -16,10 +16,7 @@ abstract class AuthDataSource {
 
   ResultFuture<String?> logout();
 
-  ResultFuture<Auth?> googleLogin({
-    required String token,
-    required UserType userType,
-  });
+  ResultFuture<Auth?> googleLogin({required UserType? userType});
 
   ResultFuture<String?> forgotPassword({required String email});
 }

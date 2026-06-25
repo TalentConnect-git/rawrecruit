@@ -230,7 +230,12 @@ class _RegisterViewState extends State<RegisterView> {
                             height: 18,
                           ),
                           text: "Continue with Google",
-                          onTap: () {},
+                          onTap: () async {
+                            final failure = await registerViewModel
+                                .googleLogin();
+
+                            failure?.showError(context);
+                          },
                         ),
 
                         const SizedBox(height: 12),

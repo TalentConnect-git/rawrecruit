@@ -31,12 +31,12 @@ class LoginViewModel extends ViewStateProvider {
     return failure;
   }
 
-  Future<Failure?> google({required UserType userType}) async {
+  Future<Failure?> google() async {
     Failure? failure;
 
     setViewState(ViewState.busy);
 
-    final result = await _authRepository.googleLogin(userType: userType);
+    final result = await _authRepository.googleLogin(userType: null);
 
     result.fold(
       (exception) {

@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/features/onboarding/index.dart' show AppHeader;
+import 'package:rawrecruit/src/features/onboarding/index.dart'
+    show AppHeader, OnboardingLocalService;
+import 'package:rawrecruit/src/features/onboarding/presentation/view_model/first_step_view_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/index.dart';
 
 class PreferencesPage extends StatefulWidget {
-  const PreferencesPage({super.key});
+  const PreferencesPage({this.isLogging = false, super.key});
+  final bool isLogging;
 
   @override
   State<PreferencesPage> createState() => _PreferencesPageState();
 }
 
 class _PreferencesPageState extends State<PreferencesPage> {
+  final FirstStepViewModel firstStepViewModel = FirstStepViewModel();
+
   int selectedIndex = 0;
   UserType _mapIndexToUserType(int index) {
     switch (index) {
@@ -29,103 +36,143 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// HEADER
-                    AppHeader(
-                      title: "How do you want to",
-                      highlight: "use Referd?",
-                      //  onBack: () => {},
-                    ),
+    return ChangeNotifierProvider.value(
+      value: firstStepViewModel,
+      child: Scaffold(
+        backgroundColor: Colors.black,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      /// HEADER
+                      AppHeader(
+                        title: "How do you want to",
+                        highlight: "use Referd?",
+                        //  onBack: () => {},
+                      ),
 
-                    const SizedBox(height: 8),
+                      const SizedBox(height: 8),
 
-                    const Text(
-                      "Choose your primary goal — you can always switch later",
-                      style: TextStyle(color: Colors.grey, fontSize: 13),
-                    ),
+                      const Text(
+                        "Choose your primary goal — you can always switch later",
+                        style: TextStyle(color: Colors.grey, fontSize: 13),
+                      ),
 
-                    const SizedBox(height: 24),
+                      const SizedBox(height: 24),
 
-                    /// CARD 1
-                    _optionCard(
-                      index: 0,
-                      icon: Icons.school,
-                      title: "Student",
-                      subtitle: "Currently studying & exploring opportunities",
-                    ),
-                    SizedBox(height: 15),
+                      /// CARD 1
+                      _optionCard(
+                        index: 0,
+                        icon: Icons.school,
+                        title: "Student",
+                        subtitle:
+                            "Currently studying & exploring opportunities",
+                      ),
+                      SizedBox(height: 15),
 
-                    _optionCard(
-                      index: 1,
-                      icon: Icons.person_outline,
-                      title: "Fresher",
-                      subtitle: "Recently graduated, looking for first job",
-                    ),
-                    SizedBox(height: 15),
-                    _optionCard(
-                      index: 2,
-                      icon: Icons.work,
-                      title: "Professional",
-                      subtitle: "Working professional seeking growth",
-                    ),
-                    const SizedBox(height: 16),
+                      _optionCard(
+                        index: 1,
+                        icon: Icons.person_outline,
+                        title: "Fresher",
+                        subtitle: "Recently graduated, looking for first job",
+                      ),
+                      SizedBox(height: 15),
+                      _optionCard(
+                        index: 2,
+                        icon: Icons.work,
+                        title: "Professional",
+                        subtitle: "Working professional seeking growth",
+                      ),
+                      const SizedBox(height: 16),
 
-                    // /// FOOTER TEXT
-                    // Row(
-                    //   children: const [
-                    //     Icon(Icons.people, color: Colors.green, size: 16),
-                    //     SizedBox(width: 6),
-                    //     Text(
-                    //       "12,400+ professionals joined this month",
-                    //       style: TextStyle(color: Colors.grey, fontSize: 12),
-                    //     ),
-                    //   ],
-                    // ),
-                  ],
-                ),
-              ),
-            ),
-
-            /// CONTINUE BUTTON
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AppColors.kGreen,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-                  onPressed: () {
-                    final userType = _mapIndexToUserType(selectedIndex);
-
-                    /// 🔥 STORE GLOBALLY
-                    getIt<AppStateProvider>().selectedUserType = userType;
-
-                    /// 👉 GO TO REGISTER
-                    context.pushNamed(RouteNames.register);
-                  },
-                  child: const Text(
-                    "Continue >",
-                    style: TextStyle(color: Colors.black),
+                      // /// FOOTER TEXT
+                      // Row(
+                      //   children: const [
+                      //     Icon(Icons.people, color: Colors.green, size: 16),
+                      //     SizedBox(width: 6),
+                      //     Text(
+                      //       "12,400+ professionals joined this month",
+                      //       style: TextStyle(color: Colors.grey, fontSize: 12),
+                      //     ),
+                      //   ],
+                      // ),
+                    ],
                   ),
                 ),
               ),
-            ),
-          ],
+
+              /// CONTINUE BUTTON
+              Selector<FirstStepViewModel, bool>(
+                selector: (_, vm) => vm.isLoading,
+                builder: (_, isLoading, _) => isLoading
+                    ? AppLoadingIndicator()
+                    : Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.kGreen,
+                              padding: const EdgeInsets.symmetric(vertical: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                            ),
+                            onPressed: () async {
+                              final userType = _mapIndexToUserType(
+                                selectedIndex,
+                              );
+
+                              if (widget.isLogging) {
+                                final failure = await firstStepViewModel.google(
+                                  userType: userType,
+                                );
+                                Toasts.showSuccessOrFailureToast(
+                                  context,
+                                  failure: failure,
+                                  successMsg: 'Register Successful!',
+                                  popOnSuccess: false,
+                                  successCallback: () async {
+                                    final onboardingService =
+                                        getIt<OnboardingLocalService>();
+
+                                    await onboardingService.clear();
+
+                                    final prefs =
+                                        await SharedPreferences.getInstance();
+
+                                    await prefs.setBool(
+                                      'onboarding_completed',
+                                      false,
+                                    );
+                                    context.pushReplacementNamed(
+                                      RouteNames.onboarding,
+                                    );
+                                  },
+                                );
+                              } else {
+                                getIt<AppStateProvider>().selectedUserType =
+                                    userType;
+
+                                /// 👉 GO TO REGISTER
+                                context.pushNamed(RouteNames.register);
+                              }
+                            },
+                            child: const Text(
+                              "Continue >",
+                              style: TextStyle(color: Colors.black),
+                            ),
+                          ),
+                        ),
+                      ),
+              ),
+            ],
+          ),
         ),
       ),
     );
