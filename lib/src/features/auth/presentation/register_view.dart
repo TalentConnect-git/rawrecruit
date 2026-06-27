@@ -247,7 +247,18 @@ class _RegisterViewState extends State<RegisterView> {
                             width: 18,
                           ),
                           text: "Continue with LinkedIn",
-                          onTap: () {},
+                          onTap: () async {
+                            final failure = await registerViewModel
+                                .linkedInLogin();
+                            if (failure?.statusCode == 404) {
+                              context.pushNamed(
+                                RouteNames.userType,
+                                extra: true,
+                              );
+                            } else {
+                              failure?.showError(context);
+                            }
+                          },
                         ),
                       ],
                     ),

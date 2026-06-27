@@ -44,21 +44,19 @@ Future<void> _init(Flavor flavor) async {
   final apiConfig = getApiConfig(flavor);
 
   FlavorConfig(flavor: flavor, baseMobileUrl: apiConfig.baseUrl);
+
+  await GoogleSignIn.instance.initialize(
+    serverClientId:
+        '532797617580-4poadlefegitmrplc1visjdkjkk7uk16.apps.googleusercontent.com',
+    // clientId:
+    //    '532797617580-3t6d4dlndcaee5rnpd33t37jgjtul6iq.apps.googleusercontent.com',
+  );
 }
 
 Future<void> _preInit(Flavor flavor) async {
   await initializeFirebaseApp(flavor);
   await SharedPrefHelper.init();
   await NotificationService().init();
-
-  try {
-    await GoogleSignIn.instance.initialize(
-      serverClientId:
-          '766071065020-de5f0sr7tvfb11lnv3psqbgg1o8es2i0.apps.googleusercontent.com',
-    );
-  } catch (_) {
-    // Already initialized or unsupported platform — safe to ignore
-  }
 
   await initDependencyLocator();
   await getIt.allReady();
