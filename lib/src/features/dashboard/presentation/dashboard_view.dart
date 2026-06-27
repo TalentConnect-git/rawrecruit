@@ -55,8 +55,21 @@ class _DashboardViewState extends State<DashboardView> {
   }
 }
 
-class _DashboardBody extends StatelessWidget {
+class _DashboardBody extends StatefulWidget {
   const _DashboardBody();
+
+  @override
+  State<_DashboardBody> createState() => _DashboardBodyState();
+}
+
+class _DashboardBodyState extends State<_DashboardBody> {
+  final ScrollController _chipScrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _chipScrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +77,6 @@ class _DashboardBody extends StatelessWidget {
       builder: (context, provider, _) {
         return Scaffold(
           backgroundColor: AppColors.kBg,
-
           body: SafeArea(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -76,48 +88,37 @@ class _DashboardBody extends StatelessWidget {
 
                   const SizedBox(height: 16),
 
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        InfoChip(
-                          text:
-                              "you have applied to ${context.watch<ApplicationViewModel>().appliedApplications.length} applications",
-                        ),
-
-                        const SizedBox(width: 8),
-
-                        InfoChip(
-                          text:
-                              "${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni in your network",
-                        ),
-
-                        // const SizedBox(width: 8),
-
-                        // InfoChip(
-                        //   text:
-                        //       "you have ${context.watch<ShortlistViewModel>().savedJobIds.length} saved jobs",
-                        // ),
-                      ],
+                  /// 🔥 CHIP ROW with visible scrollbar
+                  Scrollbar(
+                    controller: _chipScrollController,
+                    thumbVisibility: true,
+                    child: SingleChildScrollView(
+                      controller: _chipScrollController,
+                      scrollDirection: Axis.horizontal,
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        children: [
+                          InfoChip(
+                            text:
+                                "you have applied to ${context.watch<ApplicationViewModel>().appliedApplications.length} applications",
+                          ),
+                          const SizedBox(width: 8),
+                          InfoChip(
+                            text:
+                                "${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni in your network",
+                          ),
+                        ],
+                      ),
                     ),
                   ),
 
                   const SizedBox(height: 16),
 
-                  // const _SortFilterRow(),
-                  // const SizedBox(height: 16),
                   Expanded(child: const _DashboardCombinedView()),
                 ],
               ),
             ),
           ),
-
-          // floatingActionButton: FloatingActionButton(
-          //   onPressed: () {
-          //     context.pushNamed(RouteNames.jobPosted);
-          //   },
-          //   child: Icon(Icons.add),
-          // ),
         );
       },
     );
