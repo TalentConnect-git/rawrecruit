@@ -14,7 +14,7 @@ abstract class ApplicationModel with _$ApplicationModel {
 
     @UserOrStringConvertor() User? applicant,
     String? applicantType,
-    String? appliedForCompany,
+    @JobPostingOrStringConverter() JobPosting? appliedForCompany,
     String? referralCompany,
     String? appliedByType,
 

@@ -175,16 +175,46 @@ GoRouter appRouter = GoRouter(
       name: RouteNames.jobDetail,
       path: '/jobDetail',
       builder: (context, state) {
-        final job = state.extra as Job;
-        return JobDetailView(job: job);
+        final extra = state.extra;
+
+        if (extra is Job) {
+          return JobDetailView(job: extra, hideApplyButton: false);
+        }
+
+        if (extra is Map) {
+          final job = extra["job"];
+          return JobDetailView(
+            job: job is Job
+                ? job
+                : Job.fromJson(Map<String, dynamic>.from(job)),
+            hideApplyButton: extra["hideApplyButton"] == true,
+          );
+        }
+
+        return NotFoundView();
       },
     ),
     GoRoute(
       name: RouteNames.internshipDetail,
       path: '/internshipDetail',
       builder: (context, state) {
-        final internship = state.extra as Job;
-        return InternshipDetailView(internship: internship);
+        final extra = state.extra;
+
+        if (extra is Job) {
+          return InternshipDetailView(internship: extra);
+        }
+
+        if (extra is Map) {
+          final job = extra["job"];
+          return InternshipDetailView(
+            internship: job is Job
+                ? job
+                : Job.fromJson(Map<String, dynamic>.from(job)),
+            hideApplyButton: extra["hideApplyButton"] == true,
+          );
+        }
+
+        return NotFoundView();
       },
     ),
     GoRoute(

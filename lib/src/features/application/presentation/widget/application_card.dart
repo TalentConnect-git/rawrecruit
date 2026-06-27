@@ -60,11 +60,25 @@ class ApplicationCard extends StatelessWidget {
     final model = application?.jobDetails ?? application?.job;
     final title = (model?.jobRoles?.isNotEmpty == true)
         ? model?.jobRoles!.first
-        : (model?.jobTitle?.isNotEmpty == true ? model?.jobTitle! : "-");
+        : (model?.jobTitle?.isNotEmpty == true ? model?.jobTitle! : "");
 
-    final company = (application?.referralCompany != null)
-        ? application?.referralCompany
-        : (model?.jobType == "Referral" ? "Referral" : "-");
+    String? _firstNonEmpty(List<String?> values) {
+      for (final v in values) {
+        if (v != null && v.trim().isNotEmpty && v.trim() != '-') {
+          return v.trim();
+        }
+      }
+      return null;
+    }
+
+    final company =
+        _firstNonEmpty([
+          application?.referralCompany,
+          model?.jobType == "Referral" ? "Referral" : null,
+          application?.displayCompanyName,
+          model?.companyPosted?.companyDetails?.companyName,
+        ]) ??
+        "";
     final receiverName =
         application?.jobDetails?.receiverProfile?.name ??
         application?.job?.receiverProfile?.name;

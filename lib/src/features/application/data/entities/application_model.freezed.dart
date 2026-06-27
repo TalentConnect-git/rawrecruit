@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ApplicationModel {
 
-@JsonKey(name: '_id') String? get id;@UserOrStringConvertor() User? get applicant; String? get applicantType; String? get appliedForCompany; String? get referralCompany; String? get appliedByType; String? get adminApprovalStatus; String? get currentStatus; String? get jobType; bool? get applied; bool? get isVisited; bool? get isAskForReferral; String? get careerPageUrl;@JobOrStringConvertor() Job? get job; int? get matchScore; String? get adminComment; num? get rating; DateTime? get createdAt; DateTime? get updatedAt; String? get displayCompanyName;@JsonKey(name: 'jobDetails') Job? get jobDetails;@JsonKey(name: 'companyProfile') CompanyDetail? get companyProfile; List<ApplicationStatusHistory>? get statusHistory;
+@JsonKey(name: '_id') String? get id;@UserOrStringConvertor() User? get applicant; String? get applicantType;@JobPostingOrStringConverter() JobPosting? get appliedForCompany; String? get referralCompany; String? get appliedByType; String? get adminApprovalStatus; String? get currentStatus; String? get jobType; bool? get applied; bool? get isVisited; bool? get isAskForReferral; String? get careerPageUrl;@JobOrStringConvertor() Job? get job; int? get matchScore; String? get adminComment; num? get rating; DateTime? get createdAt; DateTime? get updatedAt; String? get displayCompanyName;@JsonKey(name: 'jobDetails') Job? get jobDetails;@JsonKey(name: 'companyProfile') CompanyDetail? get companyProfile; List<ApplicationStatusHistory>? get statusHistory;
 /// Create a copy of ApplicationModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,11 +48,11 @@ abstract mixin class $ApplicationModelCopyWith<$Res>  {
   factory $ApplicationModelCopyWith(ApplicationModel value, $Res Function(ApplicationModel) _then) = _$ApplicationModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: '_id') String? id,@UserOrStringConvertor() User? applicant, String? applicantType, String? appliedForCompany, String? referralCompany, String? appliedByType, String? adminApprovalStatus, String? currentStatus, String? jobType, bool? applied, bool? isVisited, bool? isAskForReferral, String? careerPageUrl,@JobOrStringConvertor() Job? job, int? matchScore, String? adminComment, num? rating, DateTime? createdAt, DateTime? updatedAt, String? displayCompanyName,@JsonKey(name: 'jobDetails') Job? jobDetails,@JsonKey(name: 'companyProfile') CompanyDetail? companyProfile, List<ApplicationStatusHistory>? statusHistory
+@JsonKey(name: '_id') String? id,@UserOrStringConvertor() User? applicant, String? applicantType,@JobPostingOrStringConverter() JobPosting? appliedForCompany, String? referralCompany, String? appliedByType, String? adminApprovalStatus, String? currentStatus, String? jobType, bool? applied, bool? isVisited, bool? isAskForReferral, String? careerPageUrl,@JobOrStringConvertor() Job? job, int? matchScore, String? adminComment, num? rating, DateTime? createdAt, DateTime? updatedAt, String? displayCompanyName,@JsonKey(name: 'jobDetails') Job? jobDetails,@JsonKey(name: 'companyProfile') CompanyDetail? companyProfile, List<ApplicationStatusHistory>? statusHistory
 });
 
 
-$UserCopyWith<$Res>? get applicant;$JobCopyWith<$Res>? get job;$JobCopyWith<$Res>? get jobDetails;$CompanyDetailCopyWith<$Res>? get companyProfile;
+$UserCopyWith<$Res>? get applicant;$JobPostingCopyWith<$Res>? get appliedForCompany;$JobCopyWith<$Res>? get job;$JobCopyWith<$Res>? get jobDetails;$CompanyDetailCopyWith<$Res>? get companyProfile;
 
 }
 /// @nodoc
@@ -71,7 +71,7 @@ id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,applicant: freezed == applicant ? _self.applicant : applicant // ignore: cast_nullable_to_non_nullable
 as User?,applicantType: freezed == applicantType ? _self.applicantType : applicantType // ignore: cast_nullable_to_non_nullable
 as String?,appliedForCompany: freezed == appliedForCompany ? _self.appliedForCompany : appliedForCompany // ignore: cast_nullable_to_non_nullable
-as String?,referralCompany: freezed == referralCompany ? _self.referralCompany : referralCompany // ignore: cast_nullable_to_non_nullable
+as JobPosting?,referralCompany: freezed == referralCompany ? _self.referralCompany : referralCompany // ignore: cast_nullable_to_non_nullable
 as String?,appliedByType: freezed == appliedByType ? _self.appliedByType : appliedByType // ignore: cast_nullable_to_non_nullable
 as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminApprovalStatus : adminApprovalStatus // ignore: cast_nullable_to_non_nullable
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
@@ -104,6 +104,18 @@ $UserCopyWith<$Res>? get applicant {
 
   return $UserCopyWith<$Res>(_self.applicant!, (value) {
     return _then(_self.copyWith(applicant: value));
+  });
+}/// Create a copy of ApplicationModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$JobPostingCopyWith<$Res>? get appliedForCompany {
+    if (_self.appliedForCompany == null) {
+    return null;
+  }
+
+  return $JobPostingCopyWith<$Res>(_self.appliedForCompany!, (value) {
+    return _then(_self.copyWith(appliedForCompany: value));
   });
 }/// Create a copy of ApplicationModel
 /// with the given fields replaced by the non-null parameter values.
@@ -223,7 +235,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType,  String? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? applied,  bool? isVisited,  bool? isAskForReferral,  String? careerPageUrl, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType, @JobPostingOrStringConverter()  JobPosting? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? applied,  bool? isVisited,  bool? isAskForReferral,  String? careerPageUrl, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ApplicationModel() when $default != null:
 return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCompany,_that.referralCompany,_that.appliedByType,_that.adminApprovalStatus,_that.currentStatus,_that.jobType,_that.applied,_that.isVisited,_that.isAskForReferral,_that.careerPageUrl,_that.job,_that.matchScore,_that.adminComment,_that.rating,_that.createdAt,_that.updatedAt,_that.displayCompanyName,_that.jobDetails,_that.companyProfile,_that.statusHistory);case _:
@@ -244,7 +256,7 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCom
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType,  String? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? applied,  bool? isVisited,  bool? isAskForReferral,  String? careerPageUrl, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType, @JobPostingOrStringConverter()  JobPosting? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? applied,  bool? isVisited,  bool? isAskForReferral,  String? careerPageUrl, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)  $default,) {final _that = this;
 switch (_that) {
 case _ApplicationModel():
 return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCompany,_that.referralCompany,_that.appliedByType,_that.adminApprovalStatus,_that.currentStatus,_that.jobType,_that.applied,_that.isVisited,_that.isAskForReferral,_that.careerPageUrl,_that.job,_that.matchScore,_that.adminComment,_that.rating,_that.createdAt,_that.updatedAt,_that.displayCompanyName,_that.jobDetails,_that.companyProfile,_that.statusHistory);case _:
@@ -264,7 +276,7 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCom
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType,  String? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? applied,  bool? isVisited,  bool? isAskForReferral,  String? careerPageUrl, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: '_id')  String? id, @UserOrStringConvertor()  User? applicant,  String? applicantType, @JobPostingOrStringConverter()  JobPosting? appliedForCompany,  String? referralCompany,  String? appliedByType,  String? adminApprovalStatus,  String? currentStatus,  String? jobType,  bool? applied,  bool? isVisited,  bool? isAskForReferral,  String? careerPageUrl, @JobOrStringConvertor()  Job? job,  int? matchScore,  String? adminComment,  num? rating,  DateTime? createdAt,  DateTime? updatedAt,  String? displayCompanyName, @JsonKey(name: 'jobDetails')  Job? jobDetails, @JsonKey(name: 'companyProfile')  CompanyDetail? companyProfile,  List<ApplicationStatusHistory>? statusHistory)?  $default,) {final _that = this;
 switch (_that) {
 case _ApplicationModel() when $default != null:
 return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCompany,_that.referralCompany,_that.appliedByType,_that.adminApprovalStatus,_that.currentStatus,_that.jobType,_that.applied,_that.isVisited,_that.isAskForReferral,_that.careerPageUrl,_that.job,_that.matchScore,_that.adminComment,_that.rating,_that.createdAt,_that.updatedAt,_that.displayCompanyName,_that.jobDetails,_that.companyProfile,_that.statusHistory);case _:
@@ -279,13 +291,13 @@ return $default(_that.id,_that.applicant,_that.applicantType,_that.appliedForCom
 @JsonSerializable()
 
 class _ApplicationModel implements ApplicationModel {
-  const _ApplicationModel({@JsonKey(name: '_id') this.id, @UserOrStringConvertor() this.applicant, this.applicantType, this.appliedForCompany, this.referralCompany, this.appliedByType, this.adminApprovalStatus, this.currentStatus, this.jobType, this.applied, this.isVisited, this.isAskForReferral, this.careerPageUrl, @JobOrStringConvertor() this.job, this.matchScore, this.adminComment, this.rating, this.createdAt, this.updatedAt, this.displayCompanyName, @JsonKey(name: 'jobDetails') this.jobDetails, @JsonKey(name: 'companyProfile') this.companyProfile, final  List<ApplicationStatusHistory>? statusHistory}): _statusHistory = statusHistory;
+  const _ApplicationModel({@JsonKey(name: '_id') this.id, @UserOrStringConvertor() this.applicant, this.applicantType, @JobPostingOrStringConverter() this.appliedForCompany, this.referralCompany, this.appliedByType, this.adminApprovalStatus, this.currentStatus, this.jobType, this.applied, this.isVisited, this.isAskForReferral, this.careerPageUrl, @JobOrStringConvertor() this.job, this.matchScore, this.adminComment, this.rating, this.createdAt, this.updatedAt, this.displayCompanyName, @JsonKey(name: 'jobDetails') this.jobDetails, @JsonKey(name: 'companyProfile') this.companyProfile, final  List<ApplicationStatusHistory>? statusHistory}): _statusHistory = statusHistory;
   factory _ApplicationModel.fromJson(Map<String, dynamic> json) => _$ApplicationModelFromJson(json);
 
 @override@JsonKey(name: '_id') final  String? id;
 @override@UserOrStringConvertor() final  User? applicant;
 @override final  String? applicantType;
-@override final  String? appliedForCompany;
+@override@JobPostingOrStringConverter() final  JobPosting? appliedForCompany;
 @override final  String? referralCompany;
 @override final  String? appliedByType;
 @override final  String? adminApprovalStatus;
@@ -347,11 +359,11 @@ abstract mixin class _$ApplicationModelCopyWith<$Res> implements $ApplicationMod
   factory _$ApplicationModelCopyWith(_ApplicationModel value, $Res Function(_ApplicationModel) _then) = __$ApplicationModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: '_id') String? id,@UserOrStringConvertor() User? applicant, String? applicantType, String? appliedForCompany, String? referralCompany, String? appliedByType, String? adminApprovalStatus, String? currentStatus, String? jobType, bool? applied, bool? isVisited, bool? isAskForReferral, String? careerPageUrl,@JobOrStringConvertor() Job? job, int? matchScore, String? adminComment, num? rating, DateTime? createdAt, DateTime? updatedAt, String? displayCompanyName,@JsonKey(name: 'jobDetails') Job? jobDetails,@JsonKey(name: 'companyProfile') CompanyDetail? companyProfile, List<ApplicationStatusHistory>? statusHistory
+@JsonKey(name: '_id') String? id,@UserOrStringConvertor() User? applicant, String? applicantType,@JobPostingOrStringConverter() JobPosting? appliedForCompany, String? referralCompany, String? appliedByType, String? adminApprovalStatus, String? currentStatus, String? jobType, bool? applied, bool? isVisited, bool? isAskForReferral, String? careerPageUrl,@JobOrStringConvertor() Job? job, int? matchScore, String? adminComment, num? rating, DateTime? createdAt, DateTime? updatedAt, String? displayCompanyName,@JsonKey(name: 'jobDetails') Job? jobDetails,@JsonKey(name: 'companyProfile') CompanyDetail? companyProfile, List<ApplicationStatusHistory>? statusHistory
 });
 
 
-@override $UserCopyWith<$Res>? get applicant;@override $JobCopyWith<$Res>? get job;@override $JobCopyWith<$Res>? get jobDetails;@override $CompanyDetailCopyWith<$Res>? get companyProfile;
+@override $UserCopyWith<$Res>? get applicant;@override $JobPostingCopyWith<$Res>? get appliedForCompany;@override $JobCopyWith<$Res>? get job;@override $JobCopyWith<$Res>? get jobDetails;@override $CompanyDetailCopyWith<$Res>? get companyProfile;
 
 }
 /// @nodoc
@@ -370,7 +382,7 @@ id: freezed == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String?,applicant: freezed == applicant ? _self.applicant : applicant // ignore: cast_nullable_to_non_nullable
 as User?,applicantType: freezed == applicantType ? _self.applicantType : applicantType // ignore: cast_nullable_to_non_nullable
 as String?,appliedForCompany: freezed == appliedForCompany ? _self.appliedForCompany : appliedForCompany // ignore: cast_nullable_to_non_nullable
-as String?,referralCompany: freezed == referralCompany ? _self.referralCompany : referralCompany // ignore: cast_nullable_to_non_nullable
+as JobPosting?,referralCompany: freezed == referralCompany ? _self.referralCompany : referralCompany // ignore: cast_nullable_to_non_nullable
 as String?,appliedByType: freezed == appliedByType ? _self.appliedByType : appliedByType // ignore: cast_nullable_to_non_nullable
 as String?,adminApprovalStatus: freezed == adminApprovalStatus ? _self.adminApprovalStatus : adminApprovalStatus // ignore: cast_nullable_to_non_nullable
 as String?,currentStatus: freezed == currentStatus ? _self.currentStatus : currentStatus // ignore: cast_nullable_to_non_nullable
@@ -404,6 +416,18 @@ $UserCopyWith<$Res>? get applicant {
 
   return $UserCopyWith<$Res>(_self.applicant!, (value) {
     return _then(_self.copyWith(applicant: value));
+  });
+}/// Create a copy of ApplicationModel
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$JobPostingCopyWith<$Res>? get appliedForCompany {
+    if (_self.appliedForCompany == null) {
+    return null;
+  }
+
+  return $JobPostingCopyWith<$Res>(_self.appliedForCompany!, (value) {
+    return _then(_self.copyWith(appliedForCompany: value));
   });
 }/// Create a copy of ApplicationModel
 /// with the given fields replaced by the non-null parameter values.

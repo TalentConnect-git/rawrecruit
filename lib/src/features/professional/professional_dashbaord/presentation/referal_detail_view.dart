@@ -260,6 +260,9 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
 
                   const SizedBox(height: 16),
 
+                  _benefitsSection(job),
+                  const SizedBox(height: 16),
+
                   _roleOverviewSection(job),
                   const SizedBox(height: 16),
 
@@ -513,6 +516,54 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                   ),
                 ),
               ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _benefitsSection(Job job) {
+    final items = job.benefits ?? [];
+
+    if (items.isEmpty) return const SizedBox();
+
+    return _cardContainer(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.card_giftcard, color: Colors.pinkAccent, size: 18),
+              SizedBox(width: 8),
+              Text(
+                "Benefits",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+
+          ...items.map(
+            (e) => Padding(
+              padding: const EdgeInsets.only(bottom: 10),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Icon(Icons.check_circle, color: AppColors.kGreen, size: 18),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Text(
+                      e,
+                      style: const TextStyle(color: Colors.grey, fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
