@@ -18,5 +18,7 @@ abstract class AuthRepository {
 
   ResultFuture<Auth?> googleLogin({required UserType? userType});
 
+  ResultFuture<Auth?> loginWithLinkedIn({required String userType});
+
   ResultFuture<String?> forgotPassword({required String email});
 }

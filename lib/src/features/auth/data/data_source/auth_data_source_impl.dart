@@ -1,7 +1,9 @@
 import 'dart:developer';
 
 import 'package:dartz/dartz.dart';
+import 'package:flutter_web_auth_2/flutter_web_auth_2.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:rawrecruit/src/config/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 
 import 'auth_data_source.dart';
@@ -212,6 +214,51 @@ class AuthDataSourceImpl implements AuthDataSource {
     }
 
     return Right(null);
+  }
+
+  @override
+  ResultFuture<Auth?> loginWithLinkedIn({required String userType}) async {
+    try {
+      final url =
+          '${FlavorConfig.instance.baseMobileUrl}${Endpoints.apiAuthLinkedIn}?userType=$userType';
+
+      // Launch OAuth flow
+      final callbackUrl = await FlutterWebAuth2.authenticate(
+        url: url,
+        callbackUrlScheme: 'myapp',
+      );
+
+      final uri = Uri.parse(callbackUrl);
+
+      final error = uri.queryParameters['error'];
+
+      if (error != null) {
+        return Left(APIException(message: error, statusCode: 400));
+      }
+
+      final token = uri.queryParameters['token'];
+
+      if (token == null) {
+        return Left(APIException(message: 'Token not found', statusCode: 400));
+      }
+
+      final auth = Auth(
+        id: uri.queryParameters['userId'],
+        email: uri.queryParameters['email'],
+        name: uri.queryParameters['name'],
+        userType: UserTypeExt.fromValue(uri.queryParameters['userType'] ?? ''),
+        profileImage: uri.queryParameters['profileImage'],
+        onboardingCompleted:
+            uri.queryParameters['onboardingCompleted'] == 'true',
+      );
+
+      await SecretRepo.setString('auth_token', token);
+      await SecretRepo.setString('auth_id', auth.id ?? '');
+
+      return Right(auth);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
 
   @override

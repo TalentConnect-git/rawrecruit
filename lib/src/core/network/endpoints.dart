@@ -7,6 +7,7 @@ class Endpoints {
   static String apiAuthSendOtp = 'api/auth/send-otp';
   static String apiAuthForgotPassword = 'api/auth/forgot-password';
   static String apiAuthGoogle = 'api/auth/google';
+  static String apiAuthLinkedIn = 'api/auth/linkedin';
   static const String apiCompanyJobsDiscover = '/api/company-jobs/discover';
   static const String apiCompanyJobsSave = 'api/company-jobs/save';
   static String apiStudentDashboardJob = 'api/student-dashboard/job';

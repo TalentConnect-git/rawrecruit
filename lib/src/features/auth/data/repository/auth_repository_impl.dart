@@ -45,4 +45,8 @@ class AuthRepositoryImpl implements AuthRepository {
   @override
   ResultFuture<Auth?> googleLogin({required UserType? userType}) =>
       _authDataSource.googleLogin(userType: userType);
+
+  @override
+  ResultFuture<Auth?> loginWithLinkedIn({required String userType}) =>
+      _authDataSource.loginWithLinkedIn(userType: userType);
 }
