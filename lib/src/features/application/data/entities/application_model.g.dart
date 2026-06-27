@@ -12,7 +12,9 @@ _ApplicationModel _$ApplicationModelFromJson(
   id: json['_id'] as String?,
   applicant: const UserOrStringConvertor().fromJson(json['applicant']),
   applicantType: json['applicantType'] as String?,
-  appliedForCompany: json['appliedForCompany'] as String?,
+  appliedForCompany: const JobPostingOrStringConverter().fromJson(
+    json['appliedForCompany'],
+  ),
   referralCompany: json['referralCompany'] as String?,
   appliedByType: json['appliedByType'] as String?,
   adminApprovalStatus: json['adminApprovalStatus'] as String?,
@@ -49,7 +51,9 @@ Map<String, dynamic> _$ApplicationModelToJson(_ApplicationModel instance) =>
       '_id': instance.id,
       'applicant': const UserOrStringConvertor().toJson(instance.applicant),
       'applicantType': instance.applicantType,
-      'appliedForCompany': instance.appliedForCompany,
+      'appliedForCompany': const JobPostingOrStringConverter().toJson(
+        instance.appliedForCompany,
+      ),
       'referralCompany': instance.referralCompany,
       'appliedByType': instance.appliedByType,
       'adminApprovalStatus': instance.adminApprovalStatus,

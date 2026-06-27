@@ -15,8 +15,13 @@ import '../../alumni/presentation/widgets/alumni_hiring_card.dart';
 
 class InternshipDetailView extends StatefulWidget {
   final Job internship;
+  final bool hideApplyButton;
 
-  const InternshipDetailView({super.key, required this.internship});
+  const InternshipDetailView({
+    super.key,
+    required this.internship,
+    this.hideApplyButton = false,
+  });
 
   @override
   State<InternshipDetailView> createState() => _InternshipDetailViewState();
@@ -34,13 +39,17 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
   final ApplicationViewModel applicationViewModel =
       getIt<ApplicationViewModel>();
   final DashboardViewModel dashboardViewModel = getIt<DashboardViewModel>();
+  bool _isAppliedLocal = false;
 
   @override
   void initState() {
     super.initState();
+    _isAppliedLocal = applicationViewModel.isApplied(
+      widget.internship.id ?? '',
+    );
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       shortlistViewModel.fetchSaved();
-      applicationViewModel.fetchApplications();
       dashboardViewModel.getAlumniData();
       await internshipDetailViewModel.fetchCompanyAlumni(
         companyName: widget.internship.candidatePosted?.currentCompany ?? '',
@@ -51,15 +60,9 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final jobId = widget.internship.id ?? '';
-
-    final isSaved = shortlistViewModel.savedJobIds.contains(jobId);
-    final isApplied = applicationViewModel.isApplied(jobId);
-
     final pkg = widget.internship.packageDetails;
     final contact = widget.internship.contactPerson;
     final company = widget.internship.companyPosted?.companyDetails;
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: shortlistViewModel),
@@ -67,249 +70,203 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
         ChangeNotifierProvider.value(value: dashboardViewModel),
         ChangeNotifierProvider.value(value: internshipDetailViewModel),
       ],
-      child: Scaffold(
-        backgroundColor: AppColors.secBorder,
+      child: Builder(
+        builder: (context) {
+          final shortlistVM = context.watch<ShortlistViewModel>();
+          final applicationVM = context.watch<ApplicationViewModel>();
 
-        appBar: AppBar(
-          backgroundColor: AppColors.kCard,
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: Text(
-            widget.internship.jobRoles?.first ?? 'Internship Detail',
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
+          final jobId = widget.internship.id ?? '';
 
-        /// 🔻 BUTTONS
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-          child: Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => shortlistViewModel.toggleSave(
-                    jobId: jobId,
-                    jobType: 'Internship',
-                    isSaved: isSaved,
-                  ),
-                  child: Text(
-                    isSaved ? 'Saved' : 'Save',
-                    style: TextStyle(color: AppColors.kGreen),
-                  ),
-                ),
+          final isSaved =
+              widget.hideApplyButton || shortlistVM.savedJobIds.contains(jobId);
+
+          // ✅ local flag is sticky — once true it stays true regardless of VM
+          final isApplied =
+              widget.hideApplyButton ||
+              _isAppliedLocal ||
+              applicationVM.isApplied(jobId);
+          return Scaffold(
+            backgroundColor: AppColors.secBorder,
+
+            appBar: AppBar(
+              backgroundColor: AppColors.kCard,
+              iconTheme: const IconThemeData(color: Colors.white),
+              title: Text(
+                widget.internship.jobRoles?.first ?? 'Internship Detail',
+                style: const TextStyle(color: Colors.white),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: ElevatedButton(
-                  onPressed: isApplied
-                      ? null
-                      : () => applicationViewModel.apply(
-                          jobId: jobId,
-                          jobType: "Internship",
-                          companyName: widget.internship.companyName ?? '',
+            ),
+
+            /// 🔻 BUTTONS
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+              child: Row(
+                children: [
+                  /// 🔻 Hide Save once applied
+                  if (!isApplied) ...[
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () {
+                          shortlistVM.toggleSave(
+                            jobId: jobId,
+                            jobType: "Internship",
+                            isSaved: isSaved,
+                          );
+                        },
+                        child: Text(
+                          isSaved ? 'Saved' : 'Save',
+                          style: TextStyle(color: AppColors.kGreen),
                         ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isApplied ? Colors.grey : AppColors.kGreen,
-                  ),
-                  child: Text(
-                    isApplied ? 'Applied' : 'Apply Now',
-                    style: TextStyle(
-                      color: AppColors.white,
-                      fontWeight: FontWeight.bold,
+                      ),
                     ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+                    const SizedBox(width: 12),
+                  ],
+                  Expanded(
+                    flex: 2,
+                    child: ElevatedButton(
+                      onPressed: isApplied
+                          ? null
+                          : () async {
+                              await applicationVM.apply(
+                                jobId: jobId,
+                                jobType: "Internship",
+                                companyName:
+                                    widget.internship.companyName ?? '',
+                              );
 
-        /// 🔥 BODY
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// 🔥 HEADER
-              _header(),
+                              // ✅ mark applied locally & immediately
+                              if (mounted) {
+                                setState(() {
+                                  _isAppliedLocal = true;
+                                });
+                              }
 
-              const SizedBox(height: 20),
-
-              /// 🔥 HIGHLIGHTED COMPANY SECTION
-
-              /// 🔥 ABOUT
-              _roleOverviewSection(),
-
-              /// 🔥 IMPORTANT DATES
-              _matchInsightsSection(),
-
-              /// 🔥 RESPONSIBILITIES
-              if ((widget.internship.workAchievements ?? []).isNotEmpty)
-                _responsibilitySection(),
-
-              /// 🔥 REQUIREMENTS
-              if ((widget.internship.skills ?? []).isNotEmpty) _skillsSection(),
-
-              /// 🔥 TOOLS
-              if ((widget.internship.toolsAndPlatforms ?? []).isNotEmpty)
-                _toolsSection(),
-
-              /// 🔥 BENEFITS
-              if ((widget.internship.benefits ?? []).isNotEmpty)
-                _benefitsSection(),
-
-              /// 🔥 CONTACT
-              if (contact != null) _recruiterSection(),
-
-              /// 🔥 COMPANY
-              // if (company != null)
-              //   _sectionInfo("Company Details", [
-              //     _info("Name", company.companyName),
-              //     _info("Industry", company.industryType),
-              //     _info("City", company.city),
-              //   ]),
-              _containerSection(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// COMPANY
-                    if (company != null) ...[
-                      const Text(
-                        "Company Details",
+                              // 🔄 sync in background — NO await, so a stale
+                              // response can't flip the button back to "Apply"
+                              applicationVM.fetchApplications();
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isApplied
+                            ? Colors.grey
+                            : AppColors.kGreen,
+                      ),
+                      child: Text(
+                        isApplied ? 'Applied' : 'Apply Now',
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
+                          color: AppColors.white,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
-                      const SizedBox(height: 14),
-
-                      _highlightInfo("Company", company.companyName),
-                      _highlightInfo("Industry", company.industryType),
-                      _highlightInfo("Company Type", company.companyType),
-
-                      _highlightInfo(
-                        "Location",
-                        "${company.city ?? ''}, ${company.state ?? ''}",
-                      ),
-
-                      _highlightInfo("Employees", company.numberOfEmployees),
-
-                      const SizedBox(height: 20),
-                    ],
-
-                    // /// EMPLOYER
-                    // /// MESSAGE RECRUITER
-                    // const Text(
-                    //   "Connect",
-                    //   style: TextStyle(
-                    //     color: Colors.white,
-                    //     fontSize: 16,
-                    //     fontWeight: FontWeight.bold,
-                    //   ),
-                    // ),
-
-                    // const SizedBox(height: 14),
-
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     final userId = widget.internship.postedByUser;
-
-                    //     if (userId == null || userId.isEmpty) return;
-
-                    //     final user = User(id: userId);
-
-                    //     context.pushNamed(RouteNames.chatUser, extra: user.id);
-                    //   },
-
-                    //   child: Container(
-                    //     padding: const EdgeInsets.symmetric(
-                    //       horizontal: 16,
-                    //       vertical: 10,
-                    //     ),
-                    //     decoration: BoxDecoration(
-                    //       color: AppColors.kGreen.withOpacity(.15),
-                    //       borderRadius: BorderRadius.circular(30),
-                    //       border: Border.all(
-                    //         color: AppColors.kGreen.withOpacity(.4),
-                    //       ),
-                    //     ),
-
-                    //     child: const Row(
-                    //       mainAxisSize: MainAxisSize.min,
-                    //       children: [
-                    //         Icon(Icons.message, size: 18, color: Colors.green),
-
-                    //         SizedBox(width: 8),
-
-                    //         Text(
-                    //           "Message Recruiter",
-                    //           style: TextStyle(
-                    //             color: Colors.green,
-                    //             fontWeight: FontWeight.w600,
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 24),
-
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Alumni Who Can Help",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () {
-                      context.goNamed(RouteNames.shortlist);
-                    },
-                    child: Text(
-                      "View All",
-                      style: TextStyle(color: AppColors.kGreen),
                     ),
                   ),
                 ],
               ),
+            ),
 
-              const SizedBox(height: 12),
+            /// 🔥 BODY
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _header(),
+                  const SizedBox(height: 20),
+                  _roleOverviewSection(),
+                  _matchInsightsSection(),
+                  if ((widget.internship.workAchievements ?? []).isNotEmpty)
+                    _responsibilitySection(),
+                  if ((widget.internship.skills ?? []).isNotEmpty)
+                    _skillsSection(),
+                  if ((widget.internship.toolsAndPlatforms ?? []).isNotEmpty)
+                    _toolsSection(),
+                  if ((widget.internship.benefits ?? []).isNotEmpty)
+                    _benefitsSection(),
+                  if (contact != null) _recruiterSection(),
 
-              /// 🔥 ALUMNI LIST
-              Consumer<InternshipDetailViewModel>(
-                builder: (context, vm, _) {
-                  if (vm.companyAlumni.isEmpty) {
-                    return const Text(
-                      "No alumni available",
-                      style: TextStyle(color: Colors.grey),
-                    );
-                  }
+                  _containerSection(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (company != null) ...[
+                          const Text(
+                            "Company Details",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          _highlightInfo("Company", company.companyName),
+                          _highlightInfo("Industry", company.industryType),
+                          _highlightInfo("Company Type", company.companyType),
+                          _highlightInfo(
+                            "Location",
+                            "${company.city ?? ''}, ${company.state ?? ''}",
+                          ),
+                          _highlightInfo(
+                            "Employees",
+                            company.numberOfEmployees,
+                          ),
+                          const SizedBox(height: 20),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
 
-                  final alumniList = vm.companyAlumni.values.toList();
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Alumni Who Can Help",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {
+                          context.goNamed(RouteNames.shortlist);
+                        },
+                        child: Text(
+                          "View All",
+                          style: TextStyle(color: AppColors.kGreen),
+                        ),
+                      ),
+                    ],
+                  ),
 
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: alumniList.length.clamp(0, 3),
-                    itemBuilder: (context, index) {
-                      return AlumniHiringCard(jobs: alumniList[index]);
+                  const SizedBox(height: 12),
+
+                  Consumer<InternshipDetailViewModel>(
+                    builder: (context, vm, _) {
+                      if (vm.companyAlumni.isEmpty) {
+                        return const Text(
+                          "No alumni available",
+                          style: TextStyle(color: Colors.grey),
+                        );
+                      }
+
+                      final alumniList = vm.companyAlumni.values.toList();
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: alumniList.length.clamp(0, 3),
+                        itemBuilder: (context, index) {
+                          return AlumniHiringCard(jobs: alumniList[index]);
+                        },
+                      );
                     },
-                  );
-                },
+                  ),
+                  const SizedBox(height: 40),
+                ],
               ),
-              const SizedBox(height: 40),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }

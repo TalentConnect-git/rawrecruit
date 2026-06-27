@@ -32,6 +32,8 @@ class ReferralHome extends StatefulWidget {
 
 class _ReferralHomeState extends State<ReferralHome> {
   final ReferralHomeViewModel referralHomeViewModel = ReferralHomeViewModel();
+  final ScrollController _chipScrollController = ScrollController(); // 👈 ADD
+
   @override
   void initState() {
     super.initState();
@@ -41,6 +43,12 @@ class _ReferralHomeState extends State<ReferralHome> {
       await postedJobViewModel.getPostedJobs();
       await postedJobViewModel.getJobs();
     });
+  }
+
+  @override
+  void dispose() {
+    _chipScrollController.dispose(); // 👈 ADD
+    super.dispose();
   }
 
   final PostedJobViewModel postedJobViewModel = PostedJobViewModel();
@@ -76,27 +84,18 @@ class _ReferralHomeState extends State<ReferralHome> {
               color: AppColors.kGreen,
               onRefresh: () async {
                 await referralHomeViewModel.getRequests();
-
                 await postedJobViewModel.getPostedJobs();
-
                 await postedJobViewModel.getJobs();
-
                 await context.read<DashboardViewModel>().getAlumniData();
-
                 await context.read<MyProfileViewModel>().getUser();
-
                 await context.read<MyProfileViewModel>().getReferralMetrics();
-
                 await context.read<ShortlistViewModel>().fetchSaved();
-
                 await context.read<ApplicationViewModel>().fetchApplications();
                 await getIt<NotificationViewModel>().getNotifications();
               },
               child: SingleChildScrollView(
                 physics: const AlwaysScrollableScrollPhysics(),
-
                 padding: const EdgeInsets.all(16),
-
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -105,70 +104,77 @@ class _ReferralHomeState extends State<ReferralHome> {
 
                     const SizedBox(height: 16),
 
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        spacing: 8,
-                        children: [
-                          GestureDetector(
-                            onTap: () {
-                              context.goNamed(
-                                RouteNames.referrer,
-                                extra: {
-                                  'userType': UserType.professional,
-                                  'applicationType':
-                                      ProfessionalReferrerApplicationType
-                                          .requestsReceived,
-                                },
-                              );
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(60),
-                                border: Border.all(
-                                  color: AppColors.white,
-                                  width: 0.5,
+                    /// 🔥 CHIP ROW — Scrollbar wraps ONLY this
+                    Scrollbar(
+                      controller: _chipScrollController,
+                      thumbVisibility: true,
+                      child: SingleChildScrollView(
+                        controller: _chipScrollController,
+                        scrollDirection: Axis.horizontal,
+                        padding: const EdgeInsets.only(bottom: 8),
+                        child: Row(
+                          spacing: 8,
+                          children: [
+                            GestureDetector(
+                              onTap: () {
+                                context.goNamed(
+                                  RouteNames.referrer,
+                                  extra: {
+                                    'userType': UserType.professional,
+                                    'applicationType':
+                                        ProfessionalReferrerApplicationType
+                                            .requestsReceived,
+                                  },
+                                );
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 4,
                                 ),
-                                color: Color(0xff222222),
-                              ),
-                              child: Text(
-                                '${context.watch<ReferralHomeViewModel>().referralApplications.length} candidates waiting for response',
-                                style: AppTextStyles.s12W400.copyWith(
-                                  color: AppColors.white,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(60),
+                                  border: Border.all(
+                                    color: AppColors.white,
+                                    width: 0.5,
+                                  ),
+                                  color: const Color(0xff222222),
                                 ),
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              context.goNamed(RouteNames.shortlist);
-                            },
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 4,
-                              ),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(60),
-                                border: Border.all(
-                                  color: AppColors.white,
-                                  width: 0.5,
-                                ),
-                                color: Color(0xff222222),
-                              ),
-                              child: Text(
-                                '${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni from your network hiring',
-                                style: AppTextStyles.s12W400.copyWith(
-                                  color: AppColors.white,
+                                child: Text(
+                                  '${context.watch<ReferralHomeViewModel>().referralApplications.length} candidates waiting for response',
+                                  style: AppTextStyles.s12W400.copyWith(
+                                    color: AppColors.white,
+                                  ),
                                 ),
                               ),
                             ),
-                          ),
-                        ],
+                            GestureDetector(
+                              onTap: () {
+                                context.goNamed(RouteNames.shortlist);
+                              },
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 16,
+                                  vertical: 4,
+                                ),
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(60),
+                                  border: Border.all(
+                                    color: AppColors.white,
+                                    width: 0.5,
+                                  ),
+                                  color: const Color(0xff222222),
+                                ),
+                                child: Text(
+                                  '${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni from your network hiring',
+                                  style: AppTextStyles.s12W400.copyWith(
+                                    color: AppColors.white,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
 
@@ -227,7 +233,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                         itemCount: requests.take(3).length,
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        separatorBuilder: (_, _) => const SizedBox(height: 8),
+                        separatorBuilder: (_, __) => const SizedBox(height: 8),
                         itemBuilder: (_, index) {
                           log('Request $index: ${requests[index]}');
                           return IncomingRequestCard(request: requests[index]);
@@ -288,7 +294,6 @@ class _ReferralHomeState extends State<ReferralHome> {
                             itemBuilder: (context, index) {
                               final jobs = vm.groupedAlumni.values
                                   .toList()[index];
-
                               return AlumniCard(jobs: jobs);
                             },
                           ),
@@ -297,7 +302,6 @@ class _ReferralHomeState extends State<ReferralHome> {
                     ),
                     const SizedBox(height: 24),
 
-                    /// Jobs Section
                     /// Jobs Section
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -346,7 +350,6 @@ class _ReferralHomeState extends State<ReferralHome> {
                         }
 
                         if (vm.job.isEmpty) {
-                          // 👈 your offcampus list
                           return Text(
                             "No jobs available",
                             style: AppTextStyles.s14W400.copyWith(
@@ -378,8 +381,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                               onApply: () => applicationVM.apply(
                                 jobId: job.id ?? '',
                                 jobType: 'Referral',
-                                companyName:
-                                    job.companyName ?? '', // or pass manually
+                                companyName: job.companyName ?? '',
                               ),
                               onBookmarkToggle: () {
                                 shortlistVM.toggleSave(
@@ -390,13 +392,10 @@ class _ReferralHomeState extends State<ReferralHome> {
                               },
                               onTap: () {
                                 final candidate = job.candidatePosted;
-
                                 final company =
                                     candidate?.currentCompany?.trim() ?? "";
-
                                 context.pushNamed(
                                   RouteNames.referralDetail,
-
                                   extra: "${job.id}|||$company",
                                 );
                               },
@@ -470,7 +469,6 @@ class _ReferralHomeState extends State<ReferralHome> {
                               const SizedBox(height: 8),
                           itemBuilder: (_, index) {
                             final job = vm.jobs[index];
-
                             return MyJobCard(
                               job: job,
                               onTap: () {

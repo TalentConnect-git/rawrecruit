@@ -12,9 +12,13 @@ import '../../../core/index.dart';
 
 class JobDetailView extends StatefulWidget {
   final Job job;
+  final bool hideApplyButton;
 
-  const JobDetailView({super.key, required this.job});
-
+  const JobDetailView({
+    super.key,
+    required this.job,
+    this.hideApplyButton = false,
+  });
   @override
   State<JobDetailView> createState() => _JobDetailViewState();
 }
@@ -27,9 +31,13 @@ class _JobDetailViewState extends State<JobDetailView> {
       getIt<ApplicationViewModel>();
   final DashboardViewModel dashboardViewModel = getIt<DashboardViewModel>();
 
+  bool _isAppliedLocal = false; // 👈 sticky local flag
+
   @override
   void initState() {
     super.initState();
+    _isAppliedLocal = applicationViewModel.isApplied(widget.job.id ?? '');
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       shortlistViewModel.fetchSaved();
       applicationViewModel.fetchApplications();
@@ -43,15 +51,6 @@ class _JobDetailViewState extends State<JobDetailView> {
 
   @override
   Widget build(BuildContext context) {
-    final jobId = widget.job.id ?? '';
-
-    final isSaved = shortlistViewModel.savedJobIds.contains(jobId);
-    final isApplied = applicationViewModel.isApplied(jobId);
-
-    final company = widget.job.companyPosted?.companyDetails;
-    final employer = widget.job.companyPosted?.employerDetails;
-    final contact = widget.job.contactPerson;
-
     return MultiProvider(
       providers: [
         ChangeNotifierProvider.value(value: shortlistViewModel),
@@ -59,259 +58,206 @@ class _JobDetailViewState extends State<JobDetailView> {
         ChangeNotifierProvider.value(value: dashboardViewModel),
         ChangeNotifierProvider.value(value: internshipDetailViewModel),
       ],
-      child: Scaffold(
-        backgroundColor: AppColors.secBorder,
+      child: Builder(
+        builder: (context) {
+          final shortlistVM = context.watch<ShortlistViewModel>();
+          final applicationVM = context.watch<ApplicationViewModel>();
 
-        appBar: AppBar(
-          backgroundColor: AppColors.kCard,
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: Text(
-            widget.job.jobRoles?.first ?? widget.job.jobTitle ?? 'Job Detail',
-            style: const TextStyle(color: Colors.white),
-          ),
-        ),
+          final jobId = widget.job.id ?? '';
 
-        bottomNavigationBar: Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-          child: Row(
-            children: [
-              Expanded(
-                child: OutlinedButton(
-                  onPressed: () => shortlistViewModel.toggleSave(
-                    jobId: jobId,
-                    jobType: 'Off-campus',
-                    isSaved: isSaved,
-                  ),
-                  child: Text(
-                    isSaved ? 'Saved' : 'Save',
-                    style: TextStyle(color: AppColors.kGreen),
-                  ),
-                ),
+          final isSaved =
+              widget.hideApplyButton || shortlistVM.savedJobIds.contains(jobId);
+
+          // ✅ local flag is sticky — VM can't flip it back
+          final isApplied =
+              widget.hideApplyButton ||
+              _isAppliedLocal ||
+              applicationVM.isApplied(jobId);
+
+          final company = widget.job.companyPosted?.companyDetails;
+          final employer = widget.job.companyPosted?.employerDetails;
+          final contact = widget.job.contactPerson;
+
+          return Scaffold(
+            backgroundColor: AppColors.secBorder,
+
+            appBar: AppBar(
+              backgroundColor: AppColors.kCard,
+              iconTheme: const IconThemeData(color: Colors.white),
+              title: Text(
+                widget.job.jobRoles?.first ??
+                    widget.job.jobTitle ??
+                    'Job Detail',
+                style: const TextStyle(color: Colors.white),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                flex: 2,
-                child: ElevatedButton(
-                  onPressed: isApplied
-                      ? null
-                      : () => applicationViewModel.apply(
+            ),
+
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
+              child: Row(
+                children: [
+                  /// 🔻 Hide Save once applied
+                  if (!isApplied) ...[
+                    Expanded(
+                      child: OutlinedButton(
+                        onPressed: () => shortlistVM.toggleSave(
                           jobId: jobId,
-                          jobType: "Off-campus",
-                          companyName: widget.job.companyName ?? '',
+                          jobType: 'Internship',
+                          isSaved: isSaved,
                         ),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: isApplied ? Colors.grey : AppColors.kGreen,
-                  ),
-                  child: Text(isApplied ? 'Applied' : 'Apply Now'),
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        body: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              /// 🔥 HEADER
-              _header(),
-
-              const SizedBox(height: 20),
-
-              /// 🔥 HIGHLIGHTED COMPANY + POSTED BY SECTION
-
-              /// 🔥 ABOUT
-              if ((widget.job.description ?? '').isNotEmpty)
-                _roleOverviewSection(),
-              _matchInsightsSection(),
-
-              /// 🔥 RESPONSIBILITIES
-              if ((widget.job.workAchievements ?? []).isNotEmpty)
-                _responsibilitySection(),
-
-              /// 🔥 REQUIREMENTS
-              if ((widget.job.skills ?? []).isNotEmpty) _skillsSection(),
-
-              /// 🔥 PREFERRED
-              if ((widget.job.certifications ?? []).isNotEmpty)
-                _sectionList("Preferred", widget.job.certifications),
-
-              _packageSection(),
-
-              /// 🔥 SELECTION PROCESS
-              // if ((widget.job.selectionProcess ?? []).isNotEmpty)
-              //   _sectionList("Selection Process", widget.job.selectionProcess),
-
-              /// 🔥 TOOLS
-              if ((widget.job.toolsAndPlatforms ?? []).isNotEmpty)
-                _toolsSection(),
-
-              /// 🔥 BENEFITS
-              _benefitsSection(),
-
-              /// 🔥 COMPANY
-              // if (company != null)
-              //   _sectionInfo("Company Details", [
-              //     _info("Name", company.companyName),
-              //     _info("Industry", company.industryType),
-              //     _info("City", company.city),
-              //   ]),
-
-              /// 🔥 EMPLOYER
-              // if (employer != null)
-              //   _sectionInfo("Employer", [
-              //     _info("Name", employer.name),
-              //     _info("Designation", employer.designation),
-              //   ]),
-              _containerSection(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// COMPANY
-                    if (company != null) ...[
-                      const Text(
-                        "Company Details",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        child: Text(
+                          isSaved ? 'Saved' : 'Save',
+                          style: TextStyle(color: AppColors.kGreen),
                         ),
                       ),
-
-                      const SizedBox(height: 14),
-
-                      _highlightInfo("Company", company.companyName),
-                      _highlightInfo("Industry", company.industryType),
-                      _highlightInfo("Company Type", company.companyType),
-
-                      _highlightInfo(
-                        "Location",
-                        "${company.city ?? ''}, ${company.state ?? ''}",
-                      ),
-
-                      _highlightInfo("Employees", company.numberOfEmployees),
-
-                      const SizedBox(height: 20),
-                    ],
-
-                    /// CONTACT PERSON
-                    if (contact != null) ...[
-                      const SizedBox(height: 20),
-
-                      const Text(
-                        "Contact Person",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-
-                      const SizedBox(height: 14),
-
-                      _highlightInfo("Name", contact.name),
-                      _highlightInfo("Email", contact.email),
-                      _highlightInfo("Designation", employer?.designation),
-
-                      _highlightInfo("Mobile", contact.mobile),
-                      // const SizedBox(height: 16),
-
-                      // GestureDetector(
-                      //   onTap: () {
-                      //     final userId = widget.job.companyPosted?.userId;
-
-                      //     if (userId == null || userId.isEmpty) return;
-
-                      //     final user = User(
-                      //       id: userId,
-                      //       name: employer?.name,
-                      //       email: employer?.email,
-                      //       phone: employer?.mobile,
-                      //     );
-
-                      //     context.pushNamed(
-                      //       RouteNames.chatUser,
-                      //       extra: user.id,
-                      //     );
-                      //   },
-                      //   child: Container(
-                      //     padding: const EdgeInsets.symmetric(
-                      //       horizontal: 16,
-                      //       vertical: 10,
-                      //     ),
-                      //     decoration: BoxDecoration(
-                      //       color: AppColors.kGreen.withOpacity(.15),
-                      //       borderRadius: BorderRadius.circular(30),
-                      //       border: Border.all(
-                      //         color: AppColors.kGreen.withOpacity(.4),
-                      //       ),
-                      //     ),
-                      //     child: const Row(
-                      //       mainAxisSize: MainAxisSize.min,
-                      //       children: [
-                      //         Icon(
-                      //           Icons.message,
-                      //           size: 18,
-                      //           color: Colors.green,
-                      //         ),
-
-                      //         SizedBox(width: 8),
-
-                      //         Text(
-                      //           "Message",
-                      //           style: TextStyle(
-                      //             color: Colors.green,
-                      //             fontWeight: FontWeight.w600,
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                    ],
+                    ),
+                    const SizedBox(width: 12),
                   ],
-                ),
+
+                  Expanded(
+                    flex: 2,
+                    child: ElevatedButton(
+                      onPressed: isApplied
+                          ? null
+                          : () async {
+                              await applicationVM.apply(
+                                jobId: jobId,
+                                jobType: "Off-campus",
+                                companyName: widget.job.companyName ?? '',
+                              );
+
+                              // ✅ mark applied locally & immediately
+                              if (mounted) {
+                                setState(() {
+                                  _isAppliedLocal = true;
+                                });
+                              }
+
+                              // 🔄 background sync — NO await
+                              applicationVM.fetchApplications();
+                            },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: isApplied
+                            ? Colors.grey
+                            : AppColors.kGreen,
+                      ),
+                      child: Text(
+                        isApplied ? 'Applied' : 'Apply Now',
+                        style: TextStyle(color: AppColors.white),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              const SizedBox(height: 24),
+            ),
 
-              Text(
-                "Alumni Who Can Help",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
+            body: SingleChildScrollView(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _header(),
+                  const SizedBox(height: 20),
+                  if ((widget.job.description ?? '').isNotEmpty)
+                    _roleOverviewSection(),
+                  _matchInsightsSection(),
+                  if ((widget.job.workAchievements ?? []).isNotEmpty)
+                    _responsibilitySection(),
+                  if ((widget.job.skills ?? []).isNotEmpty) _skillsSection(),
+                  if ((widget.job.certifications ?? []).isNotEmpty)
+                    _sectionList("Preferred", widget.job.certifications),
+                  _packageSection(),
+                  if ((widget.job.toolsAndPlatforms ?? []).isNotEmpty)
+                    _toolsSection(),
+                  _benefitsSection(),
 
-              const SizedBox(height: 12),
+                  _containerSection(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        if (company != null) ...[
+                          const Text(
+                            "Company Details",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          _highlightInfo("Company", company.companyName),
+                          _highlightInfo("Industry", company.industryType),
+                          _highlightInfo("Company Type", company.companyType),
+                          _highlightInfo(
+                            "Location",
+                            "${company.city ?? ''}, ${company.state ?? ''}",
+                          ),
+                          _highlightInfo(
+                            "Employees",
+                            company.numberOfEmployees,
+                          ),
+                          const SizedBox(height: 20),
+                        ],
 
-              /// 🔥 ALUMNI LIST
-              Consumer<InternshipDetailViewModel>(
-                builder: (context, vm, _) {
-                  if (vm.companyAlumni.isEmpty) {
-                    return const Text(
-                      "No alumni available",
-                      style: TextStyle(color: Colors.grey),
-                    );
-                  }
+                        if (contact != null) ...[
+                          const SizedBox(height: 20),
+                          const Text(
+                            "Contact Person",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 14),
+                          _highlightInfo("Name", contact.name),
+                          _highlightInfo("Email", contact.email),
+                          _highlightInfo("Designation", employer?.designation),
+                          _highlightInfo("Mobile", contact.mobile),
+                        ],
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
 
-                  final alumniList = vm.companyAlumni.values.toList();
+                  Text(
+                    "Alumni Who Can Help",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
 
-                  return ListView.builder(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    itemCount: alumniList.length.clamp(0, 3), // show 3 like UI
-                    itemBuilder: (context, index) {
-                      return AlumniHiringCard(jobs: alumniList[index]);
+                  const SizedBox(height: 12),
+
+                  Consumer<InternshipDetailViewModel>(
+                    builder: (context, vm, _) {
+                      if (vm.companyAlumni.isEmpty) {
+                        return const Text(
+                          "No alumni available",
+                          style: TextStyle(color: Colors.grey),
+                        );
+                      }
+
+                      final alumniList = vm.companyAlumni.values.toList();
+
+                      return ListView.builder(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        itemCount: alumniList.length.clamp(0, 3),
+                        itemBuilder: (context, index) {
+                          return AlumniHiringCard(jobs: alumniList[index]);
+                        },
+                      );
                     },
-                  );
-                },
+                  ),
+                  const SizedBox(height: 40),
+                ],
               ),
-              const SizedBox(height: 40),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -749,7 +695,7 @@ class _JobDetailViewState extends State<JobDetailView> {
               Icon(Icons.track_changes, size: 18, color: Colors.purpleAccent),
               SizedBox(width: 8),
               Text(
-                "Internship Insights",
+                "Job Insights",
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 15,

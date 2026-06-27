@@ -31,6 +31,13 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
     });
   }
 
+  String? _clean(String? v) {
+    if (v == null) return null;
+    final t = v.trim();
+    if (t.isEmpty || t == '[]' || t == '-') return null;
+    return t;
+  }
+
   @override
   Widget build(BuildContext context) {
     /// 🔥 RAW + NORMALIZED STATUS
@@ -72,8 +79,35 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                           )
                         : null;
 
-                    final jobTitle = currentExp?.role ?? (job?.jobTitle ?? "-");
-
+                    final jobTitle =
+                        _clean(job?.jobTitle) ??
+                        (job?.jobRoles?.isNotEmpty == true
+                            ? job!.jobRoles!.first
+                            : null) ??
+                        _clean(currentExp?.role) ??
+                        "-";
+                    debugPrint(
+                      'TITLE DEBUG → jobTitle=${job?.jobTitle} (${job?.jobTitle.runtimeType}) | '
+                      'jobRoles=${job?.jobRoles} | role=${currentExp?.role}',
+                    );
+                    final companyName = job?.companyName?.isNotEmpty == true
+                        ? job!.companyName!
+                        : (job
+                                      ?.companyPosted
+                                      ?.companyDetails
+                                      ?.companyName
+                                      ?.isNotEmpty ==
+                                  true
+                              ? job!.companyPosted!.companyDetails!.companyName!
+                              : (application?.displayCompanyName?.isNotEmpty ==
+                                        true
+                                    ? application!.displayCompanyName!
+                                    : (application
+                                                  ?.referralCompany
+                                                  ?.isNotEmpty ==
+                                              true
+                                          ? application!.referralCompany!
+                                          : "-")));
                     // final companyName =
                     //     currentExp?.company ??
                     //     ((job?.companyName?.isNotEmpty == true)
@@ -153,13 +187,43 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                         borderRadius: BorderRadius.circular(16),
                         onTap: () {
                           if ((job?.id ?? '').isEmpty) return;
-                          context.pushNamed(
-                            RouteNames.referralDetail,
-                            extra: {
-                              "jobId": job!.id,
-                              "hideApplyButton": application?.applied ?? false,
-                            },
-                          );
+
+                          final hideApplyButton = application?.applied ?? false;
+
+                          switch (job?.jobType) {
+                            case "Referral":
+                              context.pushNamed(
+                                RouteNames.referralDetail,
+                                extra: {
+                                  "jobId": job!.id,
+                                  "hideApplyButton": hideApplyButton,
+                                  "companyName": companyName,
+                                },
+                              );
+                              break;
+
+                            case "Internship":
+                              context.pushNamed(
+                                RouteNames.internshipDetail,
+                                extra: {
+                                  "job": job,
+                                  "hideApplyButton":
+                                      application?.applied ?? false,
+                                },
+                              );
+                              break;
+
+                            case "Off-campus":
+                              context.pushNamed(
+                                RouteNames.jobDetail,
+                                extra: {
+                                  "job": job,
+                                  "hideApplyButton":
+                                      application?.applied ?? false,
+                                },
+                              );
+                              break;
+                          }
                         },
                         child: headerCard,
                       );

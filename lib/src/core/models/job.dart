@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:rawrecruit/src/core/index.dart';
 
@@ -85,8 +86,8 @@ abstract class Job with _$Job {
     @JsonKey(name: 'receiverProfile')
     User? receiverProfile,
 
-    JobPosting? companyPosted,
-    JobPosting? jobCompanyPosted,
+    @JobPostingOrStringConverter() JobPosting? companyPosted,
+    @JobPostingOrStringConverter() JobPosting? jobCompanyPosted,
     String? referralCompany,
 
     String? careerPageUrl,
@@ -102,6 +103,30 @@ abstract class Job with _$Job {
     DateTime? updatedAt,
   }) = _Job;
   factory Job.fromJson(Map<String, dynamic> json) => _$JobFromJson(json);
+}
+
+class JobPostingOrStringConverter
+    implements JsonConverter<JobPosting?, dynamic> {
+  const JobPostingOrStringConverter();
+
+  @override
+  JobPosting? fromJson(dynamic json) {
+    if (json == null) return null;
+
+    if (json is Map<String, dynamic>) {
+      try {
+        return JobPosting.fromJson(json);
+      } catch (e, st) {
+        debugPrint('JOBPOSTING PARSE FAIL → $e');
+        debugPrint('$st'); // 👈 top frame = the exact field
+        return null; // don't let it kill the whole Job parse
+      }
+    }
+    return null;
+  }
+
+  @override
+  dynamic toJson(JobPosting? object) => object?.toJson();
 }
 
 String? _jobTitleFromJson(dynamic value) {

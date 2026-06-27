@@ -20,6 +20,7 @@ class ProfessionalReferralView extends StatefulWidget {
 class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
   ProfessionalReferrerApplicationType selectedTab =
       ProfessionalReferrerApplicationType.appliedByMe;
+  final ApplicationViewModel vm = ApplicationViewModel(); // 👈 ADD THIS LINE
 
   bool _initialApiCalled = false; // ✅ prevent multiple calls
   late final PageController _pageController;
@@ -33,6 +34,7 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
       initialPage: selectedTab.index,
       viewportFraction: 1.0,
     );
+    vm.fetchApplications(); // 👈 ADD THIS LINE
   }
 
   @override
@@ -43,11 +45,12 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => ApplicationViewModel()..fetchApplications(),
+    return ChangeNotifierProvider.value(
+      // 👈 .value now
+      value: vm, // 👈 use the field
       child: Builder(
         builder: (context) {
-          final vm = context.read<ApplicationViewModel>();
+          // (deleted the `final vm = context.read...` line — vm is the field now)
 
           /// ✅ SAFE INITIAL API CALL
           if (!_initialApiCalled) {
@@ -83,8 +86,6 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
                               ProfessionalReferrerApplicationType.values[index];
 
                           setState(() => selectedTab = type);
-
-                          final vm = context.read<ApplicationViewModel>();
 
                           if (type ==
                                   ProfessionalReferrerApplicationType
@@ -165,8 +166,6 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
             curve: Curves.easeInOut,
           );
 
-          final vm = context.read<ApplicationViewModel>();
-
           if (type == ProfessionalReferrerApplicationType.requestsReceived &&
               vm.referralApplications.isEmpty) {
             vm.fetchReferralRequests();
@@ -200,8 +199,6 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
   }
 
   Future<void> _refresh() async {
-    final vm = context.read<ApplicationViewModel>();
-
     await vm.fetchApplications();
 
     if (selectedTab == ProfessionalReferrerApplicationType.requestsReceived) {

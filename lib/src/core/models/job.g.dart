@@ -89,12 +89,12 @@ _Job _$JobFromJson(Map<String, dynamic> json) => _Job(
   receiverProfile: const UserOrStringConvertor().fromJson(
     json['receiverProfile'],
   ),
-  companyPosted: json['companyPosted'] == null
-      ? null
-      : JobPosting.fromJson(json['companyPosted'] as Map<String, dynamic>),
-  jobCompanyPosted: json['jobCompanyPosted'] == null
-      ? null
-      : JobPosting.fromJson(json['jobCompanyPosted'] as Map<String, dynamic>),
+  companyPosted: const JobPostingOrStringConverter().fromJson(
+    json['companyPosted'],
+  ),
+  jobCompanyPosted: const JobPostingOrStringConverter().fromJson(
+    json['jobCompanyPosted'],
+  ),
   referralCompany: json['referralCompany'] as String?,
   careerPageUrl: json['careerPageUrl'] as String?,
   isAskForReferral: json['isAskForReferral'] as bool?,
@@ -177,8 +177,12 @@ Map<String, dynamic> _$JobToJson(_Job instance) => <String, dynamic>{
   'receiverProfile': const UserOrStringConvertor().toJson(
     instance.receiverProfile,
   ),
-  'companyPosted': instance.companyPosted,
-  'jobCompanyPosted': instance.jobCompanyPosted,
+  'companyPosted': const JobPostingOrStringConverter().toJson(
+    instance.companyPosted,
+  ),
+  'jobCompanyPosted': const JobPostingOrStringConverter().toJson(
+    instance.jobCompanyPosted,
+  ),
   'referralCompany': instance.referralCompany,
   'careerPageUrl': instance.careerPageUrl,
   'isAskForReferral': instance.isAskForReferral,

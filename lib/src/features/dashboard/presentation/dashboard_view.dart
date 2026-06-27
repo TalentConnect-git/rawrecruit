@@ -329,22 +329,22 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                   );
                 },
               ),
-              ...vm.internships.take(3).map((job) {
-                final isSaved = shortlistVM.savedJobIds.contains(job.id);
-                final isApplied = applicationVM.isApplied(job.id ?? '');
+              ...vm.internships.take(3).map((internship) {
+                final isSaved = shortlistVM.savedJobIds.contains(internship.id);
+                final isApplied = applicationVM.isApplied(internship.id ?? '');
 
                 return JobCard(
-                  job: job,
+                  job: internship,
                   isSaved: isSaved,
                   isApplied: isApplied,
                   onApply: () => applicationVM.apply(
-                    jobId: job.id ?? '',
+                    jobId: internship.id ?? '',
                     jobType: "Internship",
-                    companyName: job.companyName ?? '',
+                    companyName: internship.companyName ?? '',
                   ),
                   onBookmarkToggle: () {
                     shortlistVM.toggleSave(
-                      jobId: job.id ?? '',
+                      jobId: internship.id ?? '',
                       jobType: "Internship",
                       isSaved: isSaved,
                     );
@@ -352,8 +352,9 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                   onTap: () async {
                     await context.pushNamed(
                       RouteNames.internshipDetail,
-                      extra: job,
+                      extra: internship,
                     );
+
                     if (context.mounted) {
                       context.read<ShortlistViewModel>().fetchSaved();
                       context.read<ApplicationViewModel>().fetchApplications();
