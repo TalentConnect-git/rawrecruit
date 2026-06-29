@@ -12,3 +12,25 @@ Future<void> initializeFirebaseApp(Flavor flavor) async {
   };
   await Firebase.initializeApp(options: firebaseOptions);
 }
+
+String getClientId(Flavor flavor) {
+  switch (flavor) {
+    case Flavor.debug:
+      return '532797617580-lleoeg9msbvvcrc2r531frjpt4c09m6o.apps.googleusercontent.com';
+    case Flavor.stage:
+      return '532797617580-i9hgsk8e8enqamor42ej1ilblj9d2cih.apps.googleusercontent.com';
+    case Flavor.prod:
+      return '532797617580-0f9j069f885m9r3p2i04fg7c7ebp8el5.apps.googleusercontent.com';
+  }
+}
+
+String getServerClientId(Flavor flavor) {
+  switch (flavor) {
+    case Flavor.debug:
+      return '601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com';
+    case Flavor.stage:
+      return '532797617580-jd8i8njg4kub2fkrp5qr4ha1395db36d.apps.googleusercontent.com';
+    case Flavor.prod:
+      return '532797617580-jd8i8njg4kub2fkrp5qr4ha1395db36d.apps.googleusercontent.com';
+  }
+}

@@ -14,7 +14,7 @@ ApiConfig getApiConfig(Flavor flavor) {
     case Flavor.prod:
       baseUrl = 'https://api.rawrecruit.in/';
     case Flavor.debug:
-      baseUrl = 'http://localhost:8080/';
+      baseUrl = 'https://api.rawrecruit.in/';
   }
   return ApiConfig(baseUrl);
 }

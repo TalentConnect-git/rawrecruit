@@ -159,6 +159,14 @@ class AuthDataSourceImpl implements AuthDataSource {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
+      log('Flavor: ${FlavorConfig.instance.flavor}');
+
+      log('ServerClientId: ${getServerClientId(FlavorConfig.instance.flavor)}');
+
+      await googleSignIn.initialize(
+        serverClientId: getServerClientId(FlavorConfig.instance.flavor),
+      );
+
       try {
         await googleSignIn.signOut();
       } catch (_) {}
@@ -184,6 +192,7 @@ class AuthDataSourceImpl implements AuthDataSource {
         method: RequestMethod.post,
         endpoint: Endpoints.apiAuthGoogle,
         body: {
+          'code': idToken,
           if (userType != null) 'userType': userType.apiLabel,
           'deviceToken': deviceToken,
         },

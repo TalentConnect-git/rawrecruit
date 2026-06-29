@@ -12,7 +12,12 @@
           "package_name": "com.app.rawrecruit"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBMl-wGqPAF3gQvNf_uLRm-SfdTBFm-4ik"
@@ -20,7 +25,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "601694030048-7dd273lr85bb8ctdgmpehj2crlgefva3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.rawrecruit"
+              }
+            }
+          ]
         }
       }
     },
@@ -31,7 +48,12 @@
           "package_name": "com.app.rawrecruit.debug"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBMl-wGqPAF3gQvNf_uLRm-SfdTBFm-4ik"
@@ -39,7 +61,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "601694030048-7dd273lr85bb8ctdgmpehj2crlgefva3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.rawrecruit"
+              }
+            }
+          ]
         }
       }
     },
@@ -50,7 +84,12 @@
           "package_name": "com.app.rawrecruit.stage"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBMl-wGqPAF3gQvNf_uLRm-SfdTBFm-4ik"
@@ -58,7 +97,19 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "601694030048-7dd273lr85bb8ctdgmpehj2crlgefva3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.app.rawrecruit"
+              }
+            }
+          ]
         }
       }
     }
