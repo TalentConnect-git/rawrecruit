@@ -931,6 +931,42 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
               ),
             ),
           ),
+          const SizedBox(height: 6),
+
+          if (!(vM.application?.job?.isAskForReferral ?? false)) ...[
+            const SizedBox(height: 2),
+
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  side: BorderSide(color: AppColors.kGreen.withOpacity(.4)),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                ),
+                onPressed: () {
+                  final jobId = vM.application?.job?.id;
+
+                  if (jobId == null || jobId.isEmpty) return;
+
+                  context.pushNamed(
+                    RouteNames.referralPostDetail,
+                    extra: jobId,
+                  );
+                },
+                icon: Icon(Icons.work_outline, color: AppColors.kGreen),
+                label: Text(
+                  "View Job Details",
+                  style: TextStyle(
+                    color: AppColors.kGreen,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
         ],
       ),
     );

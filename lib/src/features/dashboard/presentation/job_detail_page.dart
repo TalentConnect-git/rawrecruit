@@ -43,8 +43,8 @@ class _JobDetailViewState extends State<JobDetailView> {
       applicationViewModel.fetchApplications();
       dashboardViewModel.getAlumniData();
       await internshipDetailViewModel.fetchCompanyAlumni(
-        companyName: widget.job.candidatePosted?.currentCompany ?? '',
-        userId: widget.job.candidatePosted?.userId ?? '',
+        companyName: widget.job.companyName ?? '',
+        userId: widget.job.postedByUser ?? '',
       );
     });
   }
@@ -92,62 +92,63 @@ class _JobDetailViewState extends State<JobDetailView> {
               ),
             ),
 
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-              child: Row(
-                children: [
-                  /// 🔻 Hide Save once applied
-                  if (!isApplied) ...[
+            bottomNavigationBar: SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+                child: Row(
+                  children: [
+                    /// 🔻 Hide Save once applied
+                    if (!isApplied) ...[
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => shortlistVM.toggleSave(
+                            jobId: jobId,
+                            jobType: 'Internship',
+                            isSaved: isSaved,
+                          ),
+                          child: Text(
+                            isSaved ? 'Saved' : 'Save',
+                            style: TextStyle(color: AppColors.kGreen),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
+
                     Expanded(
-                      child: OutlinedButton(
-                        onPressed: () => shortlistVM.toggleSave(
-                          jobId: jobId,
-                          jobType: 'Internship',
-                          isSaved: isSaved,
+                      flex: 2,
+                      child: ElevatedButton(
+                        onPressed: isApplied
+                            ? null
+                            : () async {
+                                await applicationVM.apply(
+                                  jobId: jobId,
+                                  jobType: "Off-campus",
+                                  companyName: widget.job.companyName ?? '',
+                                );
+
+                                if (mounted) {
+                                  setState(() {
+                                    _isAppliedLocal = true;
+                                  });
+                                }
+
+                                applicationVM.fetchApplications();
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isApplied
+                              ? Colors.grey
+                              : AppColors.kGreen,
                         ),
                         child: Text(
-                          isSaved ? 'Saved' : 'Save',
-                          style: TextStyle(color: AppColors.kGreen),
+                          isApplied ? 'Applied' : 'Apply Now',
+                          style: TextStyle(color: AppColors.white),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
                   ],
-
-                  Expanded(
-                    flex: 2,
-                    child: ElevatedButton(
-                      onPressed: isApplied
-                          ? null
-                          : () async {
-                              await applicationVM.apply(
-                                jobId: jobId,
-                                jobType: "Off-campus",
-                                companyName: widget.job.companyName ?? '',
-                              );
-
-                              // ✅ mark applied locally & immediately
-                              if (mounted) {
-                                setState(() {
-                                  _isAppliedLocal = true;
-                                });
-                              }
-
-                              // 🔄 background sync — NO await
-                              applicationVM.fetchApplications();
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isApplied
-                            ? Colors.grey
-                            : AppColors.kGreen,
-                      ),
-                      child: Text(
-                        isApplied ? 'Applied' : 'Apply Now',
-                        style: TextStyle(color: AppColors.white),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
 
@@ -167,6 +168,12 @@ class _JobDetailViewState extends State<JobDetailView> {
                   if ((widget.job.certifications ?? []).isNotEmpty)
                     _sectionList("Preferred", widget.job.certifications),
                   _packageSection(),
+                  if (widget.job.startDate != null ||
+                      widget.job.endDate != null ||
+                      widget.job.onlineTestDate != null ||
+                      widget.job.offerRolloutDate != null ||
+                      widget.job.interviewWindow != null)
+                    _importantDatesSection(),
                   if ((widget.job.toolsAndPlatforms ?? []).isNotEmpty)
                     _toolsSection(),
                   _benefitsSection(),
@@ -784,6 +791,75 @@ class _JobDetailViewState extends State<JobDetailView> {
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _importantDatesSection() {
+    String format(DateTime? date) {
+      if (date == null) return "-";
+      return DateFormat("dd MMM yyyy").format(date);
+    }
+
+    final interview = widget.job.interviewWindow;
+
+    return _containerSection(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.event, color: Colors.orangeAccent, size: 18),
+              SizedBox(width: 8),
+              Text(
+                "Important Dates",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w600,
+                  fontSize: 15,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          _highlightInfo(
+            "Start Date",
+            widget.job.startDate == null ? null : format(widget.job.startDate),
+          ),
+
+          _highlightInfo(
+            "End Date",
+            widget.job.endDate == null ? null : format(widget.job.endDate),
+          ),
+
+          _highlightInfo(
+            "Online Test",
+            widget.job.onlineTestDate == null
+                ? null
+                : format(widget.job.onlineTestDate),
+          ),
+
+          _highlightInfo(
+            "Offer Rollout",
+            widget.job.offerRolloutDate == null
+                ? null
+                : format(widget.job.offerRolloutDate),
+          ),
+
+          // if (interview != null) ...[
+          //   _highlightInfo(
+          //     "Interview Start",
+          //     interview.startDate == null ? null : format(interview.startDate),
+          //   ),
+
+          //   _highlightInfo(
+          //     "Interview End",
+          //     interview.endDate == null ? null : format(interview.endDate),
+          //   ),
+          // ],
         ],
       ),
     );

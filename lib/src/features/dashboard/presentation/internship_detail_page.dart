@@ -44,16 +44,13 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
   @override
   void initState() {
     super.initState();
-    _isAppliedLocal = applicationViewModel.isApplied(
-      widget.internship.id ?? '',
-    );
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       shortlistViewModel.fetchSaved();
       dashboardViewModel.getAlumniData();
       await internshipDetailViewModel.fetchCompanyAlumni(
-        companyName: widget.internship.candidatePosted?.currentCompany ?? '',
-        userId: widget.internship.candidatePosted?.userId ?? '',
+        companyName: widget.internship.companyName ?? '',
+        userId: widget.internship.postedByUser ?? '',
       );
     });
   }
@@ -98,68 +95,70 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
             ),
 
             /// 🔻 BUTTONS
-            bottomNavigationBar: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 28),
-              child: Row(
-                children: [
-                  /// 🔻 Hide Save once applied
-                  if (!isApplied) ...[
+            bottomNavigationBar: SafeArea(
+              top: false,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+                child: Row(
+                  children: [
+                    /// 🔻 Hide Save once applied
+                    if (!isApplied) ...[
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () {
+                            shortlistVM.toggleSave(
+                              jobId: jobId,
+                              jobType: "Internship",
+                              isSaved: isSaved,
+                            );
+                          },
+                          child: Text(
+                            isSaved ? 'Saved' : 'Save',
+                            style: TextStyle(color: AppColors.kGreen),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                    ],
                     Expanded(
-                      child: OutlinedButton(
-                        onPressed: () {
-                          shortlistVM.toggleSave(
-                            jobId: jobId,
-                            jobType: "Internship",
-                            isSaved: isSaved,
-                          );
-                        },
+                      flex: 2,
+                      child: ElevatedButton(
+                        onPressed: isApplied
+                            ? null
+                            : () async {
+                                await applicationVM.apply(
+                                  jobId: jobId,
+                                  jobType: "Internship",
+                                  companyName:
+                                      widget.internship.companyName ?? '',
+                                );
+
+                                // ✅ mark applied locally & immediately
+                                if (mounted) {
+                                  setState(() {
+                                    _isAppliedLocal = true;
+                                  });
+                                }
+
+                                // 🔄 sync in background
+                                applicationVM.fetchApplications();
+                              },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isApplied
+                              ? Colors.grey
+                              : AppColors.kGreen,
+                        ),
                         child: Text(
-                          isSaved ? 'Saved' : 'Save',
-                          style: TextStyle(color: AppColors.kGreen),
+                          isApplied ? 'Applied' : 'Apply Now',
+                          style: TextStyle(
+                            color: AppColors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ),
-                    const SizedBox(width: 12),
                   ],
-                  Expanded(
-                    flex: 2,
-                    child: ElevatedButton(
-                      onPressed: isApplied
-                          ? null
-                          : () async {
-                              await applicationVM.apply(
-                                jobId: jobId,
-                                jobType: "Internship",
-                                companyName:
-                                    widget.internship.companyName ?? '',
-                              );
-
-                              // ✅ mark applied locally & immediately
-                              if (mounted) {
-                                setState(() {
-                                  _isAppliedLocal = true;
-                                });
-                              }
-
-                              // 🔄 sync in background — NO await, so a stale
-                              // response can't flip the button back to "Apply"
-                              applicationVM.fetchApplications();
-                            },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: isApplied
-                            ? Colors.grey
-                            : AppColors.kGreen,
-                      ),
-                      child: Text(
-                        isApplied ? 'Applied' : 'Apply Now',
-                        style: TextStyle(
-                          color: AppColors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ),
 
@@ -173,6 +172,12 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                   const SizedBox(height: 20),
                   _roleOverviewSection(),
                   _matchInsightsSection(),
+                  if (widget.internship.startDate != null ||
+                      widget.internship.endDate != null ||
+                      widget.internship.onlineTestDate != null ||
+                      widget.internship.offerRolloutDate != null ||
+                      widget.internship.interviewWindow != null)
+                    _importantDatesSection(),
                   if ((widget.internship.workAchievements ?? []).isNotEmpty)
                     _responsibilitySection(),
                   if ((widget.internship.skills ?? []).isNotEmpty)
@@ -613,6 +618,79 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
           Expanded(
             child: Text(text, style: const TextStyle(color: Colors.white)),
           ),
+        ],
+      ),
+    );
+  }
+
+  Widget _importantDatesSection() {
+    String format(DateTime? date) {
+      if (date == null) return "-";
+      return DateFormat("dd MMM yyyy").format(date);
+    }
+
+    final interview = widget.internship.interviewWindow;
+
+    return _containerSection(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: const [
+              Icon(Icons.event, color: Colors.orangeAccent, size: 18),
+              SizedBox(width: 8),
+              Text(
+                "Important Dates",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+
+          const SizedBox(height: 16),
+
+          _highlightInfo(
+            "Start Date",
+            widget.internship.startDate == null
+                ? null
+                : format(widget.internship.startDate),
+          ),
+
+          _highlightInfo(
+            "End Date",
+            widget.internship.endDate == null
+                ? null
+                : format(widget.internship.endDate),
+          ),
+
+          _highlightInfo(
+            "Online Test",
+            widget.internship.onlineTestDate == null
+                ? null
+                : format(widget.internship.onlineTestDate),
+          ),
+
+          _highlightInfo(
+            "Offer Rollout",
+            widget.internship.offerRolloutDate == null
+                ? null
+                : format(widget.internship.offerRolloutDate),
+          ),
+
+          // if (interview != null) ...[
+          //   _highlightInfo(
+          //     "Interview Start",
+          //     interview.startDate == null ? null : format(interview.startDate),
+          //   ),
+
+          //   _highlightInfo(
+          //     "Interview End",
+          //     interview.endDate == null ? null : format(interview.endDate),
+          //   ),
+          // ],
         ],
       ),
     );

@@ -62,10 +62,16 @@ class MyJobCard extends StatelessWidget {
             /// 🔹 STATS ROW
             Row(
               children: [
-                _iconText(Icons.group_outlined, "0 candidates"),
+                _iconText(
+                  Icons.group_outlined,
+                  "${job.metrics?.totalApplicationsReceived ?? 0} applications",
+                ),
                 const SizedBox(width: 12),
 
-                _iconText(Icons.send_outlined, "0 referred"),
+                _iconText(
+                  Icons.send_outlined,
+                  "${job.metrics?.totalReferredToCompany ?? 0} referred",
+                ),
                 const SizedBox(width: 12),
 
                 Row(
@@ -82,7 +88,6 @@ class MyJobCard extends StatelessWidget {
                 ),
               ],
             ),
-
             const SizedBox(height: 8),
 
             /// 🔹 SALARY
