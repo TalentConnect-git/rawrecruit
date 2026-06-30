@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart'
     show AppTextStyles, AppTextFields, AppColors, AppButton;
 import 'package:rawrecruit/src/core/index.dart'
-    show RouteNames, Toasts, AppStateProvider, getIt, FailureExt;
+    show RouteNames, Toasts, AppStateProvider, getIt;
 import 'package:rawrecruit/src/features/auth/index.dart'
     show LoginViewModel, AuthCard;
 
@@ -176,12 +176,7 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         text: "Continue with Google",
                         onTap: () async {
-                          final failure = await loginViewModel.google();
-                          if (failure?.statusCode == 404) {
-                            context.pushNamed(RouteNames.userType, extra: true);
-                          } else {
-                            failure?.showError(context);
-                          }
+                          context.pushNamed(RouteNames.userType, extra: true);
                         },
                       ),
 

@@ -196,7 +196,8 @@ class AuthDataSourceImpl implements AuthDataSource {
         endpoint: Endpoints.apiAuthGoogle,
         body: {
           'googleToken': idToken, //serverAuthCode,
-          if (userType != null) 'userType': userType.apiLabel,
+          'code': idToken, //serverAuthCode,
+          'userType': userType?.apiLabel ?? UserType.professional.apiLabel,
           'deviceToken': deviceToken,
           'isApp': true,
         },
@@ -224,6 +225,8 @@ class AuthDataSourceImpl implements AuthDataSource {
           statusCode: 500,
         ),
       );
+    } catch (e) {
+      return Left(APIException.from(e));
     }
 
     return Right(null);
