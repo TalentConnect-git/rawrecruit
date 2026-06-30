@@ -159,10 +159,6 @@ class AuthDataSourceImpl implements AuthDataSource {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
-      log('Flavor: ${FlavorConfig.instance.flavor}');
-
-      log('ServerClientId: ${getServerClientId(FlavorConfig.instance.flavor)}');
-
       await googleSignIn.initialize(
         serverClientId: getServerClientId(FlavorConfig.instance.flavor),
       );
@@ -174,8 +170,15 @@ class AuthDataSourceImpl implements AuthDataSource {
       final GoogleSignInAccount googleUser = await googleSignIn.authenticate(
         scopeHint: ['email'],
       );
+      //
+      // final authorization = await googleUser.authorizationClient
+      //     .authorizeServer(const <String>['email', 'profile']);
+      //
+      // final String? serverAuthCode = authorization?.serverAuthCode;
 
-      final idToken = googleUser.authentication.idToken;
+      final authentication = googleUser.authentication;
+
+      final idToken = authentication.idToken;
 
       if (idToken == null) {
         return Left(
@@ -192,9 +195,10 @@ class AuthDataSourceImpl implements AuthDataSource {
         method: RequestMethod.post,
         endpoint: Endpoints.apiAuthGoogle,
         body: {
-          'code': idToken,
+          'googleToken': idToken, //serverAuthCode,
           if (userType != null) 'userType': userType.apiLabel,
           'deviceToken': deviceToken,
+          'isApp': true,
         },
       );
 

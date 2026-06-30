@@ -29,8 +29,8 @@ String getServerClientId(Flavor flavor) {
     case Flavor.debug:
       return '601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com';
     case Flavor.stage:
-      return '532797617580-jd8i8njg4kub2fkrp5qr4ha1395db36d.apps.googleusercontent.com';
+      return '601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com';
     case Flavor.prod:
-      return '532797617580-jd8i8njg4kub2fkrp5qr4ha1395db36d.apps.googleusercontent.com';
+      return '601694030048-4s6c5pb7lti0gu1g5p8fjanv4mfvd8bi.apps.googleusercontent.com';
   }
 }
