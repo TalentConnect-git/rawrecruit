@@ -293,7 +293,6 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
   }
 
   /// 🔥 TOP SECTION (CONNECTED TO BACKEND)
-  /// 🔥 TOP SECTION (CONNECTED TO BACKEND)
   Widget _topProfileSection(User? p) {
     return Container(
       width: double.infinity,
@@ -325,22 +324,6 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
 
       child: Stack(
         children: [
-          /// GLOW EFFECT
-          // Positioned(
-          //   top: -30,
-          //   right: -20,
-
-          //   child: Container(
-          //     height: 120,
-          //     width: 120,
-
-          //     decoration: BoxDecoration(
-          //       shape: BoxShape.circle,
-
-          //       color: AppColors.kGreen.withOpacity(.08),
-          //     ),
-          //   ),
-          // ),
           Padding(
             padding: const EdgeInsets.all(22),
 
@@ -430,50 +413,58 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                 const SizedBox(height: 12),
 
                 /// COMPANY / ROLE
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 9,
-                  ),
-                  decoration: BoxDecoration(
-                    color: Colors.white.withOpacity(.05),
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.white.withOpacity(.06)),
-                  ),
-                  child: Builder(
-                    builder: (_) {
-                      final company = (p?.currentCompany ?? '').trim();
+                Builder(
+                  builder: (_) {
+                    final company = (p?.currentCompany ?? '').trim();
 
-                      Experience? exp;
+                    Experience? exp;
 
-                      if (p?.experiences?.isNotEmpty ?? false) {
-                        exp = p!.experiences!.firstWhere(
-                          (e) => e.isCurrent == true,
-                          orElse: () => p.experiences!.first,
-                        );
-                      }
-
-                      final role = (exp?.role ?? p?.designation ?? '').trim();
-
-                      final displayText = company.isNotEmpty
-                          ? '$company • $role'
-                          : role.isNotEmpty
-                          ? role
-                          : '-';
-
-                      return Text(
-                        displayText,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.grey[300],
-                          fontSize: 13,
-                          fontWeight: FontWeight.w500,
-                        ),
+                    if (p?.experiences?.isNotEmpty ?? false) {
+                      exp = p!.experiences!.firstWhere(
+                        (e) => e.isCurrent == true,
+                        orElse: () => p.experiences!.first,
                       );
-                    },
-                  ),
-                ),
+                    }
 
+                    final role = (exp?.role ?? p?.designation ?? '').trim();
+
+                    if (company.isEmpty && role.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    final displayText = company.isNotEmpty
+                        ? (role.isNotEmpty ? '$company • $role' : company)
+                        : role;
+
+                    return Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 9,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(.05),
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(
+                              color: Colors.white.withOpacity(.06),
+                            ),
+                          ),
+                          child: Text(
+                            displayText,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: Colors.grey[300],
+                              fontSize: 13,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(height: 14),
+                      ],
+                    );
+                  },
+                ),
                 const SizedBox(height: 14),
 
                 /// LOCATION

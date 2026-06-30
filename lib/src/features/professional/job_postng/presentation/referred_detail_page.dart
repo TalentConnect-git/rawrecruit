@@ -22,7 +22,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
     final user = application.applicant ?? const User();
 
     final name = user.name ?? "-";
-    final jobTitle = application.jobTitle ?? "-";
+    final jobTitle = application.jobTitle ?? "";
     final status = application.currentStatus ?? "-";
     final createdAt = application.createdAt;
     final company = application.referralCompany ?? "-";
@@ -68,8 +68,22 @@ class ReferredCandidateDetailPage extends StatelessWidget {
               const SizedBox(height: 16),
 
               /// 🔥 JOB CARD
-              _jobCard(jobTitle, company, location, createdAt),
+              GestureDetector(
+                onTap: () {
+                  final job = application.job;
 
+                  if (job == null) return;
+
+                  // Don't open posted job for Ask for Referral jobs
+                  if (job.isAskForReferral == true) return;
+
+                  context.pushNamed(
+                    RouteNames.referralPostDetail,
+                    extra: job.id ?? "",
+                  );
+                },
+                child: _jobCard(company, location, createdAt),
+              ),
               const SizedBox(height: 20),
 
               /// 🔥 PROGRESS
@@ -146,13 +160,9 @@ class ReferredCandidateDetailPage extends StatelessWidget {
     );
   }
 
-  /// JOB
-  Widget _jobCard(
-    String jobTitle,
-    String company,
-    String location,
-    DateTime? date,
-  ) {
+  Widget _jobCard(String company, String location, DateTime? date) {
+    final isRedirectable = application.job?.isAskForReferral != true;
+
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(14),
@@ -163,15 +173,50 @@ class ReferredCandidateDetailPage extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            company,
-            style: const TextStyle(
-              color: Colors.white70,
-              fontWeight: FontWeight.w600,
-            ),
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(2),
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: isRedirectable ? AppColors.kGreen : Colors.white,
+                    width: 2,
+                  ),
+                ),
+                child: CircleAvatar(
+                  radius: 22,
+                  backgroundColor: AppColors.kTile,
+                  child: Text(
+                    company.isNotEmpty ? company[0].toUpperCase() : "C",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+
+              const SizedBox(width: 12),
+
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      company,
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
 
-          const SizedBox(height: 4),
+          const SizedBox(height: 12),
 
           Row(
             children: [
@@ -189,6 +234,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
               ),
             ],
           ),
+
           const SizedBox(height: 6),
 
           Text(
