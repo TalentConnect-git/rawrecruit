@@ -159,10 +159,6 @@ class AuthDataSourceImpl implements AuthDataSource {
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
-      log('Flavor: ${FlavorConfig.instance.flavor}');
-
-      log('ServerClientId: ${getServerClientId(FlavorConfig.instance.flavor)}');
-
       await googleSignIn.initialize(
         serverClientId: getServerClientId(FlavorConfig.instance.flavor),
       );
