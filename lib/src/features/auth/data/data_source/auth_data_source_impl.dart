@@ -195,7 +195,7 @@ class AuthDataSourceImpl implements AuthDataSource {
         method: RequestMethod.post,
         endpoint: Endpoints.apiAuthGoogle,
         body: {
-          'code': idToken, //serverAuthCode,
+          'googleToken': idToken, //serverAuthCode,
           if (userType != null) 'userType': userType.apiLabel,
           'deviceToken': deviceToken,
           'isApp': true,
