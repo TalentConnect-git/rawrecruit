@@ -158,6 +158,7 @@ class AppStateProvider extends ViewStateProvider {
       (res) async {
         await SecretRepo.clearAll();
         await getIt<OnboardingLocalService>().clear();
+        _selectedUserType = null;
 
         final prefs = await SharedPreferences.getInstance();
 
