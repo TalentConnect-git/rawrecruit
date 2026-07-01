@@ -97,7 +97,10 @@ class ApplicationCard extends StatelessWidget {
       onTap: () {
         context.pushNamed(
           RouteNames.applicationDetail,
-          extra: applicationId ?? application?.id,
+          extra: {
+            'id': applicationId ?? application?.id,
+            'title': title, // 🔥 fallback when detail API's jobTitle is null
+          },
         );
       },
       child: Container(

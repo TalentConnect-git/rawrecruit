@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart';
-import 'package:rawrecruit/src/features/onboarding/index.dart'
-    show Wrapper, AppHeader;
+import 'package:rawrecruit/src/features/onboarding/index.dart' show AppHeader;
+
+import '../presentation/widgets/new_wrapper.dart';
+
+/// Which set of "what's next" cards to show on the complete screen.
+/// 🔁 If you already have a role/user-type enum, delete this and use yours.
+enum ReferdUserType { professional, student }
 
 class OnboardingCompletePage extends StatefulWidget {
   final VoidCallback onBack;
-  final Future<void> Function() onSubmit; // 🔥 IMPORTANT
+  final Future<void> Function() onSubmit;
+  final ReferdUserType userType; // 🔥 drives the conditional sections
 
   const OnboardingCompletePage({
     super.key,
     required this.onBack,
     required this.onSubmit,
+    required this.userType,
   });
 
   @override
@@ -22,29 +29,73 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
 
   Future<void> handleSubmit() async {
     setState(() => isLoading = true);
-
     try {
       await widget.onSubmit();
     } catch (e) {
       debugPrint(e.toString());
     }
-
-    if (mounted) {
-      setState(() => isLoading = false);
-    }
+    if (mounted) setState(() => isLoading = false);
   }
+
+  /// 🔥 All the copy lives here — edit text/icons per type, layout untouched.
+  List<_ReadyCard> get _cards => switch (widget.userType) {
+    ReferdUserType.professional => const [
+      _ReadyCard(
+        icon: Icons.card_giftcard_outlined,
+        iconColor: Colors.green,
+        title: "Post Referral Jobs & Earn Bonuses",
+        subtitle:
+            "Post open roles at your company and earn a bonus for every successful hire.",
+      ),
+      _ReadyCard(
+        icon: Icons.people_outline,
+        iconColor: Colors.deepPurple,
+        title: "Find Alumni Who Can Refer You",
+        subtitle:
+            "Looking for your next move? Discover alumni at companies you're targeting.",
+      ),
+      _ReadyCard(
+        icon: Icons.verified_user_outlined,
+        iconColor: Colors.deepPurpleAccent,
+        title: "Refer with Confidence",
+        subtitle:
+            "Every candidate is vetted by Referd's expert interview first — never vouch blind.",
+      ),
+    ],
+    ReferdUserType.student => const [
+      _ReadyCard(
+        icon: Icons.people_outline,
+        iconColor: Colors.green,
+        title: "Find Alumni Who Can Refer You",
+        subtitle:
+            "Discover college and company alumni working at your dream organizations.",
+      ),
+      _ReadyCard(
+        icon: Icons.work_outline,
+        iconColor: Colors.deepPurple,
+        title: "Browse Referral Jobs",
+        subtitle:
+            "Apply directly to jobs posted by professionals — no cold applications.",
+      ),
+      _ReadyCard(
+        icon: Icons.school_outlined,
+        iconColor: Colors.deepPurpleAccent,
+        title: "Explore Internships & Off-Campus Jobs",
+        subtitle:
+            "Curated internship and off-campus opportunities, all in one place.",
+      ),
+    ],
+  };
 
   @override
   Widget build(BuildContext context) {
-    return Wrapper(
-      title: "Complete",
+    return TopScrollWrapper(
+      title: "",
       children: [
-        /// 🔙 HEADER
         AppHeader(title: "", highlight: "", onBack: widget.onBack),
+        const SizedBox(height: 10),
 
-        const SizedBox(height: 20),
-
-        /// 🎉 ICON
+        /// 🎉 ICON  (kept horizontally centered)
         Center(
           child: Container(
             padding: const EdgeInsets.all(18),
@@ -55,9 +106,9 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
             child: Icon(Icons.auto_awesome, color: AppColors.kGreen, size: 28),
           ),
         ),
+        const SizedBox(height: 10),
 
-        const SizedBox(height: 20),
-
+        /// TITLE  (kept horizontally centered)
         Center(
           child: RichText(
             textAlign: TextAlign.center,
@@ -69,12 +120,8 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
               ),
               children: [
                 const TextSpan(
-                  text: "You're Ready to\n",
+                  text: "You're Ready",
                   style: TextStyle(color: Colors.white),
-                ),
-                TextSpan(
-                  text: "Grow Through Referrals",
-                  style: TextStyle(color: AppColors.kGreen),
                 ),
               ],
             ),
@@ -82,71 +129,25 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
         ),
         const SizedBox(height: 8),
 
-        /// SUBTITLE
+        /// SUBTITLE  (kept horizontally centered)
         const Center(
           child: Text(
-            "Your profile is now live on Referd.\nOur AI is already finding:",
+            "Your profile is live on Referd. Here's what's next:",
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.grey),
           ),
         ),
-
         const SizedBox(height: 24),
 
-        /// 📊 CARD 1
-        _infoCard(
-          icon: Icons.people_outline,
-          iconColor: Colors.green,
-          title: "Find Alumni Who Can Refer You",
-          subtitle:
-              "Discover college and company alumni working at your dream organizations.",
-        ),
+        /// 📊 CONDITIONAL CARDS
+        for (final card in _cards) ...[
+          _infoCard(card),
+          const SizedBox(height: 12),
+        ],
 
-        const SizedBox(height: 12),
+        const SizedBox(height: 18),
 
-        /// 📊 CARD 2
-        _infoCard(
-          icon: Icons.work_outline,
-          iconColor: Colors.deepPurple,
-          title: "Explore Referral Jobs",
-          subtitle: "Apply directly to employee-posted referral opportunities.",
-        ),
-        const SizedBox(height: 12),
-
-        _infoCard(
-          icon: Icons.notifications_none_rounded,
-          iconColor: Colors.deepPurpleAccent,
-          title: "Get Smart Referral Alerts",
-          subtitle:
-              "Receive notifications when a matching job or alumni connection becomes available.",
-        ),
-        const SizedBox(height: 12),
-
-        /// ⚡ HIGHLIGHT STRIP
-        Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            color: AppColors.kCard,
-            borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.kGreen.withOpacity(0.4)),
-          ),
-          child: Row(
-            children: const [
-              Icon(Icons.flash_on, color: Colors.amber, size: 18),
-              SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  "Most successful referrals happen within the first 72 hours after profile completion.",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        const SizedBox(height: 30),
-
-        /// 🔥 CTA BUTTON
+        /// 🔥 CTA
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -158,25 +159,28 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
               ),
             ),
             onPressed: isLoading ? null : handleSubmit,
-            child: const Text(
-              "👉 Go to Home  >",
-              style: TextStyle(color: Colors.black),
-            ),
+            child: isLoading
+                ? const SizedBox(
+                    height: 18,
+                    width: 18,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.black,
+                    ),
+                  )
+                : const Text(
+                    "Go to Home  ›",
+                    style: TextStyle(color: Colors.black),
+                  ),
           ),
         ),
-
         const SizedBox(height: 20),
       ],
     );
   }
 
   /// 🔥 REUSABLE INFO CARD
-  Widget _infoCard({
-    required IconData icon,
-    required Color iconColor,
-    required String title,
-    required String subtitle,
-  }) {
+  Widget _infoCard(_ReadyCard card) {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
@@ -189,20 +193,20 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: iconColor.withOpacity(0.15),
+              color: card.iconColor.withOpacity(0.15),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: iconColor, size: 18),
+            child: Icon(card.icon, color: card.iconColor, size: 18),
           ),
           const SizedBox(width: 12),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(title, style: const TextStyle(color: Colors.white)),
+                Text(card.title, style: const TextStyle(color: Colors.white)),
                 const SizedBox(height: 4),
                 Text(
-                  subtitle,
+                  card.subtitle,
                   style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
               ],
@@ -212,4 +216,19 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
       ),
     );
   }
+}
+
+/// 🔥 Lightweight data holder for a "what's next" card.
+class _ReadyCard {
+  final IconData icon;
+  final Color iconColor;
+  final String title;
+  final String subtitle;
+
+  const _ReadyCard({
+    required this.icon,
+    required this.iconColor,
+    required this.title,
+    required this.subtitle,
+  });
 }

@@ -24,5 +24,16 @@
         "--dart-define=ENV=prod"
       ]
     },
+     {
+      "name": "Debug",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/flavors/main_debug.dart",
+      "args": [
+        "--flavor",
+        "local",
+        "--dart-define=ENV=debug"
+      ]
+    },
   ]
 }
