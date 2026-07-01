@@ -234,7 +234,34 @@ class _RegisterViewState extends State<RegisterView> {
                             final failure = await registerViewModel
                                 .googleLogin();
 
-                            failure?.showError(context);
+                            Toasts.showSuccessOrFailureToast(
+                              context,
+                              failure: failure,
+                              successMsg: 'Register Successful!',
+                              popOnSuccess: false,
+                              successCallback: () async {
+                                final onboardingService =
+                                    getIt<OnboardingLocalService>();
+
+                                await onboardingService.clear();
+
+                                final prefs =
+                                    await SharedPreferences.getInstance();
+
+                                await prefs.setBool(
+                                  'onboarding_completed',
+                                  false,
+                                );
+                                final email = emailController.text.trim();
+
+                                getIt<AppStateProvider>().data = User(
+                                  email: email,
+                                );
+                                context.pushReplacementNamed(
+                                  RouteNames.onboarding,
+                                );
+                              },
+                            );
                           },
                         ),
 
