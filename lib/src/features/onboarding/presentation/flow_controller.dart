@@ -173,9 +173,15 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
                   // AchievementsPage(onBack: onBack, data: data),
 
                   /// 🔥 FINAL PAGE
+                  /// 🔥 FINAL PAGE
                   OnboardingCompletePage(
                     onBack: onBack,
                     onSubmit: submitOnboarding,
+                    userType:
+                        getIt<AppStateProvider>().userType?.name ==
+                            'professional'
+                        ? ReferdUserType.professional
+                        : ReferdUserType.student,
                   ),
                 ],
               ),

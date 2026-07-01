@@ -10,7 +10,12 @@ import '../../../core/navigation/routes_index.dart';
 
 class ApplicationDetailView extends StatefulWidget {
   final String applicationId;
-  const ApplicationDetailView({super.key, required this.applicationId});
+  final String? fallbackTitle; // 🔥 new
+  const ApplicationDetailView({
+    super.key,
+    required this.applicationId,
+    this.fallbackTitle,
+  });
 
   @override
   State<ApplicationDetailView> createState() => _ApplicationDetailViewState();
@@ -85,6 +90,9 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                             ? job!.jobRoles!.first
                             : null) ??
                         _clean(currentExp?.role) ??
+                        _clean(
+                          widget.fallbackTitle,
+                        ) ?? // 🔥 card's title as last resort
                         "-";
                     debugPrint(
                       'TITLE DEBUG → jobTitle=${job?.jobTitle} (${job?.jobTitle.runtimeType}) | '

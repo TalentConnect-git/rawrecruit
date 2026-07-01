@@ -166,9 +166,20 @@ GoRouter appRouter = GoRouter(
       name: RouteNames.applicationDetail,
       path: '/applicationDetail',
       builder: (context, state) {
-        final applicationId = state.extra as String?;
+        final extra = state.extra;
+
+        // old callers pass a String id; new card passes {id, title}
+        final applicationId = extra is Map
+            ? extra['id'] as String?
+            : extra as String?;
+        final fallbackTitle = extra is Map ? extra['title'] as String? : null;
+
         if (applicationId == null) return NotFoundView();
-        return ApplicationDetailView(applicationId: applicationId);
+
+        return ApplicationDetailView(
+          applicationId: applicationId,
+          fallbackTitle: fallbackTitle,
+        );
       },
     ),
     GoRoute(
