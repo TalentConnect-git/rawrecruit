@@ -269,8 +269,14 @@ GoRouter appRouter = GoRouter(
       name: RouteNames.userType,
       path: '/userType',
       builder: (context, state) {
-        final isLoggingIn = state.extra as bool?;
-        return PreferencesPage(isLogging: isLoggingIn ?? false);
+        final args = state.extra as Map<String, bool>?;
+        final isLoggingIn = args?['isLogging'];
+        final isLinkedinLogging = args?['isLinkedinLogging'];
+
+        return PreferencesPage(
+          isLogging: isLoggingIn ?? false,
+          isLinkedinLogging: isLinkedinLogging ?? false,
+        );
       },
     ),
 

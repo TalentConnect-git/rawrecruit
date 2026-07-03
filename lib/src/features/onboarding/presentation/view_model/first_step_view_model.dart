@@ -25,4 +25,22 @@ class FirstStepViewModel extends ViewStateProvider {
 
     return failure;
   }
+
+  Future<Failure?> linkedInLogin({required UserType userType}) async {
+    Failure? failure;
+
+    setViewState(ViewState.busy);
+
+    final result = await _authRepository.loginWithLinkedIn(
+      userType: userType.apiLabel,
+    );
+
+    result.fold((exception) {
+      failure = APIFailure.fromException(exception: exception);
+    }, (res) async {});
+
+    setViewState(ViewState.complete);
+
+    return failure;
+  }
 }

@@ -176,7 +176,10 @@ class _LoginViewState extends State<LoginView> {
                         ),
                         text: "Continue with Google",
                         onTap: () async {
-                          context.pushNamed(RouteNames.userType, extra: true);
+                          context.pushNamed(
+                            RouteNames.userType,
+                            extra: {'isLogging': true},
+                          );
                         },
                       ),
 
@@ -189,7 +192,15 @@ class _LoginViewState extends State<LoginView> {
                           width: 18,
                         ),
                         text: "Continue with LinkedIn",
-                        onTap: () {},
+                        onTap: () async {
+                          context.pushNamed(
+                            RouteNames.userType,
+                            extra: {
+                              'isLogging': true,
+                              'isLinkedinLogging': true,
+                            },
+                          );
+                        },
                       ),
                     ],
                   ),

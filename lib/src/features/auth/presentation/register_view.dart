@@ -240,6 +240,9 @@ class _RegisterViewState extends State<RegisterView> {
                               successMsg: 'Register Successful!',
                               popOnSuccess: false,
                               successCallback: () async {
+                                await getIt<AppStateProvider>()
+                                    .getUserDetails();
+
                                 final onboardingService =
                                     getIt<OnboardingLocalService>();
 
@@ -257,9 +260,21 @@ class _RegisterViewState extends State<RegisterView> {
                                 getIt<AppStateProvider>().data = User(
                                   email: email,
                                 );
-                                context.pushReplacementNamed(
-                                  RouteNames.onboarding,
-                                );
+
+                                if (getIt<AppStateProvider>()
+                                    .isProfileComplete) {
+                                  context.pushReplacementNamed(
+                                    RouteNames.dashboard,
+                                    extra: {
+                                      'userType':
+                                          getIt<AppStateProvider>().userType,
+                                    },
+                                  );
+                                } else {
+                                  context.pushReplacementNamed(
+                                    RouteNames.onboarding,
+                                  );
+                                }
                               },
                             );
                           },
@@ -284,6 +299,9 @@ class _RegisterViewState extends State<RegisterView> {
                               successMsg: 'Register Successful!',
                               popOnSuccess: false,
                               successCallback: () async {
+                                await getIt<AppStateProvider>()
+                                    .getUserDetails();
+
                                 final onboardingService =
                                     getIt<OnboardingLocalService>();
 
@@ -301,9 +319,21 @@ class _RegisterViewState extends State<RegisterView> {
                                 getIt<AppStateProvider>().data = User(
                                   email: email,
                                 );
-                                context.pushReplacementNamed(
-                                  RouteNames.onboarding,
-                                );
+
+                                if (getIt<AppStateProvider>()
+                                    .isProfileComplete) {
+                                  context.pushReplacementNamed(
+                                    RouteNames.dashboard,
+                                    extra: {
+                                      'userType':
+                                          getIt<AppStateProvider>().userType,
+                                    },
+                                  );
+                                } else {
+                                  context.pushReplacementNamed(
+                                    RouteNames.onboarding,
+                                  );
+                                }
                               },
                             );
                           },
