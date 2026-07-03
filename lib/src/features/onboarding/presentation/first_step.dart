@@ -10,8 +10,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../../core/index.dart';
 
 class PreferencesPage extends StatefulWidget {
-  const PreferencesPage({this.isLogging = false, super.key});
+  const PreferencesPage({
+    this.isLogging = false,
+    this.isLinkedinLogging = false,
+    super.key,
+  });
+
   final bool isLogging;
+  final bool isLinkedinLogging;
 
   @override
   State<PreferencesPage> createState() => _PreferencesPageState();
@@ -129,15 +135,24 @@ class _PreferencesPageState extends State<PreferencesPage> {
                               );
 
                               if (widget.isLogging) {
-                                final failure = await firstStepViewModel.google(
-                                  userType: userType,
-                                );
+                                Failure? failure;
+                                if (widget.isLinkedinLogging) {
+                                  failure = await firstStepViewModel
+                                      .linkedInLogin(userType: userType);
+                                } else {
+                                  failure = await firstStepViewModel.google(
+                                    userType: userType,
+                                  );
+                                }
                                 Toasts.showSuccessOrFailureToast(
                                   context,
                                   failure: failure,
-                                  successMsg: 'Register Successful!',
+                                  successMsg: 'Logged in Successful!',
                                   popOnSuccess: false,
                                   successCallback: () async {
+                                    await getIt<AppStateProvider>()
+                                        .getUserDetails();
+
                                     final onboardingService =
                                         getIt<OnboardingLocalService>();
 
@@ -150,9 +165,20 @@ class _PreferencesPageState extends State<PreferencesPage> {
                                       'onboarding_completed',
                                       false,
                                     );
-                                    context.pushReplacementNamed(
-                                      RouteNames.onboarding,
-                                    );
+                                    if (getIt<AppStateProvider>()
+                                        .isProfileComplete) {
+                                      context.pushReplacementNamed(
+                                        RouteNames.dashboard,
+                                        extra: {
+                                          'userType': getIt<AppStateProvider>()
+                                              .userType,
+                                        },
+                                      );
+                                    } else {
+                                      context.pushReplacementNamed(
+                                        RouteNames.onboarding,
+                                      );
+                                    }
                                   },
                                 );
                               } else {

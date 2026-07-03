@@ -236,13 +236,15 @@ class AuthDataSourceImpl implements AuthDataSource {
   ResultFuture<Auth?> loginWithLinkedIn({required String userType}) async {
     try {
       final url =
-          '${FlavorConfig.instance.baseMobileUrl}${Endpoints.apiAuthLinkedIn}?userType=$userType';
+          '${FlavorConfig.instance.baseMobileUrl}${Endpoints.apiAuthLinkedIn}?userType=$userType&isApp=true';
 
       // Launch OAuth flow
       final callbackUrl = await FlutterWebAuth2.authenticate(
         url: url,
-        callbackUrlScheme: 'myapp',
+        callbackUrlScheme: 'referd',
       );
+
+      log(callbackUrl, name: 'Callback URL');
 
       final uri = Uri.parse(callbackUrl);
 
