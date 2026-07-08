@@ -33,6 +33,12 @@ class _AppState extends State<App> {
       theme: Theme.of(
         context,
       ).copyWith(scaffoldBackgroundColor: Color(0xfffafafa)),
+      builder: (context, child) {
+        return Overlay(
+          key: getIt<NavigationRepository>().overlayKey,
+          initialEntries: [OverlayEntry(builder: (context) => child!)],
+        );
+      },
     );
   }
 }

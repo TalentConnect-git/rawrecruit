@@ -5,7 +5,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/core/index.dart'
-    show NavigationRepository, getIt, RouteNames, SecretRepo;
+    show NavigationRepository, getIt, RouteNames;
 
 class DeepLinkService {
   final AppLinks _appLinks = AppLinks();
@@ -47,13 +47,13 @@ Future<String> _handleUri(Uri uri) async {
   final path = uri.path.isNotEmpty ? uri.path : '/';
   final params = uri.queryParameters;
 
-  if (path.contains('signup')) {
-    final token = params['token'];
-
-    if (token != null && token.isNotEmpty) {
-      await SecretRepo.setString('auth_token', token);
-    }
-  }
+  // if (path.contains('signup')) {
+  //   final token = params['token'];
+  //
+  //   if (token != null && token.isNotEmpty) {
+  //     await SecretRepo.setString('auth_token', token);
+  //   }
+  // }
 
   return RouteNames.splash;
 }

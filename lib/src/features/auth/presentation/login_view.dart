@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +20,11 @@ class _LoginViewState extends State<LoginView> {
   final _formKey = GlobalKey<FormState>();
 
   final emailController = TextEditingController(
-    text: 'namrahsarfaraz2006+test@gmail.com',
+    text: kDebugMode ? 'namrahsarfaraz2006+test@gmail.com' : null,
   );
-  final passController = TextEditingController(text: 'Test@123');
+  final passController = TextEditingController(
+    text: kDebugMode ? 'Test@123' : null,
+  );
 
   final LoginViewModel loginViewModel = LoginViewModel();
 

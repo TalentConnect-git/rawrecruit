@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart' show AppTextStyles;
-import 'package:rawrecruit/src/core/index.dart' show Failure;
+import 'package:rawrecruit/src/core/index.dart'
+    show Failure, NavigationRepository, getIt;
 
 class Toasts {
   static OverlayEntry? currEntry;
@@ -14,13 +15,14 @@ class Toasts {
     required IconData icon,
     Widget? trailing,
   }) {
-    final overlay = Overlay.of(context); // just
+    final ctx = getIt<NavigationRepository>().context;
+    final overlay = Overlay.of(ctx!); // just
 
     if (currEntry != null) return;
 
     // Animation controller
     AnimationController controller = AnimationController(
-      vsync: Navigator.of(context),
+      vsync: Navigator.of(ctx),
       duration: Duration(milliseconds: 300),
     );
 

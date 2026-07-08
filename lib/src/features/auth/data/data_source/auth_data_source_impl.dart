@@ -20,7 +20,12 @@ class AuthDataSourceImpl implements AuthDataSource {
     final Request request = Request(
       method: RequestMethod.post,
       endpoint: Endpoints.apiAuthLogin,
-      body: {'email': email, 'password': password, 'deviceToken': deviceToken},
+      body: {
+        'email': email,
+        'password': password,
+        'deviceToken': deviceToken,
+        "isApp": true,
+      },
     );
 
     try {
@@ -30,6 +35,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       if (response.isNotEmpty) {
         final auth = Auth.fromJson(response['user']);
         await SecretRepo.setString('auth_token', response['token']);
+        await SecretRepo.setString('refresh_token', response['refreshToken']);
         await SecretRepo.setString('auth_id', auth.id ?? '');
 
         final loginToken = await SecretRepo.getString('auth_token');
@@ -62,6 +68,7 @@ class AuthDataSourceImpl implements AuthDataSource {
         'userType': userType.apiLabel,
         'otp': otp,
         'deviceToken': deviceToken,
+        "isApp": true,
       },
     );
 
@@ -72,6 +79,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       if (response.isNotEmpty) {
         final auth = Auth.fromJson(response['user']);
         await SecretRepo.setString('auth_token', response['token']);
+        await SecretRepo.setString('refreshToken', response['refreshToken']);
         await SecretRepo.setString('auth_id', auth.id ?? '');
         return Right(auth);
       }
