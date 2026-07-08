@@ -519,61 +519,56 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   ];
   String selectedState = "";
 
-List<String> states = [];
-List<String> cities = [];
-List<String> selectedCities = [];
+  List<String> states = [];
+  List<String> cities = [];
+  List<String> selectedCities = [];
 
-bool isLoadingStates = false;
-bool isLoadingCities = false;
-Future<void> fetchStates() async {
-  try {
-    setState(() => isLoadingStates = true);
+  bool isLoadingStates = false;
+  bool isLoadingCities = false;
+  Future<void> fetchStates() async {
+    try {
+      setState(() => isLoadingStates = true);
 
-    final res = await Dio().get(
-      "https://countriesnow.space/api/v0.1/countries/states/q",
-      queryParameters: {"country": "india"},
-    );
+      final res = await Dio().get(
+        "https://countriesnow.space/api/v0.1/countries/states/q",
+        queryParameters: {"country": "india"},
+      );
 
-    if (res.statusCode == 200 &&
-        res.data["data"] != null &&
-        res.data["data"]["states"] is List) {
-      final List stateList = res.data["data"]["states"];
+      if (res.statusCode == 200 &&
+          res.data["data"] != null &&
+          res.data["data"]["states"] is List) {
+        final List stateList = res.data["data"]["states"];
 
-      setState(() {
-        states = stateList
-            .map<String>((e) => e["name"].toString())
-            .toList();
-      });
+        setState(() {
+          states = stateList.map<String>((e) => e["name"].toString()).toList();
+        });
+      }
+    } finally {
+      setState(() => isLoadingStates = false);
     }
-  } finally {
-    setState(() => isLoadingStates = false);
   }
-}
 
-Future<void> fetchCities(String state) async {
-  try {
-    setState(() {
-      isLoadingCities = true;
-      cities = [];
-    });
-
-    final res = await Dio().get(
-      "https://countriesnow.space/api/v0.1/countries/state/cities/q",
-      queryParameters: {
-        "country": "india",
-        "state": state.toLowerCase(),
-      },
-    );
-
-    if (res.statusCode == 200 && res.data["data"] is List) {
+  Future<void> fetchCities(String state) async {
+    try {
       setState(() {
-        cities = List<String>.from(res.data["data"]);
+        isLoadingCities = true;
+        cities = [];
       });
+
+      final res = await Dio().get(
+        "https://countriesnow.space/api/v0.1/countries/state/cities/q",
+        queryParameters: {"country": "india", "state": state.toLowerCase()},
+      );
+
+      if (res.statusCode == 200 && res.data["data"] is List) {
+        setState(() {
+          cities = List<String>.from(res.data["data"]);
+        });
+      }
+    } finally {
+      setState(() => isLoadingCities = false);
     }
-  } finally {
-    setState(() => isLoadingCities = false);
   }
-}
 
   final visaStatusOptions = [
     "Citizen",
@@ -707,7 +702,7 @@ Future<void> fetchCities(String state) async {
       _pageController.jumpToPage(currentStep);
     });
     fetchColleges();
-fetchStates();
+    fetchStates();
     fetchDegrees();
 
     fetchCompanies();
@@ -716,9 +711,9 @@ fetchStates();
     fetchJobRoles();
     addEditProfileViewModel.setUserController(widget.user);
     selectedCities = controller.locations
-    .map((e) => e.text)
-    .where((e) => e.isNotEmpty)
-    .toList();
+        .map((e) => e.text)
+        .where((e) => e.isNotEmpty)
+        .toList();
     // if (controller.experiences.isEmpty) {
     //   controller.experiences.add(ExperienceController());
     // }
@@ -1222,6 +1217,16 @@ fetchStates();
                             child: ProfileSection(
                               label: 'International Experience',
 
+                              initiallyExpanded:
+                                  controller.internationalExperiences.isEmpty ||
+                                  controller.internationalExperiences.any(
+                                    (e) =>
+                                        e.country.text.trim().isNotEmpty ||
+                                        e.organization.text.trim().isNotEmpty ||
+                                        e.role.text.trim().isNotEmpty ||
+                                        e.description.text.trim().isNotEmpty,
+                                  ),
+
                               trailing: _addButton(() {
                                 setState(() {
                                   controller.internationalExperiences.add(
@@ -1247,6 +1252,15 @@ fetchStates();
 
                             child: ProfileSection(
                               label: 'Leadership Experience',
+
+                              initiallyExpanded:
+                                  controller.leadershipExperiences.isEmpty ||
+                                  controller.leadershipExperiences.any(
+                                    (e) =>
+                                        e.organization.text.trim().isNotEmpty ||
+                                        e.role.text.trim().isNotEmpty ||
+                                        e.description.text.trim().isNotEmpty,
+                                  ),
 
                               trailing: _addButton(() {
                                 setState(() {
@@ -1395,80 +1409,86 @@ fetchStates();
 
                                 const SizedBox(height: 20),
 
-                              isLoadingStates
-    ? const CircularProgressIndicator()
-    : AppDropdown(
-        hint: "Select State",
-        options: states,
-        value: selectedState.isEmpty ? null : selectedState,
-        onChanged: (val) {
-          if (val == null) return;
+                                isLoadingStates
+                                    ? const CircularProgressIndicator()
+                                    : AppDropdown(
+                                        hint: "Select State",
+                                        options: states,
+                                        value: selectedState.isEmpty
+                                            ? null
+                                            : selectedState,
+                                        onChanged: (val) {
+                                          if (val == null) return;
 
-          setState(() {
-            selectedState = val;
-            cities.clear();
-          });
+                                          setState(() {
+                                            selectedState = val;
+                                            cities.clear();
+                                          });
 
-          fetchCities(val);
-        },
-      ),
+                                          fetchCities(val);
+                                        },
+                                      ),
 
-const SizedBox(height: 12),
+                                const SizedBox(height: 12),
 
-if (selectedState.isNotEmpty)
-  isLoadingCities
-      ? const CircularProgressIndicator()
-      : AppDropdown(
-          hint: "Select City",
-          options: cities,
-          value: null,
-          onChanged: (val) {
-            if (val == null) return;
+                                if (selectedState.isNotEmpty)
+                                  isLoadingCities
+                                      ? const CircularProgressIndicator()
+                                      : AppDropdown(
+                                          hint: "Select City",
+                                          options: cities,
+                                          value: null,
+                                          onChanged: (val) {
+                                            if (val == null) return;
 
-            setState(() {
-              if (!selectedCities.contains(val)) {
-                selectedCities.add(val);
-              }
-            });
+                                            setState(() {
+                                              if (!selectedCities.contains(
+                                                val,
+                                              )) {
+                                                selectedCities.add(val);
+                                              }
+                                            });
 
-            controller.locations.clear();
+                                            controller.locations.clear();
 
-            for (final city in selectedCities) {
-              controller.locations.add(
-                TextEditingController(text: city),
-              );
-            }
+                                            for (final city in selectedCities) {
+                                              controller.locations.add(
+                                                TextEditingController(
+                                                  text: city,
+                                                ),
+                                              );
+                                            }
 
-            markChanged();
-          },
-        ),
+                                            markChanged();
+                                          },
+                                        ),
 
-const SizedBox(height: 12),
+                                const SizedBox(height: 12),
 
-Wrap(
-  spacing: 8,
-  runSpacing: 8,
-  children: selectedCities.map((city) {
-    return Chip(
-      label: Text(city),
-      onDeleted: () {
-        setState(() {
-          selectedCities.remove(city);
-        });
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 8,
+                                  children: selectedCities.map((city) {
+                                    return Chip(
+                                      label: Text(city),
+                                      onDeleted: () {
+                                        setState(() {
+                                          selectedCities.remove(city);
+                                        });
 
-        controller.locations.clear();
+                                        controller.locations.clear();
 
-        for (final city in selectedCities) {
-          controller.locations.add(
-            TextEditingController(text: city),
-          );
-        }
+                                        for (final city in selectedCities) {
+                                          controller.locations.add(
+                                            TextEditingController(text: city),
+                                          );
+                                        }
 
-        markChanged();
-      },
-    );
-  }).toList(),
-),
+                                        markChanged();
+                                      },
+                                    );
+                                  }).toList(),
+                                ),
 
                                 const SizedBox(height: 20),
 

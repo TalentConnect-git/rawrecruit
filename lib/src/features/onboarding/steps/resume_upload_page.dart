@@ -146,12 +146,24 @@ class ResumeUploadPage extends StatelessWidget {
     );
   }
 
-  /// 🔥 USE EXISTING PROFILE METHOD
   Future<void> _handleUpload(BuildContext context) async {
     bool isDialogOpen = false;
 
     try {
-      /// 🔥 SHOW LOADER
+      /// 📂 Pick file first
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.custom,
+        allowedExtensions: ['pdf'],
+      );
+
+      /// User cancelled
+      if (result == null) return;
+
+      final file = result.files.single;
+
+      if (file.path == null) return;
+
+      /// 🔥 Show loader AFTER file selection
       showDialog(
         context: context,
         barrierDismissible: false,
@@ -159,16 +171,15 @@ class ResumeUploadPage extends StatelessWidget {
       );
       isDialogOpen = true;
 
-      /// 🔥 CALL PARSE METHOD
-      final parsedData = await parseResumeAndFill();
+      /// Upload & Parse
+      final parsedData = await parseResumeAndFill(file);
 
-      /// 🔥 CLOSE LOADER SAFELY
+      /// Hide loader
       if (isDialogOpen && Navigator.canPop(context)) {
         Navigator.pop(context);
         isDialogOpen = false;
       }
 
-      /// ❌ IF FAILED → SHOW MESSAGE (NO CRASH)
       if (parsedData == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -179,9 +190,6 @@ class ResumeUploadPage extends StatelessWidget {
         );
         return;
       }
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Resume uploaded successfully")),
-      );
 
       /// 🔥 UPDATE GLOBAL STATE
       final currentUser = context.read<AppStateProvider>().data ?? User();
@@ -193,32 +201,21 @@ class ResumeUploadPage extends StatelessWidget {
         phone: parsedData['phone'],
         gender: parsedData['gender'],
         about: parsedData['about'],
-
         linkedin: parsedData['linkedin_url'],
         github: parsedData['github_url'],
         portfolio: parsedData['portfolio_url'],
-
         skills: (parsedData['skills'] as List?)
             ?.map((e) => e.toString())
             .toList(),
-
-        /// 🔥 EDUCATION
-        /// 🔥 EDUCATIONS
         educations: education
             ?.map(
               (e) => Education(
                 college: e['institution'],
-
                 degree: e['degree'],
-
                 specialization: e['field_of_study'],
-
                 cgpa: e['cgpa']?.toString(),
-
                 yearOfGraduation: e['year']?.toString(),
-
                 educationType: "bachelors",
-
                 isCurrent: false,
               ),
             )
@@ -231,7 +228,7 @@ class ResumeUploadPage extends StatelessWidget {
                 startDate: e['start_date'],
                 endDate: e['end_date'],
                 description: (e['description'] as List?)?.join('\n'),
-                isCurrent: e['end_date']?.toString().toLowerCase() == 'present',
+                isCurrent: e['end_date']?.toString().toLowerCase() == "present",
               ),
             )
             .toList(),
@@ -240,18 +237,19 @@ class ResumeUploadPage extends StatelessWidget {
             ? parsedData['work_experience'][0]['organization']
             : null,
       );
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("Resume uploaded successfully")),
+      );
+
       await Future.delayed(const Duration(milliseconds: 200));
 
-      /// 🚀 GO NEXT PAGE
       onNext();
     } catch (e) {
-      /// 🔥 CLOSE LOADER SAFELY
       if (isDialogOpen && Navigator.canPop(context)) {
         Navigator.pop(context);
-        isDialogOpen = false;
       }
 
-      /// ❌ SHOW ERROR (NO CRASH)
       ScaffoldMessenger.of(
         context,
       ).showSnackBar(const SnackBar(content: Text("Something went wrong")));
@@ -260,23 +258,12 @@ class ResumeUploadPage extends StatelessWidget {
     }
   }
 
-  Future<Map<String, dynamic>?> parseResumeAndFill() async {
+  Future<Map<String, dynamic>?> parseResumeAndFill(PlatformFile file) async {
     try {
       debugPrint("Starting resume parsing...");
 
-      /// 📂 PICK FILE
-      final result = await FilePicker.platform.pickFiles(
-        type: FileType.custom,
-        allowedExtensions: ['pdf'],
-      );
-
-      if (result == null) return null;
-
-      final file = result.files.single;
-
       if (file.path == null) return null;
 
-      /// 🔥 DIRECT DIO (same as profile)
       final dio = Dio(
         BaseOptions(
           receiveTimeout: const Duration(seconds: 120),
@@ -285,10 +272,7 @@ class ResumeUploadPage extends StatelessWidget {
       );
 
       final formData = FormData.fromMap({
-        'resume': await MultipartFile.fromFile(
-          file.path!,
-          filename: file.name, // 🔥 IMPORTANT
-        ),
+        'resume': await MultipartFile.fromFile(file.path!, filename: file.name),
       });
 
       final token = await SecretRepo.getString('auth_token');
@@ -301,14 +285,19 @@ class ResumeUploadPage extends StatelessWidget {
             "Authorization": "Bearer $token",
             "Content-Type": "multipart/form-data",
           },
-          validateStatus: (status) => true, // 🔥 prevents crash
+          validateStatus: (status) => true,
         ),
       );
 
       debugPrint("STATUS: ${response.statusCode}");
       debugPrint("DATA: ${response.data}");
 
-      /// ❌ HANDLE FAILURE (NO CRASH)
+      /// Too many requests
+      if (response.statusCode == 429) {
+        debugPrint("RATE LIMITED");
+        return null;
+      }
+
       if (response.statusCode != 200 ||
           response.data == null ||
           response.data['success'] == false) {
@@ -316,10 +305,7 @@ class ResumeUploadPage extends StatelessWidget {
         return null;
       }
 
-      /// ✅ SUCCESS
-      final data = response.data["data"] ?? response.data;
-
-      return data;
+      return response.data["data"] ?? response.data;
     } catch (e, s) {
       debugPrint("RESUME ERROR: $e");
       debugPrint("STACK: $s");
