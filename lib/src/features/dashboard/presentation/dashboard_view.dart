@@ -266,17 +266,18 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                 },
               ),
 
-              SizedBox(
-                height: 260,
-                child: ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: vm.groupedAlumni.values.take(3).length,
-                  itemBuilder: (context, index) {
-                    final jobs = vm.groupedAlumni.values.toList()[index];
-                    return AlumniCard(jobs: jobs);
-                  },
+              if (vm.groupedAlumni.isNotEmpty)
+                SizedBox(
+                  height: 260,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: vm.groupedAlumni.values.take(3).length,
+                    itemBuilder: (context, index) {
+                      final jobs = vm.groupedAlumni.values.toList()[index];
+                      return AlumniCard(jobs: jobs);
+                    },
+                  ),
                 ),
-              ),
 
               /// 🔥 REFERRAL SECTION
               _SectionHeader(

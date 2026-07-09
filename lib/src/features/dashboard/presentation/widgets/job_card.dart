@@ -42,15 +42,22 @@ class JobCard extends StatelessWidget {
       final j = job;
 
       /// 🔥 TITLE
-      title =
-          (j?.jobTitle ??
-                  j?.jobRoles?.first ??
-                  j?["jobTitle"] ??
-                  (j?["jobRoles"] is List && j["jobRoles"].isNotEmpty
-                      ? j["jobRoles"][0]
-                      : null) ??
-                  "Opportunity")
-              .toString();
+      /// 🔥 TITLE
+      final jobTitle = (j?.jobTitle ?? j?["jobTitle"])?.toString().trim();
+
+      if (jobTitle != null && jobTitle.isNotEmpty) {
+        title = jobTitle;
+      } else {
+        final roles = j?.jobRoles ?? j?["jobRoles"];
+
+        if (roles is List && roles.isNotEmpty) {
+          title = roles.first.toString();
+        } else if (roles is String && roles.trim().isNotEmpty) {
+          title = roles;
+        } else {
+          title = "Opportunity";
+        }
+      }
 
       /// 🔥 COMPANY
       company =
