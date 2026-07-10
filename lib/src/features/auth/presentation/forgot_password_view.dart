@@ -17,9 +17,7 @@ class ForgotPasswordView extends StatefulWidget {
 class _LoginViewState extends State<ForgotPasswordView> {
   final _formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController(
-    text: 'skhasan.talentconnect+new@gmail.com',
-  );
+  final emailController = TextEditingController(text: '');
 
   final ForgotPasswordViewModel forgotPasswordViewModel =
       ForgotPasswordViewModel();
@@ -32,9 +30,7 @@ class _LoginViewState extends State<ForgotPasswordView> {
         backgroundColor: Colors.black, // ✅ FIX
 
         appBar: RAppBar(
-            iconTheme: const IconThemeData(
-    color: Colors.white,
-  ),
+          iconTheme: const IconThemeData(color: Colors.white),
           label: 'Forgot Password',
           leading: InkWell(
             onTap: () {

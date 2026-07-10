@@ -385,19 +385,31 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
 
                   children: [
                     Flexible(
-                      child: Text(
-                        p?.name ?? "-",
+                      child: GestureDetector(
+                        onTap: () async {
+                          final result = await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => AddEditProfileView(
+                                user: vm.user,
+                                initialStep: 0, // Basic section
+                              ),
+                            ),
+                          );
 
-                        textAlign: TextAlign.center,
-
-                        overflow: TextOverflow.ellipsis,
-
-                        style: const TextStyle(
-                          color: Colors.white,
-
-                          fontWeight: FontWeight.bold,
-
-                          fontSize: 22,
+                          if (result == true) {
+                            await vm.getUser();
+                          }
+                        },
+                        child: Text(
+                          p?.name ?? "-",
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 22,
+                          ),
                         ),
                       ),
                     ),
@@ -438,25 +450,42 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
 
                     return Column(
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 9,
-                          ),
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(.05),
-                            borderRadius: BorderRadius.circular(30),
-                            border: Border.all(
-                              color: Colors.white.withOpacity(.06),
+                        GestureDetector(
+                          onTap: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => AddEditProfileView(
+                                  user: vm.user,
+                                  initialStep: 3, // Experience section
+                                ),
+                              ),
+                            );
+
+                            if (result == true) {
+                              await vm.getUser();
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 16,
+                              vertical: 9,
                             ),
-                          ),
-                          child: Text(
-                            displayText,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: Colors.grey[300],
-                              fontSize: 13,
-                              fontWeight: FontWeight.w500,
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(.05),
+                              borderRadius: BorderRadius.circular(30),
+                              border: Border.all(
+                                color: Colors.white.withOpacity(.06),
+                              ),
+                            ),
+                            child: Text(
+                              displayText,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                color: Colors.grey[300],
+                                fontSize: 13,
+                                fontWeight: FontWeight.w500,
+                              ),
                             ),
                           ),
                         ),
@@ -468,47 +497,74 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                 const SizedBox(height: 14),
 
                 /// LOCATION
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-
-                  children: [
-                    Icon(
-                      Icons.location_on_outlined,
-
-                      color: Colors.grey[400],
-
-                      size: 15,
-                    ),
-
-                    const SizedBox(width: 4),
-
-                    Flexible(
-                      child: Text(
-                        p?.locations?.join(', ') ?? '-',
-
-                        textAlign: TextAlign.center,
-
-                        overflow: TextOverflow.ellipsis,
-
-                        style: TextStyle(color: Colors.grey[400], fontSize: 12),
+                GestureDetector(
+                  onTap: () async {
+                    final result = await Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => AddEditProfileView(
+                          user: vm.user,
+                          initialStep: 6, // Employee Preferences
+                        ),
                       ),
-                    ),
-                  ],
+                    );
+
+                    if (result == true) {
+                      await vm.getUser();
+                    }
+                  },
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.location_on_outlined,
+                        color: Colors.grey[400],
+                        size: 15,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          p?.locations?.join(', ') ?? '-',
+                          textAlign: TextAlign.center,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.grey[400],
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
 
                 if ((p?.educations?.isNotEmpty ?? false)) ...[
                   const SizedBox(height: 10),
 
-                  Text(
-                    '🎓 ${(() {
-                      final education = p?.educations?.firstWhere((e) => e.isCurrent == true, orElse: () => p.educations?.isNotEmpty == true ? p.educations!.first : Education());
+                  GestureDetector(
+                    onTap: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (_) => AddEditProfileView(
+                            user: vm.user,
+                            initialStep: 14, // Education
+                          ),
+                        ),
+                      );
 
-                      return education?.college ?? '-';
-                    })()}',
+                      if (result == true) {
+                        await vm.getUser();
+                      }
+                    },
+                    child: Text(
+                      '🎓 ${(() {
+                        final education = p?.educations?.firstWhere((e) => e.isCurrent == true, orElse: () => p.educations?.isNotEmpty == true ? p.educations!.first : Education());
 
-                    textAlign: TextAlign.center,
-
-                    style: TextStyle(color: Colors.grey[500], fontSize: 14),
+                        return education?.college ?? '-';
+                      })()}',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: Colors.grey[500], fontSize: 14),
+                    ),
                   ),
                 ],
                 const SizedBox(height: 20),
@@ -580,15 +636,17 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
 
                   children: [
                     if ((p?.github ?? '').isNotEmpty)
-                      _socialBox('assets/images/github.png', () {
-                        final url = p!.resume!;
+                      _socialBox('assets/images/github.png', () async {
+                        final raw = p?.github ?? '';
 
-                        Navigator.push(
-                          context,
+                        final formatted = raw.startsWith('http')
+                            ? raw
+                            : 'https://$raw';
 
-                          MaterialPageRoute(
-                            builder: (_) => ResumeViewerPage(url: url),
-                          ),
+                        await launchUrl(
+                          Uri.parse(formatted),
+
+                          mode: LaunchMode.platformDefault,
                         );
                       }),
 

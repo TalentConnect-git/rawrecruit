@@ -611,7 +611,8 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
   // ============================================================
   Widget _postedBySection(Job job, dynamic referral) {
     final candidate = referral?.candidatePosted;
-    final name = candidate?.name ?? job.candidatePosted?.name ?? "Referrer";
+    final String name =
+        (candidate?.name ?? job.candidatePosted?.name ?? "Referrer").toString();
     final company =
         widget.companyName ?? candidate?.currentCompany ?? "Company";
     final college = candidate?.college ?? "—";
@@ -667,8 +668,8 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                                 ? name
                                       .trim()
                                       .split(' ')
-                                      .where((e) => e.isNotEmpty)
-                                      .map((e) => e[0])
+                                      .where((String e) => e.isNotEmpty)
+                                      .map((String e) => e.substring(0, 1))
                                       .take(2)
                                       .join()
                                       .toUpperCase()
