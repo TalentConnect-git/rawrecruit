@@ -167,7 +167,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                                     );
                                     if (getIt<AppStateProvider>()
                                         .isProfileComplete) {
-                                      context.pushReplacementNamed(
+                                      context.goNamed(
                                         RouteNames.dashboard,
                                         extra: {
                                           'userType': getIt<AppStateProvider>()
@@ -175,9 +175,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
                                         },
                                       );
                                     } else {
-                                      context.pushReplacementNamed(
-                                        RouteNames.onboarding,
-                                      );
+                                      context.goNamed(RouteNames.onboarding);
                                     }
                                   },
                                 );

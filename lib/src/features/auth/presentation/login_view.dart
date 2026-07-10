@@ -125,7 +125,7 @@ class _LoginViewState extends State<LoginView> {
                             await getIt<AppStateProvider>().getUserDetails();
 
                             if (getIt<AppStateProvider>().isProfileComplete) {
-                              context.pushReplacementNamed(
+                              context.goNamed(
                                 RouteNames.dashboard,
                                 extra: {
                                   'userType':
@@ -133,9 +133,7 @@ class _LoginViewState extends State<LoginView> {
                                 },
                               );
                             } else {
-                              context.pushReplacementNamed(
-                                RouteNames.onboarding,
-                              );
+                              context.goNamed(RouteNames.onboarding);
                             }
                           },
                         );
