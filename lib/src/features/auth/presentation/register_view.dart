@@ -170,7 +170,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                                               getIt<AppStateProvider>().data =
                                                   User(email: email);
-                                              context.pushReplacementNamed(
+                                              context.goNamed(
                                                 RouteNames.onboarding,
                                               );
                                             },
@@ -263,7 +263,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                                 if (getIt<AppStateProvider>()
                                     .isProfileComplete) {
-                                  context.pushReplacementNamed(
+                                  context.goNamed(
                                     RouteNames.dashboard,
                                     extra: {
                                       'userType':
@@ -271,9 +271,7 @@ class _RegisterViewState extends State<RegisterView> {
                                     },
                                   );
                                 } else {
-                                  context.pushReplacementNamed(
-                                    RouteNames.onboarding,
-                                  );
+                                  context.goNamed(RouteNames.onboarding);
                                 }
                               },
                             );
@@ -322,7 +320,7 @@ class _RegisterViewState extends State<RegisterView> {
 
                                 if (getIt<AppStateProvider>()
                                     .isProfileComplete) {
-                                  context.pushReplacementNamed(
+                                  context.goNamed(
                                     RouteNames.dashboard,
                                     extra: {
                                       'userType':
@@ -330,9 +328,7 @@ class _RegisterViewState extends State<RegisterView> {
                                     },
                                   );
                                 } else {
-                                  context.pushReplacementNamed(
-                                    RouteNames.onboarding,
-                                  );
+                                  context.goNamed(RouteNames.onboarding);
                                 }
                               },
                             );

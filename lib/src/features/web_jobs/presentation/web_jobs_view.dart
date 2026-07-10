@@ -188,7 +188,7 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                                         ).showSnackBar(
                                           const SnackBar(
                                             content: Text(
-                                              'Please enter a Job URL or Company Name',
+                                              'Please enter a Job URL',
                                             ),
                                           ),
                                         );
