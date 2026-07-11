@@ -115,22 +115,35 @@ class ReferredApplicantCard extends StatelessWidget {
                   const SizedBox(height: 8),
 
                   /// ✅ STATUS
+                  /// ✅ STATUS
                   if (showStatusActions)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AppColors.kGreen.withOpacity(.12),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        application.currentStatus?.toString() ?? "Pending",
-                        style: AppTextStyles.s12W600.copyWith(
-                          color: AppColors.kGreen,
-                        ),
-                      ),
+                    Builder(
+                      builder: (_) {
+                        final status =
+                            application.currentStatus?.toString() ?? "Pending";
+                        final isRejected = status.toLowerCase().contains(
+                          "rejected",
+                        );
+
+                        return Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 10,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: isRejected
+                                ? Colors.red.withOpacity(.12)
+                                : AppColors.kGreen.withOpacity(.12),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Text(
+                            status,
+                            style: AppTextStyles.s12W600.copyWith(
+                              color: isRejected ? Colors.red : AppColors.kGreen,
+                            ),
+                          ),
+                        );
+                      },
                     ),
 
                   const SizedBox(height: 6),

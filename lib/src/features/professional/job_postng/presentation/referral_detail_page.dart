@@ -511,7 +511,7 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                 onPressed: () async {
                                   await vm.updateApplicationStatus(
                                     id: widget.applicationId,
-                                    status: ApplicationStatus.accepted,
+                                    status: ApplicationStatus.referred,
                                   );
                                   if (context.mounted) {
                                     showStatusPopup(

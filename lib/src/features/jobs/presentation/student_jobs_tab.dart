@@ -25,13 +25,11 @@ class _StudentJobsViewState extends State<StudentJobsView> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      setState(() {
-        if (widget.jobType != null) {
-          selectedTab = widget.jobType!;
-        }
-      });
-    });
+
+    if (widget.jobType != null) {
+      selectedTab = widget.jobType!;
+    }
+
     _pageController = PageController(initialPage: selectedTab.index);
   }
 
