@@ -23,13 +23,40 @@ class _BasicPageState extends State<BasicPage> {
   late TextEditingController emailCtrl;
   late TextEditingController phoneCtrl;
   late TextEditingController dobCtrl;
-
+  String? emailError;
+  String? phoneError;
   String? gender;
   String? ethnicity;
   String? maritalStatus;
   String? visaStatus;
 
   String countryCode = "+91";
+
+  bool _isValidEmail(String email) {
+    final regex = RegExp(r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$');
+    return regex.hasMatch(email.trim());
+  }
+
+  bool _isValidPhone(String phone) {
+    final value = phone.trim();
+
+    switch (countryCode) {
+      case "+91": // India
+        return RegExp(r'^[6-9]\d{9}$').hasMatch(value);
+
+      case "+1": // USA
+        return RegExp(r'^\d{10}$').hasMatch(value);
+
+      case "+44": // UK
+        return RegExp(r'^\d{10,11}$').hasMatch(value);
+
+      case "+971": // UAE
+        return RegExp(r'^\d{9}$').hasMatch(value);
+
+      default:
+        return value.length >= 7;
+    }
+  }
 
   @override
   void initState() {
@@ -93,19 +120,35 @@ class _BasicPageState extends State<BasicPage> {
   }
 
   void saveData() {
+    setState(() {
+      emailError = null;
+      phoneError = null;
+
+      final email = emailCtrl.text.trim();
+      final phone = phoneCtrl.text.trim();
+
+      if (email.isNotEmpty && !_isValidEmail(email)) {
+        emailError = "Enter a valid email address";
+      }
+
+      if (phone.isNotEmpty && !_isValidPhone(phone)) {
+        phoneError = "Enter a valid phone number";
+      }
+    });
+
+    if (emailError != null || phoneError != null) {
+      return;
+    }
+
     final currentUser = context.read<AppStateProvider>().data ?? widget.data;
 
     final updatedUser = currentUser.copyWith(
       name: nameCtrl.text,
-
-      email: emailCtrl.text,
-
+      email: emailCtrl.text.trim(),
       phone: phoneCtrl.text.trim().isNotEmpty
           ? "$countryCode${phoneCtrl.text.trim()}"
           : null,
-
       dob: dobCtrl.text,
-
       gender: gender,
       ethnicity: ethnicity,
       maritalStatus: maritalStatus,

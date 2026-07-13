@@ -34,18 +34,12 @@ class DashboardCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         /// Greeting
-        Text(
-          getGreeting(),
-          style: AppTextStyles.s14W400.copyWith(color: AppColors.secText),
-        ),
-        const SizedBox(height: 6),
-
         /// Name + emoji
         Row(
           children: [
             Expanded(
               child: Text(
-                'Hey, ${vm.user?.name ?? "User"}  👋',
+                'Hey, ${vm.user?.name ?? "User"} 👋',
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 style: AppTextStyles.s22W600.copyWith(color: AppColors.white),
@@ -53,6 +47,16 @@ class DashboardCard extends StatelessWidget {
             ),
           ],
         ),
+
+        const SizedBox(height: 6),
+
+        /// Greeting
+        Text(
+          getGreeting(),
+          style: AppTextStyles.s14W400.copyWith(color: AppColors.secText),
+        ),
+
+        const SizedBox(height: 20),
 
         const SizedBox(height: 20),
 

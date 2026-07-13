@@ -11,39 +11,31 @@ class ReferralHomeHeader extends StatelessWidget {
   final MyProfileViewModel vm;
 
   const ReferralHomeHeader({super.key, required this.vm});
-String getGreeting() {
-  final hour = DateTime.now().hour;
+  String getGreeting() {
+    final hour = DateTime.now().hour;
 
-  if (hour >= 5 && hour < 12) {
-    return 'Good morning';
-  } else if (hour >= 12 && hour < 17) {
-    return 'Good afternoon';
-  } else if (hour >= 17 && hour < 21) {
-    return 'Good evening';
-  } else {
-    return 'Good night';
+    if (hour >= 5 && hour < 12) {
+      return 'Good morning';
+    } else if (hour >= 12 && hour < 17) {
+      return 'Good afternoon';
+    } else if (hour >= 17 && hour < 21) {
+      return 'Good evening';
+    } else {
+      return 'Good night';
+    }
   }
-}
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        /// Greeting
-       Text(
-  getGreeting(),
-  style: AppTextStyles.s14W400.copyWith(color: AppColors.secText),
-),
-
-        const SizedBox(height: 6),
-
         /// Name + emoji
         Row(
           children: [
             Expanded(
               child: Text(
-                'Hey, ${vm.user?.name ?? "User"}  👋',
+                'Hey, ${vm.user?.name ?? "User"} 👋',
                 overflow: TextOverflow.ellipsis,
                 maxLines: 2,
                 style: AppTextStyles.s22W600.copyWith(color: AppColors.white),
@@ -51,6 +43,16 @@ String getGreeting() {
             ),
           ],
         ),
+
+        const SizedBox(height: 6),
+
+        /// Greeting
+        Text(
+          getGreeting(),
+          style: AppTextStyles.s14W400.copyWith(color: AppColors.secText),
+        ),
+
+        const SizedBox(height: 20),
 
         const SizedBox(height: 20),
 
@@ -145,7 +147,6 @@ String getGreeting() {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly, // 🔥 key fix
         children: [
-          
           Icon(icon, color: AppColors.secText, size: 18),
 
           /// VALUE

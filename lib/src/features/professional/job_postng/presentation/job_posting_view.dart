@@ -1302,6 +1302,19 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                           ),
                           onPressed: currentStep == totalSteps - 1
                               ? () async {
+                                  if (titleController.text.trim().isEmpty) {
+                                    _showValidationMessage(
+                                      "Please select at least one Job Title",
+                                    );
+                                    return;
+                                  }
+
+                                  if (skillsController.text.trim().isEmpty) {
+                                    _showValidationMessage(
+                                      "Please add at least one Skill",
+                                    );
+                                    return;
+                                  }
                                   final model = ReferralPostModel(
                                     jobTitle: _splitController(titleController),
                                     inactive: false,
@@ -1502,7 +1515,11 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                     );
                                   }
                                 }
-                              : nextStep,
+                              : () {
+                                  if (_validateCurrentStep()) {
+                                    nextStep();
+                                  }
+                                },
                           child: Text(
                             currentStep == totalSteps - 1
                                 ? "Post Job"
@@ -1526,6 +1543,49 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     );
   }
 
+  bool _validateCurrentStep() {
+    switch (currentStep) {
+      case 0:
+        if (titleController.text.trim().isEmpty) {
+          _showValidationMessage("Please select at least one Job Title");
+          return false;
+        }
+
+        if (descriptionController.text.trim().isEmpty) {
+          _showValidationMessage("Please enter Job Description");
+          return false;
+        }
+
+        if (eligibilityController.text.trim().isEmpty) {
+          _showValidationMessage("Please enter Eligibility Criteria");
+          return false;
+        }
+        break;
+
+      case 7: // Skills page
+        if (skillsController.text.trim().isEmpty) {
+          _showValidationMessage("Please add at least one Skill");
+          return false;
+        }
+        break;
+    }
+
+    return true;
+  }
+
+  void _showValidationMessage(String message) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        behavior: SnackBarBehavior.floating,
+        backgroundColor: Colors.redAccent,
+        margin: const EdgeInsets.all(16),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
   // ── Tags widget — enum chips only, no free text ───────────────────────────
 
   Widget _tagsEnumField() {

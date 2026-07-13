@@ -10,6 +10,7 @@ class AppInput extends StatelessWidget {
   final int maxLines;
   final Widget? prefixIcon;
   final List<TextInputFormatter>? inputFormatter;
+  final String? errorText;
 
   const AppInput(
     this.hint, {
@@ -20,6 +21,7 @@ class AppInput extends StatelessWidget {
     this.maxLines = 1,
     this.prefixIcon,
     this.inputFormatter,
+    this.errorText,
   });
 
   @override
@@ -33,8 +35,9 @@ class AppInput extends StatelessWidget {
         inputFormatters: inputFormatter,
         maxLines: maxLines,
         style: const TextStyle(color: Colors.white),
-
-        decoration: appInputDecoration(hint).copyWith(prefixIcon: prefixIcon),
+        decoration: appInputDecoration(
+          hint,
+        ).copyWith(prefixIcon: prefixIcon, errorText: errorText),
       ),
     );
   }
@@ -406,31 +409,38 @@ class AppChips extends StatelessWidget {
 InputDecoration appInputDecoration(String hint) {
   return InputDecoration(
     hintText: hint,
-
-    hintStyle: const TextStyle(color: Colors.white),
+    hintStyle: const TextStyle(color: Colors.white70),
 
     filled: true,
-
     fillColor: Colors.grey.shade900,
 
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
 
+    errorStyle: const TextStyle(color: Colors.redAccent, fontSize: 12),
+
     border: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
-
       borderSide: BorderSide(color: AppColors.kBorder),
     ),
 
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
-
       borderSide: BorderSide(color: AppColors.kBorder),
     ),
 
     focusedBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(14),
-
       borderSide: BorderSide(color: AppColors.kGreen),
+    ),
+
+    errorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: Colors.redAccent),
+    ),
+
+    focusedErrorBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(14),
+      borderSide: const BorderSide(color: Colors.redAccent, width: 2),
     ),
   );
 }
