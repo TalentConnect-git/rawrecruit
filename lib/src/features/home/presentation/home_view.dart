@@ -48,6 +48,10 @@ class _HomeViewState extends State<HomeView> {
 
         await notificationVm.getNotifications();
 
+        getIt<NotificationProvider>().checkForNewNotifications();
+        getIt<InterviewProvider>().checkForNewInterviews();
+        getIt<ChatProvider>().checkForNewChats();
+
         final failure2 = await interviewViewModel.getInterviews();
         failure2?.showError(context);
       }
