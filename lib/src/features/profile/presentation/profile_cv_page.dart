@@ -1775,7 +1775,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
     final totalExperience = (user.totalYearsOfExperience?.isNotEmpty ?? false)
         ? user.totalYearsOfExperience!
         : "0";
-
+    final defaultRole = getIt<AppStateProvider>().isProfessional
+        ? 'Professional'
+        : 'Student/Fresher';
     final location = (user.locations?.isNotEmpty ?? false)
         ? user.locations!.first
         : "India";
@@ -1818,36 +1820,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
         child: Stack(
           children: [
-            /// BACKGROUND GLOW
-            //        Positioned(
-            //   bottom: -70,
-            //   left: -40,
-
-            //   child: Container(
-            //     height: 170,
-            //     width: 170,
-
-            //     decoration: BoxDecoration(
-            //       shape: BoxShape.circle,
-            //       color: AppColors.kGreen.withOpacity(.04),
-            //     ),
-            //   ),
-            // ),
-
-            // Positioned(
-            //   bottom: -70,
-            //   left: -40,
-
-            //   child: Container(
-            //     height: 170,
-            //     width: 170,
-
-            //     decoration: BoxDecoration(
-            //       shape: BoxShape.circle,
-            //       color: AppColors.kGreen.withOpacity(.04),
-            //     ),
-            //   ),
-            // ),
             Column(
               children: [
                 /// VERIFIED PROFILE
@@ -2006,10 +1978,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                   ),
 
                   child: Text(
-                    '${currentExp?.role ?? 'Professional'} @ ${currentExp?.company ?? user.currentCompany ?? '-'}',
-
+                    '${currentExp?.role ?? defaultRole} @ ${currentExp?.company ?? user.currentCompany ?? "-"}',
                     textAlign: TextAlign.center,
-
                     style: TextStyle(
                       color: AppColors.kGreen,
                       fontSize: 13,

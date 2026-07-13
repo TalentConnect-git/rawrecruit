@@ -93,6 +93,19 @@ class _RegisterViewState extends State<RegisterView> {
                     AppTextFields(
                       controller: emailController,
                       hint: 'Email Address',
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Email is required';
+                        }
+
+                        if (!RegExp(
+                          r'^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$',
+                        ).hasMatch(value.trim())) {
+                          return 'Enter a valid email address';
+                        }
+
+                        return null;
+                      },
                     ),
 
                     const SizedBox(height: 16),
