@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart' show AppColors, AppTextStyles;
 import 'package:rawrecruit/src/core/index.dart'
-    show NavItem, NavItemExt, getIt, AppStateProvider, NotificationProvider;
+    show
+        NavItem,
+        NavItemExt,
+        getIt,
+        AppStateProvider,
+        NotificationProvider,
+        ChatProvider;
 import 'package:rawrecruit/src/core/provider/interview_provider.dart';
 import 'package:stylish_bottom_bar/stylish_bottom_bar.dart';
 
@@ -28,6 +34,7 @@ class _AppBottomNavState extends State<AppBottomNav>
     WidgetsBinding.instance.addObserver(this);
     getIt<NotificationProvider>().checkForNewNotifications();
     getIt<InterviewProvider>().checkForNewInterviews();
+    getIt<ChatProvider>().checkForNewChats();
     super.initState();
   }
 
@@ -43,6 +50,7 @@ class _AppBottomNavState extends State<AppBottomNav>
     if (state == AppLifecycleState.resumed) {
       getIt<NotificationProvider>().checkForNewNotifications();
       getIt<InterviewProvider>().checkForNewInterviews();
+      getIt<ChatProvider>().checkForNewChats();
     }
   }
 

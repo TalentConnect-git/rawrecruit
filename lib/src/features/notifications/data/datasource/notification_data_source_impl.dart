@@ -64,10 +64,10 @@ class NotificationDataSourceImpl implements NotificationDataSource {
 
     try {
       final result = await networkService.request(request);
-      final response = result.data as List<dynamic>;
+      final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final notifications = response
+        final notifications = (response['data'] as List<dynamic>)
             .map((r) => Notification.fromJson(r as Map<String, dynamic>))
             .toList();
 
