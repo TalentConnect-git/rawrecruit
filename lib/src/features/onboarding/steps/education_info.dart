@@ -213,6 +213,41 @@ class _EducationPageState extends State<EducationPage> {
     91,
     (i) => (1960 + i).toString(),
   );
+  Future<void> _pickDate(TextEditingController controller) async {
+    final now = DateTime.now();
+
+    DateTime initialDate = now;
+
+    if (controller.text.isNotEmpty) {
+      try {
+        final parts = controller.text.split('/');
+        if (parts.length == 3) {
+          initialDate = DateTime(
+            int.parse(parts[2]),
+            int.parse(parts[1]),
+            int.parse(parts[0]),
+          );
+        }
+      } catch (_) {}
+    }
+
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: initialDate,
+      firstDate: DateTime(1960),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      controller.text =
+          '${picked.day.toString().padLeft(2, '0')}/'
+          '${picked.month.toString().padLeft(2, '0')}/'
+          '${picked.year}';
+
+      setState(() {});
+      saveData();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -497,14 +532,11 @@ class _EducationPageState extends State<EducationPage> {
 
                   const SizedBox(height: 16),
 
-                  AppInput(
-                    "Start Date",
-
-                    controller: e.startDate,
-
-                    onChanged: (_) {
-                      saveData();
-                    },
+                  GestureDetector(
+                    onTap: () => _pickDate(e.startDate),
+                    child: AbsorbPointer(
+                      child: AppInput("Start Date", controller: e.startDate),
+                    ),
                   ),
 
                   const SizedBox(height: 16),
@@ -538,14 +570,11 @@ class _EducationPageState extends State<EducationPage> {
                   const SizedBox(height: 8),
 
                   if (!(e.isCurrent))
-                    AppInput(
-                      "End Date",
-
-                      controller: e.endDate,
-
-                      onChanged: (_) {
-                        saveData();
-                      },
+                    GestureDetector(
+                      onTap: () => _pickDate(e.endDate),
+                      child: AbsorbPointer(
+                        child: AppInput("End Date", controller: e.endDate),
+                      ),
                     ),
                 ],
 

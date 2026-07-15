@@ -57,7 +57,7 @@ class _LoginViewState extends State<LoginView> {
 
                   /// 🔹 TITLE
                   Text(
-                    'Welcome Back!',
+                    'Welcome',
                     style: AppTextStyles.s22W600.copyWith(
                       color: Colors.white, // ✅ FIX
                     ),

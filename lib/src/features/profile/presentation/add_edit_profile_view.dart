@@ -2639,9 +2639,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     children: [
       Text(
         'Publication ${controller.publications.indexOf(p) + 1}',
-        style: AppTextStyles.s14W600,
+        style: AppTextStyles.s14W600.copyWith(color: Colors.white),
       ),
-
       AppTextFields(
         controller: p.title,
         hint: 'Title',
