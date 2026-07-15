@@ -139,7 +139,15 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                     final vm = context.read<ChatViewModel>();
 
                     await vm.startConversation(user.id!);
-                    context.pushNamed(RouteNames.chatUser, extra: user.id);
+                    final result = await context.pushNamed(
+                      RouteNames.chatUser,
+                      extra: user.id,
+                    );
+
+                    if (result == true) {
+                      await chatViewModel.fetchUsers();
+                      await chatViewModel.fetchUnreadCounts();
+                    }
                   },
                 );
               },
