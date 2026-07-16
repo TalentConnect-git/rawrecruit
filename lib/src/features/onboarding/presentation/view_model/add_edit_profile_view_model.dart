@@ -19,8 +19,16 @@ class AddEditProfileViewModel extends ViewStateProvider {
 
     setViewState(ViewState.busy);
 
+    final body = userController.toMap();
+
+    debugPrint("=========== UPDATE BODY ===========");
+    body.forEach((key, value) {
+      debugPrint("$key : $value (${value.runtimeType})");
+    });
+    debugPrint("===================================");
+
     final result = await _onboardingRepository.updateOnboardingUser(
-      body: userController.toMap(),
+      body: body,
       resume: pickedResumeFile,
       image: pickedImage,
     );
@@ -93,6 +101,7 @@ class AddEditProfileViewModel extends ViewStateProvider {
     c.openToShift.text = user.openToShift ?? '';
 
     c.currentCompany.text = user.currentCompany ?? '';
+    c.companyEmail.text = user.companyEmail ?? '';
     c.totalYearsOfExperience.text = user.totalYearsOfExperience ?? '';
     c.noticePeriod.text = user.noticePeriod ?? '';
     c.noticePeriodStartDate.text = user.noticePeriodStartDate ?? '';

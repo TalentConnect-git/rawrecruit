@@ -111,6 +111,12 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       );
 
       final body = updatedUser.toJson();
+      debugPrint("========== ONBOARDING BODY ==========");
+      body.forEach((k, v) {
+        debugPrint("$k : $v (${v.runtimeType})");
+      });
+      debugPrint("====================================");
+
       final result = await repo.submitOnboardingUser(body: body);
 
       result.fold(

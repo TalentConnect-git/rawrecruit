@@ -76,7 +76,9 @@ GoRouter appRouter = GoRouter(
     GoRoute(
       name: RouteNames.forgotPassword,
       path: '/forgot-password',
-      builder: (_, _) => ForgotPasswordView(),
+      builder: (context, state) {
+        return ForgotPasswordView(email: state.extra as String?);
+      },
     ),
     GoRoute(
       name: RouteNames.referralPostDetail,

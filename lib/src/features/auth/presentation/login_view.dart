@@ -57,7 +57,7 @@ class _LoginViewState extends State<LoginView> {
 
                   /// 🔹 TITLE
                   Text(
-                    'Welcome Back!',
+                    'Welcome',
                     style: AppTextStyles.s22W600.copyWith(
                       color: Colors.white, // ✅ FIX
                     ),
@@ -94,7 +94,10 @@ class _LoginViewState extends State<LoginView> {
                     alignment: AlignmentGeometry.centerRight,
                     child: InkWell(
                       onTap: () {
-                        context.pushNamed(RouteNames.forgotPassword);
+                        context.pushNamed(
+                          RouteNames.forgotPassword,
+                          extra: emailController.text.trim(),
+                        );
                       },
                       child: Text(
                         'Forgot Password?',
