@@ -23,12 +23,7 @@ class WorkPrefPage extends StatefulWidget {
   @override
   State<WorkPrefPage> createState() => _WorkPrefPageState();
 
-  static const employmentOptions = [
-    "full time",
-    "part time",
-    "contract",
-    "Others",
-  ];
+  static const employmentOptions = ["full time", "part time", "contract"];
 
   static const lookingForOptions = ["Internship", "Job", "Both"];
 
@@ -334,18 +329,6 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
             const SizedBox(width: 8),
 
             _employmentTile(
-              title: "Internship",
-              icon: Icons.school_outlined,
-              selected: employmentType == "internship",
-              onTap: () {
-                setState(() => employmentType = "internship");
-                saveData();
-              },
-            ),
-
-            const SizedBox(width: 8),
-
-            _employmentTile(
               title: "Contract",
               icon: Icons.assignment_outlined,
               selected: employmentType == "contract",
@@ -358,11 +341,11 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
             const SizedBox(width: 8),
 
             _employmentTile(
-              title: "Remote",
+              title: "Part Time",
               icon: Icons.laptop_mac_outlined,
               selected: employmentType == "remote",
               onTap: () {
-                setState(() => employmentType = "remote");
+                setState(() => employmentType = "part time");
                 saveData();
               },
             ),

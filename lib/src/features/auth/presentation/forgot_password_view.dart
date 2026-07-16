@@ -8,7 +8,9 @@ import 'package:rawrecruit/src/features/auth/index.dart'
     show ForgotPasswordViewModel;
 
 class ForgotPasswordView extends StatefulWidget {
-  const ForgotPasswordView({super.key});
+  final String? email;
+
+  const ForgotPasswordView({super.key, this.email});
 
   @override
   State<ForgotPasswordView> createState() => _LoginViewState();
@@ -17,7 +19,19 @@ class ForgotPasswordView extends StatefulWidget {
 class _LoginViewState extends State<ForgotPasswordView> {
   final _formKey = GlobalKey<FormState>();
 
-  final emailController = TextEditingController(text: '');
+  late final TextEditingController emailController;
+
+  @override
+  void initState() {
+    super.initState();
+    emailController = TextEditingController(text: widget.email ?? '');
+  }
+
+  @override
+  void dispose() {
+    emailController.dispose();
+    super.dispose();
+  }
 
   final ForgotPasswordViewModel forgotPasswordViewModel =
       ForgotPasswordViewModel();

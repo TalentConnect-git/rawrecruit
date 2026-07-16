@@ -9,9 +9,9 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/profile/presentation/widgets/auto_complete_field.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
+
 import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_edit_profile_view_model.dart';
 import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
-
 import '../../onboarding/steps/education_controller.dart';
 
 class AddEditProfileView extends StatefulWidget {
@@ -52,6 +52,53 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     }
   }
 
+  final countryOptions = const [
+    "Afghanistan",
+    "Albania",
+    "Algeria",
+    "Argentina",
+    "Australia",
+    "Austria",
+    "Bangladesh",
+    "Belgium",
+    "Brazil",
+    "Canada",
+    "China",
+    "Denmark",
+    "Egypt",
+    "Finland",
+    "France",
+    "Germany",
+    "Hong Kong",
+    "India",
+    "Indonesia",
+    "Ireland",
+    "Italy",
+    "Japan",
+    "Malaysia",
+    "Mexico",
+    "Nepal",
+    "Netherlands",
+    "New Zealand",
+    "Norway",
+    "Pakistan",
+    "Philippines",
+    "Qatar",
+    "Saudi Arabia",
+    "Singapore",
+    "South Africa",
+    "South Korea",
+    "Spain",
+    "Sri Lanka",
+    "Sweden",
+    "Switzerland",
+    "Thailand",
+    "Turkey",
+    "UAE",
+    "United Kingdom",
+    "United States",
+    "Vietnam",
+  ];
   List<Map<String, dynamic>> colleges = [];
 
   List<Map<String, dynamic>> degrees = [];
@@ -1328,12 +1375,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                 _dropdownField(
                                   controller.employmentType.first,
                                   'Employment Type',
-                                  [
-                                    'full time',
-                                    'part time',
-                                    'contract',
-                                    'Internship',
-                                  ],
+                                  ['full time', 'part time', 'contract'],
                                 ),
 
                                 const SizedBox(height: 20),
@@ -2004,15 +2046,15 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                     return;
                                   }
                                   if (widget.isSwitchingToProfessional) {
+                                    final body = controller.toMap();
+                                    body["profileType"] = "professional";
+
                                     await getIt<NetworkService>().request(
                                       Request(
                                         method: RequestMethod.put,
-
                                         endpoint: "/api/onboarding/update",
-
                                         isSafeRoute: true,
-
-                                        body: {"profileType": "professional"},
+                                        body: body,
                                       ),
                                     );
                                   }
@@ -2674,7 +2716,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
           const SizedBox(height: 12),
 
-          _input(controller: e.country, hint: "Country"),
+          _dropdownField(e.country, "Country", countryOptions),
           const SizedBox(height: 12),
 
           CommonAutocomplete(
