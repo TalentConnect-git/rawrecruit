@@ -252,7 +252,7 @@ class _JobDetailViewState extends State<JobDetailView> {
                       return ListView.builder(
                         shrinkWrap: true,
                         physics: const NeverScrollableScrollPhysics(),
-                        itemCount: alumniList.length.clamp(0, 3),
+                        itemCount: alumniList.length,
                         itemBuilder: (context, index) {
                           return AlumniHiringCard(jobs: alumniList[index]);
                         },

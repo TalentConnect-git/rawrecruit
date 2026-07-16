@@ -56,7 +56,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
       if ((user.name?.trim().isEmpty ?? true) ||
           (user.email?.trim().isEmpty ?? true)) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Name and Email are required")),
+          const SnackBar(content: Text("Fill all details correctly")),
         );
 
         return;

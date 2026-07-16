@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
@@ -20,6 +21,37 @@ class ResumeUploadPage extends StatelessWidget {
     return Wrapper(
       title: "Resume",
       children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: IconButton(
+            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            onPressed: () async {
+              final shouldGoBack = await showDialog<bool>(
+                context: context,
+                builder: (context) => AlertDialog(
+                  title: const Text("Go Back?"),
+                  content: const Text(
+                    "Are you sure you want to go back to the login page?",
+                  ),
+                  actions: [
+                    TextButton(
+                      onPressed: () => context.pop(false),
+                      child: const Text("Cancel"),
+                    ),
+                    TextButton(
+                      onPressed: () => context.pop(true),
+                      child: const Text("Yes"),
+                    ),
+                  ],
+                ),
+              );
+
+              if (shouldGoBack == true) {
+                context.pushNamed(RouteNames.login);
+              }
+            },
+          ),
+        ),
         AppHeader(title: "Upload your", highlight: "resume"),
 
         const SizedBox(height: 10),
