@@ -74,7 +74,7 @@ class NotificationService {
     RemoteMessage? initialMessage = await _fcm.getInitialMessage();
     if (initialMessage != null) {
       print("🚀 Opened from terminated");
-      // Handle initial notification
+      await _handlePushNotificationData(initialMessage);
     }
   }
 

@@ -88,9 +88,7 @@ Future<void> initDependencyLocator() async {
     ..registerLazySingleton<NotificationProvider>(NotificationProvider.new)
     ..registerLazySingleton<InterviewProvider>(InterviewProvider.new)
     ..registerLazySingleton<ChatProvider>(ChatProvider.new)
-    ..registerLazySingleton<OnboardingLocalService>(
-      () => OnboardingLocalService(),
-    )
+    ..registerLazySingleton<OnboardingLocalService>(OnboardingLocalService.new)
     ..registerLazySingleton<AuthDataSource>(() => AuthDataSourceImpl())
     ..registerLazySingleton<AuthRepository>(
       () => AuthRepositoryImpl(authDataSource: getIt()),
