@@ -21,6 +21,85 @@ class ReferralPostView extends StatefulWidget {
 class _ReferralPostViewState extends State<ReferralPostView> {
   final ReferralPostViewModel referralPostViewModel = ReferralPostViewModel();
   final _formKey = GlobalKey<FormState>();
+
+  Future<void> fetchDegrees() async {
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
+
+        endpoint: "api/master-data?type=DEGREE",
+
+        isSafeRoute: true,
+      ),
+    );
+
+    degrees = List<Map<String, dynamic>>.from(response.data['data']);
+
+    setState(() {});
+  }
+
+  Future<void> fetchStreams(String degreeId) async {
+    selectedDegreeId = degreeId;
+
+    final response = await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.get,
+
+        endpoint: "api/master-data?type=STREAM&parent=$degreeId",
+
+        isSafeRoute: true,
+      ),
+    );
+
+    streams = List<Map<String, dynamic>>.from(response.data['data']);
+
+    setState(() {});
+  }
+
+  Future<void> addDegreeIfNeeded(String value) async {
+    final exists = degrees.any(
+      (e) =>
+          e["value"].toString().trim().toLowerCase() ==
+          value.trim().toLowerCase(),
+    );
+
+    if (exists) return;
+
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+        endpoint: "api/master-data",
+        isSafeRoute: true,
+        body: {"type": "DEGREE", "value": value, "parent": null},
+      ),
+    );
+
+    await fetchDegrees();
+  }
+
+  Future<void> addStreamIfNeeded(String value) async {
+    if (selectedDegreeId == null) return;
+
+    final exists = streams.any(
+      (e) =>
+          e["value"].toString().trim().toLowerCase() ==
+          value.trim().toLowerCase(),
+    );
+
+    if (exists) return;
+
+    await getIt<NetworkService>().request(
+      Request(
+        method: RequestMethod.post,
+        endpoint: "api/master-data",
+        isSafeRoute: true,
+        body: {"type": "STREAM", "value": value, "parent": selectedDegreeId},
+      ),
+    );
+
+    await fetchStreams(selectedDegreeId!);
+  }
+
   static const draftKey = "referral_post_draft";
   List<String> skillOptionsApi = [];
   List<String> jobRoleOptions = [];
@@ -76,11 +155,15 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     super.initState();
     fetchStates();
     fetchJobRoles();
-
+    fetchDegrees();
     fetchSkills();
     loadDraft();
   }
 
+  List<Map<String, dynamic>> degrees = [];
+  List<Map<String, dynamic>> streams = [];
+
+  String? selectedDegreeId;
   Future<void> fetchSkills() async {
     final response = await getIt<NetworkService>().request(
       Request(
@@ -228,7 +311,17 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     broadcastType = data["broadcastType"];
 
     minEducation = data["minEducation"];
+    if (minEducation != null) {
+      final degree = degrees.cast<Map<String, dynamic>?>().firstWhere(
+        (e) => e?["value"] == minEducation,
+        orElse: () => null,
+      );
 
+      if (degree != null) {
+        selectedDegreeId = degree["_id"].toString();
+        await fetchStreams(selectedDegreeId!);
+      }
+    }
     workAuthorization = data["workAuthorization"];
 
     experienceRange = data["experienceRange"];
@@ -858,68 +951,46 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                           ),
                                         );
                                       },
-
                                   optionsViewBuilder:
                                       (context, onSelected, options) {
-                                        return Material(
-                                          color: Colors.black,
-                                          child: Container(
-                                            width:
-                                                MediaQuery.of(
-                                                  context,
-                                                ).size.width -
-                                                32,
-                                            constraints: const BoxConstraints(
-                                              maxHeight: 220,
+                                        return Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Material(
+                                            color: Colors.black,
+                                            elevation: 8,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
                                             ),
-                                            child: ListView.builder(
-                                              shrinkWrap: true,
-                                              itemCount: options.length,
-                                              itemBuilder: (context, index) {
-                                                final option = options
-                                                    .elementAt(index);
+                                            child: ConstrainedBox(
+                                              constraints: const BoxConstraints(
+                                                maxHeight: 220,
+                                              ),
+                                              child: ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                shrinkWrap: true,
+                                                itemCount: options.length,
+                                                itemBuilder: (context, index) {
+                                                  final option = options
+                                                      .elementAt(index);
 
-                                                final isCreate = option
-                                                    .startsWith('Create "');
+                                                  final isCreate = option
+                                                      .startsWith('Create "');
 
-                                                return ListTile(
-                                                  title: Row(
-                                                    children: [
-                                                      if (isCreate)
-                                                        Icon(
-                                                          Icons.add,
-                                                          color:
-                                                              AppColors.kGreen,
-                                                          size: 18,
-                                                        ),
-
-                                                      if (isCreate)
-                                                        const SizedBox(
-                                                          width: 8,
-                                                        ),
-
-                                                      Expanded(
-                                                        child: Text(
-                                                          option,
-                                                          style: TextStyle(
-                                                            color: isCreate
-                                                                ? AppColors
-                                                                      .kGreen
-                                                                : Colors.white,
-                                                            fontWeight: isCreate
-                                                                ? FontWeight
-                                                                      .w600
-                                                                : FontWeight
-                                                                      .normal,
-                                                          ),
-                                                        ),
+                                                  return ListTile(
+                                                    tileColor: Colors.black,
+                                                    title: Text(
+                                                      option,
+                                                      style: TextStyle(
+                                                        color: isCreate
+                                                            ? AppColors.kGreen
+                                                            : Colors.white,
                                                       ),
-                                                    ],
-                                                  ),
-                                                  onTap: () =>
-                                                      onSelected(option),
-                                                );
-                                              },
+                                                    ),
+                                                    onTap: () =>
+                                                        onSelected(option),
+                                                  );
+                                                },
+                                              ),
                                             ),
                                           ),
                                         );
@@ -1014,38 +1085,160 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                         child: _card(
                           title: "Education & Experience",
                           children: [
-                            _dropdownDark(
-                              "Minimum Education",
-                              minEducation,
-                              educationOptions,
-                              (val) => setState(() {
-                                minEducation = val!;
-                                fieldOfStudyController.clear();
-                              }),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Minimum Education",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                const SizedBox(height: 10),
+
+                                Autocomplete<String>(
+                                  initialValue: TextEditingValue(
+                                    text: minEducation ?? "",
+                                  ),
+
+                                  optionsBuilder: (textEditingValue) {
+                                    final query = textEditingValue.text.trim();
+
+                                    final filtered = degrees
+                                        .map((e) => e["value"].toString())
+                                        .where(
+                                          (e) => e.toLowerCase().contains(
+                                            query.toLowerCase(),
+                                          ),
+                                        );
+
+                                    final exists = degrees.any(
+                                      (e) =>
+                                          e["value"]
+                                              .toString()
+                                              .toLowerCase()
+                                              .trim() ==
+                                          query.toLowerCase().trim(),
+                                    );
+
+                                    if (query.isNotEmpty && !exists) {
+                                      return [...filtered, 'Create "$query"'];
+                                    }
+
+                                    return filtered;
+                                  },
+
+                                  onSelected: (value) async {
+                                    final actualValue =
+                                        value.startsWith('Create "')
+                                        ? value
+                                              .replaceAll('Create "', '')
+                                              .replaceAll('"', '')
+                                        : value;
+
+                                    await addDegreeIfNeeded(actualValue);
+
+                                    final degree = degrees.firstWhere(
+                                      (e) => e["value"] == actualValue,
+                                    );
+
+                                    setState(() {
+                                      minEducation = actualValue;
+                                      selectedDegreeId = degree["_id"]
+                                          .toString();
+                                      fieldOfStudyController.clear();
+                                    });
+
+                                    await fetchStreams(selectedDegreeId!);
+                                  },
+                                  fieldViewBuilder:
+                                      (
+                                        context,
+                                        controller,
+                                        focusNode,
+                                        onFieldSubmitted,
+                                      ) {
+                                        return TextField(
+                                          controller: controller,
+                                          focusNode: focusNode,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                          ),
+                                          decoration: InputDecoration(
+                                            hintText: "Search Degree",
+                                            hintStyle: const TextStyle(
+                                              color: Colors.grey,
+                                            ),
+                                            filled: true,
+                                            fillColor: Colors.black,
+                                            border: OutlineInputBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                  optionsViewBuilder:
+                                      (context, onSelected, options) {
+                                        return Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Material(
+                                            color: Colors.black,
+                                            elevation: 8,
+                                            borderRadius: BorderRadius.circular(
+                                              12,
+                                            ),
+                                            child: ConstrainedBox(
+                                              constraints: const BoxConstraints(
+                                                maxHeight: 220,
+                                              ),
+                                              child: ListView.builder(
+                                                padding: EdgeInsets.zero,
+                                                itemCount: options.length,
+                                                itemBuilder: (context, index) {
+                                                  final option = options
+                                                      .elementAt(index);
+
+                                                  final isCreate = option
+                                                      .startsWith('Create "');
+
+                                                  return ListTile(
+                                                    tileColor: Colors.black,
+                                                    title: Text(
+                                                      option,
+                                                      style: TextStyle(
+                                                        color: isCreate
+                                                            ? AppColors.kGreen
+                                                            : Colors.white,
+                                                      ),
+                                                    ),
+                                                    onTap: () =>
+                                                        onSelected(option),
+                                                  );
+                                                },
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                ),
+
+                                const SizedBox(height: 16),
+
+                                SearchableChipField(
+                                  label: "Stream",
+                                  controller: fieldOfStudyController,
+                                  options: streams
+                                      .map((e) => e["value"].toString())
+                                      .toList(),
+                                  onChanged: (value) async {
+                                    await addStreamIfNeeded(value);
+                                  },
+                                ),
+                              ],
                             ),
 
-                            SearchableChipField(
-                              label: "Stream",
-                              controller: fieldOfStudyController,
-                              options: fieldOfStudyOptions,
-                            ),
-
-                            // _fieldDark(
-                            //   "Minimum Experience",
-                            //   controller:
-                            //       minExperienceController,
-                            //   keyboardType:
-                            //       TextInputType.number,
-                            // ),
-
-                            // MultiSelectDropdownChips(
-                            //   key: ValueKey(
-                            //     'fieldOfStudy_$minEducation',
-                            //   ),
-                            //   label: "Preferred Field of Study",
-                            //   controller: fieldOfStudyController,
-                            //   options: fieldOfStudyOptions,
-                            // ),
                             const SizedBox(height: 14),
 
                             _dropdownDark(

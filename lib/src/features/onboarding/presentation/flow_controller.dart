@@ -16,8 +16,8 @@ import 'package:rawrecruit/src/features/onboarding/index.dart'
         ContinueButton;
 import 'package:rawrecruit/src/features/onboarding/steps/education_info.dart';
 import 'package:rawrecruit/src/features/onboarding/steps/resume_upload_page.dart';
-
 import '../steps/onboarding_complete_page.dart';
+
 
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({super.key});
@@ -32,7 +32,6 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   final int totalPages = 8;
   final onboardingLocal = getIt<OnboardingLocalService>();
-
   /// 🔥 SHARED DATA
   final User data = User();
 
