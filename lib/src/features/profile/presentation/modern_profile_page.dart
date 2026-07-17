@@ -489,12 +489,12 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                             ),
                           ),
                         ),
-                        const SizedBox(height: 14),
+                        const SizedBox(height: 2),
                       ],
                     );
                   },
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 10),
 
                 /// LOCATION
                 GestureDetector(

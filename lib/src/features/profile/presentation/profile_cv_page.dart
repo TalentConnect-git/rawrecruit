@@ -1091,29 +1091,28 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                                           const SizedBox(height: 12),
 
-                                          /// DATE
-                                          Row(
-                                            children: [
-                                              Image.asset(
-                                                "assets/images/calendar.png",
-                                                width: 15,
-                                                height: 15,
-                                              ),
-
-                                              const SizedBox(width: 7),
-
-                                              Expanded(
-                                                child: Text(
-                                                  "${e.startDate ?? ''} - ${e.endDate?.isNotEmpty == true ? e.endDate : 'Present'}",
-
-                                                  style: const TextStyle(
-                                                    color: Colors.white70,
-                                                    fontSize: 12,
+                                          if ((e.startDate?.isNotEmpty ??
+                                                  false) ||
+                                              (e.endDate?.isNotEmpty ?? false))
+                                            Row(
+                                              children: [
+                                                Image.asset(
+                                                  "assets/images/calendar.png",
+                                                  width: 15,
+                                                  height: 15,
+                                                ),
+                                                const SizedBox(width: 7),
+                                                Expanded(
+                                                  child: Text(
+                                                    "${e.startDate ?? ''}${(e.startDate?.isNotEmpty ?? false) ? ' - ' : ''}${e.endDate?.isNotEmpty == true ? e.endDate : 'Present'}",
+                                                    style: const TextStyle(
+                                                      color: Colors.white70,
+                                                      fontSize: 12,
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ],
-                                          ),
+                                              ],
+                                            ),
 
                                           /// DESCRIPTION
                                           if ((e.description

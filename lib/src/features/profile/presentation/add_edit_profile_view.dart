@@ -2167,7 +2167,11 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(index, title),
+          _header(index, "Experience", () {
+            setState(() {
+              controller.experiences.removeAt(index);
+            });
+          }),
           const SizedBox(height: 12),
 
           _companyField(e),
@@ -2233,7 +2237,11 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(index, "Leadership"),
+          _header(index, "Leadership", () {
+            setState(() {
+              controller.leadershipExperiences.removeAt(index);
+            });
+          }),
 
           const SizedBox(height: 12),
           CommonAutocomplete(
@@ -2295,7 +2303,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     );
   }
 
-  Widget _header(int index, String title) {
+  Widget _header(int index, String title, VoidCallback onRemove) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -2307,11 +2315,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
           ),
         ),
         GestureDetector(
-          onTap: () {
-            setState(() {
-              controller.experiences.removeAt(index);
-            });
-          },
+          onTap: onRemove,
           child: const Text("Remove", style: TextStyle(color: Colors.red)),
         ),
       ],
@@ -2712,7 +2716,11 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _header(index, "International"),
+          _header(index, "International", () {
+            setState(() {
+              controller.internationalExperiences.removeAt(index);
+            });
+          }),
 
           const SizedBox(height: 12),
 
