@@ -1,6 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart' show kDebugMode;
-import 'package:pretty_dio_logger/pretty_dio_logger.dart' show PrettyDioLogger;
 import 'package:rawrecruit/src/config/index.dart';
 import 'package:rawrecruit/src/core/index.dart' show Request, AuthInterceptor;
 
@@ -17,11 +15,11 @@ class NetworkService {
 
     _dio.interceptors.add(AuthInterceptor(dio: _dio));
 
-    if (kDebugMode) {
-      _dio.interceptors.add(
-        PrettyDioLogger(responseBody: true, requestBody: true),
-      );
-    }
+    // if (kDebugMode) {
+    //   _dio.interceptors.add(
+    //     PrettyDioLogger(responseBody: true, requestBody: true),
+    //   );
+    // }
   }
 
   final Dio _dio;
