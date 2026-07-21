@@ -4,6 +4,7 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileViewModel;
+import 'package:rawrecruit/src/features/onboarding/presentation/widgets/promo_card.dart';
 
 class DashboardCard extends StatelessWidget {
   final MyProfileViewModel vm;
@@ -58,6 +59,8 @@ class DashboardCard extends StatelessWidget {
 
         const SizedBox(height: 20),
 
+        /// Career Insights daily promo (self-manages its once-a-day visibility)
+        const CareerInsightPromoCard(),
         const SizedBox(height: 20),
 
         /// Stats Cards

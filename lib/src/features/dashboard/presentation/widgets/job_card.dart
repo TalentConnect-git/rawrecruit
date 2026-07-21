@@ -60,45 +60,36 @@ class JobCard extends StatelessWidget {
       }
 
       /// 🔥 COMPANY
+      /// 🔥 COMPANY
       company =
           (j?.companyName ??
                   j?.companyPosted?.companyDetails?.companyName ??
-                  j?["companyName"] ??
-                  j?["companyPosted"]?["companyDetails"]?["companyName"] ??
                   "Company")
               .toString();
 
       /// 🔥 WORK MODE
-      workMode =
-          (j?.workMode?.isNotEmpty == true
-                  ? j.workMode.first
-                  : (j?["workMode"] is List && j["workMode"].isNotEmpty
-                            ? j["workMode"][0]
-                            : null) ??
-                        "Remote")
-              .toString();
+      /// 🔥 WORK MODE
+      workMode = (j?.workMode?.isNotEmpty == true)
+          ? j.workMode.first.toString()
+          : "Remote";
 
       /// 🔥 LOCATION
-      location =
-          (j?.location?.isNotEmpty == true
-                  ? j.location.first
-                  : (j?["location"] is List && j["location"].isNotEmpty
-                            ? j["location"][0]
-                            : null) ??
-                        "India")
-              .toString();
+      /// 🔥 LOCATION
+      location = (j?.location?.isNotEmpty == true)
+          ? j.location.first.toString()
+          : "India";
 
       /// 🔥 SALARY (FIXED)
-      final ctc =
-          j?.packageDetails?.totalCTC ?? j?["packageDetails"]?["totalCTC"];
+      /// 🔥 SALARY (FIXED)
+      final ctc = j?.packageDetails?.totalCTC;
 
       if (ctc != null) {
         salary = ctc < 100000 ? "₹$ctc LPA" : _formatSalary(ctc);
       }
 
       /// 🔥 MATCH
-      match = j?.matchScore ?? j?["matchScore"] ?? 0;
-      alumni = j?.alumniCount ?? j?["alumniCount"] ?? 0;
+      match = j?.matchScore ?? 0;
+      alumni = j?.alumniCount ?? 0;
     } catch (e) {
       /// NEVER BREAK UI
       print("JobCard parsing error: $e");
