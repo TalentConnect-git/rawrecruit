@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:dio/dio.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -19,11 +21,12 @@ class ResumeUploadPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Wrapper(
-      title: "Resume",
       children: [
         Align(
           alignment: Alignment.centerLeft,
           child: IconButton(
+            padding: EdgeInsets.zero,
+            alignment: Alignment.topLeft,
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () async {
               final shouldGoBack = await showDialog<bool>(
@@ -52,92 +55,30 @@ class ResumeUploadPage extends StatelessWidget {
             },
           ),
         ),
-        AppHeader(title: "Upload your", highlight: "resume"),
+        AppHeader(title: "Drop your", highlight: "resume"),
 
         const SizedBox(height: 10),
 
-        const Text(
-          "Lets us automatically build your profile and improve job matching accuracy",
-          style: TextStyle(color: Colors.grey),
+        Text.rich(
+          TextSpan(
+            style: TextStyle(color: Colors.grey),
+            children: [
+              TextSpan(text: "Let AI do the stalking. 🕵️ We'll "),
+              TextSpan(
+                text:
+                    "build your profile, map your alumni network and career insights",
+                style: TextStyle(color: AppColors.kGreen),
+              ),
+              TextSpan(text: "."),
+            ],
+          ),
         ),
-
         const SizedBox(height: 20),
 
         /// 📄 UPLOAD BOX
         _uploadBox(context),
 
-        // const SizedBox(height: 16),
-
-        // Container(
-        //   padding: const EdgeInsets.all(16),
-        //   decoration: BoxDecoration(
-        //     color: AppColors.kCard,
-        //     borderRadius: BorderRadius.circular(16),
-        //     border: Border.all(color: AppColors.kBorder),
-        //   ),
-        //   child: Column(
-        //     crossAxisAlignment: CrossAxisAlignment.start,
-        //     children: [
-        //       const Text(
-        //         "We'll extract:",
-        //         style: TextStyle(
-        //           color: Colors.grey,
-        //           fontSize: 13,
-        //           fontWeight: FontWeight.w500,
-        //         ),
-        //       ),
-
-        //       const SizedBox(height: 12),
-
-        //       Row(
-        //         children: [
-        //           Expanded(
-        //             child: Column(
-        //               children: const [
-        //                 _ResumePoint("Skills"),
-        //                 SizedBox(height: 10),
-        //                 _ResumePoint("Experience"),
-        //                 SizedBox(height: 10),
-        //                 _ResumePoint("Education"),
-        //               ],
-        //             ),
-        //           ),
-
-        //           Expanded(
-        //             child: Column(
-        //               children: const [
-        //                 _ResumePoint("Certifications"),
-        //                 SizedBox(height: 10),
-        //                 _ResumePoint("Projects"),
-        //                 SizedBox(height: 10),
-        //                 _ResumePoint("Resume Score"),
-        //               ],
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ],
-        //   ),
-        // ),
         const SizedBox(height: 16),
-
-        // /// OR
-        // Row(
-        //   children: [
-        //     Expanded(child: Divider(color: AppColors.kBorder)),
-        //     const Padding(
-        //       padding: EdgeInsets.symmetric(horizontal: 8),
-        //       child: Text("or", style: TextStyle(color: Colors.grey)),
-        //     ),
-        //     Expanded(child: Divider(color: AppColors.kBorder)),
-        //   ],
-        // ),
-
-        // const SizedBox(height: 20),
-
-        // _linkedInCard(),
-
-        // const SizedBox(height: 20),
 
         /// INFO
         Container(
@@ -195,11 +136,11 @@ class ResumeUploadPage extends StatelessWidget {
 
       if (file.path == null) return;
 
-      /// 🔥 Show loader AFTER file selection
+      /// 🔥 Show cycling loader AFTER file selection
       showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (_) => const Center(child: CircularProgressIndicator()),
+        builder: (_) => const _ParsingLoader(),
       );
       isDialogOpen = true;
 
@@ -270,11 +211,10 @@ class ResumeUploadPage extends StatelessWidget {
             : null,
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Resume uploaded successfully")),
-      );
-
-      await Future.delayed(const Duration(milliseconds: 200));
+      /// 🎉 Success popup
+      if (context.mounted) {
+        await _showSuccessDialog(context);
+      }
 
       onNext();
     } catch (e) {
@@ -345,6 +285,63 @@ class ResumeUploadPage extends StatelessWidget {
     }
   }
 
+  /// 🎉 SUCCESS DIALOG
+  Future<void> _showSuccessDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (_) => Dialog(
+        backgroundColor: AppColors.kCard,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const Text("🎉", style: TextStyle(fontSize: 44)),
+              const SizedBox(height: 16),
+              const Text(
+                "Boom. Your network just got bigger.",
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                "Here's who you know (and didn't know you knew)",
+                textAlign: TextAlign.center,
+                style: TextStyle(color: Colors.grey, fontSize: 13),
+              ),
+              const SizedBox(height: 24),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.kGreen,
+                    padding: const EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text(
+                    "See my network",
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   /// 📄 UPLOAD BOX
   Widget _uploadBox(BuildContext context) {
     return GestureDetector(
@@ -405,30 +402,72 @@ class ResumeUploadPage extends StatelessWidget {
       ),
     );
   }
+}
 
-  // /// 🔗 LINKEDIN CARD
-  // Widget _linkedInCard() {
-  //   return Container(
-  //     padding: const EdgeInsets.all(16),
-  //     decoration: BoxDecoration(
-  //       color: AppColors.kCard,
-  //       borderRadius: BorderRadius.circular(16),
-  //       border: Border.all(color: AppColors.kBorder),
-  //     ),
-  //     child: Row(
-  //       children: const [
-  //         Icon(Icons.auto_awesome, color: Colors.deepPurple),
-  //         SizedBox(width: 12),
-  //         Expanded(
-  //           child: Text(
-  //             "Autofill from LinkedIn",
-  //             style: TextStyle(color: Colors.white),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
+/// ⏳ CYCLING PARSING LOADER
+class _ParsingLoader extends StatefulWidget {
+  const _ParsingLoader();
+
+  @override
+  State<_ParsingLoader> createState() => _ParsingLoaderState();
+}
+
+class _ParsingLoaderState extends State<_ParsingLoader> {
+  static const _messages = [
+    "AI is reading between the lines...",
+    "Mapping your alumni network...",
+    "Finding your people...",
+    "Almost there — decoding your career DNA...",
+  ];
+
+  int _index = 0;
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 3), (_) {
+      if (!mounted) return;
+      setState(() => _index = (_index + 1) % _messages.length);
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      backgroundColor: AppColors.kCard,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(18)),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            CircularProgressIndicator(color: AppColors.kGreen),
+            const SizedBox(height: 24),
+            AnimatedSwitcher(
+              duration: const Duration(milliseconds: 400),
+              child: Text(
+                _messages[_index],
+                key: ValueKey(_index),
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 }
 
 class _ResumePoint extends StatelessWidget {

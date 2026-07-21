@@ -1,26 +1,31 @@
 import 'package:flutter/material.dart';
+
 class Wrapper extends StatelessWidget {
-  final String title;
+  final String? title;
   final List<Widget> children;
 
-  const Wrapper({required this.title, required this.children});
+  const Wrapper({this.title, required this.children});
 
   @override
   Widget build(BuildContext context) {
+    final hasTitle = title != null && title!.isNotEmpty;
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 22,
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+          if (hasTitle) ...[
+            Text(
+              title!,
+              style: const TextStyle(
+                fontSize: 22,
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ),
-          const SizedBox(height: 20),
+            const SizedBox(height: 20),
+          ],
           ...children,
         ],
       ),
@@ -44,9 +49,7 @@ class Input extends StatelessWidget {
           hintStyle: const TextStyle(color: Colors.grey),
           filled: true,
           fillColor: Colors.grey.shade900,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
         ),
       ),
     );

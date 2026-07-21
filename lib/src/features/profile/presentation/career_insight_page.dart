@@ -72,6 +72,60 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                         ),
                       ),
 
+                      const SizedBox(height: 8),
+
+                      /// 🤖 AI SUBTITLE
+                      const Text(
+                        "AI read your resume, sized it up against what companies are hiring for right now, and pulled out where you shine — and where to level up. 🚀",
+                        style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 13,
+                          height: 1.4,
+                        ),
+                      ),
+
+                      const SizedBox(height: 16),
+
+                      /// ✨ AI BANNER
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(14),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              AppColors.kGreen.withOpacity(0.18),
+                              AppColors.kGreen.withOpacity(0.04),
+                            ],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
+                          ),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                            color: AppColors.kGreen.withOpacity(0.3),
+                          ),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              Icons.auto_awesome,
+                              color: AppColors.kGreen,
+                              size: 20,
+                            ),
+                            const SizedBox(width: 12),
+                            const Expanded(
+                              child: Text(
+                                "Personalized by AI — updated every time you tweak your profile.",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 12.5,
+                                  height: 1.3,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+
                       const SizedBox(height: 24),
 
                       /// 🔴 SKILL GAPS
