@@ -2058,6 +2058,22 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       ),
                                     );
                                   }
+                                  // Validate current experience
+                                  for (final exp in controller.experiences) {
+                                    if (exp.isCurrent &&
+                                        exp.company.text.trim().isEmpty) {
+                                      ScaffoldMessenger.of(
+                                        context,
+                                      ).showSnackBar(
+                                        const SnackBar(
+                                          content: Text(
+                                            "Company name is required for your current job.",
+                                          ),
+                                        ),
+                                      );
+                                      return;
+                                    }
+                                  }
                                   final failure = await addEditProfileViewModel
                                       .saveProfile();
 

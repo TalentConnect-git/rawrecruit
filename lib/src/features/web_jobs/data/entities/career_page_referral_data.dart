@@ -12,6 +12,8 @@ abstract class CareerPageReferralData with _$CareerPageReferralData {
     String? companyName,
     String? careerPageUrl,
     String? sourceType,
+    bool? alumniFound,
+
     @Default(0) int totalAlumniFound,
     @Default(0) int totalRequestsSent,
     @Default([]) List<ReferralAlumni> alumni,

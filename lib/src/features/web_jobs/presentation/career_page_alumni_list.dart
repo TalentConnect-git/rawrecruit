@@ -17,7 +17,6 @@ class CareerPageAlumniListView extends StatelessWidget {
     required this.careerPageUrl,
     required this.response,
   });
-
   @override
   Widget build(BuildContext context) {
     final alumni = response.data?.alumni ?? [];
@@ -26,11 +25,23 @@ class CareerPageAlumniListView extends StatelessWidget {
       create: (_) => getIt<WebJobViewModel>(),
       child: Scaffold(
         backgroundColor: AppColors.kBg,
-        appBar: RAppBar(
-          label: 'Available Alumni',
-          leading: InkWell(
-            onTap: context.pop,
-            child: const Icon(Icons.keyboard_arrow_left, color: Colors.white),
+        appBar: AppBar(
+          backgroundColor: AppColors.kBg,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          centerTitle: false,
+          title: Text(
+            response.data?.alumniFound == true
+                ? 'Available Alumni'
+                : 'Profiles Working in Company',
+            style: AppTextStyles.s18W600.copyWith(color: Colors.white),
+          ),
+          leading: IconButton(
+            onPressed: () => context.pop(),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
           ),
         ),
         body: alumni.isEmpty
@@ -146,6 +157,19 @@ class _AlumniCardState extends State<_AlumniCard> {
 
   @override
   Widget build(BuildContext context) {
+    String employeeStatus;
+    Color employeeStatusColor;
+
+    if (widget.alumni.currentlyWorking == true) {
+      employeeStatus = 'Current Employee';
+      employeeStatusColor = Colors.green;
+    } else if (widget.alumni.previouslyWorked == true) {
+      employeeStatus = 'Former Employee';
+      employeeStatusColor = Colors.orange;
+    } else {
+      employeeStatus = '';
+      employeeStatusColor = Colors.grey;
+    }
     return Consumer<WebJobViewModel>(
       builder: (_, vm, __) {
         return Container(
@@ -231,36 +255,29 @@ class _AlumniCardState extends State<_AlumniCard> {
               const SizedBox(height: 10),
 
               /// Employee Status
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 8,
-                    height: 8,
-                    decoration: BoxDecoration(
-                      color: widget.alumni.isCurrentEmployee == true
-                          ? Colors.green
-                          : Colors.orange,
-                      shape: BoxShape.circle,
+              if (employeeStatus.isNotEmpty)
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: 8,
+                      height: 8,
+                      decoration: BoxDecoration(
+                        color: employeeStatusColor,
+                        shape: BoxShape.circle,
+                      ),
                     ),
-                  ),
-
-                  const SizedBox(width: 6),
-
-                  Text(
-                    widget.alumni.isCurrentEmployee == true
-                        ? 'Current Employee'
-                        : 'Company Alumni',
-                    style: TextStyle(
-                      color: widget.alumni.isCurrentEmployee == true
-                          ? Colors.green
-                          : Colors.orange,
-                      fontSize: 12,
-                      fontWeight: FontWeight.w600,
+                    const SizedBox(width: 6),
+                    Text(
+                      employeeStatus,
+                      style: TextStyle(
+                        color: employeeStatusColor,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
 
               /// Skills
               if ((widget.alumni.jobRoles ?? []).length > 1) ...[
