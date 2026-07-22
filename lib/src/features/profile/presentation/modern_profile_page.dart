@@ -428,17 +428,18 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                 Builder(
                   builder: (_) {
                     final company = (p?.currentCompany ?? '').trim();
-
                     Experience? exp;
 
                     if (p?.experiences?.isNotEmpty ?? false) {
-                      exp = p!.experiences!.firstWhere(
-                        (e) => e.isCurrent == true,
-                        orElse: () => p.experiences!.first,
-                      );
+                      for (final e in p!.experiences!) {
+                        if (e.isCurrent == true) {
+                          exp = e;
+                          break;
+                        }
+                      }
                     }
 
-                    final role = (exp?.role ?? p?.designation ?? '').trim();
+                    final role = exp?.role?.trim() ?? '';
 
                     if (company.isEmpty && role.isEmpty) {
                       return const SizedBox.shrink();
