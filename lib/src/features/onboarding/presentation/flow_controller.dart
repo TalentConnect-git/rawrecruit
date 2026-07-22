@@ -18,7 +18,6 @@ import 'package:rawrecruit/src/features/onboarding/steps/education_info.dart';
 import 'package:rawrecruit/src/features/onboarding/steps/resume_upload_page.dart';
 import '../steps/onboarding_complete_page.dart';
 
-
 class OnboardingFlow extends StatefulWidget {
   const OnboardingFlow({super.key});
 
@@ -32,6 +31,7 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
 
   final int totalPages = 8;
   final onboardingLocal = getIt<OnboardingLocalService>();
+
   /// 🔥 SHARED DATA
   final User data = User();
 
@@ -61,7 +61,22 @@ class _OnboardingFlowState extends State<OnboardingFlow> {
         return;
       }
     }
+    if (currentPage == 4) {
+      final user = context.read<AppStateProvider>().data ?? data;
 
+      for (final exp in user.experiences ?? []) {
+        if ((exp.isCurrent ?? false) && (exp.company?.trim().isEmpty ?? true)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Please enter the company name for your current job.',
+              ),
+            ),
+          );
+          return;
+        }
+      }
+    }
     if (currentPage < totalPages - 1) {
       _controller.nextPage(
         duration: const Duration(milliseconds: 300),

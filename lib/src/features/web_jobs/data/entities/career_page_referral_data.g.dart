@@ -12,6 +12,7 @@ _CareerPageReferralData _$CareerPageReferralDataFromJson(
   companyName: json['companyName'] as String?,
   careerPageUrl: json['careerPageUrl'] as String?,
   sourceType: json['sourceType'] as String?,
+  alumniFound: json['alumniFound'] as bool?,
   totalAlumniFound: (json['totalAlumniFound'] as num?)?.toInt() ?? 0,
   totalRequestsSent: (json['totalRequestsSent'] as num?)?.toInt() ?? 0,
   alumni:
@@ -32,6 +33,7 @@ Map<String, dynamic> _$CareerPageReferralDataToJson(
   'companyName': instance.companyName,
   'careerPageUrl': instance.careerPageUrl,
   'sourceType': instance.sourceType,
+  'alumniFound': instance.alumniFound,
   'totalAlumniFound': instance.totalAlumniFound,
   'totalRequestsSent': instance.totalRequestsSent,
   'alumni': instance.alumni,

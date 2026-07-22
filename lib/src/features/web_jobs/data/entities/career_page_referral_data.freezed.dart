@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$CareerPageReferralData {
 
- String? get companyName; String? get careerPageUrl; String? get sourceType; int get totalAlumniFound; int get totalRequestsSent; List<ReferralAlumni> get alumni; List<ReferralRequest> get requests;
+ String? get companyName; String? get careerPageUrl; String? get sourceType; bool? get alumniFound; int get totalAlumniFound; int get totalRequestsSent; List<ReferralAlumni> get alumni; List<ReferralRequest> get requests;
 /// Create a copy of CareerPageReferralData
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $CareerPageReferralDataCopyWith<CareerPageReferralData> get copyWith => _$Career
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CareerPageReferralData&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.careerPageUrl, careerPageUrl) || other.careerPageUrl == careerPageUrl)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.totalAlumniFound, totalAlumniFound) || other.totalAlumniFound == totalAlumniFound)&&(identical(other.totalRequestsSent, totalRequestsSent) || other.totalRequestsSent == totalRequestsSent)&&const DeepCollectionEquality().equals(other.alumni, alumni)&&const DeepCollectionEquality().equals(other.requests, requests));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CareerPageReferralData&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.careerPageUrl, careerPageUrl) || other.careerPageUrl == careerPageUrl)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.alumniFound, alumniFound) || other.alumniFound == alumniFound)&&(identical(other.totalAlumniFound, totalAlumniFound) || other.totalAlumniFound == totalAlumniFound)&&(identical(other.totalRequestsSent, totalRequestsSent) || other.totalRequestsSent == totalRequestsSent)&&const DeepCollectionEquality().equals(other.alumni, alumni)&&const DeepCollectionEquality().equals(other.requests, requests));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,companyName,careerPageUrl,sourceType,totalAlumniFound,totalRequestsSent,const DeepCollectionEquality().hash(alumni),const DeepCollectionEquality().hash(requests));
+int get hashCode => Object.hash(runtimeType,companyName,careerPageUrl,sourceType,alumniFound,totalAlumniFound,totalRequestsSent,const DeepCollectionEquality().hash(alumni),const DeepCollectionEquality().hash(requests));
 
 @override
 String toString() {
-  return 'CareerPageReferralData(companyName: $companyName, careerPageUrl: $careerPageUrl, sourceType: $sourceType, totalAlumniFound: $totalAlumniFound, totalRequestsSent: $totalRequestsSent, alumni: $alumni, requests: $requests)';
+  return 'CareerPageReferralData(companyName: $companyName, careerPageUrl: $careerPageUrl, sourceType: $sourceType, alumniFound: $alumniFound, totalAlumniFound: $totalAlumniFound, totalRequestsSent: $totalRequestsSent, alumni: $alumni, requests: $requests)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $CareerPageReferralDataCopyWith<$Res>  {
   factory $CareerPageReferralDataCopyWith(CareerPageReferralData value, $Res Function(CareerPageReferralData) _then) = _$CareerPageReferralDataCopyWithImpl;
 @useResult
 $Res call({
- String? companyName, String? careerPageUrl, String? sourceType, int totalAlumniFound, int totalRequestsSent, List<ReferralAlumni> alumni, List<ReferralRequest> requests
+ String? companyName, String? careerPageUrl, String? sourceType, bool? alumniFound, int totalAlumniFound, int totalRequestsSent, List<ReferralAlumni> alumni, List<ReferralRequest> requests
 });
 
 
@@ -65,12 +65,13 @@ class _$CareerPageReferralDataCopyWithImpl<$Res>
 
 /// Create a copy of CareerPageReferralData
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? companyName = freezed,Object? careerPageUrl = freezed,Object? sourceType = freezed,Object? totalAlumniFound = null,Object? totalRequestsSent = null,Object? alumni = null,Object? requests = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? companyName = freezed,Object? careerPageUrl = freezed,Object? sourceType = freezed,Object? alumniFound = freezed,Object? totalAlumniFound = null,Object? totalRequestsSent = null,Object? alumni = null,Object? requests = null,}) {
   return _then(_self.copyWith(
 companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
 as String?,careerPageUrl: freezed == careerPageUrl ? _self.careerPageUrl : careerPageUrl // ignore: cast_nullable_to_non_nullable
 as String?,sourceType: freezed == sourceType ? _self.sourceType : sourceType // ignore: cast_nullable_to_non_nullable
-as String?,totalAlumniFound: null == totalAlumniFound ? _self.totalAlumniFound : totalAlumniFound // ignore: cast_nullable_to_non_nullable
+as String?,alumniFound: freezed == alumniFound ? _self.alumniFound : alumniFound // ignore: cast_nullable_to_non_nullable
+as bool?,totalAlumniFound: null == totalAlumniFound ? _self.totalAlumniFound : totalAlumniFound // ignore: cast_nullable_to_non_nullable
 as int,totalRequestsSent: null == totalRequestsSent ? _self.totalRequestsSent : totalRequestsSent // ignore: cast_nullable_to_non_nullable
 as int,alumni: null == alumni ? _self.alumni : alumni // ignore: cast_nullable_to_non_nullable
 as List<ReferralAlumni>,requests: null == requests ? _self.requests : requests // ignore: cast_nullable_to_non_nullable
@@ -159,10 +160,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? companyName,  String? careerPageUrl,  String? sourceType,  int totalAlumniFound,  int totalRequestsSent,  List<ReferralAlumni> alumni,  List<ReferralRequest> requests)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? companyName,  String? careerPageUrl,  String? sourceType,  bool? alumniFound,  int totalAlumniFound,  int totalRequestsSent,  List<ReferralAlumni> alumni,  List<ReferralRequest> requests)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CareerPageReferralData() when $default != null:
-return $default(_that.companyName,_that.careerPageUrl,_that.sourceType,_that.totalAlumniFound,_that.totalRequestsSent,_that.alumni,_that.requests);case _:
+return $default(_that.companyName,_that.careerPageUrl,_that.sourceType,_that.alumniFound,_that.totalAlumniFound,_that.totalRequestsSent,_that.alumni,_that.requests);case _:
   return orElse();
 
 }
@@ -180,10 +181,10 @@ return $default(_that.companyName,_that.careerPageUrl,_that.sourceType,_that.tot
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? companyName,  String? careerPageUrl,  String? sourceType,  int totalAlumniFound,  int totalRequestsSent,  List<ReferralAlumni> alumni,  List<ReferralRequest> requests)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? companyName,  String? careerPageUrl,  String? sourceType,  bool? alumniFound,  int totalAlumniFound,  int totalRequestsSent,  List<ReferralAlumni> alumni,  List<ReferralRequest> requests)  $default,) {final _that = this;
 switch (_that) {
 case _CareerPageReferralData():
-return $default(_that.companyName,_that.careerPageUrl,_that.sourceType,_that.totalAlumniFound,_that.totalRequestsSent,_that.alumni,_that.requests);case _:
+return $default(_that.companyName,_that.careerPageUrl,_that.sourceType,_that.alumniFound,_that.totalAlumniFound,_that.totalRequestsSent,_that.alumni,_that.requests);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +201,10 @@ return $default(_that.companyName,_that.careerPageUrl,_that.sourceType,_that.tot
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? companyName,  String? careerPageUrl,  String? sourceType,  int totalAlumniFound,  int totalRequestsSent,  List<ReferralAlumni> alumni,  List<ReferralRequest> requests)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? companyName,  String? careerPageUrl,  String? sourceType,  bool? alumniFound,  int totalAlumniFound,  int totalRequestsSent,  List<ReferralAlumni> alumni,  List<ReferralRequest> requests)?  $default,) {final _that = this;
 switch (_that) {
 case _CareerPageReferralData() when $default != null:
-return $default(_that.companyName,_that.careerPageUrl,_that.sourceType,_that.totalAlumniFound,_that.totalRequestsSent,_that.alumni,_that.requests);case _:
+return $default(_that.companyName,_that.careerPageUrl,_that.sourceType,_that.alumniFound,_that.totalAlumniFound,_that.totalRequestsSent,_that.alumni,_that.requests);case _:
   return null;
 
 }
@@ -215,12 +216,13 @@ return $default(_that.companyName,_that.careerPageUrl,_that.sourceType,_that.tot
 @JsonSerializable()
 
 class _CareerPageReferralData implements CareerPageReferralData {
-  const _CareerPageReferralData({this.companyName, this.careerPageUrl, this.sourceType, this.totalAlumniFound = 0, this.totalRequestsSent = 0, final  List<ReferralAlumni> alumni = const [], final  List<ReferralRequest> requests = const []}): _alumni = alumni,_requests = requests;
+  const _CareerPageReferralData({this.companyName, this.careerPageUrl, this.sourceType, this.alumniFound, this.totalAlumniFound = 0, this.totalRequestsSent = 0, final  List<ReferralAlumni> alumni = const [], final  List<ReferralRequest> requests = const []}): _alumni = alumni,_requests = requests;
   factory _CareerPageReferralData.fromJson(Map<String, dynamic> json) => _$CareerPageReferralDataFromJson(json);
 
 @override final  String? companyName;
 @override final  String? careerPageUrl;
 @override final  String? sourceType;
+@override final  bool? alumniFound;
 @override@JsonKey() final  int totalAlumniFound;
 @override@JsonKey() final  int totalRequestsSent;
  final  List<ReferralAlumni> _alumni;
@@ -251,16 +253,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CareerPageReferralData&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.careerPageUrl, careerPageUrl) || other.careerPageUrl == careerPageUrl)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.totalAlumniFound, totalAlumniFound) || other.totalAlumniFound == totalAlumniFound)&&(identical(other.totalRequestsSent, totalRequestsSent) || other.totalRequestsSent == totalRequestsSent)&&const DeepCollectionEquality().equals(other._alumni, _alumni)&&const DeepCollectionEquality().equals(other._requests, _requests));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CareerPageReferralData&&(identical(other.companyName, companyName) || other.companyName == companyName)&&(identical(other.careerPageUrl, careerPageUrl) || other.careerPageUrl == careerPageUrl)&&(identical(other.sourceType, sourceType) || other.sourceType == sourceType)&&(identical(other.alumniFound, alumniFound) || other.alumniFound == alumniFound)&&(identical(other.totalAlumniFound, totalAlumniFound) || other.totalAlumniFound == totalAlumniFound)&&(identical(other.totalRequestsSent, totalRequestsSent) || other.totalRequestsSent == totalRequestsSent)&&const DeepCollectionEquality().equals(other._alumni, _alumni)&&const DeepCollectionEquality().equals(other._requests, _requests));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,companyName,careerPageUrl,sourceType,totalAlumniFound,totalRequestsSent,const DeepCollectionEquality().hash(_alumni),const DeepCollectionEquality().hash(_requests));
+int get hashCode => Object.hash(runtimeType,companyName,careerPageUrl,sourceType,alumniFound,totalAlumniFound,totalRequestsSent,const DeepCollectionEquality().hash(_alumni),const DeepCollectionEquality().hash(_requests));
 
 @override
 String toString() {
-  return 'CareerPageReferralData(companyName: $companyName, careerPageUrl: $careerPageUrl, sourceType: $sourceType, totalAlumniFound: $totalAlumniFound, totalRequestsSent: $totalRequestsSent, alumni: $alumni, requests: $requests)';
+  return 'CareerPageReferralData(companyName: $companyName, careerPageUrl: $careerPageUrl, sourceType: $sourceType, alumniFound: $alumniFound, totalAlumniFound: $totalAlumniFound, totalRequestsSent: $totalRequestsSent, alumni: $alumni, requests: $requests)';
 }
 
 
@@ -271,7 +273,7 @@ abstract mixin class _$CareerPageReferralDataCopyWith<$Res> implements $CareerPa
   factory _$CareerPageReferralDataCopyWith(_CareerPageReferralData value, $Res Function(_CareerPageReferralData) _then) = __$CareerPageReferralDataCopyWithImpl;
 @override @useResult
 $Res call({
- String? companyName, String? careerPageUrl, String? sourceType, int totalAlumniFound, int totalRequestsSent, List<ReferralAlumni> alumni, List<ReferralRequest> requests
+ String? companyName, String? careerPageUrl, String? sourceType, bool? alumniFound, int totalAlumniFound, int totalRequestsSent, List<ReferralAlumni> alumni, List<ReferralRequest> requests
 });
 
 
@@ -288,12 +290,13 @@ class __$CareerPageReferralDataCopyWithImpl<$Res>
 
 /// Create a copy of CareerPageReferralData
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? companyName = freezed,Object? careerPageUrl = freezed,Object? sourceType = freezed,Object? totalAlumniFound = null,Object? totalRequestsSent = null,Object? alumni = null,Object? requests = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? companyName = freezed,Object? careerPageUrl = freezed,Object? sourceType = freezed,Object? alumniFound = freezed,Object? totalAlumniFound = null,Object? totalRequestsSent = null,Object? alumni = null,Object? requests = null,}) {
   return _then(_CareerPageReferralData(
 companyName: freezed == companyName ? _self.companyName : companyName // ignore: cast_nullable_to_non_nullable
 as String?,careerPageUrl: freezed == careerPageUrl ? _self.careerPageUrl : careerPageUrl // ignore: cast_nullable_to_non_nullable
 as String?,sourceType: freezed == sourceType ? _self.sourceType : sourceType // ignore: cast_nullable_to_non_nullable
-as String?,totalAlumniFound: null == totalAlumniFound ? _self.totalAlumniFound : totalAlumniFound // ignore: cast_nullable_to_non_nullable
+as String?,alumniFound: freezed == alumniFound ? _self.alumniFound : alumniFound // ignore: cast_nullable_to_non_nullable
+as bool?,totalAlumniFound: null == totalAlumniFound ? _self.totalAlumniFound : totalAlumniFound // ignore: cast_nullable_to_non_nullable
 as int,totalRequestsSent: null == totalRequestsSent ? _self.totalRequestsSent : totalRequestsSent // ignore: cast_nullable_to_non_nullable
 as int,alumni: null == alumni ? _self._alumni : alumni // ignore: cast_nullable_to_non_nullable
 as List<ReferralAlumni>,requests: null == requests ? _self._requests : requests // ignore: cast_nullable_to_non_nullable

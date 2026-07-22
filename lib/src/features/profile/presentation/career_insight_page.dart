@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileViewModel;
 
@@ -311,13 +312,20 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
 
                             const SizedBox(height: 18),
 
-                            _progress("Skills", vm.profileScore / 100),
+                            _progress("Profile", vm.profileScore / 100),
 
                             _progress("Resume", vm.resumeScore / 100),
 
-                            _progress("Projects", 0.4, isStatic: true),
+                            _progress("Activity", vm.activityScore / 100),
 
-                            _progress("Referrals", 0.3, isStatic: true),
+                            _progress(
+                              "Application Quality",
+                              vm.applicationQualityScore / 100,
+                            ),
+
+                            if (getIt<AppStateProvider>().userType ==
+                                UserType.professional)
+                              _progress("Hiring", vm.hiringScore / 100),
                           ],
                         ),
                       ),
@@ -440,30 +448,22 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
     );
   }
 
-  /// 🔹 PROGRESS BAR
-  Widget _progress(String label, double value, {bool isStatic = false}) {
+  Widget _progress(String label, double value) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
-
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-
         children: [
           Text(label, style: const TextStyle(color: Colors.grey, fontSize: 13)),
-
           const SizedBox(height: 8),
-
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-
             child: LinearProgressIndicator(
               value: value,
               minHeight: 8,
-
               backgroundColor: Colors.grey.withOpacity(0.2),
-
               valueColor: AlwaysStoppedAnimation<Color>(
-                isStatic ? Colors.red : Colors.green,
+                value < 0.3 ? Colors.red : Colors.green,
               ),
             ),
           ),

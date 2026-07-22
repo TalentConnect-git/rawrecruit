@@ -18,6 +18,8 @@ abstract class ReferralAlumni with _$ReferralAlumni {
 
     String? college,
     String? currentRole,
+    bool? currentlyWorking,
+    bool? previouslyWorked,
 
     String? about,
     String? linkedin,

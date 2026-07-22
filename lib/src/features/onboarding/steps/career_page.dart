@@ -786,7 +786,16 @@ class _CareerPageState extends State<CareerPage> {
 
                 onChanged: (value) {
                   if (value == null) return;
-
+                  if (value == true && companyCtrls[i].text.trim().isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Please enter the company name before marking this as your current job.',
+                        ),
+                      ),
+                    );
+                    return;
+                  }
                   setState(() {
                     /// 🔥 ONLY ONE CURRENT
                     for (int j = 0; j < experiences.length; j++) {

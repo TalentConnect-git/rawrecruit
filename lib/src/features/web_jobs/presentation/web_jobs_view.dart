@@ -31,11 +31,21 @@ class _AskForReferralViewState extends State<AskForReferralView> {
       create: (_) => getIt<WebJobViewModel>(),
       child: Scaffold(
         backgroundColor: AppColors.kBg,
-        appBar: RAppBar(
-          label: 'Ask For Referral',
-          leading: InkWell(
-            onTap: context.pop,
-            child: Icon(Icons.keyboard_arrow_left, color: Colors.white),
+        appBar: AppBar(
+          backgroundColor: AppColors.kBg,
+          elevation: 0,
+          scrolledUnderElevation: 0,
+          centerTitle: false,
+          title: Text(
+            'Ask For Referral',
+            style: AppTextStyles.s18W600.copyWith(color: Colors.white),
+          ),
+          leading: IconButton(
+            onPressed: () => context.pop(),
+            icon: const Icon(
+              Icons.arrow_back_ios_new_rounded,
+              color: Colors.white,
+            ),
           ),
         ),
         body: SafeArea(

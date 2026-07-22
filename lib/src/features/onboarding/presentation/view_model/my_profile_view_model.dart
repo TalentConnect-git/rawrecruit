@@ -304,7 +304,11 @@ class MyProfileViewModel extends ViewStateProvider {
 
   int get profileScore =>
       careerInsights?['hiringBreakdown']?['profileScore'] ?? 0;
+  int get activityScore =>
+      careerInsights?['hiringBreakdown']?['activityScore'] ?? 0;
 
+  int get applicationQualityScore =>
+      careerInsights?['hiringBreakdown']?['applicationQualityScore'] ?? 0;
   String get rankingLabel => careerRanking?['rankingLabel'] ?? "-";
 
   List<String> get missingSkills =>

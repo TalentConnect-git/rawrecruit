@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ReferralAlumni {
 
- String? get userId; String? get name; String? get currentCompany; String? get profileImage; String? get totalYearsOfExperience; List<String>? get jobRoles; String? get college; String? get currentRole; String? get about; String? get linkedin; String? get github; String? get portfolio; bool? get isCurrentEmployee; bool? get isAlumni;
+ String? get userId; String? get name; String? get currentCompany; String? get profileImage; String? get totalYearsOfExperience; List<String>? get jobRoles; String? get college; String? get currentRole; bool? get currentlyWorking; bool? get previouslyWorked; String? get about; String? get linkedin; String? get github; String? get portfolio; bool? get isCurrentEmployee; bool? get isAlumni;
 /// Create a copy of ReferralAlumni
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $ReferralAlumniCopyWith<ReferralAlumni> get copyWith => _$ReferralAlumniCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferralAlumni&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.currentCompany, currentCompany) || other.currentCompany == currentCompany)&&(identical(other.profileImage, profileImage) || other.profileImage == profileImage)&&(identical(other.totalYearsOfExperience, totalYearsOfExperience) || other.totalYearsOfExperience == totalYearsOfExperience)&&const DeepCollectionEquality().equals(other.jobRoles, jobRoles)&&(identical(other.college, college) || other.college == college)&&(identical(other.currentRole, currentRole) || other.currentRole == currentRole)&&(identical(other.about, about) || other.about == about)&&(identical(other.linkedin, linkedin) || other.linkedin == linkedin)&&(identical(other.github, github) || other.github == github)&&(identical(other.portfolio, portfolio) || other.portfolio == portfolio)&&(identical(other.isCurrentEmployee, isCurrentEmployee) || other.isCurrentEmployee == isCurrentEmployee)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ReferralAlumni&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.currentCompany, currentCompany) || other.currentCompany == currentCompany)&&(identical(other.profileImage, profileImage) || other.profileImage == profileImage)&&(identical(other.totalYearsOfExperience, totalYearsOfExperience) || other.totalYearsOfExperience == totalYearsOfExperience)&&const DeepCollectionEquality().equals(other.jobRoles, jobRoles)&&(identical(other.college, college) || other.college == college)&&(identical(other.currentRole, currentRole) || other.currentRole == currentRole)&&(identical(other.currentlyWorking, currentlyWorking) || other.currentlyWorking == currentlyWorking)&&(identical(other.previouslyWorked, previouslyWorked) || other.previouslyWorked == previouslyWorked)&&(identical(other.about, about) || other.about == about)&&(identical(other.linkedin, linkedin) || other.linkedin == linkedin)&&(identical(other.github, github) || other.github == github)&&(identical(other.portfolio, portfolio) || other.portfolio == portfolio)&&(identical(other.isCurrentEmployee, isCurrentEmployee) || other.isCurrentEmployee == isCurrentEmployee)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,name,currentCompany,profileImage,totalYearsOfExperience,const DeepCollectionEquality().hash(jobRoles),college,currentRole,about,linkedin,github,portfolio,isCurrentEmployee,isAlumni);
+int get hashCode => Object.hash(runtimeType,userId,name,currentCompany,profileImage,totalYearsOfExperience,const DeepCollectionEquality().hash(jobRoles),college,currentRole,currentlyWorking,previouslyWorked,about,linkedin,github,portfolio,isCurrentEmployee,isAlumni);
 
 @override
 String toString() {
-  return 'ReferralAlumni(userId: $userId, name: $name, currentCompany: $currentCompany, profileImage: $profileImage, totalYearsOfExperience: $totalYearsOfExperience, jobRoles: $jobRoles, college: $college, currentRole: $currentRole, about: $about, linkedin: $linkedin, github: $github, portfolio: $portfolio, isCurrentEmployee: $isCurrentEmployee, isAlumni: $isAlumni)';
+  return 'ReferralAlumni(userId: $userId, name: $name, currentCompany: $currentCompany, profileImage: $profileImage, totalYearsOfExperience: $totalYearsOfExperience, jobRoles: $jobRoles, college: $college, currentRole: $currentRole, currentlyWorking: $currentlyWorking, previouslyWorked: $previouslyWorked, about: $about, linkedin: $linkedin, github: $github, portfolio: $portfolio, isCurrentEmployee: $isCurrentEmployee, isAlumni: $isAlumni)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $ReferralAlumniCopyWith<$Res>  {
   factory $ReferralAlumniCopyWith(ReferralAlumni value, $Res Function(ReferralAlumni) _then) = _$ReferralAlumniCopyWithImpl;
 @useResult
 $Res call({
- String? userId, String? name, String? currentCompany, String? profileImage, String? totalYearsOfExperience, List<String>? jobRoles, String? college, String? currentRole, String? about, String? linkedin, String? github, String? portfolio, bool? isCurrentEmployee, bool? isAlumni
+ String? userId, String? name, String? currentCompany, String? profileImage, String? totalYearsOfExperience, List<String>? jobRoles, String? college, String? currentRole, bool? currentlyWorking, bool? previouslyWorked, String? about, String? linkedin, String? github, String? portfolio, bool? isCurrentEmployee, bool? isAlumni
 });
 
 
@@ -65,7 +65,7 @@ class _$ReferralAlumniCopyWithImpl<$Res>
 
 /// Create a copy of ReferralAlumni
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? name = freezed,Object? currentCompany = freezed,Object? profileImage = freezed,Object? totalYearsOfExperience = freezed,Object? jobRoles = freezed,Object? college = freezed,Object? currentRole = freezed,Object? about = freezed,Object? linkedin = freezed,Object? github = freezed,Object? portfolio = freezed,Object? isCurrentEmployee = freezed,Object? isAlumni = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? userId = freezed,Object? name = freezed,Object? currentCompany = freezed,Object? profileImage = freezed,Object? totalYearsOfExperience = freezed,Object? jobRoles = freezed,Object? college = freezed,Object? currentRole = freezed,Object? currentlyWorking = freezed,Object? previouslyWorked = freezed,Object? about = freezed,Object? linkedin = freezed,Object? github = freezed,Object? portfolio = freezed,Object? isCurrentEmployee = freezed,Object? isAlumni = freezed,}) {
   return _then(_self.copyWith(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,9 @@ as String?,totalYearsOfExperience: freezed == totalYearsOfExperience ? _self.tot
 as String?,jobRoles: freezed == jobRoles ? _self.jobRoles : jobRoles // ignore: cast_nullable_to_non_nullable
 as List<String>?,college: freezed == college ? _self.college : college // ignore: cast_nullable_to_non_nullable
 as String?,currentRole: freezed == currentRole ? _self.currentRole : currentRole // ignore: cast_nullable_to_non_nullable
-as String?,about: freezed == about ? _self.about : about // ignore: cast_nullable_to_non_nullable
+as String?,currentlyWorking: freezed == currentlyWorking ? _self.currentlyWorking : currentlyWorking // ignore: cast_nullable_to_non_nullable
+as bool?,previouslyWorked: freezed == previouslyWorked ? _self.previouslyWorked : previouslyWorked // ignore: cast_nullable_to_non_nullable
+as bool?,about: freezed == about ? _self.about : about // ignore: cast_nullable_to_non_nullable
 as String?,linkedin: freezed == linkedin ? _self.linkedin : linkedin // ignore: cast_nullable_to_non_nullable
 as String?,github: freezed == github ? _self.github : github // ignore: cast_nullable_to_non_nullable
 as String?,portfolio: freezed == portfolio ? _self.portfolio : portfolio // ignore: cast_nullable_to_non_nullable
@@ -166,10 +168,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? userId,  String? name,  String? currentCompany,  String? profileImage,  String? totalYearsOfExperience,  List<String>? jobRoles,  String? college,  String? currentRole,  String? about,  String? linkedin,  String? github,  String? portfolio,  bool? isCurrentEmployee,  bool? isAlumni)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String? userId,  String? name,  String? currentCompany,  String? profileImage,  String? totalYearsOfExperience,  List<String>? jobRoles,  String? college,  String? currentRole,  bool? currentlyWorking,  bool? previouslyWorked,  String? about,  String? linkedin,  String? github,  String? portfolio,  bool? isCurrentEmployee,  bool? isAlumni)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ReferralAlumni() when $default != null:
-return $default(_that.userId,_that.name,_that.currentCompany,_that.profileImage,_that.totalYearsOfExperience,_that.jobRoles,_that.college,_that.currentRole,_that.about,_that.linkedin,_that.github,_that.portfolio,_that.isCurrentEmployee,_that.isAlumni);case _:
+return $default(_that.userId,_that.name,_that.currentCompany,_that.profileImage,_that.totalYearsOfExperience,_that.jobRoles,_that.college,_that.currentRole,_that.currentlyWorking,_that.previouslyWorked,_that.about,_that.linkedin,_that.github,_that.portfolio,_that.isCurrentEmployee,_that.isAlumni);case _:
   return orElse();
 
 }
@@ -187,10 +189,10 @@ return $default(_that.userId,_that.name,_that.currentCompany,_that.profileImage,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? userId,  String? name,  String? currentCompany,  String? profileImage,  String? totalYearsOfExperience,  List<String>? jobRoles,  String? college,  String? currentRole,  String? about,  String? linkedin,  String? github,  String? portfolio,  bool? isCurrentEmployee,  bool? isAlumni)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String? userId,  String? name,  String? currentCompany,  String? profileImage,  String? totalYearsOfExperience,  List<String>? jobRoles,  String? college,  String? currentRole,  bool? currentlyWorking,  bool? previouslyWorked,  String? about,  String? linkedin,  String? github,  String? portfolio,  bool? isCurrentEmployee,  bool? isAlumni)  $default,) {final _that = this;
 switch (_that) {
 case _ReferralAlumni():
-return $default(_that.userId,_that.name,_that.currentCompany,_that.profileImage,_that.totalYearsOfExperience,_that.jobRoles,_that.college,_that.currentRole,_that.about,_that.linkedin,_that.github,_that.portfolio,_that.isCurrentEmployee,_that.isAlumni);case _:
+return $default(_that.userId,_that.name,_that.currentCompany,_that.profileImage,_that.totalYearsOfExperience,_that.jobRoles,_that.college,_that.currentRole,_that.currentlyWorking,_that.previouslyWorked,_that.about,_that.linkedin,_that.github,_that.portfolio,_that.isCurrentEmployee,_that.isAlumni);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -207,10 +209,10 @@ return $default(_that.userId,_that.name,_that.currentCompany,_that.profileImage,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? userId,  String? name,  String? currentCompany,  String? profileImage,  String? totalYearsOfExperience,  List<String>? jobRoles,  String? college,  String? currentRole,  String? about,  String? linkedin,  String? github,  String? portfolio,  bool? isCurrentEmployee,  bool? isAlumni)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String? userId,  String? name,  String? currentCompany,  String? profileImage,  String? totalYearsOfExperience,  List<String>? jobRoles,  String? college,  String? currentRole,  bool? currentlyWorking,  bool? previouslyWorked,  String? about,  String? linkedin,  String? github,  String? portfolio,  bool? isCurrentEmployee,  bool? isAlumni)?  $default,) {final _that = this;
 switch (_that) {
 case _ReferralAlumni() when $default != null:
-return $default(_that.userId,_that.name,_that.currentCompany,_that.profileImage,_that.totalYearsOfExperience,_that.jobRoles,_that.college,_that.currentRole,_that.about,_that.linkedin,_that.github,_that.portfolio,_that.isCurrentEmployee,_that.isAlumni);case _:
+return $default(_that.userId,_that.name,_that.currentCompany,_that.profileImage,_that.totalYearsOfExperience,_that.jobRoles,_that.college,_that.currentRole,_that.currentlyWorking,_that.previouslyWorked,_that.about,_that.linkedin,_that.github,_that.portfolio,_that.isCurrentEmployee,_that.isAlumni);case _:
   return null;
 
 }
@@ -222,7 +224,7 @@ return $default(_that.userId,_that.name,_that.currentCompany,_that.profileImage,
 @JsonSerializable()
 
 class _ReferralAlumni implements ReferralAlumni {
-  const _ReferralAlumni({this.userId, this.name, this.currentCompany, this.profileImage, this.totalYearsOfExperience, final  List<String>? jobRoles, this.college, this.currentRole, this.about, this.linkedin, this.github, this.portfolio, this.isCurrentEmployee, this.isAlumni}): _jobRoles = jobRoles;
+  const _ReferralAlumni({this.userId, this.name, this.currentCompany, this.profileImage, this.totalYearsOfExperience, final  List<String>? jobRoles, this.college, this.currentRole, this.currentlyWorking, this.previouslyWorked, this.about, this.linkedin, this.github, this.portfolio, this.isCurrentEmployee, this.isAlumni}): _jobRoles = jobRoles;
   factory _ReferralAlumni.fromJson(Map<String, dynamic> json) => _$ReferralAlumniFromJson(json);
 
 @override final  String? userId;
@@ -241,6 +243,8 @@ class _ReferralAlumni implements ReferralAlumni {
 
 @override final  String? college;
 @override final  String? currentRole;
+@override final  bool? currentlyWorking;
+@override final  bool? previouslyWorked;
 @override final  String? about;
 @override final  String? linkedin;
 @override final  String? github;
@@ -261,16 +265,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferralAlumni&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.currentCompany, currentCompany) || other.currentCompany == currentCompany)&&(identical(other.profileImage, profileImage) || other.profileImage == profileImage)&&(identical(other.totalYearsOfExperience, totalYearsOfExperience) || other.totalYearsOfExperience == totalYearsOfExperience)&&const DeepCollectionEquality().equals(other._jobRoles, _jobRoles)&&(identical(other.college, college) || other.college == college)&&(identical(other.currentRole, currentRole) || other.currentRole == currentRole)&&(identical(other.about, about) || other.about == about)&&(identical(other.linkedin, linkedin) || other.linkedin == linkedin)&&(identical(other.github, github) || other.github == github)&&(identical(other.portfolio, portfolio) || other.portfolio == portfolio)&&(identical(other.isCurrentEmployee, isCurrentEmployee) || other.isCurrentEmployee == isCurrentEmployee)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ReferralAlumni&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.name, name) || other.name == name)&&(identical(other.currentCompany, currentCompany) || other.currentCompany == currentCompany)&&(identical(other.profileImage, profileImage) || other.profileImage == profileImage)&&(identical(other.totalYearsOfExperience, totalYearsOfExperience) || other.totalYearsOfExperience == totalYearsOfExperience)&&const DeepCollectionEquality().equals(other._jobRoles, _jobRoles)&&(identical(other.college, college) || other.college == college)&&(identical(other.currentRole, currentRole) || other.currentRole == currentRole)&&(identical(other.currentlyWorking, currentlyWorking) || other.currentlyWorking == currentlyWorking)&&(identical(other.previouslyWorked, previouslyWorked) || other.previouslyWorked == previouslyWorked)&&(identical(other.about, about) || other.about == about)&&(identical(other.linkedin, linkedin) || other.linkedin == linkedin)&&(identical(other.github, github) || other.github == github)&&(identical(other.portfolio, portfolio) || other.portfolio == portfolio)&&(identical(other.isCurrentEmployee, isCurrentEmployee) || other.isCurrentEmployee == isCurrentEmployee)&&(identical(other.isAlumni, isAlumni) || other.isAlumni == isAlumni));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,userId,name,currentCompany,profileImage,totalYearsOfExperience,const DeepCollectionEquality().hash(_jobRoles),college,currentRole,about,linkedin,github,portfolio,isCurrentEmployee,isAlumni);
+int get hashCode => Object.hash(runtimeType,userId,name,currentCompany,profileImage,totalYearsOfExperience,const DeepCollectionEquality().hash(_jobRoles),college,currentRole,currentlyWorking,previouslyWorked,about,linkedin,github,portfolio,isCurrentEmployee,isAlumni);
 
 @override
 String toString() {
-  return 'ReferralAlumni(userId: $userId, name: $name, currentCompany: $currentCompany, profileImage: $profileImage, totalYearsOfExperience: $totalYearsOfExperience, jobRoles: $jobRoles, college: $college, currentRole: $currentRole, about: $about, linkedin: $linkedin, github: $github, portfolio: $portfolio, isCurrentEmployee: $isCurrentEmployee, isAlumni: $isAlumni)';
+  return 'ReferralAlumni(userId: $userId, name: $name, currentCompany: $currentCompany, profileImage: $profileImage, totalYearsOfExperience: $totalYearsOfExperience, jobRoles: $jobRoles, college: $college, currentRole: $currentRole, currentlyWorking: $currentlyWorking, previouslyWorked: $previouslyWorked, about: $about, linkedin: $linkedin, github: $github, portfolio: $portfolio, isCurrentEmployee: $isCurrentEmployee, isAlumni: $isAlumni)';
 }
 
 
@@ -281,7 +285,7 @@ abstract mixin class _$ReferralAlumniCopyWith<$Res> implements $ReferralAlumniCo
   factory _$ReferralAlumniCopyWith(_ReferralAlumni value, $Res Function(_ReferralAlumni) _then) = __$ReferralAlumniCopyWithImpl;
 @override @useResult
 $Res call({
- String? userId, String? name, String? currentCompany, String? profileImage, String? totalYearsOfExperience, List<String>? jobRoles, String? college, String? currentRole, String? about, String? linkedin, String? github, String? portfolio, bool? isCurrentEmployee, bool? isAlumni
+ String? userId, String? name, String? currentCompany, String? profileImage, String? totalYearsOfExperience, List<String>? jobRoles, String? college, String? currentRole, bool? currentlyWorking, bool? previouslyWorked, String? about, String? linkedin, String? github, String? portfolio, bool? isCurrentEmployee, bool? isAlumni
 });
 
 
@@ -298,7 +302,7 @@ class __$ReferralAlumniCopyWithImpl<$Res>
 
 /// Create a copy of ReferralAlumni
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? name = freezed,Object? currentCompany = freezed,Object? profileImage = freezed,Object? totalYearsOfExperience = freezed,Object? jobRoles = freezed,Object? college = freezed,Object? currentRole = freezed,Object? about = freezed,Object? linkedin = freezed,Object? github = freezed,Object? portfolio = freezed,Object? isCurrentEmployee = freezed,Object? isAlumni = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? userId = freezed,Object? name = freezed,Object? currentCompany = freezed,Object? profileImage = freezed,Object? totalYearsOfExperience = freezed,Object? jobRoles = freezed,Object? college = freezed,Object? currentRole = freezed,Object? currentlyWorking = freezed,Object? previouslyWorked = freezed,Object? about = freezed,Object? linkedin = freezed,Object? github = freezed,Object? portfolio = freezed,Object? isCurrentEmployee = freezed,Object? isAlumni = freezed,}) {
   return _then(_ReferralAlumni(
 userId: freezed == userId ? _self.userId : userId // ignore: cast_nullable_to_non_nullable
 as String?,name: freezed == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
@@ -308,7 +312,9 @@ as String?,totalYearsOfExperience: freezed == totalYearsOfExperience ? _self.tot
 as String?,jobRoles: freezed == jobRoles ? _self._jobRoles : jobRoles // ignore: cast_nullable_to_non_nullable
 as List<String>?,college: freezed == college ? _self.college : college // ignore: cast_nullable_to_non_nullable
 as String?,currentRole: freezed == currentRole ? _self.currentRole : currentRole // ignore: cast_nullable_to_non_nullable
-as String?,about: freezed == about ? _self.about : about // ignore: cast_nullable_to_non_nullable
+as String?,currentlyWorking: freezed == currentlyWorking ? _self.currentlyWorking : currentlyWorking // ignore: cast_nullable_to_non_nullable
+as bool?,previouslyWorked: freezed == previouslyWorked ? _self.previouslyWorked : previouslyWorked // ignore: cast_nullable_to_non_nullable
+as bool?,about: freezed == about ? _self.about : about // ignore: cast_nullable_to_non_nullable
 as String?,linkedin: freezed == linkedin ? _self.linkedin : linkedin // ignore: cast_nullable_to_non_nullable
 as String?,github: freezed == github ? _self.github : github // ignore: cast_nullable_to_non_nullable
 as String?,portfolio: freezed == portfolio ? _self.portfolio : portfolio // ignore: cast_nullable_to_non_nullable
