@@ -47,6 +47,25 @@ class AddEditProfileViewModel extends ViewStateProvider {
 
     final c = userController;
 
+    /// -------- STATUS --------
+    c.statusType.text = user.status?.type ?? '';
+
+    c.statusSince.text = user.status?.since != null
+        ? "${user.status!.since!.year.toString().padLeft(4, '0')}-${user.status!.since!.month.toString().padLeft(2, '0')}-${user.status!.since!.day.toString().padLeft(2, '0')}"
+        : '';
+
+    c.statusNote.text = user.status?.note ?? '';
+
+    c.expectedReturn.text = user.status?.expectedReturn != null
+        ? "${user.status!.expectedReturn!.year.toString().padLeft(4, '0')}-${user.status!.expectedReturn!.month.toString().padLeft(2, '0')}-${user.status!.expectedReturn!.day.toString().padLeft(2, '0')}"
+        : '';
+
+    debugPrint("Status: ${user.status}");
+    debugPrint("Status Type: ${c.statusType.text}");
+    debugPrint("Status Since: ${c.statusSince.text}");
+    debugPrint("Status Note: ${c.statusNote.text}");
+    debugPrint("Expected Return: ${c.expectedReturn.text}");
+
     /// -------- BASIC --------
     c.id.text = user.id ?? '';
     c.userId.text = user.userId ?? '';

@@ -6,6 +6,7 @@ import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingLocalService, AppDropdown, AppHeader, AppInput, Wrapper;
 
 import '../../../common/index.dart';
+import '../../../core/models/status.dart';
 
 class CareerPage extends StatefulWidget {
   final VoidCallback onBack;
@@ -30,7 +31,24 @@ class _CareerPageState extends State<CareerPage> {
 
   late TextEditingController aboutCtrl;
   // String currentCompanySearch = "";
+  final professionalStatuses = const [
+    "open_to_work",
+    "career_break",
+    "freelancing",
+    "building",
+    "not_looking",
+  ];
 
+  final studentStatuses = const [
+    "looking_internship",
+    "looking_job",
+    "preparing_exams",
+  ];
+
+  late TextEditingController statusTypeCtrl;
+  late TextEditingController statusSinceCtrl;
+  late TextEditingController statusNoteCtrl;
+  late TextEditingController expectedReturnCtrl;
   final Map<int, String> expCompanySearch = {};
   late TextEditingController currentCompanyCtrl;
   late TextEditingController companyEmailCtrl;
@@ -79,6 +97,10 @@ class _CareerPageState extends State<CareerPage> {
 
     fetchCompanies();
     fetchJobRoles();
+    statusTypeCtrl = TextEditingController();
+    statusSinceCtrl = TextEditingController();
+    statusNoteCtrl = TextEditingController();
+    expectedReturnCtrl = TextEditingController();
 
     /// 🔥 EMPTY CONTROLLERS
     currentSalaryCtrl = TextEditingController();
@@ -128,6 +150,13 @@ class _CareerPageState extends State<CareerPage> {
     noticePeriodCtrl.text = d.noticePeriod ?? '';
     totalYearsOfExperienceCtrl.text = d.totalYearsOfExperience ?? '';
     certifications = d.certifications;
+    statusTypeCtrl.text = d.status?.type ?? '';
+    statusSinceCtrl.text =
+        d.status?.since?.toIso8601String().split('T').first ?? '';
+
+    expectedReturnCtrl.text =
+        d.status?.expectedReturn?.toIso8601String().split('T').first ?? '';
+    statusNoteCtrl.text = d.status?.note ?? '';
 
     /// 🔥 EXPERIENCE AUTOFILL
     experiences = List.from(d.experiences ?? []);
@@ -199,7 +228,16 @@ class _CareerPageState extends State<CareerPage> {
       about: aboutCtrl.text,
 
       certifications: certifications,
-
+      status: Status(
+        type: statusTypeCtrl.text.isEmpty ? null : statusTypeCtrl.text,
+        since: statusSinceCtrl.text.isEmpty
+            ? null
+            : DateTime.tryParse(statusSinceCtrl.text),
+        note: statusNoteCtrl.text,
+        expectedReturn: expectedReturnCtrl.text.isEmpty
+            ? null
+            : DateTime.tryParse(expectedReturnCtrl.text),
+      ),
       currentCompany: derivedCurrentCompany,
       noticePeriod: noticePeriodCtrl.text,
       totalYearsOfExperience: totalYearsOfExperienceCtrl.text,
@@ -266,7 +304,10 @@ class _CareerPageState extends State<CareerPage> {
     companyEmailCtrl.dispose();
     expectedSalaryCtrl.dispose();
     expectedCurrencyCtrl.dispose();
-
+    statusTypeCtrl.dispose();
+    statusSinceCtrl.dispose();
+    statusNoteCtrl.dispose();
+    expectedReturnCtrl.dispose();
     aboutCtrl.dispose();
     noticePeriodStartDateCtrl.dispose();
     currentCompanyCtrl.dispose();
@@ -436,7 +477,128 @@ class _CareerPageState extends State<CareerPage> {
 
           const SizedBox(height: 12),
         ],
+        if (!experiences.any((e) => e.isCurrent == true)) ...[
+          Builder(
+            builder: (_) {
+              final statuses =
+                  getIt<AppStateProvider>().selectedUserType ==
+                      UserType.professional
+                  ? professionalStatuses
+                  : studentStatuses;
 
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Current Status",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 8,
+                    children: statuses.map((status) {
+                      final selected = statusTypeCtrl.text == status;
+
+                      return ChoiceChip(
+                        selected: selected,
+                        backgroundColor: Colors.black,
+                        selectedColor: Colors.black,
+                        side: BorderSide(
+                          color: selected ? Colors.white : Colors.grey.shade700,
+                        ),
+                        label: Text(
+                          status.replaceAll("_", " "),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                        onSelected: (_) {
+                          setState(() {
+                            statusTypeCtrl.text = status;
+
+                            if (status != "career_break") {
+                              expectedReturnCtrl.clear();
+                            }
+
+                            saveData();
+                          });
+                        },
+                      );
+                    }).toList(),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  GestureDetector(
+                    onTap: () async {
+                      final picked = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(1940),
+                        lastDate: DateTime.now(),
+                      );
+
+                      if (picked != null) {
+                        statusSinceCtrl.text =
+                            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+
+                        saveData();
+                        setState(() {});
+                      }
+                    },
+                    child: AbsorbPointer(
+                      child: AppInput("Since", controller: statusSinceCtrl),
+                    ),
+                  ),
+
+                  if (statusTypeCtrl.text == "career_break") ...[
+                    const SizedBox(height: 12),
+
+                    GestureDetector(
+                      onTap: () async {
+                        final picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2100),
+                        );
+
+                        if (picked != null) {
+                          expectedReturnCtrl.text =
+                              "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
+
+                          saveData();
+                          setState(() {});
+                        }
+                      },
+                      child: AbsorbPointer(
+                        child: AppInput(
+                          "Expected Return",
+                          controller: expectedReturnCtrl,
+                        ),
+                      ),
+                    ),
+                  ],
+
+                  const SizedBox(height: 12),
+
+                  AppInput(
+                    "Note",
+                    controller: statusNoteCtrl,
+                    maxLines: 3,
+                    onChanged: (_) => saveData(),
+                  ),
+
+                  const SizedBox(height: 20),
+                ],
+              );
+            },
+          ),
+        ],
         const Text("Experience", style: TextStyle(color: Colors.grey)),
 
         const SizedBox(height: 10),

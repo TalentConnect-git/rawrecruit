@@ -86,9 +86,40 @@ class OnboardingDataSourceImpl implements OnboardingDataSource {
           }
         }
       }
+      /// ✅ Nested object (status, etc.)
+      else if (value is Map<String, dynamic>) {
+        final cleanedMap = Map<String, dynamic>.from(value);
+
+        cleanedMap.removeWhere(
+          (k, v) => v == null || v.toString().trim().isEmpty,
+        );
+
+        if (cleanedMap.isNotEmpty) {
+          formMap[key] = jsonEncode(cleanedMap);
+        }
+      }
       /// ✅ Normal fields
-      else if (value != null && value.toString().isNotEmpty) {
-        formMap[key] = value.toString();
+      /// ✅ Single Freezed model (Status, etc.)
+      else if (value.runtimeType.toString().startsWith('_')) {
+        final cleanedMap = Map<String, dynamic>.from(
+          (value as dynamic).toJson(),
+        );
+
+        cleanedMap.removeWhere(
+          (k, v) => v == null || v.toString().trim().isEmpty,
+        );
+
+        if (cleanedMap.isNotEmpty) {
+          formMap[key] = jsonEncode(cleanedMap);
+        }
+      } else {
+        if (value != null) {
+          final stringValue = value.toString().trim();
+
+          if (stringValue.isNotEmpty) {
+            formMap[key] = value;
+          }
+        }
       }
     });
 

@@ -20,7 +20,8 @@ class AlumniHiringCard extends StatelessWidget {
     final firstJob = jobs.first;
 
     final candidate = firstJob.candidatePosted;
-
+    final currentStatus = candidate?.status;
+    final statusType = currentStatus?.type;
     if (candidate == null) {
       return const SizedBox();
     }
@@ -165,7 +166,39 @@ class AlumniHiringCard extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                       style: const TextStyle(color: Colors.grey, fontSize: 13),
                     ),
-
+                  if (statusType != null &&
+                      statusType.isNotEmpty &&
+                      statusType != "employed") ...[
+                    const SizedBox(height: 6),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline,
+                          size: 14,
+                          color: Colors.orange.shade300,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            statusType
+                                .replaceAll('_', ' ')
+                                .split(' ')
+                                .map(
+                                  (e) => e.isEmpty
+                                      ? e
+                                      : e[0].toUpperCase() + e.substring(1),
+                                )
+                                .join(' '),
+                            style: TextStyle(
+                              color: Colors.orange.shade300,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                   const SizedBox(height: 6),
 
                   /// COLLEGE + YEAR

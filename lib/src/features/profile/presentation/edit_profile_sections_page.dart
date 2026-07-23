@@ -23,6 +23,7 @@ class _EditProfileSectionsPageState extends State<EditProfileSectionsPage> {
       'Basic',
       'Career',
       'Skills',
+      'Education',
       'Experience',
       'International Experience',
       'Leadership Experience',
@@ -34,7 +35,6 @@ class _EditProfileSectionsPageState extends State<EditProfileSectionsPage> {
       'Achievements',
       'Publications',
       'Languages Known',
-      'Education',
     ];
 
     return PopScope(
@@ -50,9 +50,7 @@ class _EditProfileSectionsPageState extends State<EditProfileSectionsPage> {
         backgroundColor: AppColors.kBg,
 
         appBar: RAppBar(
-            iconTheme: const IconThemeData(
-    color: Colors.white,
-  ),
+          iconTheme: const IconThemeData(color: Colors.white),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
 
