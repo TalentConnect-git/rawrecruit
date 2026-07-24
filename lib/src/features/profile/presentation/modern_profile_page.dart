@@ -177,7 +177,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                                     builder: (_) => AddEditProfileView(
                                       user: vm.user,
 
-                                      initialStep: 3,
+                                      initialStep: 4,
 
                                       isSwitchingToProfessional: true,
                                     ),
