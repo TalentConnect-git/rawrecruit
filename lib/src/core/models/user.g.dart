@@ -73,6 +73,9 @@ _User _$UserFromJson(Map<String, dynamic> json) => _User(
       .toList(),
   about: json['about'] as String?,
   certifications: json['certifications'] as String?,
+  status: json['status'] == null
+      ? null
+      : Status.fromJson(json['status'] as Map<String, dynamic>),
   degreeCertificate: json['degreeCertificate'] as String?,
   email: json['email'] as String?,
   emailVerified: json['emailVerified'] as bool?,
@@ -136,6 +139,7 @@ Map<String, dynamic> _$UserToJson(_User instance) => <String, dynamic>{
   'toolsAndPlatforms': instance.toolsAndPlatforms,
   'about': instance.about,
   'certifications': instance.certifications,
+  'status': instance.status,
   'degreeCertificate': instance.degreeCertificate,
   'email': instance.email,
   'emailVerified': instance.emailVerified,

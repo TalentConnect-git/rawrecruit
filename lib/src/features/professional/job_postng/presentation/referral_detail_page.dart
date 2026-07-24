@@ -87,7 +87,8 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                   return const Center(child: CircularProgressIndicator());
                 }
                 final user = vM.application?.applicant;
-
+                final currentStatus = user?.status;
+                final statusType = currentStatus?.type ?? "";
                 final linkedin = safe(user?.linkedin);
                 final github = safe(user?.github);
                 final portfolio = safe(user?.portfolio);
@@ -114,7 +115,64 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                         _candidateHeader(context, vm, vM, status),
 
                         const SizedBox(height: 18),
+                        if (!(vM.application?.job?.isAskForReferral ?? false) &&
+                            currentStatus != null &&
+                            statusType.isNotEmpty &&
+                            statusType != "employed") ...[
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(16),
+                            decoration: BoxDecoration(
+                              color: AppColors.kGreen.withOpacity(.08),
+                              borderRadius: BorderRadius.circular(12),
+                              border: Border.all(
+                                color: AppColors.kGreen.withOpacity(.25),
+                              ),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text(
+                                  "Current Status",
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 15,
+                                  ),
+                                ),
+                                const SizedBox(height: 14),
 
+                                _statusRow(
+                                  "Status",
+                                  statusType.replaceAll("_", " "),
+                                ),
+
+                                if (currentStatus.since != null)
+                                  _statusRow(
+                                    "Since",
+                                    currentStatus.since!
+                                        .toIso8601String()
+                                        .split('T')
+                                        .first,
+                                  ),
+
+                                if ((currentStatus.note ?? "").isNotEmpty)
+                                  _statusRow("Note", currentStatus.note!),
+
+                                if (currentStatus.expectedReturn != null)
+                                  _statusRow(
+                                    "Expected Return",
+                                    currentStatus.expectedReturn!
+                                        .toIso8601String()
+                                        .split('T')
+                                        .first,
+                                  ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 18),
+                        ],
                         isAskForReferral
                             ? Container(
                                 width: double.infinity,
@@ -584,6 +642,30 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
             );
           },
         ),
+      ),
+    );
+  }
+
+  Widget _statusRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 120,
+            child: Text(
+              title,
+              style: const TextStyle(
+                color: Colors.white70,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Text(value, style: const TextStyle(color: Colors.white)),
+          ),
+        ],
       ),
     );
   }

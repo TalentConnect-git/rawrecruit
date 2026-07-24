@@ -5,6 +5,7 @@ import 'package:rawrecruit/src/core/models/experience.dart';
 import 'education.dart';
 import 'international_experience.dart';
 import 'leadership_experience.dart';
+import 'status.dart';
 
 part 'user.freezed.dart';
 part 'user.g.dart';
@@ -19,11 +20,10 @@ abstract class User with _$User {
     List<Achievement>? achievements,
     List<Award>? awards,
     List<Publication>? publications,
-@JsonKey(name: 'last_message')
-String? lastMessage,
+    @JsonKey(name: 'last_message') String? lastMessage,
     String? createdAt,
     String? updatedAt,
-  List<String>? colleges,
+    List<String>? colleges,
 
     String? profileImage,
     String? currentCompany,
@@ -55,6 +55,7 @@ String? lastMessage,
 
     String? about,
     String? certifications,
+    Status? status,
 
     String? degreeCertificate,
     String? email,

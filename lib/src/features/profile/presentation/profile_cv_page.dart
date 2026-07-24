@@ -1769,8 +1769,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
   }
 
   Widget _premiumHeader(User user, dynamic currentEducation) {
-    Experience? currentExp;
-
+    final currentStatus = user.status;
+    final statusType = currentStatus?.type ?? '';
     final totalExperience = (user.totalYearsOfExperience?.isNotEmpty ?? false)
         ? user.totalYearsOfExperience!
         : "0";
@@ -1785,13 +1785,18 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
             ?.where((e) => (e.company?.trim().isNotEmpty ?? false))
             .length ??
         0;
-    if (user.experiences?.isNotEmpty ?? false) {
-      currentExp = user.experiences!.firstWhere(
-        (e) => e.isCurrent == true,
-        orElse: () => user.experiences!.first,
-      );
-    }
 
+    Experience? currentExp;
+
+    if (user.experiences?.any((e) => e.isCurrent == true) ?? false) {
+      currentExp = user.experiences!.firstWhere((e) => e.isCurrent == true);
+    }
+    final roleCompanyText = currentExp == null
+        ? ''
+        : [
+            if ((currentExp.role ?? '').isNotEmpty) currentExp.role!,
+            if ((currentExp.company ?? '').isNotEmpty) currentExp.company!,
+          ].join(' @ ');
     return TweenAnimationBuilder<double>(
       tween: Tween(begin: 0, end: 1),
       duration: const Duration(milliseconds: 900),
@@ -1960,33 +1965,82 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                 const SizedBox(height: 10),
 
                 /// ROLE + COMPANY
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 9,
+                if (roleCompanyText.isNotEmpty)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 9,
+                    ),
+                    decoration: BoxDecoration(
+                      color: AppColors.kGreen.withOpacity(.10),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(
+                        color: AppColors.kGreen.withOpacity(.25),
+                      ),
+                    ),
+                    child: Text(
+                      roleCompanyText,
+                      style: TextStyle(
+                        color: AppColors.kGreen,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
+                if (statusType.isNotEmpty && statusType != "employed") ...[
+                  const SizedBox(height: 12),
 
-                  decoration: BoxDecoration(
-                    color: AppColors.kGreen.withOpacity(.10),
-
-                    borderRadius: BorderRadius.circular(30),
-
-                    border: Border.all(
-                      color: AppColors.kGreen.withOpacity(.25),
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(.12),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: Colors.orange.withOpacity(.25)),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.info_outline,
+                          size: 14,
+                          color: Colors.orange,
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          statusType
+                              .replaceAll('_', ' ')
+                              .split(' ')
+                              .map(
+                                (e) => e.isEmpty
+                                    ? e
+                                    : '${e[0].toUpperCase()}${e.substring(1)}',
+                              )
+                              .join(' '),
+                          style: const TextStyle(
+                            color: Colors.orange,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
 
-                  child: Text(
-                    '${currentExp?.role ?? defaultRole} @ ${currentExp?.company ?? user.currentCompany ?? "-"}',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                      color: AppColors.kGreen,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w700,
+                  if ((currentStatus?.note ?? '').isNotEmpty) ...[
+                    const SizedBox(height: 8),
+                    Text(
+                      currentStatus!.note!,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.white60,
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ),
-
+                  ],
+                ],
                 const SizedBox(height: 20),
 
                 /// INFO ROW

@@ -427,27 +427,45 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                 /// COMPANY / ROLE
                 Builder(
                   builder: (_) {
-                    final company = (p?.currentCompany ?? '').trim();
-                    Experience? exp;
+                    Experience? currentExp;
 
                     if (p?.experiences?.isNotEmpty ?? false) {
                       for (final e in p!.experiences!) {
                         if (e.isCurrent == true) {
-                          exp = e;
+                          currentExp = e;
                           break;
                         }
                       }
                     }
 
-                    final role = exp?.role?.trim() ?? '';
+                    String displayText = "";
 
-                    if (company.isEmpty && role.isEmpty) {
-                      return const SizedBox.shrink();
+                    if (currentExp != null) {
+                      final company = (p?.currentCompany ?? '').trim();
+                      final role = currentExp.role?.trim() ?? '';
+
+                      displayText = company.isNotEmpty
+                          ? (role.isNotEmpty ? '$company • $role' : company)
+                          : role;
+                    } else {
+                      final status = p?.status?.type?.trim() ?? '';
+
+                      if (status.isNotEmpty) {
+                        displayText = status
+                            .replaceAll('_', ' ')
+                            .split(' ')
+                            .map(
+                              (e) => e.isEmpty
+                                  ? e
+                                  : '${e[0].toUpperCase()}${e.substring(1).toLowerCase()}',
+                            )
+                            .join(' ');
+                      }
                     }
 
-                    final displayText = company.isNotEmpty
-                        ? (role.isNotEmpty ? '$company • $role' : company)
-                        : role;
+                    if (displayText.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
 
                     return Column(
                       children: [

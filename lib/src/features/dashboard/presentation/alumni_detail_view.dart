@@ -111,7 +111,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                       .join(", ")
                 : '';
             final isHiring = vm.alumni?.referralJobs?.isNotEmpty ?? false;
-
+            final currentStatus = vm.alumni?.status;
+            final statusType = currentStatus?.type ?? '';
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -305,6 +306,57 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                             ),
                                           ],
                                         ),
+                                      if (statusType.isNotEmpty &&
+                                          statusType != "employed") ...[
+                                        const SizedBox(height: 6),
+                                        Row(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const Icon(
+                                              Icons.info_outline,
+                                              size: 14,
+                                              color: Colors.orange,
+                                            ),
+                                            const SizedBox(width: 6),
+                                            Expanded(
+                                              child: Text(
+                                                statusType
+                                                    .replaceAll('_', ' ')
+                                                    .split(' ')
+                                                    .map(
+                                                      (e) => e.isEmpty
+                                                          ? e
+                                                          : '${e[0].toUpperCase()}${e.substring(1)}',
+                                                    )
+                                                    .join(' '),
+                                                style: const TextStyle(
+                                                  color: Colors.orange,
+                                                  fontSize: 13,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+
+                                        if ((currentStatus?.note ?? '')
+                                            .isNotEmpty) ...[
+                                          const SizedBox(height: 4),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              left: 20,
+                                            ),
+                                            child: Text(
+                                              currentStatus!.note!,
+                                              style: const TextStyle(
+                                                color: Colors.grey,
+                                                fontSize: 12,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ],
                                     ],
                                   ),
 

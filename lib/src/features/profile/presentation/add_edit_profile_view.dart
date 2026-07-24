@@ -10,10 +10,6 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/profile/presentation/widgets/auto_complete_field.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 
-import 'package:rawrecruit/src/features/onboarding/presentation/view_model/add_edit_profile_view_model.dart';
-import 'package:rawrecruit/src/features/onboarding/presentation/widgets/profile_image.dart';
-import '../../onboarding/steps/education_controller.dart';
-
 class AddEditProfileView extends StatefulWidget {
   const AddEditProfileView({
     this.user,
@@ -35,6 +31,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
   final _formKey = GlobalKey<FormState>();
   bool _isParsingResume = false;
   File? _pickedResumeFile;
+
   bool isExperienceExpanded = false;
   Map<String, String> currencySymbols = {
     "INR": "₹",
@@ -348,154 +345,19 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     "Diploma",
     "Other",
   ];
+  final professionalStatuses = [
+    "open_to_work",
+    "career_break",
+    "freelancing",
+    "building",
+    "not_looking",
+  ];
 
-  // /// Specialization options keyed by degree.
-  // /// Falls back to [_defaultSpecializations] if degree not found.
-  // static const Map<String, List<String>> _specializationByDegree = {
-  //   "B.Tech": [
-  //     "Computer Science & Engineering",
-  //     "Information Technology",
-  //     "Electronics & Communication Engineering",
-  //     "Electrical Engineering",
-  //     "Mechanical Engineering",
-  //     "Civil Engineering",
-  //     "Chemical Engineering",
-  //     "Aerospace Engineering",
-  //     "Biotechnology",
-  //     "Data Science & AI",
-  //     "Cybersecurity",
-  //     "Other",
-  //   ],
-  //   "B.E": [
-  //     "Computer Engineering",
-  //     "Electronics Engineering",
-  //     "Electrical Engineering",
-  //     "Mechanical Engineering",
-  //     "Civil Engineering",
-  //     "Chemical Engineering",
-  //     "Production Engineering",
-  //     "Instrumentation Engineering",
-  //     "Other",
-  //   ],
-  //   "Bachelor of Science": [
-  //     "Computer Science",
-  //     "Physics",
-  //     "Chemistry",
-  //     "Mathematics",
-  //     "Statistics",
-  //     "Biology",
-  //     "Biochemistry",
-  //     "Environmental Science",
-  //     "Microbiology",
-  //     "Data Science",
-  //     "Other",
-  //   ],
-  //   "BCA": [
-  //     "Computer Applications",
-  //     "Software Development",
-  //     "Data Analytics",
-  //     "Cloud Computing",
-  //     "Cybersecurity",
-  //     "Other",
-  //   ],
-  //   "B.Com": [
-  //     "Accounting & Finance",
-  //     "Banking & Insurance",
-  //     "Taxation",
-  //     "Business Economics",
-  //     "E-Commerce",
-  //     "Other",
-  //   ],
-  //   "BA": [
-  //     "English Literature",
-  //     "History",
-  //     "Political Science",
-  //     "Economics",
-  //     "Psychology",
-  //     "Sociology",
-  //     "Philosophy",
-  //     "Mass Communication",
-  //     "Journalism",
-  //     "Other",
-  //   ],
-  //   "M.Tech": [
-  //     "Computer Science & Engineering",
-  //     "Data Science & Machine Learning",
-  //     "VLSI Design",
-  //     "Embedded Systems",
-  //     "Software Engineering",
-  //     "Cybersecurity",
-  //     "Robotics & Automation",
-  //     "Thermal Engineering",
-  //     "Structural Engineering",
-  //     "Power Systems",
-  //     "Other",
-  //   ],
-  //   "M.E": [
-  //     "Computer Engineering",
-  //     "Electronics Engineering",
-  //     "Structural Engineering",
-  //     "Thermal Engineering",
-  //     "Manufacturing Engineering",
-  //     "Other",
-  //   ],
-  //   "MSc": [
-  //     "Computer Science",
-  //     "Data Science",
-  //     "Physics",
-  //     "Chemistry",
-  //     "Mathematics",
-  //     "Statistics",
-  //     "Biotechnology",
-  //     "Environmental Science",
-  //     "Other",
-  //   ],
-  //   "MBA": [
-  //     "Finance",
-  //     "Marketing",
-  //     "Human Resources",
-  //     "Operations Management",
-  //     "Information Technology",
-  //     "Business Analytics",
-  //     "International Business",
-  //     "Entrepreneurship",
-  //     "Supply Chain Management",
-  //     "Other",
-  //   ],
-  //   "MCA": [
-  //     "Software Engineering",
-  //     "Data Science",
-  //     "Cloud Computing",
-  //     "Cybersecurity",
-  //     "Artificial Intelligence",
-  //     "Other",
-  //   ],
-  //   "PhD": [
-  //     "Computer Science",
-  //     "Electronics",
-  //     "Mechanical Engineering",
-  //     "Civil Engineering",
-  //     "Physics",
-  //     "Chemistry",
-  //     "Mathematics",
-  //     "Management",
-  //     "Life Sciences",
-  //     "Social Sciences",
-  //     "Other",
-  //   ],
-  //   "Diploma": [
-  //     "Computer Engineering",
-  //     "Electronics & Telecommunication",
-  //     "Mechanical Engineering",
-  //     "Civil Engineering",
-  //     "Electrical Engineering",
-  //     "Information Technology",
-  //     "Other",
-  //   ],
-  //   "Other": ["Other"],
-  // };
-
-  // static const List<String> _defaultSpecializations = ["Other"];
+  final studentStatuses = [
+    "looking_internship",
+    "looking_job",
+    "preparing_exams",
+  ];
 
   final semesterOptions = List.generate(8, (i) => "Semester ${i + 1}");
 
@@ -1215,6 +1077,320 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                             ),
                           ),
 
+                          /// ───────────────── EDUCATION ─────────────────
+                          SingleChildScrollView(
+                            padding: const EdgeInsets.all(16),
+
+                            child: ProfileSection(
+                              label: 'Education',
+
+                              trailing: _addButton(() {
+                                setState(() {
+                                  controller.educations.add(
+                                    EducationController(),
+                                  );
+                                });
+                              }),
+
+                              children: controller.educations
+                                  .asMap()
+                                  .entries
+                                  .map((entry) {
+                                    final index = entry.key;
+
+                                    final e = entry.value;
+
+                                    return Container(
+                                      margin: const EdgeInsets.only(bottom: 16),
+
+                                      padding: const EdgeInsets.all(16),
+
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF111827),
+
+                                        borderRadius: BorderRadius.circular(16),
+                                      ),
+
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+
+                                            children: [
+                                              Text(
+                                                "Education ${index + 1}",
+
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+
+                                              if (controller.educations.length >
+                                                  1)
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      controller.educations
+                                                          .removeAt(index);
+                                                    });
+                                                  },
+
+                                                  child: const Text(
+                                                    "Remove",
+
+                                                    style: TextStyle(
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                            ],
+                                          ),
+
+                                          const SizedBox(height: 16),
+
+                                          /// COLLEGE
+                                          CommonAutocomplete(
+                                            label: "College",
+
+                                            hint: "College",
+
+                                            options: colleges
+                                                .map(
+                                                  (e) => e['label'].toString(),
+                                                )
+                                                .toList(),
+
+                                            initialValue: e.college.text,
+
+                                            showCreateOption: true,
+
+                                            onChanged: (value) {
+                                              e.college.text = value;
+
+                                              markChanged();
+                                            },
+
+                                            onSelected: (value) async {
+                                              await addCollegeIfNeeded(value);
+
+                                              e.college.text = value;
+
+                                              markChanged();
+                                            },
+
+                                            onCreate: (value) async {
+                                              await addCollegeIfNeeded(value);
+
+                                              e.college.text = value;
+
+                                              markChanged();
+                                            },
+                                          ),
+
+                                          const SizedBox(height: 16),
+
+                                          /// DEGREE
+                                          CommonAutocomplete(
+                                            label: "Degree",
+
+                                            hint: "Degree",
+
+                                            options: degrees
+                                                .map(
+                                                  (e) => e['value'].toString(),
+                                                )
+                                                .toList(),
+
+                                            initialValue: e.degree.text,
+
+                                            showCreateOption: true,
+
+                                            onChanged: (value) {
+                                              e.degree.text = value;
+
+                                              markChanged();
+                                            },
+
+                                            onSelected: (value) async {
+                                              FocusScope.of(context).unfocus();
+
+                                              await addDegreeIfNeeded(value);
+
+                                              e.degree.text = value;
+
+                                              final selected = degrees
+                                                  .firstWhere(
+                                                    (d) =>
+                                                        d['value']
+                                                            .toString()
+                                                            .toLowerCase() ==
+                                                        value.toLowerCase(),
+
+                                                    orElse: () => {},
+                                                  );
+
+                                              if (selected.isNotEmpty) {
+                                                e.selectedDegreeId =
+                                                    selected['_id'];
+
+                                                await fetchStreams(
+                                                  e.selectedDegreeId!,
+                                                );
+
+                                                e.streams = streams;
+                                              }
+
+                                              setState(() {});
+                                            },
+
+                                            onCreate: (value) async {
+                                              await addDegreeIfNeeded(value);
+
+                                              e.degree.text = value;
+
+                                              markChanged();
+                                            },
+                                          ),
+
+                                          const SizedBox(height: 16),
+
+                                          /// SPECIALIZATION
+                                          CommonAutocomplete(
+                                            label: "Specialization",
+
+                                            hint: "Specialization",
+
+                                            options: e.streams
+                                                .map(
+                                                  (s) => s['value'].toString(),
+                                                )
+                                                .toList(),
+
+                                            initialValue: e.specialization.text,
+
+                                            showCreateOption: true,
+
+                                            onChanged: (value) {
+                                              e.specialization.text = value;
+
+                                              markChanged();
+                                            },
+
+                                            onSelected: (value) {
+                                              FocusScope.of(context).unfocus();
+
+                                              e.specialization.text = value;
+
+                                              markChanged();
+                                            },
+
+                                            onCreate: (value) async {
+                                              if (e.selectedDegreeId != null) {
+                                                await addStreamIfNeeded(value);
+
+                                                await fetchStreams(
+                                                  e.selectedDegreeId!,
+                                                );
+
+                                                e.streams = streams;
+                                              }
+
+                                              e.specialization.text = value;
+
+                                              markChanged();
+
+                                              setState(() {});
+                                            },
+                                          ),
+
+                                          const SizedBox(height: 16),
+
+                                          AppTextFields(
+                                            controller: e.cgpa,
+
+                                            hint: 'CGPA',
+
+                                            onChanged: (_) => markChanged(),
+                                          ),
+
+                                          const SizedBox(height: 16),
+
+                                          _dropdownField(
+                                            e.yearOfGraduation,
+
+                                            'Graduation Year',
+
+                                            graduationYears,
+                                          ),
+
+                                          if (!isProfessional &&
+                                              !isFresher) ...[
+                                            const SizedBox(height: 16),
+
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  child: _dateField(
+                                                    e.startDate,
+
+                                                    "Start Date",
+                                                  ),
+                                                ),
+
+                                                const SizedBox(width: 10),
+
+                                                Expanded(
+                                                  child: _dateField(
+                                                    e.endDate,
+
+                                                    "End Date",
+
+                                                    enabled: !e.isCurrent,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            const SizedBox(height: 16),
+
+                                            Row(
+                                              children: [
+                                                Checkbox(
+                                                  value: e.isCurrent,
+
+                                                  onChanged: (val) {
+                                                    setState(() {
+                                                      e.isCurrent =
+                                                          val ?? false;
+                                                    });
+
+                                                    markChanged();
+                                                  },
+                                                ),
+
+                                                const Text(
+                                                  "Currently Studying",
+
+                                                  style: TextStyle(
+                                                    color: Colors.white,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ],
+                                      ),
+                                    );
+                                  })
+                                  .toList(),
+                            ),
+                          ),
+
                           /// ───────────────── EXPERIENCE ─────────────────
                           SingleChildScrollView(
                             padding: const EdgeInsets.all(16),
@@ -1242,9 +1418,14 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                               }),
 
                               children: [
-                                /// 🔥 COMMON EMAIL FIELD
-                                const SizedBox(height: 20),
+                                if (!controller.experiences.any(
+                                  (e) => e.isCurrent,
+                                )) ...[
+                                  _statusSection(),
+                                  const SizedBox(height: 20),
+                                ],
 
+                                /// 🔥 COMMON EMAIL FIELD
                                 ...controller.experiences.asMap().entries.map((
                                   entry,
                                 ) {
@@ -1700,320 +1881,6 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                             ),
                           ),
 
-                          /// ───────────────── EDUCATION ─────────────────
-                          SingleChildScrollView(
-                            padding: const EdgeInsets.all(16),
-
-                            child: ProfileSection(
-                              label: 'Education',
-
-                              trailing: _addButton(() {
-                                setState(() {
-                                  controller.educations.add(
-                                    EducationController(),
-                                  );
-                                });
-                              }),
-
-                              children: controller.educations
-                                  .asMap()
-                                  .entries
-                                  .map((entry) {
-                                    final index = entry.key;
-
-                                    final e = entry.value;
-
-                                    return Container(
-                                      margin: const EdgeInsets.only(bottom: 16),
-
-                                      padding: const EdgeInsets.all(16),
-
-                                      decoration: BoxDecoration(
-                                        color: const Color(0xFF111827),
-
-                                        borderRadius: BorderRadius.circular(16),
-                                      ),
-
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-
-                                            children: [
-                                              Text(
-                                                "Education ${index + 1}",
-
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-
-                                              if (controller.educations.length >
-                                                  1)
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      controller.educations
-                                                          .removeAt(index);
-                                                    });
-                                                  },
-
-                                                  child: const Text(
-                                                    "Remove",
-
-                                                    style: TextStyle(
-                                                      color: Colors.red,
-                                                    ),
-                                                  ),
-                                                ),
-                                            ],
-                                          ),
-
-                                          const SizedBox(height: 16),
-
-                                          /// COLLEGE
-                                          CommonAutocomplete(
-                                            label: "College",
-
-                                            hint: "College",
-
-                                            options: colleges
-                                                .map(
-                                                  (e) => e['label'].toString(),
-                                                )
-                                                .toList(),
-
-                                            initialValue: e.college.text,
-
-                                            showCreateOption: true,
-
-                                            onChanged: (value) {
-                                              e.college.text = value;
-
-                                              markChanged();
-                                            },
-
-                                            onSelected: (value) async {
-                                              await addCollegeIfNeeded(value);
-
-                                              e.college.text = value;
-
-                                              markChanged();
-                                            },
-
-                                            onCreate: (value) async {
-                                              await addCollegeIfNeeded(value);
-
-                                              e.college.text = value;
-
-                                              markChanged();
-                                            },
-                                          ),
-
-                                          const SizedBox(height: 16),
-
-                                          /// DEGREE
-                                          CommonAutocomplete(
-                                            label: "Degree",
-
-                                            hint: "Degree",
-
-                                            options: degrees
-                                                .map(
-                                                  (e) => e['value'].toString(),
-                                                )
-                                                .toList(),
-
-                                            initialValue: e.degree.text,
-
-                                            showCreateOption: true,
-
-                                            onChanged: (value) {
-                                              e.degree.text = value;
-
-                                              markChanged();
-                                            },
-
-                                            onSelected: (value) async {
-                                              FocusScope.of(context).unfocus();
-
-                                              await addDegreeIfNeeded(value);
-
-                                              e.degree.text = value;
-
-                                              final selected = degrees
-                                                  .firstWhere(
-                                                    (d) =>
-                                                        d['value']
-                                                            .toString()
-                                                            .toLowerCase() ==
-                                                        value.toLowerCase(),
-
-                                                    orElse: () => {},
-                                                  );
-
-                                              if (selected.isNotEmpty) {
-                                                e.selectedDegreeId =
-                                                    selected['_id'];
-
-                                                await fetchStreams(
-                                                  e.selectedDegreeId!,
-                                                );
-
-                                                e.streams = streams;
-                                              }
-
-                                              setState(() {});
-                                            },
-
-                                            onCreate: (value) async {
-                                              await addDegreeIfNeeded(value);
-
-                                              e.degree.text = value;
-
-                                              markChanged();
-                                            },
-                                          ),
-
-                                          const SizedBox(height: 16),
-
-                                          /// SPECIALIZATION
-                                          CommonAutocomplete(
-                                            label: "Specialization",
-
-                                            hint: "Specialization",
-
-                                            options: e.streams
-                                                .map(
-                                                  (s) => s['value'].toString(),
-                                                )
-                                                .toList(),
-
-                                            initialValue: e.specialization.text,
-
-                                            showCreateOption: true,
-
-                                            onChanged: (value) {
-                                              e.specialization.text = value;
-
-                                              markChanged();
-                                            },
-
-                                            onSelected: (value) {
-                                              FocusScope.of(context).unfocus();
-
-                                              e.specialization.text = value;
-
-                                              markChanged();
-                                            },
-
-                                            onCreate: (value) async {
-                                              if (e.selectedDegreeId != null) {
-                                                await addStreamIfNeeded(value);
-
-                                                await fetchStreams(
-                                                  e.selectedDegreeId!,
-                                                );
-
-                                                e.streams = streams;
-                                              }
-
-                                              e.specialization.text = value;
-
-                                              markChanged();
-
-                                              setState(() {});
-                                            },
-                                          ),
-
-                                          const SizedBox(height: 16),
-
-                                          AppTextFields(
-                                            controller: e.cgpa,
-
-                                            hint: 'CGPA',
-
-                                            onChanged: (_) => markChanged(),
-                                          ),
-
-                                          const SizedBox(height: 16),
-
-                                          _dropdownField(
-                                            e.yearOfGraduation,
-
-                                            'Graduation Year',
-
-                                            graduationYears,
-                                          ),
-
-                                          if (!isProfessional &&
-                                              !isFresher) ...[
-                                            const SizedBox(height: 16),
-
-                                            Row(
-                                              children: [
-                                                Expanded(
-                                                  child: _dateField(
-                                                    e.startDate,
-
-                                                    "Start Date",
-                                                  ),
-                                                ),
-
-                                                const SizedBox(width: 10),
-
-                                                Expanded(
-                                                  child: _dateField(
-                                                    e.endDate,
-
-                                                    "End Date",
-
-                                                    enabled: !e.isCurrent,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            const SizedBox(height: 16),
-
-                                            Row(
-                                              children: [
-                                                Checkbox(
-                                                  value: e.isCurrent,
-
-                                                  onChanged: (val) {
-                                                    setState(() {
-                                                      e.isCurrent =
-                                                          val ?? false;
-                                                    });
-
-                                                    markChanged();
-                                                  },
-                                                ),
-
-                                                const Text(
-                                                  "Currently Studying",
-
-                                                  style: TextStyle(
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ],
-                                      ),
-                                    );
-                                  })
-                                  .toList(),
-                            ),
-                          ),
-
                           /// ───────────────── LANGUAGES KNOWN ─────────────────
                         ],
                       ),
@@ -2073,6 +1940,23 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       );
                                       return;
                                     }
+                                  }
+                                  final hasCurrentExperience = controller
+                                      .experiences
+                                      .any((e) => e.isCurrent);
+
+                                  if (!hasCurrentExperience &&
+                                      controller.statusType.text
+                                          .trim()
+                                          .isEmpty) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          "Please select your current status.",
+                                        ),
+                                      ),
+                                    );
+                                    return;
                                   }
                                   final failure = await addEditProfileViewModel
                                       .saveProfile();
@@ -2172,6 +2056,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     int index, {
     String title = "Experience",
   }) {
+    final hasCurrentExperience = controller.experiences.any((e) => e.isCurrent);
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
@@ -2454,6 +2339,12 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
           onChanged: (val) {
             setState(() {
               e.isCurrent = val ?? false;
+              if (e.isCurrent) {
+                controller.statusType.clear();
+                controller.statusSince.clear();
+                controller.statusNote.clear();
+                controller.expectedReturn.clear();
+              }
 
               /// remove current flag from others
               for (final exp in controller.experiences) {
@@ -2505,20 +2396,26 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     TextEditingController controller,
     String hint, {
     bool enabled = true,
+    bool allowFuture = false,
   }) {
     return GestureDetector(
       onTap: !enabled
           ? null
           : () async {
+              final now = DateTime.now();
+
               final date = await showDatePicker(
                 context: context,
+                initialDate: now,
                 firstDate: DateTime(2000),
-                lastDate: DateTime.now(),
-                initialDate: DateTime.now(),
+                lastDate: allowFuture ? DateTime(2100) : now,
               );
 
               if (date != null) {
-                controller.text = "${date.month}/${date.year}";
+                controller.text =
+                    "${date.day.toString().padLeft(2, '0')}/"
+                    "${date.month.toString().padLeft(2, '0')}/"
+                    "${date.year}";
               }
             },
       child: AbsorbPointer(
@@ -2533,6 +2430,79 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       hint: "Briefly describe your responsibilities...",
       maxLines: 3,
       onChanged: (_) => markChanged(),
+    );
+  }
+
+  Widget _statusSection() {
+    final statuses = isProfessional ? professionalStatuses : studentStatuses;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          "Current Status",
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 12),
+
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: statuses.map((status) {
+            final selected = controller.statusType.text == status;
+
+            return ChoiceChip(
+              selected: selected,
+              backgroundColor: Colors.black,
+              selectedColor: Colors.black,
+              side: BorderSide(
+                color: selected ? Colors.white : Colors.grey.shade700,
+              ),
+              label: Text(
+                status.replaceAll("_", " "),
+                style: const TextStyle(color: Colors.white),
+              ),
+              onSelected: (_) {
+                setState(() {
+                  controller.statusType.text = status;
+
+                  if (status != "career_break") {
+                    controller.expectedReturn.clear();
+                  }
+                });
+
+                markChanged();
+              },
+            );
+          }).toList(),
+        ),
+
+        const SizedBox(height: 16),
+
+        _dateField(controller.statusSince, "Since"),
+
+        const SizedBox(height: 12),
+
+        if (controller.statusType.text == "career_break") ...[
+          _datePickerField(
+            controller.expectedReturn,
+            "Expected Return",
+            allowFuture: true,
+          ),
+          const SizedBox(height: 12),
+        ],
+
+        AppTextFields(
+          controller: controller.statusNote,
+          hint: "Note",
+          maxLines: 3,
+          onChanged: (_) => markChanged(),
+        ),
+      ],
     );
   }
 
@@ -2917,7 +2887,11 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     );
   }
 
-  Widget _datePickerField(TextEditingController ctrl, String hint) {
+  Widget _datePickerField(
+    TextEditingController ctrl,
+    String hint, {
+    bool allowFuture = false,
+  }) {
     return TextFormField(
       controller: ctrl,
       readOnly: true,
@@ -2965,7 +2939,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
           context: context,
           initialDate: initial,
           firstDate: DateTime(1940),
-          lastDate: now,
+          lastDate: allowFuture ? DateTime(2100) : now,
         );
 
         if (picked != null) {

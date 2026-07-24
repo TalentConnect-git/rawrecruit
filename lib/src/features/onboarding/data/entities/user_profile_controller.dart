@@ -55,13 +55,20 @@ class UserController {
       totalYearsOfExperience = TextEditingController(),
 
       companyEmail = TextEditingController(),
-      noticePeriodStartDate = TextEditingController();
+      noticePeriodStartDate = TextEditingController(),
+      statusType = TextEditingController(),
+      statusSince = TextEditingController(),
+      statusNote = TextEditingController(),
+      expectedReturn = TextEditingController();
 
   /// Basic Fields
   TextEditingController id;
   TextEditingController userId;
   TextEditingController v;
-
+  TextEditingController statusType;
+  TextEditingController statusSince;
+  TextEditingController statusNote;
+  TextEditingController expectedReturn;
   TextEditingController createdAt;
   TextEditingController updatedAt;
 
@@ -121,28 +128,26 @@ class UserController {
   TextEditingController noticePeriodStartDate;
   Map<String, dynamic> toMap() {
     String? clean(String? v) => v == null || v.trim().isEmpty ? null : v.trim();
-List<String>? cleanList(List<TextEditingController> list) {
-  final values = <String>[];
+    List<String>? cleanList(List<TextEditingController> list) {
+      final values = <String>[];
 
-  for (final controller in list) {
-    final text = controller.text.trim();
+      for (final controller in list) {
+        final text = controller.text.trim();
 
-    debugPrint("CHIP VALUE => $text");
+        debugPrint("CHIP VALUE => $text");
 
-    if (text.isEmpty) continue;
+        if (text.isEmpty) continue;
 
-    values.addAll(
-      text
-          .split(',')
-          .map((e) => e.trim())
-          .where((e) => e.isNotEmpty),
-    );
-  }
+        values.addAll(
+          text.split(',').map((e) => e.trim()).where((e) => e.isNotEmpty),
+        );
+      }
 
-  debugPrint("FINAL VALUES => $values");
+      debugPrint("FINAL VALUES => $values");
 
-  return values.isEmpty ? null : values;
-}
+      return values.isEmpty ? null : values;
+    }
+
     Map<String, dynamic> cleanMap(Map<String, dynamic> map) {
       map.removeWhere((key, value) {
         if (value == null) return true;
@@ -198,6 +203,15 @@ List<String>? cleanList(List<TextEditingController> list) {
       'visaStatus': clean(visaStatus.text),
 
       'servingNoticePeriod': servingNoticePeriod,
+      if (!experiences.any((e) => e.isCurrent))
+        'status': cleanMap({
+          'type': clean(statusType.text),
+          'since': clean(statusSince.text),
+          'note': clean(statusNote.text),
+          'expectedReturn': statusType.text == 'career_break'
+              ? clean(expectedReturn.text)
+              : null,
+        }),
 
       /// Lists
       'skills': cleanList(skills),
@@ -330,6 +344,10 @@ List<String>? cleanList(List<TextEditingController> list) {
     certifications.dispose();
 
     email.dispose();
+    statusType.dispose();
+    statusSince.dispose();
+    statusNote.dispose();
+    expectedReturn.dispose();
     gender.dispose();
     github.dispose();
     linkedin.dispose();
