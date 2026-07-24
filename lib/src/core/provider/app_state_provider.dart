@@ -160,7 +160,19 @@ class AppStateProvider extends ViewStateProvider {
         await getIt<OnboardingLocalService>().clear();
         _selectedUserType = null;
         final prefs = await SharedPreferences.getInstance();
+
+        const keepKey = 'deviceToken';
+
+        // Save the value before clearing
+        final keepValue = prefs.getString(keepKey);
+
+        // Clear all preferences
         await prefs.clear();
+
+        // Restore the value
+        if (keepValue != null) {
+          await prefs.setString(keepKey, keepValue);
+        }
         final token = await SecretRepo.getString('auth_token');
         log(token ?? '', name: 'token');
         user = null;
