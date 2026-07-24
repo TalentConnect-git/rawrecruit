@@ -73,7 +73,7 @@ class ResumeUploadPage extends StatelessWidget {
             ],
           ),
         ),
-        const SizedBox(height: 20),
+        const SizedBox(height: 36),
 
         /// 📄 UPLOAD BOX
         _uploadBox(context),
