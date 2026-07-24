@@ -7,8 +7,8 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
-import 'package:rawrecruit/src/features/profile/presentation/widgets/auto_complete_field.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
+import 'package:rawrecruit/src/features/profile/presentation/widgets/auto_complete_field.dart';
 
 class AddEditProfileView extends StatefulWidget {
   const AddEditProfileView({
@@ -1912,19 +1912,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                   if (!_formKey.currentState!.validate()) {
                                     return;
                                   }
-                                  if (widget.isSwitchingToProfessional) {
-                                    final body = controller.toMap();
-                                    body["profileType"] = "professional";
 
-                                    await getIt<NetworkService>().request(
-                                      Request(
-                                        method: RequestMethod.put,
-                                        endpoint: "/api/onboarding/update",
-                                        isSafeRoute: true,
-                                        body: body,
-                                      ),
-                                    );
-                                  }
                                   // Validate current experience
                                   for (final exp in controller.experiences) {
                                     if (exp.isCurrent &&
@@ -1958,8 +1946,26 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                     );
                                     return;
                                   }
-                                  final failure = await addEditProfileViewModel
-                                      .saveProfile();
+
+                                  Failure? failure;
+
+                                  if (widget.isSwitchingToProfessional) {
+                                    final body = controller.toMap();
+                                    body["profileType"] = "professional";
+
+                                    await getIt<NetworkService>().request(
+                                      Request(
+                                        method: RequestMethod.put,
+                                        endpoint: "/api/onboarding/update",
+                                        isSafeRoute: true,
+                                        body: body,
+                                      ),
+                                    );
+                                    failure = null;
+                                  } else {
+                                    failure = await addEditProfileViewModel
+                                        .saveProfile();
+                                  }
 
                                   if (failure == null) {
                                     hasChanges = false;
