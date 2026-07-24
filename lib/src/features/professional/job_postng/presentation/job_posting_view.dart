@@ -1508,6 +1508,17 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                     );
                                     return;
                                   }
+                                  final appState = context
+                                      .read<AppStateProvider>();
+
+                                  if ((appState.user?.currentCompany ?? '')
+                                      .trim()
+                                      .isEmpty) {
+                                    _showValidationMessage(
+                                      "Current company name is empty.",
+                                    );
+                                    return;
+                                  }
                                   final model = ReferralPostModel(
                                     jobTitle: _splitController(titleController),
                                     inactive: false,
