@@ -248,7 +248,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Alumni Hiring Network',
+                          'Alumni Network',
                           style: AppTextStyles.s16W600.copyWith(
                             color: Colors.white,
                           ),

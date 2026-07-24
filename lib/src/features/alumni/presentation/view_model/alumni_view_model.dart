@@ -50,12 +50,12 @@ class AlumniViewModel extends ChangeNotifier {
 
       grouped[id]!.add(Job(candidatePosted: user));
     }
-log("GROUP USERS COUNT => ${users.length}");
+    log("GROUP USERS COUNT => ${users.length}");
 
-for (final user in users) {
-  log("USER ID => ${user.id}");
-  log("USER NAME => ${user.name}");
-}
+    for (final user in users) {
+      log("USER ID => ${user.id}");
+      log("USER NAME => ${user.name}");
+    }
     return grouped;
   }
 
@@ -86,8 +86,8 @@ for (final user in users) {
 
         collegeAlumni = _groupUsers(filtered);
         log("COLLEGE SOURCE => ${_collegeSource.length}");
-log("FILTERED => ${filtered.length}");
-log("GROUPED => ${collegeAlumni.length}");
+        log("FILTERED => ${filtered.length}");
+        log("GROUPED => ${collegeAlumni.length}");
       },
     );
 
@@ -128,30 +128,6 @@ log("GROUPED => ${collegeAlumni.length}");
   // =========================================================
   Future<void> fetchCompanyAlumni() async {
     _setLoading(true);
-    await getIt<AppStateProvider>().getUserDetails();
-
-    final user = getIt<AppStateProvider>().user;
-
-    String? companyName = user?.currentCompany;
-
-    if (companyName == null || companyName.trim().isEmpty) {
-      final currentExp = user?.experiences?.firstWhere(
-        (e) => e.isCurrent == true,
-        orElse: () => Experience(),
-      );
-
-      companyName = currentExp?.company;
-    }
-
-    log("Current Company => $companyName");
-
-    if (companyName == null || companyName.trim().isEmpty) {
-      _setLoading(false);
-
-      log("Company alumni error: Company Name Not Found.");
-
-      return;
-    }
 
     final result = await _repo.getCompanyAlumni();
 
@@ -164,16 +140,14 @@ log("GROUPED => ${collegeAlumni.length}");
 
         log("API Companies => ${allCompanies.keys.toList()}");
 
-        /// 🔥 FIXED MATCHING
-        final currentCompanyAlumni = allCompanies.values
-            .expand((e) => e)
-            .toList();
+        // Get all alumni from all companies
+        final companyAlumniList = allCompanies.values.expand((e) => e).toList();
 
-        log("Matched Alumni Count => ${currentCompanyAlumni.length}");
+        log("Company Alumni Count => ${companyAlumniList.length}");
 
         _companySource
           ..clear()
-          ..addAll(currentCompanyAlumni);
+          ..addAll(companyAlumniList);
 
         filtered = List.from(_companySource);
 

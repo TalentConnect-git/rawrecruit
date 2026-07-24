@@ -257,7 +257,7 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
                   return ApplicationCard(application: job);
                 }),
               _SectionHeader(
-                title: "Alumni Hiring Network",
+                title: "Alumni Network",
                 onTap: () {
                   context.pushNamed(
                     RouteNames.shortlist,
