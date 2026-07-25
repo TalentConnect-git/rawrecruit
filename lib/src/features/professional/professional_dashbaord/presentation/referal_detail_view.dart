@@ -296,11 +296,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
   // ============================================================
   Widget _header(Job job, dynamic referral) {
     final role = job.jobTitle ?? "Software Developer";
-    final company =
-        widget.companyName ??
-        referral?.candidatePosted?.currentCompany ??
-        job.candidatePosted?.currentCompany ??
-        "Company";
+    final company = referral?.companyName ?? "Company";
     final location = (job.location?.isNotEmpty ?? false)
         ? job.location!.join(", ")
         : "—";

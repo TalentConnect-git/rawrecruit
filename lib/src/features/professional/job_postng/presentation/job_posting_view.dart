@@ -234,8 +234,9 @@ class _ReferralPostViewState extends State<ReferralPostView> {
   int currentStep = 0;
 
   final int totalSteps = 9;
+  void nextStep() async {
+    await saveDraft();
 
-  void nextStep() {
     if (currentStep < totalSteps - 1) {
       _pageController.nextPage(
         duration: const Duration(milliseconds: 300),
@@ -325,10 +326,15 @@ class _ReferralPostViewState extends State<ReferralPostView> {
     workAuthorization = data["workAuthorization"];
 
     experienceRange = data["experienceRange"];
-
     selectedState = data["selectedState"] ?? "";
 
-    selectedCity = data["selectedCity"] ?? "";
+    final savedCity = data["selectedCity"] ?? "";
+
+    if (selectedState.isNotEmpty) {
+      await fetchCities(selectedState);
+    }
+
+    selectedCity = savedCity;
 
     currentStep = data["currentStep"] ?? 0;
 
@@ -1520,6 +1526,8 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                     return;
                                   }
                                   final model = ReferralPostModel(
+                                    companyName: appState.user!.currentCompany!
+                                        .trim(),
                                     jobTitle: _splitController(titleController),
                                     inactive: false,
                                     description: descriptionController.text

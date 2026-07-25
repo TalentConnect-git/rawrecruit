@@ -32,6 +32,7 @@ _ReferralPostModel _$ReferralPostModelFromJson(
       ? null
       : PackageDetails.fromJson(json['packageDetails'] as Map<String, dynamic>),
   skills: (json['skills'] as List<dynamic>?)?.map((e) => e as String).toList(),
+  companyName: json['companyName'] as String,
   studentStreams: (json['studentStreams'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),
@@ -76,6 +77,7 @@ Map<String, dynamic> _$ReferralPostModelToJson(_ReferralPostModel instance) =>
       'numberOfOpenings': instance.numberOfOpenings,
       'packageDetails': instance.packageDetails,
       'skills': instance.skills,
+      'companyName': instance.companyName,
       'studentStreams': instance.studentStreams,
       'tags': instance.tags,
       'workAuthorization': instance.workAuthorization,

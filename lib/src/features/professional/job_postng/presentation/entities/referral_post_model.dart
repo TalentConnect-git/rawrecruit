@@ -22,6 +22,7 @@ abstract class ReferralPostModel with _$ReferralPostModel {
     int? numberOfOpenings,
     PackageDetails? packageDetails,
     List<String>? skills,
+    required String companyName,
     List<String>? studentStreams,
     List<String>? tags,
     String? workAuthorization,
