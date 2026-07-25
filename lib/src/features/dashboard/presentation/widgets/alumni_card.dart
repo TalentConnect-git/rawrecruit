@@ -18,13 +18,49 @@ class AlumniCard extends StatelessWidget {
 
     final first = jobs.first;
     final candidate = first.candidatePosted;
-    final currentExperience = candidate?.experiences?.firstWhere(
-      (e) => e.isCurrent == true,
-      orElse: () => candidate.experiences!.isNotEmpty
-          ? candidate.experiences!.first
-          : Experience(),
-    );
+    final currentExperience =
+        (candidate?.experiences ?? []).any((e) => e.isCurrent == true)
+        ? candidate!.experiences!.firstWhere((e) => e.isCurrent == true)
+        : null;
+    final currentStatus = candidate?.status;
+    final statusType = currentStatus?.type ?? '';
 
+    String formattedStatus;
+
+    switch (statusType) {
+      case 'looking_job':
+        formattedStatus = 'Looking for Job';
+        break;
+      case 'looking_internship':
+        formattedStatus = 'Looking for Internship';
+        break;
+      case 'open_to_work':
+        formattedStatus = 'Open to Work';
+        break;
+      case 'career_break':
+        formattedStatus = 'Career Break';
+        break;
+      case 'preparing_exams':
+        formattedStatus = 'Preparing for Exams';
+        break;
+      case 'not_looking':
+        formattedStatus = 'Not Looking';
+        break;
+      case 'freelancing':
+        formattedStatus = 'Freelancing';
+        break;
+      case 'building':
+        formattedStatus = 'Building Something';
+        break;
+      default:
+        formattedStatus = statusType
+            .replaceAll('_', ' ')
+            .split(' ')
+            .map(
+              (e) => e.isEmpty ? e : '${e[0].toUpperCase()}${e.substring(1)}',
+            )
+            .join(' ');
+    }
     final currentEducation = (candidate?.educations?.isNotEmpty ?? false)
         ? candidate!.educations!.firstWhere(
             (e) => e.isCurrent == true,
@@ -123,74 +159,93 @@ class AlumniCard extends StatelessWidget {
                 /// DESIGNATION + COMPANY
 
                 /// COMPANY
-             if (currentExperience?.company?.isNotEmpty == true)
-  Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      const Icon(
-        Icons.business_center_outlined,
-        size: 14,
-        color: Colors.white70,
-      ),
-      const SizedBox(width: 4),
-      Flexible(
-        child: Text(
-          currentExperience!.company!,
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w700,
-            fontSize: 13,
-          ),
-        ),
-      ),
-    ],
-  ),
+                if (currentExperience != null) ...[
+                  if (currentExperience.company?.isNotEmpty == true)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Icon(
+                          Icons.business_center_outlined,
+                          size: 14,
+                          color: Colors.white70,
+                        ),
+                        const SizedBox(width: 4),
+                        Flexible(
+                          child: Text(
+                            currentExperience.company!,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
 
-                const SizedBox(height: 4),
+                  const SizedBox(height: 4),
 
-                /// ROLE
-            if (currentExperience?.role?.isNotEmpty == true)
-  Text(
-    currentExperience!.role!,
-    textAlign: TextAlign.center,
-    maxLines: 1,
-    overflow: TextOverflow.ellipsis,
-    style: const TextStyle(
-      color: Colors.grey,
-      fontSize: 12,
-    ),
-  ),
+                  if (currentExperience.role?.isNotEmpty == true)
+                    Text(
+                      currentExperience.role!,
+                      textAlign: TextAlign.center,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    ),
+                ] else if (statusType.isNotEmpty &&
+                    statusType != 'employed') ...[
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withOpacity(.12),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      formattedStatus,
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        color: Colors.orange,
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 6),
 
                 /// COLLEGE
-               if (currentEducation?.college?.isNotEmpty == true)
-  Row(
-    mainAxisAlignment: MainAxisAlignment.center,
-    children: [
-      Icon(
-        Icons.school_outlined,
-        size: 14,
-        color: AppColors.kGreen,
-      ),
-      const SizedBox(width: 4),
-      Flexible(
-        child: Text(
-          currentEducation!.college!,
-          textAlign: TextAlign.center,
-          maxLines: 1,
-          overflow: TextOverflow.ellipsis,
-          style: TextStyle(
-            color: AppColors.kGreen,
-            fontSize: 12,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ),
-    ],
-  ),
+                if (currentEducation?.college?.isNotEmpty == true)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.school_outlined,
+                        size: 14,
+                        color: AppColors.kGreen,
+                      ),
+                      const SizedBox(width: 4),
+                      Flexible(
+                        child: Text(
+                          currentEducation!.college!,
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: AppColors.kGreen,
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 const SizedBox(height: 8),
 
                 /// 🔹 HIRING STATUS

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 
@@ -13,7 +14,23 @@ class ReferralTile extends StatelessWidget {
         Expanded(
           child: InkWell(
             borderRadius: BorderRadius.circular(14),
-            onTap: () => context.pushNamed(RouteNames.referralPost),
+            onTap: () {
+              final appState = context.read<AppStateProvider>();
+
+              if ((appState.user?.currentCompany ?? '').trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text(
+                      "Please update your current company before posting a job.",
+                    ),
+                    behavior: SnackBarBehavior.floating,
+                  ),
+                );
+                return;
+              }
+
+              context.pushNamed(RouteNames.referralPost);
+            },
             child: Container(
               height: 62,
               padding: const EdgeInsets.symmetric(horizontal: 10),
