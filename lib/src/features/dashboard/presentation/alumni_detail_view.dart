@@ -79,25 +79,11 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                       : null);
 
             final college = currentEducation?.college ?? '';
-            final fallbackExperience =
-                currentExperience ??
-                ((vm.alumni?.experiences ?? []).isNotEmpty
-                    ? vm.alumni?.experiences?.first
-                    : null);
 
-            /// ROLE
-            final role = (currentExperience?.role ?? '').trim().isNotEmpty
-                ? currentExperience!.role!.trim()
-                : (fallbackExperience?.role ?? '').trim();
+            /// Only show current experience
+            final role = (currentExperience?.role ?? '').trim();
+            final company = (currentExperience?.company ?? '').trim();
 
-            /// COMPANY
-            final company = (currentExperience?.company ?? '').trim().isNotEmpty
-                ? currentExperience!.company!.trim()
-                : (vm.alumni?.currentCompany ?? '').trim().isNotEmpty
-                ? vm.alumni!.currentCompany!.trim()
-                : (fallbackExperience?.company ?? '').trim();
-
-            /// ROLE + COMPANY TEXT
             final roleCompanyText = role.isNotEmpty && company.isNotEmpty
                 ? "$role @ $company"
                 : role.isNotEmpty
@@ -113,6 +99,45 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
             final isHiring = vm.alumni?.referralJobs?.isNotEmpty ?? false;
             final currentStatus = vm.alumni?.status;
             final statusType = currentStatus?.type ?? '';
+
+            String formattedStatus;
+
+            switch (statusType) {
+              case 'looking_job':
+                formattedStatus = 'Looking for Job';
+                break;
+              case 'looking_internship':
+                formattedStatus = 'Looking for Internship';
+                break;
+              case 'open_to_work':
+                formattedStatus = 'Open to Work';
+                break;
+              case 'career_break':
+                formattedStatus = 'Career Break';
+                break;
+              case 'preparing_exams':
+                formattedStatus = 'Preparing for Exams';
+                break;
+              case 'not_looking':
+                formattedStatus = 'Not Looking';
+                break;
+              case 'freelancing':
+                formattedStatus = 'Freelancing';
+                break;
+              case 'building':
+                formattedStatus = 'Building Something';
+                break;
+              default:
+                formattedStatus = statusType
+                    .replaceAll('_', ' ')
+                    .split(' ')
+                    .map(
+                      (e) => e.isEmpty
+                          ? e
+                          : '${e[0].toUpperCase()}${e.substring(1)}',
+                    )
+                    .join(' ');
+            }
             return SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(
@@ -308,7 +333,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                         ),
                                       if (statusType.isNotEmpty &&
                                           statusType != "employed") ...[
-                                        const SizedBox(height: 6),
+                                        const SizedBox(height: 2),
                                         Row(
                                           crossAxisAlignment:
                                               CrossAxisAlignment.start,
@@ -321,15 +346,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                             const SizedBox(width: 6),
                                             Expanded(
                                               child: Text(
-                                                statusType
-                                                    .replaceAll('_', ' ')
-                                                    .split(' ')
-                                                    .map(
-                                                      (e) => e.isEmpty
-                                                          ? e
-                                                          : '${e[0].toUpperCase()}${e.substring(1)}',
-                                                    )
-                                                    .join(' '),
+                                                formattedStatus,
                                                 style: const TextStyle(
                                                   color: Colors.orange,
                                                   fontSize: 13,

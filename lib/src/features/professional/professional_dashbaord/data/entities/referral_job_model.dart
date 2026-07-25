@@ -16,7 +16,7 @@ abstract class ReferralJobModel with _$ReferralJobModel {
     @JsonKey(fromJson: _jobTitleFromJson) String? jobTitle,
     String? description,
     String? jobStatus,
-    final String? company,
+    @JsonKey(name: 'companyName') final String? company,
     final String? currentCompany,
     String? approvalStatus,
     String? jobType,

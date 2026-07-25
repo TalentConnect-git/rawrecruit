@@ -1771,6 +1771,43 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
   Widget _premiumHeader(User user, dynamic currentEducation) {
     final currentStatus = user.status;
     final statusType = currentStatus?.type ?? '';
+
+    String formattedStatus;
+
+    switch (statusType) {
+      case 'looking_job':
+        formattedStatus = 'Looking for Job';
+        break;
+      case 'looking_internship':
+        formattedStatus = 'Looking for Internship';
+        break;
+      case 'open_to_work':
+        formattedStatus = 'Open to Work';
+        break;
+      case 'career_break':
+        formattedStatus = 'Career Break';
+        break;
+      case 'preparing_exams':
+        formattedStatus = 'Preparing for Exams';
+        break;
+      case 'not_looking':
+        formattedStatus = 'Not Looking';
+        break;
+      case 'freelancing':
+        formattedStatus = 'Freelancing';
+        break;
+      case 'building':
+        formattedStatus = 'Building Something';
+        break;
+      default:
+        formattedStatus = statusType
+            .replaceAll('_', ' ')
+            .split(' ')
+            .map(
+              (e) => e.isEmpty ? e : '${e[0].toUpperCase()}${e.substring(1)}',
+            )
+            .join(' ');
+    }
     final totalExperience = (user.totalYearsOfExperience?.isNotEmpty ?? false)
         ? user.totalYearsOfExperience!
         : "0";
@@ -2010,15 +2047,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          statusType
-                              .replaceAll('_', ' ')
-                              .split(' ')
-                              .map(
-                                (e) => e.isEmpty
-                                    ? e
-                                    : '${e[0].toUpperCase()}${e.substring(1)}',
-                              )
-                              .join(' '),
+                          formattedStatus,
                           style: const TextStyle(
                             color: Colors.orange,
                             fontSize: 12,
