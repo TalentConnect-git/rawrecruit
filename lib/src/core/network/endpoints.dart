@@ -42,6 +42,7 @@ class Endpoints {
   static const String chatUserList = 'api/messages/allusers';
   static const String getUnreadCounts = "api/messages/unread-count";
   static const String createConversation = "api/messages/conversation";
+  static const String apiMessagesUser = "api/messages/user";
 
   static const String apiNotifications = "api/notifications";
   static const String apiNotificationsUnread = "api/notifications/unread";
