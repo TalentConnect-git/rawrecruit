@@ -79,7 +79,7 @@ class AuthDataSourceImpl implements AuthDataSource {
       if (response.isNotEmpty) {
         final auth = Auth.fromJson(response['user']);
         await SecretRepo.setString('auth_token', response['token']);
-        await SecretRepo.setString('refreshToken', response['refreshToken']);
+        await SecretRepo.setString('refresh_token', response['refreshToken']);
         await SecretRepo.setString('auth_id', auth.id ?? '');
         return Right(auth);
       }
@@ -217,7 +217,10 @@ class AuthDataSourceImpl implements AuthDataSource {
       if (response.isNotEmpty) {
         final auth = Auth.fromJson(response['user']);
         await SecretRepo.setString('auth_token', response['token']);
+        await SecretRepo.setString('refresh_token', response['refreshToken']);
         await SecretRepo.setString('auth_id', auth.id ?? '');
+        final token = await SecretRepo.getString('refresh_token');
+        log(token ?? 'Not found', name: 'Refresh Token');
         return Right(auth);
       }
     } on GoogleSignInException catch (e, s) {

@@ -220,7 +220,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   ResultFuture<User?> getUserById({required String userId}) async {
     final Request request = Request(
       method: RequestMethod.get,
-      endpoint: '${Endpoints.apiOnboardingGetDetails}/$userId',
+      endpoint: '${Endpoints.apiMessagesUser}/$userId',
       isSafeRoute: true,
     );
 
@@ -229,7 +229,7 @@ class DashboardDataSourceImpl implements DashboardDataSource {
       final response = result.data as Map<String, dynamic>;
 
       if (response.isNotEmpty) {
-        final profile = User.fromJson(response['data'] as Map<String, dynamic>);
+        final profile = User.fromJson(response);
         return Right(profile);
       }
     } catch (e) {
