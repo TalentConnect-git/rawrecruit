@@ -138,7 +138,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                                     color: AppColors.white,
                                     width: 0.5,
                                   ),
-                                  color: const Color(0xff222222),
+                                  color: AppColors.kCard,
                                 ),
                                 child: Text(
                                   '${context.watch<ReferralHomeViewModel>().referralApplications.length} candidates waiting for response',
@@ -163,7 +163,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                                     color: AppColors.white,
                                     width: 0.5,
                                   ),
-                                  color: const Color(0xff222222),
+                                  color: AppColors.kCard,
                                 ),
                                 child: Text(
                                   '${context.watch<DashboardViewModel>().groupedAlumni.values.length} alumni from your network hiring',
@@ -190,7 +190,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                         Text(
                           'Incoming Requests',
                           style: AppTextStyles.s16W600.copyWith(
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                         GestureDetector(
@@ -250,7 +250,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                         Text(
                           'Alumni Network',
                           style: AppTextStyles.s16W600.copyWith(
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                         GestureDetector(
@@ -309,7 +309,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                         Text(
                           'Jobs For You',
                           style: AppTextStyles.s16W600.copyWith(
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                         GestureDetector(
@@ -412,7 +412,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                         Text(
                           'My Posted Jobs',
                           style: AppTextStyles.s16W600.copyWith(
-                            color: Colors.white,
+                            color: AppColors.white,
                           ),
                         ),
                         GestureDetector(

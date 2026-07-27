@@ -391,8 +391,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
         queryParameters: {"country": "india"},
       );
 
-      print("STATE DATA: ${res.data}");
-
       if (res.statusCode == 200 &&
           res.data["data"] != null &&
           res.data["data"]["states"] is List) {
@@ -401,7 +399,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
         states = stateList.map((e) => e["name"].toString()).toList();
       }
     } catch (e) {
-      print("STATE API ERROR: $e");
+      debugPrint("STATE API ERROR: $e");
     } finally {
       setState(() => isLoadingStates = false);
     }
@@ -420,13 +418,11 @@ class _ReferralPostViewState extends State<ReferralPostView> {
         queryParameters: {"country": "india", "state": state.toLowerCase()},
       );
 
-      print("CITY DATA: ${res.data}");
-
       if (res.statusCode == 200 && res.data["data"] is List) {
         cities = List<String>.from(res.data["data"]);
       }
     } catch (e) {
-      print("CITY API ERROR: $e");
+      debugPrint("CITY API ERROR: $e");
     } finally {
       setState(() => isLoadingCities = false);
     }
@@ -765,10 +761,10 @@ class _ReferralPostViewState extends State<ReferralPostView> {
         backgroundColor: AppColors.kBg,
         appBar: AppBar(
           backgroundColor: AppColors.kCard,
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
+          iconTheme: IconThemeData(color: AppColors.white),
+          title: Text(
             "Post Referral",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: AppColors.white),
           ),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
@@ -789,7 +785,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                 padding: const EdgeInsets.all(16),
                 child: LinearProgressIndicator(
                   value: (currentStep + 1) / totalSteps,
-                  backgroundColor: Colors.grey.shade800,
+                  backgroundColor: AppColors.kBorder,
                   color: AppColors.kGreen,
                   minHeight: 8,
                   borderRadius: BorderRadius.circular(20),
@@ -817,10 +813,10 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   "Job Title",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -926,16 +922,16 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                         return TextField(
                                           controller: controller,
                                           focusNode: focusNode,
-                                          style: const TextStyle(
-                                            color: Colors.white,
+                                          style: TextStyle(
+                                            color: AppColors.white,
                                           ),
                                           decoration: InputDecoration(
                                             hintText: "Search Job Role",
-                                            hintStyle: const TextStyle(
-                                              color: Colors.grey,
+                                            hintStyle: TextStyle(
+                                              color: AppColors.secText,
                                             ),
                                             filled: true,
-                                            fillColor: Colors.black,
+                                            fillColor: AppColors.kTile,
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12),
@@ -962,7 +958,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                         return Align(
                                           alignment: Alignment.topLeft,
                                           child: Material(
-                                            color: Colors.black,
+                                            color: AppColors.kTile,
                                             elevation: 8,
                                             borderRadius: BorderRadius.circular(
                                               12,
@@ -983,13 +979,13 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                                       .startsWith('Create "');
 
                                                   return ListTile(
-                                                    tileColor: Colors.black,
+                                                    tileColor: AppColors.kTile,
                                                     title: Text(
                                                       option,
                                                       style: TextStyle(
                                                         color: isCreate
                                                             ? AppColors.kGreen
-                                                            : Colors.white,
+                                                            : AppColors.white,
                                                       ),
                                                     ),
                                                     onTap: () =>
@@ -1004,7 +1000,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                 ),
                               ],
                             ),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             _fieldDark(
                               "Description",
                               controller: descriptionController,
@@ -1016,13 +1012,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                               controller: eligibilityController,
                               maxLines: 3,
                             ),
-                            //                     const SizedBox(height: 12),
-
-                            // _fieldDark(
-                            //   "Minimum Experience",
-                            //   controller: minExperienceController,
-                            //   keyboardType: TextInputType.number,
-                            // ),
                           ],
                         ),
                       ),
@@ -1094,10 +1083,10 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   "Minimum Education",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -1168,16 +1157,16 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                         return TextField(
                                           controller: controller,
                                           focusNode: focusNode,
-                                          style: const TextStyle(
-                                            color: Colors.white,
+                                          style: TextStyle(
+                                            color: AppColors.white,
                                           ),
                                           decoration: InputDecoration(
                                             hintText: "Search Degree",
-                                            hintStyle: const TextStyle(
-                                              color: Colors.grey,
+                                            hintStyle: TextStyle(
+                                              color: AppColors.secText,
                                             ),
                                             filled: true,
-                                            fillColor: Colors.black,
+                                            fillColor: AppColors.kTile,
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12),
@@ -1190,7 +1179,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                         return Align(
                                           alignment: Alignment.topLeft,
                                           child: Material(
-                                            color: Colors.black,
+                                            color: AppColors.kTile,
                                             elevation: 8,
                                             borderRadius: BorderRadius.circular(
                                               12,
@@ -1210,13 +1199,13 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                                       .startsWith('Create "');
 
                                                   return ListTile(
-                                                    tileColor: Colors.black,
+                                                    tileColor: AppColors.kTile,
                                                     title: Text(
                                                       option,
                                                       style: TextStyle(
                                                         color: isCreate
                                                             ? AppColors.kGreen
-                                                            : Colors.white,
+                                                            : AppColors.white,
                                                       ),
                                                     ),
                                                     onTap: () =>
@@ -1374,18 +1363,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                           title: "Benefits & Studies",
 
                           children: [
-                            // SearchableChipField(
-                            //   label:
-                            //       "Preferred Field of Study",
-
-                            //   controller:
-                            //       fieldOfStudyController,
-
-                            //   options:
-                            //       fieldOfStudyOptions,
-                            // ),
-
-                            // const SizedBox(height: 16),
                             SearchableChipField(
                               label: "Benefits",
 
@@ -1436,7 +1413,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                       ),
 
                       /// STEP 7 — CERTIFICATIONS
-                      /// STEP 7 — CERTIFICATIONS
                       SingleChildScrollView(
                         padding: const EdgeInsets.all(16),
 
@@ -1458,8 +1434,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                 ),
               ),
 
-              /// STEP 6 — SKILLS
-
               /// 🔥 BOTTOM BUTTONS
               Padding(
                 padding: const EdgeInsets.all(16),
@@ -1476,10 +1450,10 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                             ),
                           ),
                           onPressed: previousStep,
-                          child: const Text(
+                          child: Text(
                             "Back",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppColors.white,
                               fontWeight: FontWeight.bold,
                               fontSize: 16,
                             ),
@@ -1607,7 +1581,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                       context: context,
                                       barrierDismissible: false,
 
-                                      // Very light overlay instead of heavy dark background
                                       barrierColor: Colors.black.withOpacity(
                                         0.12,
                                       ),
@@ -1662,22 +1635,22 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                                     ),
                                                   ),
                                                   const SizedBox(height: 18),
-                                                  const Text(
+                                                  Text(
                                                     "Referral Added Successfully",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      color: Colors.white,
+                                                      color: AppColors.white,
                                                       fontSize: 18,
                                                       fontWeight:
                                                           FontWeight.w700,
                                                     ),
                                                   ),
                                                   const SizedBox(height: 10),
-                                                  const Text(
+                                                  Text(
                                                     "Please wait for admin approval of your posted job.",
                                                     textAlign: TextAlign.center,
                                                     style: TextStyle(
-                                                      color: Colors.grey,
+                                                      color: AppColors.secText,
                                                       fontSize: 13,
                                                       height: 1.5,
                                                     ),
@@ -1805,7 +1778,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
       width: double.infinity,
       padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
+        border: Border.all(color: AppColors.kBorder),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Wrap(
@@ -1853,7 +1826,11 @@ class _ReferralPostViewState extends State<ReferralPostView> {
       padding: const EdgeInsets.only(bottom: 12),
       child: Text(
         title,
-        style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 15,
+          fontWeight: FontWeight.bold,
+          color: AppColors.white,
+        ),
       ),
     );
   }
@@ -1877,11 +1854,11 @@ class _ReferralPostViewState extends State<ReferralPostView> {
             ? TextInputAction.newline
             : TextInputAction.done,
 
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: AppColors.white),
 
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.grey),
+          labelStyle: TextStyle(color: AppColors.secText),
           filled: true,
           fillColor: AppColors.kCard,
           border: OutlineInputBorder(
@@ -1904,10 +1881,10 @@ class _ReferralPostViewState extends State<ReferralPostView> {
       child: DropdownButtonFormField<String>(
         value: value,
         dropdownColor: AppColors.kCard,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: AppColors.white),
         decoration: InputDecoration(
           labelText: label,
-          labelStyle: const TextStyle(color: Colors.grey),
+          labelStyle: TextStyle(color: AppColors.secText),
           filled: true,
           fillColor: AppColors.kCard,
           border: OutlineInputBorder(
@@ -1919,7 +1896,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
             .map(
               (e) => DropdownMenuItem(
                 value: e,
-                child: Text(e, style: const TextStyle(color: Colors.white)),
+                child: Text(e, style: TextStyle(color: AppColors.white)),
               ),
             )
             .toList(),
@@ -2014,7 +1991,7 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label, style: const TextStyle(color: Colors.white)),
+        Text(widget.label, style: TextStyle(color: AppColors.white)),
 
         const SizedBox(height: 8),
 
@@ -2062,7 +2039,7 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
                                 dense: true,
                                 title: Text(
                                   item,
-                                  style: const TextStyle(color: Colors.white),
+                                  style: TextStyle(color: AppColors.white),
                                 ),
                                 onTap: () {
                                   setStatePopup(() {
@@ -2076,10 +2053,12 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
                             if (selected.contains("Others")) ...[
                               TextField(
                                 controller: customController,
-                                style: const TextStyle(color: Colors.white),
-                                decoration: const InputDecoration(
+                                style: TextStyle(color: AppColors.white),
+                                decoration: InputDecoration(
                                   hintText: "Add custom",
-                                  hintStyle: TextStyle(color: Colors.grey),
+                                  hintStyle: TextStyle(
+                                    color: AppColors.secText,
+                                  ),
                                 ),
                                 onSubmitted: (_) {
                                   _addCustom();
@@ -2102,7 +2081,7 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
             decoration: BoxDecoration(
               color: AppColors.kCard,
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.grey),
+              border: Border.all(color: AppColors.kBorder),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2111,9 +2090,9 @@ class _MultiSelectDropdownChipsState extends State<MultiSelectDropdownChips> {
                   selected.isEmpty
                       ? "Select options"
                       : "${selected.length} selected",
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: AppColors.secText),
                 ),
-                const Icon(Icons.arrow_drop_down, color: Colors.grey),
+                Icon(Icons.arrow_drop_down, color: AppColors.secText),
               ],
             ),
           ),
@@ -2179,10 +2158,7 @@ class _SearchableChipFieldState extends State<SearchableChipField> {
         Text(
           widget.label,
 
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.w600),
         ),
 
         const SizedBox(height: 12),
@@ -2213,12 +2189,12 @@ class _SearchableChipFieldState extends State<SearchableChipField> {
         TextField(
           controller: searchController,
 
-          style: const TextStyle(color: Colors.white),
+          style: TextStyle(color: AppColors.white),
 
           decoration: InputDecoration(
             hintText: "Search or add",
 
-            hintStyle: const TextStyle(color: Colors.grey),
+            hintStyle: TextStyle(color: AppColors.secText),
 
             filled: true,
 
@@ -2255,12 +2231,12 @@ class _SearchableChipFieldState extends State<SearchableChipField> {
             ),
 
             child: ListTile(
-              leading: const Icon(Icons.add, color: Color(0xFF22C55E)),
+              leading: Icon(Icons.add, color: AppColors.kGreen),
 
               title: Text(
                 'Create "${searchController.text.trim()}"',
 
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.white),
               ),
 
               onTap: () async {
@@ -2312,13 +2288,13 @@ class _SearchableChipFieldState extends State<SearchableChipField> {
 
                     borderRadius: BorderRadius.circular(30),
 
-                    border: Border.all(color: Colors.white.withOpacity(.08)),
+                    border: Border.all(color: AppColors.kBorder),
                   ),
 
                   child: Text(
                     item,
 
-                    style: const TextStyle(color: Colors.white, fontSize: 12),
+                    style: TextStyle(color: AppColors.white, fontSize: 12),
                   ),
                 ),
               );
@@ -2541,7 +2517,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
                 focusNode: _focusNode,
 
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.white),
 
                 onChanged: (_) {
                   setState(() {});
@@ -2550,13 +2526,13 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                 decoration: InputDecoration(
                   hintText: "Search or add ${widget.label}",
 
-                  hintStyle: const TextStyle(color: Colors.grey),
+                  hintStyle: TextStyle(color: AppColors.secText),
 
                   filled: true,
 
                   fillColor: AppColors.kCard,
 
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                  prefixIcon: Icon(Icons.search, color: AppColors.secText),
 
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
@@ -2582,12 +2558,12 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                   ),
 
                   child: ListTile(
-                    leading: const Icon(Icons.add, color: Color(0xFF22C55E)),
+                    leading: Icon(Icons.add, color: AppColors.kGreen),
 
                     title: Text(
                       'Create "${_textController.text.trim()}"',
 
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: AppColors.white),
                     ),
 
                     onTap: () async {
@@ -2624,7 +2600,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
               return Chip(
                 label: Text(item),
 
-                backgroundColor: const Color(0xFF22C55E),
+                backgroundColor: AppColors.kGreen,
 
                 labelStyle: const TextStyle(color: Colors.black),
 
@@ -2642,7 +2618,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
         Text(
           "POPULAR ${widget.label.toUpperCase()}",
 
-          style: const TextStyle(color: Colors.grey),
+          style: TextStyle(color: AppColors.secText),
         ),
 
         const SizedBox(height: 10),
@@ -2672,9 +2648,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                   ),
 
                   decoration: BoxDecoration(
-                    color: isSelected
-                        ? const Color(0xFF22C55E)
-                        : AppColors.kCard,
+                    color: isSelected ? AppColors.kGreen : AppColors.kCard,
 
                     borderRadius: BorderRadius.circular(20),
                   ),
@@ -2683,7 +2657,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                     option,
 
                     style: TextStyle(
-                      color: isSelected ? Colors.black : Colors.white,
+                      color: isSelected ? Colors.black : AppColors.white,
                     ),
                   ),
                 ),

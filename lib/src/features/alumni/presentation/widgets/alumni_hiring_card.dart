@@ -79,11 +79,11 @@ class AlumniHiringCard extends StatelessWidget {
         padding: const EdgeInsets.all(18),
 
         decoration: BoxDecoration(
-          color: const Color(0xFF111827),
+          color: AppColors.kCard,
 
           borderRadius: BorderRadius.circular(18),
 
-          border: Border.all(color: Colors.white.withOpacity(.06)),
+          border: Border.all(color: AppColors.kBorder),
         ),
 
         child: Row(
@@ -134,8 +134,8 @@ class AlumniHiringCard extends StatelessWidget {
 
                           overflow: TextOverflow.ellipsis,
 
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: AppColors.white,
 
                             fontWeight: FontWeight.w600,
 
@@ -147,7 +147,7 @@ class AlumniHiringCard extends StatelessWidget {
                       _chip(
                         isHiring ? "Hiring" : "Not Hiring",
 
-                        isHiring ? Colors.green : Colors.grey,
+                        isHiring ? Colors.green : AppColors.secText,
                       ),
                     ],
                   ),
@@ -164,7 +164,7 @@ class AlumniHiringCard extends StatelessWidget {
                       ].join(' at '),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      style: TextStyle(color: AppColors.secText, fontSize: 13),
                     ),
                   if (statusType != null &&
                       statusType.isNotEmpty &&
@@ -212,7 +212,7 @@ class AlumniHiringCard extends StatelessWidget {
                       ].join(' • '),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      style: TextStyle(color: AppColors.secText, fontSize: 13),
                     ),
                   const SizedBox(height: 10),
 
@@ -228,7 +228,7 @@ class AlumniHiringCard extends StatelessWidget {
                           overflow: TextOverflow.ellipsis,
 
                           style: TextStyle(
-                            color: isHiring ? Colors.green : Colors.grey,
+                            color: isHiring ? Colors.green : AppColors.secText,
 
                             fontSize: 10,
 

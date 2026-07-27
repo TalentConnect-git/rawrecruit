@@ -48,21 +48,17 @@ class _EditProfileSectionsPageState extends State<EditProfileSectionsPage> {
 
       child: Scaffold(
         backgroundColor: AppColors.kBg,
-
         appBar: RAppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: AppColors.text),
           leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-
+            icon: Icon(Icons.arrow_back, color: AppColors.text),
             onPressed: () {
               Navigator.pop(context, hasUpdated);
             },
           ),
-
           title: Text(
             'Edit Profile',
-
-            style: AppTextStyles.s16W600.copyWith(color: AppColors.white),
+            style: AppTextStyles.s16W600.copyWith(color: AppColors.text),
           ),
         ),
 
@@ -99,43 +95,30 @@ class _EditProfileSectionsPageState extends State<EditProfileSectionsPage> {
 
               child: Container(
                 margin: const EdgeInsets.only(bottom: 10),
-
                 padding: const EdgeInsets.all(16),
-
                 decoration: BoxDecoration(
                   color: AppColors.kCard,
-
                   borderRadius: BorderRadius.circular(14),
-
                   border: Border.all(color: AppColors.kBorder),
                 ),
-
                 child: Row(
                   children: [
                     Icon(Icons.edit_outlined, color: AppColors.kGreen),
-
                     const SizedBox(width: 12),
-
                     Expanded(
                       child: Text(
                         sections[index],
-
-                        style: const TextStyle(
-                          color: Colors.white,
-
+                        style: TextStyle(
+                          color: AppColors.text,
                           fontWeight: FontWeight.w600,
-
                           fontSize: 15,
                         ),
                       ),
                     ),
-
-                    const Icon(
+                    Icon(
                       Icons.arrow_forward_ios,
-
                       size: 14,
-
-                      color: Colors.grey,
+                      color: AppColors.secText,
                     ),
                   ],
                 ),

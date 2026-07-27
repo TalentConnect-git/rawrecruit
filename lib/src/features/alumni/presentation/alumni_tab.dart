@@ -71,10 +71,10 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
                     style: const TextStyle(color: Colors.white),
                     decoration: InputDecoration(
                       hintText: "Search alumni...",
-                      hintStyle: const TextStyle(color: Colors.grey),
+                      hintStyle: TextStyle(color: AppColors.secBorder),
                       prefixIcon: const Icon(Icons.search, color: Colors.grey),
                       filled: true,
-                      fillColor: const Color(0xFF1F2937),
+                      fillColor: AppColors.chip,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide.none,
@@ -147,7 +147,7 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        color: AppColors.chip,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
@@ -180,7 +180,9 @@ class _AlumniHiringViewState extends State<AlumniHiringView> {
                       style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w600,
-                        color: t == selectedTab ? Colors.black : Colors.grey,
+                        color: t == selectedTab
+                            ? AppColors.onGreenButton
+                            : AppColors.secText,
                       ),
                     ),
                   ),

@@ -81,7 +81,7 @@ class _ProfileSectionState extends State<ProfileSection> {
                       widget.label,
 
                       style: AppTextStyles.s18W600.copyWith(
-                        color: Colors.white,
+                        color: AppColors.white,
                       ),
                     ),
                   ],
