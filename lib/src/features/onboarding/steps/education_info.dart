@@ -270,10 +270,10 @@ class _EducationPageState extends State<EducationPage> {
 
         const SizedBox(height: 10),
 
-        const Text(
+        Text(
           "Help alumni from your college discover and support you",
 
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(color: AppColors.secText),
         ),
 
         const SizedBox(height: 16),
@@ -289,11 +289,11 @@ class _EducationPageState extends State<EducationPage> {
             padding: const EdgeInsets.all(16),
 
             decoration: BoxDecoration(
-              color: Colors.black,
+              color: AppColors.kCard,
 
               borderRadius: BorderRadius.circular(16),
 
-              border: Border.all(color: Colors.grey.shade800),
+              border: Border.all(color: AppColors.kBorder),
             ),
 
             child: Column(
@@ -305,11 +305,9 @@ class _EducationPageState extends State<EducationPage> {
                     Text(
                       "Education ${index + 1}",
 
-                      style: const TextStyle(
-                        color: Colors.white,
-
+                      style: TextStyle(
+                        color: AppColors.text,
                         fontWeight: FontWeight.bold,
-
                         fontSize: 16,
                       ),
                     ),
@@ -376,8 +374,7 @@ class _EducationPageState extends State<EducationPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
-                    const Text("Degree", style: TextStyle(color: Colors.white)),
-
+                    Text("Degree", style: TextStyle(color: AppColors.text)),
                     const SizedBox(height: 8),
 
                     CommonAutocomplete(
@@ -455,10 +452,9 @@ class _EducationPageState extends State<EducationPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
 
                   children: [
-                    const Text(
+                    Text(
                       "Specialization",
-
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: AppColors.text),
                     ),
 
                     const SizedBox(height: 8),
@@ -559,10 +555,9 @@ class _EducationPageState extends State<EducationPage> {
                         },
                       ),
 
-                      const Text(
+                      Text(
                         "Currently Studying",
-
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColors.text),
                       ),
                     ],
                   ),

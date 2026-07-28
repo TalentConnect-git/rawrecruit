@@ -72,7 +72,7 @@ class _ProfileSectionState extends State<ProfileSection> {
                           ? Icons.keyboard_arrow_down
                           : Icons.keyboard_arrow_right,
 
-                      color: Colors.white,
+                      color: AppColors.subtext,
                     ),
 
                     const SizedBox(width: 6),

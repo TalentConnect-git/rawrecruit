@@ -69,10 +69,10 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
         ChangeNotifierProvider.value(value: referralDetailViewModel),
       ],
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.kBg,
         appBar: AppBar(
           backgroundColor: AppColors.kCard,
-          iconTheme: const IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: AppColors.white),
           title: Text(
             "Candidate Profile",
             style: TextStyle(color: AppColors.white),
@@ -132,10 +132,10 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   "Current Status",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 15,
                                   ),
@@ -187,10 +187,10 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Career Page",
                                       style: TextStyle(
-                                        color: Colors.white,
+                                        color: AppColors.white,
                                         fontWeight: FontWeight.w600,
                                         fontSize: 15,
                                       ),
@@ -215,9 +215,9 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                               ),
                                             ),
                                           ),
-                                          const Icon(
+                                          Icon(
                                             Icons.open_in_new,
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                             size: 18,
                                           ),
                                         ],
@@ -239,12 +239,12 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    const Row(
+                                    Row(
                                       children: [
                                         Text(
                                           "Candidate Assessment",
                                           style: TextStyle(
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                             fontWeight: FontWeight.w600,
                                             fontSize: 15,
                                           ),
@@ -253,10 +253,10 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                     ),
                                     const SizedBox(height: 16),
 
-                                    const Text(
+                                    Text(
                                       "Rating",
                                       style: TextStyle(
-                                        color: Colors.white70,
+                                        color: AppColors.white.withOpacity(.7),
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -280,16 +280,16 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                     const SizedBox(height: 16),
 
                                     Divider(
-                                      color: Colors.white.withOpacity(.08),
+                                      color: AppColors.kBorder,
                                       height: 1,
                                     ),
 
                                     const SizedBox(height: 16),
 
-                                    const Text(
+                                    Text(
                                       "Review",
                                       style: TextStyle(
-                                        color: Colors.white70,
+                                        color: AppColors.white.withOpacity(.7),
                                         fontSize: 12,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -299,8 +299,8 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
 
                                     Text(
                                       vM.application?.adminComment ?? '',
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style: TextStyle(
+                                        color: AppColors.white,
                                         height: 1.5,
                                         fontSize: 14,
                                       ),
@@ -334,13 +334,12 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                                   12,
                                                 ),
                                                 decoration: BoxDecoration(
-                                                  color: Colors.white
+                                                  color: AppColors.text
                                                       .withOpacity(.03),
                                                   borderRadius:
                                                       BorderRadius.circular(12),
                                                   border: Border.all(
-                                                    color: Colors.white
-                                                        .withOpacity(.05),
+                                                    color: AppColors.kBorder,
                                                   ),
                                                 ),
 
@@ -352,8 +351,8 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                                     /// DEGREE
                                                     Text(
                                                       safe(edu.degree),
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
+                                                      style: TextStyle(
+                                                        color: AppColors.white,
                                                         fontSize: 14,
                                                         fontWeight:
                                                             FontWeight.w600,
@@ -366,8 +365,9 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                                     Text(
                                                       safe(edu.specialization),
 
-                                                      style: const TextStyle(
-                                                        color: Colors.white70,
+                                                      style: TextStyle(
+                                                        color: AppColors.white
+                                                            .withOpacity(.7),
                                                         fontSize: 12,
                                                       ),
                                                     ),
@@ -401,12 +401,11 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                                             safe(
                                                               edu.yearOfGraduation,
                                                             ),
-                                                            style:
-                                                                const TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 12,
-                                                                ),
+                                                            style: TextStyle(
+                                                              color: AppColors
+                                                                  .secText,
+                                                              fontSize: 12,
+                                                            ),
                                                           ),
                                                         ),
                                                       ],
@@ -417,10 +416,11 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                                     /// CGPA
                                                     Row(
                                                       children: [
-                                                        const Icon(
+                                                        Icon(
                                                           Icons.star_border,
                                                           size: 14,
-                                                          color: Colors.grey,
+                                                          color:
+                                                              AppColors.secText,
                                                         ),
 
                                                         const SizedBox(
@@ -431,12 +431,11 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                                           child: Text(
                                                             "CGPA: ${safe(edu.cgpa)}",
 
-                                                            style:
-                                                                const TextStyle(
-                                                                  color: Colors
-                                                                      .grey,
-                                                                  fontSize: 12,
-                                                                ),
+                                                            style: TextStyle(
+                                                              color: AppColors
+                                                                  .secText,
+                                                              fontSize: 12,
+                                                            ),
                                                           ),
                                                         ),
                                                       ],
@@ -447,9 +446,11 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                             )
                                             .toList(),
                                       )
-                                    : const Text(
+                                    : Text(
                                         "-",
-                                        style: TextStyle(color: Colors.grey),
+                                        style: TextStyle(
+                                          color: AppColors.secText,
+                                        ),
                                       ),
                               ),
                             ),
@@ -470,9 +471,11 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                             .map((e) => _skillChip(e))
                                             .toList(),
                                       )
-                                    : const Text(
+                                    : Text(
                                         "-",
-                                        style: TextStyle(color: Colors.grey),
+                                        style: TextStyle(
+                                          color: AppColors.secText,
+                                        ),
                                       ),
                               ),
                             ),
@@ -514,7 +517,7 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                     foregroundColor: Colors.white,
                                     backgroundColor: isResumeAvailable(user)
                                         ? AppColors.kGreen
-                                        : Colors.grey.shade800,
+                                        : AppColors.kBorder,
                                     padding: const EdgeInsets.symmetric(
                                       vertical: 14,
                                     ),
@@ -656,14 +659,14 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
             width: 120,
             child: Text(
               title,
-              style: const TextStyle(
-                color: Colors.white70,
+              style: TextStyle(
+                color: AppColors.white.withOpacity(.7),
                 fontWeight: FontWeight.w500,
               ),
             ),
           ),
           Expanded(
-            child: Text(value, style: const TextStyle(color: Colors.white)),
+            child: Text(value, style: TextStyle(color: AppColors.white)),
           ),
         ],
       ),
@@ -689,7 +692,6 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
 
     final college = safe(currentEducation?.college);
 
-    final cgpa = safe(currentEducation?.cgpa);
     Experience? currentExp;
 
     if (user.experiences?.isNotEmpty ?? false) {
@@ -704,16 +706,13 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
     final company = safe(currentExp?.company);
 
     final experience = safe(user.totalYearsOfExperience);
-    print("MATCH SCORE FROM API = ${vM.application?.matchScore}");
-    print("APPLICATION ID = ${vM.application?.id}");
     final match = vM.application?.matchScore ?? 9;
-    print("MATCH VARIABLE = $match");
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(.06)),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: Column(
         children: [
@@ -786,8 +785,8 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                         Expanded(
                           child: Text(
                             name,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppColors.white,
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
                             ),
@@ -798,39 +797,27 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                       ],
                     ),
 
-                    // const SizedBox(height: 4),
-
-                    // Text(
-                    //   degree,
-                    //   style:
-                    //       const TextStyle(
-                    //     color: Colors.grey,
-                    //     fontSize: 13,
-                    //   ),
-                    // ),
                     const SizedBox(height: 10),
 
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
 
                       children: [
-                        /// LOCATION / DEGREE
-
                         /// COLLEGE
                         if (college.isNotEmpty)
                           Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.school_outlined,
                                 size: 14,
-                                color: Colors.grey,
+                                color: AppColors.secText,
                               ),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
                                   college,
-                                  style: const TextStyle(
-                                    color: Colors.white70,
+                                  style: TextStyle(
+                                    color: AppColors.white.withOpacity(.7),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -844,10 +831,10 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                         if (role.isNotEmpty || company.isNotEmpty)
                           Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.work_outline,
                                 size: 14,
-                                color: Colors.grey,
+                                color: AppColors.secText,
                               ),
                               const SizedBox(width: 6),
                               Expanded(
@@ -855,8 +842,8 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                   company.isNotEmpty
                                       ? "$role @ $company"
                                       : role,
-                                  style: const TextStyle(
-                                    color: Colors.white70,
+                                  style: TextStyle(
+                                    color: AppColors.white.withOpacity(.7),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -869,17 +856,17 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                         if (experience.isNotEmpty)
                           Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.work_history_outlined,
                                 size: 14,
-                                color: Colors.grey,
+                                color: AppColors.secText,
                               ),
                               const SizedBox(width: 6),
                               Expanded(
                                 child: Text(
                                   "$experience years experience",
-                                  style: const TextStyle(
-                                    color: Colors.white70,
+                                  style: TextStyle(
+                                    color: AppColors.white.withOpacity(.7),
                                     fontSize: 12,
                                   ),
                                 ),
@@ -943,7 +930,6 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
 
               const SizedBox(width: 12),
 
-              /// REJECT
               /// MESSAGE
               Expanded(
                 child: OutlinedButton.icon(
@@ -993,7 +979,7 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
               ),
 
               onPressed: () {
-                final userId = user?.userId;
+                final userId = user.userId;
 
                 if (userId == null || userId.isEmpty) {
                   return;
@@ -1078,8 +1064,8 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                 Text(
                   message,
                   textAlign: TextAlign.center,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppColors.white,
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
                   ),
@@ -1109,21 +1095,21 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withOpacity(.05)),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: Colors.grey, size: 18),
+              Icon(icon, color: AppColors.secText, size: 18),
 
               const SizedBox(width: 8),
 
               Text(
                 title,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1143,12 +1129,12 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.06),
+        color: AppColors.chip,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.white, fontSize: 11),
+        style: TextStyle(color: AppColors.chipText, fontSize: 11),
       ),
     );
   }
@@ -1167,18 +1153,18 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
               width: 18,
               height: 18,
 
-              color: enabled ? null : Colors.grey,
+              color: enabled ? null : AppColors.secText,
             ),
             const SizedBox(width: 10),
 
             Expanded(
-              child: Text(title, style: const TextStyle(color: Colors.white)),
+              child: Text(title, style: TextStyle(color: AppColors.white)),
             ),
 
             Icon(
               Icons.open_in_new,
               size: 16,
-              color: enabled ? Colors.white : Colors.grey,
+              color: enabled ? AppColors.white : AppColors.secText,
             ),
           ],
         ),

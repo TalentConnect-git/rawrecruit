@@ -133,10 +133,10 @@ class _HomeViewState extends State<HomeView> {
                   icon: Stack(
                     clipBehavior: Clip.none,
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.calendar_today_outlined,
                         size: 20,
-                        color: Colors.grey,
+                        color: AppColors.subtext,
                       ),
                       if (hasInterviews)
                         Positioned(
@@ -174,7 +174,11 @@ class _HomeViewState extends State<HomeView> {
                       clipBehavior: Clip.none,
 
                       children: [
-                        const Icon(Icons.notifications),
+                        Icon(
+                          Icons.notifications,
+                          size: 22,
+                          color: AppColors.subtext,
+                        ),
 
                         if (available)
                           Positioned(
@@ -214,7 +218,7 @@ class _HomeViewState extends State<HomeView> {
                           'assets/images/chat.png',
                           height: 24,
                           width: 24,
-                          color: Colors.white,
+                          color: AppColors.subtext,
                         ),
 
                         if (available)

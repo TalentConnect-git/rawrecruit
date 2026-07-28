@@ -22,7 +22,7 @@ class TopScrollWrapper extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.secBorder,
+      backgroundColor: AppColors.kBg,
       appBar: title.isEmpty
           ? null
           : AppBar(

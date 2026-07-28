@@ -33,7 +33,7 @@ class _LoginViewState extends State<LoginView> {
     return ChangeNotifierProvider.value(
       value: loginViewModel,
       child: Scaffold(
-        backgroundColor: Colors.black, // ✅ FIX
+        backgroundColor: AppColors.kBg, // ✅ FIX
         body: SingleChildScrollView(
           padding: EdgeInsets.symmetric(
             horizontal: 20,
@@ -59,7 +59,7 @@ class _LoginViewState extends State<LoginView> {
                   Text(
                     'Welcome',
                     style: AppTextStyles.s22W600.copyWith(
-                      color: Colors.white, // ✅ FIX
+                      color: AppColors.text,
                     ),
                   ),
 
@@ -68,7 +68,8 @@ class _LoginViewState extends State<LoginView> {
                   Text(
                     'Login to continue your journey.',
                     style: AppTextStyles.s14W400.copyWith(
-                      color: Colors.grey, // ✅ FIX
+                      color: AppColors.secText,
+                      //✅ FIX
                     ),
                   ),
 
@@ -222,7 +223,7 @@ class _LoginViewState extends State<LoginView> {
                         Text(
                           "Don't have an account? ",
                           style: AppTextStyles.s14W400.copyWith(
-                            color: Colors.grey,
+                            color: AppColors.secText,
                           ),
                         ),
                         Text(
@@ -264,7 +265,7 @@ Widget _socialButton({
         children: [
           icon,
           const SizedBox(width: 10),
-          Text(text, style: const TextStyle(color: Colors.white)),
+          Text(text, style: TextStyle(color: AppColors.white)),
         ],
       ),
     ),

@@ -70,7 +70,9 @@ class ApplicantCard extends StatelessWidget {
                   /// ✅ NAME
                   Text(
                     name,
-                    style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+                    style: AppTextStyles.s16W600.copyWith(
+                      color: AppColors.secBorder,
+                    ),
                   ),
 
                   const SizedBox(height: 6),
@@ -118,7 +120,9 @@ class ApplicantCard extends StatelessWidget {
                   /// ✅ TIME
                   Text(
                     _timeAgo(application.createdAt),
-                    style: AppTextStyles.s12W400.copyWith(color: Colors.grey),
+                    style: AppTextStyles.s12W400.copyWith(
+                      color: AppColors.subtext,
+                    ),
                   ),
                 ],
               ),

@@ -17,6 +17,9 @@ class AppColors {
   static Color get shadow => Color(0xff000000).withValues(alpha: 0.2);
 
   static Color get secText => _isDark ? Color(0xffbcbcbc) : Color(0xff858585);
+
+  static Color get grey => _isDark ? Colors.transparent : Colors.grey;
+  static Color get subtext => _isDark ? Colors.grey : Colors.black;
   static Color get secCard => _isDark ? Color(0xff0F1115) : Color(0xfffafafa);
   static Color get secChip => _isDark ? Color(0xff0F1115) : Color(0xfffafafa);
   static Color get white => _isDark ? Color(0xffffffff) : Color(0xff222222);
@@ -35,7 +38,8 @@ class AppColors {
   static Color get kCard => _isDark ? Color(0xFF111827) : Color(0xffF0F2F5);
   static Color get kTile => _isDark ? Color(0xFF0F1115) : Color(0xffF7F8FA);
   static Color get kBorder => _isDark ? Color(0xFF1F2937) : Color(0xff000000);
-  static Color get kGreen => Color(0xFF22C55E);
+  static Color get kGreen =>
+      _isDark ? Color(0xFF22C55E) : Color.fromARGB(255, 11, 152, 61);
   static Color get heroCard => _isDark ? Color(0xff091B38) : Color(0xffE8F3F7);
   static Color get kInputFill =>
       _isDark ? Color(0xff2C2C2C) : Color(0xffF0F2F5);

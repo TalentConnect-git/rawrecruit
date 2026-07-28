@@ -62,238 +62,244 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
   Widget build(BuildContext context) {
     return ChangeNotifierProvider.value(
       value: vm,
-      child: Scaffold(
-        backgroundColor: AppColors.kBg,
-        body: SafeArea(
-          child: Consumer<MyProfileViewModel>(
-            builder: (_, vm, __) {
-              if (vm.isLoading) {
-                return Center(
-                  child: CircularProgressIndicator(color: AppColors.kGreen),
-                );
-              }
+      child: ListenableBuilder(
+        listenable: ThemeController.instance,
+        builder: (_, __) {
+          return Scaffold(
+            backgroundColor: AppColors.kBg,
+            body: SafeArea(
+              child: Consumer<MyProfileViewModel>(
+                builder: (_, vm, __) {
+                  if (vm.isLoading) {
+                    return Center(
+                      child: CircularProgressIndicator(color: AppColors.kGreen),
+                    );
+                  }
 
-              final p = vm.user;
+                  final p = vm.user;
 
-              return SingleChildScrollView(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  children: [
-                    /// 🔹 HEADER
-                    // Row(
-                    //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //   children: [
-                    //     Row(
-                    //       children: [
-                    //         InkWell(
-                    //           onTap: context.pop,
-                    //           child: const Icon(
-                    //             Icons.arrow_back,
-                    //             color: Colors.white,
-                    //           ),
-                    //         ),
-                    //         const SizedBox(width: 12),
-                    //         const Text(
-                    //           "Profile",
-                    //           style: TextStyle(
-                    //             color: Colors.white,
-                    //             fontSize: 20,
-                    //             fontWeight: FontWeight.bold,
-                    //           ),
-                    //         ),
-                    //       ],
-                    //     ),
-                    //     const Icon(Icons.settings, color: Colors.grey),
-                    //   ],
-                    // ),
-                    const SizedBox(height: 20),
+                  return SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      children: [
+                        /// 🔹 HEADER
+                        // Row(
+                        //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //   children: [
+                        //     Row(
+                        //       children: [
+                        //         InkWell(
+                        //           onTap: context.pop,
+                        //           child: const Icon(
+                        //             Icons.arrow_back,
+                        //             color: Colors.white,
+                        //           ),
+                        //         ),
+                        //         const SizedBox(width: 12),
+                        //         const Text(
+                        //           "Profile",
+                        //           style: TextStyle(
+                        //             color: Colors.white,
+                        //             fontSize: 20,
+                        //             fontWeight: FontWeight.bold,
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //     const Icon(Icons.settings, color: Colors.grey),
+                        //   ],
+                        // ),
+                        const SizedBox(height: 20),
 
-                    /// 🔥 PROFILE CARD
-                    _topProfileSection(p),
+                        /// 🔥 PROFILE CARD
+                        _topProfileSection(p),
 
-                    const SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
-                    /// 🔥 STATS GRID
-                    _statsGrid(vm),
+                        /// 🔥 STATS GRID
+                        _statsGrid(vm),
 
-                    const SizedBox(height: 16),
-                    if (!getIt<AppStateProvider>().isProfessional)
-                      Container(
-                        margin: const EdgeInsets.only(bottom: 16),
+                        const SizedBox(height: 16),
+                        if (!getIt<AppStateProvider>().isProfessional)
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 16),
 
-                        padding: const EdgeInsets.all(16),
+                            padding: const EdgeInsets.all(16),
 
-                        decoration: BoxDecoration(
-                          color: AppColors.kCard,
+                            decoration: BoxDecoration(
+                              color: AppColors.kCard,
 
-                          borderRadius: BorderRadius.circular(16),
+                              borderRadius: BorderRadius.circular(16),
 
-                          border: Border.all(
-                            color: AppColors.kGreen.withOpacity(.2),
-                          ),
-                        ),
-
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-
-                                children: [
-                                  const Text(
-                                    "Switch to Professional",
-
-                                    style: TextStyle(
-                                      color: Colors.white,
-
-                                      fontWeight: FontWeight.bold,
-
-                                      fontSize: 15,
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 4),
-
-                                  Text(
-                                    "Add experience & unlock professional profile",
-
-                                    style: TextStyle(
-                                      color: Colors.grey[400],
-
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
+                              border: Border.all(
+                                color: AppColors.kGreen.withOpacity(.2),
                               ),
                             ),
 
-                            Switch(
-                              value: false,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
 
-                              activeColor: AppColors.kGreen,
+                                    children: [
+                                      Text(
+                                        "Switch to Professional",
 
-                              onChanged: (value) {
-                                Navigator.push(
-                                  context,
+                                        style: TextStyle(
+                                          color: AppColors.white,
 
-                                  MaterialPageRoute(
-                                    builder: (_) => AddEditProfileView(
-                                      user: vm.user,
+                                          fontWeight: FontWeight.bold,
 
-                                      initialStep: 4,
+                                          fontSize: 15,
+                                        ),
+                                      ),
 
-                                      isSwitchingToProfessional: true,
-                                    ),
+                                      const SizedBox(height: 4),
+
+                                      Text(
+                                        "Add experience & unlock professional profile",
+
+                                        style: TextStyle(
+                                          color: AppColors.secText,
+
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                );
-                              },
+                                ),
+
+                                Switch(
+                                  value: false,
+
+                                  activeColor: AppColors.kGreen,
+
+                                  onChanged: (value) {
+                                    Navigator.push(
+                                      context,
+
+                                      MaterialPageRoute(
+                                        builder: (_) => AddEditProfileView(
+                                          user: vm.user,
+
+                                          initialStep: 4,
+
+                                          isSwitchingToProfessional: true,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
+                          ),
+
+                        /// 🔥 MENU LIST
+                        _menuItem(
+                          "Edit Profile",
+                          Icons.edit,
+                          onTap: () async {
+                            final result = await Navigator.push(
+                              context,
+
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    EditProfileSectionsPage(user: vm.user!),
+                              ),
+                            );
+
+                            if (result == true) {
+                              /// 🔥 CALL onboarding/me AGAIN
+                              final failure = await getIt<AppStateProvider>()
+                                  .getUserDetails();
+
+                              /// 🔥 UPDATE LOCAL VM
+                              vm.user = getIt<AppStateProvider>().user;
+
+                              if (mounted) {
+                                setState(() {});
+
+                                failure?.showError(context);
+                              }
+                            }
+                          },
                         ),
-                      ),
-
-                    /// 🔥 MENU LIST
-                    _menuItem(
-                      "Edit Profile",
-                      Icons.edit,
-                      onTap: () async {
-                        final result = await Navigator.push(
-                          context,
-
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                EditProfileSectionsPage(user: vm.user!),
-                          ),
-                        );
-
-                        if (result == true) {
-                          /// 🔥 CALL onboarding/me AGAIN
-                          final failure = await getIt<AppStateProvider>()
-                              .getUserDetails();
-
-                          /// 🔥 UPDATE LOCAL VM
-                          vm.user = getIt<AppStateProvider>().user;
-
-                          if (mounted) {
-                            setState(() {});
-
-                            failure?.showError(context);
-                          }
-                        }
-                      },
-                    ),
-                    if (getIt<AppStateProvider>().isProfessional) ...[
-                      _menuItem(
-                        "My Posted Jobs",
-                        Icons.work,
-                        onTap: () {
-                          context.pushNamed(
-                            RouteNames.application,
-                            extra: {
-                              'userType': UserType.professional,
-                              'jobType': ProfessionalJobType.posted,
+                        if (getIt<AppStateProvider>().isProfessional) ...[
+                          _menuItem(
+                            "My Posted Jobs",
+                            Icons.work,
+                            onTap: () {
+                              context.pushNamed(
+                                RouteNames.application,
+                                extra: {
+                                  'userType': UserType.professional,
+                                  'jobType': ProfessionalJobType.posted,
+                                },
+                              );
                             },
-                          );
-                        },
-                      ),
-
-                      _menuItem(
-                        "Referrals",
-                        Icons.share,
-                        onTap: () {
-                          context.pushNamed(
-                            RouteNames.referrer,
-                            extra: {'userType': UserType.professional},
-                          );
-                        },
-                      ),
-                    ],
-
-                    _menuItem(
-                      "Alumni Network",
-                      Icons.group,
-                      onTap: () {
-                        context.pushNamed(RouteNames.shortlist);
-                      },
-                    ),
-                    _menuItem(
-                      "Career Insights",
-                      Icons.trending_up,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const CareerInsightsPage(),
                           ),
-                        );
-                      },
-                    ),
-                    _menuItem(
-                      "Support",
-                      Icons.trending_up,
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const SupportPage(),
+
+                          _menuItem(
+                            "Referrals",
+                            Icons.share,
+                            onTap: () {
+                              context.pushNamed(
+                                RouteNames.referrer,
+                                extra: {'userType': UserType.professional},
+                              );
+                            },
                           ),
-                        );
-                      },
+                        ],
+
+                        _menuItem(
+                          "Alumni Network",
+                          Icons.group,
+                          onTap: () {
+                            context.pushNamed(RouteNames.shortlist);
+                          },
+                        ),
+                        _menuItem(
+                          "Career Insights",
+                          Icons.trending_up,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const CareerInsightsPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        _menuItem(
+                          "Support",
+                          Icons.trending_up,
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => const SupportPage(),
+                              ),
+                            );
+                          },
+                        ),
+                        const SizedBox(height: 20),
+
+                        _themeToggleItem(), // 🔥 new theme switch row
+
+                        const SizedBox(height: 20),
+
+                        /// 🔥 SIGN OUT
+                        _signOut(),
+                      ],
                     ),
-                    const SizedBox(height: 20),
-
-                    _themeToggleItem(), // 🔥 new theme switch row
-
-                    const SizedBox(height: 20),
-
-                    /// 🔥 SIGN OUT
-                    _signOut(),
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
@@ -936,8 +942,11 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                 color: AppColors.kGreen,
               ),
               const SizedBox(width: 12),
-              const Expanded(
-                child: Text("Dark Mode", style: TextStyle(color: Colors.white)),
+              Expanded(
+                child: Text(
+                  "Dark Mode",
+                  style: TextStyle(color: AppColors.white),
+                ),
               ),
               Switch(
                 value: isDark,

@@ -80,7 +80,9 @@ class ReferredApplicantCard extends StatelessWidget {
                   /// ✅ NAME
                   Text(
                     name,
-                    style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+                    style: AppTextStyles.s16W600.copyWith(
+                      color: AppColors.subtext,
+                    ),
                   ),
 
                   const SizedBox(height: 6),

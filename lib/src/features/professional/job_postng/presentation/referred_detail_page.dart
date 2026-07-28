@@ -29,10 +29,10 @@ class ReferredCandidateDetailPage extends StatelessWidget {
 
     final location = application.job?.location?.join(", ") ?? "-";
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: AppColors.kBg,
       appBar: AppBar(
-        backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: AppColors.kBg,
+        iconTheme: IconThemeData(color: AppColors.white),
         title: Text(
           "Referral Details",
           style: TextStyle(color: AppColors.white),
@@ -127,7 +127,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
               child: imageUrl.isEmpty
                   ? Text(
                       name.isNotEmpty ? name[0].toUpperCase() : "U",
-                      style: const TextStyle(color: Colors.black),
+                      style: TextStyle(color: AppColors.onGreenButton),
                     )
                   : null,
             ),
@@ -142,13 +142,13 @@ class ReferredCandidateDetailPage extends StatelessWidget {
                   name,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
+                  style: TextStyle(color: AppColors.white, fontSize: 16),
                 ),
 
                 const SizedBox(height: 4),
                 Text(
                   application.applicant?.email ?? "-",
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: AppColors.secText),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -180,7 +180,9 @@ class ReferredCandidateDetailPage extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(
-                    color: isRedirectable ? AppColors.kGreen : Colors.white,
+                    color: isRedirectable
+                        ? AppColors.kGreen
+                        : AppColors.kBorder,
                     width: 2,
                   ),
                 ),
@@ -189,8 +191,8 @@ class ReferredCandidateDetailPage extends StatelessWidget {
                   backgroundColor: AppColors.kTile,
                   child: Text(
                     company.isNotEmpty ? company[0].toUpperCase() : "C",
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.white,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -205,8 +207,8 @@ class ReferredCandidateDetailPage extends StatelessWidget {
                   children: [
                     Text(
                       company,
-                      style: const TextStyle(
-                        color: Colors.white70,
+                      style: TextStyle(
+                        color: AppColors.secText,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -220,16 +222,16 @@ class ReferredCandidateDetailPage extends StatelessWidget {
 
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on_outlined,
                 size: 14,
-                color: Colors.grey,
+                color: AppColors.secText,
               ),
               const SizedBox(width: 4),
               Expanded(
                 child: Text(
                   location,
-                  style: const TextStyle(color: Colors.grey),
+                  style: TextStyle(color: AppColors.secText),
                 ),
               ),
             ],
@@ -239,7 +241,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
 
           Text(
             "Referred on ${_formatDate(date)}",
-            style: const TextStyle(color: Colors.grey),
+            style: TextStyle(color: AppColors.secText),
           ),
         ],
       ),
@@ -271,7 +273,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text("Progress", style: TextStyle(color: Colors.white)),
+        Text("Progress", style: TextStyle(color: AppColors.white)),
 
         const SizedBox(height: 10),
 
@@ -286,14 +288,14 @@ class ReferredCandidateDetailPage extends StatelessWidget {
                 children: [
                   Icon(
                     isDone ? Icons.check_circle : Icons.radio_button_unchecked,
-                    color: isDone ? Colors.green : Colors.grey,
+                    color: isDone ? AppColors.kGreen : AppColors.secText,
                   ),
 
                   if (index != steps.length - 1)
                     Container(
                       width: 2,
                       height: 30,
-                      color: isDone ? Colors.green : Colors.grey,
+                      color: isDone ? AppColors.kGreen : AppColors.secText,
                     ),
                 ],
               ),
@@ -304,7 +306,9 @@ class ReferredCandidateDetailPage extends StatelessWidget {
                 padding: const EdgeInsets.only(top: 4),
                 child: Text(
                   steps[index],
-                  style: TextStyle(color: isDone ? Colors.white : Colors.grey),
+                  style: TextStyle(
+                    color: isDone ? AppColors.white : AppColors.secText,
+                  ),
                 ),
               ),
             ],
@@ -332,7 +336,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
           },
           child: Text(
             "Message Candidate",
-            style: TextStyle(color: AppColors.white),
+            style: TextStyle(color: AppColors.onGreenButton),
           ),
         ),
 
@@ -341,7 +345,7 @@ class ReferredCandidateDetailPage extends StatelessWidget {
           const SizedBox(height: 12),
 
           PopupMenuButton<String>(
-            color: Colors.white,
+            color: AppColors.kCard,
             onSelected: (value) async {
               // final vm = context.read<ApplicationViewModel>();
 
@@ -354,41 +358,62 @@ class ReferredCandidateDetailPage extends StatelessWidget {
                 jobRole: application.jobTitle ?? "",
               );
             },
-            itemBuilder: (_) => const [
-              PopupMenuItem(value: "Shortlisted", child: Text("Shortlisted")),
+            itemBuilder: (_) => [
+              PopupMenuItem(
+                value: "Shortlisted",
+                child: Text(
+                  "Shortlisted",
+                  style: TextStyle(color: AppColors.white),
+                ),
+              ),
               PopupMenuItem(
                 value: "Interview Scheduled",
-                child: Text("Interview Scheduled"),
+                child: Text(
+                  "Interview Scheduled",
+                  style: TextStyle(color: AppColors.white),
+                ),
               ),
               PopupMenuItem(
                 value: "Offer Extended",
-                child: Text("Offer Extended"),
+                child: Text(
+                  "Offer Extended",
+                  style: TextStyle(color: AppColors.white),
+                ),
               ),
               PopupMenuItem(
                 value: "Offer Accepted",
-                child: Text("Offer Accepted"),
+                child: Text(
+                  "Offer Accepted",
+                  style: TextStyle(color: AppColors.white),
+                ),
               ),
               PopupMenuItem(
                 value: "Offer Rejected",
-                child: Text("Offer Rejected"),
+                child: Text(
+                  "Offer Rejected",
+                  style: TextStyle(color: AppColors.white),
+                ),
               ),
               PopupMenuItem(
                 value: "Joined the Company",
-                child: Text("Joined the Company"),
+                child: Text(
+                  "Joined the Company",
+                  style: TextStyle(color: AppColors.white),
+                ),
               ),
             ],
             child: Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(
-                color: Colors.white,
+                color: AppColors.kCard,
                 borderRadius: BorderRadius.circular(12),
               ),
-              child: const Center(
+              child: Center(
                 child: Text(
                   "Update Status",
                   style: TextStyle(
-                    color: Colors.black,
+                    color: AppColors.white,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

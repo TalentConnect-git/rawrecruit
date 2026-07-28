@@ -232,7 +232,10 @@ enum JobType {
   poolCampus('Pool Campus'),
 
   @JsonValue('Referral')
-  referral('Referral');
+  referral('Referral'),
+
+  @JsonValue('Internship')
+  internship('Internship');
 
   final String label;
 

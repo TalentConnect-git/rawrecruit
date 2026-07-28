@@ -941,9 +941,9 @@ class _CareerPageState extends State<CareerPage> {
 
                 contentPadding: EdgeInsets.zero,
 
-                title: const Text(
+                title: Text(
                   "Currently working here",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.white),
                 ),
 
                 onChanged: (value) {

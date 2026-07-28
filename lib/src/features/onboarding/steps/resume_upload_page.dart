@@ -27,7 +27,7 @@ class ResumeUploadPage extends StatelessWidget {
           child: IconButton(
             padding: EdgeInsets.zero,
             alignment: Alignment.topLeft,
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
+            icon: Icon(Icons.arrow_back, color: AppColors.text),
             onPressed: () async {
               final shouldGoBack = await showDialog<bool>(
                 context: context,
@@ -61,7 +61,7 @@ class ResumeUploadPage extends StatelessWidget {
 
         Text.rich(
           TextSpan(
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: AppColors.secText),
             children: [
               TextSpan(text: "Let AI do the stalking. 🕵️ We'll "),
               TextSpan(
@@ -88,13 +88,13 @@ class ResumeUploadPage extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
           ),
           child: Row(
-            children: const [
+            children: [
               Icon(Icons.flash_on, color: Colors.green, size: 16),
               SizedBox(width: 8),
               Expanded(
                 child: Text(
                   "Profiles with resumes get 3x more referrals",
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
+                  style: TextStyle(color: AppColors.secText, fontSize: 12),
                 ),
               ),
             ],
@@ -107,9 +107,9 @@ class ResumeUploadPage extends StatelessWidget {
         Center(
           child: TextButton(
             onPressed: onNext, // ✅ JUST MOVE NEXT
-            child: const Text(
+            child: Text(
               "Skip and Fill Manually",
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: AppColors.secText),
             ),
           ),
         ),
@@ -343,34 +343,27 @@ class ResumeUploadPage extends StatelessWidget {
   }
 
   /// 📄 UPLOAD BOX
+  /// 📄 UPLOAD BOX
   Widget _uploadBox(BuildContext context) {
     return GestureDetector(
       onTap: () => _handleUpload(context),
 
       child: Container(
         width: double.infinity,
-
         padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 26),
-
         decoration: BoxDecoration(
           color: AppColors.kCard,
-
           borderRadius: BorderRadius.circular(18),
-
           border: Border.all(color: AppColors.kBorder),
         ),
-
         child: Column(
           children: [
             Container(
               padding: const EdgeInsets.all(16),
-
               decoration: BoxDecoration(
                 color: AppColors.kGreen.withOpacity(.12),
-
                 shape: BoxShape.circle,
               ),
-
               child: Icon(
                 Icons.upload_file_rounded,
                 color: AppColors.kGreen,
@@ -380,11 +373,10 @@ class ResumeUploadPage extends StatelessWidget {
 
             const SizedBox(height: 18),
 
-            const Text(
+            Text(
               "Upload Your Resume",
-
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.text,
                 fontSize: 16,
                 fontWeight: FontWeight.w700,
               ),
@@ -392,10 +384,9 @@ class ResumeUploadPage extends StatelessWidget {
 
             const SizedBox(height: 6),
 
-            const Text(
+            Text(
               "PDF • Max 5MB",
-
-              style: TextStyle(color: Colors.grey, fontSize: 12),
+              style: TextStyle(color: AppColors.secText, fontSize: 12),
             ),
           ],
         ),

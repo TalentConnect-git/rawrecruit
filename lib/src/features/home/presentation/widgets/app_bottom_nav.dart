@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/index.dart' show AppColors, AppTextStyles;
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart'
     show
         NavItem,
@@ -56,64 +57,47 @@ class _AppBottomNavState extends State<AppBottomNav>
 
   @override
   Widget build(BuildContext context) {
-    final items = getIt<AppStateProvider>().isProfessional
-        ? NavItemExt.professionals
-        : NavItemExt.freshers;
+    return ListenableBuilder(
+      listenable: ThemeController.instance,
+      builder: (_, __) {
+        final items = getIt<AppStateProvider>().isProfessional
+            ? NavItemExt.professionals
+            : NavItemExt.freshers;
 
-    // final items = NavItem.values;
+        return Container(
+          child: StylishBottomBar(
+            currentIndex: widget.currentIndex,
+            backgroundColor: AppColors.kBg,
+            onTap: (index) => widget.onTap(items[index]),
+            items: [
+              ...items.map((item) {
+                final isSelected = items.indexOf(item) == widget.currentIndex;
 
-    return Container(
-      // decoration: BoxDecoration(
-      //   border: Border.all(
-      //     color: AppColors.secText.withValues(alpha: 0.2),
-      //     width: 0.4,
-      //   ),
-      // ),
-      child: StylishBottomBar(
-        currentIndex: widget.currentIndex,
-        backgroundColor: AppColors.kBg,
-        onTap: (index) => widget.onTap(items[index]),
-        items: [
-          ...items.map((item) {
-            final isSelected = items.indexOf(item) == widget.currentIndex;
+                Widget iconWidget = Stack(
+                  clipBehavior: Clip.none,
+                  children: [
+                    Icon(
+                      isSelected ? item.selectedIcon : item.unSelectedIcon,
+                      color: isSelected ? AppColors.kGreen : AppColors.secText,
+                    ),
+                  ],
+                );
 
-            Widget iconWidget = Stack(
-              clipBehavior: Clip.none,
-              children: [
-                Icon(
-                  isSelected ? item.selectedIcon : item.unSelectedIcon,
-                  color: isSelected ? AppColors.kGreen : AppColors.secText,
-                ),
-
-                // if (item == NavItem.profile && hasUnread)
-                //   Positioned(
-                //     right: -2,
-                //     top: -2,
-                //     child: Container(
-                //       width: 8,
-                //       height: 8,
-                //       decoration: const BoxDecoration(
-                //         color: Colors.red,
-                //         shape: BoxShape.circle,
-                //       ),
-                //     ),
-                //   ),
-              ],
-            );
-
-            return BottomBarItem(
-              icon: iconWidget,
-              title: Text(
-                item.label,
-                style: AppTextStyles.s12W400.copyWith(
-                  color: isSelected ? AppColors.kGreen : AppColors.secText,
-                ),
-              ),
-            );
-          }),
-        ],
-        option: AnimatedBarOptions(iconStyle: IconStyle.Default),
-      ),
+                return BottomBarItem(
+                  icon: iconWidget,
+                  title: Text(
+                    item.label,
+                    style: AppTextStyles.s12W400.copyWith(
+                      color: isSelected ? AppColors.kGreen : AppColors.secText,
+                    ),
+                  ),
+                );
+              }),
+            ],
+            option: AnimatedBarOptions(iconStyle: IconStyle.Default),
+          ),
+        );
+      },
     );
   }
 }

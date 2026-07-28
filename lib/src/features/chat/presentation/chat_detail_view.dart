@@ -69,7 +69,7 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                           decoration: BoxDecoration(
                             color: AppColors.kBg,
                             border: Border(
-                              bottom: BorderSide(color: Colors.white12),
+                              bottom: BorderSide(color: AppColors.kBorder),
                             ),
                           ),
 
@@ -82,7 +82,7 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                                   onTap: () => context.pop(true),
                                   child: Icon(
                                     Icons.keyboard_arrow_left,
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                   ),
                                 ),
 
@@ -102,7 +102,8 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                                               name(user).getInitials,
                                               style: AppTextStyles.s18W600
                                                   .copyWith(
-                                                    color: AppColors.kBg,
+                                                    color:
+                                                        AppColors.onGreenButton,
                                                   ),
                                             )
                                           : null,
@@ -117,13 +118,13 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                                         decoration: BoxDecoration(
                                           color:
                                               vm.onlineUsers.contains(user?.id)
-                                              ? Colors.green
-                                              : Colors.white,
+                                              ? AppColors.kGreen
+                                              : AppColors.secBackground,
                                           borderRadius: BorderRadius.circular(
                                             10,
                                           ),
                                           border: Border.all(
-                                            color: Colors.grey,
+                                            color: AppColors.kBorder,
                                             width: 2,
                                           ),
                                         ),
@@ -145,7 +146,7 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                                           name(user),
                                           style: AppTextStyles.s16W400.copyWith(
                                             overflow: TextOverflow.ellipsis,
-                                            color: Colors.white,
+                                            color: AppColors.white,
                                           ),
                                           maxLines: 1,
                                         ),
@@ -184,15 +185,15 @@ class _ChatDetailViewState extends State<ChatDetailView> {
                                           ? AppColors.kGreen.withValues(
                                               alpha: 0.5,
                                             )
-                                          : Colors.grey.shade300,
+                                          : AppColors.kTile,
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Text(
                                       msg.message ?? "",
                                       style: TextStyle(
                                         color: isMe
-                                            ? Colors.white
-                                            : Colors.black,
+                                            ? AppColors.onGreenButton
+                                            : AppColors.text,
                                       ),
                                     ),
                                   ),

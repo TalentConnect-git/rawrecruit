@@ -180,14 +180,14 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
           margin: const EdgeInsets.symmetric(horizontal: 4),
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: isSelected ? AppColors.kGreen : const Color(0xFF1F2937),
+            color: isSelected ? AppColors.kGreen : AppColors.kCard,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Center(
             child: Text(
               type.label,
               style: TextStyle(
-                color: isSelected ? Colors.black : Colors.white,
+                color: isSelected ? Colors.black : AppColors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),

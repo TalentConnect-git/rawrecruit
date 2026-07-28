@@ -307,9 +307,9 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
 
         const SizedBox(height: 20),
 
-        const Text(
+        Text(
           "Employment Type",
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
+          style: TextStyle(color: AppColors.text, fontWeight: FontWeight.w600),
         ),
 
         const SizedBox(height: 12),
@@ -367,16 +367,16 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
           },
         ),
 
-        const SizedBox(height: 10),
+        const SizedBox(height: 20),
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
 
           children: [
-            const Text(
+            Text(
               "Job Roles",
 
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.text,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -457,7 +457,7 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
 
                       focusNode: focusNode,
 
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: AppColors.text),
 
                       decoration: InputDecoration(
                         hintText: "Search Job Role",
@@ -671,7 +671,7 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
             children: [
               Icon(
                 icon,
-                color: selected ? AppColors.kGreen : Colors.grey,
+                color: selected ? AppColors.kGreen : AppColors.secText,
                 size: 22,
               ),
               const SizedBox(height: 6),

@@ -657,7 +657,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
               elevation: 0,
 
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back, color: Colors.white),
+                icon: Icon(Icons.arrow_back, color: AppColors.white),
                 onPressed: () => context.pop(), // 🔥 simple back
               ),
             ),
@@ -822,9 +822,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                   enable: false,
 
-                                  suffixIcon: const Icon(
+                                  suffixIcon: Icon(
                                     Icons.lock_outline,
-                                    color: Colors.grey,
+                                    color: AppColors.secText,
                                     size: 18,
                                   ),
 
@@ -853,9 +853,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                   enable: false,
 
-                                  suffixIcon: const Icon(
+                                  suffixIcon: Icon(
                                     Icons.lock_outline,
-                                    color: Colors.grey,
+                                    color: AppColors.secText,
                                     size: 18,
                                   ),
 
@@ -871,16 +871,18 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                   ),
 
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF1F2937),
+                                    color: AppColors.kCard,
                                     borderRadius: BorderRadius.circular(12),
                                   ),
 
                                   child: Row(
                                     children: [
-                                      const Expanded(
+                                      Expanded(
                                         child: Text(
                                           "Currently Serving Notice Period",
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(
+                                            color: AppColors.text,
+                                          ),
                                         ),
                                       ),
 
@@ -952,7 +954,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       padding: const EdgeInsets.all(16),
 
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF1F2937),
+                                        color: AppColors.kCard,
                                         borderRadius: BorderRadius.circular(16),
                                       ),
 
@@ -985,8 +987,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                           Text(
                                             "Start Date: ${controller.noticePeriodStartDate.text}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                            style: TextStyle(
+                                              color: AppColors.text,
                                             ),
                                           ),
 
@@ -994,8 +996,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                           Text(
                                             "Total Notice Period: ${controller.noticePeriod.text} days",
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                            style: TextStyle(
+                                              color: AppColors.text,
                                             ),
                                           ),
 
@@ -1003,8 +1005,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                           Text(
                                             "Days Served: ${notice["daysPassed"]}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                            style: TextStyle(
+                                              color: AppColors.text,
                                             ),
                                           ),
 
@@ -1012,8 +1014,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                           Text(
                                             "Days Remaining: ${notice["daysRemaining"]}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                            style: TextStyle(
+                                              color: AppColors.text,
                                             ),
                                           ),
 
@@ -1021,8 +1023,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                           Text(
                                             "Expected Last Day: ${notice["endDate"]}",
-                                            style: const TextStyle(
-                                              color: Colors.white,
+                                            style: TextStyle(
+                                              color: AppColors.text,
                                             ),
                                           ),
 
@@ -1030,6 +1032,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
                                           LinearProgressIndicator(
                                             value: notice["progress"],
+                                            color: AppColors.kGreen,
+                                            backgroundColor: AppColors.kBorder
+                                                .withOpacity(.25),
                                           ),
                                         ],
                                       ),
@@ -1106,7 +1111,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       padding: const EdgeInsets.all(16),
 
                                       decoration: BoxDecoration(
-                                        color: const Color(0xFF111827),
+                                        color: AppColors.kCard,
 
                                         borderRadius: BorderRadius.circular(16),
                                       ),
@@ -1124,8 +1129,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                               Text(
                                                 "Education ${index + 1}",
 
-                                                style: const TextStyle(
-                                                  color: Colors.white,
+                                                style: TextStyle(
+                                                  color: AppColors.text,
 
                                                   fontWeight: FontWeight.bold,
                                                 ),
@@ -2019,7 +2024,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
                                       ? "Switch"
                                       : "Save",
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.white,
                                     fontWeight: FontWeight.bold,
                                     fontSize: 16,
                                   ),
@@ -2063,13 +2068,14 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     String title = "Experience",
   }) {
     final hasCurrentExperience = controller.experiences.any((e) => e.isCurrent);
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111827),
+        color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: AppColors.kBorder.withOpacity(0.06)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2094,13 +2100,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
           if (e.isCurrent) ...[
             AppTextFields(
               controller: controller.companyEmail,
-
               hint: 'Official Company Email',
-
               keyboardType: TextInputType.emailAddress,
-
               helperText: "Used for company verification",
-
               onChanged: (_) => markChanged(),
             ),
 
@@ -2109,11 +2111,8 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
             AppTextFields(
               controller: controller.noticePeriod,
-
               hint: 'Notice Period (days)',
-
               keyboardType: TextInputType.number,
-
               onChanged: (_) => markChanged(),
             ),
           ],
@@ -2136,9 +2135,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       padding: const EdgeInsets.all(16),
 
       decoration: BoxDecoration(
-        color: const Color(0xFF111827),
+        color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: AppColors.kBorder.withOpacity(0.06)),
       ),
 
       child: Column(
@@ -2151,6 +2150,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
           }),
 
           const SizedBox(height: 12),
+
           CommonAutocomplete(
             label: "Company",
 
@@ -2168,6 +2168,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
               setState(() {});
             },
+
             initialValue: e.organization.text,
 
             onChanged: (value) {
@@ -2198,6 +2199,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
           const SizedBox(height: 12),
 
           _roleField(e.role),
+
           const SizedBox(height: 12),
 
           _dateRowOnly(e.startDate, e.endDate),
@@ -2216,10 +2218,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       children: [
         Text(
           "$title ${index + 1}",
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
-          ),
+          style: TextStyle(color: AppColors.text, fontWeight: FontWeight.w600),
         ),
         GestureDetector(
           onTap: onRemove,
@@ -2445,10 +2444,10 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Text(
+        Text(
           "Current Status",
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.white,
             fontSize: 16,
             fontWeight: FontWeight.w600,
           ),
@@ -2525,12 +2524,13 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       controller: controller,
       maxLines: maxLines,
       enabled: enabled,
-      style: const TextStyle(color: Colors.white),
+
+      style: TextStyle(color: AppColors.white),
       decoration: InputDecoration(
         hintText: hint,
-        hintStyle: const TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: AppColors.subtext),
         filled: true,
-        fillColor: const Color(0xFF1F2937),
+        fillColor: AppColors.kBg,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
           borderSide: BorderSide.none,
@@ -2645,16 +2645,16 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     return TextFormField(
       controller: controller,
 
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: AppColors.white),
 
       decoration: InputDecoration(
         hintText: hint,
 
-        hintStyle: const TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: AppColors.subtext),
 
         filled: true,
 
-        fillColor: const Color(0xFF1F2937),
+        fillColor: AppColors.kBg,
 
         prefixIcon: Padding(
           padding: const EdgeInsets.all(12),
@@ -2677,7 +2677,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     children: [
       Text(
         'Publication ${controller.publications.indexOf(p) + 1}',
-        style: AppTextStyles.s14W600.copyWith(color: Colors.white),
+        style: AppTextStyles.s14W600.copyWith(color: AppColors.white),
       ),
       AppTextFields(
         controller: p.title,
@@ -2700,9 +2700,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       padding: const EdgeInsets.all(16),
 
       decoration: BoxDecoration(
-        color: const Color(0xFF111827),
+        color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: AppColors.kBorder.withOpacity(0.06)),
       ),
 
       child: Column(
@@ -2813,7 +2813,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       onPressed: onTap,
       child: Text(
         '+ Add',
-        style: AppTextStyles.s16W400.copyWith(color: AppColors.primary),
+        style: AppTextStyles.s16W400.copyWith(color: AppColors.subtext),
       ),
     );
   }
@@ -2828,7 +2828,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     return DropdownButtonFormField<String>(
       value: selectedValue,
 
-      dropdownColor: const Color(0xFF1F2937), // 🔥 dark grey dropdown bg
+      dropdownColor: AppColors.kBg, // 🔥 dark grey dropdown bg
 
       style: AppTextStyles.s16W400.copyWith(color: AppColors.white),
 
@@ -2902,29 +2902,29 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       controller: ctrl,
       readOnly: true,
 
-      style: const TextStyle(color: Colors.white),
+      style: TextStyle(color: AppColors.white),
 
       decoration: InputDecoration(
         hintText: hint,
 
-        hintStyle: const TextStyle(color: Colors.white70),
+        hintStyle: TextStyle(color: AppColors.white),
 
         border: const OutlineInputBorder(
           borderSide: BorderSide(color: Colors.white),
         ),
 
-        enabledBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.white),
         ),
 
-        focusedBorder: const OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.white),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: AppColors.white),
         ),
 
-        suffixIcon: const Icon(
+        suffixIcon: Icon(
           Icons.calendar_today_outlined,
           size: 20,
-          color: Colors.white,
+          color: AppColors.white,
         ),
       ),
 
@@ -3413,7 +3413,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
                 focusNode: _focusNode,
 
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.white),
 
                 onChanged: (_) {
                   setState(() {});
@@ -3422,13 +3422,13 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                 decoration: InputDecoration(
                   hintText: "Search or add ${widget.label}",
 
-                  hintStyle: const TextStyle(color: Colors.grey),
+                  hintStyle: TextStyle(color: AppColors.grey),
 
                   filled: true,
 
                   fillColor: AppColors.kCard,
 
-                  prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                  prefixIcon: Icon(Icons.search, color: AppColors.grey),
 
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
@@ -3459,7 +3459,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                     title: Text(
                       'Create "${_textController.text.trim()}"',
 
-                      style: const TextStyle(color: Colors.white),
+                      style: TextStyle(color: AppColors.subtext),
                     ),
 
                     onTap: () async {
@@ -3559,7 +3559,7 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                     option,
 
                     style: TextStyle(
-                      color: isSelected ? Colors.black : Colors.white,
+                      color: isSelected ? Colors.black : AppColors.white,
                     ),
                   ),
                 ),
