@@ -119,9 +119,9 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
                 height: 1.2,
               ),
               children: [
-                const TextSpan(
+                TextSpan(
                   text: "You're Ready",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.text),
                 ),
               ],
             ),
@@ -130,11 +130,12 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
         const SizedBox(height: 8),
 
         /// SUBTITLE  (kept horizontally centered)
-        const Center(
-          child: Text(
-            "Your profile is live on Referd. Here's what's next:",
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.grey),
+        Center(
+          child: Center(
+            child: Text(
+              "Your profile is live on Referd. Here's what's next:",
+              style: TextStyle(color: AppColors.secText),
+            ),
           ),
         ),
         const SizedBox(height: 24),
@@ -203,11 +204,11 @@ class _OnboardingCompletePageState extends State<OnboardingCompletePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(card.title, style: const TextStyle(color: Colors.white)),
+                Text(card.title, style: TextStyle(color: AppColors.text)),
                 const SizedBox(height: 4),
                 Text(
                   card.subtitle,
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  style: TextStyle(color: AppColors.secText, fontSize: 12),
                 ),
               ],
             ),

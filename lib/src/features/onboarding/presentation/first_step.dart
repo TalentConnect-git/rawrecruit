@@ -45,7 +45,7 @@ class _PreferencesPageState extends State<PreferencesPage> {
     return ChangeNotifierProvider.value(
       value: firstStepViewModel,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.kBg,
         body: SafeArea(
           child: Column(
             children: [
@@ -64,9 +64,12 @@ class _PreferencesPageState extends State<PreferencesPage> {
 
                       const SizedBox(height: 8),
 
-                      const Text(
+                      Text(
                         "Choose your primary goal — you can always switch later",
-                        style: TextStyle(color: Colors.grey, fontSize: 13),
+                        style: TextStyle(
+                          color: AppColors.secText,
+                          fontSize: 13,
+                        ),
                       ),
 
                       const SizedBox(height: 24),
@@ -249,8 +252,8 @@ class _PreferencesPageState extends State<PreferencesPage> {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: AppColors.white,
                           fontSize: 14,
                           fontWeight: FontWeight.w600,
                         ),

@@ -34,7 +34,7 @@ class AppInput extends StatelessWidget {
         keyboardType: keyboardType,
         inputFormatters: inputFormatter,
         maxLines: maxLines,
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: AppColors.subtext),
         decoration: appInputDecoration(
           hint,
         ).copyWith(prefixIcon: prefixIcon, errorText: errorText),
@@ -81,9 +81,9 @@ class _AppDropdownState extends State<AppDropdown> {
         isExpanded: true,
         dropdownColor: AppColors.kCard,
 
-        hint: Text(widget.hint, style: const TextStyle(color: Colors.white)),
+        hint: Text(widget.hint, style: TextStyle(color: AppColors.text)),
 
-        style: const TextStyle(color: Colors.white),
+        style: TextStyle(color: AppColors.text),
 
         decoration: appInputDecoration("").copyWith(
           isDense: true,
@@ -93,15 +93,13 @@ class _AppDropdownState extends State<AppDropdown> {
           ),
         ),
 
-        icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-
+        icon: Icon(Icons.keyboard_arrow_down, color: AppColors.secText),
         items: widget.options.map((e) {
           return DropdownMenuItem(
             value: e,
-            child: Text(e, style: const TextStyle(color: Colors.white)),
+            child: Text(e, style: TextStyle(color: AppColors.text)),
           );
         }).toList(),
-
         onChanged: (val) {
           setState(() => selected = val);
 
@@ -207,7 +205,7 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
       children: [
         Text(
           widget.label,
-          style: const TextStyle(color: Colors.white, fontSize: 14),
+          style: TextStyle(color: AppColors.white, fontSize: 14),
         ),
 
         const SizedBox(height: 8),
@@ -218,8 +216,7 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
           padding: const EdgeInsets.all(12),
 
           decoration: BoxDecoration(
-            color: Colors.grey.shade900,
-
+            color: AppColors.kCard,
             borderRadius: BorderRadius.circular(14),
 
             border: Border.all(color: AppColors.kBorder),
@@ -257,13 +254,7 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
                         ),
                       ),
 
-                      child: Text(
-                        e,
-
-                        style: TextStyle(
-                          color: isSelected ? AppColors.kGreen : Colors.white,
-                        ),
-                      ),
+                      child: Text(e, style: TextStyle(color: AppColors.text)),
                     ),
                   );
                 }).toList(),
@@ -285,9 +276,7 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
                     hintStyle: const TextStyle(color: Colors.grey),
 
                     filled: true,
-
-                    fillColor: Colors.grey.shade900,
-
+                    fillColor: AppColors.kCard,
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -365,7 +354,7 @@ class AppHeader extends StatelessWidget {
               TextSpan(
                 text: "$title ",
 
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.white),
               ),
 
               TextSpan(
@@ -409,10 +398,10 @@ class AppChips extends StatelessWidget {
 InputDecoration appInputDecoration(String hint) {
   return InputDecoration(
     hintText: hint,
-    hintStyle: const TextStyle(color: Colors.white70),
+    hintStyle: TextStyle(color: AppColors.text),
 
     filled: true,
-    fillColor: Colors.grey.shade900,
+    fillColor: AppColors.kCard,
 
     contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
 

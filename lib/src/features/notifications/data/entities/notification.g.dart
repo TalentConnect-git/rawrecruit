@@ -90,4 +90,5 @@ const _$JobTypeEnumMap = {
   JobType.offCampus: 'Off-campus',
   JobType.poolCampus: 'Pool-campus',
   JobType.referral: 'Referral',
+  JobType.internship: 'Internship',
 };

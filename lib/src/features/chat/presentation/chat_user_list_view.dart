@@ -46,7 +46,7 @@ class _ChatUserListViewState extends State<ChatUserListView> {
       child: Scaffold(
         backgroundColor: AppColors.kBg,
         appBar: RAppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: AppColors.white),
           leading: IconButton(
             onPressed: context.pop,
             icon: Icon(Icons.keyboard_arrow_left, color: AppColors.white),
@@ -60,13 +60,18 @@ class _ChatUserListViewState extends State<ChatUserListView> {
             }
 
             if (vm.users.isEmpty) {
-              return const Center(child: Text("No Users Found"));
+              return Center(
+                child: Text(
+                  "No Users Found",
+                  style: TextStyle(color: AppColors.secText),
+                ),
+              );
             }
 
             return ListView.separated(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
               itemCount: vm.users.length,
-              separatorBuilder: (_, _) => Divider(color: AppColors.kBg),
+              separatorBuilder: (_, _) => Divider(color: AppColors.kBorder),
               itemBuilder: (context, index) {
                 final user = vm.users[index];
                 final unread = vm.getUnreadCount(user.id!);
@@ -86,7 +91,7 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                             ? Text(
                                 name(user).getInitials,
                                 style: AppTextStyles.s18W600.copyWith(
-                                  color: AppColors.kBg,
+                                  color: Colors.black,
                                 ),
                               )
                             : null,
@@ -101,9 +106,12 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                           decoration: BoxDecoration(
                             color: vm.onlineUsers.contains(user.id)
                                 ? Colors.green
-                                : Colors.white,
+                                : AppColors.secText,
                             borderRadius: BorderRadius.circular(10),
-                            border: Border.all(color: Colors.grey, width: 2),
+                            border: Border.all(
+                              color: AppColors.kCard,
+                              width: 2,
+                            ),
                           ),
                         ),
                       ),
@@ -124,14 +132,18 @@ class _ChatUserListViewState extends State<ChatUserListView> {
                       : null,
                   title: Text(
                     name(user),
-                    style: AppTextStyles.s16W400.copyWith(color: Colors.white),
+                    style: AppTextStyles.s16W400.copyWith(
+                      color: AppColors.white,
+                    ),
                     overflow: TextOverflow.ellipsis,
                   ),
                   subtitle: Text(
                     user.lastMessage?.isNotEmpty == true
                         ? user.lastMessage!
                         : "No messages yet",
-                    style: AppTextStyles.s12W400.copyWith(color: Colors.white),
+                    style: AppTextStyles.s12W400.copyWith(
+                      color: AppColors.secText,
+                    ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

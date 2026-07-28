@@ -47,7 +47,7 @@ class _RegisterViewState extends State<RegisterView> {
     return ChangeNotifierProvider.value(
       value: registerViewModel,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.kBg,
         body: SafeArea(
           child: SingleChildScrollView(
             padding: EdgeInsets.symmetric(
@@ -76,7 +76,7 @@ class _RegisterViewState extends State<RegisterView> {
                     Text(
                       'Create Account',
                       style: AppTextStyles.s22W600.copyWith(
-                        color: Colors.white,
+                        color: AppColors.text,
                       ),
                     ),
 
@@ -421,8 +421,8 @@ Widget _socialButton({
 
           Text(
             text,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppColors.text,
               fontWeight: FontWeight.w500,
             ),
           ),

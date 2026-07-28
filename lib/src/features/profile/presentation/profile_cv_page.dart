@@ -36,48 +36,32 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
         return null;
       }
 
-      /// NOTICE START DATE
       final startDate = DateTime.parse(startDateStr);
-
-      /// TODAY
       final now = DateTime.now();
-
-      /// REMOVE TIME PART
       final start = DateTime(startDate.year, startDate.month, startDate.day);
-
       final today = DateTime(now.year, now.month, now.day);
 
-      /// DAYS SERVED
       int daysPassed = today.difference(start).inDays;
 
       if (daysPassed < 0) {
         daysPassed = 0;
       }
 
-      /// DAYS REMAINING
       int daysRemaining = totalDays - daysPassed;
 
       if (daysRemaining < 0) {
         daysRemaining = 0;
       }
 
-      /// END DATE
       final endDate = start.add(Duration(days: totalDays));
-
-      /// PROGRESS
       final progress = (daysPassed / totalDays).clamp(0.0, 1.0);
 
       return {
         "daysPassed": daysPassed,
-
         "daysRemaining": daysRemaining,
-
         "totalDays": totalDays,
-
         "progress": progress,
-
         "isExpired": daysPassed >= totalDays,
-
         "endDate":
             "${endDate.day.toString().padLeft(2, '0')}/"
             "${endDate.month.toString().padLeft(2, '0')}/"
@@ -126,7 +110,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
         builder: (_, vm, __) {
           if (vm.viewState == ViewState.busy) {
             return Scaffold(
-              backgroundColor: AppColors.secBorder,
+              backgroundColor: AppColors.kBg,
 
               body: Center(child: CircularProgressIndicator()),
             );
@@ -154,17 +138,14 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
           }
 
           return Scaffold(
-            backgroundColor: AppColors.secBorder,
+            backgroundColor: AppColors.kBg,
 
             appBar: AppBar(
               backgroundColor: AppColors.kCard,
 
-              iconTheme: const IconThemeData(color: Colors.white),
+              iconTheme: IconThemeData(color: AppColors.white),
 
-              title: const Text(
-                "Profile",
-                style: TextStyle(color: Colors.white),
-              ),
+              title: Text("Profile", style: TextStyle(color: AppColors.white)),
             ),
             body: RefreshIndicator(
               color: AppColors.kGreen,
@@ -243,11 +224,11 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                                     alignment: Alignment.center,
 
-                                    child: const Text(
+                                    child: Text(
                                       "No Notice Period",
 
                                       style: TextStyle(
-                                        color: Colors.white54,
+                                        color: AppColors.white.withOpacity(.54),
                                         fontSize: 13,
                                         fontWeight: FontWeight.w500,
                                       ),
@@ -288,7 +269,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                                         .clamp(1, 999)))
                                                 .clamp(0.0, 1.0)
                                                 .toDouble(),
-                                        backgroundColor: Colors.white12,
+                                        backgroundColor: AppColors.kBorder,
 
                                         valueColor: AlwaysStoppedAnimation(
                                           noticeData?["isExpired"] == true
@@ -355,8 +336,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       child: Text(
                         user.about ?? "-",
 
-                        style: const TextStyle(
-                          color: Colors.white70,
+                        style: TextStyle(
+                          color: AppColors.white.withOpacity(.7),
                           height: 1.6,
                           fontSize: 14,
                         ),
@@ -386,9 +367,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                             borderRadius: BorderRadius.circular(18),
 
-                            border: Border.all(
-                              color: Colors.white.withOpacity(.05),
-                            ),
+                            border: Border.all(color: AppColors.kBorder),
                           ),
 
                           child: Row(
@@ -415,11 +394,11 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
 
                                   children: [
-                                    const Text(
+                                    Text(
                                       "Official Email",
 
                                       style: TextStyle(
-                                        color: Colors.grey,
+                                        color: AppColors.secText,
                                         fontSize: 11,
                                       ),
                                     ),
@@ -429,8 +408,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                     Text(
                                       user.email!,
 
-                                      style: const TextStyle(
-                                        color: Colors.white,
+                                      style: TextStyle(
+                                        color: AppColors.white,
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -438,11 +417,11 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   ],
                                 ),
                               ),
-                              const SizedBox(width: 12), // <- add this
+                              const SizedBox(width: 12),
 
-                              const Icon(
+                              Icon(
                                 Icons.open_in_new,
-                                color: Colors.grey,
+                                color: AppColors.secText,
                                 size: 18,
                               ),
                             ],
@@ -496,13 +475,13 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                     vertical: 8,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(.06),
+                                    color: AppColors.chip,
                                     borderRadius: BorderRadius.circular(30),
                                   ),
                                   child: Text(
                                     e,
-                                    style: const TextStyle(
-                                      color: Colors.white,
+                                    style: TextStyle(
+                                      color: AppColors.chipText,
                                       fontSize: 11,
                                     ),
                                   ),
@@ -634,11 +613,11 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                             if ((user.employmentType ?? []).isNotEmpty) ...[
                               const SizedBox(height: 10),
 
-                              const Text(
+                              Text(
                                 "Employment Type",
 
                                 style: TextStyle(
-                                  color: Colors.grey,
+                                  color: AppColors.secText,
                                   fontSize: 11,
                                 ),
                               ),
@@ -659,11 +638,11 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                             if ((user.lookingFor ?? []).isNotEmpty) ...[
                               const SizedBox(height: 18),
 
-                              const Text(
+                              Text(
                                 "Looking For",
 
                                 style: TextStyle(
-                                  color: Colors.grey,
+                                  color: AppColors.secText,
                                   fontSize: 11,
                                 ),
                               ),
@@ -684,11 +663,11 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                             if ((user.locations ?? []).isNotEmpty) ...[
                               const SizedBox(height: 18),
 
-                              const Text(
+                              Text(
                                 "Preferred Locations",
 
                                 style: TextStyle(
-                                  color: Colors.grey,
+                                  color: AppColors.secText,
                                   fontSize: 11,
                                 ),
                               ),
@@ -709,11 +688,11 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                             if ((user.jobRoles ?? []).isNotEmpty) ...[
                               const SizedBox(height: 18),
 
-                              const Text(
+                              Text(
                                 "Preferred Job Roles",
 
                                 style: TextStyle(
-                                  color: Colors.grey,
+                                  color: AppColors.secText,
                                   fontSize: 11,
                                 ),
                               ),
@@ -740,11 +719,11 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                             if ((user.certifications?.isNotEmpty ?? false)) ...[
                               const SizedBox(height: 18),
 
-                              const Text(
+                              Text(
                                 "Certifications",
 
                                 style: TextStyle(
-                                  color: Colors.grey,
+                                  color: AppColors.secText,
                                   fontSize: 11,
                                 ),
                               ),
@@ -804,7 +783,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                           margin: const EdgeInsets.symmetric(
                                             vertical: 4,
                                           ),
-                                          color: Colors.white12,
+                                          color: AppColors.kBorder,
                                         ),
                                       ),
                                   ],
@@ -826,8 +805,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                             Expanded(
                                               child: Text(
                                                 e.degree ?? "",
-                                                style: const TextStyle(
-                                                  color: Colors.white,
+                                                style: TextStyle(
+                                                  color: AppColors.white,
                                                   fontSize: 15,
                                                   fontWeight: FontWeight.w700,
                                                 ),
@@ -865,8 +844,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                             false))
                                           Text(
                                             e.specialization!,
-                                            style: const TextStyle(
-                                              color: Colors.white70,
+                                            style: TextStyle(
+                                              color: AppColors.white
+                                                  .withOpacity(.7),
                                               fontSize: 14,
                                             ),
                                           ),
@@ -915,8 +895,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                                                   Text(
                                                     e.yearOfGraduation!,
-                                                    style: const TextStyle(
-                                                      color: Colors.white70,
+                                                    style: TextStyle(
+                                                      color: AppColors.white
+                                                          .withOpacity(.7),
                                                       fontSize: 12,
                                                     ),
                                                   ),
@@ -1020,8 +1001,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                               Expanded(
                                                 child: Text(
                                                   e.company ?? "",
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
+                                                  style: TextStyle(
+                                                    color: AppColors.white,
                                                     fontSize: 15,
                                                     fontWeight: FontWeight.w700,
                                                   ),
@@ -1082,8 +1063,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                           Text(
                                             e.role ?? "",
 
-                                            style: const TextStyle(
-                                              color: Colors.white70,
+                                            style: TextStyle(
+                                              color: AppColors.white
+                                                  .withOpacity(.7),
                                               fontSize: 14,
                                               fontWeight: FontWeight.w500,
                                             ),
@@ -1105,8 +1087,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                                 Expanded(
                                                   child: Text(
                                                     "${e.startDate ?? ''}${(e.startDate?.isNotEmpty ?? false) ? ' - ' : ''}${e.endDate?.isNotEmpty == true ? e.endDate : 'Present'}",
-                                                    style: const TextStyle(
-                                                      color: Colors.white70,
+                                                    style: TextStyle(
+                                                      color: AppColors.white
+                                                          .withOpacity(.7),
                                                       fontSize: 12,
                                                     ),
                                                   ),
@@ -1124,8 +1107,9 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                             Text(
                                               e.description!,
 
-                                              style: const TextStyle(
-                                                color: Colors.white60,
+                                              style: TextStyle(
+                                                color: AppColors.white
+                                                    .withOpacity(.6),
                                                 fontSize: 13,
                                                 height: 1.5,
                                               ),
@@ -1159,12 +1143,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   padding: const EdgeInsets.all(14),
 
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(.04),
+                                    color: AppColors.text.withOpacity(.04),
 
                                     borderRadius: BorderRadius.circular(16),
 
                                     border: Border.all(
-                                      color: Colors.white.withOpacity(.05),
+                                      color: AppColors.kBorder,
                                     ),
                                   ),
 
@@ -1176,8 +1160,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.role ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                        style: TextStyle(
+                                          color: AppColors.white,
                                           fontSize: 15,
                                           fontWeight: FontWeight.w700,
                                         ),
@@ -1199,8 +1183,10 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         "${e.startDate ?? ''} - ${e.endDate ?? ''}",
 
-                                        style: const TextStyle(
-                                          color: Colors.white70,
+                                        style: TextStyle(
+                                          color: AppColors.white.withOpacity(
+                                            .7,
+                                          ),
                                           fontSize: 12,
                                         ),
                                       ),
@@ -1210,8 +1196,10 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.description ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.white70,
+                                        style: TextStyle(
+                                          color: AppColors.white.withOpacity(
+                                            .7,
+                                          ),
                                           height: 1.5,
                                           fontSize: 13,
                                         ),
@@ -1242,12 +1230,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   padding: const EdgeInsets.all(14),
 
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(.04),
+                                    color: AppColors.text.withOpacity(.04),
 
                                     borderRadius: BorderRadius.circular(16),
 
                                     border: Border.all(
-                                      color: Colors.white.withOpacity(.05),
+                                      color: AppColors.kBorder,
                                     ),
                                   ),
 
@@ -1259,8 +1247,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.role ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                        style: TextStyle(
+                                          color: AppColors.white,
                                           fontSize: 15,
                                           fontWeight: FontWeight.w700,
                                         ),
@@ -1282,8 +1270,10 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         "${e.startDate ?? ''} - ${e.endDate ?? ''}",
 
-                                        style: const TextStyle(
-                                          color: Colors.white70,
+                                        style: TextStyle(
+                                          color: AppColors.white.withOpacity(
+                                            .7,
+                                          ),
                                           fontSize: 12,
                                         ),
                                       ),
@@ -1293,8 +1283,10 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.description ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.white70,
+                                        style: TextStyle(
+                                          color: AppColors.white.withOpacity(
+                                            .7,
+                                          ),
                                           height: 1.5,
                                           fontSize: 13,
                                         ),
@@ -1313,7 +1305,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       _modernSection(
                         title: "Achievements",
                         assetIcon: "assets/images/achievements.png",
-                        // iconColor: Colors.yellow,
                         child: Column(
                           children: (user.achievements ?? [])
                               .map(
@@ -1325,12 +1316,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   padding: const EdgeInsets.all(14),
 
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(.04),
+                                    color: AppColors.text.withOpacity(.04),
 
                                     borderRadius: BorderRadius.circular(16),
 
                                     border: Border.all(
-                                      color: Colors.white.withOpacity(.05),
+                                      color: AppColors.kBorder,
                                     ),
                                   ),
 
@@ -1341,13 +1332,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                     children: [
                                       Row(
                                         children: [
-                                          // const Icon(
-                                          //   Icons.star,
-                                          //   color: Colors.amber,
-                                          //   size: 18,
-                                          // ),
-
-                                          // const SizedBox(width: 8),
                                           Expanded(
                                             child: Text(
                                               e.title ?? '-',
@@ -1365,8 +1349,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.event ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.grey,
+                                        style: TextStyle(
+                                          color: AppColors.secText,
                                           fontSize: 13,
                                         ),
                                       ),
@@ -1376,8 +1360,10 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.date ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.white70,
+                                        style: TextStyle(
+                                          color: AppColors.white.withOpacity(
+                                            .7,
+                                          ),
                                           fontSize: 12,
                                         ),
                                       ),
@@ -1396,7 +1382,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                       _modernSection(
                         title: "Awards",
                         assetIcon: "assets/images/awards.png",
-                        // iconColor: Colors.orangeAccent,
                         child: Column(
                           children: (user.awards ?? [])
                               .map(
@@ -1408,12 +1393,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   padding: const EdgeInsets.all(14),
 
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(.04),
+                                    color: AppColors.text.withOpacity(.04),
 
                                     borderRadius: BorderRadius.circular(16),
 
                                     border: Border.all(
-                                      color: Colors.white.withOpacity(.05),
+                                      color: AppColors.kBorder,
                                     ),
                                   ),
 
@@ -1424,13 +1409,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                     children: [
                                       Row(
                                         children: [
-                                          // const Icon(
-                                          //   Icons.star,
-                                          //   color: Colors.amber,
-                                          //   size: 18,
-                                          // ),
-
-                                          // const SizedBox(width: 8),
                                           Expanded(
                                             child: Text(
                                               e.title ?? '-',
@@ -1448,8 +1426,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.organization ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.grey,
+                                        style: TextStyle(
+                                          color: AppColors.secText,
                                           fontSize: 13,
                                         ),
                                       ),
@@ -1459,8 +1437,10 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.description ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.white70,
+                                        style: TextStyle(
+                                          color: AppColors.white.withOpacity(
+                                            .7,
+                                          ),
                                           height: 1.5,
                                           fontSize: 13,
                                         ),
@@ -1492,12 +1472,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   padding: const EdgeInsets.all(14),
 
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withOpacity(.04),
+                                    color: AppColors.text.withOpacity(.04),
 
                                     borderRadius: BorderRadius.circular(16),
 
                                     border: Border.all(
-                                      color: Colors.white.withOpacity(.05),
+                                      color: AppColors.kBorder,
                                     ),
                                   ),
 
@@ -1509,8 +1489,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                       Text(
                                         e.title ?? '-',
 
-                                        style: const TextStyle(
-                                          color: Colors.white,
+                                        style: TextStyle(
+                                          color: AppColors.white,
                                           fontSize: 15,
                                           fontWeight: FontWeight.w700,
                                         ),
@@ -1554,12 +1534,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: (user.github?.isNotEmpty ?? false)
                               ? AppColors.kGreen
-                              : Colors.white12,
+                              : AppColors.kBorder,
                           foregroundColor: (user.github?.isNotEmpty ?? false)
                               ? Colors.white
-                              : Colors.grey,
-                          disabledBackgroundColor: Colors.white12,
-                          disabledForegroundColor: Colors.grey,
+                              : AppColors.secText,
+                          disabledBackgroundColor: AppColors.kBorder,
+                          disabledForegroundColor: AppColors.secText,
                         ),
                       ),
                     ),
@@ -1576,59 +1556,16 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: (user.portfolio?.isNotEmpty ?? false)
                               ? AppColors.kGreen
-                              : Colors.white12,
+                              : AppColors.kBorder,
                           foregroundColor: (user.portfolio?.isNotEmpty ?? false)
                               ? Colors.white
-                              : Colors.grey,
-                          disabledBackgroundColor: Colors.white12,
-                          disabledForegroundColor: Colors.grey,
+                              : AppColors.secText,
+                          disabledBackgroundColor: AppColors.kBorder,
+                          disabledForegroundColor: AppColors.secText,
                         ),
                       ),
                     ),
 
-                    //                     const SizedBox(height: 15),
-
-                    // SizedBox(
-                    //   width: double.infinity,
-                    //   child: ElevatedButton.icon(
-                    //     onPressed: (user.resume?.isNotEmpty ?? false)
-                    //         ? () {
-                    //             final url = user.resume;
-
-                    //             if (url == null) {
-                    //               Toasts.showInfoToast(
-                    //                 context,
-                    //                 message: 'No Resume Found!',
-                    //               );
-                    //               return;
-                    //             }
-
-                    //             Navigator.push(
-                    //               context,
-                    //               MaterialPageRoute(
-                    //                 builder: (_) => ResumeViewerPage(url: url),
-                    //               ),
-                    //             );
-                    //           }
-                    //         : null,
-                    //     icon: const Icon(Icons.picture_as_pdf),
-                    //     label: const Text("Open Resume"),
-                    //     style: ElevatedButton.styleFrom(
-                    //       backgroundColor: (user.resume?.isNotEmpty ?? false)
-                    //           ? AppColors.kGreen
-                    //           : Colors.white12,
-                    //       foregroundColor: (user.resume?.isNotEmpty ?? false)
-                    //           ? Colors.white
-                    //           : Colors.grey,
-                    //       disabledBackgroundColor: Colors.white12,
-                    //       disabledForegroundColor: Colors.grey,
-                    //       padding: const EdgeInsets.symmetric(vertical: 14),
-                    //       shape: RoundedRectangleBorder(
-                    //         borderRadius: BorderRadius.circular(14),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     const SizedBox(height: 40),
                   ],
                 ),
@@ -1666,7 +1603,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
           borderRadius: BorderRadius.circular(16),
 
-          border: Border.all(color: Colors.white.withOpacity(.06)),
+          border: Border.all(color: AppColors.kBorder),
         ),
 
         child: Column(
@@ -1684,8 +1621,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                 Expanded(
                   child: Text(
                     title,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                     ),
@@ -1696,7 +1633,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
             const SizedBox(height: 14),
 
-            Container(height: 1, color: Colors.white.withOpacity(.06)),
+            Container(height: 1, color: AppColors.kBorder),
 
             const SizedBox(height: 14),
 
@@ -1713,7 +1650,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       padding: const EdgeInsets.symmetric(vertical: 14),
 
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.05),
+        color: AppColors.text.withOpacity(.05),
 
         borderRadius: BorderRadius.circular(16),
       ),
@@ -1727,8 +1664,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
           Text(
             value,
 
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppColors.white,
               fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
@@ -1736,7 +1673,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
           const SizedBox(height: 4),
 
-          Text(title, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+          Text(title, style: TextStyle(color: AppColors.secText, fontSize: 12)),
         ],
       ),
     );
@@ -1750,15 +1687,15 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
         crossAxisAlignment: CrossAxisAlignment.start,
 
         children: [
-          Text(title, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+          Text(title, style: TextStyle(color: AppColors.secText, fontSize: 11)),
 
           const SizedBox(height: 4),
 
           Text(
             (value?.isNotEmpty ?? false) ? value! : "-",
 
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppColors.white,
               fontSize: 13,
               fontWeight: FontWeight.w500,
             ),
@@ -1811,9 +1748,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
     final totalExperience = (user.totalYearsOfExperience?.isNotEmpty ?? false)
         ? user.totalYearsOfExperience!
         : "0";
-    final defaultRole = getIt<AppStateProvider>().isProfessional
-        ? 'Professional'
-        : 'Student/Fresher';
     final location = (user.locations?.isNotEmpty ?? false)
         ? user.locations!.first
         : "India";
@@ -1856,7 +1790,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
           borderRadius: BorderRadius.circular(24),
 
-          border: Border.all(color: Colors.white.withOpacity(.06)),
+          border: Border.all(color: AppColors.kBorder),
         ),
 
         child: Stack(
@@ -1918,7 +1852,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                   alignment: Alignment.center,
 
                   children: [
-                    /// OUTER RING
                     Container(
                       height: 118,
                       width: 118,
@@ -1929,7 +1862,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                     /// PROFILE
                     CircleAvatar(
                       radius: 48,
-                      backgroundColor: Colors.black,
+                      backgroundColor: AppColors.kGreen,
 
                       backgroundImage: (user.profileImage?.isNotEmpty ?? false)
                           ? NetworkImage(user.profileImage!)
@@ -1942,44 +1875,13 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   : "U",
 
                               style: const TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 42,
                                 fontWeight: FontWeight.w800,
                               ),
                             )
                           : null,
                     ),
-
-                    /// VERIFIED TICK
-                    // Positioned(
-                    //   bottom: 10,
-                    //   right: 6,
-
-                    //   child: Container(
-                    //     height: 24,
-                    //     width: 24,
-
-                    //     decoration: BoxDecoration(
-                    //       color: AppColors.kGreen,
-                    //       shape: BoxShape.circle,
-
-                    //       border: Border.all(color: Colors.black, width: 3),
-
-                    //       boxShadow: [
-                    //         BoxShadow(
-                    //           color: AppColors.kGreen.withOpacity(.5),
-                    //           blurRadius: 12,
-                    //         ),
-                    //       ],
-                    //     ),
-
-                    //     child: const Icon(
-                    //       Icons.check,
-                    //       size: 14,
-                    //       color: Colors.black,
-                    //     ),
-                    //   ),
-                    // ),
                   ],
                 ),
 
@@ -1991,8 +1893,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                   textAlign: TextAlign.center,
 
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppColors.white,
                     fontSize: 34,
                     fontWeight: FontWeight.w800,
                     letterSpacing: -.8,
@@ -2063,8 +1965,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                     Text(
                       currentStatus!.note!,
                       textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        color: Colors.white60,
+                      style: TextStyle(
+                        color: AppColors.white.withOpacity(.6),
                         fontSize: 12,
                       ),
                     ),
@@ -2095,15 +1997,15 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         Text(
                           location,
 
-                          style: const TextStyle(
-                            color: Colors.white70,
+                          style: TextStyle(
+                            color: AppColors.white.withOpacity(.7),
                             fontSize: 12,
                           ),
                         ),
                       ],
                     ),
 
-                    Container(height: 12, width: 1, color: Colors.white24),
+                    Container(height: 12, width: 1, color: AppColors.kBorder),
 
                     Row(
                       mainAxisSize: MainAxisSize.min,
@@ -2120,8 +2022,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         Text(
                           "Worked at $companyCount Companies",
 
-                          style: const TextStyle(
-                            color: Colors.white70,
+                          style: TextStyle(
+                            color: AppColors.white.withOpacity(.7),
                             fontSize: 12,
                           ),
                         ),
@@ -2227,23 +2129,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
     );
   }
 
-  // Widget _topInfo(IconData icon, String text) {
-  //   return Row(
-  //     children: [
-  //       Icon(icon, size: 14, color: Colors.grey),
-  //       const SizedBox(width: 5),
-  //       Text(
-  //         text,
-  //         style: const TextStyle(
-  //           color: Colors.grey,
-  //           fontSize: 12,
-  //           fontWeight: FontWeight.w500,
-  //         ),
-  //       ),
-  //     ],
-  //   );
-  // }
-
   Widget _premiumChip(
     String text, {
     required Color color,
@@ -2285,8 +2170,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
               text,
               overflow: TextOverflow.ellipsis,
 
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: AppColors.white,
                 fontSize: 12,
                 fontWeight: FontWeight.w600,
               ),
@@ -2297,14 +2182,6 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
     );
   }
 
-  // Widget _headerDivider() {
-  //   return Container(
-  //     margin: const EdgeInsets.symmetric(horizontal: 12),
-  //     height: 12,
-  //     width: 1,
-  //     color: Colors.white.withOpacity(.12),
-  //   );
-  // }
   Widget _premiumStatCard({
     required String title,
     required String value,
@@ -2317,7 +2194,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withOpacity(.06)),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -2331,8 +2208,8 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppColors.white,
               fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
@@ -2343,7 +2220,10 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.white70, fontSize: 8),
+            style: TextStyle(
+              color: AppColors.white.withOpacity(.7),
+              fontSize: 8,
+            ),
           ),
         ],
       ),
@@ -2368,15 +2248,15 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
               )
             : null,
         color: disabled
-            ? Colors.white.withOpacity(.05)
+            ? AppColors.text.withOpacity(.05)
             : filled
             ? null
-            : Colors.white.withOpacity(.06),
+            : AppColors.text.withOpacity(.06),
         borderRadius: BorderRadius.circular(5),
         border: Border.all(
           color: disabled
-              ? Colors.white.withOpacity(.04)
-              : Colors.white.withOpacity(.08),
+              ? AppColors.kBorder.withOpacity(.5)
+              : AppColors.kBorder,
         ),
         boxShadow: disabled
             ? []
@@ -2393,14 +2273,18 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: disabled ? Colors.grey : Colors.white, size: 18),
+          Icon(
+            icon,
+            color: disabled ? AppColors.secText : Colors.white,
+            size: 18,
+          ),
 
           const SizedBox(width: 8),
 
           Text(
             title,
             style: TextStyle(
-              color: disabled ? Colors.grey : Colors.white,
+              color: disabled ? AppColors.secText : Colors.white,
               fontWeight: FontWeight.w700,
               fontSize: 13,
             ),
@@ -2415,7 +2299,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
 
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.06),
+        color: AppColors.chip,
 
         borderRadius: BorderRadius.circular(30),
       ),
@@ -2423,7 +2307,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       child: Text(
         text,
 
-        style: const TextStyle(color: Colors.white, fontSize: 11),
+        style: TextStyle(color: AppColors.chipText, fontSize: 11),
       ),
     );
   }

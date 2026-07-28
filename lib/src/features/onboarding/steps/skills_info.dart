@@ -201,11 +201,11 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
                 return TextField(
                   controller: controller,
                   focusNode: focusNode,
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.text),
 
                   decoration: InputDecoration(
                     hintText: "Search or add a skill...",
-                    hintStyle: const TextStyle(color: Colors.grey),
+                    hintStyle: TextStyle(color: AppColors.secText),
                     filled: true,
                     fillColor: AppColors.kCard,
                     prefixIcon: const Icon(Icons.search, color: Colors.grey),
@@ -262,7 +262,7 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
                               dense: true,
                               title: Text(
                                 option,
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(color: AppColors.text),
                               ),
                               onTap: () {
                                 onSelected(option);
@@ -282,7 +282,7 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
                                   ),
                                   title: Text(
                                     'Create "$value"',
-                                    style: const TextStyle(color: Colors.white),
+                                    style: TextStyle(color: AppColors.text),
                                   ),
                                   onTap: () async {
                                     addSkill(value);
@@ -323,7 +323,7 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
 
             const SizedBox(height: 20),
 
-            const Text("POPULAR SKILLS", style: TextStyle(color: Colors.grey)),
+            Text("POPULAR SKILLS", style: TextStyle(color: AppColors.secText)),
 
             const SizedBox(height: 10),
 
@@ -356,7 +356,9 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
                     child: Text(
                       skill,
                       style: TextStyle(
-                        color: isSelected ? Colors.black : Colors.white,
+                        color: isSelected
+                            ? AppColors.blackwhite
+                            : AppColors.text,
                       ),
                     ),
                   ),

@@ -32,13 +32,13 @@ class _InterviewsScreenState extends State<InterviewsScreen> {
     return ChangeNotifierProvider.value(
       value: interviewViewModel,
       child: Scaffold(
-        backgroundColor: AppColors.secBorder,
+        backgroundColor: AppColors.kBg,
 
         appBar: RAppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
+          iconTheme: IconThemeData(color: AppColors.white),
+          title: Text(
             'Scheduled Interviews',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: AppColors.white),
           ),
         ),
 
@@ -49,10 +49,10 @@ class _InterviewsScreenState extends State<InterviewsScreen> {
             }
 
             if (vm.interviews.isEmpty) {
-              return const Center(
+              return Center(
                 child: Text(
                   'No scheduled interviews found.',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.white),
                 ),
               );
             }
@@ -112,7 +112,7 @@ class InterviewCard extends StatelessWidget {
         }
       },
 
-      /// 🔥 DARK CARD
+      /// 🔥 THEMED CARD
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -134,8 +134,8 @@ class InterviewCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     companyName,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.white,
                       fontWeight: FontWeight.w600,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -158,7 +158,7 @@ class InterviewCard extends StatelessWidget {
 
             if (roles.isNotEmpty) ...[
               const SizedBox(height: 4),
-              Text(roles, style: const TextStyle(color: Colors.grey)),
+              Text(roles, style: TextStyle(color: AppColors.secText)),
             ],
 
             Divider(color: AppColors.kBorder, height: 20),
@@ -174,20 +174,20 @@ class InterviewCard extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(
                   interview.date ?? '—',
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.white),
                 ),
 
                 const SizedBox(width: 16),
 
-                const Icon(
+                Icon(
                   Icons.access_time_outlined,
                   size: 16,
-                  color: Colors.grey,
+                  color: AppColors.secText,
                 ),
                 const SizedBox(width: 6),
                 Text(
                   interview.time ?? '—',
-                  style: const TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.white),
                 ),
               ],
             ),
@@ -237,8 +237,8 @@ class InterviewCard extends StatelessWidget {
               const SizedBox(height: 8),
               Text(
                 interview.message!,
-                style: const TextStyle(
-                  color: Colors.grey,
+                style: TextStyle(
+                  color: AppColors.secText,
                   fontStyle: FontStyle.italic,
                 ),
                 maxLines: 2,
@@ -252,15 +252,15 @@ class InterviewCard extends StatelessWidget {
               const SizedBox(height: 8),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.person_outline,
                     size: 16,
-                    color: Colors.grey,
+                    color: AppColors.secText,
                   ),
                   const SizedBox(width: 6),
                   Text(
                     'Scheduled by ${interview.companySnapshot!.scheduledBy!.name}',
-                    style: const TextStyle(color: Colors.grey),
+                    style: TextStyle(color: AppColors.secText),
                   ),
                 ],
               ),

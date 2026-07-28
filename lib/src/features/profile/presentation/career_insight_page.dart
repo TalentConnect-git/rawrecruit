@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show MyProfileViewModel;
@@ -31,8 +32,7 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
       child: Consumer<MyProfileViewModel>(
         builder: (_, vm, __) {
           return Scaffold(
-            backgroundColor: Colors.black,
-
+            backgroundColor: AppColors.kBg,
             body: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.symmetric(
@@ -49,13 +49,15 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                       GestureDetector(
                         onTap: () => Navigator.pop(context),
 
-                        child: const Row(
+                        child: Row(
                           children: [
-                            Icon(Icons.arrow_back, color: Colors.grey),
-
+                            Icon(Icons.arrow_back, color: AppColors.secText),
                             SizedBox(width: 6),
 
-                            Text("Back", style: TextStyle(color: Colors.grey)),
+                            Text(
+                              "Back",
+                              style: TextStyle(color: AppColors.secText),
+                            ),
                           ],
                         ),
                       ),
@@ -63,11 +65,10 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                       const SizedBox(height: 24),
 
                       /// 🔹 TITLE
-                      const Text(
+                      Text(
                         "Career Insights",
-
                         style: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.text,
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
                         ),
@@ -76,10 +77,10 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                       const SizedBox(height: 8),
 
                       /// 🤖 AI SUBTITLE
-                      const Text(
+                      Text(
                         "AI read your resume, sized it up against what companies are hiring for right now, and pulled out where you shine — and where to level up. 🚀",
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: AppColors.secText,
                           fontSize: 13,
                           height: 1.4,
                         ),
@@ -90,15 +91,18 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                       /// ✨ AI BANNER
                       Container(
                         width: double.infinity,
-                        padding: const EdgeInsets.all(14),
+                        padding: EdgeInsets.all(14),
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
-                            colors: [
-                              AppColors.kGreen.withOpacity(0.18),
-                              AppColors.kGreen.withOpacity(0.04),
-                            ],
-                            begin: Alignment.topLeft,
-                            end: Alignment.bottomRight,
+                            colors: ThemeController.instance.isDark
+                                ? [
+                                    AppColors.kGreen.withOpacity(.18),
+                                    AppColors.kGreen.withOpacity(.04),
+                                  ]
+                                : [
+                                    const Color(0xFFE8F8EE),
+                                    const Color(0xFFF7FCF8),
+                                  ],
                           ),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
@@ -113,11 +117,11 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                               size: 20,
                             ),
                             const SizedBox(width: 12),
-                            const Expanded(
+                            Expanded(
                               child: Text(
                                 "Personalized by AI — updated every time you tweak your profile.",
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: AppColors.white,
                                   fontSize: 12.5,
                                   height: 1.3,
                                 ),
@@ -135,7 +139,7 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
 
                           children: [
-                            const Row(
+                            Row(
                               children: [
                                 Icon(
                                   Icons.error_outline,
@@ -149,7 +153,7 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                                   "Skill Gaps",
 
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.text,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
                                   ),
@@ -159,11 +163,11 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
 
                             const SizedBox(height: 10),
 
-                            const Text(
+                            Text(
                               "These skills are missing from your profile",
 
                               style: TextStyle(
-                                color: Colors.grey,
+                                color: AppColors.secText,
                                 fontSize: 13,
                               ),
                             ),
@@ -178,7 +182,7 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                                   ? vm.missingSkills
                                         .map((s) => _chip(s, Colors.red))
                                         .toList()
-                                  : [_chip("No data", Colors.grey)],
+                                  : [_chip("No data", AppColors.secText)],
                             ),
                           ],
                         ),
@@ -192,7 +196,7 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
 
                           children: [
-                            const Row(
+                            Row(
                               children: [
                                 Icon(
                                   Icons.trending_up,
@@ -206,7 +210,7 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                                   "Market Demand",
 
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.text,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
                                   ),
@@ -216,11 +220,11 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
 
                             const SizedBox(height: 10),
 
-                            const Text(
+                            Text(
                               "Skills companies are hiring for right now",
 
                               style: TextStyle(
-                                color: Colors.grey,
+                                color: AppColors.secText,
                                 fontSize: 13,
                               ),
                             ),
@@ -235,7 +239,7 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                                   ? vm.highDemandSkills
                                         .map((s) => _chip(s, Colors.green))
                                         .toList()
-                                  : [_chip("No data", Colors.grey)],
+                                  : [_chip("No data", AppColors.secText)],
                             ),
                           ],
                         ),
@@ -249,7 +253,7 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
 
                           children: [
-                            const Row(
+                            Row(
                               children: [
                                 Icon(
                                   Icons.lightbulb_outline,
@@ -263,7 +267,7 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                                   "Suggestions",
 
                                   style: TextStyle(
-                                    color: Colors.white,
+                                    color: AppColors.text,
                                     fontWeight: FontWeight.w600,
                                     fontSize: 16,
                                   ),
@@ -300,11 +304,11 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
 
                           children: [
-                            const Text(
+                            Text(
                               "Profile Progress",
 
                               style: TextStyle(
-                                color: Colors.white,
+                                color: AppColors.text,
                                 fontWeight: FontWeight.w600,
                                 fontSize: 16,
                               ),
@@ -425,8 +429,8 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
             child: Text(
               text,
 
-              style: const TextStyle(
-                color: Colors.white,
+              style: TextStyle(
+                color: AppColors.white,
                 fontSize: 13.5,
                 height: 1.4,
               ),
@@ -454,14 +458,14 @@ class _CareerInsightsPageState extends State<CareerInsightsPage> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(label, style: const TextStyle(color: Colors.grey, fontSize: 13)),
+          Text(label, style: TextStyle(color: AppColors.secText, fontSize: 13)),
           const SizedBox(height: 8),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: value,
               minHeight: 8,
-              backgroundColor: Colors.grey.withOpacity(0.2),
+              backgroundColor: AppColors.secText.withOpacity(0.2),
               valueColor: AlwaysStoppedAnimation<Color>(
                 value < 0.3 ? Colors.red : Colors.green,
               ),
