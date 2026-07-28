@@ -18,7 +18,7 @@ class InfoChip extends StatelessWidget {
       ),
       child: Text(
         text,
-        style: AppTextStyles.s12W400.copyWith(color: AppColors.white),
+        style: AppTextStyles.s12W400.copyWith(color: AppColors.secCard),
       ),
     );
   }

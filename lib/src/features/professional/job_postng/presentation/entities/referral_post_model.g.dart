@@ -32,7 +32,7 @@ _ReferralPostModel _$ReferralPostModelFromJson(
       ? null
       : PackageDetails.fromJson(json['packageDetails'] as Map<String, dynamic>),
   skills: (json['skills'] as List<dynamic>?)?.map((e) => e as String).toList(),
-  companyName: json['companyName'] as String,
+  companyName: json['companyName'] as String?,
   studentStreams: (json['studentStreams'] as List<dynamic>?)
       ?.map((e) => e as String)
       .toList(),

@@ -115,7 +115,7 @@ class JobCard extends StatelessWidget {
                   child: Text(
                     title,
                     style: AppTextStyles.s16W600.copyWith(
-                      color: AppColors.white,
+                      color: AppColors.secBorder,
                     ),
                   ),
                 ),

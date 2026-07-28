@@ -60,14 +60,11 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
     return ChangeNotifierProvider.value(
       value: referralPostDetailViewModel,
       child: Scaffold(
-        backgroundColor: AppColors.secBorder,
+        backgroundColor: AppColors.secBorders,
         appBar: AppBar(
           backgroundColor: AppColors.kCard,
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
-            "Posted Job",
-            style: TextStyle(color: Colors.white),
-          ),
+          iconTheme: IconThemeData(color: AppColors.white),
+          title: Text("Posted Job", style: TextStyle(color: AppColors.white)),
         ),
         body: Consumer<ReferralPostDetailViewModel>(
           builder: (_, vm, _) {
@@ -120,9 +117,9 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFF111827),
+        color: AppColors.kCard,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,14 +131,14 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                 height: 48,
                 width: 48,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.blackwhite,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
                   child: Text(
                     company.isNotEmpty ? company[0] : "G",
-                    style: const TextStyle(
-                      color: Colors.black,
+                    style: TextStyle(
+                      color: AppColors.onGreenButton,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -157,8 +154,8 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                         Expanded(
                           child: Text(
                             title,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppColors.white,
                               fontWeight: FontWeight.bold,
                             ),
                             overflow: TextOverflow.ellipsis,
@@ -173,13 +170,13 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                         //     vertical: 3,
                         //   ),
                         //   decoration: BoxDecoration(
-                        //     color: Colors.green.withOpacity(0.2),
+                        //     color: AppColors.kGreen.withValues(alpha: 0.2),
                         //     borderRadius: BorderRadius.circular(20),
                         //   ),
-                        //   child: const Text(
+                        //   child: Text(
                         //     "LIVE",
                         //     style: TextStyle(
-                        //       color: Colors.green,
+                        //       color: AppColors.kGreen,
                         //       fontSize: 10,
                         //       fontWeight: FontWeight.w600,
                         //     ),
@@ -192,7 +189,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
 
                     Text(
                       "$company • $location",
-                      style: const TextStyle(color: Colors.grey),
+                      style: TextStyle(color: AppColors.secText),
                     ),
                   ],
                 ),
@@ -248,13 +245,10 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
       children: [
         Text(
           value,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 4),
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10)),
+        Text(label, style: TextStyle(color: AppColors.secText, fontSize: 10)),
       ],
     );
   }
@@ -331,16 +325,16 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
         return StatefulBuilder(
           builder: (context, setModalState) {
             return AlertDialog(
-              backgroundColor: const Color(0xFF1F2937),
+              backgroundColor: AppColors.chip,
 
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(16),
               ),
 
-              title: const Text(
+              title: Text(
                 "Reactivate Job",
 
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.white),
               ),
 
               content: Column(
@@ -372,7 +366,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                       padding: const EdgeInsets.all(14),
 
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: AppColors.kTile,
 
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -382,7 +376,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                             ? "Select Start Date"
                             : startDate!.toString().split(" ").first,
 
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColors.white),
                       ),
                     ),
                   ),
@@ -414,7 +408,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                       padding: const EdgeInsets.all(14),
 
                       decoration: BoxDecoration(
-                        color: Colors.black,
+                        color: AppColors.kTile,
 
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -424,7 +418,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                             ? "Select End Date"
                             : endDate!.toString().split(" ").first,
 
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColors.white),
                       ),
                     ),
                   ),
@@ -437,10 +431,10 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                     Navigator.pop(context);
                   },
 
-                  child: const Text(
+                  child: Text(
                     "Cancel",
 
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: AppColors.secText),
                   ),
                 ),
 
@@ -524,22 +518,19 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
       context: context,
       builder: (_) {
         return AlertDialog(
-          backgroundColor: const Color(0xFF1F2937),
+          backgroundColor: AppColors.chip,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
           ),
-          title: const Text(
-            "Delete Job",
-            style: TextStyle(color: Colors.white),
-          ),
-          content: const Text(
+          title: Text("Delete Job", style: TextStyle(color: AppColors.white)),
+          content: Text(
             "Are you sure you want to delete this job? This action cannot be undone.",
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: AppColors.secText),
           ),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
-              child: const Text("Cancel", style: TextStyle(color: Colors.grey)),
+              child: Text("Cancel", style: TextStyle(color: AppColors.secText)),
             ),
             ElevatedButton(
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -591,15 +582,15 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        color: AppColors.chip,
         borderRadius: BorderRadius.circular(14),
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Icon(icon, color: Colors.white, size: 18),
+          Icon(icon, color: AppColors.white, size: 18),
           const SizedBox(width: 6),
-          Text(text, style: const TextStyle(color: Colors.white)),
+          Text(text, style: TextStyle(color: AppColors.white)),
         ],
       ),
     );
@@ -612,7 +603,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: const Color(0xFF1F2937),
+        color: AppColors.chip,
         borderRadius: BorderRadius.circular(30),
       ),
       child: Row(
@@ -638,7 +629,9 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                     style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w600,
-                      color: isSelected ? Colors.black : Colors.grey,
+                      color: isSelected
+                          ? AppColors.onGreenButton
+                          : AppColors.secText,
                     ),
                   ),
                 ),
@@ -704,10 +697,10 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
     }
 
     if (applications.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
           "No applications yet",
-          style: TextStyle(color: Colors.grey),
+          style: TextStyle(color: AppColors.secText),
         ),
       );
     }
@@ -729,13 +722,10 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
-        Text(content ?? "-", style: const TextStyle(color: Colors.grey)),
+        Text(content ?? "-", style: TextStyle(color: AppColors.secText)),
         const SizedBox(height: 20),
       ],
     );
@@ -749,18 +739,15 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
         ...items.map(
           (e) => Row(
             children: [
-              const Text("• ", style: TextStyle(color: Colors.green)),
+              Text("• ", style: TextStyle(color: AppColors.kGreen)),
               Expanded(
-                child: Text(e, style: const TextStyle(color: Colors.grey)),
+                child: Text(e, style: TextStyle(color: AppColors.secText)),
               ),
             ],
           ),
@@ -776,10 +763,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
       children: [
         Text(
           title,
-          style: const TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(color: AppColors.white, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 10),
         ...children,
@@ -797,14 +781,11 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
         children: [
           Expanded(
             flex: 2,
-            child: Text(title, style: const TextStyle(color: Colors.grey)),
+            child: Text(title, style: TextStyle(color: AppColors.secText)),
           ),
           Expanded(
             flex: 3,
-            child: Text(
-              value ?? '',
-              style: const TextStyle(color: Colors.white),
-            ),
+            child: Text(value ?? '', style: TextStyle(color: AppColors.white)),
           ),
         ],
       ),

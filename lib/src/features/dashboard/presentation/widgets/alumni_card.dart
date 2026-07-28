@@ -96,9 +96,9 @@ class AlumniCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
         width: 200,
         decoration: BoxDecoration(
-          color: const Color(0xFF111827),
+          color: AppColors.kCard,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: Colors.white.withOpacity(0.08)),
+          border: Border.all(color: AppColors.kBorder),
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min, // 🔥 prevents overflow
@@ -119,7 +119,7 @@ class AlumniCard extends StatelessWidget {
                   child: (candidate?.profileImage ?? '').isEmpty
                       ? Text(
                           initials,
-                          style: const TextStyle(
+                          style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
                             fontSize: 14,
@@ -136,8 +136,8 @@ class AlumniCard extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppColors.white,
                     fontWeight: FontWeight.w600,
                     fontSize: 14,
                   ),
@@ -145,29 +145,16 @@ class AlumniCard extends StatelessWidget {
 
                 const SizedBox(height: 4),
 
-                // /// ROLE
-                // Text(
-                //   role,
-                //   textAlign: TextAlign.center,
-                //   maxLines: 1,
-                //   overflow: TextOverflow.ellipsis,
-                //   style: const TextStyle(color: Colors.grey, fontSize: 12),
-                // ),
-
-                // const SizedBox(height: 4),
-
-                /// DESIGNATION + COMPANY
-
                 /// COMPANY
                 if (currentExperience != null) ...[
                   if (currentExperience.company?.isNotEmpty == true)
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.business_center_outlined,
                           size: 14,
-                          color: Colors.white70,
+                          color: AppColors.white.withOpacity(.7),
                         ),
                         const SizedBox(width: 4),
                         Flexible(
@@ -176,8 +163,8 @@ class AlumniCard extends StatelessWidget {
                             textAlign: TextAlign.center,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.white,
+                            style: TextStyle(
+                              color: AppColors.white,
                               fontWeight: FontWeight.w700,
                               fontSize: 13,
                             ),
@@ -194,7 +181,7 @@ class AlumniCard extends StatelessWidget {
                       textAlign: TextAlign.center,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      style: TextStyle(color: AppColors.secText, fontSize: 12),
                     ),
                 ] else if (statusType.isNotEmpty &&
                     statusType != 'employed') ...[
@@ -256,7 +243,7 @@ class AlumniCard extends StatelessWidget {
                       width: 8,
                       height: 8,
                       decoration: BoxDecoration(
-                        color: isHiring ? Colors.green : Colors.grey,
+                        color: isHiring ? Colors.green : AppColors.secText,
                         shape: BoxShape.circle,
                       ),
                     ),
@@ -266,7 +253,7 @@ class AlumniCard extends StatelessWidget {
                     Text(
                       isHiring ? "Hiring • $jobCount jobs" : "Not Hiring",
                       style: TextStyle(
-                        color: isHiring ? Colors.green : Colors.grey,
+                        color: isHiring ? Colors.green : AppColors.secText,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),

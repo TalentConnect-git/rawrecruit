@@ -121,8 +121,8 @@ class ApplicationCard extends StatelessWidget {
                 Expanded(
                   child: Text(
                     title ?? '',
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.white,
                       fontWeight: FontWeight.w600,
                     ),
                     overflow: TextOverflow.ellipsis,
@@ -131,8 +131,8 @@ class ApplicationCard extends StatelessWidget {
 
                 Text(
                   "$percent%",
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: AppColors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -146,13 +146,16 @@ class ApplicationCard extends StatelessWidget {
               children: [
                 Text(
                   company ?? '',
-                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                  style: TextStyle(color: AppColors.secText, fontSize: 12),
                 ),
 
                 if (receiverName != null && receiverName.isNotEmpty)
                   Text(
                     "Referred by $receiverName",
-                    style: const TextStyle(color: Colors.white70, fontSize: 12),
+                    style: TextStyle(
+                      color: AppColors.white.withOpacity(.7),
+                      fontSize: 12,
+                    ),
                   ),
               ],
             ),
@@ -162,7 +165,7 @@ class ApplicationCard extends StatelessWidget {
             Text(
               status,
               style: TextStyle(
-                color: isRejected ? Colors.red : AppColors.kGreen,
+                color: isRejected ? AppColors.errorBorder : AppColors.kGreen,
                 fontWeight: FontWeight.w600,
               ),
             ),
@@ -176,9 +179,9 @@ class ApplicationCard extends StatelessWidget {
 
                 final color = isActive
                     ? (isRejected && index == step
-                          ? Colors.red
+                          ? AppColors.errorBorder
                           : AppColors.kGreen)
-                    : Colors.grey.shade700;
+                    : AppColors.kBorder;
 
                 return Expanded(
                   child: Container(

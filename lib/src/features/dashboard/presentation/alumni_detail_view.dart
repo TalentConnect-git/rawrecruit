@@ -35,15 +35,15 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
     return ChangeNotifierProvider.value(
       value: alumniDetailViewModel,
       child: Scaffold(
-        backgroundColor: Colors.black,
+        backgroundColor: AppColors.kBg,
 
         appBar: AppBar(
-          backgroundColor: Colors.black,
+          backgroundColor: AppColors.kBg,
           elevation: 0,
-          iconTheme: const IconThemeData(color: Colors.white),
-          title: const Text(
+          iconTheme: IconThemeData(color: AppColors.white),
+          title: Text(
             "Alumni Profile",
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: AppColors.white),
           ),
         ),
 
@@ -54,10 +54,10 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
             }
 
             if (vm.alumni == null) {
-              return const Center(
+              return Center(
                 child: Text(
                   "No data found",
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.white),
                 ),
               );
             }
@@ -148,7 +148,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                     decoration: BoxDecoration(
                       color: AppColors.kCard,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: Colors.white.withOpacity(.06)),
+                      border: Border.all(color: AppColors.kBorder),
                     ),
                     child: Column(
                       children: [
@@ -169,8 +169,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                               child: (vm.alumni?.profileImage ?? '').isEmpty
                                   ? Text(
                                       name.getInitials,
-                                      style: const TextStyle(
-                                        color: Colors.black,
+                                      style: TextStyle(
+                                        color: AppColors.onGreenButton,
                                         fontWeight: FontWeight.bold,
                                         fontSize: 18,
                                       ),
@@ -193,8 +193,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                           name,
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            color: Colors.white,
+                                          style: TextStyle(
+                                            color: AppColors.white,
                                             fontSize: 24,
                                             fontWeight: FontWeight.w700,
                                           ),
@@ -222,10 +222,10 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                       if (location.isNotEmpty)
                                         Row(
                                           children: [
-                                            const Icon(
+                                            Icon(
                                               Icons.location_on_outlined,
                                               size: 14,
-                                              color: Colors.grey,
+                                              color: AppColors.secText,
                                             ),
 
                                             const SizedBox(width: 6),
@@ -233,8 +233,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                             Expanded(
                                               child: Text(
                                                 location ?? '',
-                                                style: const TextStyle(
-                                                  color: Colors.grey,
+                                                style: TextStyle(
+                                                  color: AppColors.secText,
                                                   fontSize: 15,
                                                 ),
                                               ),
@@ -248,17 +248,17 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                       if ((college ?? '').isNotEmpty)
                                         Row(
                                           children: [
-                                            const Icon(
+                                            Icon(
                                               Icons.school_outlined,
                                               size: 14,
-                                              color: Colors.grey,
+                                              color: AppColors.secText,
                                             ),
                                             const SizedBox(width: 6),
                                             Expanded(
                                               child: Text(
                                                 college ?? '',
-                                                style: const TextStyle(
-                                                  color: Colors.grey,
+                                                style: TextStyle(
+                                                  color: AppColors.secText,
                                                   fontSize: 13,
                                                 ),
                                               ),
@@ -277,10 +277,11 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                                   /// ROLE + COMPANY
                                                   Row(
                                                     children: [
-                                                      const Icon(
+                                                      Icon(
                                                         Icons.work_outline,
                                                         size: 14,
-                                                        color: Colors.grey,
+                                                        color:
+                                                            AppColors.secText,
                                                       ),
 
                                                       const SizedBox(width: 6),
@@ -289,12 +290,11 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                                         child: Text(
                                                           roleCompanyText,
 
-                                                          style:
-                                                              const TextStyle(
-                                                                color:
-                                                                    Colors.grey,
-                                                                fontSize: 13,
-                                                              ),
+                                                          style: TextStyle(
+                                                            color: AppColors
+                                                                .secText,
+                                                            fontSize: 13,
+                                                          ),
                                                         ),
                                                       ),
                                                     ],
@@ -311,10 +311,10 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                           .isNotEmpty)
                                         Row(
                                           children: [
-                                            const Icon(
+                                            Icon(
                                               Icons.work_history_outlined,
                                               size: 14,
-                                              color: Colors.grey,
+                                              color: AppColors.secText,
                                             ),
 
                                             const SizedBox(width: 6),
@@ -323,8 +323,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                               child: Text(
                                                 "${vm.alumni?.totalYearsOfExperience} years experience",
 
-                                                style: const TextStyle(
-                                                  color: Colors.grey,
+                                                style: TextStyle(
+                                                  color: AppColors.secText,
                                                   fontSize: 13,
                                                 ),
                                               ),
@@ -366,8 +366,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                             ),
                                             child: Text(
                                               currentStatus!.note!,
-                                              style: const TextStyle(
-                                                color: Colors.grey,
+                                              style: TextStyle(
+                                                color: AppColors.secText,
                                                 fontSize: 12,
                                               ),
                                             ),
@@ -384,7 +384,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                   //     Icon(
                                   //       Icons.location_on_outlined,
                                   //       size: 14,
-                                  //       color: Colors.grey,
+                                  //       color: AppColors.secText,
                                   //     ),
 
                                   //     const SizedBox(width: 6),
@@ -392,8 +392,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                   //     Expanded(
                                   //       child: Text(
                                   //         location,
-                                  //         style: const TextStyle(
-                                  //           color: Colors.white70,
+                                  //         style: TextStyle(
+                                  //           color: AppColors.secText,
                                   //           fontSize: 12,
                                   //         ),
                                   //       ),
@@ -408,7 +408,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                   //     Icon(
                                   //       Icons.business_outlined,
                                   //       size: 14,
-                                  //       color: Colors.grey,
+                                  //       color: AppColors.secText,
                                   //     ),
 
                                   //     const SizedBox(width: 6),
@@ -416,8 +416,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                   //     Expanded(
                                   //       child: Text(
                                   //         company,
-                                  //         style: const TextStyle(
-                                  //           color: Colors.white70,
+                                  //         style: TextStyle(
+                                  //           color: AppColors.secText,
                                   //           fontSize: 12,
                                   //         ),
                                   //       ),
@@ -438,7 +438,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                           child: ElevatedButton.icon(
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.kGreen,
-                              foregroundColor: Colors.white,
+                              foregroundColor: AppColors.onGreenButton,
                               padding: const EdgeInsets.symmetric(vertical: 14),
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
@@ -450,14 +450,14 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                 extra: widget.alumniId,
                               );
                             },
-                            icon: const Icon(
+                            icon: Icon(
                               Icons.message,
-                              color: Colors.white,
+                              color: AppColors.onGreenButton,
                             ),
-                            label: const Text(
+                            label: Text(
                               "Message",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: AppColors.onGreenButton,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -498,7 +498,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                               padding: const EdgeInsets.symmetric(vertical: 14),
 
                               side: BorderSide(
-                                color: AppColors.kGreen.withOpacity(.5),
+                                color: AppColors.kGreen.withValues(alpha: .5),
                               ),
 
                               shape: RoundedRectangleBorder(
@@ -531,10 +531,10 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
                         Row(
                           children: [
-                            const Text(
+                            Text(
                               "Status",
                               style: TextStyle(
-                                color: Colors.grey,
+                                color: AppColors.secText,
                                 fontSize: 12,
                               ),
                             ),
@@ -548,8 +548,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                   isHiring ? "Hiring" : "Not Hiring",
                                   style: TextStyle(
                                     color: isHiring
-                                        ? Colors.green
-                                        : Colors.grey,
+                                        ? AppColors.kGreen
+                                        : AppColors.secText,
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
                                   ),
@@ -561,8 +561,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                                   height: 8,
                                   decoration: BoxDecoration(
                                     color: isHiring
-                                        ? Colors.green
-                                        : Colors.grey,
+                                        ? AppColors.kGreen
+                                        : AppColors.secText,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -582,8 +582,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                     icon: Icons.person_outline,
                     child: Text(
                       vm.alumni?.about ?? '-',
-                      style: const TextStyle(
-                        color: Colors.grey,
+                      style: TextStyle(
+                        color: AppColors.secText,
                         fontSize: 14,
                         height: 1.5,
                       ),
@@ -732,11 +732,11 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
         padding: const EdgeInsets.all(12),
 
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(.03),
+          color: AppColors.kTile,
 
           borderRadius: BorderRadius.circular(12),
 
-          border: Border.all(color: Colors.white.withOpacity(.05)),
+          border: Border.all(color: AppColors.kBorder),
         ),
 
         child: Row(
@@ -753,7 +753,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                   Text(
                     title,
 
-                    style: const TextStyle(color: Colors.grey, fontSize: 11),
+                    style: TextStyle(color: AppColors.secText, fontSize: 11),
                   ),
 
                   const SizedBox(height: 3),
@@ -765,8 +765,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
                     overflow: TextOverflow.ellipsis,
 
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.white,
                       fontSize: 13,
                       fontWeight: FontWeight.w500,
                     ),
@@ -779,7 +779,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
               title == "Email" ? Icons.email_outlined : Icons.open_in_new,
 
               size: 16,
-              color: Colors.grey,
+              color: AppColors.secText,
             ),
           ],
         ),
@@ -798,21 +798,21 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: Colors.white.withOpacity(.05)),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              Icon(icon, color: Colors.grey, size: 18),
+              Icon(icon, color: AppColors.secText, size: 18),
 
               const SizedBox(width: 8),
 
               Text(
                 title,
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -831,15 +831,15 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
   Widget _metricRow(String title, String value) {
     return Row(
       children: [
-        Text(title, style: const TextStyle(color: Colors.grey, fontSize: 12)),
+        Text(title, style: TextStyle(color: AppColors.secText, fontSize: 12)),
 
         const Spacer(),
 
         Text(
           value,
           textAlign: TextAlign.right,
-          style: const TextStyle(
-            color: Colors.white,
+          style: TextStyle(
+            color: AppColors.white,
             fontSize: 12,
             fontWeight: FontWeight.w600,
           ),
@@ -879,9 +879,9 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(14),
         decoration: BoxDecoration(
-          color: Colors.white.withOpacity(.03),
+          color: AppColors.kTile,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(.05)),
+          border: Border.all(color: AppColors.kBorder),
         ),
         child: Row(
           children: [
@@ -889,7 +889,7 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
               height: 46,
               width: 46,
               decoration: BoxDecoration(
-                color: AppColors.kGreen.withOpacity(.15),
+                color: AppColors.kGreen.withValues(alpha: .15),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Icon(Icons.work_outline, color: AppColors.kGreen),
@@ -903,8 +903,8 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.white,
                       fontWeight: FontWeight.w600,
                       fontSize: 14,
                     ),
@@ -914,13 +914,13 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
                   Text(
                     salary.isNotEmpty ? "$company • $salary" : company,
-                    style: const TextStyle(color: Colors.grey, fontSize: 12),
+                    style: TextStyle(color: AppColors.secText, fontSize: 12),
                   ),
                 ],
               ),
             ),
 
-            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey),
+            Icon(Icons.arrow_forward_ios, size: 16, color: AppColors.secText),
           ],
         ),
       ),

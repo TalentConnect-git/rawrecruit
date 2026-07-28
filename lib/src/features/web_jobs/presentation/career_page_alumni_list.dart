@@ -34,21 +34,21 @@ class CareerPageAlumniListView extends StatelessWidget {
             response.data?.alumniFound == true
                 ? 'Available Alumni'
                 : 'Profiles Working in Company',
-            style: AppTextStyles.s18W600.copyWith(color: Colors.white),
+            style: AppTextStyles.s18W600.copyWith(color: AppColors.white),
           ),
           leading: IconButton(
             onPressed: () => context.pop(),
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
         ),
         body: alumni.isEmpty
-            ? const Center(
+            ? Center(
                 child: Text(
                   'No Alumni Found',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: AppColors.white),
                 ),
               )
             : Consumer<WebJobViewModel>(
@@ -63,7 +63,7 @@ class CareerPageAlumniListView extends StatelessWidget {
                           child: ElevatedButton.icon(
                             icon: Icon(
                               Icons.groups_rounded,
-                              color: Colors.black,
+                              color: AppColors.onGreenButton,
                             ),
                             label: Text(
                               'Request All (${alumni.length})',
@@ -74,7 +74,7 @@ class CareerPageAlumniListView extends StatelessWidget {
                             ),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.kGreen,
-                              foregroundColor: Colors.black,
+                              foregroundColor: AppColors.onGreenButton,
                               elevation: 0,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(14),
@@ -162,13 +162,13 @@ class _AlumniCardState extends State<_AlumniCard> {
 
     if (widget.alumni.currentlyWorking == true) {
       employeeStatus = 'Current Employee';
-      employeeStatusColor = Colors.green;
+      employeeStatusColor = AppColors.kGreen;
     } else if (widget.alumni.previouslyWorked == true) {
       employeeStatus = 'Former Employee';
       employeeStatusColor = Colors.orange;
     } else {
       employeeStatus = '';
-      employeeStatusColor = Colors.grey;
+      employeeStatusColor = AppColors.secText;
     }
     return Consumer<WebJobViewModel>(
       builder: (_, vm, __) {
@@ -177,7 +177,7 @@ class _AlumniCardState extends State<_AlumniCard> {
           decoration: BoxDecoration(
             color: AppColors.kCard,
             borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.white.withOpacity(.08)),
+            border: Border.all(color: AppColors.kBorder),
           ),
           child: Column(
             children: [
@@ -194,8 +194,8 @@ class _AlumniCardState extends State<_AlumniCard> {
                         (widget.alumni.name ?? 'A')
                             .substring(0, 1)
                             .toUpperCase(),
-                        style: const TextStyle(
-                          color: Colors.black,
+                        style: TextStyle(
+                          color: AppColors.onGreenButton,
                           fontWeight: FontWeight.bold,
                           fontSize: 22,
                         ),
@@ -208,7 +208,7 @@ class _AlumniCardState extends State<_AlumniCard> {
               Text(
                 widget.alumni.name ?? '',
                 textAlign: TextAlign.center,
-                style: AppTextStyles.s18W600.copyWith(color: Colors.white),
+                style: AppTextStyles.s18W600.copyWith(color: AppColors.white),
               ),
 
               const SizedBox(height: 10),
@@ -218,10 +218,10 @@ class _AlumniCardState extends State<_AlumniCard> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.business_center_outlined,
                       size: 15,
-                      color: Colors.white70,
+                      color: AppColors.secText,
                     ),
 
                     const SizedBox(width: 6),
@@ -231,8 +231,8 @@ class _AlumniCardState extends State<_AlumniCard> {
                         widget.alumni.currentCompany!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: AppColors.white,
                           fontWeight: FontWeight.w600,
                           fontSize: 14,
                         ),
@@ -248,7 +248,7 @@ class _AlumniCardState extends State<_AlumniCard> {
                   child: Text(
                     widget.alumni.jobRoles!.first,
                     textAlign: TextAlign.center,
-                    style: const TextStyle(color: Colors.white70, fontSize: 13),
+                    style: TextStyle(color: AppColors.secText, fontSize: 13),
                   ),
                 ),
 
@@ -296,7 +296,7 @@ class _AlumniCardState extends State<_AlumniCard> {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.kGreen.withOpacity(.12),
+                            color: AppColors.kGreen.withValues(alpha: .12),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Text(
@@ -341,10 +341,10 @@ class _AlumniCardState extends State<_AlumniCard> {
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AppColors.kGreen,
-                        foregroundColor: Colors.black,
+                        foregroundColor: AppColors.onGreenButton,
 
-                        disabledBackgroundColor: Colors.grey.shade700,
-                        disabledForegroundColor: Colors.white,
+                        disabledBackgroundColor: AppColors.kBorder,
+                        disabledForegroundColor: AppColors.secText,
                       ),
                       onPressed: isLoading || isRequestSent
                           ? null
@@ -381,10 +381,13 @@ class _AlumniCardState extends State<_AlumniCard> {
                               });
                             },
                       child: isLoading
-                          ? const SizedBox(
+                          ? SizedBox(
                               width: 18,
                               height: 18,
-                              child: CircularProgressIndicator(strokeWidth: 2),
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: AppColors.onGreenButton,
+                              ),
                             )
                           : Text(
                               isRequestSent ? 'Request Sent' : 'Ask Referral',

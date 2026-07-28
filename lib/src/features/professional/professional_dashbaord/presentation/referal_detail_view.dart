@@ -79,15 +79,15 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
           final isApplied = applicationVM.isApplied(jobId);
 
           return Scaffold(
-            backgroundColor: AppColors.secBorder,
+            backgroundColor: AppColors.secBorders,
 
             /// 🔥 APPBAR
             appBar: AppBar(
               backgroundColor: AppColors.kCard,
-              iconTheme: const IconThemeData(color: Colors.white),
+              iconTheme: IconThemeData(color: AppColors.white),
               title: Text(
                 job.jobTitle ?? '',
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.white),
               ),
               actions: [
                 GestureDetector(
@@ -100,7 +100,7 @@ class _ReferralDetailViewState extends State<ReferralDetailView> {
                     padding: const EdgeInsets.symmetric(horizontal: 16),
                     child: Icon(
                       isSaved ? Icons.bookmark : Icons.bookmark_border,
-                      color: isSaved ? AppColors.kGreen : Colors.grey,
+                      color: isSaved ? AppColors.kGreen : AppColors.secText,
                     ),
                   ),
                 ),
@@ -157,9 +157,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                 padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
                 decoration: BoxDecoration(
                   color: AppColors.kCard,
-                  border: Border(
-                    top: BorderSide(color: Colors.white.withOpacity(0.06)),
-                  ),
+                  border: Border(top: BorderSide(color: AppColors.kBorder)),
                 ),
 
                 child: Row(
@@ -226,7 +224,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: isApplied
-                                ? Colors.grey
+                                ? AppColors.secText
                                 : AppColors.kGreen,
                             foregroundColor: Colors.white,
                             padding: const EdgeInsets.symmetric(vertical: 14),
@@ -289,9 +287,6 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
   }
 
   // ============================================================
-  // HEADER (logo, title, chips, salary + experience)
-  // ============================================================
-  // ============================================================
   // HEADER (compact - tight spacing, inline info row with dividers)
   // ============================================================
   Widget _header(Job job, dynamic referral) {
@@ -320,7 +315,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -355,8 +350,8 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                   children: [
                     Text(
                       role,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: AppColors.white,
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
                       ),
@@ -369,8 +364,8 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                         Flexible(
                           child: Text(
                             company,
-                            style: const TextStyle(
-                              color: Colors.grey,
+                            style: TextStyle(
+                              color: AppColors.secText,
                               fontSize: 13,
                             ),
                             maxLines: 2,
@@ -390,10 +385,10 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
           /// Inline info row with vertical dividers
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on_outlined,
                 size: 13,
-                color: Colors.grey,
+                color: AppColors.secText,
               ),
               const SizedBox(width: 2),
 
@@ -401,7 +396,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                 flex: 2,
                 child: Text(
                   location,
-                  style: const TextStyle(color: Colors.grey, fontSize: 11),
+                  style: TextStyle(color: AppColors.secText, fontSize: 11),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -409,10 +404,10 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
 
               _vDivider(),
 
-              const Icon(
+              Icon(
                 Icons.business_center_outlined,
                 size: 13,
-                color: Colors.grey,
+                color: AppColors.secText,
               ),
               const SizedBox(width: 2),
 
@@ -420,7 +415,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                 flex: 2,
                 child: Text(
                   mode,
-                  style: const TextStyle(color: Colors.grey, fontSize: 11),
+                  style: TextStyle(color: AppColors.secText, fontSize: 11),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -454,9 +449,9 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.03),
+              color: AppColors.text.withOpacity(0.03),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(0.05)),
+              border: Border.all(color: AppColors.kBorder),
             ),
             child: Row(
               children: [
@@ -472,10 +467,10 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                         ),
                       ),
                       const SizedBox(height: 2),
-                      const Text(
+                      Text(
                         "EST. ANNUAL CTC",
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: AppColors.secText,
                           fontSize: 10,
                           letterSpacing: 0.5,
                         ),
@@ -483,27 +478,23 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                     ],
                   ),
                 ),
-                Container(
-                  height: 30,
-                  width: 1,
-                  color: Colors.white.withOpacity(0.08),
-                ),
+                Container(height: 30, width: 1, color: AppColors.kBorder),
                 Expanded(
                   child: Column(
                     children: [
                       Text(
                         experience,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: AppColors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
                       ),
                       const SizedBox(height: 2),
-                      const Text(
+                      Text(
                         "EXPERIENCE REQUIRED",
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: AppColors.secText,
                           fontSize: 10,
                           letterSpacing: 0.5,
                         ),
@@ -529,13 +520,17 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.card_giftcard, color: Colors.pinkAccent, size: 18),
-              SizedBox(width: 8),
+            children: [
+              const Icon(
+                Icons.card_giftcard,
+                color: Colors.pinkAccent,
+                size: 18,
+              ),
+              const SizedBox(width: 8),
               Text(
                 "Benefits",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -555,7 +550,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                   Expanded(
                     child: Text(
                       e,
-                      style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      style: TextStyle(color: AppColors.secText, fontSize: 13),
                     ),
                   ),
                 ],
@@ -573,32 +568,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
       height: 12,
       width: 1,
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      color: Colors.white.withOpacity(0.15),
-    );
-  }
-
-  Widget _headerChip(IconData icon, String text, {Color? valueColor}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-      decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, size: 14, color: Colors.grey),
-          const SizedBox(width: 6),
-          Text(
-            text,
-            style: TextStyle(
-              color: valueColor ?? Colors.grey[300],
-              fontSize: 12,
-            ),
-          ),
-        ],
-      ),
+      color: AppColors.kBorder,
     );
   }
 
@@ -611,7 +581,6 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
         (candidate?.name ?? job.candidatePosted?.name ?? "Referrer").toString();
     final company =
         widget.companyName ?? candidate?.currentCompany ?? "Company";
-    final college = candidate?.college ?? "—";
 
     return _cardContainer(
       child: Column(
@@ -620,10 +589,10 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Posted by (Referrer)",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -703,8 +672,8 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                   children: [
                     Text(
                       name,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: AppColors.white,
                         fontSize: 15,
                         fontWeight: FontWeight.w600,
                       ),
@@ -712,43 +681,14 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                     const SizedBox(height: 2),
                     Text(
                       job.jobTitle ?? 'Software Engineer',
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      style: TextStyle(color: AppColors.secText, fontSize: 12),
                     ),
                     const SizedBox(height: 6),
                     Text(
                       company,
-                      style: const TextStyle(color: Colors.grey, fontSize: 11),
+                      style: TextStyle(color: AppColors.secText, fontSize: 11),
                     ),
                     const SizedBox(height: 6),
-                    // Container(
-                    //   padding: const EdgeInsets.symmetric(
-                    //     horizontal: 8,
-                    //     vertical: 4,
-                    //   ),
-                    //   decoration: BoxDecoration(
-                    //     color: AppColors.kGreen.withOpacity(0.12),
-                    //     borderRadius: BorderRadius.circular(6),
-                    //   ),
-                    //   child: Row(
-                    //     mainAxisSize: MainAxisSize.min,
-                    //     children: [
-                    //       Icon(
-                    //         Icons.people_outline,
-                    //         size: 12,
-                    //         color: AppColors.kGreen,
-                    //       ),
-                    //       const SizedBox(width: 4),
-                    //       Text(
-                    //         "2nd Degree Connection",
-                    //         style: TextStyle(
-                    //           color: AppColors.kGreen,
-                    //           fontSize: 10,
-                    //           fontWeight: FontWeight.w600,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -836,33 +776,24 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
     final metrics = referral?.metrics;
 
     final applications = metrics?.totalApplicationsReceived ?? 0;
-
     final referred = metrics?.totalReferredToCompany ?? 0;
-
-    final interviews = metrics?.totalInterviewScheduled ?? 0;
-
-    final accepted = metrics?.totalAcceptedByCompany ?? 0;
-
-    final responseRate = metrics?.responseRate ?? 0;
-
-    final successRate = metrics?.referralSuccessRate ?? 0;
 
     return _cardContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.analytics_outlined,
                 color: Colors.orangeAccent,
                 size: 18,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 "Referral Metrics",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -881,46 +812,6 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
               Expanded(child: _metricCard("Referred", referred.toString())),
             ],
           ),
-
-          // const SizedBox(height: 10),
-
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: _metricCard(
-          //         "Interviews",
-          //         interviews.toString(),
-          //       ),
-          //     ),
-          //     const SizedBox(width: 10),
-          //     Expanded(
-          //       child: _metricCard(
-          //         "Accepted",
-          //         accepted.toString(),
-          //       ),
-          //     ),
-          //   ],
-          // ),
-
-          // const SizedBox(height: 10),
-
-          // Row(
-          //   children: [
-          //     Expanded(
-          //       child: _metricCard(
-          //         "Response Rate",
-          //         "$responseRate%",
-          //       ),
-          //     ),
-          //     const SizedBox(width: 10),
-          //     Expanded(
-          //       child: _metricCard(
-          //         "Success Rate",
-          //         "$successRate%",
-          //       ),
-          //     ),
-          //   ],
-          // ),
         ],
       ),
     );
@@ -930,9 +821,9 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(.03),
+        color: AppColors.text.withOpacity(.03),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(.05)),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: Column(
         children: [
@@ -948,7 +839,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
           Text(
             title,
             textAlign: TextAlign.center,
-            style: const TextStyle(color: Colors.grey, fontSize: 11),
+            style: TextStyle(color: AppColors.secText, fontSize: 11),
           ),
         ],
       ),
@@ -967,20 +858,23 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
     final process = (job.selectionProcess?.isNotEmpty ?? false)
         ? job.selectionProcess!.join(", ")
         : "—";
-    final views = job.views?.toString() ?? "0";
     final score = (job.matchScore ?? 0).clamp(0, 100);
     return _cardContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.track_changes, size: 18, color: Colors.purpleAccent),
-              SizedBox(width: 8),
+            children: [
+              const Icon(
+                Icons.track_changes,
+                size: 18,
+                color: Colors.purpleAccent,
+              ),
+              const SizedBox(width: 8),
               Text(
                 "Match & Referral Insights",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1018,11 +912,11 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
             padding: const EdgeInsets.all(14),
 
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.03),
+              color: AppColors.text.withOpacity(.03),
 
               borderRadius: BorderRadius.circular(12),
 
-              border: Border.all(color: Colors.white.withOpacity(.05)),
+              border: Border.all(color: AppColors.kBorder),
             ),
 
             child: Column(
@@ -1030,20 +924,20 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
 
               children: [
                 Row(
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       Icons.account_tree_outlined,
                       size: 16,
                       color: Colors.orangeAccent,
                     ),
 
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
 
                     Text(
                       "Selection Process",
 
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -1056,8 +950,8 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                 Text(
                   process,
 
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: AppColors.secText,
                     fontSize: 13,
                     height: 1.5,
                   ),
@@ -1077,13 +971,13 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
         const SizedBox(width: 8),
         Text(
           "$label: ",
-          style: const TextStyle(color: Colors.grey, fontSize: 12),
+          style: TextStyle(color: AppColors.secText, fontSize: 12),
         ),
         Flexible(
           child: Text(
             value,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppColors.white,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
@@ -1114,17 +1008,17 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.description_outlined,
                 size: 18,
                 color: Colors.lightBlueAccent,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 "Role Overview",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1138,15 +1032,19 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 6, right: 8),
-                    child: Icon(Icons.circle, size: 5, color: Colors.grey),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6, right: 8),
+                    child: Icon(
+                      Icons.circle,
+                      size: 5,
+                      color: AppColors.secText,
+                    ),
                   ),
                   Expanded(
                     child: Text(
                       e,
-                      style: const TextStyle(
-                        color: Colors.grey,
+                      style: TextStyle(
+                        color: AppColors.secText,
                         fontSize: 13,
                         height: 1.4,
                       ),
@@ -1165,41 +1063,26 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
   // JOB DETAILS - 2 column grid
   // ============================================================
   Widget _jobDetailsSection(Job job) {
-    final exp = job.yearsOfExperience != null
-        ? "${job.yearsOfExperience}"
-        : "—";
     final education = (job.minEducation?.trim().isNotEmpty ?? false)
         ? job.minEducation!
         : "Not Specified";
-    final openings = job.numberOfOpenings?.toString() ?? "—";
-    final String jobType =
-        job.jobType ??
-        ((job.employmentType?.isNotEmpty ?? false)
-            ? job.employmentType!.join(", ")
-            : "—");
-    final workMode = (job.workMode?.isNotEmpty ?? false)
-        ? job.workMode!.join(", ")
-        : "—";
-    final location = (job.location?.isNotEmpty ?? false)
-        ? job.location!.join(", ")
-        : "—";
 
     return _cardContainer(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.business_center_outlined,
                 size: 18,
                 color: Colors.blueAccent,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 "Job Details",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1226,26 +1109,6 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
               ),
             ],
           ),
-          // const SizedBox(height: 14),
-          // Row(
-          //   children: [
-          //     Expanded(child: _detailRow("Education", education)),
-          //     // Expanded(child: _detailRow("Work Mode", workMode)),
-          //   ],
-          // ),
-          // const SizedBox(height: 14),
-          // Row(
-          //   children: [
-          //     Expanded(child: _detailRow("Openings", openings)),
-          //     // Expanded(
-          //     //   child: _detailRow(
-          //     //     "Location",
-          //     //     location,
-          //     //     valueColor: AppColors.kGreen,
-          //     //   ),
-          //     // ),
-          //   ],
-          // ),
         ],
       ),
     );
@@ -1255,12 +1118,12 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 11)),
+        Text(label, style: TextStyle(color: AppColors.secText, fontSize: 11)),
         const SizedBox(height: 4),
         Text(
           value,
           style: TextStyle(
-            color: valueColor ?? Colors.white,
+            color: valueColor ?? AppColors.white,
             fontSize: 13,
             fontWeight: FontWeight.w500,
           ),
@@ -1280,13 +1143,13 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.code, size: 18, color: Colors.greenAccent),
-              SizedBox(width: 8),
+            children: [
+              const Icon(Icons.code, size: 18, color: Colors.greenAccent),
+              const SizedBox(width: 8),
               Text(
                 "Skills Required",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1297,9 +1160,9 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
           const SizedBox(height: 12),
 
           if (skills.isEmpty)
-            const Text(
+            Text(
               "No skills specified",
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: AppColors.secText),
             )
           else
             Wrap(
@@ -1319,13 +1182,13 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: Colors.white.withOpacity(0.06),
+        color: AppColors.chip,
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: Colors.white.withOpacity(0.05)),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: Text(
         text,
-        style: const TextStyle(color: Colors.white, fontSize: 12),
+        style: TextStyle(color: AppColors.chipText, fontSize: 12),
       ),
     );
   }
@@ -1367,10 +1230,10 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
             children: [
               Icon(Icons.verified_outlined, size: 18, color: AppColors.kGreen),
               const SizedBox(width: 8),
-              const Text(
+              Text(
                 "Eligibility",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1396,7 +1259,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                   Expanded(
                     child: Text(
                       e,
-                      style: const TextStyle(color: Colors.grey, fontSize: 13),
+                      style: TextStyle(color: AppColors.secText, fontSize: 13),
                     ),
                   ),
                 ],
@@ -1409,52 +1272,15 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
   }
 
   // ============================================================
-  // ABOUT COMPANY
-  // ============================================================
-  // Widget _aboutCompanySection(Job job) {
-  //   final company = widget.companyName ?? "Company";
-  //   return _cardContainer(
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.start,
-  //       children: [
-  //         Row(
-  //           children: const [
-  //             Icon(Icons.apartment_rounded, size: 18, color: Colors.blueAccent),
-  //         //     SizedBox(width: 8),
-  //         //     Text(
-  //         //       "About Company",
-  //         //       style: TextStyle(
-  //         //         color: Colors.white,
-  //         //         fontSize: 15,
-  //         //         fontWeight: FontWeight.w600,
-  //         //       ),
-  //         //     ),
-  //         //   ],
-  //         // ),
-  //   //       const SizedBox(height: 10),
-  //   //       Text(
-  //   //         "$company is a leading organization focused on innovation, growth and excellence. Join the team to work on impactful, cutting-edge projects.",
-  //   //         style: const TextStyle(
-  //   //           color: Colors.grey,
-  //   //           fontSize: 12,
-  //   //           height: 1.5,
-  //   //         ),
-  //   //       ),
-  //   //     ],
-  //   //   ),
-  //   // );
-  // }
-
-  // ============================================================
   // ALUMNI SECTION (logic preserved)
   // ============================================================
   Widget _alumniHeader() {
-    return const Padding(
-      padding: EdgeInsets.only(left: 4),
+    return Padding(
+      padding: const EdgeInsets.only(left: 4),
       child: Text(
         "Alumni Who Can Help",
         style: TextStyle(
-          color: Colors.white,
+          color: AppColors.white,
           fontSize: 16,
           fontWeight: FontWeight.w600,
         ),
@@ -1466,11 +1292,11 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
     return Consumer<ProfessionalViewModel>(
       builder: (context, vm, _) {
         if (vm.companyAlumni.isEmpty) {
-          return const Padding(
-            padding: EdgeInsets.symmetric(vertical: 12),
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
             child: Text(
               "No alumni available",
-              style: TextStyle(color: Colors.grey),
+              style: TextStyle(color: AppColors.secText),
             ),
           );
         }
@@ -1495,7 +1321,7 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: Colors.white.withOpacity(0.06)),
+        border: Border.all(color: AppColors.kBorder),
       ),
       child: child,
     );
@@ -1587,8 +1413,6 @@ class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
 
   @override
   Widget build(BuildContext context) {
-    print("ANIMATED SCORE = ${widget.score}");
-
     return AnimatedBuilder(
       animation: _anim,
       builder: (context, _) {
@@ -1605,7 +1429,7 @@ class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
                 child: CircularProgressIndicator(
                   value: _anim.value, // animated 0 → target
                   strokeWidth: 6,
-                  backgroundColor: Colors.white.withOpacity(0.08),
+                  backgroundColor: AppColors.kBorder,
                   valueColor: AlwaysStoppedAnimation(AppColors.kGreen),
                 ),
               ),
@@ -1614,8 +1438,8 @@ class _AnimatedMatchScoreState extends State<AnimatedMatchScore>
                 children: [
                   Text(
                     '$displayed%', // counts up live
-                    style: const TextStyle(
-                      color: Colors.white,
+                    style: TextStyle(
+                      color: AppColors.white,
                       fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),

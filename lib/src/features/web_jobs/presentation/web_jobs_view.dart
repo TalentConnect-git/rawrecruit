@@ -38,13 +38,13 @@ class _AskForReferralViewState extends State<AskForReferralView> {
           centerTitle: false,
           title: Text(
             'Ask For Referral',
-            style: AppTextStyles.s18W600.copyWith(color: Colors.white),
+            style: AppTextStyles.s18W600.copyWith(color: AppColors.white),
           ),
           leading: IconButton(
             onPressed: () => context.pop(),
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios_new_rounded,
-              color: Colors.white,
+              color: AppColors.white,
             ),
           ),
         ),
@@ -58,7 +58,7 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                   width: double.infinity,
                   padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: const Color(0xff091B38),
+                    color: AppColors.heroCard,
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Column(
@@ -74,14 +74,14 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                       Text(
                         'Find referrals from alumni and employees',
                         style: AppTextStyles.s20W600.copyWith(
-                          color: Colors.white,
+                          color: AppColors.white,
                         ),
                       ),
                       const SizedBox(height: 10),
                       Text(
                         'Ask for referrals by searching a company. We will fetch matching jobs from the company career page and rank them by alumni count and match score.',
                         style: AppTextStyles.s14W400.copyWith(
-                          color: Colors.white70,
+                          color: AppColors.secText,
                         ),
                       ),
                     ],
@@ -108,24 +108,24 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                 Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: const Color(0xff222222),
+                    color: AppColors.kCard,
                     borderRadius: BorderRadius.circular(16),
-                    border: Border.all(color: Colors.white12),
+                    border: Border.all(color: AppColors.kBorder),
                   ),
                   child: Column(
                     children: [
                       TextFormField(
                         controller: urlController,
-                        style: const TextStyle(color: Colors.white),
+                        style: TextStyle(color: AppColors.white),
                         decoration: InputDecoration(
                           hintText: 'Paste Job URL',
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          prefixIcon: const Icon(
+                          hintStyle: TextStyle(color: AppColors.secText),
+                          prefixIcon: Icon(
                             Icons.link,
-                            color: Colors.grey,
+                            color: AppColors.secText,
                           ),
                           filled: true,
-                          fillColor: const Color(0xff2C2C2C),
+                          fillColor: AppColors.kInputFill,
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(12),
                             borderSide: BorderSide.none,
@@ -142,7 +142,7 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                       // Text(
                       //   'OR',
                       //   style: AppTextStyles.s14W600.copyWith(
-                      //     color: Colors.white70,
+                      //     color: AppColors.secText,
                       //   ),
                       // ),
 
@@ -150,16 +150,16 @@ class _AskForReferralViewState extends State<AskForReferralView> {
 
                       // TextFormField(
                       //   controller: companyController,
-                      //   style: const TextStyle(color: Colors.white),
+                      //   style: TextStyle(color: AppColors.white),
                       //   decoration: InputDecoration(
                       //     hintText: 'Enter Company Name',
-                      //     hintStyle: const TextStyle(color: Colors.grey),
-                      //     prefixIcon: const Icon(
+                      //     hintStyle: TextStyle(color: AppColors.secText),
+                      //     prefixIcon: Icon(
                       //       Icons.business,
-                      //       color: Colors.grey,
+                      //       color: AppColors.secText,
                       //     ),
                       //     filled: true,
-                      //     fillColor: const Color(0xff2C2C2C),
+                      //     fillColor: AppColors.kInputFill,
                       //     border: OutlineInputBorder(
                       //       borderRadius: BorderRadius.circular(12),
                       //       borderSide: BorderSide.none,
@@ -259,18 +259,18 @@ class _AskForReferralViewState extends State<AskForReferralView> {
                                       }
                                     },
                               child: vm.viewState == ViewState.busy
-                                  ? const SizedBox(
+                                  ? SizedBox(
                                       height: 20,
                                       width: 20,
                                       child: CircularProgressIndicator(
                                         strokeWidth: 2,
-                                        color: Colors.black,
+                                        color: AppColors.onGreenButton,
                                       ),
                                     )
                                   : Text(
                                       'Apply For Referral',
                                       style: AppTextStyles.s16W600.copyWith(
-                                        color: Colors.black,
+                                        color: AppColors.onGreenButton,
                                       ),
                                     ),
                             ),

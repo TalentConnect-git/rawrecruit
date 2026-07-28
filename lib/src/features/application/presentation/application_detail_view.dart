@@ -50,9 +50,9 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
     return ChangeNotifierProvider.value(
       value: applicationDetailViewModel,
       child: Scaffold(
-        backgroundColor: AppColors.secBorder,
+        backgroundColor: AppColors.kBg,
         appBar: RAppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: AppColors.white),
           leading: IconButton(
             onPressed: () => context.pop(),
             icon: const Icon(Icons.keyboard_arrow_left),
@@ -61,7 +61,7 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
             selector: (_, vm) => vm.application,
             builder: (_, application, _) => Text(
               application?.displayCompanyName ?? '',
-              style: const TextStyle(color: Colors.white),
+              style: TextStyle(color: AppColors.white),
             ),
           ),
         ),
@@ -172,7 +172,7 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                               const SizedBox(width: 4),
                               Text(
                                 location ?? "-",
-                                style: const TextStyle(color: Colors.white),
+                                style: TextStyle(color: AppColors.white),
                               ),
                             ],
                           ),
@@ -181,8 +181,8 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
 
                           Text(
                             "Applied on $appliedDate",
-                            style: const TextStyle(
-                              color: Colors.grey,
+                            style: TextStyle(
+                              color: AppColors.secText,
                               fontSize: 12,
                             ),
                           ),
@@ -256,10 +256,10 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                             const SizedBox(height: 30),
 
                             /// 🔥 TIMELINE TITLE
-                            const Text(
+                            Text(
                               "Progress Timeline",
                               style: TextStyle(
-                                color: Colors.white,
+                                color: AppColors.white,
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
@@ -405,9 +405,9 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
+                  Text(
                     "Referrer",
-                    style: TextStyle(color: Colors.grey, fontSize: 12),
+                    style: TextStyle(color: AppColors.secText, fontSize: 12),
                   ),
 
                   const SizedBox(height: 4),
@@ -416,7 +416,9 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                     receiver.name ?? "-",
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: AppTextStyles.s16W600.copyWith(color: Colors.white),
+                    style: AppTextStyles.s16W600.copyWith(
+                      color: AppColors.white,
+                    ),
                   ),
 
                   if ((receiver.currentCompany ?? '').isNotEmpty)
@@ -426,8 +428,8 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                         receiver.currentCompany!,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          color: Colors.grey,
+                        style: TextStyle(
+                          color: AppColors.secText,
                           fontSize: 13,
                         ),
                       ),
@@ -476,7 +478,6 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
     );
   }
 
-  /// 🔥 NORMALIZE STATUS
   /// 🔥 NORMALIZE STATUS
   String _normalizeStatus(String status) {
     final s = status.toLowerCase();
@@ -528,7 +529,6 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
     return "pending";
   }
 
-  /// 🔥 STATUS BADGE
   /// 🔥 STATUS BADGE
   Widget _statusBadge(String rawStatus) {
     final status = _normalizeStatus(rawStatus);
@@ -607,16 +607,12 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
           children: [
             Icon(
               isDone ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: isDone ? Colors.green : Colors.grey,
+              color: isDone ? Colors.green : AppColors.secText,
               size: 20,
             ),
 
             if (!isLast)
-              Container(
-                width: 2,
-                height: 30,
-                color: Colors.grey.withOpacity(0.3),
-              ),
+              Container(width: 2, height: 30, color: AppColors.kBorder),
           ],
         ),
 
@@ -627,7 +623,7 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
           child: Text(
             title,
             style: TextStyle(
-              color: isDone ? Colors.white : Colors.grey,
+              color: isDone ? AppColors.white : AppColors.secText,
               fontWeight: FontWeight.w500,
             ),
           ),

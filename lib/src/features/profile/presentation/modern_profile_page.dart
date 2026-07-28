@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/jobs/utils/enums.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
@@ -67,7 +68,9 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
           child: Consumer<MyProfileViewModel>(
             builder: (_, vm, __) {
               if (vm.isLoading) {
-                return const Center(child: CircularProgressIndicator());
+                return Center(
+                  child: CircularProgressIndicator(color: AppColors.kGreen),
+                );
               }
 
               final p = vm.user;
@@ -277,6 +280,9 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         );
                       },
                     ),
+                    const SizedBox(height: 20),
+
+                    _themeToggleItem(), // 🔥 new theme switch row
 
                     const SizedBox(height: 20),
 
@@ -299,16 +305,20 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
 
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(28),
-
         gradient: LinearGradient(
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-
-          colors: [
-            const Color(0xFF111827),
-            const Color(0xFF0B1220),
-            AppColors.kCard,
-          ],
+          colors: ThemeController.instance.isDark
+              ? [
+                  const Color(0xFF111827),
+                  const Color(0xFF0B1220),
+                  AppColors.kCard,
+                ]
+              : [
+                  const Color(0xFFE8F8EE),
+                  const Color(0xFFD7F1E3),
+                  const Color(0xFFF8FFFA),
+                ],
         ),
 
         border: Border.all(color: AppColors.kGreen.withOpacity(.15)),
@@ -405,8 +415,8 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                           p?.name ?? "-",
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
-                            color: Colors.white,
+                          style: TextStyle(
+                            color: AppColors.white,
                             fontWeight: FontWeight.bold,
                             fontSize: 22,
                           ),
@@ -491,7 +501,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                               vertical: 9,
                             ),
                             decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(.05),
+                              color: AppColors.white.withOpacity(.05),
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(
                                 color: Colors.white.withOpacity(.06),
@@ -501,7 +511,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                               displayText,
                               textAlign: TextAlign.center,
                               style: TextStyle(
-                                color: Colors.grey[300],
+                                color: AppColors.white,
                                 fontSize: 13,
                                 fontWeight: FontWeight.w500,
                               ),
@@ -537,7 +547,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                     children: [
                       Icon(
                         Icons.location_on_outlined,
-                        color: Colors.grey[400],
+                        color: AppColors.secText,
                         size: 15,
                       ),
                       const SizedBox(width: 4),
@@ -547,7 +557,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
-                            color: Colors.grey[400],
+                            color: AppColors.white,
                             fontSize: 12,
                           ),
                         ),
@@ -799,8 +809,8 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
             children: [
               Text(
                 stats[i][0],
-                style: const TextStyle(
-                  color: Colors.white,
+                style: TextStyle(
+                  color: AppColors.secText,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -856,7 +866,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
   //     child: Row(
   //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
   //       children: [
-  //         Text(skill, style: const TextStyle(color: Colors.white)),
+  //         Text(skill, style: TextStyle(color: AppColors.text)),
   //         Container(
   //           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
   //           decoration: BoxDecoration(
@@ -897,12 +907,47 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
             Icon(icon, color: AppColors.kGreen),
             const SizedBox(width: 12),
             Expanded(
-              child: Text(title, style: const TextStyle(color: Colors.white)),
+              child: Text(title, style: TextStyle(color: AppColors.text)),
             ),
-            const Icon(Icons.arrow_forward_ios, size: 14, color: Colors.grey),
+            Icon(Icons.arrow_forward_ios, size: 14, color: AppColors.secText),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _themeToggleItem() {
+    return ListenableBuilder(
+      listenable: ThemeController.instance,
+      builder: (context, _) {
+        final isDark = ThemeController.instance.isDark;
+        return Container(
+          margin: const EdgeInsets.only(bottom: 10),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: AppColors.kCard,
+            borderRadius: BorderRadius.circular(14),
+            border: Border.all(color: AppColors.kBorder),
+          ),
+          child: Row(
+            children: [
+              Icon(
+                isDark ? Icons.dark_mode : Icons.light_mode,
+                color: AppColors.kGreen,
+              ),
+              const SizedBox(width: 12),
+              const Expanded(
+                child: Text("Dark Mode", style: TextStyle(color: Colors.white)),
+              ),
+              Switch(
+                value: isDark,
+                activeColor: AppColors.kGreen,
+                onChanged: (_) => ThemeController.instance.toggleTheme(),
+              ),
+            ],
+          ),
+        );
+      },
     );
   }
 

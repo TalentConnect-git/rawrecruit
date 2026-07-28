@@ -245,11 +245,11 @@ class _DashboardCombinedViewState extends State<_DashboardCombinedView> {
               ),
 
               if (applicationVM.appliedApplications.isEmpty)
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: 10),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   child: Text(
                     "No Applications Yet",
-                    style: TextStyle(color: Colors.grey),
+                    style: TextStyle(color: AppColors.secText),
                   ),
                 )
               else
@@ -430,8 +430,8 @@ class _SectionHeader extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppColors.white,
               fontSize: 18,
               fontWeight: FontWeight.bold,
             ),
@@ -532,7 +532,7 @@ class _SegmentToggle extends StatelessWidget {
             style: TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.w600,
-              color: isSelected ? Colors.white : AppColors.white,
+              color: isSelected ? AppColors.white : AppColors.white,
             ),
           ),
         ),
@@ -556,7 +556,7 @@ class InfoChip extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(60),
           border: Border.all(color: AppColors.white, width: 0.5),
-          color: const Color(0xff222222),
+          color: AppColors.kCard,
         ),
         child: Text(
           text,
