@@ -29,9 +29,7 @@ class Toasts {
     final overlayEntry = OverlayEntry(
       builder: (context) {
         return Positioned(
-          bottom:
-              MediaQuery.of(context).padding.bottom +
-              kToolbarHeight, // below status bar
+          top: MediaQuery.of(context).padding.top + 12, // below status bar
           left: 16,
           right: 16,
           child: Material(

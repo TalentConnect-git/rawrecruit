@@ -18,13 +18,56 @@ class ReferralTile extends StatelessWidget {
               final appState = context.read<AppStateProvider>();
 
               if ((appState.user?.currentCompany ?? '').trim().isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text(
-                      "Please update your current company before posting a job.",
-                    ),
-                    behavior: SnackBarBehavior.floating,
-                  ),
+                showDialog(
+                  context: context,
+                  builder: (dialogContext) {
+                    return Dialog(
+                      backgroundColor: AppColors.dialog,
+                      child: Stack(
+                        children: [
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                              vertical: 20,
+                              horizontal: 26,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.error_outline,
+                                  size: 48,
+                                  color: AppColors.errorBorder,
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  'No Company found!',
+                                  style: AppTextStyles.s18W600.copyWith(
+                                    color: AppColors.text,
+                                  ),
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  'Please update your current company before posting a job.',
+                                  style: AppTextStyles.s14W400.copyWith(
+                                    color: AppColors.secText,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Positioned(
+                            right: 20,
+                            top: 20,
+                            child: InkWell(
+                              onTap: dialogContext.pop,
+                              child: Icon(Icons.close, color: AppColors.text),
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
                 );
                 return;
               }

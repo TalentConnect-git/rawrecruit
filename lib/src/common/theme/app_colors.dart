@@ -6,6 +6,7 @@ class AppColors {
 
   static Color get text => _isDark ? Color(0xffffffff) : Color(0xff222222);
   static Color get card => _isDark ? Color(0xFF111827) : Color(0xffbcdfec);
+  static Color get dialog => _isDark ? Color(0xFF111827) : Color(0xffffffff);
   static Color get chip => _isDark ? Color(0xFF1F2937) : Color(0xffb4c8d2);
   static Color get chipText => _isDark ? Color(0xffffffff) : Color(0xff092b38);
   static Color get primary => Color(0xff2f9db6);
