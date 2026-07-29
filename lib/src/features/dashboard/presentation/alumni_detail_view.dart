@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/dashboard/presentation/view_model/alumni_detail_view_model.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -148,7 +149,21 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
                     decoration: BoxDecoration(
                       color: AppColors.kCard,
                       borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: AppColors.kBorder),
+                      border: Border.all(
+                        color: ThemeController.instance.isDark
+                            ? AppColors.kBorder
+                            : const Color(0xFFE5E7EB),
+                        width: 1,
+                      ),
+                      boxShadow: ThemeController.instance.isDark
+                          ? []
+                          : [
+                              BoxShadow(
+                                color: AppColors.shadow,
+                                blurRadius: 16,
+                                offset: const Offset(0, 6),
+                              ),
+                            ],
                     ),
                     child: Column(
                       children: [
@@ -733,12 +748,23 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
 
         decoration: BoxDecoration(
           color: AppColors.kTile,
-
           borderRadius: BorderRadius.circular(12),
-
-          border: Border.all(color: AppColors.kBorder),
+          border: Border.all(
+            color: ThemeController.instance.isDark
+                ? AppColors.kBorder
+                : const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+          boxShadow: ThemeController.instance.isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: AppColors.shadow,
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
-
         child: Row(
           children: [
             Image.asset(image, height: 22, width: 22),
@@ -798,7 +824,21 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.kBorder),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+          width: 1,
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -881,7 +921,21 @@ class _AlumniDetailViewState extends State<AlumniDetailView> {
         decoration: BoxDecoration(
           color: AppColors.kTile,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.kBorder),
+          border: Border.all(
+            color: ThemeController.instance.isDark
+                ? AppColors.kBorder
+                : const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+          boxShadow: ThemeController.instance.isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: AppColors.shadow,
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
         child: Row(
           children: [

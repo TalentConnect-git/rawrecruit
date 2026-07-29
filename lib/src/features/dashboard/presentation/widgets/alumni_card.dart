@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 
 import '../../../../core/index.dart';
 import '../../../../core/models/experience.dart';
@@ -98,7 +99,21 @@ class AlumniCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.kCard,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.kBorder),
+          border: Border.all(
+            color: ThemeController.instance.isDark
+                ? AppColors.kBorder
+                : const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+          boxShadow: ThemeController.instance.isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: AppColors.shadow,
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min, // 🔥 prevents overflow

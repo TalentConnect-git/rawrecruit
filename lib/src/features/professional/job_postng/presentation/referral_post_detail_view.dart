@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/data/repository/job_posting_repo.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_application.dart';
@@ -60,11 +61,22 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
     return ChangeNotifierProvider.value(
       value: referralPostDetailViewModel,
       child: Scaffold(
-        backgroundColor: AppColors.secBorders,
+        backgroundColor: AppColors.kBg,
         appBar: AppBar(
           backgroundColor: AppColors.kCard,
-          iconTheme: IconThemeData(color: AppColors.white),
-          title: Text("Posted Job", style: TextStyle(color: AppColors.white)),
+          elevation: ThemeController.instance.isDark ? 0 : 2,
+          shadowColor: ThemeController.instance.isDark
+              ? Colors.transparent
+              : AppColors.shadow,
+          surfaceTintColor: Colors.transparent,
+          iconTheme: IconThemeData(color: AppColors.text),
+          title: Text(
+            "Posted Job",
+            style: TextStyle(
+              color: AppColors.text,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
         body: Consumer<ReferralPostDetailViewModel>(
           builder: (_, vm, _) {
@@ -119,7 +131,21 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: AppColors.kBorder),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+          width: 1,
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -582,8 +608,22 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
     return Container(
       padding: const EdgeInsets.symmetric(vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.chip,
+        color: AppColors.kCard,
         borderRadius: BorderRadius.circular(14),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -596,15 +636,28 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
     );
   }
 
-  /// 🔥 TABS
   Widget _tabs() {
     final tabs = ["Overview", "Candidates"];
 
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: AppColors.chip,
+        color: ThemeController.instance.isDark ? AppColors.chip : Colors.white,
         borderRadius: BorderRadius.circular(30),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Row(
         children: List.generate(tabs.length, (index) {
@@ -612,9 +665,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
 
           return Expanded(
             child: GestureDetector(
-              onTap: () {
-                setState(() => selectedTab = index);
-              },
+              onTap: () => setState(() => selectedTab = index),
               child: AnimatedContainer(
                 duration: const Duration(milliseconds: 250),
                 curve: Curves.easeInOut,
@@ -631,7 +682,7 @@ class _ReferralPostDetailViewState extends State<ReferralPostDetailView> {
                       fontWeight: FontWeight.w600,
                       color: isSelected
                           ? AppColors.onGreenButton
-                          : AppColors.secText,
+                          : AppColors.text,
                     ),
                   ),
                 ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/alumni/presentation/widgets/alumni_hiring_card.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
@@ -315,7 +316,20 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.kBorder),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1321,7 +1335,20 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kBorder),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: child,
     );

@@ -808,7 +808,21 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
           decoration: BoxDecoration(
             color: AppColors.kCard,
             borderRadius: BorderRadius.circular(14),
-            border: Border.all(color: AppColors.kBorder),
+            border: Border.all(
+              color: ThemeController.instance.isDark
+                  ? AppColors.kBorder
+                  : const Color(0xFFE5E7EB),
+              width: 1,
+            ),
+            boxShadow: ThemeController.instance.isDark
+                ? []
+                : [
+                    BoxShadow(
+                      color: AppColors.shadow,
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
+                    ),
+                  ],
           ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -906,7 +920,21 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
         decoration: BoxDecoration(
           color: AppColors.kCard,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: AppColors.kBorder),
+          border: Border.all(
+            color: ThemeController.instance.isDark
+                ? AppColors.kBorder
+                : const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+          boxShadow: ThemeController.instance.isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: AppColors.shadow,
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
         child: Row(
           children: [

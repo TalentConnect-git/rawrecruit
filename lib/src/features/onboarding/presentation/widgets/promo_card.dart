@@ -65,7 +65,7 @@ class _CareerInsightPromoCardState extends State<CareerInsightPromoCard> {
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: Colors.white10),
+            border: Border.all(color: AppColors.white),
             gradient: LinearGradient(
               colors: [AppColors.kCard, AppColors.kTile],
               begin: Alignment.topLeft,

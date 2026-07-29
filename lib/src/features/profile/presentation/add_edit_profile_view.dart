@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart';
 import 'package:rawrecruit/src/features/profile/presentation/widgets/auto_complete_field.dart';
@@ -2075,7 +2076,21 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kBorder.withOpacity(0.06)),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder.withOpacity(0.06)
+              : const Color(0xFFE5E7EB),
+          width: 1,
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2133,11 +2148,24 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kBorder.withOpacity(0.06)),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder.withOpacity(0.06)
+              : const Color(0xFFE5E7EB),
+          width: 1,
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
 
       child: Column(
@@ -2373,10 +2401,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
             markChanged();
           },
         ),
-        const Text(
-          "I currently work here",
-          style: TextStyle(color: Colors.white),
-        ),
+        Text("I currently work here", style: TextStyle(color: AppColors.white)),
       ],
     );
   }
@@ -2533,7 +2558,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
         fillColor: AppColors.kBg,
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+          borderSide: BorderSide(color: AppColors.kGreen, width: 0),
         ),
       ),
     );
@@ -2698,11 +2723,24 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(16),
-
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kBorder.withOpacity(0.06)),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder.withOpacity(0.06)
+              : const Color(0xFFE5E7EB),
+          width: 1,
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
 
       child: Column(
@@ -3400,173 +3438,222 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
     final isSimpleSelection = widget.label == 'Employment Type';
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-
-      children: [
-        /// SEARCH FIELD
-        if (!isSimpleSelection) ...[
-          Column(
-            children: [
-              TextField(
-                controller: _textController,
-
-                focusNode: _focusNode,
-
-                style: TextStyle(color: AppColors.white),
-
-                onChanged: (_) {
-                  setState(() {});
-                },
-
-                decoration: InputDecoration(
-                  hintText: "Search or add ${widget.label}",
-
-                  hintStyle: TextStyle(color: AppColors.grey),
-
-                  filled: true,
-
-                  fillColor: AppColors.kCard,
-
-                  prefixIcon: Icon(Icons.search, color: AppColors.grey),
-
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(14),
-
-                    borderSide: BorderSide.none,
-                  ),
-                ),
-              ),
-
-              if (_textController.text.trim().isNotEmpty &&
-                  _filteredSuggestions.isEmpty &&
-                  !widget.options.any(
-                    (e) =>
-                        e.toLowerCase().trim() ==
-                        _textController.text.toLowerCase().trim(),
-                  ))
-                Container(
-                  margin: const EdgeInsets.only(top: 8),
-
-                  decoration: BoxDecoration(
-                    color: AppColors.kCard,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-
-                  child: ListTile(
-                    leading: const Icon(Icons.add, color: Color(0xFF22C55E)),
-
-                    title: Text(
-                      'Create "${_textController.text.trim()}"',
-
-                      style: TextStyle(color: AppColors.subtext),
-                    ),
-
-                    onTap: () async {
-                      final value = _textController.text.trim();
-
-                      _addItem(value);
-
-                      final parentState = context
-                          .findAncestorStateOfType<_AddEditProfileViewState>();
-
-                      if (widget.label == 'Skills') {
-                        await parentState?.addSkillIfNeeded(value);
-                      }
-
-                      if (widget.label == 'Job Roles') {
-                        await parentState?.addJobRoleIfNeeded(value);
-                      }
-
-                      _textController.clear();
-
-                      setState(() {});
-                    },
-                  ),
-                ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-        ],
-
-        /// SELECTED ITEMS
-        if (selected.isNotEmpty) ...[
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-
-            children: selected.map((item) {
-              return Chip(
-                label: Text(item),
-
-                backgroundColor: const Color(0xFF22C55E),
-
-                labelStyle: const TextStyle(color: Colors.black),
-
-                deleteIcon: const Icon(Icons.close, size: 18),
-
-                onDeleted: () => _removeItem(item),
-              );
-            }).toList(),
-          ),
-
-          const SizedBox(height: 20),
-        ],
-
-        /// POPULAR TITLE
-        Text(
-          "POPULAR ${widget.label.toUpperCase()}",
-
-          style: const TextStyle(color: Colors.grey),
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: AppColors.kCard,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+          width: 1,
         ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+              ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
 
-        const SizedBox(height: 10),
+        children: [
+          /// SEARCH FIELD
+          if (!isSimpleSelection) ...[
+            Column(
+              children: [
+                TextField(
+                  controller: _textController,
 
-        /// OPTIONS
-        if (hasEnums)
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
+                  focusNode: _focusNode,
 
-            children: widget.options.map((option) {
-              final isSelected = selected.contains(option);
+                  style: TextStyle(color: AppColors.white),
 
-              return GestureDetector(
-                onTap: () {
-                  if (isSelected) {
-                    _removeItem(option);
-                  } else {
-                    _addItem(option);
-                  }
-                },
+                  onChanged: (_) {
+                    setState(() {});
+                  },
 
-                child: Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 8,
-                  ),
+                  decoration: InputDecoration(
+                    hintText: "Search or add ${widget.label}",
+                    hintStyle: TextStyle(color: AppColors.grey),
 
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? const Color(0xFF22C55E)
-                        : AppColors.kCard,
+                    filled: true,
+                    fillColor: AppColors.kTile,
 
-                    borderRadius: BorderRadius.circular(20),
-                  ),
+                    prefixIcon: Icon(Icons.search, color: AppColors.grey),
 
-                  child: Text(
-                    option,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide.none,
+                    ),
 
-                    style: TextStyle(
-                      color: isSelected ? Colors.black : AppColors.white,
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide(
+                        color: ThemeController.instance.isDark
+                            ? AppColors.kBorder
+                            : const Color(0xFFE5E7EB),
+                        width: 1,
+                      ),
+                    ),
+
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(14),
+                      borderSide: BorderSide(
+                        color: AppColors.kGreen,
+                        width: 1.5,
+                      ),
                     ),
                   ),
                 ),
-              );
-            }).toList(),
+                if (_textController.text.trim().isNotEmpty &&
+                    _filteredSuggestions.isEmpty &&
+                    !widget.options.any(
+                      (e) =>
+                          e.toLowerCase().trim() ==
+                          _textController.text.toLowerCase().trim(),
+                    ))
+                  Container(
+                    margin: const EdgeInsets.only(top: 8),
+
+                    decoration: BoxDecoration(
+                      color: AppColors.kCard,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+
+                    child: ListTile(
+                      leading: const Icon(Icons.add, color: Color(0xFF22C55E)),
+
+                      title: Text(
+                        'Create "${_textController.text.trim()}"',
+
+                        style: TextStyle(color: AppColors.subtext),
+                      ),
+
+                      onTap: () async {
+                        final value = _textController.text.trim();
+
+                        _addItem(value);
+
+                        final parentState = context
+                            .findAncestorStateOfType<
+                              _AddEditProfileViewState
+                            >();
+
+                        if (widget.label == 'Skills') {
+                          await parentState?.addSkillIfNeeded(value);
+                        }
+
+                        if (widget.label == 'Job Roles') {
+                          await parentState?.addJobRoleIfNeeded(value);
+                        }
+
+                        _textController.clear();
+
+                        setState(() {});
+                      },
+                    ),
+                  ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+          ],
+
+          /// SELECTED ITEMS
+          if (selected.isNotEmpty) ...[
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+
+              children: selected.map((item) {
+                return Chip(
+                  label: Text(item),
+
+                  backgroundColor: const Color(0xFF22C55E),
+
+                  labelStyle: const TextStyle(color: Colors.black),
+
+                  deleteIcon: const Icon(Icons.close, size: 18),
+
+                  onDeleted: () => _removeItem(item),
+                );
+              }).toList(),
+            ),
+
+            const SizedBox(height: 20),
+          ],
+
+          /// POPULAR TITLE
+          Text(
+            "POPULAR ${widget.label.toUpperCase()}",
+
+            style: const TextStyle(color: Colors.grey),
           ),
-      ],
+
+          const SizedBox(height: 10),
+
+          /// OPTIONS
+          if (hasEnums)
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+
+              children: widget.options.map((option) {
+                final isSelected = selected.contains(option);
+
+                return GestureDetector(
+                  onTap: () {
+                    if (isSelected) {
+                      _removeItem(option);
+                    } else {
+                      _addItem(option);
+                    }
+                  },
+
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 8,
+                    ),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? const Color(0xFF22C55E)
+                          : AppColors.kTile,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: ThemeController.instance.isDark
+                            ? AppColors.kBorder
+                            : const Color(0xFFE5E7EB),
+                        width: 1,
+                      ),
+                      boxShadow: ThemeController.instance.isDark
+                          ? []
+                          : [
+                              BoxShadow(
+                                color: AppColors.shadow,
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                    ),
+                    child: Text(
+                      option,
+                      style: TextStyle(
+                        color: isSelected ? Colors.black : AppColors.white,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+        ],
+      ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/features/profile/presentation/resume_view_page.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -364,12 +365,23 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                           decoration: BoxDecoration(
                             color: AppColors.kCard,
-
                             borderRadius: BorderRadius.circular(18),
-
-                            border: Border.all(color: AppColors.kBorder),
+                            border: Border.all(
+                              color: ThemeController.instance.isDark
+                                  ? AppColors.kBorder
+                                  : const Color(0xFFE5E7EB),
+                              width: 1,
+                            ),
+                            boxShadow: ThemeController.instance.isDark
+                                ? []
+                                : [
+                                    BoxShadow(
+                                      color: AppColors.shadow,
+                                      blurRadius: 16,
+                                      offset: const Offset(0, 6),
+                                    ),
+                                  ],
                           ),
-
                           child: Row(
                             children: [
                               Container(
@@ -475,8 +487,26 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                     vertical: 8,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: AppColors.chip,
+                                    color: AppColors.blackwhite.withOpacity(
+                                      .12,
+                                    ),
                                     borderRadius: BorderRadius.circular(30),
+                                    border: Border.all(
+                                      color: ThemeController.instance.isDark
+                                          ? AppColors.kBorder
+                                          : const Color(0xFFE5E7EB),
+                                      width: 1,
+                                    ),
+                                    boxShadow: ThemeController.instance.isDark
+                                        ? []
+                                        : [
+                                            BoxShadow(
+                                              color: AppColors.shadow,
+                                              blurRadius: 5,
+                                              offset: const Offset(1
+                                              , 2),
+                                            ),
+                                          ],
                                   ),
                                   child: Text(
                                     e,
@@ -759,6 +789,151 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
                           final isLast = index == (user.educations!.length - 1);
 
+                          final hasDegree =
+                              (e.degree?.trim().isNotEmpty ?? false);
+                          final hasSpecialization =
+                              (e.specialization?.trim().isNotEmpty ?? false);
+                          final hasYear =
+                              (e.yearOfGraduation?.trim().isNotEmpty ?? false);
+                          final hasCgpa = (e.cgpa?.trim().isNotEmpty ?? false);
+
+                          final contentChildren = <Widget>[];
+
+                          /// DEGREE + CURRENT BADGE — only if there's a degree
+                          /// or a "current" flag to show
+                          if (hasDegree || e.isCurrent == true) {
+                            contentChildren.add(
+                              Row(
+                                children: [
+                                  if (hasDegree)
+                                    Expanded(
+                                      child: Text(
+                                        e.degree!,
+                                        style: TextStyle(
+                                          color: AppColors.white,
+                                          fontSize: 15,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    )
+                                  else
+                                    const Spacer(),
+
+                                  if (e.isCurrent == true)
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                        vertical: 5,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: AppColors.kGreen.withOpacity(
+                                          .12,
+                                        ),
+                                        borderRadius: BorderRadius.circular(30),
+                                      ),
+                                      child: Text(
+                                        "Current ",
+                                        style: TextStyle(
+                                          color: AppColors.kGreen,
+                                          fontSize: 10,
+                                          fontWeight: FontWeight.w700,
+                                        ),
+                                      ),
+                                    ),
+                                ],
+                              ),
+                            );
+                          }
+
+                          /// SPECIALIZATION — only if present
+                          if (hasSpecialization) {
+                            if (contentChildren.isNotEmpty) {
+                              contentChildren.add(const SizedBox(height: 5));
+                            }
+                            contentChildren.add(
+                              Text(
+                                e.specialization!,
+                                style: TextStyle(
+                                  color: AppColors.white.withOpacity(.7),
+                                  fontSize: 14,
+                                ),
+                              ),
+                            );
+                          }
+
+                          /// COLLEGE + YEAR — college always present, year
+                          /// only if present
+                          if (contentChildren.isNotEmpty) {
+                            contentChildren.add(const SizedBox(height: 10));
+                          }
+                          contentChildren.add(
+                            Wrap(
+                              spacing: 14,
+                              runSpacing: 10,
+                              children: [
+                                Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Image.asset(
+                                      "assets/images/edu_cap.png",
+                                      width: 15,
+                                      height: 15,
+                                    ),
+
+                                    const SizedBox(width: 6),
+
+                                    Text(
+                                      e.college ?? "",
+                                      style: TextStyle(
+                                        color: AppColors.primary,
+                                        fontSize: 12,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                if (hasYear)
+                                  Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Image.asset(
+                                        "assets/images/calendar.png",
+                                        width: 15,
+                                        height: 15,
+                                      ),
+
+                                      const SizedBox(width: 6),
+
+                                      Text(
+                                        e.yearOfGraduation!,
+                                        style: TextStyle(
+                                          color: AppColors.white.withOpacity(
+                                            .7,
+                                          ),
+                                          fontSize: 12,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                              ],
+                            ),
+                          );
+
+                          /// CGPA — only if present
+                          if (hasCgpa) {
+                            contentChildren.add(const SizedBox(height: 10));
+                            contentChildren.add(
+                              Text(
+                                "CGPA: ${e.cgpa}",
+                                style: TextStyle(
+                                  color: AppColors.white,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            );
+                          }
+
                           return IntrinsicHeight(
                             child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -798,127 +973,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                     child: Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
-                                      children: [
-                                        /// DEGREE
-                                        Row(
-                                          children: [
-                                            Expanded(
-                                              child: Text(
-                                                e.degree ?? "",
-                                                style: TextStyle(
-                                                  color: AppColors.white,
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w700,
-                                                ),
-                                              ),
-                                            ),
-
-                                            if (e.isCurrent == true)
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                      horizontal: 10,
-                                                      vertical: 5,
-                                                    ),
-                                                decoration: BoxDecoration(
-                                                  color: AppColors.kGreen
-                                                      .withOpacity(.12),
-                                                  borderRadius:
-                                                      BorderRadius.circular(30),
-                                                ),
-                                                child: Text(
-                                                  "Current ",
-                                                  style: TextStyle(
-                                                    color: AppColors.kGreen,
-                                                    fontSize: 10,
-                                                    fontWeight: FontWeight.w700,
-                                                  ),
-                                                ),
-                                              ),
-                                          ],
-                                        ),
-
-                                        const SizedBox(height: 5),
-
-                                        if ((e.specialization?.isNotEmpty ??
-                                            false))
-                                          Text(
-                                            e.specialization!,
-                                            style: TextStyle(
-                                              color: AppColors.white
-                                                  .withOpacity(.7),
-                                              fontSize: 14,
-                                            ),
-                                          ),
-
-                                        const SizedBox(height: 10),
-
-                                        Wrap(
-                                          spacing: 14,
-                                          runSpacing: 10,
-                                          children: [
-                                            Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                Image.asset(
-                                                  "assets/images/edu_cap.png",
-                                                  width: 15,
-                                                  height: 15,
-                                                ),
-
-                                                const SizedBox(width: 6),
-
-                                                Text(
-                                                  e.college ?? "",
-                                                  style: TextStyle(
-                                                    color: AppColors.primary,
-                                                    fontSize: 12,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-
-                                            if ((e
-                                                    .yearOfGraduation
-                                                    ?.isNotEmpty ??
-                                                false))
-                                              Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  Image.asset(
-                                                    "assets/images/calendar.png",
-                                                    width: 15,
-                                                    height: 15,
-                                                  ),
-
-                                                  const SizedBox(width: 6),
-
-                                                  Text(
-                                                    e.yearOfGraduation!,
-                                                    style: TextStyle(
-                                                      color: AppColors.white
-                                                          .withOpacity(.7),
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                          ],
-                                        ),
-
-                                        if ((e.cgpa?.isNotEmpty ?? false)) ...[
-                                          const SizedBox(height: 10),
-
-                                          Text(
-                                            "CGPA: ${e.cgpa}",
-                                            style: TextStyle(
-                                              color: AppColors.white,
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600,
-                                            ),
-                                          ),
-                                        ],
-                                      ],
+                                      children: contentChildren,
                                     ),
                                   ),
                                 ),
@@ -979,7 +1034,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                             : "C",
 
                                         style: TextStyle(
-                                          color: AppColors.secBorder,
+                                          color: AppColors.blackwhite,
                                           fontSize: 18,
                                           fontWeight: FontWeight.w800,
                                         ),
@@ -1143,13 +1198,25 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   padding: const EdgeInsets.all(14),
 
                                   decoration: BoxDecoration(
-                                    color: AppColors.text.withOpacity(.04),
-
+                                    color: ThemeController.instance.isDark
+                                        ? AppColors.text.withOpacity(.04)
+                                        : AppColors.kTile,
                                     borderRadius: BorderRadius.circular(16),
-
                                     border: Border.all(
-                                      color: AppColors.kBorder,
+                                      color: ThemeController.instance.isDark
+                                          ? AppColors.kBorder
+                                          : const Color(0xFFE5E7EB),
+                                      width: 1,
                                     ),
+                                    boxShadow: ThemeController.instance.isDark
+                                        ? []
+                                        : [
+                                            BoxShadow(
+                                              color: AppColors.shadow,
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
                                   ),
 
                                   child: Column(
@@ -1230,13 +1297,25 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   padding: const EdgeInsets.all(14),
 
                                   decoration: BoxDecoration(
-                                    color: AppColors.text.withOpacity(.04),
-
+                                    color: ThemeController.instance.isDark
+                                        ? AppColors.text.withOpacity(.04)
+                                        : AppColors.kTile,
                                     borderRadius: BorderRadius.circular(16),
-
                                     border: Border.all(
-                                      color: AppColors.kBorder,
+                                      color: ThemeController.instance.isDark
+                                          ? AppColors.kBorder
+                                          : const Color(0xFFE5E7EB),
+                                      width: 1,
                                     ),
+                                    boxShadow: ThemeController.instance.isDark
+                                        ? []
+                                        : [
+                                            BoxShadow(
+                                              color: AppColors.shadow,
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
                                   ),
 
                                   child: Column(
@@ -1314,15 +1393,26 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   margin: const EdgeInsets.only(bottom: 14),
 
                                   padding: const EdgeInsets.all(14),
-
                                   decoration: BoxDecoration(
-                                    color: AppColors.text.withOpacity(.04),
-
+                                    color: ThemeController.instance.isDark
+                                        ? AppColors.text.withOpacity(.04)
+                                        : AppColors.kTile,
                                     borderRadius: BorderRadius.circular(16),
-
                                     border: Border.all(
-                                      color: AppColors.kBorder,
+                                      color: ThemeController.instance.isDark
+                                          ? AppColors.kBorder
+                                          : const Color(0xFFE5E7EB),
+                                      width: 1,
                                     ),
+                                    boxShadow: ThemeController.instance.isDark
+                                        ? []
+                                        : [
+                                            BoxShadow(
+                                              color: AppColors.shadow,
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
                                   ),
 
                                   child: Column(
@@ -1393,13 +1483,25 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   padding: const EdgeInsets.all(14),
 
                                   decoration: BoxDecoration(
-                                    color: AppColors.text.withOpacity(.04),
-
+                                    color: ThemeController.instance.isDark
+                                        ? AppColors.text.withOpacity(.04)
+                                        : AppColors.kTile,
                                     borderRadius: BorderRadius.circular(16),
-
                                     border: Border.all(
-                                      color: AppColors.kBorder,
+                                      color: ThemeController.instance.isDark
+                                          ? AppColors.kBorder
+                                          : const Color(0xFFE5E7EB),
+                                      width: 1,
                                     ),
+                                    boxShadow: ThemeController.instance.isDark
+                                        ? []
+                                        : [
+                                            BoxShadow(
+                                              color: AppColors.shadow,
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
                                   ),
 
                                   child: Column(
@@ -1472,13 +1574,25 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                   padding: const EdgeInsets.all(14),
 
                                   decoration: BoxDecoration(
-                                    color: AppColors.text.withOpacity(.04),
-
+                                    color: ThemeController.instance.isDark
+                                        ? AppColors.text.withOpacity(.04)
+                                        : AppColors.kTile,
                                     borderRadius: BorderRadius.circular(16),
-
                                     border: Border.all(
-                                      color: AppColors.kBorder,
+                                      color: ThemeController.instance.isDark
+                                          ? AppColors.kBorder
+                                          : const Color(0xFFE5E7EB),
+                                      width: 1,
                                     ),
+                                    boxShadow: ThemeController.instance.isDark
+                                        ? []
+                                        : [
+                                            BoxShadow(
+                                              color: AppColors.shadow,
+                                              blurRadius: 12,
+                                              offset: const Offset(0, 4),
+                                            ),
+                                          ],
                                   ),
 
                                   child: Column(
@@ -1534,12 +1648,22 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: (user.github?.isNotEmpty ?? false)
                               ? AppColors.kGreen
-                              : AppColors.kBorder,
+                              : (ThemeController.instance.isDark
+                                    ? AppColors.kBorder
+                                    : const Color(0xFFF3F4F6)),
                           foregroundColor: (user.github?.isNotEmpty ?? false)
                               ? Colors.white
-                              : AppColors.secText,
-                          disabledBackgroundColor: AppColors.kBorder,
-                          disabledForegroundColor: AppColors.secText,
+                              : (ThemeController.instance.isDark
+                                    ? AppColors.secText
+                                    : const Color(0xFF9CA3AF)),
+                          disabledBackgroundColor:
+                              ThemeController.instance.isDark
+                              ? AppColors.kBorder
+                              : const Color(0xFFF3F4F6),
+                          disabledForegroundColor:
+                              ThemeController.instance.isDark
+                              ? AppColors.secText
+                              : const Color(0xFF9CA3AF),
                         ),
                       ),
                     ),
@@ -1556,12 +1680,22 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: (user.portfolio?.isNotEmpty ?? false)
                               ? AppColors.kGreen
-                              : AppColors.kBorder,
+                              : (ThemeController.instance.isDark
+                                    ? AppColors.kBorder
+                                    : const Color(0xFFF3F4F6)),
                           foregroundColor: (user.portfolio?.isNotEmpty ?? false)
                               ? Colors.white
-                              : AppColors.secText,
-                          disabledBackgroundColor: AppColors.kBorder,
-                          disabledForegroundColor: AppColors.secText,
+                              : (ThemeController.instance.isDark
+                                    ? AppColors.secText
+                                    : const Color(0xFF9CA3AF)),
+                          disabledBackgroundColor:
+                              ThemeController.instance.isDark
+                              ? AppColors.kBorder
+                              : const Color(0xFFF3F4F6),
+                          disabledForegroundColor:
+                              ThemeController.instance.isDark
+                              ? AppColors.secText
+                              : const Color(0xFF9CA3AF),
                         ),
                       ),
                     ),
@@ -1600,10 +1734,22 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
         decoration: BoxDecoration(
           color: AppColors.kCard,
-
           borderRadius: BorderRadius.circular(16),
-
-          border: Border.all(color: AppColors.kBorder),
+          border: Border.all(
+            color: ThemeController.instance.isDark
+                ? AppColors.kBorder
+                : const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+          boxShadow: ThemeController.instance.isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: AppColors.shadow,
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
         ),
 
         child: Column(
@@ -1787,10 +1933,22 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
         decoration: BoxDecoration(
           color: AppColors.kCard,
-
           borderRadius: BorderRadius.circular(24),
-
-          border: Border.all(color: AppColors.kBorder),
+          border: Border.all(
+            color: ThemeController.instance.isDark
+                ? AppColors.kBorder
+                : const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+          boxShadow: ThemeController.instance.isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: AppColors.shadow,
+                    blurRadius: 16,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
         ),
 
         child: Stack(
@@ -2194,7 +2352,21 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: AppColors.kBorder),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+          width: 1,
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -2236,6 +2408,12 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
     bool filled = false,
     bool disabled = false,
   }) {
+    final isDark = ThemeController.instance.isDark;
+
+    /// In light theme, an enabled/filled button drops the border and relies
+    /// on a soft shadow instead. Dark theme keeps its existing look.
+    final borderless = !isDark && filled && !disabled;
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       height: 54,
@@ -2253,17 +2431,21 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
             ? null
             : AppColors.text.withOpacity(.06),
         borderRadius: BorderRadius.circular(5),
-        border: Border.all(
-          color: disabled
-              ? AppColors.kBorder.withOpacity(.5)
-              : AppColors.kBorder,
-        ),
+        border: borderless
+            ? null
+            : Border.all(
+                color: disabled
+                    ? AppColors.kBorder.withOpacity(.5)
+                    : AppColors.kBorder,
+              ),
         boxShadow: disabled
             ? []
             : filled
             ? [
                 BoxShadow(
-                  color: AppColors.kGreen.withOpacity(.35),
+                  color: isDark
+                      ? AppColors.kGreen.withOpacity(.35)
+                      : AppColors.kGreen.withOpacity(.22),
                   blurRadius: 20,
                   offset: const Offset(0, 10),
                 ),
@@ -2296,18 +2478,30 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
 
   Widget _chip(String text) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
 
       decoration: BoxDecoration(
-        color: AppColors.chip,
+        color: Colors.white,
 
         borderRadius: BorderRadius.circular(30),
+
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(.15),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
 
       child: Text(
         text,
 
-        style: TextStyle(color: AppColors.chipText, fontSize: 11),
+        style: TextStyle(
+          color: Colors.black87,
+          fontSize: 12.5,
+          fontWeight: FontWeight.w600,
+        ),
       ),
     );
   }

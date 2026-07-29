@@ -273,10 +273,10 @@ class _ProfessionalJobsViewState extends State<ProfessionalJobsView> {
             const SizedBox(height: 12),
 
             /// 🔥 REFERRAL SECTION
-            const Text(
+            Text(
               "Referral Jobs",
               style: TextStyle(
-                color: Colors.white,
+                color: AppColors.white,
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
               ),
