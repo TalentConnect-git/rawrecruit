@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/application/data/entities/application_model.dart';
 
@@ -109,7 +110,21 @@ class ApplicationCard extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.kTile,
           borderRadius: BorderRadius.circular(18),
-          border: Border.all(color: AppColors.kBorder),
+          border: Border.all(
+            color: ThemeController.instance.isDark
+                ? AppColors.kBorder
+                : const Color(0xFFE5E7EB),
+            width: 1,
+          ),
+          boxShadow: ThemeController.instance.isDark
+              ? []
+              : [
+                  BoxShadow(
+                    color: AppColors.shadow,
+                    blurRadius: 12,
+                    offset: const Offset(0, 4),
+                  ),
+                ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

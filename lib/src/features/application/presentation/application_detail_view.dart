@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/application/index.dart';
 import 'package:rawrecruit/src/features/application/presentation/view_model/application_detail_view_model.dart';
@@ -41,6 +42,26 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
     final t = v.trim();
     if (t.isEmpty || t == '[]' || t == '-') return null;
     return t;
+  }
+
+  /// 🔥 Shared card decoration used for the header and referrer cards
+  BoxDecoration _cardDecoration() {
+    return BoxDecoration(
+      color: AppColors.kBg,
+      borderRadius: BorderRadius.circular(16),
+      border: Border.all(
+        color: ThemeController.instance.isDark
+            ? AppColors.kBorder
+            : const Color(0xFFD1D5DB),
+      ),
+      boxShadow: [
+        BoxShadow(
+          color: AppColors.shadow,
+          blurRadius: 12,
+          offset: const Offset(0, 4),
+        ),
+      ],
+    );
   }
 
   @override
@@ -137,11 +158,7 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
 
                     Widget headerCard = Container(
                       padding: const EdgeInsets.all(18),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.08),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(color: AppColors.kBorder),
-                      ),
+                      decoration: _cardDecoration(),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -164,10 +181,10 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
 
                           Row(
                             children: [
-                              const Icon(
+                              Icon(
                                 Icons.location_on,
                                 size: 16,
-                                color: Colors.green,
+                                color: AppColors.kGreen,
                               ),
                               const SizedBox(width: 4),
                               Text(
@@ -373,11 +390,7 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
       },
       child: Container(
         padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: AppColors.primary.withValues(alpha: 0.08),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: AppColors.kBorder),
-        ),
+        decoration: _cardDecoration(),
         child: Row(
           children: [
             /// Avatar
@@ -385,7 +398,7 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
               padding: const EdgeInsets.all(2),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: Colors.green, width: 2),
+                border: Border.all(color: AppColors.kGreen, width: 2),
               ),
               child: CircleAvatar(
                 radius: 24,
@@ -455,15 +468,15 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
                   color: AppColors.kGreen.withOpacity(0.15),
                   borderRadius: BorderRadius.circular(22),
                 ),
-                child: const Row(
+                child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Icon(Icons.message, size: 14, color: Colors.green),
-                    SizedBox(width: 6),
+                    Icon(Icons.message, size: 14, color: AppColors.kGreen),
+                    const SizedBox(width: 6),
                     Text(
                       "Message",
                       style: TextStyle(
-                        color: Colors.green,
+                        color: AppColors.kGreen,
                         fontSize: 12,
                         fontWeight: FontWeight.w600,
                       ),
@@ -533,11 +546,11 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
   Widget _statusBadge(String rawStatus) {
     final status = _normalizeStatus(rawStatus);
 
-    Color textColor = Colors.grey;
+    Color textColor = AppColors.secText;
 
     switch (status) {
       case "pending":
-        textColor = Colors.grey;
+        textColor = AppColors.secText;
         break;
 
       case "application_sent":
@@ -561,11 +574,11 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
         break;
 
       case "accepted":
-        textColor = Colors.green;
+        textColor = AppColors.kGreen;
         break;
 
       case "offer_accepted":
-        textColor = Colors.green;
+        textColor = AppColors.kGreen;
         break;
 
       case "offer_rejected":
@@ -607,7 +620,7 @@ class _ApplicationDetailViewState extends State<ApplicationDetailView> {
           children: [
             Icon(
               isDone ? Icons.check_circle : Icons.radio_button_unchecked,
-              color: isDone ? Colors.green : AppColors.secText,
+              color: isDone ? AppColors.kGreen : AppColors.secText,
               size: 20,
             ),
 

@@ -14,8 +14,6 @@ class AppColors {
   static Color get border => _isDark ? Color(0xFF1F2937) : Color(0xff858585);
   static Color get errorBorder => Color.fromARGB(255, 240, 41, 41);
 
-  static Color get shadow => Color(0xff000000).withValues(alpha: 0.2);
-
   static Color get secText => _isDark ? Color(0xffbcbcbc) : Color(0xff858585);
 
   static Color get grey => _isDark ? Colors.transparent : Colors.grey;
@@ -35,11 +33,16 @@ class AppColors {
   static Color get secBorders =>
       _isDark ? Color(0xff000000) : Color(0xffffffff);
   static Color get kBg => _isDark ? Color(0xff080A0C) : Color(0xffffffff);
-  static Color get kCard => _isDark ? Color(0xFF111827) : Color(0xffF0F2F5);
-  static Color get kTile => _isDark ? Color(0xFF0F1115) : Color(0xffF7F8FA);
-  static Color get kBorder => _isDark ? Color(0xFF1F2937) : Color(0xff000000);
+  static Color get kCard => _isDark ? Color(0xFF111827) : Color(0xffffffff);
+  static Color get kTile => _isDark ? Color(0xFF0F1115) : Color(0xffffffff);
+  static Color get kBorder =>
+      _isDark ? const Color(0xFF1F2937) : const Color(0xFF1F2937);
+
+  static Color get shadow => _isDark
+      ? Color(0xff000000).withValues(alpha: 0.2)
+      : const Color(0x14000000); // ~8% black
   static Color get kGreen =>
-      _isDark ? Color(0xFF22C55E) : Color.fromARGB(255, 11, 152, 61);
+      _isDark ? Color(0xFF22C55E) : Color.fromARGB(255, 16, 189, 77);
   static Color get heroCard => _isDark ? Color(0xff091B38) : Color(0xffE8F3F7);
   static Color get kInputFill =>
       _isDark ? Color(0xff2C2C2C) : Color(0xffF0F2F5);

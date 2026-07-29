@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/core/navigation/routes_index.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
@@ -83,28 +84,32 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
               _isAppliedLocal ||
               applicationVM.isApplied(jobId);
           return Scaffold(
-            backgroundColor: AppColors.secBorder,
+            backgroundColor: AppColors.secBorders,
 
             appBar: AppBar(
               backgroundColor: AppColors.kCard,
-              iconTheme: const IconThemeData(color: Colors.white),
+              iconTheme: IconThemeData(color: AppColors.white),
               title: Text(
                 widget.internship.jobRoles?.first ?? 'Internship Detail',
-                style: const TextStyle(color: Colors.white),
+                style: TextStyle(color: AppColors.white),
               ),
             ),
 
             /// 🔻 BUTTONS
             bottomNavigationBar: SafeArea(
               top: false,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                decoration: BoxDecoration(
+                  color: AppColors.kCard,
+                  border: Border(top: BorderSide(color: AppColors.kBorder)),
+                ),
                 child: Row(
                   children: [
                     /// 🔻 Hide Save once applied
                     if (!isApplied) ...[
                       Expanded(
-                        child: OutlinedButton(
+                        child: OutlinedButton.icon(
                           onPressed: () {
                             shortlistVM.toggleSave(
                               jobId: jobId,
@@ -112,9 +117,26 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                               isSaved: isSaved,
                             );
                           },
-                          child: Text(
+                          icon: Icon(
+                            isSaved ? Icons.bookmark : Icons.bookmark_border,
+                            color: AppColors.kGreen,
+                            size: 18,
+                          ),
+                          label: Text(
                             isSaved ? 'Saved' : 'Save',
-                            style: TextStyle(color: AppColors.kGreen),
+                            style: TextStyle(
+                              color: AppColors.kGreen,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(vertical: 14),
+                            side: BorderSide(
+                              color: AppColors.kGreen.withOpacity(.5),
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
                         ),
                       ),
@@ -122,7 +144,7 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                     ],
                     Expanded(
                       flex: 2,
-                      child: ElevatedButton(
+                      child: ElevatedButton.icon(
                         onPressed: isApplied
                             ? null
                             : () async {
@@ -143,16 +165,22 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                                 // 🔄 sync in background
                                 applicationVM.fetchApplications();
                               },
+                        icon: Icon(
+                          isApplied ? Icons.check_circle : Icons.send_rounded,
+                          size: 18,
+                        ),
+                        label: Text(
+                          isApplied ? 'Applied' : 'Apply Now',
+                          style: const TextStyle(fontWeight: FontWeight.w600),
+                        ),
                         style: ElevatedButton.styleFrom(
                           backgroundColor: isApplied
-                              ? Colors.grey
+                              ? AppColors.secText
                               : AppColors.kGreen,
-                        ),
-                        child: Text(
-                          isApplied ? 'Applied' : 'Apply Now',
-                          style: TextStyle(
-                            color: AppColors.white,
-                            fontWeight: FontWeight.bold,
+                          foregroundColor: Colors.white,
+                          padding: const EdgeInsets.symmetric(vertical: 14),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(12),
                           ),
                         ),
                       ),
@@ -193,10 +221,10 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         if (company != null) ...[
-                          const Text(
+                          Text(
                             "Company Details",
                             style: TextStyle(
-                              color: Colors.white,
+                              color: AppColors.white,
                               fontSize: 16,
                               fontWeight: FontWeight.bold,
                             ),
@@ -226,7 +254,7 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                       Text(
                         "Alumni Who Can Help",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: AppColors.white,
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
                         ),
@@ -248,9 +276,9 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                   Consumer<InternshipDetailViewModel>(
                     builder: (context, vm, _) {
                       if (vm.companyAlumni.isEmpty) {
-                        return const Text(
+                        return Text(
                           "No alumni available",
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(color: AppColors.secText),
                         );
                       }
 
@@ -284,13 +312,17 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.psychology, color: Colors.lightBlueAccent, size: 18),
-              SizedBox(width: 8),
+            children: [
+              const Icon(
+                Icons.psychology,
+                color: Colors.lightBlueAccent,
+                size: 18,
+              ),
+              const SizedBox(width: 8),
               Text(
                 "Skills Required",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -358,7 +390,20 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.white.withOpacity(.06)),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -395,8 +440,8 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                       role,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: AppColors.white,
                         fontSize: 17,
                         fontWeight: FontWeight.w700,
                       ),
@@ -411,8 +456,8 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                             company,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.grey,
+                            style: TextStyle(
+                              color: AppColors.secText,
                               fontSize: 13,
                             ),
                           ),
@@ -434,10 +479,10 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
           /// Location | Work Mode | Deadline
           Row(
             children: [
-              const Icon(
+              Icon(
                 Icons.location_on_outlined,
                 size: 13,
-                color: Colors.grey,
+                color: AppColors.secText,
               ),
 
               const SizedBox(width: 2),
@@ -448,16 +493,16 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                   location,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.grey, fontSize: 11),
+                  style: TextStyle(color: AppColors.secText, fontSize: 11),
                 ),
               ),
 
               _vDivider(),
 
-              const Icon(
+              Icon(
                 Icons.business_center_outlined,
                 size: 13,
-                color: Colors.grey,
+                color: AppColors.secText,
               ),
 
               const SizedBox(width: 2),
@@ -468,7 +513,7 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                   mode,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(color: Colors.grey, fontSize: 11),
+                  style: TextStyle(color: AppColors.secText, fontSize: 11),
                 ),
               ),
 
@@ -501,9 +546,9 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
           Container(
             padding: const EdgeInsets.symmetric(vertical: 12),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.03),
+              color: AppColors.text.withOpacity(0.03),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(.05)),
+              border: Border.all(color: AppColors.kBorder),
             ),
             child: Row(
               children: [
@@ -521,10 +566,10 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
 
                       const SizedBox(height: 2),
 
-                      const Text(
+                      Text(
                         "STIPEND",
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: AppColors.secText,
                           fontSize: 10,
                           letterSpacing: .5,
                         ),
@@ -533,19 +578,15 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                   ),
                 ),
 
-                Container(
-                  width: 1,
-                  height: 30,
-                  color: Colors.white.withOpacity(.08),
-                ),
+                Container(width: 1, height: 30, color: AppColors.kBorder),
 
                 Expanded(
                   child: Column(
                     children: [
                       Text(
                         duration,
-                        style: const TextStyle(
-                          color: Colors.white,
+                        style: TextStyle(
+                          color: AppColors.white,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
                         ),
@@ -553,10 +594,10 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
 
                       const SizedBox(height: 2),
 
-                      const Text(
+                      Text(
                         "EXPERIENCE",
                         style: TextStyle(
-                          color: Colors.grey,
+                          color: AppColors.secText,
                           fontSize: 10,
                           letterSpacing: .5,
                         ),
@@ -578,7 +619,7 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
       height: 12,
       width: 1,
       margin: const EdgeInsets.symmetric(horizontal: 4),
-      color: Colors.white.withOpacity(0.15),
+      color: AppColors.kBorder,
     );
   }
 
@@ -590,7 +631,20 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
       decoration: BoxDecoration(
         color: AppColors.kCard,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: AppColors.kGreen.withOpacity(.25)),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? AppColors.kBorder
+              : const Color(0xFFE5E7EB),
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: AppColors.shadow,
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
       ),
       child: child,
     );
@@ -616,7 +670,7 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
           ),
 
           Expanded(
-            child: Text(text, style: const TextStyle(color: Colors.white)),
+            child: Text(text, style: TextStyle(color: AppColors.white)),
           ),
         ],
       ),
@@ -636,13 +690,13 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.event, color: Colors.orangeAccent, size: 18),
-              SizedBox(width: 8),
+            children: [
+              const Icon(Icons.event, color: Colors.orangeAccent, size: 18),
+              const SizedBox(width: 8),
               Text(
                 "Important Dates",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -704,13 +758,13 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.task_alt, color: Colors.orange, size: 18),
-              SizedBox(width: 8),
+            children: [
+              const Icon(Icons.task_alt, color: Colors.orange, size: 18),
+              const SizedBox(width: 8),
               Text(
                 "Responsibilities",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontWeight: FontWeight.w600,
                   fontSize: 15,
                 ),
@@ -729,7 +783,7 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                   Expanded(
                     child: Text(
                       e,
-                      style: const TextStyle(color: Colors.grey, height: 1.5),
+                      style: TextStyle(color: AppColors.secText, height: 1.5),
                     ),
                   ),
                 ],
@@ -759,13 +813,17 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.track_changes, size: 18, color: Colors.purpleAccent),
-              SizedBox(width: 8),
+            children: [
+              const Icon(
+                Icons.track_changes,
+                size: 18,
+                color: Colors.purpleAccent,
+              ),
+              const SizedBox(width: 8),
               Text(
                 "Internship Insights",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -813,25 +871,25 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
             width: double.infinity,
             padding: const EdgeInsets.all(14),
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(.03),
+              color: AppColors.text.withOpacity(.03),
               borderRadius: BorderRadius.circular(12),
-              border: Border.all(color: Colors.white.withOpacity(.05)),
+              border: Border.all(color: AppColors.kBorder),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Row(
-                  children: const [
-                    Icon(
+                  children: [
+                    const Icon(
                       Icons.account_tree_outlined,
                       size: 16,
                       color: Colors.orangeAccent,
                     ),
-                    SizedBox(width: 8),
+                    const SizedBox(width: 8),
                     Text(
                       "Selection Process",
                       style: TextStyle(
-                        color: Colors.white,
+                        color: AppColors.white,
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
                       ),
@@ -843,8 +901,8 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
 
                 Text(
                   process,
-                  style: const TextStyle(
-                    color: Colors.grey,
+                  style: TextStyle(
+                    color: AppColors.secText,
                     fontSize: 13,
                     height: 1.5,
                   ),
@@ -866,15 +924,15 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
 
         Text(
           "$label: ",
-          style: const TextStyle(color: Colors.grey, fontSize: 12),
+          style: TextStyle(color: AppColors.secText, fontSize: 12),
         ),
 
         Flexible(
           child: Text(
             value,
             overflow: TextOverflow.ellipsis,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: AppColors.white,
               fontSize: 12,
               fontWeight: FontWeight.w600,
             ),
@@ -906,17 +964,17 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(
+            children: [
+              const Icon(
                 Icons.description_outlined,
                 size: 18,
                 color: Colors.lightBlueAccent,
               ),
-              SizedBox(width: 8),
+              const SizedBox(width: 8),
               Text(
                 "Role Overview",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -932,16 +990,20 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 6, right: 8),
-                    child: Icon(Icons.circle, size: 5, color: Colors.grey),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 6, right: 8),
+                    child: Icon(
+                      Icons.circle,
+                      size: 5,
+                      color: AppColors.secText,
+                    ),
                   ),
 
                   Expanded(
                     child: Text(
                       item,
-                      style: const TextStyle(
-                        color: Colors.grey,
+                      style: TextStyle(
+                        color: AppColors.secText,
                         fontSize: 13,
                         height: 1.5,
                       ),
@@ -964,13 +1026,13 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.build_outlined, color: Colors.amber, size: 18),
-              SizedBox(width: 8),
+            children: [
+              const Icon(Icons.build_outlined, color: Colors.amber, size: 18),
+              const SizedBox(width: 8),
               Text(
                 "Tools & Platforms",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -982,8 +1044,8 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
             runSpacing: 8,
             children: tools.map((e) {
               return Chip(
-                backgroundColor: Colors.white.withOpacity(.05),
-                label: Text(e, style: const TextStyle(color: Colors.white)),
+                backgroundColor: AppColors.chip,
+                label: Text(e, style: TextStyle(color: AppColors.chipText)),
               );
             }).toList(),
           ),
@@ -1014,10 +1076,10 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 "Recruiter",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontSize: 15,
                   fontWeight: FontWeight.w600,
                 ),
@@ -1097,8 +1159,8 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                   children: [
                     Text(
                       name,
-                      style: const TextStyle(
-                        color: Colors.white,
+                      style: TextStyle(
+                        color: AppColors.white,
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
                       ),
@@ -1108,14 +1170,14 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
 
                     Text(
                       role,
-                      style: const TextStyle(color: Colors.grey, fontSize: 12),
+                      style: TextStyle(color: AppColors.secText, fontSize: 12),
                     ),
 
                     const SizedBox(height: 6),
 
                     Text(
                       company,
-                      style: const TextStyle(color: Colors.grey, fontSize: 11),
+                      style: TextStyle(color: AppColors.secText, fontSize: 11),
                     ),
 
                     if ((contact.email ?? '').isNotEmpty) ...[
@@ -1204,13 +1266,17 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            children: const [
-              Icon(Icons.card_giftcard, color: Colors.pinkAccent, size: 18),
-              SizedBox(width: 8),
+            children: [
+              const Icon(
+                Icons.card_giftcard,
+                color: Colors.pinkAccent,
+                size: 18,
+              ),
+              const SizedBox(width: 8),
               Text(
                 "Benefits",
                 style: TextStyle(
-                  color: Colors.white,
+                  color: AppColors.white,
                   fontWeight: FontWeight.w600,
                 ),
               ),
@@ -1225,7 +1291,7 @@ class _InternshipDetailViewState extends State<InternshipDetailView> {
                   Icon(Icons.check, color: AppColors.kGreen, size: 18),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(e, style: const TextStyle(color: Colors.grey)),
+                    child: Text(e, style: TextStyle(color: AppColors.secText)),
                   ),
                 ],
               ),
