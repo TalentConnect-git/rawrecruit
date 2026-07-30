@@ -137,11 +137,21 @@ class ApplicantCard extends StatelessWidget {
   }
 
   String _initials(String name) {
-    final parts = name.split(" ");
+    final parts = name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((e) => e.isNotEmpty)
+        .toList();
+
     if (parts.length >= 2) {
-      return "${parts[0][0]}${parts[1][0]}";
+      return "${parts[0][0]}${parts[1][0]}".toUpperCase();
     }
-    return name.isNotEmpty ? name[0] : "U";
+
+    if (parts.isNotEmpty) {
+      return parts[0][0].toUpperCase();
+    }
+
+    return "U";
   }
 
   String _timeAgo(DateTime? date) {

@@ -2443,9 +2443,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
               if (date != null) {
                 controller.text =
-                    "${date.day.toString().padLeft(2, '0')}/"
-                    "${date.month.toString().padLeft(2, '0')}/"
-                    "${date.year}";
+                    "${date.year.toString().padLeft(4, '0')}-"
+                    "${date.month.toString().padLeft(2, '0')}-"
+                    "${date.day.toString().padLeft(2, '0')}";
               }
             },
       child: AbsorbPointer(

@@ -747,7 +747,7 @@ class _CareerPageState extends State<CareerPage> {
 
                   if (pickedDate != null) {
                     final formatted =
-                        "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                        "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
 
                     startCtrls[i].text = formatted;
 

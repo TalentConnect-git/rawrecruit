@@ -116,6 +116,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
               body: Center(child: CircularProgressIndicator()),
             );
           }
+          final isDark = ThemeController.instance.isDark;
 
           final user = vm.user;
           final currentEducation =
@@ -503,8 +504,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                             BoxShadow(
                                               color: AppColors.shadow,
                                               blurRadius: 5,
-                                              offset: const Offset(1
-                                              , 2),
+                                              offset: const Offset(1, 2),
                                             ),
                                           ],
                                   ),
@@ -1010,21 +1010,20 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                     Container(
                                       height: 44,
                                       width: 44,
-
                                       alignment: Alignment.center,
-
                                       decoration: BoxDecoration(
-                                        color: AppColors.white,
-
+                                        color: isDark
+                                            ? Colors.white
+                                            : AppColors.white,
                                         borderRadius: BorderRadius.circular(14),
-
                                         border: Border.all(
-                                          color: AppColors.white.withOpacity(
-                                            .18,
-                                          ),
+                                          color: isDark
+                                              ? AppColors.white.withOpacity(.25)
+                                              : AppColors.white.withOpacity(
+                                                  .18,
+                                                ),
                                         ),
                                       ),
-
                                       child: Text(
                                         (e.company?.isNotEmpty ?? false)
                                             ? e.company!
@@ -1032,15 +1031,15 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                                   .substring(0, 1)
                                                   .toUpperCase()
                                             : "C",
-
                                         style: TextStyle(
-                                          color: AppColors.blackwhite,
+                                          color: isDark
+                                              ? Colors.black
+                                              : AppColors.blackwhite,
                                           fontSize: 18,
                                           fontWeight: FontWeight.w800,
                                         ),
                                       ),
                                     ),
-
                                     const SizedBox(width: 14),
 
                                     /// CONTENT
@@ -2477,29 +2476,34 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
   }
 
   Widget _chip(String text) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 11),
+    final isDark = ThemeController.instance.isDark;
 
+    final Color color = isDark
+        ? const Color(0xFF7F5AF0) // Same purple as Preferred Job Roles
+        : AppColors.kGreen;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.white,
-
-        borderRadius: BorderRadius.circular(30),
-
+        gradient: LinearGradient(
+          colors: [color.withOpacity(.22), color.withOpacity(.10)],
+        ),
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: color.withOpacity(.30)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(.15),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: color.withOpacity(.15),
+            blurRadius: 14,
+            offset: const Offset(0, 8),
           ),
         ],
       ),
-
       child: Text(
         text,
-
         style: TextStyle(
-          color: Colors.black87,
-          fontSize: 12.5,
+          color: isDark ? AppColors.white : Colors.black87,
+          fontSize: 12,
           fontWeight: FontWeight.w600,
         ),
       ),

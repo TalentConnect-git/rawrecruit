@@ -109,9 +109,9 @@ class AlumniCard extends StatelessWidget {
               ? []
               : [
                   BoxShadow(
-                    color: AppColors.shadow,
+                    color: Colors.black.withOpacity(0.05),
                     blurRadius: 16,
-                    offset: const Offset(0, 6),
+                    offset: const Offset(0, 5),
                   ),
                 ],
         ),

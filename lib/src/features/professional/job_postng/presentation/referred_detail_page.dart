@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/core/navigation/routes_index.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
@@ -109,6 +110,26 @@ class ReferredCandidateDetailPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.kTile,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? Colors.transparent
+              : const Color(0xFFE5E7EB),
+          width: 1,
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.06),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: Row(
         children: [
@@ -169,6 +190,26 @@ class ReferredCandidateDetailPage extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColors.kTile,
         borderRadius: BorderRadius.circular(16),
+        border: Border.all(
+          color: ThemeController.instance.isDark
+              ? Colors.transparent
+              : const Color(0xFFE5E7EB),
+          width: 1,
+        ),
+        boxShadow: ThemeController.instance.isDark
+            ? []
+            : [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.06),
+                  blurRadius: 16,
+                  offset: const Offset(0, 6),
+                ),
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -50,10 +50,6 @@ class AddEditProfileViewModel extends ViewStateProvider {
     /// -------- STATUS --------
     c.statusType.text = user.status?.type ?? '';
 
-    c.statusSince.text = user.status?.since != null
-        ? "${user.status!.since!.year.toString().padLeft(4, '0')}-${user.status!.since!.month.toString().padLeft(2, '0')}-${user.status!.since!.day.toString().padLeft(2, '0')}"
-        : '';
-
     c.statusNote.text = user.status?.note ?? '';
 
     c.expectedReturn.text = user.status?.expectedReturn != null
