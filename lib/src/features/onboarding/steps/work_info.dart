@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:dio/dio.dart';
+import 'package:rawrecruit/src/core/models/status.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show
         OnboardingLocalService,
@@ -26,7 +27,13 @@ class WorkPrefPage extends StatefulWidget {
   static const employmentOptions = ["full time", "part time", "contract"];
 
   static const lookingForOptions = ["Internship", "Job", "Both"];
-
+  final professionalStatuses = const [
+    "open_to_work",
+    "career_break",
+    "freelancing",
+    "building",
+    "not_looking",
+  ];
   static const industryOptions = [
     "Technology",
     "Finance",
@@ -103,10 +110,28 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
     });
   }
 
+  Future<void> _pickExpectedReturnDate() async {
+    final picked = await showDatePicker(
+      context: context,
+      initialDate: DateTime.tryParse(expectedReturnCtrl.text) ?? DateTime.now(),
+      firstDate: DateTime.now(),
+      lastDate: DateTime(2100),
+    );
+
+    if (picked != null) {
+      expectedReturnCtrl.text = picked.toIso8601String().split('T').first;
+      saveData();
+      setState(() {});
+    }
+  }
+
   bool isInitialized = false;
 
   String selectedState = "";
-
+  late TextEditingController statusTypeCtrl;
+  late TextEditingController statusSinceCtrl;
+  late TextEditingController statusNoteCtrl;
+  late TextEditingController expectedReturnCtrl;
   List<String> states = [];
   List<String> cities = [];
   List<String> selectedCities = [];
@@ -121,7 +146,17 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
     if (isInitialized) return;
 
     final d = context.read<AppStateProvider>().data ?? widget.data;
+    statusTypeCtrl = TextEditingController(text: d.status?.type ?? '');
 
+    statusSinceCtrl = TextEditingController(
+      text: d.status?.since?.toIso8601String().split('T').first ?? '',
+    );
+
+    statusNoteCtrl = TextEditingController(text: d.status?.note ?? '');
+
+    expectedReturnCtrl = TextEditingController(
+      text: d.status?.expectedReturn?.toIso8601String().split('T').first ?? '',
+    );
     expectedSalaryCtrl = TextEditingController(
       text: d.expectedSalaryAmount ?? '',
     );
@@ -230,7 +265,16 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
       lookingFor: lookingFor != null ? [lookingFor!] : [],
 
       industry: industry,
-
+      status: Status(
+        type: statusTypeCtrl.text.isEmpty ? null : statusTypeCtrl.text,
+        since: statusSinceCtrl.text.isEmpty
+            ? null
+            : DateTime.tryParse(statusSinceCtrl.text),
+        note: statusNoteCtrl.text,
+        expectedReturn: expectedReturnCtrl.text.isEmpty
+            ? null
+            : DateTime.tryParse(expectedReturnCtrl.text),
+      ),
       jobRoles: jobRoles,
 
       languagesKnown: languages,
@@ -289,6 +333,10 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
 
   @override
   Widget build(BuildContext context) {
+    final hasCurrentExperience =
+        (context.watch<AppStateProvider>().data?.experiences ?? []).any(
+          (e) => e.isCurrent == true,
+        );
     return Wrapper(
       title: "Work Preferences",
       children: [
@@ -343,7 +391,7 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
             _employmentTile(
               title: "Part Time",
               icon: Icons.laptop_mac_outlined,
-              selected: employmentType == "remote",
+              selected: employmentType == "part time",
               onTap: () {
                 setState(() => employmentType = "part time");
                 saveData();
@@ -353,6 +401,49 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
         ),
 
         const SizedBox(height: 10),
+        if (!hasCurrentExperience) ...[
+          AppDropdown(
+            hint: "Current Status",
+            options: widget.professionalStatuses
+                .map((e) => e.replaceAll("_", " "))
+                .toList(),
+            value: statusTypeCtrl.text.isEmpty
+                ? null
+                : statusTypeCtrl.text.replaceAll("_", " "),
+            onChanged: (val) {
+              if (val == null) return;
+
+              statusTypeCtrl.text = val.toLowerCase().replaceAll(" ", "_");
+
+              if (statusTypeCtrl.text != "career_break") {
+                expectedReturnCtrl.clear();
+              }
+
+              saveData();
+              setState(() {});
+            },
+          ),
+
+          const SizedBox(height: 12),
+          if (statusTypeCtrl.text == "career_break") ...[
+            const SizedBox(height: 12),
+            GestureDetector(
+              onTap: _pickExpectedReturnDate,
+              child: AbsorbPointer(
+                child: AppInput(
+                  "Expected Return",
+                  controller: expectedReturnCtrl,
+                ),
+              ),
+            ),
+          ],
+          const SizedBox(height: 12),
+
+          // Since field
+          // Expected Return (if career_break)
+          // Note field
+        ],
+        const SizedBox(height: 12),
 
         AppMultiSelectChips(
           label: "Industry",

@@ -23,21 +23,21 @@ class InfoChip extends StatelessWidget {
               : const Color(0xFFE5E7EB),
           width: 1,
         ),
-        boxShadow: ThemeController.instance.isDark
-            ? []
-            : [
-                BoxShadow(
-                  color: AppColors.shadow,
-                  blurRadius: 12,
-                  offset: const Offset(0, 4),
-                ),
-              ],
+        // boxShadow: ThemeController.instance.isDark
+        //     ? []
+        //     : [
+        //         BoxShadow(
+        //           color: AppColors.shadow,
+        //           blurRadius: 12,
+        //           offset: const Offset(0, 4),
+        //         ),
+        //       ],
       ),
       child: Text(
         text,
         style: AppTextStyles.s12W400.copyWith(
           color: ThemeController.instance.isDark
-              ? AppColors.secCard
+              ? AppColors.white
               : AppColors.text,
         ),
       ),
