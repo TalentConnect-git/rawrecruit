@@ -492,7 +492,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                               MaterialPageRoute(
                                 builder: (_) => AddEditProfileView(
                                   user: vm.user,
-                                  initialStep: 3, // Experience section
+                                  initialStep: 4, // Experience section
                                 ),
                               ),
                             );
@@ -539,7 +539,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                       MaterialPageRoute(
                         builder: (_) => AddEditProfileView(
                           user: vm.user,
-                          initialStep: 6, // Employee Preferences
+                          initialStep: 7, // Employee Preferences
                         ),
                       ),
                     );
@@ -582,7 +582,7 @@ class _ModernProfilePageState extends State<ModernProfilePage> {
                         MaterialPageRoute(
                           builder: (_) => AddEditProfileView(
                             user: vm.user,
-                            initialStep: 14, // Education
+                            initialStep: 3, // Education
                           ),
                         ),
                       );

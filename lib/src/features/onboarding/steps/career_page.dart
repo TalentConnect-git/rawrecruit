@@ -477,128 +477,7 @@ class _CareerPageState extends State<CareerPage> {
 
           const SizedBox(height: 12),
         ],
-        if (!experiences.any((e) => e.isCurrent == true)) ...[
-          Builder(
-            builder: (_) {
-              final statuses =
-                  getIt<AppStateProvider>().selectedUserType ==
-                      UserType.professional
-                  ? professionalStatuses
-                  : studentStatuses;
 
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text(
-                    "Current Status",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16,
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-
-                  Wrap(
-                    spacing: 8,
-                    runSpacing: 8,
-                    children: statuses.map((status) {
-                      final selected = statusTypeCtrl.text == status;
-
-                      return ChoiceChip(
-                        selected: selected,
-                        backgroundColor: Colors.black,
-                        selectedColor: Colors.black,
-                        side: BorderSide(
-                          color: selected ? Colors.white : Colors.grey.shade700,
-                        ),
-                        label: Text(
-                          status.replaceAll("_", " "),
-                          style: const TextStyle(color: Colors.white),
-                        ),
-                        onSelected: (_) {
-                          setState(() {
-                            statusTypeCtrl.text = status;
-
-                            if (status != "career_break") {
-                              expectedReturnCtrl.clear();
-                            }
-
-                            saveData();
-                          });
-                        },
-                      );
-                    }).toList(),
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  GestureDetector(
-                    onTap: () async {
-                      final picked = await showDatePicker(
-                        context: context,
-                        initialDate: DateTime.now(),
-                        firstDate: DateTime(1940),
-                        lastDate: DateTime.now(),
-                      );
-
-                      if (picked != null) {
-                        statusSinceCtrl.text =
-                            "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-
-                        saveData();
-                        setState(() {});
-                      }
-                    },
-                    child: AbsorbPointer(
-                      child: AppInput("Since", controller: statusSinceCtrl),
-                    ),
-                  ),
-
-                  if (statusTypeCtrl.text == "career_break") ...[
-                    const SizedBox(height: 12),
-
-                    GestureDetector(
-                      onTap: () async {
-                        final picked = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime.now(),
-                          lastDate: DateTime(2100),
-                        );
-
-                        if (picked != null) {
-                          expectedReturnCtrl.text =
-                              "${picked.year}-${picked.month.toString().padLeft(2, '0')}-${picked.day.toString().padLeft(2, '0')}";
-
-                          saveData();
-                          setState(() {});
-                        }
-                      },
-                      child: AbsorbPointer(
-                        child: AppInput(
-                          "Expected Return",
-                          controller: expectedReturnCtrl,
-                        ),
-                      ),
-                    ),
-                  ],
-
-                  const SizedBox(height: 12),
-
-                  AppInput(
-                    "Note",
-                    controller: statusNoteCtrl,
-                    maxLines: 3,
-                    onChanged: (_) => saveData(),
-                  ),
-
-                  const SizedBox(height: 20),
-                ],
-              );
-            },
-          ),
-        ],
         const Text("Experience", style: TextStyle(color: Colors.grey)),
 
         const SizedBox(height: 10),
@@ -868,7 +747,7 @@ class _CareerPageState extends State<CareerPage> {
 
                   if (pickedDate != null) {
                     final formatted =
-                        "${pickedDate.day}/${pickedDate.month}/${pickedDate.year}";
+                        "${pickedDate.year}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.day.toString().padLeft(2, '0')}";
 
                     startCtrls[i].text = formatted;
 

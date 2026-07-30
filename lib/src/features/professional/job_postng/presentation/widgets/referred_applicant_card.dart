@@ -216,18 +216,28 @@ class ReferredApplicantCard extends StatelessWidget {
                     vertical: 7,
                   ),
                   decoration: BoxDecoration(
-                    color: AppColors.secBorder,
+                    color: ThemeController.instance.isDark
+                        ? Colors.white
+                        : Colors.black,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Row(
+                  child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.sync, size: 14, color: Colors.white),
-                      SizedBox(width: 5),
+                      Icon(
+                        Icons.sync,
+                        size: 14,
+                        color: ThemeController.instance.isDark
+                            ? Colors.black
+                            : Colors.white,
+                      ),
+                      const SizedBox(width: 5),
                       Text(
                         "Update",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: ThemeController.instance.isDark
+                              ? Colors.black
+                              : Colors.white,
                           fontSize: 12,
                           fontWeight: FontWeight.w600,
                         ),
@@ -256,13 +266,21 @@ class ReferredApplicantCard extends StatelessWidget {
   }
 
   String _initials(String name) {
-    final parts = name.split(" ");
+    final parts = name
+        .trim()
+        .split(RegExp(r'\s+'))
+        .where((e) => e.isNotEmpty)
+        .toList();
 
     if (parts.length >= 2) {
-      return "${parts[0][0]}${parts[1][0]}";
+      return "${parts[0][0]}${parts[1][0]}".toUpperCase();
     }
 
-    return name.isNotEmpty ? name[0] : "U";
+    if (parts.isNotEmpty) {
+      return parts[0][0].toUpperCase();
+    }
+
+    return "U";
   }
 
   String _timeAgo(DateTime? date) {

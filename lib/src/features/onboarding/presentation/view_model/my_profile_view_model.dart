@@ -68,8 +68,11 @@ class MyProfileViewModel extends ViewStateProvider {
       (e) {
         failure = APIFailure.fromException(exception: e);
       },
-      (r) {
+      (r) async {
         user = r;
+
+        await getIt<AppStateProvider>().getUserDetails();
+        user = getIt<AppStateProvider>().user;
       },
     );
 

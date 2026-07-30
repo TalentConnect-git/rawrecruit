@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:path/path.dart' as p;
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/scheduled_interviews/index.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,15 +33,15 @@ class _InterviewDetailScreenState extends State<InterviewDetailScreen> {
     return ChangeNotifierProvider.value(
       value: vm,
       child: Scaffold(
-        backgroundColor: AppColors.secBorder,
+        backgroundColor: AppColors.secShadow,
 
         /// 🔹 APPBAR
         appBar: RAppBar(
-          title: const Text(
+          title: Text(
             'Interview Details',
-            style: TextStyle(color: Colors.white),
+            style: TextStyle(color: AppColors.secBorder),
           ),
-          iconTheme: const IconThemeData(color: Colors.white),
+          iconTheme: IconThemeData(color: AppColors.secBorder),
         ),
 
         body: Consumer<InterviewViewModel>(
@@ -248,6 +250,7 @@ class _StatusHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final companyName = interview.companySnapshot?.companyName ?? '—';
+    final isDark = ThemeController.instance.isDark;
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -264,8 +267,8 @@ class _StatusHeader extends StatelessWidget {
               children: [
                 Text(
                   companyName,
-                  style: const TextStyle(
-                    color: Colors.white,
+                  style: TextStyle(
+                    color: isDark ? Colors.white : Colors.black,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -296,7 +299,6 @@ class _StatusHeader extends StatelessWidget {
 }
 
 /// 🔥 SECTION
-
 class _InfoSection extends StatelessWidget {
   const _InfoSection({required this.title, required this.children});
 
@@ -305,6 +307,8 @@ class _InfoSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = ThemeController.instance.isDark;
+
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -317,8 +321,8 @@ class _InfoSection extends StatelessWidget {
         children: [
           Text(
             title,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: isDark ? Colors.white : Colors.black,
               fontWeight: FontWeight.w600,
             ),
           ),
@@ -344,9 +348,10 @@ class _InfoTile extends StatelessWidget {
   final String label;
   final String value;
   final bool isLink;
-
   @override
   Widget build(BuildContext context) {
+    final isDark = ThemeController.instance.isDark;
+    debugPrint(Theme.of(context).brightness.toString());
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -365,7 +370,9 @@ class _InfoTile extends StatelessWidget {
                 Text(
                   value,
                   style: TextStyle(
-                    color: isLink ? AppColors.kGreen : Colors.white,
+                    color: isLink
+                        ? AppColors.kGreen
+                        : (isDark ? Colors.white : Colors.black),
                     decoration: isLink ? TextDecoration.underline : null,
                   ),
                 ),

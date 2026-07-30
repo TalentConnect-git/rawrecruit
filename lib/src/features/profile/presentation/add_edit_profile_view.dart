@@ -2443,9 +2443,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
               if (date != null) {
                 controller.text =
-                    "${date.day.toString().padLeft(2, '0')}/"
-                    "${date.month.toString().padLeft(2, '0')}/"
-                    "${date.year}";
+                    "${date.year.toString().padLeft(4, '0')}-"
+                    "${date.month.toString().padLeft(2, '0')}-"
+                    "${date.day.toString().padLeft(2, '0')}";
               }
             },
       child: AbsorbPointer(
@@ -2513,11 +2513,30 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
         const SizedBox(height: 16),
 
+        Text(
+          "Since",
+          style: TextStyle(
+            color: AppColors.text,
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        const SizedBox(height: 8),
+
         _dateField(controller.statusSince, "Since"),
 
         const SizedBox(height: 12),
 
         if (controller.statusType.text == "career_break") ...[
+          Text(
+            "Career Break Expected Return",
+            style: TextStyle(
+              color: AppColors.text,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 8),
           _datePickerField(
             controller.expectedReturn,
             "Expected Return",
@@ -3480,12 +3499,12 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
 
                   decoration: InputDecoration(
                     hintText: "Search or add ${widget.label}",
-                    hintStyle: TextStyle(color: AppColors.grey),
+                    hintStyle: TextStyle(color: AppColors.white),
 
                     filled: true,
-                    fillColor: AppColors.kTile,
+                    fillColor: AppColors.kBg,
 
-                    prefixIcon: Icon(Icons.search, color: AppColors.grey),
+                    prefixIcon: Icon(Icons.search, color: AppColors.white),
 
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
