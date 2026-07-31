@@ -220,6 +220,29 @@ class DashboardDataSourceImpl implements DashboardDataSource {
   ResultFuture<User?> getUserById({required String userId}) async {
     final Request request = Request(
       method: RequestMethod.get,
+      endpoint: '${Endpoints.apiOnboardingGetDetails}/$userId',
+      isSafeRoute: true,
+    );
+
+    try {
+      final result = await _networkService.request(request);
+      final response = result.data as Map<String, dynamic>;
+
+      if (response.isNotEmpty) {
+        final profile = User.fromJson(response['data']);
+        return Right(profile);
+      }
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
+
+    return Right(null);
+  }
+
+  @override
+  ResultFuture<User?> getMessageDetailById({required String userId}) async {
+    final Request request = Request(
+      method: RequestMethod.get,
       endpoint: '${Endpoints.apiMessagesUser}/$userId',
       isSafeRoute: true,
     );

@@ -53,4 +53,8 @@ class DashboardRepositoryImpl implements DashboardRepository {
   @override
   ResultFuture<User?> getUserById({required String userId}) =>
       _dataSource.getUserById(userId: userId);
+
+  @override
+  ResultFuture<User?> getMessageDetailById({required String userId}) =>
+      _dataSource.getMessageDetailById(userId: userId);
 }

@@ -21,4 +21,5 @@ abstract class DashboardRepository {
   });
 
   ResultFuture<User?> getUserById({required String userId});
+  ResultFuture<User?> getMessageDetailById({required String userId});
 }

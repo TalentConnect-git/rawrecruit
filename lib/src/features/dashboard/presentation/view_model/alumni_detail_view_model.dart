@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/dashboard/index.dart';
 
@@ -21,6 +23,8 @@ class AlumniDetailViewModel extends ViewStateProvider {
       },
       (res) {
         alumni = res;
+
+        log('Alumni ${res?.toJson()}');
       },
     );
 

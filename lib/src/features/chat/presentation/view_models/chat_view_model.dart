@@ -155,7 +155,9 @@ class ChatViewModel extends ViewStateProvider {
 
     Failure? failure;
 
-    final result = await getIt<DashboardRepository>().getUserById(userId: id);
+    final result = await getIt<DashboardRepository>().getMessageDetailById(
+      userId: id,
+    );
     result.fold(
       (exception) {
         failure = APIFailure.fromException(exception: exception);
