@@ -20,4 +20,6 @@ abstract class DashboardDataSource {
   });
 
   ResultFuture<User?> getUserById({required String userId});
+
+  ResultFuture<User?> getMessageDetailById({required String userId});
 }
