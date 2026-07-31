@@ -447,14 +447,24 @@ class ReferredCandidateDetailPage extends StatelessWidget {
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 14),
               decoration: BoxDecoration(
-                color: AppColors.kCard,
+                color: ThemeController.instance.isDark
+                    ? Colors.white
+                    : AppColors.kCard,
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: ThemeController.instance.isDark
+                      ? Colors.transparent
+                      : Colors.black,
+                  width: 1,
+                ),
               ),
               child: Center(
                 child: Text(
                   "Update Status",
                   style: TextStyle(
-                    color: AppColors.white,
+                    color: ThemeController.instance.isDark
+                        ? Colors.black
+                        : AppColors.white,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

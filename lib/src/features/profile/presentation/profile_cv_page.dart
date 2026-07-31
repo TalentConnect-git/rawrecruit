@@ -1140,7 +1140,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                                                 const SizedBox(width: 7),
                                                 Expanded(
                                                   child: Text(
-                                                    "${e.startDate ?? ''}${(e.startDate?.isNotEmpty ?? false) ? ' - ' : ''}${e.endDate?.isNotEmpty == true ? e.endDate : 'Present'}",
+                                                    "${e.startDate ?? ''}${(e.startDate?.isNotEmpty ?? false) ? ' - ' : ''}${e.endDate?.isNotEmpty == true ? e.endDate : ''}",
                                                     style: TextStyle(
                                                       color: AppColors.white
                                                           .withOpacity(.7),

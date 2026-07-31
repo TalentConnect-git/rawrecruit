@@ -2693,16 +2693,31 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
 
       decoration: InputDecoration(
         hintText: hint,
-
         hintStyle: TextStyle(color: AppColors.subtext),
-
         filled: true,
-
         fillColor: AppColors.kBg,
 
         prefixIcon: Padding(
           padding: const EdgeInsets.all(12),
           child: Image.asset(asset, width: 22, height: 22),
+        ),
+
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: ThemeController.instance.isDark
+                ? Colors.transparent
+                : const Color(0xFFE5E7EB),
+          ),
+        ),
+
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(12),
+          borderSide: BorderSide(
+            color: ThemeController.instance.isDark
+                ? AppColors.kGreen
+                : const Color(0xFFE5E7EB),
+          ),
         ),
 
         border: OutlineInputBorder(
@@ -2934,7 +2949,9 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
           child: Text(
             e,
             style: TextStyle(
-              color: Colors.grey.shade300, // 🔥 option text color
+              color: ThemeController.instance.isDark
+                  ? Colors.grey.shade300
+                  : Colors.black,
             ),
           ),
         );

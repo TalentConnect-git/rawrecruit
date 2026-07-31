@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:dio/dio.dart';
 import 'package:rawrecruit/src/core/models/status.dart';
@@ -770,7 +771,11 @@ class _WorkPrefPageState extends State<WorkPrefPage> {
                 title,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: selected ? Colors.white : Colors.grey,
+                  color: selected
+                      ? (ThemeController.instance.isDark
+                            ? Colors.white
+                            : Colors.black87)
+                      : AppColors.secText,
                   fontSize: 11,
                   fontWeight: FontWeight.w600,
                 ),
