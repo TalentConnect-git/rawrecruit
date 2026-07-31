@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingLocalService, AppHeader;
@@ -352,6 +353,14 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
                           ? const Color(0xFF22C55E)
                           : AppColors.kCard,
                       borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                        color: isSelected
+                            ? const Color(0xFF22C55E)
+                            : (ThemeController.instance.isDark
+                                  ? AppColors.kBorder
+                                  : Colors.black),
+                        width: 1,
+                      ),
                     ),
                     child: Text(
                       skill,

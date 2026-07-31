@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:rawrecruit/src/common/index.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/view_model/job_posting_view_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -1170,6 +1171,14 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12),
+                                              borderSide:
+                                                  ThemeController
+                                                      .instance
+                                                      .isDark
+                                                  ? BorderSide.none
+                                                  : BorderSide(
+                                                      color: AppColors.border,
+                                                    ),
                                             ),
                                           ),
                                         );
@@ -1863,7 +1872,9 @@ class _ReferralPostViewState extends State<ReferralPostView> {
           fillColor: AppColors.kCard,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderSide: ThemeController.instance.isDark
+                ? BorderSide.none
+                : BorderSide(color: AppColors.border),
           ),
         ),
       ),
@@ -1889,7 +1900,9 @@ class _ReferralPostViewState extends State<ReferralPostView> {
           fillColor: AppColors.kCard,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(12),
-            borderSide: BorderSide.none,
+            borderSide: ThemeController.instance.isDark
+                ? BorderSide.none
+                : BorderSide(color: AppColors.border),
           ),
         ),
         items: items
@@ -2203,7 +2216,9 @@ class _SearchableChipFieldState extends State<SearchableChipField> {
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
 
-              borderSide: BorderSide.none,
+              borderSide: ThemeController.instance.isDark
+                  ? BorderSide.none
+                  : BorderSide(color: AppColors.border),
             ),
           ),
 
@@ -2537,7 +2552,9 @@ class _ChipMultiSelectFieldState extends State<_ChipMultiSelectField> {
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(14),
 
-                    borderSide: BorderSide.none,
+                    borderSide: ThemeController.instance.isDark
+                        ? BorderSide.none
+                        : BorderSide(color: AppColors.border),
                   ),
                 ),
               ),
