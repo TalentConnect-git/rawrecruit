@@ -2,7 +2,7 @@ name: rawrecruit
 description: "A new Flutter project."
 publish_to: 'none'
 
-version: 2.3.4+20
+version: 3.0.1+21
 
 environment:
   sdk: ^3.10.0-290.4.beta
