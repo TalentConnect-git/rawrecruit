@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +10,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/vie
 import 'package:rawrecruit/src/features/professional/job_postng/utils/enum.dart';
 import 'package:rawrecruit/src/features/professional/professional_dashbaord/presentation/referal_detail_view.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:ui';
+
 import '../../../../core/models/experience.dart';
 
 class ReferralDetailPage extends StatefulWidget {
@@ -340,6 +342,7 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                                       BorderRadius.circular(12),
                                                   border: Border.all(
                                                     color: AppColors.kBorder,
+                                                    width: 0.2,
                                                   ),
                                                 ),
 
