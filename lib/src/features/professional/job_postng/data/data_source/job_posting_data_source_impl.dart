@@ -8,30 +8,27 @@ import '../../presentation/entities/referral_post_model.dart';
 import 'job_posting_data_source.dart';
 
 class ReferralPostDataSourceImpl implements ReferralPostDataSource {
-  final NetworkService _networkService = NetworkService();
-@override
-ResultFuture<void> postReferralJob(
-  ReferralPostModel model,
-) async {
+  final NetworkService _networkService = getIt<NetworkService>();
+  @override
+  ResultFuture<void> postReferralJob(ReferralPostModel model) async {
+    final body = model.toJson();
 
-  final body = model.toJson();
+    body.remove('_id');
 
-  body.remove('_id');
+    final request = Request(
+      method: RequestMethod.post,
+      endpoint: "/api/hiring-channels/referral-posting",
+      body: body,
+      isSafeRoute: true,
+    );
 
-  final request = Request(
-    method: RequestMethod.post,
-    endpoint: "/api/hiring-channels/referral-posting",
-    body: body,
-    isSafeRoute: true,
-  );
-
-  try {
-    await _networkService.request(request);
-    return const Right(null);
-  } catch (e) {
-    return Left(APIException.from(e));
+    try {
+      await _networkService.request(request);
+      return const Right(null);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
 
   @override
   ResultFuture<List<ReferralApplication>> getApplicationByReferralJobId({
@@ -101,7 +98,7 @@ ResultFuture<void> postReferralJob(
   }) async {
     final request = Request(
       method: RequestMethod.patch,
-      endpoint: '${Endpoints.applicationUpdateStatus}/$applicationId',
+      endpoint: '${Endpoints.applicationReferrals}/$applicationId/status',
       body: {"status": status},
       isSafeRoute: true,
     );
@@ -120,7 +117,6 @@ ResultFuture<void> postReferralJob(
     return const Right(null);
   }
 
-  
   @override
   ResultFuture<List<Job>> getOffCampusJobs() async {
     final Request request = Request(
@@ -135,18 +131,18 @@ ResultFuture<void> postReferralJob(
 
       final List data = response['data'] ?? [];
 
-final jobs = data
-    .map((e) {
-      try {
-        return Job.fromJson(e);
-      } catch (err) {
-        print("PARSE ERROR: $err");
-        return null;
-      }
-    })
-    .whereType<Job>()
-    .toList();
-    print("FINAL JOBS COUNT: ${jobs.length}");
+      final jobs = data
+          .map((e) {
+            try {
+              return Job.fromJson(e);
+            } catch (err) {
+              print("PARSE ERROR: $err");
+              return null;
+            }
+          })
+          .whereType<Job>()
+          .toList();
+      print("FINAL JOBS COUNT: ${jobs.length}");
       return Right(jobs);
     } catch (e) {
       return Left(APIException.from(e));
@@ -154,38 +150,34 @@ final jobs = data
   }
 
   @override
-ResultFuture<void> deleteReferralJob({
-  required String jobId,
-}) async {
-  final request = Request(
-    method: RequestMethod.delete,
-    endpoint: '/api/delete-job/$jobId',
-    isSafeRoute: true,
-  );
+  ResultFuture<void> deleteReferralJob({required String jobId}) async {
+    final request = Request(
+      method: RequestMethod.delete,
+      endpoint: '/api/delete-job/$jobId',
+      isSafeRoute: true,
+    );
 
-  try {
-    await _networkService.request(request);
-    return const Right(null);
-  } catch (e) {
-    return Left(APIException.from(e));
+    try {
+      await _networkService.request(request);
+      return const Right(null);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
 
-@override
-ResultFuture<void> toggleReferralJobStatus({
-  required String jobId,
-}) async {
-  final request = Request(
-    method: RequestMethod.patch,
-    endpoint: '/company/jobmanagement/referral/$jobId',
-    isSafeRoute: true,
-  );
+  @override
+  ResultFuture<void> toggleReferralJobStatus({required String jobId}) async {
+    final request = Request(
+      method: RequestMethod.patch,
+      endpoint: '/company/jobmanagement/referral/$jobId',
+      isSafeRoute: true,
+    );
 
-  try {
-    await _networkService.request(request);
-    return const Right(null);
-  } catch (e) {
-    return Left(APIException.from(e));
+    try {
+      await _networkService.request(request);
+      return const Right(null);
+    } catch (e) {
+      return Left(APIException.from(e));
+    }
   }
-}
 }

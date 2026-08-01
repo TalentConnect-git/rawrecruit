@@ -4,7 +4,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/ent
 import 'package:rawrecruit/src/features/referral/data/data_source/referral_data_source.dart';
 
 class ReferralDataSourceImpl implements ReferralDataSource {
-  final NetworkService networkService = NetworkService();
+  final NetworkService networkService = getIt<NetworkService>();
 
   @override
   ResultFuture<List<ReferralApplication>> getAllRequests() async {

@@ -8,7 +8,7 @@ import '../../../../../core/index.dart';
 
 class ReferralApplicationDataSourceImpl
     implements ReferralApplicationDataSource {
-  final NetworkService _networkService = NetworkService();
+  final NetworkService _networkService = getIt<NetworkService>();
 
   @override
   ResultFuture<List<ApplicationModel>> getMyReferralApplications() async {

@@ -8,14 +8,15 @@ import 'package:rawrecruit/src/core/index.dart'
         Request,
         RequestMethod,
         Endpoints,
-        APIException;
+        APIException,
+        getIt;
 import 'package:rawrecruit/src/features/scheduled_interviews/index.dart'
     show InterviewModel;
 
 import 'scheduled_data_source.dart';
 
 class InterviewDataSourceImpl implements InterviewDataSource {
-  final NetworkService _networkService = NetworkService();
+  final NetworkService _networkService = getIt<NetworkService>();
 
   @override
   ResultFuture<List<InterviewModel>> getInterviews() async {

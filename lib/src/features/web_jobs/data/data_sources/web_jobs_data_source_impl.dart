@@ -8,7 +8,7 @@ import '../entities/web_job.dart';
 import 'index.dart';
 
 class WebJobDataSourceImpl implements WebJobDataSource {
-  final NetworkService _networkService = NetworkService();
+  final NetworkService _networkService = getIt<NetworkService>();
 
   @override
   ResultFuture<CompanyJobsDiscovery?> discoverJobs({

@@ -8,7 +8,7 @@ import 'package:rawrecruit/src/features/dashboard/data/data_source/dashbooard_da
 import '../../../../core/index.dart';
 
 class DashboardDataSourceImpl implements DashboardDataSource {
-  final NetworkService _networkService = NetworkService();
+  final NetworkService _networkService = getIt<NetworkService>();
 
   @override
   ResultFuture<List<Job>> getOffCampusJobs() async {
