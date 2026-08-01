@@ -342,7 +342,7 @@ class _ReferralDetailPageState extends State<ReferralDetailPage> {
                                                       BorderRadius.circular(12),
                                                   border: Border.all(
                                                     color: AppColors.kBorder,
-                                                    width: 0.2,
+                                                    width: 0.5,
                                                   ),
                                                 ),
 

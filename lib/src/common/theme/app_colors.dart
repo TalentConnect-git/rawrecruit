@@ -39,7 +39,7 @@ class AppColors {
   static Color get searchBox => _isDark ? Color(0xFF111827) : Color(0xff000000);
   static Color get kTile => _isDark ? Color(0xFF0F1115) : Color(0xffffffff);
   static Color get kBorder =>
-      _isDark ? const Color(0xFF1F2937) : const Color(0xFF1F2937);
+      _isDark ? const Color(0xFF1F2937) : const Color(0xFFd9d9d9);
 
   static Color get shadow => _isDark
       ? Color(0xff000000).withValues(alpha: 0.2)
