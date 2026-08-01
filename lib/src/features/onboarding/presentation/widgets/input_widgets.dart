@@ -250,7 +250,9 @@ class _AppMultiSelectChipsState extends State<AppMultiSelectChips> {
                         borderRadius: BorderRadius.circular(20),
 
                         border: Border.all(
-                          color: isSelected ? AppColors.kGreen : Colors.white,
+                          color: isSelected
+                              ? AppColors.kGreen
+                              : AppColors.kChip,
                         ),
                       ),
 

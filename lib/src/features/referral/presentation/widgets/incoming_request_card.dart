@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 
 import '../../../../common/index.dart';
 import '../../../../core/index.dart';
@@ -20,6 +21,9 @@ class IncomingRequestCard extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
           color: AppColors.kTile,
+          border: ThemeController.instance.isDark
+              ? null
+              : Border.all(color: Color(0xff222222).withValues(alpha: 0.4)),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -91,7 +95,7 @@ class IncomingRequestCard extends StatelessWidget {
                     ],
                   ),
                   Text(
-                    'For ${request.job?.jobTitle ?? ''}',
+                    'For ${request.job?.jobTitle?.join(',') ?? ''}',
                     style: AppTextStyles.s16W600.copyWith(
                       color: AppColors.secText,
                     ),

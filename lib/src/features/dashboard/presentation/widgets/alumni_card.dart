@@ -4,7 +4,6 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 
 import '../../../../core/index.dart';
-import '../../../../core/models/experience.dart';
 
 class AlumniCard extends StatelessWidget {
   final List<Job> jobs;
@@ -105,15 +104,6 @@ class AlumniCard extends StatelessWidget {
                 : const Color(0xFFE5E7EB),
             width: 1,
           ),
-          boxShadow: ThemeController.instance.isDark
-              ? []
-              : [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 16,
-                    offset: const Offset(0, 5),
-                  ),
-                ],
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min, // 🔥 prevents overflow

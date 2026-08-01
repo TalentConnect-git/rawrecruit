@@ -480,44 +480,48 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
                         child: Wrap(
                           spacing: 8,
                           runSpacing: 8,
-                          children: (user.skills ?? [])
-                              .map(
-                                (e) => Container(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 12,
-                                    vertical: 8,
-                                  ),
-                                  decoration: BoxDecoration(
-                                    color: AppColors.blackwhite.withOpacity(
-                                      .12,
-                                    ),
-                                    borderRadius: BorderRadius.circular(30),
-                                    border: Border.all(
-                                      color: ThemeController.instance.isDark
-                                          ? AppColors.kBorder
-                                          : const Color(0xFFE5E7EB),
-                                      width: 1,
-                                    ),
-                                    boxShadow: ThemeController.instance.isDark
-                                        ? []
-                                        : [
-                                            BoxShadow(
-                                              color: AppColors.shadow,
-                                              blurRadius: 5,
-                                              offset: const Offset(1, 2),
-                                            ),
-                                          ],
-                                  ),
-                                  child: Text(
-                                    e,
-                                    style: TextStyle(
-                                      color: AppColors.chipText,
-                                      fontSize: 11,
-                                    ),
-                                  ),
+                          children: (user.skills ?? []).map((e) {
+                            final isDark = ThemeController.instance.isDark;
+
+                            final Color color = isDark
+                                ? const Color(
+                                    0xFF7F5AF0,
+                                  ) // Same purple as Preferred Job Roles
+                                : AppColors.kGreen;
+
+                            return Container(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 12,
+                                vertical: 8,
+                              ),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    color.withOpacity(.10),
+                                    color.withOpacity(.05),
+                                  ],
                                 ),
-                              )
-                              .toList(),
+                                borderRadius: BorderRadius.circular(30),
+                                border: Border.all(
+                                  color: color.withOpacity(.30),
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: color.withOpacity(.15),
+                                    blurRadius: 14,
+                                    offset: const Offset(0, 8),
+                                  ),
+                                ],
+                              ),
+                              child: Text(
+                                e,
+                                style: TextStyle(
+                                  color: AppColors.chipText,
+                                  fontSize: 11,
+                                ),
+                              ),
+                            );
+                          }).toList(),
                         ),
                       ),
                       const SizedBox(height: 18),
@@ -2487,7 +2491,7 @@ class _ProfileDetailViewState extends State<ProfileDetailView> {
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          colors: [color.withOpacity(.22), color.withOpacity(.10)],
+          colors: [color.withOpacity(.10), color.withOpacity(.05)],
         ),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: color.withOpacity(.30)),

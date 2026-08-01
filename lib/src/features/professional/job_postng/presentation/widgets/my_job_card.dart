@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/entities/referral_post_model.dart';
+
 import '../../../../../common/index.dart';
 
 class MyJobCard extends StatelessWidget {
@@ -58,7 +59,7 @@ class MyJobCard extends StatelessWidget {
                   ),
                 ),
 
-                _statusChip(job.approvalStatus),
+                _statusChip(!(job.inactive ?? false), job.approvalStatus),
               ],
             ),
 
@@ -117,21 +118,31 @@ class MyJobCard extends StatelessWidget {
   }
 
   /// 🔥 STATUS CHIP (LIVE / PENDING / APPROVED)
-  Widget _statusChip(String? status) {
-    final isLive = status?.toLowerCase() == "approved";
+  Widget _statusChip(bool active, String? status) {
+    final isApproved = status?.toLowerCase() == "approved";
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
       decoration: BoxDecoration(
-        color: isLive
-            ? AppColors.kGreen.withOpacity(0.15)
+        color: isApproved
+            ? active
+                  ? AppColors.kGreen.withOpacity(0.15)
+                  : AppColors.errorBorder.withOpacity(0.15)
             : Colors.orange.withOpacity(0.15),
         borderRadius: BorderRadius.circular(20),
       ),
       child: Text(
-        isLive ? "live" : (status ?? "pending"),
+        isApproved
+            ? active
+                  ? "live"
+                  : 'paused'
+            : (status ?? "pending"),
         style: AppTextStyles.s12W600.copyWith(
-          color: isLive ? AppColors.kGreen : Colors.orange,
+          color: isApproved
+              ? active
+                    ? AppColors.kGreen
+                    : AppColors.errorBorder
+              : Colors.orange,
         ),
       ),
     );

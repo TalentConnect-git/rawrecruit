@@ -4,8 +4,8 @@ import 'package:rawrecruit/src/common/index.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/application/index.dart'
     show ApplicationViewModel, ApplicationCard;
-import 'package:rawrecruit/src/features/referrer/utils/enums.dart';
 import 'package:rawrecruit/src/features/professional/job_postng/presentation/widgets/applicant_card.dart';
+import 'package:rawrecruit/src/features/referrer/utils/enums.dart';
 
 import '../../professional/job_postng/presentation/widgets/referred_applicant_card.dart';
 
@@ -227,7 +227,7 @@ class _ProfessionalReferralViewState extends State<ProfessionalReferralView> {
 
               Center(
                 child: Text(
-                  "No requests received",
+                  "No referral request",
                   style: TextStyle(color: Colors.grey),
                 ),
               ),

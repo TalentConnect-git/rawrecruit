@@ -1,6 +1,6 @@
 enum ProfessionalReferrerApplicationType {
   appliedByMe("Applied By Me"),
-  requestsReceived("Requests Received"),
+  requestsReceived("Referral Request"),
   referredByMe("Referred By Me");
 
   const ProfessionalReferrerApplicationType(this.label);

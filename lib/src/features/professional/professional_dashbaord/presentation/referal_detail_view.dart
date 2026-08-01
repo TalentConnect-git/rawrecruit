@@ -342,14 +342,16 @@ https://play.google.com/store/apps/details?id=com.app.rawrecruit
                 height: 44,
                 width: 44,
                 decoration: BoxDecoration(
-                  color: Colors.white,
+                  color: AppColors.jobAvatar,
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Center(
                   child: Text(
                     company.isNotEmpty ? company[0].toUpperCase() : "C",
-                    style: const TextStyle(
-                      color: Colors.black,
+                    style: TextStyle(
+                      color: ThemeController.instance.isDark
+                          ? Colors.black
+                          : Colors.white,
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
                     ),
