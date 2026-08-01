@@ -4,6 +4,7 @@ import 'package:rawrecruit/src/common/theme/theme_controller.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/onboarding/index.dart'
     show OnboardingLocalService, AppHeader;
+
 import '../../../common/index.dart';
 
 class SkillsDomainPage extends StatefulWidget {
@@ -212,7 +213,7 @@ class _SkillsDomainPageState extends State<SkillsDomainPage> {
                     prefixIcon: const Icon(Icons.search, color: Colors.grey),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(14),
-                      borderSide: BorderSide.none,
+                      borderSide: BorderSide(color: AppColors.searchBox),
                     ),
                   ),
 

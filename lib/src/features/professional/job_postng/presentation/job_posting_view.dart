@@ -909,6 +909,8 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                       });
                                     }
                                     _jobRoleController.clear();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                   },
 
                                   fieldViewBuilder:

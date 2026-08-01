@@ -35,6 +35,8 @@ class AppColors {
       _isDark ? Color(0xff000000) : Color(0xffffffff);
   static Color get kBg => _isDark ? Color(0xff080A0C) : Color(0xffffffff);
   static Color get kCard => _isDark ? Color(0xFF111827) : Color(0xffffffff);
+  static Color get kChip => _isDark ? Color(0xffffffff) : Color(0xff000000);
+  static Color get searchBox => _isDark ? Color(0xFF111827) : Color(0xff000000);
   static Color get kTile => _isDark ? Color(0xFF0F1115) : Color(0xffffffff);
   static Color get kBorder =>
       _isDark ? const Color(0xFF1F2937) : const Color(0xFF1F2937);
