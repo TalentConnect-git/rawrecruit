@@ -5,6 +5,7 @@ class AppColors {
   static bool get _isDark => ThemeController.instance.isDark;
 
   static Color get text => _isDark ? Color(0xffffffff) : Color(0xff222222);
+  static Color get jobAvatar => _isDark ? Color(0xffffffff) : Color(0xff222222);
   static Color get card => _isDark ? Color(0xFF111827) : Color(0xffbcdfec);
   static Color get dialog => _isDark ? Color(0xFF111827) : Color(0xffffffff);
   static Color get chip => _isDark ? Color(0xFF1F2937) : Color(0xffb4c8d2);
