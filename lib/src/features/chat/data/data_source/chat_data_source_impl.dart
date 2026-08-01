@@ -9,7 +9,7 @@ import '../entities/chat_unread_model.dart';
 import '../entities/message_model.dart';
 
 class ChatDataSourceImpl implements ChatDataSource {
-  final NetworkService _networkService = NetworkService();
+  final NetworkService _networkService = getIt<NetworkService>();
 
   @override
   ResultFuture<List<User>> getAllUsers() async {

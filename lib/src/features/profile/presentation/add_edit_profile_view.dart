@@ -3155,7 +3155,7 @@ class _AddEditProfileViewState extends State<AddEditProfileView> {
       });
 
       /// 🔥 NETWORK CALL
-      final networkService = NetworkService();
+      final networkService = getIt<NetworkService>();
 
       final response = await networkService.request(
         Request(

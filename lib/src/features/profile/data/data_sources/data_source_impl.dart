@@ -4,7 +4,7 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'data_source.dart';
 
 class ProfileDetailDataSourceImpl implements ProfileDetailDataSource {
-  final NetworkService _networkService = NetworkService();
+  final NetworkService _networkService = getIt<NetworkService>();
 
   @override
   ResultFuture<User> getProfileDetails(String userId) async {

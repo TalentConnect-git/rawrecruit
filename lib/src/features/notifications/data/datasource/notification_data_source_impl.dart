@@ -3,7 +3,7 @@ import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/notifications/index.dart';
 
 class NotificationDataSourceImpl implements NotificationDataSource {
-  final NetworkService networkService = NetworkService();
+  final NetworkService networkService = getIt<NetworkService>();
 
   @override
   ResultFuture<List<Notification>> getNotifications() async {

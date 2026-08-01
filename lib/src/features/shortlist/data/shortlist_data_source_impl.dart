@@ -1,10 +1,11 @@
 import 'package:dartz/dartz.dart';
 import 'package:rawrecruit/src/core/index.dart';
 import 'package:rawrecruit/src/features/shortlist/entities/shortlist_model.dart';
+
 import 'shortlist_data_source.dart';
 
 class ShortlistDataSourceImpl implements ShortlistDataSource {
-  final NetworkService _networkService = NetworkService();
+  final NetworkService _networkService = getIt<NetworkService>();
 
   @override
   ResultFuture<void> saveOpportunity({

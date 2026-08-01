@@ -6,7 +6,7 @@ import 'package:rawrecruit/src/features/professional/job_postng/presentation/ent
 import 'application_data_source.dart';
 
 class ApplicationDataSourceImpl implements ApplicationDataSource {
-  final NetworkService _networkService = NetworkService();
+  final NetworkService _networkService = getIt<NetworkService>();
 
   // /// 🔥 COMMON SAFE MAPPER (MOST IMPORTANT FIX)
   // Job _mapToJob(Map<String, dynamic> e, String type) {

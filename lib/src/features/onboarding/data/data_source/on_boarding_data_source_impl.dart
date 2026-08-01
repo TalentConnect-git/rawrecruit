@@ -20,7 +20,7 @@ import 'package:rawrecruit/src/core/index.dart'
 import 'on_boarding_data_source.dart';
 
 class OnboardingDataSourceImpl implements OnboardingDataSource {
-  final NetworkService _networkService = NetworkService();
+  final NetworkService _networkService = getIt<NetworkService>();
 
   Future<FormData> _buildFormData({
     required Map<String, dynamic> body,
