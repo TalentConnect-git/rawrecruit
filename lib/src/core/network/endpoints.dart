@@ -31,6 +31,7 @@ class Endpoints {
   static const String applicationAllReferrals = "/application/all-referrals";
   static const String metrics = "application/professional/metrics";
 
+  static const String applicationReferrals = 'application/referrals';
   static const String applicationUpdateStatus = 'application/update-status';
   static const String applicationMyReferralApplications =
       'application/my-referral-applications';

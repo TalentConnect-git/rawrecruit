@@ -98,7 +98,7 @@ class ReferralPostDataSourceImpl implements ReferralPostDataSource {
   }) async {
     final request = Request(
       method: RequestMethod.patch,
-      endpoint: '${Endpoints.applicationUpdateStatus}/$applicationId',
+      endpoint: '${Endpoints.applicationReferrals}/$applicationId/status',
       body: {"status": status},
       isSafeRoute: true,
     );
