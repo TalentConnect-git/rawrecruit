@@ -861,29 +861,19 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                   optionsBuilder: (textEditingValue) {
                                     final query = textEditingValue.text.trim();
 
-                                    // When the field is first opened after a selection,
-                                    // show all available degrees instead of only the selected one.
-                                    if (query.isEmpty ||
-                                        query == minEducation) {
-                                      return degrees.map(
-                                        (e) => e["value"].toString(),
-                                      );
-                                    }
-
-                                    final filtered = degrees
-                                        .map((e) => e["value"].toString())
-                                        .where(
-                                          (e) => e.toLowerCase().contains(
+                                    final filtered = jobRoleOptions.where(
+                                      (option) =>
+                                          option.toLowerCase().contains(
                                             query.toLowerCase(),
-                                          ),
-                                        );
-
-                                    final exists = degrees.any(
-                                      (e) =>
-                                          e["value"]
-                                              .toString()
+                                          ) &&
+                                          !titleController.text
                                               .toLowerCase()
-                                              .trim() ==
+                                              .contains(option.toLowerCase()),
+                                    );
+
+                                    final exists = jobRoleOptions.any(
+                                      (e) =>
+                                          e.toLowerCase().trim() ==
                                           query.toLowerCase().trim(),
                                     );
 
@@ -902,22 +892,25 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                               .replaceAll('"', '')
                                         : value;
 
-                                    await addDegreeIfNeeded(actualValue);
+                                    await addJobRoleIfNeeded(actualValue);
 
-                                    final degree = degrees.firstWhere(
-                                      (e) => e["value"] == actualValue,
-                                    );
+                                    final currentRoles = titleController.text
+                                        .split(',')
+                                        .map((e) => e.trim())
+                                        .where((e) => e.isNotEmpty)
+                                        .toList();
 
-                                    setState(() {
-                                      minEducation = actualValue;
-                                      selectedDegreeId = degree["_id"]
-                                          .toString();
+                                    if (!currentRoles.contains(actualValue)) {
+                                      currentRoles.add(actualValue);
 
-                                      // Clear stream whenever education changes
-                                      fieldOfStudyController.clear();
-                                    });
-
-                                    await fetchStreams(selectedDegreeId!);
+                                      setState(() {
+                                        titleController.text = currentRoles
+                                            .join(', ');
+                                      });
+                                    }
+                                    _jobRoleController.clear();
+                                    FocusManager.instance.primaryFocus
+                                        ?.unfocus();
                                   },
 
                                   fieldViewBuilder:
@@ -927,6 +920,8 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                         focusNode,
                                         onFieldSubmitted,
                                       ) {
+                                        _jobRoleController = controller;
+
                                         return TextField(
                                           controller: controller,
                                           focusNode: focusNode,
@@ -934,24 +929,16 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                             color: AppColors.white,
                                           ),
                                           decoration: InputDecoration(
-                                            hintText: "Search Degree",
+                                            hintText: "Search Job Role",
                                             hintStyle: TextStyle(
                                               color: AppColors.secText,
                                             ),
-
                                             filled: true,
                                             fillColor: AppColors.kTile,
-
-                                            // Normal border
                                             border: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12),
-                                              borderSide: BorderSide(
-                                                color: AppColors.border,
-                                              ),
                                             ),
-
-                                            // Border when field is enabled
                                             enabledBorder: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12),
@@ -959,8 +946,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                                 color: AppColors.border,
                                               ),
                                             ),
-
-                                            // Green border when searching/focused
                                             focusedBorder: OutlineInputBorder(
                                               borderRadius:
                                                   BorderRadius.circular(12),
@@ -971,7 +956,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                           ),
                                         );
                                       },
-
                                   optionsViewBuilder:
                                       (context, onSelected, options) {
                                         return Align(
@@ -982,17 +966,14 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                             borderRadius: BorderRadius.circular(
                                               12,
                                             ),
-
                                             child: ConstrainedBox(
                                               constraints: const BoxConstraints(
                                                 maxHeight: 220,
                                               ),
-
                                               child: ListView.builder(
                                                 padding: EdgeInsets.zero,
                                                 shrinkWrap: true,
                                                 itemCount: options.length,
-
                                                 itemBuilder: (context, index) {
                                                   final option = options
                                                       .elementAt(index);
@@ -1002,7 +983,6 @@ class _ReferralPostViewState extends State<ReferralPostView> {
 
                                                   return ListTile(
                                                     tileColor: AppColors.kTile,
-
                                                     title: Text(
                                                       option,
                                                       style: TextStyle(
@@ -1011,10 +991,8 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                                             : AppColors.white,
                                                       ),
                                                     ),
-
-                                                    onTap: () {
-                                                      onSelected(option);
-                                                    },
+                                                    onTap: () =>
+                                                        onSelected(option),
                                                   );
                                                 },
                                               ),
@@ -1025,6 +1003,7 @@ class _ReferralPostViewState extends State<ReferralPostView> {
                                 ),
                               ],
                             ),
+
                             const SizedBox(height: 10),
                             _fieldDark(
                               "Description",
